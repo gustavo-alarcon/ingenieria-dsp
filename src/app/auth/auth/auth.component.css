@@ -1,3 +1,89 @@
-.mat-toolbar {
+.container-login {
+    height: 100vh;
+    background: url(../../../assets/img/login/caterpilar.png);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
+.bkground-img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 375px;
+    height: 302px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 10.4498px;
+}
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    color: white;
     width: 100%;
+}
+
+.footer-flex {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.img-meraki {
+    height: 180px;
+    height: 55px;
+}
+
+.img-google {
+    height: 230px;
+    height: 75px;
+}
+
+.img-logo-ferreyros {
+    width: 374px;
+    height: 143px;
+}
+
+.hr-line {
+    background-color: black;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.button-login {
+    margin-top: 63px;
+    margin-bottom: 17px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.button-login button {
+    background: #6200ee;
+    border-radius: 4px;
+    width: 159px;
+    height: 37px;
+}
+
+.span-version {
+    margin-right: 5px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+@media (min-width: 568px) {
+    .footer-flex {
+        margin-left: 25px;
+        margin-right: 25px;
+        margin-bottom: 20px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
 }

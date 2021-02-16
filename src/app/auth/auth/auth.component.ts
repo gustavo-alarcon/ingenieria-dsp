@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-auth',
@@ -6,7 +7,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./auth.component.css']
 })
 export class AuthComponent {
-
-  constructor() {}
+  version = environment.version;
+  constructor() { }
 
 }
