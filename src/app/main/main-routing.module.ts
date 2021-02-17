@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { NotFoundComponent } from '../shared/not-found/not-found.component';
 import { MainComponent } from './main/main.component';
 
 const routes: Routes = [
@@ -22,12 +23,11 @@ const routes: Routes = [
       {
         path: 'settings',
         loadChildren: () => import('./pages/settings/settings.module').then(m => m.SettingsModule)
+      },
+      {
+        path: '**',
+        component: NotFoundComponent
       }
-      // ,
-      // {
-      //   path: '**',
-      //   component: NotFoundComponent
-      // }
     ]
   }
 ];
