@@ -1,17 +1,22 @@
-<mat-sidenav-container class="sidenav-container">
+<!-- 
+  
+  <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #drawer class="sidenav" fixedInViewport
       [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
       [mode]="(isHandset$ | async) ? 'over' : 'side'"
       [opened]="(isHandset$ | async) === false">
     <mat-toolbar>Menu</mat-toolbar>
     <mat-nav-list>
+      <div *ngIf="authService.currentUser() | async as user">
+        <div>{{user | json}}</div>
+      </div>
       <a mat-list-item href="#">Link 1</a>
       <a mat-list-item href="#">Link 2</a>
       <a mat-list-item href="#">Link 3</a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
-    <mat-toolbar color="primary">
+    <mat-toolbar class="main_toolbar">
       <button
         type="button"
         aria-label="Toggle sidenav"
@@ -21,7 +26,89 @@
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
       <span>ingenieria-dsp</span>
+      
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-button
+        class="btn-exit-app"
+        (click)="exitApp()"
+        >
+        CERRAR SESION
+        <mat-icon aria-label="Side nav toggle icon">exit_to_app</mat-icon>
+      </button>
+
     </mat-toolbar>
-    <!-- Add Content Here -->
   </mat-sidenav-content>
-</mat-sidenav-container>
+</mat-sidenav-container> -->
+
+
+<div class="">
+  <mat-sidenav-container style="height:100vh;">
+      <mat-sidenav mode="over" #sideMenu [(opened)]="openedMenu" class="container-toolbar">
+          <div class="sidenav-menu">              
+            <div>
+              <div *ngIf="authService.currentUser() | async as user" class="user">
+                <div>
+                    <img *ngIf="user.photoURL" [src]="user.photoURL"
+                        class="user__image border--primary">
+                    <h2 class="user__name">{{user.displayName}} </h2>
+                    <h4 class="user__rol">Administrador</h4>
+                </div>
+              </div>
+              <mat-divider style="background: #F2C94C; margin-bottom: 10px;"></mat-divider>                  
+              <div class="menu">                                                    
+                  <button mat-button class="menu__button" routerLink="/main" (click)="toggleSideMenu()">
+                      <mat-icon class="menu__icon">bookmark</mat-icon>
+                      Mejoras
+                  </button>
+                  <button mat-button class="menu__button" routerLink="/main" (click)="toggleSideMenu()">
+                      <mat-icon class="menu__icon">verified</mat-icon>
+                      Revisión de repuestos
+                  </button>
+                  <button mat-button class="menu__button" routerLink="/main" (click)="toggleSideMenu()">
+                      <mat-icon class="menu__icon">settings</mat-icon>
+                      Configuración
+                  </button>
+                                       
+              </div>
+            </div>
+          </div>
+      </mat-sidenav>
+
+      <mat-sidenav-content cdkScrollable>
+          <mat-toolbar class="main__toolbar">
+            <button
+                type="button"
+                aria-label="Toggle sidenav"
+                mat-icon-button
+                (click)="toggleSideMenu()"
+                >
+                <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+              </button>
+              <span>ingenieria-dsp</span>
+              
+              <button
+                type="button"
+                aria-label="Toggle sidenav"
+                mat-button
+                class="btn-exit-app"
+                (click)="exitApp()"
+                >
+                CERRAR SESION
+                <mat-icon aria-label="Side nav toggle icon">exit_to_app</mat-icon>
+              </button>
+              
+          </mat-toolbar>
+          <div class="main__space">
+              <router-outlet></router-outlet>
+          </div>
+      </mat-sidenav-content>
+
+  </mat-sidenav-container>
+</div>
+
+
+
+
+
