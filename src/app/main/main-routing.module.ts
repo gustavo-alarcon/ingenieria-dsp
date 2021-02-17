@@ -6,6 +6,29 @@ const routes: Routes = [
   {
     path: '',
     component: MainComponent,
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('./pages/improvements/improvements.module').then(m => m.ImprovementsModule)
+      },
+      {
+        path: 'improvements',
+        loadChildren: () => import('./pages/improvements/improvements.module').then(m => m.ImprovementsModule)
+      },
+      {
+        path: 'spare-parts',
+        loadChildren: () => import('./pages/spare-parts/spare-parts.module').then(m => m.SparePartsModule)
+      },
+      {
+        path: 'settings',
+        loadChildren: () => import('./pages/settings/settings.module').then(m => m.SettingsModule)
+      }
+      // ,
+      // {
+      //   path: '**',
+      //   component: NotFoundComponent
+      // }
+    ]
   }
 ];
 
