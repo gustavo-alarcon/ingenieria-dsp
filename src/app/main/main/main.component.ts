@@ -12,6 +12,10 @@ import { Router } from '@angular/router';
 })
 export class MainComponent {
 
+  version: string
+  openedMenu: boolean = false;
+  title: string ;
+
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
       map(result => result.matches),
@@ -19,12 +23,15 @@ export class MainComponent {
     );
 
   constructor(private breakpointObserver: BreakpointObserver,
-               private authService:AuthService,
+               public authService:AuthService,
                private router: Router
               )
-                {}
+              {}
 
-   async exitApp(): Promise<void> {
+  toggleSideMenu(): void {
+    this.openedMenu = !this.openedMenu;
+  }
+  async exitApp(): Promise<void> {
     try {
       await this.authService.logout();
       this.router.navigate(['/auth']);
