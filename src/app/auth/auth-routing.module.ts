@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { NotFoundComponent } from '../shared/not-found/not-found.component';
 import { AuthComponent } from './auth/auth.component';
 
 const routes: Routes = [
@@ -15,12 +16,7 @@ const routes: Routes = [
         path: 'login',
         loadChildren: () => import('../auth/pages/login/login.module').then(m => m.LoginModule)
       },
-
-      /*Agregar Componente para la pagina not fount*/
-      // {
-      //   path: '**',
-      //   component: NotFoundComponent
-      // }
+      { path: '**', component: NotFoundComponent }
     ]
   }
 ];

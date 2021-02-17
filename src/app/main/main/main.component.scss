@@ -1,9 +1,10 @@
+$base-font: "Poppins", sans-serif;
 
-/* .main_toolbar{
+.main_toolbar {
   background: #333333;
   color: white;
 }
-.btn-exit-app{
+.btn-exit-app {
   position: absolute;
   right: 50px;
 }
@@ -13,11 +14,12 @@
 }
 
 .sidenav {
-  width: 200px;
+  width: 300px;
 }
 
 .sidenav .mat-toolbar {
-  background: inherit;
+  background: #f2c94c;
+  height: 24px;
 }
 
 .mat-toolbar.mat-primary {
@@ -46,103 +48,56 @@
   padding-top: 64px;
 }
 
-//SilverVav
-.sidenav-menu{
-  display: flex; 
-  flex-direction: column;
-   height: 100%; 
-   justify-content: space-between;
-   width: 300px;  
-  }
-  .user {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    font-weight: 900;
-    font-size: 1.1em;
-    padding: 28px 40px 20px;
-    position: relative;
-    justify-content: left;
-  }
-  .user__name {
-    width: 100%;    
-    margin-bottom: 0px;
-    padding-bottom: 0px;
-  }
-  .user__rol {
-    width: 100%;
-    text-align: left;
-    font-size: small;
-    font-weight: normal;
-    margin-bottom: 0px;
-    padding-bottom: 0px;
-  }
-  
-  .user__image {
-    border-width: 3px;
-    border-style: solid;
-    width: 55px;
-    height: 55px;
-    object-fit: contain;
-    border-radius: 50%;
-    margin-right: 15px;
-  }
-  .menu {
-    min-height: 51vh;
-    max-width: fit-content;
-  }
-  
-  .menu__title {
-    font-weight: 900;
-    font-size: 1.2em;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    margin-left: 20px;
-  }
-  
-  .menu__button {
-    width: 100%;
-    text-align: left;
-    border-radius: 0px 0px 0px 0px;
-    padding: 5px 10px 5px 10px;
-    font-size: 1em;
-    letter-spacing: 0.05em;
-    // color: #ffffff;
-  }  
-  
-  .menu__icon {
-    vertical-align: middle;
-    margin-right: 5px;
-  }
-  .menu__button:hover {
-    width: 100%;
-    text-align: left;
-    border-radius: 0px 0px 0px 0px;
-    //padding: 5px 10px 5px 40px;
-    font-size: 1em;
-    letter-spacing: 0.05em;
-    // color: #ffffff;
-    color: #6200EE;
-  }  
-  
-
-
-
-
-@media (max-width: 601px) {
-  .main__toolbar {
-    // background: url("../../assets/images/toolbar_mini.png") no-repeat center;
-    background-size: cover;
-    background-color: #333333;
-    //border-top: 7px solid #F2C94C;
-  }
-
-  .main__logoimage {
-    max-height: 36px;
-  }
-
-  .main__space{
-    padding-top: 56px;
-  }
+.hr-line {
+  height: 1px;
+  border: 0;
+  background-color: #f2c94c;
 }
 
+.mat-card-user {
+  height: 166px;
+}
+
+mat-card img {
+  background-size: cover; /*this makes the image in src fit to the size specified below*/
+  width: 100%; /* Here you can use wherever you want to specify the width and also the height of the <img>*/
+  height: 100%;
+  border-radius: 50%;
+}
+
+.text-menu-title-user {
+  font-family: $base-font;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: 0.15px;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.text-menu-title-role {
+  font-size: 14px;
+  line-height: 20px;
+
+  /* identical to box height, or 143% */
+  letter-spacing: 0.25px;
+
+  /* 00. On Surface / Medium Emphasis */
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.mat-item-list-span {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 24px;
+  letter-spacing: 0.1px;
+  color: rgba(0, 0, 0, 0.6);
+  margin-left: 33px;
+}
+
+.mat-icon-menu{
+  width: 22px;
+  height: 22px;
+}
