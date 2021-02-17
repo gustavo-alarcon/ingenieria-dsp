@@ -3,7 +3,7 @@
       <img src="../../../assets/img/login/logo_ferreyros.png" alt="" class="img-logo-ferreyros">
       <hr class="hr-line">
       <div class="button-login">
-        <button mat-raised-button color="primary">{{ 'ingresar' | uppercase }}</button>
+        <button mat-raised-button color="primary" (click)="loginGoogle()">{{ 'ingresar' | uppercase }}</button>
       </div>
       <div class="span-version">
         <span>{{ version }}</span>
