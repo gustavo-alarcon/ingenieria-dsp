@@ -38,7 +38,7 @@ export class AuthService {
   }
 
   async logout(): Promise<void> {
-    return await this.auth.signOut();
+     await this.auth.signOut();
   }
 
   getUserClaims(): Observable<firebase.auth.IdTokenResult> {
