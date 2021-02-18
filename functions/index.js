@@ -4,6 +4,7 @@ const admin = require('firebase-admin');
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 //
 admin.initializeApp();
+admin.firestore().settings({ timestampsInSnapshots: true });
 
 exports.googleChatBot = functions.https.onRequest((request, response) => {
     var HEADER = {
@@ -31,17 +32,24 @@ exports.googleChatBot = functions.https.onRequest((request, response) => {
 
 
 exports.createUserSetClaims = functions.auth.user().onCreate(async (user) => {
-    admin.firestore().settings({ timestampsInSnapshots: true });
     functions.logger.info(`create user ${user.email} ${user.uid}`, { structuredData: true });
     const role = 'Administrador';
-    await admin.auth().setCustomUserClaims(user.uid, { role });
-    await admin.firestore().collection('users').doc(user.uid).set({
-        email: user.email,
-        uid: user.uid,
-        name: user.displayName,
-        picture: user.photoURL,
-        role
-    }, { merge: true });
-    return;
+    const createdAt= new Date();
+    try {
+        await admin.auth().setCustomUserClaims(user.uid, { role });
+        await admin.firestore().collection('users').doc(user.uid).set({
+            email: user.email,
+            uid: user.uid,
+            name: user.displayName,
+            picture: user.photoURL,
+            role,
+            phoneNumber: user.phoneNumber,
+            createdAt
+        }, { merge: true });
+        return;
+    } catch (error) {
+        functions.logger.info(error, { structuredData: true });
+        return;
+    }
 });
 
