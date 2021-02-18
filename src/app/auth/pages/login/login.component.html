@@ -1,18 +1,23 @@
-<div class="container-login">
-    <div class="bkground-img">
-      <img src="../../../assets/img/login/logo_ferreyros.png" alt="" class="img-logo-ferreyros">
-      <hr class="hr-line">
-      <div class="button-login">
-        <button mat-raised-button color="primary" (click)="loginGoogle()">{{ 'ingresar' | uppercase }}</button>
-      </div>
-      <div class="span-version">
-        <span>{{ version }}</span>
-      </div>
+<div class="container">
+  <div class="login">
+
+    <img class="login__logo" src="../../../assets/img/login/logo_ferreyros.png" alt="ferreyros logo">
+
+    <mat-divider></mat-divider>
+
+    <button class="login__button" mat-raised-button color="primary" (click)="loginGoogle()">
+      <img class="login__button--icon" src="../../../../assets/icons/google-icon.svg" alt="google icon">
+      {{'iniciar sesión con google' | uppercase }}
+    </button>
+
+    <div class="span-version">
+      <span>{{ version }}</span>
     </div>
-    <footer class="footer">
-      <div class="footer-flex">
-        <img src="../../../assets/img/login/meraki.png" alt="" class="img-meraki">
-        <img src="../../../assets/img/login/google_cloud.png" alt="" class="img-google">
-      </div>
-    </footer>
   </div>
+  <footer class="footer">
+    <div class="footer__flex">
+      <img src="../../../assets/img/login/meraki.png" alt="meraki solutions logo" class="img-meraki">
+      <img src="../../../assets/img/login/google_cloud.png" alt="google cloud logo" class="img-google">
+    </div>
+  </footer>
+</div>

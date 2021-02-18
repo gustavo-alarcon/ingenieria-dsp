@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
-import { map, pluck, shareReplay } from 'rxjs/operators';
+import { map, pluck, shareReplay, take } from 'rxjs/operators';
 import { AuthService } from '../../auth/services/auth.service';
 import { Router } from '@angular/router';
 
@@ -19,12 +19,12 @@ export class MainComponent implements OnInit {
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
       map(result => result.matches),
-      shareReplay()
+      shareReplay(1)
     );
 
   claims$: Observable<any>;
 
-  claims = { name: '', picture: '', email: '' };
+  claims = { name: '', picture: '', email: '', role: '' };
   constructor(
     private breakpointObserver: BreakpointObserver,
     private authService: AuthService,
@@ -48,6 +48,7 @@ export class MainComponent implements OnInit {
   getClaimstUser(): void {
     this.claims$ = this.authService.getUserClaims()
       .pipe(
+        take(1),
         pluck('claims')
       );
     this.claims$.subscribe((value) => {
