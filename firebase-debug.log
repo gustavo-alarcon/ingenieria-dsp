@@ -1,0 +1,92 @@
+[debug] [2021-02-18T01:08:20.365Z] ----------------------------------------------------------------------
+[debug] [2021-02-18T01:08:20.367Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\galar\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy --only functions
+[debug] [2021-02-18T01:08:20.367Z] CLI Version:   9.3.0
+[debug] [2021-02-18T01:08:20.367Z] Platform:      win32
+[debug] [2021-02-18T01:08:20.367Z] Node Version:  v12.16.3
+[debug] [2021-02-18T01:08:20.368Z] Time:          Wed Feb 17 2021 20:08:20 GMT-0500 (GMT-05:00)
+[debug] [2021-02-18T01:08:20.368Z] ----------------------------------------------------------------------
+[debug] [2021-02-18T01:08:20.368Z] 
+[debug] [2021-02-18T01:08:20.374Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2021-02-18T01:08:20.375Z] > authorizing via signed-in user
+[debug] [2021-02-18T01:08:20.375Z] [iam] checking project ferreyros-mvp for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2021-02-18T01:08:20.377Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2021-02-18T01:08:20.377Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2021-02-18T01:08:20.825Z] <<< HTTP RESPONSE 200 {"expires":"Mon, 01 Jan 1990 00:00:00 GMT","pragma":"no-cache","date":"Thu, 18 Feb 2021 01:08:20 GMT","cache-control":"no-cache, no-store, max-age=0, must-revalidate","content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","server":"scaffolding on HTTPServer2","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-02-18T01:08:20.831Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/ferreyros-mvp:testIamPermissions  
+ {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2021-02-18T01:08:21.735Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Thu, 18 Feb 2021 01:08:21 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","server-timing":"gfet4t7; dur=165","alt-svc":"h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-02-18T01:08:21.736Z] >>> HTTP REQUEST POST https://iam.googleapis.com/v1/projects/ferreyros-mvp/serviceAccounts/ferreyros-mvp@appspot.gserviceaccount.com:testIamPermissions  
+ {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2021-02-18T01:08:22.315Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Thu, 18 Feb 2021 01:08:21 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] 
+[info] === Deploying to 'ferreyros-mvp'...
+[info] 
+[info] i  deploying functions 
+[debug] [2021-02-18T01:08:24.940Z] > [functions] package.json contents: {
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "scripts": {
+    "serve": "firebase emulators:start --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "12"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "firebase-admin": "^9.2.0",
+    "firebase-functions": "^3.11.0"
+  },
+  "devDependencies": {
+    "firebase-functions-test": "^0.2.0"
+  },
+  "private": true
+}
+[info] i  functions: ensuring required API cloudfunctions.googleapis.com is enabled... 
+[info] i  functions: ensuring required API cloudbuild.googleapis.com is enabled... 
+[debug] [2021-02-18T01:08:25.987Z] >>> HTTP REQUEST GET https://serviceusage.googleapis.com/v1/projects/ferreyros-mvp/services/cloudfunctions.googleapis.com  
+ 
+[debug] [2021-02-18T01:08:25.987Z] >>> HTTP REQUEST GET https://serviceusage.googleapis.com/v1/projects/ferreyros-mvp/services/runtimeconfig.googleapis.com  
+ 
+[debug] [2021-02-18T01:08:25.987Z] >>> HTTP REQUEST GET https://serviceusage.googleapis.com/v1/projects/ferreyros-mvp/services/cloudbuild.googleapis.com  
+ 
+[debug] [2021-02-18T01:08:26.794Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Thu, 18 Feb 2021 01:08:26 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-02-18T01:08:26.897Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Thu, 18 Feb 2021 01:08:26 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] +  functions: required API cloudbuild.googleapis.com is enabled 
+[debug] [2021-02-18T01:08:26.973Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Thu, 18 Feb 2021 01:08:26 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] +  functions: required API cloudfunctions.googleapis.com is enabled 
+[debug] [2021-02-18T01:08:26.974Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/ferreyros-mvp/adminSdkConfig  
+ 
+[debug] [2021-02-18T01:08:27.543Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Thu, 18 Feb 2021 01:08:26 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] i  functions: preparing functions directory for uploading... 
+[debug] [2021-02-18T01:08:27.545Z] >>> HTTP REQUEST GET https://runtimeconfig.googleapis.com/v1beta1/projects/ferreyros-mvp/configs  
+ 
+[debug] [2021-02-18T01:08:28.394Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Thu, 18 Feb 2021 01:08:27 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[info] i  functions: packaged functions (21.79 KB) for uploading 
+[debug] [2021-02-18T01:08:28.529Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/projects/ferreyros-mvp/locations/-/functions  
+ 
+[debug] [2021-02-18T01:08:29.473Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Thu, 18 Feb 2021 01:08:28 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-02-18T01:08:29.474Z] [functions] found 1 new HTTP functions, testing setIamPolicy permission...
+[debug] [2021-02-18T01:08:29.475Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/ferreyros-mvp:testIamPermissions  
+ {"permissions":["cloudfunctions.functions.setIamPolicy"]}
+[debug] [2021-02-18T01:08:29.963Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Thu, 18 Feb 2021 01:08:29 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","server-timing":"gfet4t7; dur=176","alt-svc":"h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-02-18T01:08:29.964Z] [functions] found setIamPolicy permission, proceeding with deploy
+[debug] [2021-02-18T01:08:29.964Z] >>> HTTP REQUEST POST https://cloudfunctions.googleapis.com/v1/projects/ferreyros-mvp/locations/us-central1/functions:generateUploadUrl  
+ 
+[debug] [2021-02-18T01:08:31.090Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Thu, 18 Feb 2021 01:08:30 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-02-18T01:08:31.091Z] >>> HTTP REQUEST PUT https://storage.googleapis.com/gcf-upload-us-central1-3aa76a22-1db4-4a50-9220-c328aca2987d/bc3c72ec-d152-4488-8e23-1b72c5ee46cf.zip?GoogleAccessId=service-139653549940@gcf-admin-robot.iam.gserviceaccount.com&Expires=1613612310&Signature=gmJSdToFYQAqiV5g1zQOqvd3dmUVQ7dwQyLusKpbmUvZ6%2BWSO0F%2FQqj9Wh%2BTOpHjAAvq1u6jmredHmx1JS3SeKZhuS2FLks04rUMfN%2Bly8vmLGflpeQJHK0O5kHXYBNxLBVAV1h7aq6vtWqC0jN8acmbeYAZ6EVmK7KwDNTzbM3hvrGz9Bn7M3ubi7asOjkodKOsg8WrvfiVPwuKiBiir5xA7p5eJVJ8bMulLP%2FqcdfjI6xkx4aSmDWPgLZCSusP3FUBWSE7np241sCuk%2F3JBXcSAWIrqDTtjdYFQCL04WfapmiblxGSIxTWVwcnkdmAbz4zrp8pq4hm8A%2B12YyC8g%3D%3D  
+ <request body omitted>
+[debug] [2021-02-18T01:08:32.113Z] <<< HTTP RESPONSE 200 {"x-guploader-uploadid":"ABg5-Uy5HRWKTZUvcMiU9DlFwNM_9y1CVy8A5d6Bu3gqja8FgOpbuwY2zdo1Ipsq9XqJ_6Pl0D3T6op0BzEn-8Jp99s","etag":"\"c62bfd0997b09eb78362b2b265c8f186\"","x-goog-generation":"1613610511400511","x-goog-metageneration":"1","x-goog-hash":"crc32c=rDv/PA==, md5=xiv9CZewnreDYrKyZcjxhg==","x-goog-stored-content-length":"22315","x-goog-stored-content-encoding":"identity","vary":"Origin","content-length":"0","date":"Thu, 18 Feb 2021 01:08:31 GMT","server":"UploadServer","content-type":"text/html; charset=UTF-8","alt-svc":"h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\""}
+[info] +  functions: functions folder uploaded successfully 
+[info] i  functions: creating Node.js 12 function googleChatBot(us-central1)... 
+[debug] [2021-02-18T01:08:32.116Z] Trigger is:  {"httpsTrigger":{}}
+[info] 
+The following functions are found in your project but do not exist in your local source code:
+	createUserSetClaims(us-central1)
+
+If you are renaming a function or changing its region, it is recommended that you create the new function first before deleting the old one to prevent event loss. For more info, visit https://firebase.google.com/docs/functions/manage-functions#modify
+
