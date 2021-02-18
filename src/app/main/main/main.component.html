@@ -1,14 +1,14 @@
-<mat-sidenav-container class="sidenav-container">
+<mat-sidenav-container class="sidenav-container" fullscreen>
   <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-    [mode]="(isHandset$ | async) ? 'over' : 'push'" [opened]="(isHandset$ | async) === false">
+    [mode]="(isHandset$ | async) ? 'over' : 'over'" [opened]="(isHandset$ | async) === !false">
     <mat-toolbar class="color-toolbar-sidebar"></mat-toolbar>
-    <mat-card class="mat-elevation-z0 mat-card-user">
+    <mat-card class="mat-elevation-z0 mat-card-user" *ngFor="let item of items | async">
       <div mat-card-avatar style="margin-top: 40px;margin-bottom: 30px;">
-        <img [src]="claims.picture" alt="">
+        <img src="{{item.picture}}" alt="">
       </div>
       <mat-card-content>
-        <mat-card-title class="text-menu-title-user">{{ claims.name }}</mat-card-title>
-        <mat-card-subtitle class="text-menu-title-role">{{claims.role}}</mat-card-subtitle>
+        <mat-card-title class="text-menu-title-user">{{item.name}}</mat-card-title>
+        <mat-card-subtitle class="text-menu-title-role">{{item.role}}</mat-card-subtitle>
       </mat-card-content>
     </mat-card>
     <hr class="hr-line">
@@ -26,9 +26,9 @@
             Revisión de repuestos
           </span>
         </a>
-        <a mat-list-item [routerLink]="['/main/settings']" routerLinkActive="active" (click)="drawer.toggle()">
-          <mat-icon mat-list-icon color="primary" class="mat-icon-menu">settings</mat-icon>
-          <span style="color: #6200EE" class="mat-item-list-span">
+        <a mat-list-item [routerLink]="['/main/settings']" routerLinkActive="active"  (click)="drawer.toggle()">
+          <mat-icon mat-list-icon class="mat-icon-menu">settings</mat-icon>
+          <span class="mat-item-list-span">
             Configuración
           </span>
         </a>
@@ -51,15 +51,10 @@
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
+
+
+
 <!-- 
-
-
-
-
-
-
-
-  
   <div class="">
     <mat-sidenav-container style="height:100vh;">
       <mat-sidenav mode="over" #sideMenu [(opened)]="openedMenu" class="container-toolbar">

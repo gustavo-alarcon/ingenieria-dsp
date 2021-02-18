@@ -1,5 +1,6 @@
-import { Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { AuthService } from '../../services/auth.service';
 
@@ -11,7 +12,7 @@ import { AuthService } from '../../services/auth.service';
 export class LoginComponent {
 
   version = environment.version;
-
+  subscription: Subscription;
   constructor(
     private router: Router,
     private authSevice: AuthService,
@@ -19,7 +20,7 @@ export class LoginComponent {
 
   async loginGoogle(): Promise<void> {
     try {
-      const resp = await this.authSevice.loginGoogle();
+      await this.authSevice.loginGoogle();
       this.router.navigate(['/main']);
     } catch (error) {
       console.log('error');

@@ -8,12 +8,12 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 })
 export class MainGuard implements CanActivate {
 
-  constructor(public authSevice: AuthService, private router: Router) { }
+  constructor(public authService: AuthService, private router: Router) { }
 
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    return this.authSevice.currentUser()
+    return this.authService.currentUser()
       .pipe(
         map((user) => user === null ? false : true),
         tap(hasUser => {
