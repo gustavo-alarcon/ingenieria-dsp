@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-improvements',
@@ -6,32 +8,66 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./improvements.component.scss']
 })
 export class ImprovementsComponent implements OnInit {
-  displayedColumns: string[] = ['date', 'name','user', 'state', 'actions'];
-  dataSource = ELEMENT_DATA;
 
+   //Improvement
+  improvementDataSource = new MatTableDataSource<Improvements>(improvements);
+  improvementDisplayedColumns: string[] = ['date',  'name','component', 'model', 'review','qty','current','improved','stock','availability','user','state','actions'];
+
+  /* @ViewChild("improvementPaginator", { static: false }) set content(paginator: MatPaginator) {
+    this.improvementDataSource.paginator = paginator;
+  } */
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
+  
+  ngAfterViewInit() {
+    this.improvementDataSource.paginator =this.paginator;
+  }
+  
   constructor() { }
 
-  ngOnInit(): void {
-  }
-
+  ngOnInit(): void{}
 }
 
-export interface PeriodicElement {
+
+export interface Improvements {
+  date: string;
   name: string;
-  date: number;
-  state: number;
+  component:string,
+  model:string,
+  review:string
+  qty:number,
+  current:string,
+  improved:string,
+  stock:number,
+  availability:string,
   user: string;
+  state: string;
 }
 
-const ELEMENT_DATA: PeriodicElement[] = [
-  {date: 1, name: 'Hydrogen', state: 1.0079, user: 'H'},
-  {date: 2, name: 'Helium', state: 4.0026, user: 'He'},
-  {date: 3, name: 'Lithium', state: 6.941, user: 'Li'},
-  {date: 4, name: 'Beryllium', state: 9.0122, user: 'Be'},
-  {date: 5, name: 'Boron', state: 10.811, user: 'B'},
-  {date: 6, name: 'Carbon', state: 12.0107, user: 'C'},
-  {date: 7, name: 'Nitrogen', state: 14.0067, user: 'N'},
-  {date: 8, name: 'Oxygen', state: 15.9994, user: 'O'},
-  {date: 9, name: 'Fluorine', state: 18.9984, user: 'F'},
-  {date: 10, name: 'Neon', state: 20.1797, user: 'Ne'},
+const improvements: Improvements[] = [
+  {date: '18/02/2021', name: 'Mejora 1',component:'MOTOR',model:'797F',review:'NO',qty: 1,current:'AA: 1234567',improved:'AA: 5B7686',stock:10,availability:'18/02/2021', user: 'Miguiel Mauriola', state:'Validado'},
+  {date: '18/02/2021', name: 'Mejora 1',component:'MOTOR',model:'797F',review:'NO',qty: 1,current:'AA: 1234567',improved:'AA: 5B7686',stock:10,availability:'18/02/2021', user: 'Miguiel Mauriola', state:'Validado'},
+  {date: '18/02/2021', name: 'Mejora 1',component:'MOTOR',model:'797F',review:'NO',qty: 1,current:'AA: 1234567',improved:'AA: 5B7686',stock:10,availability:'18/02/2021', user: 'Miguiel Mauriola', state:'Validado'},
+  {date: '18/02/2021', name: 'Mejora 1',component:'MOTOR',model:'797F',review:'NO',qty: 1,current:'AA: 1234567',improved:'AA: 5B7686',stock:10,availability:'18/02/2021', user: 'Miguiel Mauriola', state:'Validado'},
+  {date: '18/02/2021', name: 'Mejora 1',component:'MOTOR',model:'797F',review:'NO',qty: 1,current:'AA: 1234567',improved:'AA: 5B7686',stock:10,availability:'18/02/2021', user: 'Miguiel Mauriola', state:'Validado'},
+  {date: '18/02/2021', name: 'Mejora 1',component:'MOTOR',model:'797F',review:'NO',qty: 1,current:'AA: 1234567',improved:'AA: 5B7686',stock:10,availability:'18/02/2021', user: 'Miguiel Mauriola', state:'Validado'},
+  {date: '18/02/2021', name: 'Mejora 1',component:'MOTOR',model:'797F',review:'NO',qty: 1,current:'AA: 1234567',improved:'AA: 5B7686',stock:10,availability:'18/02/2021', user: 'Miguiel Mauriola', state:'Validado'},
+  {date: '18/02/2021', name: 'Mejora 1',component:'MOTOR',model:'797F',review:'NO',qty: 1,current:'AA: 1234567',improved:'AA: 5B7686',stock:10,availability:'18/02/2021', user: 'Miguiel Mauriola', state:'Validado'},
+  {date: '18/02/2021', name: 'Mejora 1',component:'MOTOR',model:'797F',review:'NO',qty: 1,current:'AA: 1234567',improved:'AA: 5B7686',stock:10,availability:'18/02/2021', user: 'Miguiel Mauriola', state:'Validado'},
+  {date: '18/02/2021', name: 'Mejora 1',component:'MOTOR',model:'797F',review:'NO',qty: 1,current:'AA: 1234567',improved:'AA: 5B7686',stock:10,availability:'18/02/2021', user: 'Miguiel Mauriola', state:'Validado'},
+  {date: '18/02/2021', name: 'Mejora 1',component:'MOTOR',model:'797F',review:'NO',qty: 1,current:'AA: 1234567',improved:'AA: 5B7686',stock:10,availability:'18/02/2021', user: 'Miguiel Mauriola', state:'Validado'},
+  {date: '18/02/2021', name: 'Mejora 1',component:'MOTOR',model:'797F',review:'NO',qty: 1,current:'AA: 1234567',improved:'AA: 5B7686',stock:10,availability:'18/02/2021', user: 'Miguiel Mauriola', state:'Validado'},
+  {date: '18/02/2021', name: 'Mejora 1',component:'MOTOR',model:'797F',review:'NO',qty: 1,current:'AA: 1234567',improved:'AA: 5B7686',stock:10,availability:'18/02/2021', user: 'Miguiel Mauriola', state:'Validado'},
+  {date: '18/02/2021', name: 'Mejora 1',component:'MOTOR',model:'797F',review:'NO',qty: 1,current:'AA: 1234567',improved:'AA: 5B7686',stock:10,availability:'18/02/2021', user: 'Miguiel Mauriola', state:'Validado'},
+  {date: '18/02/2021', name: 'Mejora 1',component:'MOTOR',model:'797F',review:'NO',qty: 1,current:'AA: 1234567',improved:'AA: 5B7686',stock:10,availability:'18/02/2021', user: 'Miguiel Mauriola', state:'Validado'},
+  {date: '18/02/2021', name: 'Mejora 1',component:'MOTOR',model:'797F',review:'NO',qty: 1,current:'AA: 1234567',improved:'AA: 5B7686',stock:10,availability:'18/02/2021', user: 'Miguiel Mauriola', state:'Validado'},
+  {date: '18/02/2021', name: 'Mejora 1',component:'MOTOR',model:'797F',review:'NO',qty: 1,current:'AA: 1234567',improved:'AA: 5B7686',stock:10,availability:'18/02/2021', user: 'Miguiel Mauriola', state:'Validado'},
+  {date: '18/02/2021', name: 'Mejora 1',component:'MOTOR',model:'797F',review:'NO',qty: 1,current:'AA: 1234567',improved:'AA: 5B7686',stock:10,availability:'18/02/2021', user: 'Miguiel Mauriola', state:'Validado'},
+  {date: '18/02/2021', name: 'Mejora 1',component:'MOTOR',model:'797F',review:'NO',qty: 1,current:'AA: 1234567',improved:'AA: 5B7686',stock:10,availability:'18/02/2021', user: 'Miguiel Mauriola', state:'Validado'},
+  {date: '18/02/2021', name: 'Mejora 1',component:'MOTOR',model:'797F',review:'NO',qty: 1,current:'AA: 1234567',improved:'AA: 5B7686',stock:10,availability:'18/02/2021', user: 'Miguiel Mauriola', state:'Validado'},
+  {date: '18/02/2021', name: 'Mejora 1',component:'MOTOR',model:'797F',review:'NO',qty: 1,current:'AA: 1234567',improved:'AA: 5B7686',stock:10,availability:'18/02/2021', user: 'Miguiel Mauriola', state:'Validado'},
+  {date: '18/02/2021', name: 'Mejora 1',component:'MOTOR',model:'797F',review:'NO',qty: 1,current:'AA: 1234567',improved:'AA: 5B7686',stock:10,availability:'18/02/2021', user: 'Miguiel Mauriola', state:'Validado'},
+  {date: '18/02/2021', name: 'Mejora 1',component:'MOTOR',model:'797F',review:'NO',qty: 1,current:'AA: 1234567',improved:'AA: 5B7686',stock:10,availability:'18/02/2021', user: 'Miguiel Mauriola', state:'Validado'},
+  
 ];
