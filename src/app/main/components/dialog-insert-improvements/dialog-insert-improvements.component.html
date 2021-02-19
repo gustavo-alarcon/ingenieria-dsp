@@ -1,0 +1,95 @@
+<div class="container">
+    <h2 mat-dialog-title>
+        Ingreso de mejora
+        <mat-divider></mat-divider>
+    </h2>
+    <form class="container-form" [formGroup]="improvenmentsForm" (ngSubmit)="save()">
+        <mat-dialog-content class="mat-typography">
+            <h3>Detalles de mejora</h3>
+            <!-- description -->
+            <div class="container-form__description">
+                <div class="container-form__description--inputs">
+                    <mat-form-field appearance="outline" style="width: 200px;">
+                        <mat-label>Nombre</mat-label>
+                        <input matInput placeholder="Nombre" formControlName="name">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" style="width: 200px;">
+                        <mat-label>Modelo</mat-label>
+                        <input matInput placeholder="Modelo" formControlName="model">
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field appearance="outline" style="width: 430px;">
+                        <mat-label>Descripción</mat-label>
+                        <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="6.15"
+                            cdkAutosizeMaxRows="15" formControlName="description" placeholder="Descripción"></textarea>
+                    </mat-form-field>
+                </div>
+            </div>
+            <!-- fin description -->
+            <div class="container-form__checked">
+                <div class="container-form__checked--input">
+                    <mat-form-field appearance="outline" style="width: 200px;">
+                        <mat-label>Compononte</mat-label>
+                        <input matInput placeholder="Compononte" formControlName="component">
+                    </mat-form-field>
+                </div>
+                <div class="container-form__checked--date">
+                    <mat-form-field appearance="outline" style="width: 200px;">
+                        <mat-label>Fecha de publicación</mat-label>
+                        <input matInput [matDatepicker]="picker1" formControlName="date">
+                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="container-form__checked--cheked">
+                    <span>Parte crítica</span>
+                    <mat-checkbox class="checked-margin" color="primary" formControlName="criticalPart"></mat-checkbox>
+                    <span>Tarifa</span>
+                    <mat-checkbox class="checked-margin" color="primary" formControlName="rate"></mat-checkbox>
+                </div>
+            </div>
+            <h3>Lista de partes</h3>
+
+            <div formArrayName="parts">
+                <div *ngFor="let _ of parts.controls; let i=index" class="form-array">
+                    <div [formGroupName]="i" class="container-form-array">
+                        <mat-form-field appearance="outline" style="width: 200px;" class="container-form-array__inputs">
+                            <mat-label>Label</mat-label>
+                            <input matInput placeholder="Label" formControlName="label">
+                            <mat-icon matSuffix>settings</mat-icon>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" style="width: 100px;" class="container-form-array__inputs">
+                            <mat-label>Cantidad</mat-label>
+                            <input matInput placeholder="Cantidad" formControlName="amount">
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" style="width: 200px;" class="container-form-array__inputs">
+                            <mat-label>Nº de parte actual</mat-label>
+                            <input matInput placeholder="Nº de parte actual" formControlName="currentPart">
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" style="width: 200px;" class="container-form-array__inputs">
+                            <mat-label>Nº de parte mejorada</mat-label>
+                            <input matInput placeholder="Nº de parte mejorada" formControlName="improvedPart">
+                        </mat-form-field>
+                        <div class="container-form-array__checked">
+                            <span>Kit</span>
+                            <mat-checkbox class="checked-margin" color="primary" formControlName="kit"></mat-checkbox>
+                        </div>
+                        <button mat-icon-button type="button" style="margin-top: 8px;">
+                            <mat-icon color="warn"  (click)="deleteControl(i)">delete</mat-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <button type="button" mat-stroked-button color="primary" (click)="addControl()">
+                <mat-icon color="primary">add</mat-icon>
+                Agregar
+            </button>
+        </mat-dialog-content>
+        <mat-dialog-actions align="end">
+            <button type="button" mat-stroked-button color="warn" mat-dialog-close>CERRAR</button>
+            <button type="submit" mat-raised-button [mat-dialog-close]="true" color="primary">ENVIAR</button>
+        </mat-dialog-actions>
+    </form>
+</div>
+
