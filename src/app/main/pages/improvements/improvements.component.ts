@@ -105,7 +105,7 @@ export class ImprovementsComponent implements OnInit{
       console.log('aux : ',aux); 
       */
 
-      aux === false ? this.impvServices.addTagDestinations({
+      aux === false ? this.impvServices.addImprovements({
         date: array2[0],
         name: array2[1],
         component:array2[2],

@@ -13,12 +13,12 @@
             </button> 
     </div>
     <div class="body-container">
-        <div *ngIf="improvement$ |async">
-          <table mat-table [dataSource]="improvementDataSource" class="mat-elevation-z8">
+        <div *ngIf="setting$ |async">
+          <table mat-table [dataSource]="settingDataSource" class="mat-elevation-z8">
   
               <ng-container matColumnDef="date">
                 <th mat-header-cell *matHeaderCellDef> Fecha </th>
-                <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.date*1000|date:"dd/MM/yyyy"}} </td>
               </ng-container>
             
               <ng-container matColumnDef="name">
@@ -33,23 +33,41 @@
                 <th mat-header-cell *matHeaderCellDef> Modelo </th>
                 <td mat-cell *matCellDef="let element"> {{element.model}} </td>
               </ng-container>
-              <ng-container matColumnDef="review">
-                <th mat-header-cell *matHeaderCellDef> Mejora critica </th>
-                <td mat-cell *matCellDef="let element"> {{element.review}} </td>
+
+              <ng-container matColumnDef="half">
+                <th mat-header-cell *matHeaderCellDef> Media </th>
+                <td mat-cell *matCellDef="let element"> {{element.half}} </td>
+              </ng-container>
+              
+              <ng-container matColumnDef="qty">
+                <th mat-header-cell *matHeaderCellDef> QTy </th>
+                <td mat-cell *matCellDef="let element"> {{element.qty}} </td>
               </ng-container>
                          
-              <ng-container matColumnDef="user">
-                <th mat-header-cell *matHeaderCellDef> Usuario </th>
-                <td mat-cell *matCellDef="let element"> {{element.user}} </td>
+              <ng-container matColumnDef="current">
+                <th mat-header-cell *matHeaderCellDef> N/P Actual </th>
+                <td mat-cell *matCellDef="let element"> {{element.current}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="improved">
+                <th mat-header-cell *matHeaderCellDef> N/P Mejorado </th>
+                <td mat-cell *matCellDef="let element"> {{element.improved}} </td>
+              </ng-container>
+                         
+              <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef> Descripcion </th>
+                <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="stock">
+                <th mat-header-cell *matHeaderCellDef> Stock </th>
+                <td mat-cell *matCellDef="let element"> {{element.stock}} </td>
               </ng-container>
             
-              <ng-container matColumnDef="state">
-                <th mat-header-cell *matHeaderCellDef> Estado </th>
-  
+              <ng-container matColumnDef="available">
+                <th mat-header-cell *matHeaderCellDef> disponibilidad </th>  
                 <td mat-cell *matCellDef="let element"> 
-                  <button mat-button  [ngClass]="{'btn-state-register': element.state==='Registrado','btn-state-validate': element.state==='Validado'}"> 
-                    {{element.state}}
-                  </button>                 
+                    {{element.available*1000|date:"dd/MM/yyyy"}}
                 </td>
               </ng-container>
             
@@ -76,15 +94,24 @@
                     </ng-container>
                    
                   </td>
-                </ng-container>
+                </ng-container> 
             
-              <tr mat-header-row *matHeaderRowDef="improvementDisplayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: improvementDisplayedColumns;"></tr>
+              <tr mat-header-row *matHeaderRowDef="settingDisplayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: settingDisplayedColumns;"></tr>
             </table>
           </div>
-            <mat-paginator #improvementPaginator class="ms-paginator" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+            <mat-paginator #settingPaginator class="ms-paginator" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
             </mat-paginator>        
           
+      </div>
+      
+      <div class="footer">
+        <button type="file" aria-label="add" mat-button class="footer__btn-close" > 
+             CANCELAR
+        </button>         
+        <button type="file" aria-label="add" mat-button class="footer__btn-save" > 
+             GUARDAR
+        </button>         
       </div>
         
 </div>

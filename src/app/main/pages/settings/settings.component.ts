@@ -6,6 +6,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { ImprovementsService } from '../../../auth/services/improvements.service';
 import { tap } from 'rxjs/operators';
 import * as XLSX from 'xlsx';
+import { Settings } from '../../../auth/models/settings.model';
 
 @Component({
   selector: 'app-settings',
@@ -17,22 +18,23 @@ export class SettingsComponent implements OnInit {
   dataSource = new MatTableDataSource();
   selected:any;
   
-  improvement$: Observable<object[]>
+  setting$: Observable<object[]>
 
    //Improvement
-  improvementDataSource = new MatTableDataSource<Improvements>();
-  improvementDisplayedColumns: string[] = ['date',  'name','component', 'model', 'review','user','state','actions'];
+    
+  settingDataSource = new MatTableDataSource<Settings>();
+  settingDisplayedColumns: string[] = ['date',  'name','component', 'model', 'half','qty','current','improved','description','stock','available'];
 
-  @ViewChild("improvementPaginator", { static: false }) set content(paginator: MatPaginator) {
-    this.improvementDataSource.paginator = paginator;
+  @ViewChild("settingPaginator", { static: false }) set content(paginator: MatPaginator) {
+    this.settingDataSource.paginator = paginator;
   } 
   constructor(private impvServices:ImprovementsService,) { }
 
   ngOnInit(): void {
-    this.improvement$ = this.impvServices.getAllImprovement().pipe(
+    this.setting$ = this.impvServices.getAllSettings().pipe(
       tap(res => {
         if (res) {
-          this.improvementDataSource.data = res
+          this.settingDataSource.data = res
         }
 
       })
@@ -55,14 +57,14 @@ export class SettingsComponent implements OnInit {
 
         /* save data */
         this.selected = XLSX.utils.sheet_to_json(ws, { header: "A", defval: "" });
-        this.upLoadXlsImprovements(this.selected)
+        this.upLoadXlsSettings(this.selected)
       };
       reader.readAsBinaryString(event.target.files[0]);
     }
   }
 
 
-  upLoadXlsImprovements(array): void {
+  upLoadXlsSettings(array): void {
     
     let aux: boolean;
     array.forEach(el => { //slice(1)
@@ -88,16 +90,22 @@ export class SettingsComponent implements OnInit {
       console.log('aux : ',aux); 
       */
 
-      aux === false ? this.impvServices.addTagDestinations({
-        date: array2[0],
+      aux === false ? this.impvServices.addSettings({ 
+
+        date:new Date(array2[0]), //new Date(Date.parse(array2[0])*1000)
         name: array2[1],
         component:array2[2],
         model:array2[3],
-        review:array2[4],
-        user:array2[5],
-        state: array2[6],
+        half:array2[4],
+        qty:parseInt(array2[5]),
+        current:array2[6],
+        improved:array2[7],
+        description:array2[8],
+        stock:parseInt(array2[9]),
+        available:new Date(array2[10]),// new Date(Date.parse(array2[10]))
       }) : null;
     })
+
     //Se limpia entrada de documento en el HTML
     document.getElementById("fileInput2").nodeValue = "";
 }
