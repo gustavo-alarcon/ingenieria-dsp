@@ -1,11 +1,15 @@
 
 
 export interface Improvements {
-    date: string;
-    name: string;
-    component:string,
-    model:string,
-    review:string,
-    user: string;
-    state: string;
+  date: Date;
+  name: string;
+  component:string,
+  model:string,
+  half:string,
+  qty: number;
+  current: string;
+  improved: string;
+  description: string;
+  stock: number;
+  available: Date;
   }
