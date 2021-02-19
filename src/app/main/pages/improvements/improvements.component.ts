@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -7,13 +6,10 @@ import * as XLSX from 'xlsx';
 import { ImprovementsService } from '../../../auth/services/improvements.service';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-=======
-import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogInsertImprovementsComponent } from '../../components/dialog-insert-improvements/dialog-insert-improvements.component';
 import { DialogValidationLogisticsComponent } from '../../components/dialog-validation-logistics/dialog-validation-logistics.component';
->>>>>>> HU#05-Dialogo-Validacion-logistica
 
 @Component({
   selector: 'app-improvements',
@@ -25,12 +21,6 @@ export class ImprovementsComponent implements OnInit{
 
   improvenmentsForm: FormGroup;
 
-  constructor(
-    public dialog: MatDialog,
-    private fb: FormBuilder,
-  ) { }
-
-<<<<<<< HEAD
   dataSource = new MatTableDataSource();
   selected:any;
   
@@ -45,19 +35,25 @@ export class ImprovementsComponent implements OnInit{
   } 
   
   constructor(
-              private impvServices:ImprovementsService
+              private impvServices:ImprovementsService,
+              public dialog: MatDialog,
+              private fb: FormBuilder,
   ) { }
 
-  ngOnInit(): void{
-     //Improvements
-     this.improvement$ = this.impvServices.getAllImprovement().pipe(
+  ngOnInit(): void {
+
+    this.improvement$ = this.impvServices.getAllImprovement().pipe(
       tap(res => {
         if (res) {
           this.improvementDataSource.data = res
         }
 
       })
-    )
+    );
+    
+    this.createFormListParts();
+
+    
   }
 
   onFileSelectedImprovements(event) {
@@ -122,11 +118,7 @@ export class ImprovementsComponent implements OnInit{
     //Se limpia entrada de documento en el HTML
     document.getElementById("fileInput2").nodeValue = "";
 }
-=======
 
-  ngOnInit(): void {
-    this.createFormListParts();
-  }
 
   openDialog(value: string): void {
     const sizeModal = {
@@ -173,6 +165,5 @@ export class ImprovementsComponent implements OnInit{
   }
 
 
->>>>>>> HU#05-Dialogo-Validacion-logistica
 }
 
