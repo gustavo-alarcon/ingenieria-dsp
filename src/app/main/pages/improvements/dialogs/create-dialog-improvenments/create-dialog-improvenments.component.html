@@ -3,7 +3,7 @@
         Ingreso de mejora
         <mat-divider></mat-divider>
     </h2>
-    <form class="container-form" [formGroup]="improvenmentsForm" (ngSubmit)="save()">
+    <form class="container-form" [formGroup]="improvenmentsForm">
         <mat-dialog-content class="mat-typography">
             <h3>Detalles de mejora</h3>
             <!-- description -->
@@ -76,7 +76,7 @@
                             <mat-checkbox class="checked-margin" color="primary" formControlName="kit"></mat-checkbox>
                         </div>
                         <button mat-icon-button type="button" style="margin-top: 8px;">
-                            <mat-icon color="warn"  (click)="deleteControl(i)">delete</mat-icon>
+                            <mat-icon color="warn" (click)="deleteControl(i)">delete</mat-icon>
                         </button>
                     </div>
                 </div>
@@ -88,8 +88,7 @@
         </mat-dialog-content>
         <mat-dialog-actions align="end">
             <button type="button" mat-stroked-button color="warn" mat-dialog-close>CERRAR</button>
-            <button type="submit" mat-raised-button [mat-dialog-close]="true" color="primary">ENVIAR</button>
+            <button type="button" mat-raised-button color="primary" (click)="save()">ENVIAR</button>
         </mat-dialog-actions>
     </form>
 </div>
-

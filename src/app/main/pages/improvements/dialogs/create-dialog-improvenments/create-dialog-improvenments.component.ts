@@ -1,19 +1,28 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+
+
+export interface DialogData {
+  animal: 'panda' | 'unicorn' | 'lion';
+}
 
 @Component({
-  selector: 'app-dialog-insert-improvements',
-  templateUrl: './dialog-insert-improvements.component.html',
-  styleUrls: ['./dialog-insert-improvements.component.scss']
+  selector: 'app-create-dialog-improvenments',
+  templateUrl: './create-dialog-improvenments.component.html',
+  styleUrls: ['./create-dialog-improvenments.component.scss']
 })
-export class DialogInsertImprovementsComponent implements OnInit {
+export class CreateDialogImprovenmentsComponent implements OnInit {
 
   improvenmentsForm: FormGroup;
 
   constructor(
     private fb: FormBuilder,
-
-  ) { }
+    @Inject(MAT_DIALOG_DATA) public data: DialogData,
+    public dialogRef: MatDialogRef<CreateDialogImprovenmentsComponent>
+  ) {
+    console.log(data);
+  }
 
   ngOnInit(): void {
     this.createFormListParts();
@@ -46,7 +55,12 @@ export class DialogInsertImprovementsComponent implements OnInit {
 
 
   save(): void {
-    console.log(this.improvenmentsForm.value);
+    console.log(this.improvenmentsForm.valid);
+    if (this.improvenmentsForm.invalid) {
+      this.improvenmentsForm.markAllAsTouched();
+      return;
+    }
+    this.dialogRef.close('result');
   }
 
   addControl(): void {
