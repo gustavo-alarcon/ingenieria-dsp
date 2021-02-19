@@ -5,7 +5,7 @@
         <mat-icon mat-list-icon class="mat-icon-menu" style="font-size: 2.5em;">settings</mat-icon>
         <h1 style="font-size: 2.5em; margin-left: 20px;">Configuraciones</h1>
         
-        <input #fileInput2 style="display: none" type="file" (change)="onFileSelectedSettings($event)"
+        <input #fileInput2 style="display: none" type="file" (change)=" onFileSelected($event)"
             accept=".xls,.xlsx" id="fileInput2">
             <button type="file" aria-label="add" mat-button class="btn-add"  accept=".xls,.xlsx" (click)="fileInput2.click()" >
               <mat-icon aria-label="agregar" class="icon-add">add</mat-icon>
@@ -13,12 +13,15 @@
             </button> 
     </div>
     <div class="body-container">
-        <div *ngIf="setting$ |async">
+        <div > <!-- *ngIf="setting$ |async" -->
           <table mat-table [dataSource]="settingDataSource" class="mat-elevation-z8">
   
               <ng-container matColumnDef="date">
                 <th mat-header-cell *matHeaderCellDef> Fecha </th>
-                <td mat-cell *matCellDef="let element"> {{element.date*1000|date:"dd/MM/yyyy"}} </td>
+                    <td mat-cell *matCellDef="let element">
+                            <!-- {{element.date*1000|date:"dd/MM/yyyy"}}  -->
+                            {{element.date}} 
+                    </td>
               </ng-container>
             
               <ng-container matColumnDef="name">
@@ -67,7 +70,8 @@
               <ng-container matColumnDef="available">
                 <th mat-header-cell *matHeaderCellDef> disponibilidad </th>  
                 <td mat-cell *matCellDef="let element"> 
-                    {{element.available*1000|date:"dd/MM/yyyy"}}
+                     <!-- {{element.available*1000|date:"dd/MM/yyyy"}} --> 
+                     {{element.available}} 
                 </td>
               </ng-container>
             
@@ -106,10 +110,10 @@
       </div>
       
       <div class="footer">
-        <button type="file" aria-label="add" mat-button class="footer__btn-close" > 
+        <button type="file" aria-label="add" mat-button class="footer__btn-close" (click)="clearDataTable()"> 
              CANCELAR
         </button>         
-        <button type="file" aria-label="add" mat-button class="footer__btn-save" > 
+        <button type="file" aria-label="add" mat-button class="footer__btn-save" (click)="saveDataTable()" > 
              GUARDAR
         </button>         
       </div>

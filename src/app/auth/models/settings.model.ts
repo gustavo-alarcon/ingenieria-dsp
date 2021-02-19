@@ -1,6 +1,6 @@
 
 export interface Settings{
-    date: Date;
+   /*  date: Date;
     name: string;
     component:string,
     model:string,
@@ -10,5 +10,5 @@ export interface Settings{
     improved: string;
     description: string;
     stock: number;
-    available: Date;
+    available: Date; */
 }

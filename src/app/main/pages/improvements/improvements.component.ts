@@ -42,14 +42,14 @@ export class ImprovementsComponent implements OnInit{
 
   ngOnInit(): void {
 
-    this.improvement$ = this.impvServices.getAllImprovement().pipe(
+   /*  this.improvement$ = this.impvServices.getAllImprovement().pipe(
       tap(res => {
         if (res) {
           this.improvementDataSource.data = res
         }
 
       })
-    );
+    ); */
     
     this.createFormListParts();
 
@@ -105,7 +105,7 @@ export class ImprovementsComponent implements OnInit{
       console.log('aux : ',aux); 
       */
 
-      aux === false ? this.impvServices.addImprovements({
+      /* aux === false ? this.impvServices.addImprovements({
         date: array2[0],
         name: array2[1],
         component:array2[2],
@@ -113,7 +113,7 @@ export class ImprovementsComponent implements OnInit{
         review:array2[4],
         user:array2[5],
         state: array2[6],
-      }) : null;
+      }) : null; */
     })
     //Se limpia entrada de documento en el HTML
     document.getElementById("fileInput2").nodeValue = "";
