@@ -8,6 +8,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CreateDialogImprovenmentsComponent } from './dialogs/create-dialog-improvenments/create-dialog-improvenments.component';
 import { EditDialogImprovenmentsComponent } from './dialogs/edit-dialog-improvenments/edit-dialog-improvenments.component';
 import { DeleteDialogImprovenmentsComponent } from './dialogs/delete-dialog-improvenments/delete-dialog-improvenments.component';
+import { ValidateDialogImprovenmentsComponent } from './dialogs/validate-dialog-improvenments/validate-dialog-improvenments.component';
 
 
 @NgModule({
@@ -16,6 +17,7 @@ import { DeleteDialogImprovenmentsComponent } from './dialogs/delete-dialog-impr
     CreateDialogImprovenmentsComponent,
     EditDialogImprovenmentsComponent,
     DeleteDialogImprovenmentsComponent,
+    ValidateDialogImprovenmentsComponent,
   ],
   exports: [
     ImprovementsComponent,

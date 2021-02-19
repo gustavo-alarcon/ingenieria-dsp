@@ -11,6 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { CreateDialogImprovenmentsComponent } from './dialogs/create-dialog-improvenments/create-dialog-improvenments.component';
 import { EditDialogImprovenmentsComponent } from './dialogs/edit-dialog-improvenments/edit-dialog-improvenments.component';
 import { DeleteDialogImprovenmentsComponent } from './dialogs/delete-dialog-improvenments/delete-dialog-improvenments.component';
+import { ValidateDialogImprovenmentsComponent } from './dialogs/validate-dialog-improvenments/validate-dialog-improvenments.component';
 
 @Component({
   selector: 'app-improvements',
@@ -131,6 +132,15 @@ export class ImprovementsComponent implements OnInit {
     switch (value) {
       case 'create':
         dialogRef = this.dialog.open(CreateDialogImprovenmentsComponent,
+          optionsDialog,
+        );
+
+        dialogRef.afterClosed().subscribe(result => {
+          console.log(`Dialog result: ${result}`);
+        });
+        break;
+      case 'create':
+        dialogRef = this.dialog.open(ValidateDialogImprovenmentsComponent,
           optionsDialog,
         );
 
