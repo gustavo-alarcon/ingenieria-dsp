@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Improvements } from 'src/app/auth/models/inprovenents.model';
-import { ImprovementsService } from '../../../auth/services/improvements.service';
 import { Observable } from 'rxjs';
 import { FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -11,6 +10,8 @@ import { EditDialogImprovenmentsComponent } from './dialogs/edit-dialog-improven
 import { DeleteDialogImprovenmentsComponent } from './dialogs/delete-dialog-improvenments/delete-dialog-improvenments.component';
 import { ValidateDialogImprovenmentsComponent } from './dialogs/validate-dialog-improvenments/validate-dialog-improvenments.component';
 import { tap } from 'rxjs/operators';
+import { ImprovementsService } from '../../services/improvements.service';
+import { ImproventmentModel1 } from '../../models/improvenents.model';
 
 @Component({
   selector: 'app-improvements',
@@ -22,11 +23,27 @@ export class ImprovementsComponent implements OnInit {
   dataSource = new MatTableDataSource();
   selected: any;
 
-  improvement$: Observable<object[]>;
+  improvement$: Observable<ImproventmentModel1[]>;
 
   // Improvement
-  improvementDataSource = new MatTableDataSource<Improvements>();
+  improvementDataSource = new MatTableDataSource<ImproventmentModel1>();
   improvementDisplayedColumns: string[] = ['date', 'name', 'component', 'model', 'review', 'user', 'state', 'actions'];
+
+  available: number;
+  component: string;
+  createdAt: {
+    seconds: number;
+    nanoseconds: number;
+  };
+  current: string;
+  date: number;
+  description: string;
+  half: string;
+  improved: string;
+  model: string;
+  uid: string;
+  qty: number;
+  name: string;
 
   @ViewChild('improvementPaginator', { static: false }) set content(paginator: MatPaginator) {
     this.improvementDataSource.paginator = paginator;
@@ -43,6 +60,7 @@ export class ImprovementsComponent implements OnInit {
       tap(res => {
         if (res) {
           this.improvementDataSource.data = res;
+          // console.log(res);
         }
       })
     );
@@ -54,9 +72,7 @@ export class ImprovementsComponent implements OnInit {
     const optionsDialog = {
       width: '100%',
       height: '90%',
-      data: {
-        element: this.improvementDataSource.data[index]
-      }
+      data: this.improvementDataSource.data
     };
     let dialogRef;
 
