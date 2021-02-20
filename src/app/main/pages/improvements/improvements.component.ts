@@ -65,7 +65,7 @@ export class ImprovementsComponent implements OnInit {
       })
     );
 
-   }
+  }
 
   openDialog(value: string, index?: number): void {
     // console.log(this.improvementDataSource.data[index])
@@ -106,8 +106,10 @@ export class ImprovementsComponent implements OnInit {
         break;
 
       case 'delete':
-        dialogRef = this.dialog.open(DeleteDialogImprovenmentsComponent,
-          optionsDialog,
+        dialogRef = this.dialog.open(DeleteDialogImprovenmentsComponent, {
+          width: '40%',
+          data: this.improvementDataSource.data[index]
+        }
         );
         dialogRef.afterClosed().subscribe(result => {
           console.log(`Dialog result: ${result}`);
