@@ -106,8 +106,11 @@ export class ImprovementsComponent implements OnInit {
         break;
 
       case 'delete':
-        dialogRef = this.dialog.open(DeleteDialogImprovenmentsComponent,
-          optionsDialog,
+        dialogRef = this.dialog.open(DeleteDialogImprovenmentsComponent,{
+            width: '40%',
+            height: '35%',
+            data: this.improvementDataSource.data
+          }
         );
         dialogRef.afterClosed().subscribe(result => {
           console.log(`Dialog result: ${result}`);
