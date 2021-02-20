@@ -19,32 +19,6 @@
     margin-top: 40px;
 }
 
-.container-form {
-    &__description {
-        display: flex;
-
-        &--inputs {
-            display: flex;
-            flex-direction: column;
-            margin-right: 20px;
-        }
-    }
-
-    &__checked {
-        display: flex;
-        &--input {
-            margin-right: 20px;
-        }
-        &--date {
-            margin-right: 50px;
-        }
-        &--cheked {
-            display: flex;
-            margin: 18px 0;
-        }
-    }
-}
-
 
 
 .checked-margin{

@@ -13,10 +13,11 @@
             </button> 
     </div>
     <div class="body-container">
+        <h4 style="font-weight: bold;">Lista de partes</h4>
         <div formArrayName="parts">
             <div  class="form-array">
                 <div class="container-form-array"> <!--  *ngFor="let of counter; let i=index"   [formGroupName]="i"  -->
-                    <mat-form-field appearance="outline" style="width: 200px;" class="container-form-array__inputs">
+                    <mat-form-field appearance="outline" style="width: 300px;" class="container-form-array__inputs">
                         <mat-label>Piston</mat-label>
                         <input matInput placeholder="Label" formControlName="label">
                         <mat-icon matSuffix></mat-icon>
@@ -25,11 +26,65 @@
                         <mat-label>Cantidad</mat-label>
                         <input matInput placeholder="Cantidad" formControlName="amount">
                     </mat-form-field>
-                    <mat-form-field appearance="outline" style="width: 200px;" class="container-form-array__inputs">
+                    <mat-form-field appearance="outline" style="width: 300px;" class="container-form-array__inputs">
                         <mat-label>Nº de parte actual</mat-label>
                         <input matInput placeholder="Nº de parte actual" formControlName="currentPart">
                     </mat-form-field>
-                    <mat-form-field appearance="outline" style="width: 200px;" class="container-form-array__inputs">
+                    <mat-form-field appearance="outline" style="width: 300px;" class="container-form-array__inputs">
+                        <mat-label>Nº de parte mejorada</mat-label>
+                        <input matInput placeholder="Nº de parte mejorada" formControlName="improvedPart">
+                    </mat-form-field>
+                    <div class="container-form-array__checked">
+                        <span>Kit</span>
+                        <mat-checkbox class="checked-margin" color="primary" formControlName="kit"></mat-checkbox>
+                    </div>
+                    
+                    <!-- <button mat-icon-button type="button" style="margin-top: 8px;">
+                        <mat-icon color="warn"  (click)="deleteControl()">delete</mat-icon>
+                    </button> -->
+                </div>
+                <div class="container-form-array"> <!--  *ngFor="let of counter; let i=index"   [formGroupName]="i"  -->
+                    <mat-form-field appearance="outline" style="width: 300px;" class="container-form-array__inputs">
+                        <mat-label>Piston</mat-label>
+                        <input matInput placeholder="Label" formControlName="label">
+                        <mat-icon matSuffix>arrow_drop_down</mat-icon>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" style="width: 100px;" class="container-form-array__inputs">
+                        <mat-label>Cantidad</mat-label>
+                        <input matInput placeholder="Cantidad" formControlName="amount">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" style="width: 300px;" class="container-form-array__inputs">
+                        <mat-label>Nº de parte actual</mat-label>
+                        <input matInput placeholder="Nº de parte actual" formControlName="currentPart">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" style="width: 300px;" class="container-form-array__inputs">
+                        <mat-label>Nº de parte mejorada</mat-label>
+                        <input matInput placeholder="Nº de parte mejorada" formControlName="improvedPart">
+                    </mat-form-field>
+                    <div class="container-form-array__checked">
+                        <span>Kit</span>
+                        <mat-checkbox class="checked-margin" color="primary" formControlName="kit"></mat-checkbox>
+                    </div>
+                    
+                    <!-- <button mat-icon-button type="button" style="margin-top: 8px;">
+                        <mat-icon color="warn"  (click)="deleteControl()">delete</mat-icon>
+                    </button> -->
+                </div>
+                <div class="container-form-array"> <!--  *ngFor="let of counter; let i=index"   [formGroupName]="i"  -->
+                    <mat-form-field appearance="outline" style="width: 300px;" class="container-form-array__inputs">
+                        <mat-label>Piston</mat-label>
+                        <input matInput placeholder="Label" formControlName="label">
+                        <mat-icon matSuffix>arrow_drop_down</mat-icon>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" style="width: 100px;" class="container-form-array__inputs">
+                        <mat-label>Cantidad</mat-label>
+                        <input matInput placeholder="Cantidad" formControlName="amount">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" style="width: 300px;" class="container-form-array__inputs">
+                        <mat-label>Nº de parte actual</mat-label>
+                        <input matInput placeholder="Nº de parte actual" formControlName="currentPart">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" style="width: 300px;" class="container-form-array__inputs">
                         <mat-label>Nº de parte mejorada</mat-label>
                         <input matInput placeholder="Nº de parte mejorada" formControlName="improvedPart">
                     </mat-form-field>

@@ -52,9 +52,7 @@ export class ImprovementsComponent implements OnInit{
       })
     );
     
-    this.createFormListParts();
-
-    
+    this.createFormListParts();    
   }
 
   onFileSelectedImprovements(event) {
