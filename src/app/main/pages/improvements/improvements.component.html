@@ -45,8 +45,10 @@
               [ngClass]="{'btn-state-register': element.state==='Registrado','btn-state-validate': element.state==='Validado'}">
               {{element.state}}
             </button>
-          </td>
-        </ng-container>
+    </div>
+    <div class="body-container">
+      <div *ngIf="improvement$ |async">
+        <table mat-table [dataSource]="improvementDataSource" class="mat-elevation-z8">
 
         <ng-container matColumnDef="actions" stickyEnd>
           <th mat-header-cell *matHeaderCellDef>

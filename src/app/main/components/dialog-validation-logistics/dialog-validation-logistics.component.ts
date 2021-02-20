@@ -1,28 +1,19 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-
-export interface DialogData {
-  animal: 'panda' | 'unicorn' | 'lion';
-}
-
 
 @Component({
-  selector: 'app-validate-dialog-improvenments',
-  templateUrl: './validate-dialog-improvenments.component.html',
-  styleUrls: ['./validate-dialog-improvenments.component.scss']
+  selector: 'app-dialog-validation-logistics',
+  templateUrl: './dialog-validation-logistics.component.html',
+  styleUrls: ['./dialog-validation-logistics.component.scss']
 })
-export class ValidateDialogImprovenmentsComponent implements OnInit {
+export class DialogValidationLogisticsComponent implements OnInit {
 
   validationLogisticForm: FormGroup;
 
   constructor(
     private fb: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData,
-    public dialogRef: MatDialogRef<ValidateDialogImprovenmentsComponent>
-  ) {
-    console.log(data);
-  }
+
+  ) { }
 
   ngOnInit(): void {
     this.createFormListParts();
