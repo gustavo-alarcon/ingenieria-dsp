@@ -1,6 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Observable, Subscription } from 'rxjs';
+import { map, startWith, tap } from 'rxjs/operators';
 
 
 export interface DialogData {
@@ -16,6 +18,16 @@ export class CreateDialogImprovenmentsComponent implements OnInit {
 
   createImprovenmentsForm: FormGroup;
 
+  options1: string[] = ['One', 'Two', 'Three'];
+  partsFilteredOptions1: Observable<string[]>;
+  arrParts1 = [];
+
+  options2: string[] = ['Four', 'Five', 'Six'];
+  partsFilteredOptions2: Observable<string[]>;
+  arrParts2 = [];
+
+  subscriptions: Subscription = new Subscription();
+
   constructor(
     private fb: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
@@ -26,6 +38,24 @@ export class CreateDialogImprovenmentsComponent implements OnInit {
 
   ngOnInit(): void {
     this.createFormListParts();
+
+    this.partsFilteredOptions1 = this.parts.controls[0].get('spareParts').valueChanges.pipe(
+      startWith(''),
+      map(value1 => this._filter1(value1))
+    );
+    this.arrParts1.push(this.partsFilteredOptions1);
+
+
+    this.partsFilteredOptions2 = this.parts.controls[0].get('currentPart').valueChanges.pipe(
+      tap(() => {
+        this.parts.controls[0].get('amount').setValue('10');
+      }),
+      startWith(''),
+      map(value2 => this._filter2(value2))
+    );
+
+    this.arrParts2.push(this.partsFilteredOptions2);
+
   }
 
   createFormListParts(): void {
@@ -34,13 +64,13 @@ export class CreateDialogImprovenmentsComponent implements OnInit {
       description: ['', Validators.required],
       model: ['', Validators.required],
       component: ['', Validators.required],
-      date: ['', Validators.required],
+      date: [{ value: '', disabled: true }, Validators.required],
       criticalPart: [false],
       rate: [false],
       parts: this.fb.array([
         this.fb.group({
           spareParts: ['', Validators.required],
-          amount: ['', Validators.required],
+          amount: [{ value: '', disabled: true }, Validators.required],
           currentPart: ['', Validators.required],
           improvedPart: ['', Validators.required],
           kit: [false],
@@ -55,7 +85,7 @@ export class CreateDialogImprovenmentsComponent implements OnInit {
 
 
   save(): void {
-    console.log(this.createImprovenmentsForm.valid);
+    console.log(this.createImprovenmentsForm.value);
     if (this.createImprovenmentsForm.invalid) {
       this.createImprovenmentsForm.markAllAsTouched();
       return;
@@ -64,20 +94,45 @@ export class CreateDialogImprovenmentsComponent implements OnInit {
   }
 
   addControl(): void {
-    console.log(this.parts.controls[0].get('spareParts').value);
     const group = this.fb.group({
       spareParts: ['', Validators.required],
-      amount: ['', Validators.required],
+      amount: [{ value: '', disabled: true }, Validators.required],
       currentPart: ['', Validators.required],
       improvedPart: ['', Validators.required],
       kit: [false],
     });
 
     this.parts.push(group);
+
+    this.partsFilteredOptions1 = this.parts.controls[this.parts.length - 1].get('spareParts').valueChanges.pipe(
+      startWith(''),
+      map(value1 => this._filter1(value1))
+    );
+    this.arrParts1.push(this.partsFilteredOptions1);
+
+    this.partsFilteredOptions2 = this.parts.controls[this.parts.length - 1].get('currentPart').valueChanges.pipe(
+      tap(() => {
+        this.parts.controls[this.parts.length - 1].get('amount').setValue('10');
+      }),
+      startWith(''),
+      map(value2 => this._filter2(value2))
+    );
+
+    this.arrParts2.push(this.partsFilteredOptions2);
   }
 
   deleteControl(index: number): void {
     this.parts.removeAt(index);
+  }
+
+  private _filter1(value1: string): string[] {
+    const filterValue1 = value1.toLowerCase();
+    return this.options1.filter(option1 => option1.toLowerCase().indexOf(filterValue1) === 0);
+  }
+
+  private _filter2(value2: string): string[] {
+    const filterValue2 = value2.toLowerCase();
+    return this.options2.filter(option2 => option2.toLowerCase().indexOf(filterValue2) === 0);
   }
 
 }
