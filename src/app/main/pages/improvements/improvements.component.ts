@@ -58,12 +58,10 @@ export class ImprovementsComponent implements OnInit {
   ngOnInit(): void {
     this.improvement$ = this.impvServices.getAllImprovement().pipe(
       tap(res => {
-         console.log('Res : ',res);
         if (res) {
           this.improvementDataSource.data = res;
           // console.log(res);
         }
-
       })
     );
 
@@ -76,12 +74,15 @@ export class ImprovementsComponent implements OnInit {
       height: '90%',
       data: this.improvementDataSource.data
     };
+    let dialogRef;
+
     switch (value) {
-      case 'insert':
-        const dialogRefInsert = this.dialog.open(DialogInsertImprovementsComponent,
-          sizeModal
+      case 'create':
+        dialogRef = this.dialog.open(CreateDialogImprovenmentsComponent,
+          optionsDialog,
         );
-        dialogRefInsert.afterClosed().subscribe(result => {
+
+        dialogRef.afterClosed().subscribe(result => {
           console.log(`Dialog result: ${result}`);
         });
         break;
@@ -95,14 +96,26 @@ export class ImprovementsComponent implements OnInit {
         });
         break;
       case 'edit':
-        const dialogRefEdit = this.dialog.open(DialogValidationLogisticsComponent,
-          sizeModal
+        dialogRef = this.dialog.open(EditDialogImprovenmentsComponent,
+          optionsDialog,
         );
-        dialogRefEdit.afterClosed().subscribe(result => {
+
+        dialogRef.afterClosed().subscribe(result => {
+          console.log(`Dialog result: ${result}`);
+        });
+        break;
+
+      case 'delete':
+        dialogRef = this.dialog.open(DeleteDialogImprovenmentsComponent,
+          optionsDialog,
+        );
+        dialogRef.afterClosed().subscribe(result => {
           console.log(`Dialog result: ${result}`);
         });
         break;
     }
   }
+
+
 }
 
