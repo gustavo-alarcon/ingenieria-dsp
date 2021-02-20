@@ -1,0 +1,14 @@
+<h2 mat-dialog-title>
+    <span>
+        <!-- <mat-icon>delete</mat-icon> -->
+        Borrar
+    </span>
+    <mat-divider></mat-divider>
+</h2>
+<mat-dialog-content class="mat-typography">
+    ¿Estas seguro de borrar la mejora?
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-stroked-button mat-dialog-close color="warn" cdkFocusInitial>Cerrar</button>
+    <button mat-raised-button [mat-dialog-close]="true" color="primary">Si. Borrar</button>
+</mat-dialog-actions>
