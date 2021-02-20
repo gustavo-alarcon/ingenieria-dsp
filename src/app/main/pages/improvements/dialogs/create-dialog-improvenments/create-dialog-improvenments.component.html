@@ -3,7 +3,7 @@
         Ingreso de mejora
         <mat-divider></mat-divider>
     </h2>
-    <form class="container-form" [formGroup]="improvenmentsForm">
+    <form class="container-form" [formGroup]="createImprovenmentsForm">
         <mat-dialog-content class="mat-typography">
             <h3>Detalles de mejora</h3>
             <!-- description -->
@@ -12,17 +12,27 @@
                     <mat-form-field appearance="outline" style="width: 200px;">
                         <mat-label>Nombre</mat-label>
                         <input matInput placeholder="Nombre" formControlName="name">
+                        <mat-error *ngIf="createImprovenmentsForm.controls['name'].errors">
+                            Campo <strong>requerido.</strong>
+                        </mat-error>
                     </mat-form-field>
                     <mat-form-field appearance="outline" style="width: 200px;">
                         <mat-label>Modelo</mat-label>
                         <input matInput placeholder="Modelo" formControlName="model">
+                        <mat-error *ngIf="createImprovenmentsForm.controls['model'].errors">
+                            Campo <strong>requerido.</strong>
+                        </mat-error>
                     </mat-form-field>
                 </div>
                 <div>
                     <mat-form-field appearance="outline" style="width: 430px;">
                         <mat-label>Descripción</mat-label>
                         <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="6.15"
-                            cdkAutosizeMaxRows="15" formControlName="description" placeholder="Descripción"></textarea>
+                            cdkAutosizeMaxRows="15" formControlName="description" placeholder="Descripción">
+                        </textarea>
+                        <mat-error *ngIf="createImprovenmentsForm.controls['description'].errors">
+                            Campo <strong>requerido.</strong>
+                        </mat-error>
                     </mat-form-field>
                 </div>
             </div>
@@ -32,12 +42,18 @@
                     <mat-form-field appearance="outline" style="width: 200px;">
                         <mat-label>Compononte</mat-label>
                         <input matInput placeholder="Compononte" formControlName="component">
+                        <mat-error *ngIf="createImprovenmentsForm.controls['component'].errors">
+                            Campo <strong>requerido.</strong>
+                        </mat-error>
                     </mat-form-field>
                 </div>
                 <div class="container-form__checked--date">
                     <mat-form-field appearance="outline" style="width: 200px;">
                         <mat-label>Fecha de publicación</mat-label>
                         <input matInput [matDatepicker]="picker1" formControlName="date">
+                        <mat-error *ngIf="createImprovenmentsForm.controls['date'].errors">
+                            Campo <strong>requerido.</strong>
+                        </mat-error>
                         <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                         <mat-datepicker #picker1></mat-datepicker>
                     </mat-form-field>
@@ -56,20 +72,32 @@
                     <div [formGroupName]="i" class="container-form-array">
                         <mat-form-field appearance="outline" style="width: 200px;" class="container-form-array__inputs">
                             <mat-label>Label</mat-label>
-                            <input matInput placeholder="Label" formControlName="label">
+                            <input matInput placeholder="Label" formControlName="spareParts">
+                            <mat-error *ngIf="this.parts.controls[i].get('spareParts').errors">
+                                Campo <strong>requerido.</strong>
+                            </mat-error>
                             <mat-icon matSuffix>settings</mat-icon>
                         </mat-form-field>
                         <mat-form-field appearance="outline" style="width: 100px;" class="container-form-array__inputs">
                             <mat-label>Cantidad</mat-label>
                             <input matInput placeholder="Cantidad" formControlName="amount">
+                            <mat-error *ngIf="this.parts.controls[i].get('amount').errors">
+                                Campo <strong>requerido.</strong>
+                            </mat-error>
                         </mat-form-field>
                         <mat-form-field appearance="outline" style="width: 200px;" class="container-form-array__inputs">
                             <mat-label>Nº de parte actual</mat-label>
                             <input matInput placeholder="Nº de parte actual" formControlName="currentPart">
+                            <mat-error *ngIf="this.parts.controls[i].get('currentPart').errors">
+                                Campo <strong>requerido.</strong>
+                            </mat-error>
                         </mat-form-field>
                         <mat-form-field appearance="outline" style="width: 200px;" class="container-form-array__inputs">
                             <mat-label>Nº de parte mejorada</mat-label>
                             <input matInput placeholder="Nº de parte mejorada" formControlName="improvedPart">
+                            <mat-error *ngIf="this.parts.controls[i].get('improvedPart').errors">
+                                Campo <strong>requerido.</strong>
+                            </mat-error>
                         </mat-form-field>
                         <div class="container-form-array__checked">
                             <span>Kit</span>

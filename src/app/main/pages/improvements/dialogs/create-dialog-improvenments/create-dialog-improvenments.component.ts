@@ -14,14 +14,14 @@ export interface DialogData {
 })
 export class CreateDialogImprovenmentsComponent implements OnInit {
 
-  improvenmentsForm: FormGroup;
+  createImprovenmentsForm: FormGroup;
 
   constructor(
     private fb: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: DialogData,
     public dialogRef: MatDialogRef<CreateDialogImprovenmentsComponent>
   ) {
-    console.log(data);
+    // console.log(data);
   }
 
   ngOnInit(): void {
@@ -29,7 +29,7 @@ export class CreateDialogImprovenmentsComponent implements OnInit {
   }
 
   createFormListParts(): void {
-    this.improvenmentsForm = this.fb.group({
+    this.createImprovenmentsForm = this.fb.group({
       name: ['', Validators.required],
       description: ['', Validators.required],
       model: ['', Validators.required],
@@ -39,7 +39,7 @@ export class CreateDialogImprovenmentsComponent implements OnInit {
       rate: [false],
       parts: this.fb.array([
         this.fb.group({
-          label: ['', Validators.required],
+          spareParts: ['', Validators.required],
           amount: ['', Validators.required],
           currentPart: ['', Validators.required],
           improvedPart: ['', Validators.required],
@@ -50,22 +50,23 @@ export class CreateDialogImprovenmentsComponent implements OnInit {
   }
 
   get parts(): FormArray {
-    return this.improvenmentsForm.get('parts') as FormArray;
+    return this.createImprovenmentsForm.get('parts') as FormArray;
   }
 
 
   save(): void {
-    console.log(this.improvenmentsForm.valid);
-    if (this.improvenmentsForm.invalid) {
-      this.improvenmentsForm.markAllAsTouched();
+    console.log(this.createImprovenmentsForm.valid);
+    if (this.createImprovenmentsForm.invalid) {
+      this.createImprovenmentsForm.markAllAsTouched();
       return;
     }
     this.dialogRef.close('result');
   }
 
   addControl(): void {
+    console.log(this.parts.controls[0].get('spareParts').value);
     const group = this.fb.group({
-      label: ['', Validators.required],
+      spareParts: ['', Validators.required],
       amount: ['', Validators.required],
       currentPart: ['', Validators.required],
       improvedPart: ['', Validators.required],
@@ -78,4 +79,5 @@ export class CreateDialogImprovenmentsComponent implements OnInit {
   deleteControl(index: number): void {
     this.parts.removeAt(index);
   }
+
 }
