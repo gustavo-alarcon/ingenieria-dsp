@@ -2,13 +2,6 @@
   <div class="header-container">
     <mat-icon mat-list-icon class="mat-icon-menu" style="font-size: 2.5em;">turned_in</mat-icon>
     <h1 style="font-size: 2.5em; margin-left: 20px;">Mejoras</h1>
-
-    <!-- <input #fileInput2 style="display: none" type="file" (change)="onFileSelectedImprovements($event)"
-      accept=".xls,.xlsx" id="fileInput2">
-    <button type="file" aria-label="add" mat-button class="btn-add" accept=".xls,.xlsx" (click)="fileInput2.click()">
-      <mat-icon aria-label="agregar" class="icon-add">add</mat-icon>
-      CREAR
-    </button> -->
     <button type="file" aria-label="add" mat-button class="btn-add" (click)="openDialog('create')">
       <mat-icon aria-label="agregar" class="icon-add">add</mat-icon>
       CREAR
@@ -47,7 +40,6 @@
 
         <ng-container matColumnDef="state">
           <th mat-header-cell *matHeaderCellDef> Estado </th>
-
           <td mat-cell *matCellDef="let element">
             <button mat-button
               [ngClass]="{'btn-state-register': element.state==='Registrado','btn-state-validate': element.state==='Validado'}">
@@ -81,7 +73,6 @@
                 <mat-icon>more_vert</mat-icon>
               </button>
             </ng-container>
-
           </td>
         </ng-container>
 
@@ -91,8 +82,5 @@
     </div>
     <mat-paginator #improvementPaginator class="ms-paginator" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
     </mat-paginator>
-
   </div>
-  
-
 </div>
