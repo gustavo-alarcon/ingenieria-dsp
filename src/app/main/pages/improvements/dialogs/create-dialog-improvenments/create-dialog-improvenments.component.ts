@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { from, Observable, of, Subscription } from 'rxjs';
@@ -15,7 +15,7 @@ export interface DialogData {
   templateUrl: './create-dialog-improvenments.component.html',
   styleUrls: ['./create-dialog-improvenments.component.scss']
 })
-export class CreateDialogImprovenmentsComponent implements OnInit {
+export class CreateDialogImprovenmentsComponent implements OnInit, OnDestroy {
 
   createImprovenmentsForm: FormGroup;
 
@@ -29,8 +29,9 @@ export class CreateDialogImprovenmentsComponent implements OnInit {
 
   subscriptions: Subscription = new Subscription();
 
-  obs1$: { improved: string, qty: number, index: number };
+  // obs1$: { improved: string, qty: number, index: number };
 
+  indexAux: number[] = [];
   constructor(
     private fb: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: ImproventmentModel1[],
@@ -41,8 +42,10 @@ export class CreateDialogImprovenmentsComponent implements OnInit {
     for (const post of data) {
       this.options1.push(post.description);
       this.options2.push(post.improved);
+      this.indexAux.push(post.qty);
     }
   }
+
 
   ngOnInit(): void {
     this.createFormListParts();
@@ -53,17 +56,29 @@ export class CreateDialogImprovenmentsComponent implements OnInit {
     );
     this.arrParts1.push(this.partsFilteredOptions1);
 
-
     this.partsFilteredOptions2 = this.parts.controls[0].get('currentPart').valueChanges.pipe(
-      tap(() => {
-        this.parts.controls[0].get('amount').setValue('10');
-      }),
       startWith(''),
       map(value2 => this._filter2(value2))
     );
 
+    this.subscriptions.add(
+      this.parts.controls[0].get('currentPart').valueChanges.subscribe(val => {
+        this.parts.controls[0].get('amount').reset();
+        this.indexAux.map((index) => {
+          if (this.data[index].improved === val) {
+            this.parts.controls[0].get('amount').setValue(this.data[index].qty.toString());
+            return;
+          }
+        });
+      })
+    );
+
     this.arrParts2.push(this.partsFilteredOptions2);
 
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   createFormListParts(): void {
@@ -90,8 +105,6 @@ export class CreateDialogImprovenmentsComponent implements OnInit {
   get parts(): FormArray {
     return this.createImprovenmentsForm.get('parts') as FormArray;
   }
-
-
   save(): void {
     console.log(this.createImprovenmentsForm.value);
     if (this.createImprovenmentsForm.invalid) {
@@ -119,14 +132,23 @@ export class CreateDialogImprovenmentsComponent implements OnInit {
     this.arrParts1.push(this.partsFilteredOptions1);
 
     this.partsFilteredOptions2 = this.parts.controls[this.parts.length - 1].get('currentPart').valueChanges.pipe(
-      tap(() => {
-        this.parts.controls[this.parts.length - 1].get('amount').setValue('10');
-      }),
       startWith(''),
       map(value2 => this._filter2(value2))
     );
 
     this.arrParts2.push(this.partsFilteredOptions2);
+
+    this.subscriptions.add(
+      this.parts.controls[this.parts.length - 1].get('currentPart').valueChanges.subscribe(val => {
+        this.parts.controls[this.parts.length - 1].get('amount').reset();
+        this.indexAux.map((index) => {
+          if (this.data[index].improved === val) {
+            this.parts.controls[this.parts.length - 1].get('amount').setValue(this.data[index].qty.toString());
+            return;
+          }
+        });
+      })
+    );
   }
 
   deleteControl(index: number): void {

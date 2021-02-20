@@ -74,7 +74,8 @@
                             <mat-label>Parte</mat-label>
                             <input matInput placeholder="Parte" 
                             formControlName="spareParts"
-                            [matAutocomplete]="auto1">
+                            [matAutocomplete]="auto1"
+                            >
                             <mat-autocomplete autoActiveFirstOption #auto1="matAutocomplete">
                                 <mat-option *ngFor="let option1 of arrParts1[i] | async" [value]="option1">
                                   {{option1}}
