@@ -10,7 +10,12 @@ export class ImprovementsService {
   constructor(
              private afs: AngularFirestore,
              ) { }
+  getAllImprovement(): Observable<any[]> {
+    return this.afs.collection<any>(`/db/ferreyros/improvements`,
+        ref => ref.orderBy("createdAt", 'desc'))
+        .valueChanges();
 
+  }
   //Settings
   addSettings(data) {
     /* this.auth.user$
@@ -48,10 +53,5 @@ export class ImprovementsService {
       /* }) */
 
   }
-  getAllSettings(): Observable<any[]> {
-    return this.afs.collection<any>(`/db/ferreyros/settings`,
-        ref => ref.orderBy("createdAt", 'desc'))
-        .valueChanges();
-
-  }
+  
 }

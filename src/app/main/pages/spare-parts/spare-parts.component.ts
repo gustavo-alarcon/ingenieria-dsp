@@ -7,9 +7,21 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SparePartsComponent implements OnInit {
 
+  counter=4;
+
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  onFileSelected(event){
+
+  }
+  deleteControl(){
+
+  }
+  downloadData(){
+    
   }
 
 }

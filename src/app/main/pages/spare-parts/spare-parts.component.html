@@ -1,1 +1,54 @@
-<p>spare-parts works!</p>
+
+
+<div class="container">
+    <div class="header-container">
+        <mat-icon mat-list-icon class="mat-icon-menu" style="font-size: 2.5em;">settings</mat-icon>
+        <h1 style="font-size: 2.5em; margin-left: 20px;">Revisión de repuestos</h1>
+        
+        <input #fileInput2 style="display: none" type="file" (change)=" onFileSelected($event)"
+            accept=".xls,.xlsx" id="fileInput2">
+            <button type="file" aria-label="add" mat-button class="btn-add"  accept=".xls,.xlsx" (click)="fileInput2.click()" >
+              <mat-icon aria-label="agregar" class="icon-add">add</mat-icon>
+               ADJUNTAR SIS
+            </button> 
+    </div>
+    <div class="body-container">
+        <div formArrayName="parts">
+            <div  class="form-array">
+                <div class="container-form-array"> <!--  *ngFor="let of counter; let i=index"   [formGroupName]="i"  -->
+                    <mat-form-field appearance="outline" style="width: 200px;" class="container-form-array__inputs">
+                        <mat-label>Piston</mat-label>
+                        <input matInput placeholder="Label" formControlName="label">
+                        <mat-icon matSuffix></mat-icon>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" style="width: 100px;" class="container-form-array__inputs">
+                        <mat-label>Cantidad</mat-label>
+                        <input matInput placeholder="Cantidad" formControlName="amount">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" style="width: 200px;" class="container-form-array__inputs">
+                        <mat-label>Nº de parte actual</mat-label>
+                        <input matInput placeholder="Nº de parte actual" formControlName="currentPart">
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" style="width: 200px;" class="container-form-array__inputs">
+                        <mat-label>Nº de parte mejorada</mat-label>
+                        <input matInput placeholder="Nº de parte mejorada" formControlName="improvedPart">
+                    </mat-form-field>
+                    <div class="container-form-array__checked">
+                        <span>Kit</span>
+                        <mat-checkbox class="checked-margin" color="primary" formControlName="kit"></mat-checkbox>
+                    </div>
+                    
+                    <!-- <button mat-icon-button type="button" style="margin-top: 8px;">
+                        <mat-icon color="warn"  (click)="deleteControl()">delete</mat-icon>
+                    </button> -->
+                </div>
+            </div>
+        </div>   
+    </div>
+    <div class="footer">       
+        <button type="file" aria-label="add" mat-button class="footer__btn-save" (click)="downloadData()" > 
+             DESCARGAR
+        </button>         
+      </div>
+      
+</div>

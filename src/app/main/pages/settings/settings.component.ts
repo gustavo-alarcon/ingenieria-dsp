@@ -6,7 +6,6 @@ import { MatPaginator } from '@angular/material/paginator';
 import { ImprovementsService } from '../../../auth/services/improvements.service';
 import { tap } from 'rxjs/operators';
 import * as XLSX from 'xlsx';
-import { Settings } from '../../../auth/models/settings.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
@@ -45,6 +44,20 @@ export class SettingsComponent implements OnInit {
 
       }) 
     ); */
+  }
+  change() {
+
+    this.currentData = [];
+    this.dataSource.data = [];
+
+  }
+  
+  ifchange() {
+  if (this.currentData.length) {
+   
+  } else {
+    this.change()
+  }
   }
   onFileSelected(event): void {
     if (event.target.files && event.target.files[0]) {
