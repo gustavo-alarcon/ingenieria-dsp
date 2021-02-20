@@ -1,0 +1,49 @@
+
+
+.container{
+    margin: 40px 70px 40px 70px;
+}
+.header-container{
+    display: inline-flex;
+}
+.btn-add{
+  border: 1px #6200EE solid;
+  color: #6200EE;
+  margin-left:40px ;
+  padding: 5px 30px 5px 30px;
+}
+.icon-add{
+    color: #6200EE;
+}
+.body-container{
+    margin-top: 40px;
+}
+
+
+
+.checked-margin{
+    margin: 0 12px;
+}
+
+.container-form-array{
+    display: flex;
+    &__inputs{
+        margin-right: 20px;
+    }
+    &__checked{
+        display: flex;
+        margin: 18px 0;
+    }
+}
+
+.footer{
+    text-align: end;
+    margin: 50px 10px 50px 10px;
+  }
+  
+  .footer__btn-save{
+      background: #6200EE;
+      color: white;
+      padding: 0px 30px 0px 30px;
+  
+  }

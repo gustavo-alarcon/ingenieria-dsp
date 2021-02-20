@@ -42,18 +42,17 @@ export class ImprovementsComponent implements OnInit{
 
   ngOnInit(): void {
 
-   /*  this.improvement$ = this.impvServices.getAllImprovement().pipe(
+    this.improvement$ = this.impvServices.getAllImprovement().pipe(
       tap(res => {
+         console.log('Res : ',res);
         if (res) {
           this.improvementDataSource.data = res
         }
 
       })
-    ); */
+    );
     
-    this.createFormListParts();
-
-    
+    this.createFormListParts();    
   }
 
   onFileSelectedImprovements(event) {
