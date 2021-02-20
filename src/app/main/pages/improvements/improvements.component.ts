@@ -10,6 +10,7 @@ import { CreateDialogImprovenmentsComponent } from './dialogs/create-dialog-impr
 import { EditDialogImprovenmentsComponent } from './dialogs/edit-dialog-improvenments/edit-dialog-improvenments.component';
 import { DeleteDialogImprovenmentsComponent } from './dialogs/delete-dialog-improvenments/delete-dialog-improvenments.component';
 import { ValidateDialogImprovenmentsComponent } from './dialogs/validate-dialog-improvenments/validate-dialog-improvenments.component';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-improvements',
@@ -37,8 +38,16 @@ export class ImprovementsComponent implements OnInit {
     private fb: FormBuilder,
   ) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.improvement$ = this.impvServices.getAllImprovement().pipe(
+      tap(res => {
+        if (res) {
+          this.improvementDataSource.data = res;
+        }
+      })
+    );
 
+   }
 
   openDialog(value: string, index?: number): void {
     // console.log(this.improvementDataSource.data[index])
@@ -61,7 +70,7 @@ export class ImprovementsComponent implements OnInit {
           console.log(`Dialog result: ${result}`);
         });
         break;
-      case 'create':
+      case 'validate':
         dialogRef = this.dialog.open(ValidateDialogImprovenmentsComponent,
           optionsDialog,
         );
