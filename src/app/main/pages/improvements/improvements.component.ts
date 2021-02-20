@@ -16,28 +16,28 @@ import { DialogValidationLogisticsComponent } from '../../components/dialog-vali
   templateUrl: './improvements.component.html',
   styleUrls: ['./improvements.component.scss']
 })
-export class ImprovementsComponent implements OnInit{
+export class ImprovementsComponent implements OnInit {
 
 
   improvenmentsForm: FormGroup;
 
   dataSource = new MatTableDataSource();
-  selected:any;
-  
-  improvement$: Observable<object[]>
+  selected: any;
 
-   //Improvement
+  improvement$: Observable<object[]>;
+
+  // Improvement
   improvementDataSource = new MatTableDataSource<Improvements>();
-  improvementDisplayedColumns: string[] = ['date',  'name','component', 'model', 'review','user','state','actions'];
+  improvementDisplayedColumns: string[] = ['date', 'name', 'component', 'model', 'review', 'user', 'state', 'actions'];
 
-  @ViewChild("improvementPaginator", { static: false }) set content(paginator: MatPaginator) {
+  @ViewChild('improvementPaginator', { static: false }) set content(paginator: MatPaginator) {
     this.improvementDataSource.paginator = paginator;
-  } 
-  
+  }
+
   constructor(
-              private impvServices:ImprovementsService,
-              public dialog: MatDialog,
-              private fb: FormBuilder,
+    private impvServices: ImprovementsService,
+    public dialog: MatDialog,
+    private fb: FormBuilder,
   ) { }
 
   ngOnInit(): void {
@@ -52,14 +52,15 @@ export class ImprovementsComponent implements OnInit{
       })
     );
     
-    this.createFormListParts();    
+    //this.createFormListParts();    
   }
 
-  onFileSelectedImprovements(event) {
+  onFileSelectedImprovements(event): void {
 
     if (event.target.files && event.target.files[0]) {
 
-      var reader = new FileReader();
+      // tslint:disable-next-line: no-var-keyword
+      const reader = new FileReader();
       reader.onload = (e: any) => {
         /* read workbook */
         const bstr: string = e.target.result;
@@ -70,8 +71,8 @@ export class ImprovementsComponent implements OnInit{
         const ws: XLSX.WorkSheet = wb.Sheets[wsname];
 
         /* save data */
-        this.selected = XLSX.utils.sheet_to_json(ws, { header: "A", defval: "" });
-        this.upLoadXlsImprovements(this.selected)
+        this.selected = XLSX.utils.sheet_to_json(ws, { header: 'A', defval: '' });
+        this.upLoadXlsImprovements(this.selected);
       };
       reader.readAsBinaryString(event.target.files[0]);
     }
@@ -79,13 +80,14 @@ export class ImprovementsComponent implements OnInit{
 
 
   upLoadXlsImprovements(array): void {
-    
+
     let aux: boolean;
-    array.forEach(el => { //slice(1)
-      console.log('el : ',el);
+    array.forEach(el => { // slice(1)
+      console.log('el : ', el);
       aux = false;
-      let array2: Array<string> = Object.values(el);
-      /* 
+
+      const array2: Array<string> = Object.values(el);
+      /*
       aux = false;
       let array2: Array<string> = Object.values(el);
       //probando si nombre ya existe. si es asi, ejecuta editTagDestinations.
@@ -99,9 +101,9 @@ export class ImprovementsComponent implements OnInit{
           });
           aux=true;
         }
-      }); 
+      });
       console.log('array 2 : ',array2);
-      console.log('aux : ',aux); 
+      console.log('aux : ',aux);
       */
 
       /* aux === false ? this.impvServices.addImprovements({
@@ -113,10 +115,10 @@ export class ImprovementsComponent implements OnInit{
         user:array2[5],
         state: array2[6],
       }) : null; */
-    })
-    //Se limpia entrada de documento en el HTML
-    document.getElementById("fileInput2").nodeValue = "";
-}
+    });
+    // Se limpia entrada de documento en el HTML
+    document.getElementById('fileInput2').nodeValue = '';
+  }
 
 
   openDialog(value: string): void {
@@ -143,26 +145,5 @@ export class ImprovementsComponent implements OnInit{
         break;
     }
   }
-
-  createFormListParts(): void {
-    this.improvenmentsForm = this.fb.group({
-      name: ['', Validators.required],
-      description: ['', Validators.required],
-      model: ['', Validators.required],
-      component: ['', Validators.required],
-      date: ['', Validators.required],
-      criticalPart: [false, Validators.required],
-      rate: [false, Validators.required],
-      parts: this.fb.array([
-        ['', Validators.required],
-        ['', Validators.required],
-        ['', Validators.required],
-        ['', Validators.required],
-        ['', Validators.required],
-      ], Validators.required)
-    });
-  }
-
-
 }
 
