@@ -5,11 +5,6 @@ import { from, Observable, of, Subscription } from 'rxjs';
 import { map, pluck, startWith, tap } from 'rxjs/operators';
 import { ImproventmentModel1 } from 'src/app/main/models/improvenents.model';
 
-
-export interface DialogData {
-  animal: 'panda' | 'unicorn' | 'lion';
-}
-
 @Component({
   selector: 'app-create-dialog-improvenments',
   templateUrl: './create-dialog-improvenments.component.html',
@@ -29,9 +24,8 @@ export class CreateDialogImprovenmentsComponent implements OnInit, OnDestroy {
 
   subscriptions: Subscription = new Subscription();
 
-  // obs1$: { improved: string, qty: number, index: number };
-
   indexAux: number[] = [];
+
   constructor(
     private fb: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: ImproventmentModel1[],
@@ -87,13 +81,13 @@ export class CreateDialogImprovenmentsComponent implements OnInit, OnDestroy {
       description: ['', Validators.required],
       model: ['', Validators.required],
       component: ['', Validators.required],
-      date: [{ value: '', disabled: true }, Validators.required],
+      date: ['', Validators.required],
       criticalPart: [false],
       rate: [false],
       parts: this.fb.array([
         this.fb.group({
           spareParts: ['', Validators.required],
-          amount: [{ value: '', disabled: true }, Validators.required],
+          amount: ['', Validators.required],
           currentPart: ['', Validators.required],
           improvedPart: ['', Validators.required],
           kit: [false],
@@ -105,6 +99,7 @@ export class CreateDialogImprovenmentsComponent implements OnInit, OnDestroy {
   get parts(): FormArray {
     return this.createImprovenmentsForm.get('parts') as FormArray;
   }
+
   save(): void {
     console.log(this.createImprovenmentsForm.value);
     if (this.createImprovenmentsForm.invalid) {
@@ -117,7 +112,7 @@ export class CreateDialogImprovenmentsComponent implements OnInit, OnDestroy {
   addControl(): void {
     const group = this.fb.group({
       spareParts: ['', Validators.required],
-      amount: [{ value: '', disabled: true }, Validators.required],
+      amount: ['', Validators.required],
       currentPart: ['', Validators.required],
       improvedPart: ['', Validators.required],
       kit: [false],

@@ -3,7 +3,7 @@
         Ingreso de mejora
         <mat-divider></mat-divider>
     </h2>
-    <form class="container-form" [formGroup]="createImprovenmentsForm">
+    <form class="container-form" [formGroup]="createImprovenmentsForm" autocomplete="off">
         <mat-dialog-content class="mat-typography">
             <h3>Detalles de mejora</h3>
             <!-- description -->
@@ -55,7 +55,7 @@
                             Campo <strong>requerido.</strong>
                         </mat-error>
                         <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-                        <mat-datepicker #picker1 [disabled]=false></mat-datepicker>
+                        <mat-datepicker #picker1></mat-datepicker>
                     </mat-form-field>
                 </div>
                 <div class="container-form__checked--cheked">
