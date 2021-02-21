@@ -91,9 +91,11 @@ export class ImprovementsService {
    * @param {improvementsForm} form - Form data passed on improvements creation
    * @param {User} user - User's data in actual session
    */
-  createImprovements(form: improvementsForm, user: User): Observable<firebase.default.firestore.WriteBatch> {
+  createImprovements(entryId: string, form: improvementsForm, user: User): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     let batch = this.afs.firestore.batch();
+    // create reference to entry document
+    let improvementEntryDocRef = this.afs.firestore.doc(`db/ferreyros/improvementEntries/${entryId}`);
     // add improvements to batch
     form.parts.forEach(part => {
       // create reference for document in improvements collection
@@ -123,6 +125,8 @@ export class ImprovementsService {
       // 
       batch.set(improvementDocRef, data);
     });
+    
+    batch.update(improvementEntryDocRef, {state: 'validated'})
 
     return of(batch);
   }

@@ -55,8 +55,8 @@
           <td mat-cell *matCellDef="let element; let i = index">
             <ng-container>
               <mat-menu #rawMenu="matMenu">
-                <button class="w3-small" mat-menu-item (click)="openDialog('validate',i)">
-                  <mat-icon>edit</mat-icon>
+                <button class="w3-small" mat-menu-item (click)="openDialog('validate', element, i)">
+                  <mat-icon>check_circle</mat-icon>
                   Validar
                 </button>
                 <button class="w3-small" mat-menu-item (click)="openDialog('edit', element, i)">
