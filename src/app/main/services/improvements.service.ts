@@ -31,8 +31,7 @@ export class ImprovementsService {
   createImprovementEntry(form: improvementsForm, user: User): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     let batch = this.afs.firestore.batch();
-    // add improvements to batch
-    // create reference for document in improvements collection
+    // create reference for document in improvement entries collection
     let improvementDocRef = this.afs.firestore.collection(`db/ferreyros/improvementEntries`).doc();
     // Structuring the data model
     let data: ImprovementEntry = {
@@ -53,6 +52,36 @@ export class ImprovementsService {
     };
     // 
     batch.set(improvementDocRef, data);
+
+    return of(batch);
+  }
+
+  /**
+   * Edit the improvement entry
+   * @param {improvementsForm} form - Form data passed on improvements creation
+   * @param {User} user - User's data in actual session
+   */
+  editImprovementEntry(entryId: string, form: improvementsForm, user: User): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    let batch = this.afs.firestore.batch();
+    // create reference for document on improvementEntries
+    let improvementDocRef = this.afs.firestore.doc(`db/ferreyros/improvementEntries/${entryId}`);
+    // Structuring the data model
+    let data: any = {
+      date: new Date(),
+      name: form.name,
+      component: form.component,
+      model: form.model,
+      description: form.description,
+      criticalPart: form.criticalPart,
+      rate: form.rate,
+      state: 'registered',
+      parts: form.parts,
+      editedAt: new Date(),
+      editedBy: user,
+    };
+    // 
+    batch.update(improvementDocRef, data);
 
     return of(batch);
   }

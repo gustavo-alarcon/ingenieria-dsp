@@ -11,7 +11,7 @@ import { DeleteDialogImprovenmentsComponent } from './dialogs/delete-dialog-impr
 import { ValidateDialogImprovenmentsComponent } from './dialogs/validate-dialog-improvenments/validate-dialog-improvenments.component';
 import { tap } from 'rxjs/operators';
 import { ImprovementsService } from '../../services/improvements.service';
-import { Improvement } from '../../models/improvenents.model';
+import { Improvement, ImprovementEntry } from '../../models/improvenents.model';
 
 @Component({
   selector: 'app-improvements',
@@ -60,18 +60,16 @@ export class ImprovementsComponent implements OnInit {
       tap(res => {
         if (res) {
           this.improvementDataSource.data = res;
-          // console.log(res);
         }
       })
     );
 
   }
 
-  openDialog(value: string, index?: number): void {
-    // console.log(this.improvementDataSource.data[index])
+  openDialog(value: string, entry?: ImprovementEntry, index?: number): void {
     const optionsDialog = {
       width: '100%',
-      data: this.improvementDataSource.data
+      data: entry
     };
     let dialogRef;
 
