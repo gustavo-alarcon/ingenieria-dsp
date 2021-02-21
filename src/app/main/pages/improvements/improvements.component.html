@@ -13,7 +13,7 @@
 
         <ng-container matColumnDef="date">
           <th mat-header-cell *matHeaderCellDef> Fecha </th>
-          <td mat-cell *matCellDef="let element"> {{element.date}} </td>
+          <td mat-cell *matCellDef="let element"> {{(element.date.seconds * 1000) | date : 'dd/MM/yy'}} </td>
         </ng-container>
 
         <ng-container matColumnDef="name">
@@ -30,20 +30,20 @@
         </ng-container>
         <ng-container matColumnDef="review">
           <th mat-header-cell *matHeaderCellDef> Mejora critica </th>
-          <td mat-cell *matCellDef="let element"> {{element.review}} </td>
+          <td mat-cell *matCellDef="let element"> {{element.criticalPart ? 'Si':'No'}} </td>
         </ng-container>
 
         <ng-container matColumnDef="user">
           <th mat-header-cell *matHeaderCellDef> Usuario </th>
-          <td mat-cell *matCellDef="let element"> {{element.user}} </td>
+          <td mat-cell *matCellDef="let element"> {{element.createdBy.name}} </td>
         </ng-container>
 
         <ng-container matColumnDef="state">
           <th mat-header-cell *matHeaderCellDef> Estado </th>
           <td mat-cell *matCellDef="let element">
             <button mat-button
-              [ngClass]="{'btn-state-register': element.state==='Registrado','btn-state-validate': element.state==='Validado'}">
-              {{element.state}}
+              [ngClass]="{'btn-state-register': element.state==='registered','btn-state-validate': element.state==='validated'}">
+              {{element.state === 'registered' ? 'Registrado':'Validado'}}
             </button>
           </td>
         </ng-container>

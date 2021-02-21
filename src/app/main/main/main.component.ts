@@ -5,7 +5,7 @@ import { map, shareReplay } from 'rxjs/operators';
 import { AuthService } from '../../auth/services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
-import { UserModel } from '../models/user-model';
+import { User } from '../models/user-model';
 
 
 @Component({
@@ -19,8 +19,8 @@ export class MainComponent {
   openedMenu = false;
   title: string;
 
-  private itemsCollection: AngularFirestoreCollection<UserModel>;
-  items: Observable<UserModel[]>;
+  private itemsCollection: AngularFirestoreCollection<User>;
+  items: Observable<User[]>;
 
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
@@ -32,13 +32,12 @@ export class MainComponent {
     private breakpointObserver: BreakpointObserver,
     private authService: AuthService,
     private router: Router,
-    private afs: AngularFirestore,
-    private activateRoute: ActivatedRoute
+    private afs: AngularFirestore
   ) {
 
     this.authService.currentUser().subscribe(
       (value) => {
-        this.itemsCollection = afs.collection<UserModel>('users', ref => ref.where('uid', '==', value.uid));
+        this.itemsCollection = afs.collection<User>('users', ref => ref.where('uid', '==', value.uid));
         this.items = this.itemsCollection.valueChanges();
       }
     );

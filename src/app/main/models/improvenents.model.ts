@@ -1,30 +1,69 @@
+import { User } from "./user-model";
 
-
-export interface ImprovementsModel {
-  date: string;
+// This interface should be used to store validated improvements in firestore improvements collection
+export interface Improvement {
+  id: string;
+  date: Date;
   name: string;
   component: string;
+  description: string;
+  criticalPart: boolean;
+  rate: boolean;
   model: string;
-  review: string;
-  user: string;
-  state: string;
+  media: string;
+  quantity: number;
+  currentPart: string;
+  improvedPart: string;
+  stock: number;
+  availability: Date;
+  kit: boolean;
+  createdAt: Date;
+  createdBy: User;
+  editedAt: Date;
+  editedBy: User;
 }
 
-export interface ImproventmentModel1 {
-  available: number;
+// This interface should be used with improvement create/edit form.
+export interface improvementsForm {
   component: string;
-  createdAt: {
-    seconds: number;
-    nanoseconds: number;
-  };
-  current: string;
-  date: number;
+  criticalPart: boolean;
+  rate: boolean;
   description: string;
-  half: string;
-  improved: string;
   model: string;
-  uid: string;
-  qty: number;
   name: string;
-  stock: number;
+  parts: Array<{
+    quantity: number;
+    currentPart: string;
+    improvedPart: string;
+    kit: boolean;
+    sparePart: string;
+    stock?: number;
+    availability?: Date;
+  }>
+}
+
+// This interface should be used to store an improvement entry in firestore improvementEntries collection.
+export interface ImprovementEntry {
+  id: string;
+  date: Date;
+  name: string;
+  component: string;
+  criticalPart: boolean;
+  rate: boolean;
+  model: string;
+  description: string;
+  parts: Array<{
+    quantity: number;
+    currentPart: string;
+    improvedPart: string;
+    kit: boolean;
+    sparePart: string;
+    stock?: number;
+    availability?: Date;
+  }>;
+  state: string;
+  createdAt: Date;
+  createdBy: User;
+  editedAt: Date;
+  editedBy: User;
 }

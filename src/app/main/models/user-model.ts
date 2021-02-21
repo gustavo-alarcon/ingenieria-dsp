@@ -1,4 +1,6 @@
-export interface UserModel {
+export interface User {
+    createdAt: Date;
+    phoneNumber?: string;
     name: string;
     picture: string;
     email: string;

@@ -24,18 +24,16 @@
     }
 }
 
-
-
-.checked-margin{
+.checked-margin {
     margin: 0 12px;
 }
 
-.container-form-array{
+.container-form-array {
     display: flex;
-    &__inputs{
+    &__inputs {
         margin-right: 20px;
     }
-    &__checked{
+    &__checked {
         display: flex;
         margin: 18px 0;
     }

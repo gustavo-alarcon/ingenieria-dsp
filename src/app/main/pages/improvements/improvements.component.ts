@@ -11,7 +11,7 @@ import { DeleteDialogImprovenmentsComponent } from './dialogs/delete-dialog-impr
 import { ValidateDialogImprovenmentsComponent } from './dialogs/validate-dialog-improvenments/validate-dialog-improvenments.component';
 import { tap } from 'rxjs/operators';
 import { ImprovementsService } from '../../services/improvements.service';
-import { ImproventmentModel1 } from '../../models/improvenents.model';
+import { Improvement } from '../../models/improvenents.model';
 
 @Component({
   selector: 'app-improvements',
@@ -23,10 +23,10 @@ export class ImprovementsComponent implements OnInit {
   dataSource = new MatTableDataSource();
   selected: any;
 
-  improvement$: Observable<ImproventmentModel1[]>;
+  improvement$: Observable<Improvement[]>;
 
   // Improvement
-  improvementDataSource = new MatTableDataSource<ImproventmentModel1>();
+  improvementDataSource = new MatTableDataSource<Improvement>();
   improvementDisplayedColumns: string[] = ['date', 'name', 'component', 'model', 'review', 'user', 'state', 'actions'];
 
   available: number;
@@ -56,7 +56,7 @@ export class ImprovementsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.improvement$ = this.impvServices.getAllImprovement().pipe(
+    this.improvement$ = this.impvServices.getAllImprovementEntries().pipe(
       tap(res => {
         if (res) {
           this.improvementDataSource.data = res;
@@ -71,7 +71,6 @@ export class ImprovementsComponent implements OnInit {
     // console.log(this.improvementDataSource.data[index])
     const optionsDialog = {
       width: '100%',
-      height: '90%',
       data: this.improvementDataSource.data
     };
     let dialogRef;
@@ -107,7 +106,7 @@ export class ImprovementsComponent implements OnInit {
 
       case 'delete':
         dialogRef = this.dialog.open(DeleteDialogImprovenmentsComponent, {
-          width: '40%',
+          width: '350px',
           data: this.improvementDataSource.data[index]
         }
         );

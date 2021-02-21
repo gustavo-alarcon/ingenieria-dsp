@@ -1,9 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { from, Observable, of, Subscription } from 'rxjs';
-import { map, pluck, startWith, tap } from 'rxjs/operators';
-import { ImproventmentModel1 } from 'src/app/main/models/improvenents.model';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { switchMap, take } from 'rxjs/operators';
+import { AuthService } from 'src/app/auth/services/auth.service';
+import { Improvement } from 'src/app/main/models/improvenents.model';
+import { ImprovementsService } from 'src/app/main/services/improvements.service';
 
 
 export interface DialogData {
@@ -16,6 +19,9 @@ export interface DialogData {
   styleUrls: ['./create-dialog-improvenments.component.scss']
 })
 export class CreateDialogImprovenmentsComponent implements OnInit {
+
+  loading = new BehaviorSubject<boolean>(false);
+  loading$ = this.loading.asObservable();
 
   createImprovenmentsForm: FormGroup;
 
@@ -33,37 +39,16 @@ export class CreateDialogImprovenmentsComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) public data: ImproventmentModel1[],
-    public dialogRef: MatDialogRef<CreateDialogImprovenmentsComponent>
+    @Inject(MAT_DIALOG_DATA) public data: Improvement[],
+    public dialogRef: MatDialogRef<CreateDialogImprovenmentsComponent>,
+    private snackbar: MatSnackBar,
+    private auth: AuthService,
+    private impService: ImprovementsService
   ) {
-    // console.log(this.data);
-
-    for (const post of data) {
-      this.options1.push(post.description);
-      this.options2.push(post.improved);
-    }
   }
 
   ngOnInit(): void {
     this.createFormListParts();
-
-    this.partsFilteredOptions1 = this.parts.controls[0].get('spareParts').valueChanges.pipe(
-      startWith(''),
-      map(value1 => this._filter1(value1))
-    );
-    this.arrParts1.push(this.partsFilteredOptions1);
-
-
-    this.partsFilteredOptions2 = this.parts.controls[0].get('currentPart').valueChanges.pipe(
-      tap(() => {
-        this.parts.controls[0].get('amount').setValue('10');
-      }),
-      startWith(''),
-      map(value2 => this._filter2(value2))
-    );
-
-    this.arrParts2.push(this.partsFilteredOptions2);
-
   }
 
   createFormListParts(): void {
@@ -77,8 +62,8 @@ export class CreateDialogImprovenmentsComponent implements OnInit {
       rate: [false],
       parts: this.fb.array([
         this.fb.group({
-          spareParts: ['', Validators.required],
-          amount: [{ value: '', disabled: true }, Validators.required],
+          sparePart: ['', Validators.required],
+          quantity: [null, Validators.required],
           currentPart: ['', Validators.required],
           improvedPart: ['', Validators.required],
           kit: [false],
@@ -93,54 +78,54 @@ export class CreateDialogImprovenmentsComponent implements OnInit {
 
 
   save(): void {
+    this.loading.next(true);
     console.log(this.createImprovenmentsForm.value);
+    
     if (this.createImprovenmentsForm.invalid) {
       this.createImprovenmentsForm.markAllAsTouched();
       return;
+    } else {
+      this.auth.user$.pipe(
+        take(1),
+        switchMap(user => {
+          return this.impService.createImprovementEntry(this.createImprovenmentsForm.value, user)
+        })
+      ).subscribe(batch => {
+        if (batch) {
+          batch.commit()
+            .then(() => {
+              this.loading.next(false);
+              this.snackbar.open('✅ Mejoras registradas!', 'Aceptar', {
+                duration: 6000
+              });
+              this.dialogRef.close('result');
+            })
+            .catch(err => {
+              this.loading.next(false);
+              this.snackbar.open('🚨 Hubo un error guardando las mejoras!', 'Aceptar', {
+                duration: 6000
+              })
+            })
+        }
+      })
     }
-    this.dialogRef.close('result');
+    
   }
 
   addControl(): void {
     const group = this.fb.group({
-      spareParts: ['', Validators.required],
-      amount: [{ value: '', disabled: true }, Validators.required],
+      sparePart: ['', Validators.required],
+      quantity: [null, Validators.required],
       currentPart: ['', Validators.required],
       improvedPart: ['', Validators.required],
       kit: [false],
     });
 
     this.parts.push(group);
-
-    this.partsFilteredOptions1 = this.parts.controls[this.parts.length - 1].get('spareParts').valueChanges.pipe(
-      startWith(''),
-      map(value1 => this._filter1(value1))
-    );
-    this.arrParts1.push(this.partsFilteredOptions1);
-
-    this.partsFilteredOptions2 = this.parts.controls[this.parts.length - 1].get('currentPart').valueChanges.pipe(
-      tap(() => {
-        this.parts.controls[this.parts.length - 1].get('amount').setValue('10');
-      }),
-      startWith(''),
-      map(value2 => this._filter2(value2))
-    );
-
-    this.arrParts2.push(this.partsFilteredOptions2);
   }
 
   deleteControl(index: number): void {
     this.parts.removeAt(index);
-  }
-
-  private _filter1(value1: string): string[] {
-    const filterValue1 = value1.toLowerCase();
-    return this.options1.filter(option1 => option1.toLowerCase().indexOf(filterValue1) === 0);
-  }
-
-  private _filter2(value2: string): string[] {
-    const filterValue2 = value2.toLowerCase();
-    return this.options2.filter(option2 => option2.toLowerCase().indexOf(filterValue2) === 0);
   }
 
 }
