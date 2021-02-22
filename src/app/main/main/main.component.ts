@@ -30,7 +30,7 @@ export class MainComponent {
 
   constructor(
     private breakpointObserver: BreakpointObserver,
-    private authService: AuthService,
+    public authService: AuthService,
     private router: Router,
     private afs: AngularFirestore
   ) {
