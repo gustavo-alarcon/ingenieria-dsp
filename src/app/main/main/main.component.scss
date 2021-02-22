@@ -1,0 +1,110 @@
+$base-font: "Poppins", sans-serif;
+
+.main_toolbar {
+  display: flex;
+  background: #333333;
+  color: white;
+}
+.btn-exit-app {
+  position: absolute;
+  right: 50px;
+}
+
+.sidenav-container {
+  height: 100%;
+}
+
+.sidenav {
+  width: 300px;
+}
+
+.sidenav .mat-toolbar {
+  background: #f2c94c;
+  height: 24px;
+}
+
+.mat-toolbar.mat-primary {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+//Toolbar
+.container-toolbar {
+  border-top: 24px solid #f2c94c;
+}
+.main__toolbar {
+  background-size: cover;
+  background-color: #333333;
+  position: fixed;
+  top: 0;
+  z-index: 4;
+  color: white;
+}
+.btn-exit-app {
+  position: absolute;
+  right: 50px;
+}
+.main__space {
+  padding-top: 64px;
+}
+
+.hr-line {
+  height: 1px;
+  border: 0;
+  background-color: #f2c94c;
+}
+
+.mat-card-user {
+  height: 166px;
+}
+
+mat-card img {
+  background-size: cover;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.text-menu-title-user {
+  font-family: $base-font;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: 0.15px;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.text-menu-title-role {
+  margin-bottom: 8px;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.25px;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.text-menu-title-version {
+  font-size: 0.7rem;
+  font-weight: 500;
+}
+
+.mat-item-list-span {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 24px;
+  letter-spacing: 0.1px;
+  color: rgba(0, 0, 0, 0.6);
+  margin-left: 33px;
+}
+
+.mat-icon-menu {
+  width: 22px;
+  height: 22px;
+}
+
+.active {
+  background: #9b27b036;
+}

@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "ferreyros-mvp": {
+      "hosting": {
+        "ingenieria-dsp": [
+          "ferreyros-mvp"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "ferreyros-mvp"
+  }
+}
