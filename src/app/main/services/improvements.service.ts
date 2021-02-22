@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { from, Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { improvementsForm, Improvement, ImprovementEntry } from '../models/improvenents.model';
 
 import * as firebase from 'firebase';
