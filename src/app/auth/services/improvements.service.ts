@@ -50,7 +50,8 @@ export class ImprovementsService {
       .valueChanges();
   }
 
-  getCurrent_Improv(code) {
+  getCurrent_Improv(code): Observable<any[]> {
+    console.log('improved db : ',code)
     return this.afs.collection('/db/ferreyros/improvements', (ref) =>
     ref.where("current", "==",code)
   ).get().pipe(
@@ -59,4 +60,10 @@ export class ImprovementsService {
     })
   );
   }
+  getCurrent_Improv1(code) {
+    return this.afs.collection('/db/ferreyros/improvements', ref => 
+    ref.where("current", "==",code))
+    .valueChanges();
+  }
+
 }
