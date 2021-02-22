@@ -12,7 +12,7 @@ import { ImprovementsService } from '../../services/improvements.service';
 @Component({
   selector: 'app-summary',
   templateUrl: './summary.component.html',
-  styleUrls: ['./summary.component.sass']
+  styleUrls: ['./summary.component.scss']
 })
 export class SummaryComponent implements OnInit, AfterViewInit {
   loading = new BehaviorSubject<boolean>(false);
