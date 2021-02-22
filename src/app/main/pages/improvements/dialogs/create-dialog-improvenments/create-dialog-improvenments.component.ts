@@ -79,7 +79,7 @@ export class CreateDialogImprovenmentsComponent implements OnInit, OnDestroy {
   save(): void {
     this.loading.next(true);
     console.log(this.createImprovenmentsForm.value);
-    
+
     if (this.createImprovenmentsForm.invalid) {
       this.createImprovenmentsForm.markAllAsTouched();
       return;
@@ -87,7 +87,7 @@ export class CreateDialogImprovenmentsComponent implements OnInit, OnDestroy {
       this.auth.user$.pipe(
         take(1),
         switchMap(user => {
-          return this.impService.createImprovementEntry(this.createImprovenmentsForm.value, user)
+          return this.impService.createImprovementEntry(this.createImprovenmentsForm.value, user);
         })
       ).subscribe(batch => {
         if (batch) {
@@ -103,12 +103,12 @@ export class CreateDialogImprovenmentsComponent implements OnInit, OnDestroy {
               this.loading.next(false);
               this.snackbar.open('🚨 Hubo un error guardando las mejoras!', 'Aceptar', {
                 duration: 6000
-              })
-            })
+              });
+            });
         }
-      })
+      });
     }
-    
+
   }
 
   addControl(): void {

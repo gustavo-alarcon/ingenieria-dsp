@@ -121,8 +121,18 @@
             </button>
         </mat-dialog-content>
         <mat-dialog-actions align="end">
-            <button type="button" mat-stroked-button color="warn" mat-dialog-close>CERRAR</button>
-            <button type="button" mat-raised-button color="primary" (click)="save()">ENVIAR</button>
+            <button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close>CERRAR</button>
+            <button type="button" mat-raised-button color="primary" class="footer__btn-save" (click)="save()">ENVIAR</button>
         </mat-dialog-actions>
     </form>
 </div>
+
+<!-- 
+<div class="footer">
+    <button type="file" aria-label="add" mat-button class="footer__btn-close" (click)="clearDataTable()"> 
+         CANCELAR
+    </button>         
+    <button type="file" aria-label="add" mat-button class="footer__btn-save" (click)="saveDataTable()" > 
+         GUARDAR
+    </button>         
+  </div> -->
