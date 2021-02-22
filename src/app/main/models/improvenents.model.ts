@@ -1,4 +1,4 @@
-import { User } from "./user-model";
+import { User } from './user-model';
 
 // This interface should be used to store validated improvements in firestore improvements collection
 export interface Improvement {
@@ -24,6 +24,8 @@ export interface Improvement {
 }
 
 // This interface should be used with improvement create/edit form.
+
+// tslint:disable-next-line: class-name
 export interface improvementsForm {
   component: string;
   criticalPart: boolean;
@@ -31,7 +33,7 @@ export interface improvementsForm {
   description: string;
   model: string;
   name: string;
-  parts: Array<ImprovementPart>
+  parts: Array<ImprovementPart>;
 }
 
 // This interface should be used to store an improvement entry in firestore improvementEntries collection.
@@ -59,14 +61,14 @@ export interface ImprovementPart {
   kit: boolean;
   sparePart: string;
   stock?: number;
-  availability?: Date;
+  availability?: string;
 }
 
 export interface SparePart {
   description: string;
   quantity: number;
   improvedPart: string;
-  evaluatedPart: string,
+  evaluatedPart: string;
   kit: boolean;
   match: boolean;
 }

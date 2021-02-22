@@ -3,7 +3,7 @@
         Validación de logística
         <mat-divider></mat-divider>
     </h2>
-    <form class="container-form" [formGroup]="validationLogisticForm">
+    <form class="container-form" [formGroup]="validationLogisticForm" (ngSubmit)="save()" autocomplete="off">
         <mat-dialog-content class="mat-typography">
             <h3>Detalles de mejora</h3>
             <!-- description -->
@@ -78,23 +78,31 @@
                             <span>Kit</span>
                             <mat-checkbox class="checked-margin" color="primary" formControlName="kit"></mat-checkbox>
                         </div>
-                        <mat-form-field appearance="outline" style="width:80px"   class="container-form-array__inputs">
+                        <mat-form-field appearance="outline" style="width:80px" class="container-form-array__inputs">
                             <mat-label>Stock</mat-label>
                             <input matInput type="number" placeholder="Stock" formControlName="stock" min="0" step="1">
                         </mat-form-field>
                         <!-- <mat-form-field appearance="outline">
                             <mat-label>Fecha de disponibilidad</mat-label>
-                            <input matInput [matDatepicker]="j" formControlName="availability">
-                            <mat-datepicker-toggle matSuffix [for]="j"></mat-datepicker-toggle>
-                            <mat-datepicker #j></mat-datepicker>
+                            <input matInput type="text" mask="00/00/0000" [matDatepicker]="p+i"
+                                formControlName="availability">
+                            <mat-datepicker-toggle matSuffix [for]="p + i"></mat-datepicker-toggle>
+                            <mat-datepicker #p+i></mat-datepicker>
                         </mat-form-field> -->
+                        <mat-form-field appearance="outline" style="width:150px"   class="container-form-array__inputs">
+                            <mat-label>Fecha de disponibilidad</mat-label>
+                            <input matInput type="text"  mask="00/00/0000" placeholder="dd/mm/yyyy" formControlName="availability" >
+                        </mat-form-field>
+
                     </div>
                 </div>
             </div>
         </mat-dialog-content>
         <mat-dialog-actions align="end">
-            <button type="button" mat-stroked-button color="warn" mat-dialog-close>CERRAR</button>
-            <button type="submit" mat-raised-button color="primary" (click)="save()">ENVIAR</button>
+            <button type="button" mat-stroked-button color="warn" class="footer__btn-close"
+                mat-dialog-close>CERRAR</button>
+            <button type="button" mat-raised-button color="primary" class="footer__btn-save"
+                (click)="save()">ENVIAR</button>
         </mat-dialog-actions>
     </form>
 </div>

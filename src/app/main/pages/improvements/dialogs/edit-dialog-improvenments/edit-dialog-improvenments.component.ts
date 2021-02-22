@@ -40,6 +40,7 @@ export class EditDialogImprovenmentsComponent implements OnInit {
       description: [this.data.description ? this.data.description : null, Validators.required],
       model: [this.data.model ? this.data.model : null, Validators.required],
       component: [this.data.component ? this.data.component : null, Validators.required],
+      // tslint:disable-next-line: no-string-literal
       date: [this.data.date ? new Date(this.data.date['seconds'] * 1000) : null, Validators.required],
       criticalPart: [this.data.criticalPart ? this.data.criticalPart : false],
       rate: [this.data.rate ? this.data.rate : false],
@@ -95,7 +96,7 @@ export class EditDialogImprovenmentsComponent implements OnInit {
       this.auth.user$.pipe(
         take(1),
         switchMap(user => {
-          return this.impService.editImprovementEntry(this.data.id, this.editImprovenmentsForm.value, user)
+          return this.impService.editImprovementEntry(this.data.id, this.editImprovenmentsForm.value, user);
         })
       ).subscribe(batch => {
         if (batch) {
@@ -111,10 +112,10 @@ export class EditDialogImprovenmentsComponent implements OnInit {
               this.loading.next(false);
               this.snackbar.open('🚨 Hubo un error guardando la edición!', 'Aceptar', {
                 duration: 6000
-              })
-            })
+              });
+            });
         }
-      })
+      });
     }
   }
 }

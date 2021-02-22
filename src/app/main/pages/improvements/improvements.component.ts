@@ -29,22 +29,6 @@ export class ImprovementsComponent implements OnInit {
   improvementDataSource = new MatTableDataSource<ImprovementEntry>();
   improvementDisplayedColumns: string[] = ['date', 'name', 'component', 'model', 'review', 'user', 'state', 'actions'];
 
-  available: number;
-  component: string;
-  createdAt: {
-    seconds: number;
-    nanoseconds: number;
-  };
-  current: string;
-  date: number;
-  description: string;
-  half: string;
-  improved: string;
-  model: string;
-  uid: string;
-  qty: number;
-  name: string;
-
   @ViewChild('improvementPaginator', { static: false }) set content(paginator: MatPaginator) {
     this.improvementDataSource.paginator = paginator;
   }

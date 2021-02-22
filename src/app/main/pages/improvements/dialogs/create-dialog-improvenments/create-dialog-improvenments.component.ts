@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -8,17 +8,12 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 import { Improvement } from 'src/app/main/models/improvenents.model';
 import { ImprovementsService } from 'src/app/main/services/improvements.service';
 
-
-export interface DialogData {
-  animal: 'panda' | 'unicorn' | 'lion';
-}
-
 @Component({
   selector: 'app-create-dialog-improvenments',
   templateUrl: './create-dialog-improvenments.component.html',
   styleUrls: ['./create-dialog-improvenments.component.scss']
 })
-export class CreateDialogImprovenmentsComponent implements OnInit {
+export class CreateDialogImprovenmentsComponent implements OnInit, OnDestroy {
 
   loading = new BehaviorSubject<boolean>(false);
   loading$ = this.loading.asObservable();
@@ -35,7 +30,7 @@ export class CreateDialogImprovenmentsComponent implements OnInit {
 
   subscriptions: Subscription = new Subscription();
 
-  obs1$: { improved: string, qty: number, index: number };
+  indexAux: number[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -47,8 +42,13 @@ export class CreateDialogImprovenmentsComponent implements OnInit {
   ) {
   }
 
+
   ngOnInit(): void {
     this.createFormListParts();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   createFormListParts(): void {
@@ -57,7 +57,7 @@ export class CreateDialogImprovenmentsComponent implements OnInit {
       description: ['', Validators.required],
       model: ['', Validators.required],
       component: ['', Validators.required],
-      date: [{ value: '', disabled: true }, Validators.required],
+      date: ['', Validators.required],
       criticalPart: [false],
       rate: [false],
       parts: this.fb.array([
@@ -76,11 +76,10 @@ export class CreateDialogImprovenmentsComponent implements OnInit {
     return this.createImprovenmentsForm.get('parts') as FormArray;
   }
 
-
   save(): void {
     this.loading.next(true);
     console.log(this.createImprovenmentsForm.value);
-    
+
     if (this.createImprovenmentsForm.invalid) {
       this.createImprovenmentsForm.markAllAsTouched();
       return;
@@ -88,7 +87,7 @@ export class CreateDialogImprovenmentsComponent implements OnInit {
       this.auth.user$.pipe(
         take(1),
         switchMap(user => {
-          return this.impService.createImprovementEntry(this.createImprovenmentsForm.value, user)
+          return this.impService.createImprovementEntry(this.createImprovenmentsForm.value, user);
         })
       ).subscribe(batch => {
         if (batch) {
@@ -104,12 +103,12 @@ export class CreateDialogImprovenmentsComponent implements OnInit {
               this.loading.next(false);
               this.snackbar.open('🚨 Hubo un error guardando las mejoras!', 'Aceptar', {
                 duration: 6000
-              })
-            })
+              });
+            });
         }
-      })
+      });
     }
-    
+
   }
 
   addControl(): void {

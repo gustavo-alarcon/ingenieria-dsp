@@ -40,11 +40,11 @@ export class ImprovementsService {
    */
   createImprovementEntry(form: improvementsForm, user: User): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
-    let batch = this.afs.firestore.batch();
+    const batch = this.afs.firestore.batch();
     // create reference for document in improvement entries collection
-    let improvementDocRef = this.afs.firestore.collection(`db/ferreyros/improvementEntries`).doc();
+    const improvementDocRef = this.afs.firestore.collection(`db/ferreyros/improvementEntries`).doc();
     // Structuring the data model
-    let data: ImprovementEntry = {
+    const data: ImprovementEntry = {
       id: improvementDocRef.id,
       date: new Date(),
       name: form.name,
@@ -60,7 +60,7 @@ export class ImprovementsService {
       editedAt: null,
       editedBy: null,
     };
-    // 
+
     batch.set(improvementDocRef, data);
 
     return of(batch);
@@ -73,11 +73,11 @@ export class ImprovementsService {
    */
   editImprovementEntry(entryId: string, form: improvementsForm, user: User): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
-    let batch = this.afs.firestore.batch();
+    const batch = this.afs.firestore.batch();
     // create reference for document on improvementEntries
-    let improvementDocRef = this.afs.firestore.doc(`db/ferreyros/improvementEntries/${entryId}`);
+    const improvementDocRef = this.afs.firestore.doc(`db/ferreyros/improvementEntries/${entryId}`);
     // Structuring the data model
-    let data: any = {
+    const data: any = {
       date: new Date(),
       name: form.name,
       component: form.component,
@@ -90,7 +90,7 @@ export class ImprovementsService {
       editedAt: new Date(),
       editedBy: user,
     };
-    // 
+
     batch.update(improvementDocRef, data);
 
     return of(batch);
@@ -103,15 +103,15 @@ export class ImprovementsService {
    */
   createImprovements(entryId: string, form: improvementsForm, user: User): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
-    let batch = this.afs.firestore.batch();
+    const batch = this.afs.firestore.batch();
     // create reference to entry document
-    let improvementEntryDocRef = this.afs.firestore.doc(`db/ferreyros/improvementEntries/${entryId}`);
+    const improvementEntryDocRef = this.afs.firestore.doc(`db/ferreyros/improvementEntries/${entryId}`);
     // add improvements to batch
     form.parts.forEach(part => {
       // create reference for document in improvements collection
-      let improvementDocRef = this.afs.firestore.collection(`db/ferreyros/improvements`).doc();
+      const improvementDocRef = this.afs.firestore.collection(`db/ferreyros/improvements`).doc();
       // Structuring the data model
-      let data: Improvement = {
+      const data: Improvement = {
         id: improvementDocRef.id,
         date: new Date(),
         name: form.name,
@@ -125,18 +125,23 @@ export class ImprovementsService {
         currentPart: part.currentPart,
         improvedPart: part.improvedPart,
         stock: part.stock,
-        availability: part.availability,
+        availability: new Date(parseInt(part.availability)),
         kit: part.kit,
         createdAt: new Date(),
         createdBy: user,
         editedAt: null,
         editedBy: null,
       };
-      // 
       batch.set(improvementDocRef, data);
     });
 
-    batch.update(improvementEntryDocRef, { state: 'validated' })
+    // batch.update(improvementEntryDocRef, form.parts);
+    // batch.update(improvementEntryDocRef, { state: 'validated' });
+
+    batch.update(improvementEntryDocRef, {
+      parts: form.parts,
+      state: 'validated'
+    })
 
     return of(batch);
   }

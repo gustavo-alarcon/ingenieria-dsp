@@ -63,8 +63,8 @@ export class ValidateDialogImprovenmentsComponent implements OnInit {
       currentPart: [part.currentPart ? part.currentPart : null, Validators.required],
       improvedPart: [part.improvedPart ? part.improvedPart : null, Validators.required],
       kit: [part.kit ? part.kit : null],
-      stock: [0, Validators.required],
-      availability: [null, Validators.required],
+      stock: [part.stock ? part.stock : 0, Validators.required],
+      availability: [part.availability ? part.availability : '', Validators.required],
     });
 
     this.parts.push(group);
@@ -73,7 +73,6 @@ export class ValidateDialogImprovenmentsComponent implements OnInit {
 
   save(): void {
     this.loading.next(true);
-
     if (this.validationLogisticForm.invalid) {
       this.validationLogisticForm.markAllAsTouched();
       return;
@@ -81,7 +80,7 @@ export class ValidateDialogImprovenmentsComponent implements OnInit {
       this.auth.user$.pipe(
         take(1),
         switchMap(user => {
-          return this.impService.createImprovements(this.data.id, this.validationLogisticForm.value, user)
+          return this.impService.createImprovements(this.data.id, this.validationLogisticForm.value, user);
         })
       ).subscribe(batch => {
         if (batch) {
@@ -97,10 +96,10 @@ export class ValidateDialogImprovenmentsComponent implements OnInit {
               this.loading.next(false);
               this.snackbar.open('🚨 Hubo un error guardando la edición!', 'Aceptar', {
                 duration: 6000
-              })
-            })
+              });
+            });
         }
-      })
+      });
     }
   }
 }
