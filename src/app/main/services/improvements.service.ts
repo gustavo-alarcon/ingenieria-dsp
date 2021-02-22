@@ -114,8 +114,8 @@ export class ImprovementsService {
         quantity: part.quantity,
         currentPart: part.currentPart,
         improvedPart: part.improvedPart,
-        stock: null,
-        availability: null,
+        stock: part.stock,
+        availability: new Date(),
         kit: part.kit,
         createdAt: new Date(),
         createdBy: user,
@@ -125,7 +125,13 @@ export class ImprovementsService {
       batch.set(improvementDocRef, data);
     });
 
-    batch.update(improvementEntryDocRef, { state: 'validated' });
+    // batch.update(improvementEntryDocRef, form.parts);
+    // batch.update(improvementEntryDocRef, { state: 'validated' });
+
+    batch.update(improvementEntryDocRef, {
+      parts: form.parts,
+      state: 'validated'
+    })
 
     return of(batch);
   }
