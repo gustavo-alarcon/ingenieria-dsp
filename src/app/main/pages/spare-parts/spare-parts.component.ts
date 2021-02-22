@@ -1,12 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import * as XLSX from 'xlsx';
 import { MatSnackBar } from '@angular/material/snack-bar';
-<<<<<<< HEAD
 import { ImprovementsService } from '../../services/improvements.service';
-=======
-import { ImprovementsService } from '../../../auth/services/improvements.service';
-import { take } from 'rxjs/operators';
->>>>>>> develop
 
 @Component({
   selector: 'app-spare-parts',
@@ -66,7 +61,6 @@ export class SparePartsComponent implements OnInit {
     if (array.length > 0) {
       array.forEach(el => {
         let array2 = Object.values(el);
-<<<<<<< HEAD
         //let array2: Array<string> = Object.values(el);        
         let data =
         {
@@ -83,58 +77,6 @@ export class SparePartsComponent implements OnInit {
         }
         arraydData.push(data)
       });
-=======
-       console.log('array2[5',array2[5])
-        this.impvServices.getCurrent_Improv1(array2[5])
-      .subscribe(dt => {
-       console.log('dt : ',dt)
-        /*  console.log(data)
-         console.log(data['0'].improved)
-         return data; */
-         let data = 
-            {
-              partN:array2[0], 
-              qty: array2[1],
-              type:array2[2],
-              smcs:array2[3],
-              partName:array2[4],
-              groupN:array2[5],
-              groupName:array2[6],
-              note:array2[7],
-              newGroupN:dt.length>0?dt['0'].improved:'no existe',
-             
-            }
-            arraydData.push(data)
-        });
-        //let array2: Array<string> = Object.values(el);          
-          /* let data = 
-            {
-              partN:array2[0], 
-              qty: array2[1],
-              type:array2[2],
-              smcs:array2[3],
-              partName:array2[4],
-              groupN:array2[5],
-              groupName:array2[6],
-              note:array2[7],
-              newGroupN:this.impvServices.getCurrent_Improv(array2[5]),
-             
-            }
-            arraydData.push(data) */        
-      });
-      console.log('arraydData asdsd: ',arraydData);
-
-      let prueba = this.impvServices.getCurrent_Improv('481-1441').pipe(take(1))
-      .subscribe(data => {
-        console.log(data)
-        console.log(data['0'].improved)
-        return data;
-      });
-
-      console.log('prueba',prueba);
-
-      this.dataSparePart=arraydData;
->>>>>>> develop
 
       console.log('arraydData : ', arraydData);
 
