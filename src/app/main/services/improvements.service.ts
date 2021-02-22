@@ -161,7 +161,7 @@ export class ImprovementsService {
     return of(batch);
   }
   async removeImprovementFef(id: string): Promise<void> {
-   await this.afs.collection(`db/ferreyros/improvementEntries/`).doc(id).delete().then(()=> {
+    await this.afs.collection(`db/ferreyros/improvementEntries/`).doc(id).delete().then(() => {
       console.log('Document successfully deleted!');
     }).catch((error) => {
       console.error('Error removing document: ', error);

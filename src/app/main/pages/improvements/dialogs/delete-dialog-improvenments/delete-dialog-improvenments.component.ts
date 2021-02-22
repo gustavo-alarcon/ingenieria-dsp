@@ -23,6 +23,7 @@ export class DeleteDialogImprovenmentsComponent implements OnInit {
 
   async deteteImprovenment(): Promise<void> {
     try {
+      // tslint:disable-next-line: no-string-literal
       await this.impServices.removeImprovementFef(this.data['id']);
       this.dialogRef.close('result');
 
