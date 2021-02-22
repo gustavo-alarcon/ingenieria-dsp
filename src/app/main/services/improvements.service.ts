@@ -16,11 +16,21 @@ export class ImprovementsService {
     private afs: AngularFirestore,
   ) { }
 
-
-  getAllImprovementEntries(): Observable<Improvement[]> {
-    return this.afs.collection<Improvement>(`/db/ferreyros/improvementEntries`,
+  /**
+   * Get all documents from improvementEntries collection
+   */
+  getAllImprovementEntries(): Observable<ImprovementEntry[]> {
+    return this.afs.collection<ImprovementEntry>(`/db/ferreyros/improvementEntries`,
       ref => ref.orderBy('createdAt', 'desc'))
       .valueChanges();
+  }
+
+  /**
+   * Get all documents from improvements collection
+   */
+  getAllImprovements(): Observable<Improvement[]> {
+    return this.afs.collection<Improvement>(`db/ferreyros/improvements`, ref => ref.orderBy('createdAt', 'desc'))
+      .valueChanges()
   }
 
   /**
@@ -131,8 +141,19 @@ export class ImprovementsService {
     return of(batch);
   }
 
-  getCurrent_Improv(data: any): Observable<any> {
-    return of(null)
+  /**
+   * Delete the passed improvement based in his ID
+   * @param {string} id - ID of the improvement to be removed
+   */
+  removeImprovement(id: string): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    let batch = this.afs.firestore.batch();
+    // create document reference in improvements collection
+    let improvementDocRef = this.afs.firestore.doc(`/db/ferreyros/improvements/${id}`);
+    // 
+    batch.delete(improvementDocRef);
+
+    return of(batch);
   }
 
 
@@ -193,13 +214,13 @@ export class ImprovementsService {
             res.forEach(doc => {
               let evaluatedPart;
               console.log(doc);
-              
+
               if (doc.stock > 0 && !doc.availability) {
                 evaluatedPart = doc.improvedPart;
               } else {
                 evaluatedPart = doc.currentPart;
               }
-              
+
               data = {
                 description: doc.description,
                 quantity: doc.quantity,
@@ -211,7 +232,7 @@ export class ImprovementsService {
 
             })
           } else {
-            data =  {
+            data = {
               description: part[3],
               quantity: part[1],
               improvedPart: part[0],
