@@ -115,7 +115,6 @@ export class ImprovementsService {
         currentPart: part.currentPart,
         improvedPart: part.improvedPart,
         stock: part.stock,
-        // tslint:disable-next-line: radix
         availability: new Date(parseInt(part.availability)),
         kit: part.kit,
         createdAt: new Date(),

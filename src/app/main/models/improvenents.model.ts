@@ -68,7 +68,7 @@ export interface SparePart {
   description: string;
   quantity: number;
   improvedPart: string;
-  evaluatedPart: string,
+  evaluatedPart: string;
   kit: boolean;
   match: boolean;
 }
