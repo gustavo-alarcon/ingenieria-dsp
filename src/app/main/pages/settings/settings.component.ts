@@ -8,6 +8,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { ImprovementsService } from '../../services/improvements.service';
 import { Improvement } from '../../models/improvenents.model';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-settings',
@@ -31,7 +32,12 @@ export class SettingsComponent implements OnInit {
   @ViewChild("fileInput2", {read: ElementRef}) fileButton: ElementRef;
 
   currentData: Array<Improvement> = [];
+  
+  @ViewChild(MatSort) sort: MatSort;
 
+  ngAfterViewInit() {
+    this.settingDataSource.sort = this.sort;
+  }
   constructor(
     private auth: AuthService,
     private impServices: ImprovementsService,
