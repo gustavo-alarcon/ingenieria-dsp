@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import * as XLSX from 'xlsx';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ImprovementsService } from '../../../auth/services/improvements.service';
+import { ImprovementsService } from '../../services/improvements.service';
 
 @Component({
   selector: 'app-spare-parts',

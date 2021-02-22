@@ -125,8 +125,54 @@ export class ImprovementsService {
       // 
       batch.set(improvementDocRef, data);
     });
-    
-    batch.update(improvementEntryDocRef, {state: 'validated'})
+
+    batch.update(improvementEntryDocRef, { state: 'validated' })
+
+    return of(batch);
+  }
+
+  getCurrent_Improv(data: any) {
+    // 
+  }
+
+
+  /**
+   * Append setting as improvements in firestore's improvements collection
+   * @param {Improvement[]} list - List of improvements uploaded by the user
+   * @param {User} user - User's data in actual session
+   */
+  addSettings(list: Improvement[], user): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    let batch = this.afs.firestore.batch();
+
+    list.forEach(element => {
+      // create reference for document in improvements collection
+      const improvementDocRef = this.afs.firestore.collection(`/db/ferreyros/improvements`).doc();
+      // Structuring the data model
+      let data: Improvement = {
+        id: improvementDocRef.id,
+        date: element.date ? element.date : null,
+        name: element.name ? element.name : null,
+        component: element.component ? element.component : null,
+        model: element.model ? element.model : null,
+        description: element.description ? element.description : null,
+        media: element.media ? element.media : null,
+        criticalPart: element.criticalPart ? element.criticalPart : null,
+        rate: element.rate ? element.rate : null,
+        quantity: element.quantity ? element.quantity : null,
+        currentPart: element.currentPart ? element.currentPart : null,
+        improvedPart: element.improvedPart ? element.improvedPart : null,
+        stock: element.stock ? element.stock : null,
+        availability: element.availability ? element.availability : null,
+        kit: element.kit ? element.kit : null,
+        createdAt: new Date(),
+        createdBy: user,
+        editedAt: null,
+        editedBy: null,
+      };
+      // 
+      batch.set(improvementDocRef, data);
+    });
 
     return of(batch);
   }

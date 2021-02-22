@@ -1,121 +1,104 @@
-
-
 <div class="container">
-    <div class="header-container">
-        <mat-icon mat-list-icon class="mat-icon-menu" style="font-size: 2.5em;">settings</mat-icon>
-        <h1 style="font-size: 2.5em; margin-left: 20px;">Configuraciones</h1>
-        
-        <input #fileInput2 style="display: none" type="file" (change)=" onFileSelected($event)"
-            accept=".xls,.xlsx" id="fileInput2">
-            <button type="file" aria-label="add" mat-button class="btn-add"  accept=".xls,.xlsx" (click)="fileInput2.click()" >
-              <mat-icon aria-label="agregar" class="icon-add">add</mat-icon>
-               SUBIR ARCHIVO
-            </button> 
+  <div class="header-container">
+    <mat-icon mat-list-icon class="mat-icon-menu" style="font-size: 2.5em;">settings</mat-icon>
+    <h1 style="font-size: 2.5em; margin-left: 20px;">Configuraciones</h1>
+
+    <input #fileInput2 style="display: none" type="file" (change)=" onFileSelected($event)" accept=".xls,.xlsx"
+      id="fileInput2">
+    <button aria-label="add" mat-button class="btn-add" accept=".xls,.xlsx" (click)="fileInput2.click()">
+      <mat-icon aria-label="agregar" class="icon-add">add</mat-icon>
+      SUBIR ARCHIVO
+    </button>
+  </div>
+  <div class="body-container">
+    <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+    <div style="overflow: auto;">
+      <table mat-table [dataSource]="settingDataSource" class="mat-elevation-z8">
+
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef class="table__cell"> Fecha </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{element.date | date:"dd/MM/yyyy"}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name" sticky>
+          <th mat-header-cell *matHeaderCellDef class="table__cell"> Nombre de Mejora </th>
+          <td mat-cell *matCellDef="let element" class="table__cell"> {{element.name}} </td>
+        </ng-container>
+        <ng-container matColumnDef="component">
+          <th mat-header-cell *matHeaderCellDef class="table__cell"> Componente </th>
+          <td mat-cell *matCellDef="let element" class="table__cell"> {{element.component}} </td>
+        </ng-container>
+        <ng-container matColumnDef="model">
+          <th mat-header-cell *matHeaderCellDef class="table__cell"> Modelo </th>
+          <td mat-cell *matCellDef="let element" class="table__cell"> {{element.model}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="media">
+          <th mat-header-cell *matHeaderCellDef class="table__cell"> Media </th>
+          <td mat-cell *matCellDef="let element" class="table__cell"> {{element.media}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="quantity">
+          <th mat-header-cell *matHeaderCellDef class="table__cell"> Cantidad </th>
+          <td mat-cell *matCellDef="let element" class="table__cell"> {{element.quantity}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="currentPart">
+          <th mat-header-cell *matHeaderCellDef class="table__cell"> N/P Actual </th>
+          <td mat-cell *matCellDef="let element" class="table__cell"> {{element.currentPart}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="improvedPart">
+          <th mat-header-cell *matHeaderCellDef class="table__cell"> N/P Mejorado </th>
+          <td mat-cell *matCellDef="let element" class="table__cell"> {{element.improvedPart}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef class="table__cell"> Descripción </th>
+          <td mat-cell *matCellDef="let element" class="table__cell"> {{element.description}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="stock">
+          <th mat-header-cell *matHeaderCellDef class="table__cell"> Stock </th>
+          <td mat-cell *matCellDef="let element" class="table__cell"> {{element.stock}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="availability">
+          <th mat-header-cell *matHeaderCellDef class="table__cell"> Disponibilidad </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{element.availability | date:"dd/MM/yyyy"}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions" stickyEnd>
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            Acciones
+          </th>
+          <td mat-cell *matCellDef="let raw; index as i" class="table__cell">
+            <button mat-icon-button class="w3-small" (click)="remove(i)">
+              <mat-icon>remove_circle</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="settingDisplayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: settingDisplayedColumns;"></tr>
+      </table>
     </div>
-    <div class="body-container">
-        <div > <!-- *ngIf="setting$ |async" -->
-          <table mat-table [dataSource]="settingDataSource" class="mat-elevation-z8">
-  
-              <ng-container matColumnDef="date">
-                <th mat-header-cell *matHeaderCellDef> Fecha </th>
-                    <td mat-cell *matCellDef="let element">
-                            <!-- {{element.date*1000|date:"dd/MM/yyyy"}}  -->
-                            {{element.date}} 
-                    </td>
-              </ng-container>
-            
-              <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef> Nombre de Mejora </th>
-                <td mat-cell *matCellDef="let element"> {{element.name}} </td>
-              </ng-container>
-              <ng-container matColumnDef="component">
-                <th mat-header-cell *matHeaderCellDef> Componente </th>
-                <td mat-cell *matCellDef="let element"> {{element.component}} </td>
-              </ng-container>
-              <ng-container matColumnDef="model">
-                <th mat-header-cell *matHeaderCellDef> Modelo </th>
-                <td mat-cell *matCellDef="let element"> {{element.model}} </td>
-              </ng-container>
+    <mat-paginator #settingPaginator class="ms-paginator" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+    </mat-paginator>
 
-              <ng-container matColumnDef="half">
-                <th mat-header-cell *matHeaderCellDef> Media </th>
-                <td mat-cell *matCellDef="let element"> {{element.half}} </td>
-              </ng-container>
-              
-              <ng-container matColumnDef="qty">
-                <th mat-header-cell *matHeaderCellDef> QTy </th>
-                <td mat-cell *matCellDef="let element"> {{element.qty}} </td>
-              </ng-container>
-                         
-              <ng-container matColumnDef="current">
-                <th mat-header-cell *matHeaderCellDef> N/P Actual </th>
-                <td mat-cell *matCellDef="let element"> {{element.current}} </td>
-              </ng-container>
+  </div>
 
-              <ng-container matColumnDef="improved">
-                <th mat-header-cell *matHeaderCellDef> N/P Mejorado </th>
-                <td mat-cell *matCellDef="let element"> {{element.improved}} </td>
-              </ng-container>
-                         
-              <ng-container matColumnDef="description">
-                <th mat-header-cell *matHeaderCellDef> Descripcion </th>
-                <td mat-cell *matCellDef="let element"> {{element.description}} </td>
-              </ng-container>
+  <div class="footer">
+    <button type="file" aria-label="add" mat-button class="footer__btn-close" (click)="clearDataTable()">
+      CANCELAR
+    </button>
+    <button type="file" aria-label="add" mat-button class="footer__btn-save" (click)="saveDataTable()">
+      GUARDAR
+    </button>
+  </div>
 
-              <ng-container matColumnDef="stock">
-                <th mat-header-cell *matHeaderCellDef> Stock </th>
-                <td mat-cell *matCellDef="let element"> {{element.stock}} </td>
-              </ng-container>
-            
-              <ng-container matColumnDef="available">
-                <th mat-header-cell *matHeaderCellDef> disponibilidad </th>  
-                <td mat-cell *matCellDef="let element"> 
-                     <!-- {{element.available*1000|date:"dd/MM/yyyy"}} --> 
-                     {{element.available}} 
-                </td>
-              </ng-container>
-            
-              <ng-container matColumnDef="actions" stickyEnd>
-                  <th mat-header-cell *matHeaderCellDef>
-                    Acciones
-                  </th>
-                  <td mat-cell *matCellDef="let raw" >
-                    <ng-container >
-                      <mat-menu #rawMenu="matMenu">
-                        <button class="w3-small" mat-menu-item >
-                          <mat-icon>edit</mat-icon> 
-                          Editar
-                        </button>
-                        <button class="w3-small" mat-menu-item >
-                          <mat-icon>delete</mat-icon>
-                          Eliminar
-                        </button>
-                      </mat-menu>
-    
-                      <button mat-icon-button [matMenuTriggerFor]="rawMenu">
-                        <mat-icon>more_vert</mat-icon>
-                      </button>
-                    </ng-container>
-                   
-                  </td>
-                </ng-container> 
-            
-              <tr mat-header-row *matHeaderRowDef="settingDisplayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: settingDisplayedColumns;"></tr>
-            </table>
-          </div>
-            <mat-paginator #settingPaginator class="ms-paginator" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
-            </mat-paginator>        
-          
-      </div>
-      
-      <div class="footer">
-        <button type="file" aria-label="add" mat-button class="footer__btn-close" (click)="clearDataTable()"> 
-             CANCELAR
-        </button>         
-        <button type="file" aria-label="add" mat-button class="footer__btn-save" (click)="saveDataTable()" > 
-             GUARDAR
-        </button>         
-      </div>
-        
 </div>

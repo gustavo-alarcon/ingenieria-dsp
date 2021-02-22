@@ -1,12 +1,13 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { Observable } from 'rxjs';
-import { Improvements } from '../../../auth/models/inprovenents.model';
+import { BehaviorSubject } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
-import { ImprovementsService } from '../../../auth/services/improvements.service';
-import { tap } from 'rxjs/operators';
+import { switchMap, take } from 'rxjs/operators';
 import * as XLSX from 'xlsx';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthService } from 'src/app/auth/services/auth.service';
+import { ImprovementsService } from '../../services/improvements.service';
+import { Improvement } from '../../models/improvenents.model';
 
 @Component({
   selector: 'app-settings',
@@ -14,51 +15,32 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./settings.component.scss']
 })
 export class SettingsComponent implements OnInit {
-  
-  dataSource = new MatTableDataSource();
-  selected:any;
-  
-  setting$: Observable<object[]>
+  loading = new BehaviorSubject<boolean>(false);
+  loading$ = this.loading.asObservable();
 
-   //Improvement
-    
-  settingDataSource = new MatTableDataSource<Improvements>();
-  settingDisplayedColumns: string[] = ['date',  'name','component', 'model', 'half','qty','current','improved','description','stock','available'];
+  selected: any;
+
+  //Improvement
+  settingDataSource = new MatTableDataSource<Improvement>();
+  settingDisplayedColumns: string[] = ['date', 'name', 'component', 'model', 'media', 'quantity', 'currentPart', 'improvedPart', 'description', 'stock', 'availability', 'actions'];
 
   @ViewChild("settingPaginator", { static: false }) set content(paginator: MatPaginator) {
     this.settingDataSource.paginator = paginator;
-  } 
+  }
 
-  currentData: Array<Improvements> = [];
+  @ViewChild("fileInput2", {read: ElementRef}) fileButton: ElementRef;
 
-  constructor(private impvServices:ImprovementsService,
-              private snackBar: MatSnackBar
-    ) { }
+  currentData: Array<Improvement> = [];
+
+  constructor(
+    private auth: AuthService,
+    private impServices: ImprovementsService,
+    private snackbar: MatSnackBar
+  ) { }
 
   ngOnInit(): void {
-    /* this.setting$ = this.impvServices.getAllSettings().pipe(
-      tap(res => {
-        if (res) {
-          this.settingDataSource.data = res
-        }
+  }
 
-      }) 
-    ); */
-  }
-  change() {
-
-    this.currentData = [];
-    this.dataSource.data = [];
-
-  }
-  
-  ifchange() {
-  if (this.currentData.length) {
-   
-  } else {
-    this.change()
-  }
-  }
   onFileSelected(event): void {
     if (event.target.files && event.target.files[0]) {
       let name = event.target.files[0].name
@@ -67,138 +49,99 @@ export class SettingsComponent implements OnInit {
       reader.onload = (e: any) => {
         /* read workbook */
         const bstr: string = e.target.result;
-        const wb: XLSX.WorkBook = XLSX.read(bstr, { type: 'binary' });
+        const wb: XLSX.WorkBook = XLSX.read(bstr, { type: 'binary', cellDates: true });
 
         /* grab first sheet */
         const wsname: string = wb.SheetNames[0];
         const ws: XLSX.WorkSheet = wb.Sheets[wsname];
 
         /* save data */
-        this.selected = XLSX.utils.sheet_to_json(ws, { header: "A", defval: "" });
-        
-        this.upLoadXls(this.selected, name.split(".")[0])
-      };
-      reader.readAsBinaryString(event.target.files[0]);
-    }
-  }
-  upLoadXls(array, name): void {  
-    let arraydData = [];
-    if (array.length>0) {
-       array.forEach(el => {
-        let array2 = Object.values(el);
-        //let array2: Array<string> = Object.values(el);          
-          let data = 
-            {
-              date:array2[0], //new Date(Date.parse(array2[0])*1000)
-              name: array2[1],
-              component:array2[2],
-              model:array2[3],
-              half:array2[4],
-              qty:array2[5],
-              current:array2[6],
-              improved:array2[7],
-              description:array2[8],
-              stock:array2[9],
-              available:array2[10],
-            }
-            arraydData.push(data)        
-      });
-    }else{
-      this.snackBar.open("el archivo esta vacio ", "Aceptar", {
-        duration: 3000,});
-    }
-    
-     this.currentData=arraydData;
+        this.selected = XLSX.utils.sheet_to_json(ws, { header: 1 });
 
-    this.settingDataSource.data = this.currentData;
-     
-   document.getElementById("fileInput2").nodeValue = "";
-  }
-  
-  clearDataTable(){
-    this.settingDataSource.data=[];
-    document.getElementById("fileInput2").nodeValue = "";
-  }
-
-  saveDataTable(){
-   this.settingDataSource.data.forEach(el => {
-    this.impvServices.addSettings(el);
-   });
-   this.settingDataSource.data=[];
-   this.snackBar.open("se guardo correctamente", "Aceptar", {
-    duration: 3000,});
-  }
-
-  onFileSelectedSettings(event) {
-
-    if (event.target.files && event.target.files[0]) {
-
-      var reader = new FileReader();
-      reader.onload = (e: any) => {
-        /* read workbook */
-        const bstr: string = e.target.result;
-        const wb: XLSX.WorkBook = XLSX.read(bstr, { type: 'binary' });
-
-        /* grab first sheet */
-        const wsname: string = wb.SheetNames[0];
-        const ws: XLSX.WorkSheet = wb.Sheets[wsname];
-
-        /* save data */
-        this.selected = XLSX.utils.sheet_to_json(ws, { header: "A", defval: "" });
-        this.upLoadXlsSettings(this.selected)
+        this.upLoadXlsToTable(this.selected, name.split(".")[0])
       };
       reader.readAsBinaryString(event.target.files[0]);
     }
   }
 
-
-
-
-  upLoadXlsSettings(array): void {
-    
-    let aux: boolean;
-    array.forEach(el => { //slice(1)
-      console.log('el : ',el);
-      aux = false;
-      let array2: Array<string> = Object.values(el);
-      /* 
-      aux = false;
-      let array2: Array<string> = Object.values(el);
-      //probando si nombre ya existe. si es asi, ejecuta editTagDestinations.
-      //sino, crea nuevo destino.
-       this.dataSourceListaDestinos.data.forEach(element =>{
-        if(element["name"].toLowerCase() === array2[0].toLowerCase()){
-          this.dbs.editTagDestinations({
-            name: array2[0],
-            description: array2[1],
-            id: element["id"]
-          });
-          aux=true;
+  upLoadXlsToTable(xlsx, name): void {
+    let xlsxData = [];
+    if (xlsx.length > 0) {
+      xlsx.forEach(el => {
+        let temp = Object.values(el);
+        let data =
+        {
+          date: temp[0],
+          name: temp[1],
+          component: temp[2],
+          model: temp[3],
+          media: temp[4],
+          quantity: temp[5],
+          currentPart: temp[6],
+          improvedPart: temp[7],
+          description: temp[8],
+          stock: temp[9],
+          availability: temp[10],
         }
-      }); 
-      console.log('array 2 : ',array2);
-      console.log('aux : ',aux); 
-      */
 
-      aux === false ? this.impvServices.addSettings({ 
+        xlsxData.push(data)
+      });
 
-        date:new Date(array2[0]), //new Date(Date.parse(array2[0])*1000)
-        name: array2[1],
-        component:array2[2],
-        model:array2[3],
-        half:array2[4],
-        qty:parseInt(array2[5]),
-        current:array2[6],
-        improved:array2[7],
-        description:array2[8],
-        stock:parseInt(array2[9]),
-        available:new Date(array2[10]),// new Date(Date.parse(array2[10]))
-      }) : null;
-    })
+      this.currentData = xlsxData;
 
-    //Se limpia entrada de documento en el HTML
+      this.settingDataSource.data = this.currentData;
+
+      this.fileButton.nativeElement.value = null;
+    } else {
+      this.snackbar.open("el archivo esta vacio ", "Aceptar", {
+        duration: 3000,
+      });
+    }
+
+
+  }
+
+  clearDataTable() {
+    this.settingDataSource.data = [];
     document.getElementById("fileInput2").nodeValue = "";
-}
+  }
 
+  saveDataTable() {
+    this.loading.next(true);
+
+    this.auth.user$.pipe(
+      take(1),
+      switchMap(user => {
+        return this.impServices.addSettings(this.settingDataSource.data, user);
+      })
+    ).subscribe(batch => {
+      if (batch) {
+        batch.commit()
+          .then(() => {
+            this.loading.next(false);
+            this.snackbar.open('✅ Archivo subido correctamente!', 'Aceptar', {
+              duration: 6000
+            });
+            this.settingDataSource.data = [];
+          })
+          .catch(err => {
+            this.loading.next(false);
+            this.snackbar.open('🚨 Hubo un error subiendo el archivo.', 'Aceptar', {
+              duration: 6000
+            })
+          })
+      }
+    });
+
+  }
+
+  remove(index: number): void {
+    let table = [...this.settingDataSource.data];
+    table.splice(index, 1);
+    this.settingDataSource.data = table;
+    this.snackbar.open('🗑️ Elemento removido!', 'Aceptar', {
+      duration: 6000
+    });
+  }
 
 }

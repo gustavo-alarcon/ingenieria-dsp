@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { Improvements } from 'src/app/auth/models/inprovenents.model';
 import { Observable } from 'rxjs';
 import { FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';

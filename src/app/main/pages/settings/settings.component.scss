@@ -35,5 +35,11 @@ table {
     background: #6200EE;
     color: white;
     padding: 0px 30px 0px 30px;
+}
 
+table {
+  .table__cell {
+    min-width: 80px;
+    padding: 0px 8px;
+  }
 }
