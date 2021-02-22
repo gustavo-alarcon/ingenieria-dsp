@@ -11,7 +11,7 @@ import { DeleteDialogImprovenmentsComponent } from './dialogs/delete-dialog-impr
 import { ValidateDialogImprovenmentsComponent } from './dialogs/validate-dialog-improvenments/validate-dialog-improvenments.component';
 import { tap } from 'rxjs/operators';
 import { ImprovementsService } from '../../services/improvements.service';
-import { ImproventmentModel1 } from '../../models/improvenents.model';
+import { Improvement, ImprovementEntry } from '../../models/improvenents.model';
 
 @Component({
   selector: 'app-improvements',
@@ -23,10 +23,10 @@ export class ImprovementsComponent implements OnInit {
   dataSource = new MatTableDataSource();
   selected: any;
 
-  improvement$: Observable<ImproventmentModel1[]>;
+  improvement$: Observable<Improvement[]>;
 
   // Improvement
-  improvementDataSource = new MatTableDataSource<ImproventmentModel1>();
+  improvementDataSource = new MatTableDataSource<Improvement>();
   improvementDisplayedColumns: string[] = ['date', 'name', 'component', 'model', 'review', 'user', 'state', 'actions'];
 
   @ViewChild('improvementPaginator', { static: false }) set content(paginator: MatPaginator) {
@@ -40,23 +40,20 @@ export class ImprovementsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.improvement$ = this.impvServices.getAllImprovement().pipe(
+    this.improvement$ = this.impvServices.getAllImprovementEntries().pipe(
       tap(res => {
         if (res) {
           this.improvementDataSource.data = res;
-          // console.log(res);
         }
       })
     );
 
   }
 
-  openDialog(value: string, index?: number): void {
-    // console.log(this.improvementDataSource.data[index])
+  openDialog(value: string, entry?: ImprovementEntry, index?: number): void {
     const optionsDialog = {
       width: '100%',
-      height: '90%',
-      data: this.improvementDataSource.data
+      data: entry
     };
     let dialogRef;
 
@@ -91,7 +88,7 @@ export class ImprovementsComponent implements OnInit {
 
       case 'delete':
         dialogRef = this.dialog.open(DeleteDialogImprovenmentsComponent, {
-          width: '40%',
+          width: '350px',
           data: this.improvementDataSource.data[index]
         }
         );

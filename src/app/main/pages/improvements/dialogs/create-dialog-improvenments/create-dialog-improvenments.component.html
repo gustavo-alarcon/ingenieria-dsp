@@ -2,6 +2,7 @@
     <h2 mat-dialog-title>
         Ingreso de mejora
         <mat-divider></mat-divider>
+        <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
     </h2>
     <form class="container-form" [formGroup]="createImprovenmentsForm" autocomplete="off">
         <mat-dialog-content class="mat-typography">
@@ -72,16 +73,8 @@
                     <div [formGroupName]="i" class="container-form-array">
                         <mat-form-field appearance="outline" style="width: 200px;" class="container-form-array__inputs">
                             <mat-label>Parte</mat-label>
-                            <input matInput placeholder="Parte" 
-                            formControlName="spareParts"
-                            [matAutocomplete]="auto1"
-                            >
-                            <mat-autocomplete autoActiveFirstOption #auto1="matAutocomplete">
-                                <mat-option *ngFor="let option1 of arrParts1[i] | async" [value]="option1">
-                                  {{option1}}
-                                </mat-option>
-                              </mat-autocomplete>
-                            <mat-error *ngIf="parts.controls[i].get('spareParts').errors">
+                            <input matInput placeholder="Parte" formControlName="sparePart">
+                            <mat-error *ngIf="parts.controls[i].get('sparePart').errors">
                                 Campo <strong>requerido.</strong>
                             </mat-error>
                             <mat-icon matSuffix>settings</mat-icon>
@@ -90,30 +83,24 @@
 
                         <mat-form-field appearance="outline" style="width: 100px;" class="container-form-array__inputs">
                             <mat-label>Cantidad</mat-label>
-                            <input matInput placeholder="Cantidad" formControlName="amount">
-                            <mat-error *ngIf="parts.controls[i].get('amount').errors">
+                            <input matInput type='number' placeholder="Cantidad" formControlName="quantity" min='0'
+                                step='1'>
+                            <mat-error *ngIf="parts.controls[i].get('quantity').errors">
                                 Campo <strong>requerido.</strong>
                             </mat-error>
                         </mat-form-field>
-                       
+
                         <mat-form-field appearance="outline" style="width: 200px;" class="container-form-array__inputs">
                             <mat-label>Nº de parte actual</mat-label>
-                            <input matInput placeholder="Parte" 
-                            formControlName="currentPart"
-                            [matAutocomplete]="auto2">
-                            <mat-autocomplete autoActiveFirstOption #auto2="matAutocomplete">
-                                <mat-option *ngFor="let option2 of arrParts2[i] | async" [value]="option2">
-                                  {{option2}}
-                                </mat-option>
-                              </mat-autocomplete>
-                              <mat-error *ngIf="parts.controls[i].get('currentPart').errors">
+                            <input matInput type='text' placeholder="Parte" formControlName="currentPart">
+                            <mat-error *ngIf="parts.controls[i].get('currentPart').errors">
                                 Campo <strong>requerido.</strong>
                             </mat-error>
                         </mat-form-field>
-                       
+
                         <mat-form-field appearance="outline" style="width: 200px;" class="container-form-array__inputs">
                             <mat-label>Nº de parte mejorada</mat-label>
-                            <input matInput placeholder="Nº de parte mejorada" formControlName="improvedPart">
+                            <input matInput type="text" placeholder="Nº de parte mejorada" formControlName="improvedPart">
                             <mat-error *ngIf="parts.controls[i].get('improvedPart').errors">
                                 Campo <strong>requerido.</strong>
                             </mat-error>
