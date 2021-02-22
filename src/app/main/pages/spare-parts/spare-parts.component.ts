@@ -67,7 +67,6 @@ export class SparePartsComponent implements OnInit {
     if (xlsx.length > 0) {
       xlsx.forEach(el => {
         let temp = Object.values(el);
-
         let obs = this.impServices.checkPart(temp);
         obsArray.push(obs);
       });
@@ -75,6 +74,8 @@ export class SparePartsComponent implements OnInit {
       this.checkedParts$ = combineLatest(
         obsArray
       ).pipe(map((list) => {
+        console.log(list);
+        
         this.dataSparePart = list;
         this.fileButton.nativeElement.value = null;
         return list

@@ -182,35 +182,36 @@ export class ImprovementsService {
    * @param {string} part - Part number to be evaluated
    */
   checkPart(part: any): Observable<SparePart> {
-    console.log(part);
 
     return this.afs.collection<Improvement>(`/db/ferreyros/improvements`, ref => ref.where('improvedPart', '==', part[0]))
       .valueChanges()
       .pipe(
         take(1),
         map(res => {
+          let data;
           if (res.length) {
             res.forEach(doc => {
               let evaluatedPart;
-
-              if (doc[0].stock > 0 || doc[0].availability) {
-                evaluatedPart = doc[0].improvedPart;
+              console.log(doc);
+              
+              if (doc.stock > 0 && !doc.availability) {
+                evaluatedPart = doc.improvedPart;
               } else {
-                evaluatedPart = doc[0].currentPart;
+                evaluatedPart = doc.currentPart;
               }
-
-              return {
-                description: doc[0].description,
-                quantity: doc[0].quantity,
-                improvedPart: doc[0].improvedPart,
+              
+              data = {
+                description: doc.description,
+                quantity: doc.quantity,
+                improvedPart: doc.improvedPart,
                 evaluatedPart: evaluatedPart,
-                kit: doc[0].kit,
+                kit: doc.kit,
                 match: true
               }
 
             })
           } else {
-            return {
+            data =  {
               description: part[3],
               quantity: part[1],
               improvedPart: part[0],
@@ -219,6 +220,8 @@ export class ImprovementsService {
               match: false
             }
           }
+
+          return data;
         })
       )
   }
