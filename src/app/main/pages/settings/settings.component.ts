@@ -35,9 +35,7 @@ export class SettingsComponent implements OnInit {
   
   @ViewChild(MatSort) sort: MatSort;
 
-  ngAfterViewInit() {
-    this.settingDataSource.sort = this.sort;
-  }
+  
   constructor(
     private auth: AuthService,
     private impServices: ImprovementsService,
@@ -45,6 +43,10 @@ export class SettingsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+  }
+
+  ngAfterViewInit() {
+    this.settingDataSource.sort = this.sort;
   }
 
   onFileSelected(event): void {

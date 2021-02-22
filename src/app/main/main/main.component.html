@@ -26,6 +26,12 @@
             Revisión de repuestos
           </span>
         </a>
+        <a mat-list-item [routerLink]="['/main/summary']" routerLinkActive="active" (click)="drawer.toggle()">
+          <mat-icon mat-list-icon class="mat-icon-menu">fact_check</mat-icon>
+          <span class="mat-item-list-span">
+            Resumen
+          </span>
+        </a>
         <a mat-list-item [routerLink]="['/main/settings']" routerLinkActive="active"  (click)="drawer.toggle()">
           <mat-icon mat-list-icon class="mat-icon-menu">settings</mat-icon>
           <span class="mat-item-list-span">

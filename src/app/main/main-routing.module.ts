@@ -17,6 +17,10 @@ const routes: Routes = [
         loadChildren: () => import('./pages/improvements/improvements.module').then(m => m.ImprovementsModule)
       },
       {
+        path: 'summary',
+        loadChildren: () => import('./pages/summary/summary.module').then(m => m.SummaryModule)
+      },
+      {
         path: 'spare-parts',
         loadChildren: () => import('./pages/spare-parts/spare-parts.module').then(m => m.SparePartsModule)
       },
