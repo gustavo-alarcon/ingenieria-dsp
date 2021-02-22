@@ -59,5 +59,5 @@ export interface ImprovementPart {
   kit: boolean;
   sparePart: string;
   stock?: number;
-  availability?: Date;
+  availability?: string;
 }

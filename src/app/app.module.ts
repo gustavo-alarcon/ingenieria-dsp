@@ -13,6 +13,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { environment } from '../environments/environment';
 
 import { NotFoundComponent } from './shared/not-found/not-found.component';
+import { NgxMaskModule } from 'ngx-mask';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { NotFoundComponent } from './shared/not-found/not-found.component';
     AngularFireAuthModule,
     AngularFireStorageModule,
     HttpClientModule,
+    NgxMaskModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent]

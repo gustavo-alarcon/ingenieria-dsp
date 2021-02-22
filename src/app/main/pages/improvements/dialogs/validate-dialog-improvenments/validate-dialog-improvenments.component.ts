@@ -63,8 +63,8 @@ export class ValidateDialogImprovenmentsComponent implements OnInit {
       currentPart: [part.currentPart ? part.currentPart : null, Validators.required],
       improvedPart: [part.improvedPart ? part.improvedPart : null, Validators.required],
       kit: [part.kit ? part.kit : null],
-      stock: [0, Validators.required],
-      availability: [null, Validators.required],
+      stock: [part.stock ? part.stock : 0, Validators.required],
+      availability: [part.availability ? part.availability : '', Validators.required],
     });
 
     this.parts.push(group);

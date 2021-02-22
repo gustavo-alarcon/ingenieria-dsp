@@ -9,6 +9,7 @@ import { CreateDialogImprovenmentsComponent } from './dialogs/create-dialog-impr
 import { EditDialogImprovenmentsComponent } from './dialogs/edit-dialog-improvenments/edit-dialog-improvenments.component';
 import { DeleteDialogImprovenmentsComponent } from './dialogs/delete-dialog-improvenments/delete-dialog-improvenments.component';
 import { ValidateDialogImprovenmentsComponent } from './dialogs/validate-dialog-improvenments/validate-dialog-improvenments.component';
+import { NgxMaskModule } from 'ngx-mask';
 
 
 @NgModule({
@@ -27,7 +28,8 @@ import { ValidateDialogImprovenmentsComponent } from './dialogs/validate-dialog-
     ImprovementsRoutingModule,
     MaterialModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    NgxMaskModule,
   ]
 })
 export class ImprovementsModule { }
