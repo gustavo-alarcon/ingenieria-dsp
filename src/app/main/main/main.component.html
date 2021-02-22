@@ -38,6 +38,12 @@
             Configuración
           </span>
         </a>
+        <a mat-list-item [routerLink]="['/main/evaluations']" routerLinkActive="active"  (click)="drawer.toggle()">
+          <mat-icon mat-list-icon class="mat-icon-menu">turned_in</mat-icon>
+          <span class="mat-item-list-span">
+            Evaluaciones
+          </span>
+        </a>
       </div>
     </mat-nav-list>
   </mat-sidenav>

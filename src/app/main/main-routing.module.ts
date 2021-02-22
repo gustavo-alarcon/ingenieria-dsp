@@ -29,6 +29,10 @@ const routes: Routes = [
         loadChildren: () => import('./pages/settings/settings.module').then(m => m.SettingsModule)
       },
       {
+        path: 'evaluations',
+        loadChildren: () => import('./pages/evaluations/evaluations.module').then(m => m.EvaluationsModule)
+      },
+      {
         path: '**',
         component: NotFoundComponent
       }
