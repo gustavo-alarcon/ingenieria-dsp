@@ -41,7 +41,7 @@
         <ng-container matColumnDef="state">
           <th mat-header-cell *matHeaderCellDef> Estado </th>
           <td mat-cell *matCellDef="let element">
-            <button mat-button
+            <button mat-button (click)="showImprovementEntry(element)"
               [ngClass]="{'btn-state-register': element.state==='registered','btn-state-validate': element.state==='validated'}">
               {{element.state === 'registered' ? 'Registrado':'Validado'}}
             </button>

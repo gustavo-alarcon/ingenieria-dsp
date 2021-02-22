@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { Improvements } from 'src/app/auth/models/inprovenents.model';
 import { Observable } from 'rxjs';
 import { FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -12,6 +11,7 @@ import { ValidateDialogImprovenmentsComponent } from './dialogs/validate-dialog-
 import { tap } from 'rxjs/operators';
 import { ImprovementsService } from '../../services/improvements.service';
 import { Improvement, ImprovementEntry } from '../../models/improvenents.model';
+import { ShowDialogImprovementsComponent } from './dialogs/show-dialog-improvements/show-dialog-improvements.component';
 
 @Component({
   selector: 'app-improvements',
@@ -97,6 +97,13 @@ export class ImprovementsComponent implements OnInit {
         });
         break;
     }
+  }
+
+  showImprovementEntry(row: ImprovementEntry): void {
+    this.dialog.open(ShowDialogImprovementsComponent, {
+      width: '100%',
+      data: row
+    })
   }
 
 
