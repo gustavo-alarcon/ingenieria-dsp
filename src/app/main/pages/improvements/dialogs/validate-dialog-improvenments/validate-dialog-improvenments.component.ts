@@ -75,6 +75,7 @@ export class ValidateDialogImprovenmentsComponent implements OnInit {
     this.loading.next(true);
     if (this.validationLogisticForm.invalid) {
       this.validationLogisticForm.markAllAsTouched();
+      this.loading.next(false);
       return;
     } else {
       this.auth.user$.pipe(

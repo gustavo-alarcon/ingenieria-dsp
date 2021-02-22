@@ -78,10 +78,9 @@ export class CreateDialogImprovenmentsComponent implements OnInit, OnDestroy {
 
   save(): void {
     this.loading.next(true);
-    console.log(this.createImprovenmentsForm.value);
-
     if (this.createImprovenmentsForm.invalid) {
       this.createImprovenmentsForm.markAllAsTouched();
+      this.loading.next(false);
       return;
     } else {
       this.auth.user$.pipe(

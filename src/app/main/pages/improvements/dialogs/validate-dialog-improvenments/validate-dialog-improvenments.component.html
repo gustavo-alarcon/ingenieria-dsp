@@ -12,13 +12,16 @@
                     <mat-form-field appearance="outline" style="width: 200px;">
                         <mat-label>Nombre</mat-label>
                         <input matInput placeholder="Nombre" formControlName="name">
-                        <!-- <mat-error *ngIf="emailFormControl.hasError('required')">
-                            Email is <strong>required</strong>
-                          </mat-error> -->
+                        <mat-error *ngIf="validationLogisticForm.controls['name'].errors">
+                            Campo <strong>requerido.</strong>
+                        </mat-error>
                     </mat-form-field>
                     <mat-form-field appearance="outline" style="width: 200px;">
                         <mat-label>Modelo</mat-label>
                         <input matInput placeholder="Modelo" formControlName="model">
+                        <mat-error *ngIf="validationLogisticForm.controls['model'].errors">
+                            Campo <strong>requerido.</strong>
+                        </mat-error>
                     </mat-form-field>
                 </div>
                 <div>
@@ -26,6 +29,9 @@
                         <mat-label>Descripción</mat-label>
                         <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="6.15"
                             cdkAutosizeMaxRows="15" formControlName="description" placeholder="Descripción"></textarea>
+                        <mat-error *ngIf="validationLogisticForm.controls['description'].errors">
+                            Campo <strong>requerido.</strong>
+                        </mat-error>
                     </mat-form-field>
                 </div>
             </div>
@@ -35,12 +41,18 @@
                     <mat-form-field appearance="outline" style="width: 200px;">
                         <mat-label>Compononte</mat-label>
                         <input matInput placeholder="Compononte" formControlName="component">
+                        <mat-error *ngIf="validationLogisticForm.controls['component'].errors">
+                            Campo <strong>requerido.</strong>
+                        </mat-error>
                     </mat-form-field>
                 </div>
                 <div class="container-form__checked--date">
                     <mat-form-field appearance="outline" style="width: 200px;">
                         <mat-label>Fecha de publicación</mat-label>
                         <input matInput [matDatepicker]="picker1" formControlName="date">
+                        <mat-error *ngIf="validationLogisticForm.controls['date'].errors">
+                            Campo <strong>requerido.</strong>
+                        </mat-error>
                         <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                         <mat-datepicker #picker1></mat-datepicker>
                     </mat-form-field>
@@ -60,19 +72,31 @@
                         <mat-form-field appearance="outline" style="width: 120px;" class="container-form-array__inputs">
                             <mat-label>Parte</mat-label>
                             <input matInput placeholder="Label" formControlName="sparePart">
+                            <mat-error *ngIf="parts.controls[i].get('sparePart').errors">
+                                Campo <strong>requerido.</strong>
+                            </mat-error>
                             <mat-icon matSuffix>settings</mat-icon>
                         </mat-form-field>
                         <mat-form-field appearance="outline" style="width: 80px;" class="container-form-array__inputs">
                             <mat-label>Cantidad</mat-label>
                             <input matInput placeholder="Cantidad" formControlName="quantity">
+                            <mat-error *ngIf="parts.controls[i].get('quantity').errors">
+                                Campo <strong>requerido.</strong>
+                            </mat-error>
                         </mat-form-field>
                         <mat-form-field appearance="outline" style="width: 100px;" class="container-form-array__inputs">
                             <mat-label>Nº de parte actual</mat-label>
                             <input matInput placeholder="Nº de parte actual" formControlName="currentPart">
+                            <mat-error *ngIf="parts.controls[i].get('currentPart').errors">
+                                Campo <strong>requerido.</strong>
+                            </mat-error>
                         </mat-form-field>
                         <mat-form-field appearance="outline" style="width: 100px;" class="container-form-array__inputs">
                             <mat-label>Nº de parte mejorada</mat-label>
                             <input matInput placeholder="Nº de parte mejorada" formControlName="improvedPart">
+                            <mat-error *ngIf="parts.controls[i].get('improvedPart').errors">
+                                Campo <strong>requerido.</strong>
+                            </mat-error>
                         </mat-form-field>
                         <div class="container-form-array__checked">
                             <span>Kit</span>
@@ -81,17 +105,17 @@
                         <mat-form-field appearance="outline" style="width:80px" class="container-form-array__inputs">
                             <mat-label>Stock</mat-label>
                             <input matInput type="number" placeholder="Stock" formControlName="stock" min="0" step="1">
+                            <mat-error *ngIf="parts.controls[i].get('stock').errors">
+                                Campo <strong>requerido.</strong>
+                            </mat-error>
                         </mat-form-field>
-                        <!-- <mat-form-field appearance="outline">
+                        <mat-form-field appearance="outline" style="width:150px" class="container-form-array__inputs">
                             <mat-label>Fecha de disponibilidad</mat-label>
-                            <input matInput type="text" mask="00/00/0000" [matDatepicker]="p+i"
+                            <input matInput type="text" mask="00/00/0000" placeholder="dd/mm/yyyy"
                                 formControlName="availability">
-                            <mat-datepicker-toggle matSuffix [for]="p + i"></mat-datepicker-toggle>
-                            <mat-datepicker #p+i></mat-datepicker>
-                        </mat-form-field> -->
-                        <mat-form-field appearance="outline" style="width:150px"   class="container-form-array__inputs">
-                            <mat-label>Fecha de disponibilidad</mat-label>
-                            <input matInput type="text"  mask="00/00/0000" placeholder="dd/mm/yyyy" formControlName="availability" >
+                            <mat-error *ngIf="parts.controls[i].get('availability').errors">
+                                Campo <strong>requerido.</strong>
+                            </mat-error>
                         </mat-form-field>
 
                     </div>
