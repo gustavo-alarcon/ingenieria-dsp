@@ -9,6 +9,7 @@ import { CreateDialogImprovenmentsComponent } from './dialogs/create-dialog-impr
 import { EditDialogImprovenmentsComponent } from './dialogs/edit-dialog-improvenments/edit-dialog-improvenments.component';
 import { DeleteDialogImprovenmentsComponent } from './dialogs/delete-dialog-improvenments/delete-dialog-improvenments.component';
 import { ValidateDialogImprovenmentsComponent } from './dialogs/validate-dialog-improvenments/validate-dialog-improvenments.component';
+import { ShowDialogImprovementsComponent } from './dialogs/show-dialog-improvements/show-dialog-improvements.component';
 
 
 @NgModule({
@@ -18,6 +19,7 @@ import { ValidateDialogImprovenmentsComponent } from './dialogs/validate-dialog-
     EditDialogImprovenmentsComponent,
     DeleteDialogImprovenmentsComponent,
     ValidateDialogImprovenmentsComponent,
+    ShowDialogImprovementsComponent,
   ],
   exports: [
     ImprovementsComponent,

@@ -11,6 +11,7 @@ import { ValidateDialogImprovenmentsComponent } from './dialogs/validate-dialog-
 import { tap } from 'rxjs/operators';
 import { ImprovementsService } from '../../services/improvements.service';
 import { Improvement, ImprovementEntry } from '../../models/improvenents.model';
+import { ShowDialogImprovementsComponent } from './dialogs/show-dialog-improvements/show-dialog-improvements.component';
 
 @Component({
   selector: 'app-improvements',
@@ -112,6 +113,13 @@ export class ImprovementsComponent implements OnInit {
         });
         break;
     }
+  }
+
+  showImprovementEntry(row: ImprovementEntry): void {
+    this.dialog.open(ShowDialogImprovementsComponent, {
+      width: '100%',
+      data: row
+    })
   }
 
 
