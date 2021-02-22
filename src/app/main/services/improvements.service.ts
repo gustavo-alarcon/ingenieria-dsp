@@ -115,7 +115,8 @@ export class ImprovementsService {
         currentPart: part.currentPart,
         improvedPart: part.improvedPart,
         stock: part.stock,
-        availability: new Date(),
+        // tslint:disable-next-line: radix
+        availability: new Date(parseInt(part.availability)),
         kit: part.kit,
         createdAt: new Date(),
         createdBy: user,
@@ -198,13 +199,13 @@ export class ImprovementsService {
             res.forEach(doc => {
               let evaluatedPart;
               console.log(doc);
-              
+
               if (doc.stock > 0 && !doc.availability) {
                 evaluatedPart = doc.improvedPart;
               } else {
                 evaluatedPart = doc.currentPart;
               }
-              
+
               data = {
                 description: doc.description,
                 quantity: doc.quantity,
@@ -216,7 +217,7 @@ export class ImprovementsService {
 
             })
           } else {
-            data =  {
+            data = {
               description: part[3],
               quantity: part[1],
               improvedPart: part[0],
