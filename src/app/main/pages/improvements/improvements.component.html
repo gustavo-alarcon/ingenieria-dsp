@@ -63,7 +63,7 @@
                   <mat-icon>edit</mat-icon>
                   Editar
                 </button>
-                <button *ngIf="!element.state==='validated'" class="w3-small" mat-menu-item (click)="openDialog('delete',element,i)">
+                <button *ngIf="element.state==='registered'" class="w3-small" mat-menu-item (click)="openDialog('delete',element,i)">
                   <mat-icon>delete</mat-icon>
                   Borrar
                 </button>

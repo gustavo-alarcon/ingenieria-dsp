@@ -30,7 +30,7 @@ export class ImprovementsService {
    */
   getAllImprovements(): Observable<Improvement[]> {
     return this.afs.collection<Improvement>(`db/ferreyros/improvements`, ref => ref.orderBy('createdAt', 'desc'))
-      .valueChanges()
+      .valueChanges();
   }
 
   /**
@@ -141,7 +141,7 @@ export class ImprovementsService {
     batch.update(improvementEntryDocRef, {
       parts: form.parts,
       state: 'validated'
-    })
+    });
 
     return of(batch);
   }
@@ -152,15 +152,21 @@ export class ImprovementsService {
    */
   removeImprovement(id: string): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
-    let batch = this.afs.firestore.batch();
+    const batch = this.afs.firestore.batch();
     // create document reference in improvements collection
-    let improvementDocRef = this.afs.firestore.doc(`/db/ferreyros/improvements/${id}`);
-    // 
+    const improvementDocRef = this.afs.firestore.doc(`/db/ferreyros/improvements/${id}`);
+    //
     batch.delete(improvementDocRef);
 
     return of(batch);
   }
-
+  async removeImprovementFef(id: string): Promise<void> {
+   await this.afs.collection(`db/ferreyros/improvementEntries/`).doc(id).delete().then(()=> {
+      console.log('Document successfully deleted!');
+    }).catch((error) => {
+      console.error('Error removing document: ', error);
+    });
+  }
 
   /**
    * Append setting as improvements in firestore's improvements collection
@@ -169,13 +175,13 @@ export class ImprovementsService {
    */
   addSettings(list: Improvement[], user): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
-    let batch = this.afs.firestore.batch();
+    const batch = this.afs.firestore.batch();
 
     list.forEach(element => {
       // create reference for document in improvements collection
       const improvementDocRef = this.afs.firestore.collection(`/db/ferreyros/improvements`).doc();
       // Structuring the data model
-      let data: Improvement = {
+      const data: Improvement = {
         id: improvementDocRef.id,
         date: element.date ? element.date : null,
         name: element.name ? element.name : null,
@@ -196,7 +202,7 @@ export class ImprovementsService {
         editedAt: null,
         editedBy: null,
       };
-      // 
+      //
       batch.set(improvementDocRef, data);
     });
 
@@ -230,12 +236,12 @@ export class ImprovementsService {
                 description: doc.description,
                 quantity: doc.quantity,
                 improvedPart: doc.improvedPart,
-                evaluatedPart: evaluatedPart,
+                evaluatedPart,
                 kit: doc.kit,
                 match: true
-              }
+              };
 
-            })
+            });
           } else {
             data = {
               description: part[3],
@@ -244,11 +250,11 @@ export class ImprovementsService {
               evaluatedPart: part[0],
               kit: null,
               match: false
-            }
+            };
           }
 
           return data;
         })
-      )
+      );
   }
 }
