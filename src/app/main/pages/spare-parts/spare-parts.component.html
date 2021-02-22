@@ -13,50 +13,50 @@
     </div>
     <div class="body-container">
         <h4 style="font-weight: bold;">Lista de partes</h4>
-        <ng-container *ngIf="dataSparePart.length; else default">
-            <form action="" *ngFor="let item of dataSparePart; let i=index">
+        <ng-container *ngIf="checkedParts$ | async; else default">
+            <form  *ngFor="let item of dataSparePart; let i=index">
                 <div class="container-form-array">
                     <!-- [formGroupName]="i" -->
                     <mat-form-field appearance="outline" style="width: 280px;" class="container-form-array__inputs">
                         <mat-label>Nombre</mat-label>
-                        <input matInput placeholder="Label" [ngModel]="item.partName" name="partName">
+                        <input matInput placeholder="Label" [ngModel]="item.description" name="description">
                         <!--  <mat-icon matSuffix>settings</mat-icon> -->
                     </mat-form-field>
                     <mat-form-field appearance="outline" style="width: 100px;" class="container-form-array__inputs">
                         <mat-label>Cantidad</mat-label>
-                        <input matInput placeholder="Cantidad" [ngModel]="item.qty" name='quantity'>
+                        <input matInput placeholder="Cantidad" [ngModel]="item.quantity" name='quantity'>
                     </mat-form-field>
                     <mat-form-field appearance="outline" style="width: 280px;" class="container-form-array__inputs">
-                        <mat-label>Nº de parte actual</mat-label>
-                        <input matInput placeholder="Nº de parte actual" [ngModel]="item.partN" name="partN">
+                        <mat-label>Nº de parte</mat-label>
+                        <input matInput placeholder="Nº de parte actual" [ngModel]="item.improvedPart" name="improvedPart">
                     </mat-form-field>
                     <mat-form-field appearance="outline" style="width: 280px;" class="container-form-array__inputs">
-                        <mat-label>Nº de parte mejorada</mat-label>
-                        <input matInput placeholder="Nº de parte mejorada" [ngModel]="item.partName" name="partName">
+                        <mat-label>Nº de parte disponible</mat-label>
+                        <input matInput placeholder="Nº de parte mejorada" [ngModel]="item.evaluatedPart"
+                            name="evaluatedPart">
                     </mat-form-field>
 
                     <div class="container-form-array__checked">
                         <span>Kit</span>
-                        <mat-checkbox class="checked-margin" color="primary" value="checked"
-                            (click)="changeValue(checked,i)"></mat-checkbox>
-                        <div *ngIf="selectCkeck===i">
-                            <p  style="color: red; font-weight: bold;">Eliminado</p>
-                        </div>
+                        <mat-checkbox class="checked-margin" color="primary" [ngModel]="item.kit" value="checked" name="kit">
+                        </mat-checkbox>
+                        <p *ngIf="item.kit" style="color: red; font-weight: bold;">Eliminado</p>
                     </div>
-                    <!-- Aqui va los stoks -->
                 </div>
+                <!-- Aqui va los stoks -->
             </form>
         </ng-container>
         <ng-template #default>
             <div class="default">
-                <span><mat-icon style="vertical-align: middle;">upload</mat-icon> Adjunte archivo</span>
+                <span>
+                    <mat-icon style="vertical-align: middle;">upload</mat-icon> Adjunte archivo
+                </span>
             </div>
         </ng-template>
     </div>
     <div class="footer">
-        <button aria-label="add" mat-button class="footer__btn-save" (click)="downloadData()">
+        <button aria-label="add" mat-button class="footer__btn-save" (click)="downloadXls()" [disabled]="dataSparePart.length < 1">
             DESCARGAR
         </button>
     </div>
-
 </div>

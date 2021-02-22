@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable, of } from 'rxjs';
-import { improvementsForm, Improvement, ImprovementEntry } from '../models/improvenents.model';
+import { improvementsForm, Improvement, ImprovementEntry, SparePart } from '../models/improvenents.model';
 
 import * as firebase from 'firebase';
 
 import { User } from '../models/user-model';
+import { map, take } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
@@ -113,8 +114,8 @@ export class ImprovementsService {
         quantity: part.quantity,
         currentPart: part.currentPart,
         improvedPart: part.improvedPart,
-        stock: null,
-        availability: null,
+        stock: part.stock,
+        availability: part.availability,
         kit: part.kit,
         createdAt: new Date(),
         createdBy: user,
@@ -130,8 +131,8 @@ export class ImprovementsService {
     return of(batch);
   }
 
-  getCurrent_Improv(data: any) {
-    // 
+  getCurrent_Improv(data: any): Observable<any> {
+    return of(null)
   }
 
 
@@ -174,5 +175,51 @@ export class ImprovementsService {
     });
 
     return of(batch);
+  }
+
+  /**
+   * Check if the part number passed have stock or availability date
+   * @param {string} part - Part number to be evaluated
+   */
+  checkPart(part: any): Observable<SparePart> {
+    console.log(part);
+
+    return this.afs.collection<Improvement>(`/db/ferreyros/improvements`, ref => ref.where('improvedPart', '==', part[0]))
+      .valueChanges()
+      .pipe(
+        take(1),
+        map(res => {
+          if (res.length) {
+            res.forEach(doc => {
+              let evaluatedPart;
+
+              if (doc[0].stock > 0 || doc[0].availability) {
+                evaluatedPart = doc[0].improvedPart;
+              } else {
+                evaluatedPart = doc[0].currentPart;
+              }
+
+              return {
+                description: doc[0].description,
+                quantity: doc[0].quantity,
+                improvedPart: doc[0].improvedPart,
+                evaluatedPart: evaluatedPart,
+                kit: doc[0].kit,
+                match: true
+              }
+
+            })
+          } else {
+            return {
+              description: part[3],
+              quantity: part[1],
+              improvedPart: part[0],
+              evaluatedPart: part[0],
+              kit: null,
+              match: false
+            }
+          }
+        })
+      )
   }
 }

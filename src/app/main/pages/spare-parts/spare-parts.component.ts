@@ -1,12 +1,10 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import * as XLSX from 'xlsx';
 import { MatSnackBar } from '@angular/material/snack-bar';
-<<<<<<< HEAD
 import { ImprovementsService } from '../../services/improvements.service';
-=======
-import { ImprovementsService } from '../../../auth/services/improvements.service';
-import { take } from 'rxjs/operators';
->>>>>>> develop
+import { map } from 'rxjs/operators';
+import { combineLatest, Observable } from 'rxjs';
+import { SparePart } from '../../models/improvenents.model';
 
 @Component({
   selector: 'app-spare-parts',
@@ -15,7 +13,7 @@ import { take } from 'rxjs/operators';
 })
 export class SparePartsComponent implements OnInit {
 
-  @ViewChild("fileInput2", {read: ElementRef}) fileButton: ElementRef;
+  @ViewChild("fileInput2", { read: ElementRef }) fileButton: ElementRef;
 
   checked: boolean = false;
   selectCkeck: number;
@@ -23,6 +21,7 @@ export class SparePartsComponent implements OnInit {
 
   dataSparePart: SparePart[] = [];
 
+  checkedParts$: Observable<SparePart[]>;
 
   constructor(
     private snackBar: MatSnackBar,
@@ -60,116 +59,74 @@ export class SparePartsComponent implements OnInit {
     this.selectCkeck = i;
   }
 
-  upLoadXls(array): void {
-    let arraydData = [];
+  upLoadXls(xlsx): void {
+    xlsx.shift();
 
-    if (array.length > 0) {
-      array.forEach(el => {
-        let array2 = Object.values(el);
-<<<<<<< HEAD
-        //let array2: Array<string> = Object.values(el);        
-        let data =
-        {
-          partN: array2[0],
-          qty: array2[1],
-          type: array2[2],
-          smcs: array2[3],
-          partName: array2[4],
-          groupN: array2[5],
-          groupName: array2[6],
-          note: array2[7],
-          newGroupN: this.impServices.getCurrent_Improv(array2[5]),
+    let obsArray: Array<Observable<SparePart>> = [];
 
-        }
-        arraydData.push(data)
-      });
-=======
-       console.log('array2[5',array2[5])
-        this.impvServices.getCurrent_Improv1(array2[5])
-      .subscribe(dt => {
-       console.log('dt : ',dt)
-        /*  console.log(data)
-         console.log(data['0'].improved)
-         return data; */
-         let data = 
-            {
-              partN:array2[0], 
-              qty: array2[1],
-              type:array2[2],
-              smcs:array2[3],
-              partName:array2[4],
-              groupN:array2[5],
-              groupName:array2[6],
-              note:array2[7],
-              newGroupN:dt.length>0?dt['0'].improved:'no existe',
-             
-            }
-            arraydData.push(data)
-        });
-        //let array2: Array<string> = Object.values(el);          
-          /* let data = 
-            {
-              partN:array2[0], 
-              qty: array2[1],
-              type:array2[2],
-              smcs:array2[3],
-              partName:array2[4],
-              groupN:array2[5],
-              groupName:array2[6],
-              note:array2[7],
-              newGroupN:this.impvServices.getCurrent_Improv(array2[5]),
-             
-            }
-            arraydData.push(data) */        
-      });
-      console.log('arraydData asdsd: ',arraydData);
+    if (xlsx.length > 0) {
+      xlsx.forEach(el => {
+        let temp = Object.values(el);
 
-      let prueba = this.impvServices.getCurrent_Improv('481-1441').pipe(take(1))
-      .subscribe(data => {
-        console.log(data)
-        console.log(data['0'].improved)
-        return data;
+        let obs = this.impServices.checkPart(temp);
+        obsArray.push(obs);
       });
 
-      console.log('prueba',prueba);
+      this.checkedParts$ = combineLatest(
+        obsArray
+      ).pipe(map((list) => {
+        this.dataSparePart = list;
+        this.fileButton.nativeElement.value = null;
+        return list
+      }))
 
-      this.dataSparePart=arraydData;
->>>>>>> develop
-
-      console.log('arraydData : ', arraydData);
-
-      this.dataSparePart = arraydData;
-
-      this.fileButton.nativeElement.value = null;
     } else {
       this.snackBar.open("el archivo esta vacio ", "Aceptar", {
         duration: 3000,
       });
     }
-
-    /*   this.currentData=arraydData;
- 
-     this.settingDataSource.data = this.currentData; */
-    console.log('this.dataSpare : ', this.dataSparePart);
   }
 
-  deleteControl() {
+  downloadXls(): void {
 
-  }
-  downloadData() {
+    let table_xlsx: any[] = [];
+
+    let headersXlsx = [
+      'PART',
+      '',
+      '_1',
+      'QTY',
+      'Parts Category']
+
+    table_xlsx.push(headersXlsx);
+
+    this.dataSparePart.forEach(part => {
+      if (!part.kit) {
+        const temp = [
+          'AA:' + part.evaluatedPart,
+          '',
+          '',
+          part.quantity,
+          'Additional'
+        ];
+
+        table_xlsx.push(temp);
+      }
+    });
+    
+    /* generate worksheet */
+    const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(table_xlsx);
+
+    /* generate workbook and add the worksheet */
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'SAP');
+
+    /* save to file */
+    const name = 'SAP' + '.xlsx';
+    XLSX.writeFile(wb, name);
 
   }
 
 }
 
-export interface SparePart {
-  partN: string;
-  qty: number;
-  type: string;
-  smcs: number;
-  partName: string;
-  groupN: string;
-  groupName: string;
-  note: string;
-  newGroupN: string;
-}
+

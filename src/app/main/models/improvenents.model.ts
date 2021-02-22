@@ -61,3 +61,12 @@ export interface ImprovementPart {
   stock?: number;
   availability?: Date;
 }
+
+export interface SparePart {
+  description: string;
+  quantity: number;
+  improvedPart: string;
+  evaluatedPart: string,
+  kit: boolean;
+  match: boolean;
+}
