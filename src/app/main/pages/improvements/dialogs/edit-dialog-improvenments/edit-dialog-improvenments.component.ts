@@ -91,6 +91,7 @@ export class EditDialogImprovenmentsComponent implements OnInit {
 
     if (this.editImprovenmentsForm.invalid) {
       this.editImprovenmentsForm.markAllAsTouched();
+      this.loading.next(false);
       return;
     } else {
       this.auth.user$.pipe(
