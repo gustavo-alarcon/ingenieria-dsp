@@ -10,6 +10,9 @@ import { EvaluationsProcessComponent } from './evaluations-process/evaluations-p
 
 @NgModule({
   declarations: [EvaluationsComponent, EvaluationsRequestsComponent, EvaluationsProcessComponent],
+  exports: [
+    EvaluationsComponent
+  ],
   imports: [
     CommonModule,
     EvaluationsRoutingModule,
