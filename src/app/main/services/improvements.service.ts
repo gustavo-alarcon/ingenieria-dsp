@@ -111,6 +111,11 @@ export class ImprovementsService {
       // create reference for document in improvements collection
       const improvementDocRef = this.afs.firestore.collection(`db/ferreyros/improvements`).doc();
       // Structuring the data model
+      let availabilityArray = form.parts[0].availability.match(/(..?)/g);
+      let year = parseInt(availabilityArray[2] + availabilityArray[3]);
+      let month = parseInt(availabilityArray[1]) - 1;
+      let day = parseInt(availabilityArray[0]);
+
       const data: Improvement = {
         id: improvementDocRef.id,
         date: new Date(),
@@ -125,7 +130,7 @@ export class ImprovementsService {
         currentPart: part.currentPart,
         improvedPart: part.improvedPart,
         stock: part.stock,
-        availability: new Date(parseInt(part.availability)),
+        availability: new Date(year, month, day),
         kit: part.kit,
         createdAt: new Date(),
         createdBy: user,

@@ -25,7 +25,8 @@
                     <mat-form-field appearance="outline" style="width: 430px;">
                         <mat-label>Descripción</mat-label>
                         <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="6.15"
-                            cdkAutosizeMaxRows="15" formControlName="description" placeholder="Descripción" readonly></textarea>
+                            cdkAutosizeMaxRows="15" formControlName="description" placeholder="Descripción"
+                            readonly></textarea>
                     </mat-form-field>
                 </div>
             </div>
@@ -47,7 +48,8 @@
                 </div>
                 <div class="container-form__checked--cheked">
                     <span>Parte crítica</span>
-                    <mat-checkbox class="checked-margin" color="primary" formControlName="criticalPart" readonly></mat-checkbox>
+                    <mat-checkbox class="checked-margin" color="primary" formControlName="criticalPart" readonly>
+                    </mat-checkbox>
                     <span>Tarifa</span>
                     <mat-checkbox class="checked-margin" color="primary" formControlName="rate" readonly></mat-checkbox>
                 </div>
@@ -76,18 +78,22 @@
                         </mat-form-field>
                         <div class="container-form-array__checked">
                             <span>Kit</span>
-                            <mat-checkbox class="checked-margin" color="primary" formControlName="kit" readonly></mat-checkbox>
+                            <mat-checkbox class="checked-margin" color="primary" formControlName="kit" readonly>
+                            </mat-checkbox>
                         </div>
                         <mat-form-field appearance="outline" style="width:80px" class="container-form-array__inputs">
                             <mat-label>Stock</mat-label>
-                            <input matInput type="number" placeholder="Stock" formControlName="stock" min="0" step="1" readonly>
+                            <input matInput type="number" placeholder="Stock" formControlName="stock" min="0" step="1"
+                                readonly>
                         </mat-form-field>
-                        <!-- <mat-form-field appearance="outline">
+                        <mat-form-field appearance="outline" style="width:150px" class="container-form-array__inputs">
                             <mat-label>Fecha de disponibilidad</mat-label>
-                            <input matInput [matDatepicker]="j" formControlName="availability">
-                            <mat-datepicker-toggle matSuffix [for]="j"></mat-datepicker-toggle>
-                            <mat-datepicker #j></mat-datepicker>
-                        </mat-form-field> -->
+                            <input matInput type="text" mask="00/00/0000" placeholder="dd/mm/yyyy"
+                                formControlName="availability" readonly>
+                            <mat-error *ngIf="parts.controls[i].get('availability').errors">
+                                Campo <strong>requerido.</strong>
+                            </mat-error>
+                        </mat-form-field>
                     </div>
                 </div>
             </div>

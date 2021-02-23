@@ -8,7 +8,8 @@ import { Observable, of } from 'rxjs';
 
 import { HttpClient } from '@angular/common/http';
 import { User } from 'src/app/main/models/user-model';
-import { shareReplay, switchMap } from 'rxjs/operators';
+import { shareReplay, switchMap, take } from 'rxjs/operators';
+import { GeneralConfig } from '../models/generalConfig.model';
 
 
 @Injectable({
@@ -18,10 +19,12 @@ import { shareReplay, switchMap } from 'rxjs/operators';
 export class AuthService {
 
   user$: Observable<User>;
+  version$: Observable<GeneralConfig>;
+  version: string = '';
 
   constructor(
     private afAuth: AngularFireAuth,
-    private afs: AngularFirestore,
+    public afs: AngularFirestore,
     public http: HttpClient
   ) {
     this.user$ =
@@ -36,6 +39,22 @@ export class AuthService {
         }),
         shareReplay(1)
       )
+
+
+    this.getGeneralConfig()
+      .pipe(
+        take(1)
+      )
+      .subscribe(doc => {
+        if (doc) {
+          this.version = doc.version;
+        }
+      })
+  }
+
+  getGeneralConfig(): Observable<GeneralConfig> {
+    return this.afs.doc<GeneralConfig>(`/db/generalConfig`)
+      .valueChanges();
   }
 
   async loginGoogle(): Promise<firebase.auth.UserCredential> {
@@ -52,7 +71,7 @@ export class AuthService {
   }
 
   async logout(): Promise<void> {
-     await this.afAuth.signOut();
+    await this.afAuth.signOut();
   }
 
   getUserClaims(): Observable<firebase.auth.IdTokenResult> {

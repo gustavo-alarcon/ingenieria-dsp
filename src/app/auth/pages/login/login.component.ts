@@ -15,7 +15,7 @@ export class LoginComponent {
   subscription: Subscription;
   constructor(
     private router: Router,
-    private authSevice: AuthService,
+    public authSevice: AuthService,
   ) { }
 
   async loginGoogle(): Promise<void> {
