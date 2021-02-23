@@ -1,68 +1,62 @@
-
 <div class="requests">
-    <div class="requests__title">
-      <h1 class="requests__title--name">Solicitudes</h1>
-      <div class="requests__title--icon">
-          <mat-icon mat-list-icon  >settings</mat-icon>
-      </div>
-      <!-- <form action="" class="requests__title--search"> -->
-          <!-- <mat-form-field appearance="outline"  class="requests__forminput">
+  <div class="requests__title">
+    <h1 class="requests__title--name">Solicitudes</h1>
+    <!-- <button type="button" class="requests__title--icon" mat-icon-button (click)="settingDialog()">
+        <mat-icon aria-label="Side nav toggle icon">settings</mat-icon>
+    </button> -->
+    <div class="requests__title--icon" (click)="settingDialog()">
+      <mat-icon mat-list-icon>settings</mat-icon>
+    </div>
+    <!-- <form action="" class="requests__title--search"> -->
+    <!-- <mat-form-field appearance="outline"  class="requests__forminput">
               <mat-label>Nombre</mat-label>
                <mat-icon matSuffix>settings</mat-icon> -->
-          <input matInput placeholder="Buscar" name="search" class="requests__title--search">
-          <!-- </mat-form-field> -->
-     <!--  </form> -->
-    </div>
-    <div class="requests__quantity">10</div>
+    <input
+      matInput
+      placeholder="Buscar"
+      name="search"
+      class="requests__title--search"
+    />
+    <!-- </mat-form-field> -->
+    <!--  </form> -->
+  </div>
+  <div class="requests__quantity">10</div>
 </div>
-<!-- 
-<div class="box" *ngFor="let item of process" cdkDrag [cdkDragData]="item">
-  <div class="header-box">
-      <div *ngIf="item['internalWashRegisterData']" class="priority">
-          {{item['internalWashRegisterData']['priority']}}</div>
-      <div>
-          <mat-menu #requestsMenu="matMenu">
-              <button mat-menu-item (click)="editDialog(item)">
-                  <mat-icon>edit</mat-icon> Iniciar
-              </button>
-              <button mat-menu-item (click)="deleteDialog(item['id'])">
-                  <mat-icon>delete</mat-icon> Observacion
-              </button>
-              <button mat-menu-item (click)="timeline(item)">
-                  <mat-icon>timeline</mat-icon> Línea de tiempo
-              </button>
-          </mat-menu>
-          <button mat-icon-button [matMenuTriggerFor]="requestsMenu">
-              <mat-icon>more_vert</mat-icon>
-          </button>
-      </div>
-  </div>
-  <div class="info-box">
-      <div class="lj">{{item['ot']}}</div>
-      <div class="info-row" *ngIf="item['internalWashRegisterData']">
-          <span>{{item['internalWashRegisterData']['component']}}</span>
-          <span>{{item['internalWashRegisterData']['destination']}}</span>
-      </div>
-      <div class="info-row">
-          <span
-              *ngIf="item['internalWashRegisterData']">{{item['internalWashRegisterData']['piecesAmount']}}
-              Pz.</span>
-          <span class="date">{{item['date']}}</span>
-      </div>
-      <div class="info-row">
-          <span
-              *ngIf="item['internalWashRegisterData']">{{item['internalWashRegisterData']['utilajeType']}}</span>
-          <span
-              class="date">{{item['internalWashEnterData']['enterDate'].toMillis()| date:'HH:mm:ss'}}</span>
-      </div>
-  </div>
-  <div *ngIf="item['timer'] |async as time">
-      <div class="progress-time">
-      </div>
-      <div class="progress-dynamic">
-          <div class="progress-transparent" [ngStyle]="{'width': time['percent'] + '%'}"></div>
-          <div class="progress-black" [ngStyle]="{'width': (100-time['percent']) + '%'}"></div>
-      </div>
-      <div class="progress-view">{{time['time']}}</div>
-  </div>
-</div> -->
+
+<div class="body">
+    <div class="box">
+    <div class="header-box">
+        <div class="priority"></div>
+        <div>
+        <mat-menu #requestsMenu="matMenu">
+            <button mat-menu-item (click)="initDialog()">
+            <mat-icon>play_circle_outline</mat-icon> Iniciar
+            </button>
+            <button mat-menu-item (click)="obsDialog()">
+            <mat-icon>visibility</mat-icon> Observacion
+            </button>
+            <button mat-menu-item (click)="timeline()">
+            <mat-icon>timeline</mat-icon> Línea de tiempo
+            </button>
+        </mat-menu>
+        <button mat-icon-button [matMenuTriggerFor]="requestsMenu">
+            <mat-icon>more_vert</mat-icon>
+        </button>
+        </div>
+    </div>
+    <div class="info-box">
+        <div class="lj">OT 00000 - <span>(Orden de trabajo) </span>  </div>
+        <div class="info-row">Componente: <span>XXXXXX </span> </div>
+        <div class="info-row"> Nro parte: <span> XXXXXX</span> </div>
+        <div class="info-row"> Fecha: <span>03/03/2020 - 07:30:45 </span> </div>
+    </div>
+    <div>
+        <div class="progress-time"></div>
+        <div class="progress-dynamic">
+        <div class="progress-transparent"></div>
+        <div class="progress-black"></div>
+        </div>
+        <div class="progress-view">40 min</div>
+    </div>
+    </div>
+</div>
