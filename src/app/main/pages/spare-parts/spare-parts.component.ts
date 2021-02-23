@@ -90,9 +90,9 @@ export class SparePartsComponent implements OnInit {
 
   downloadXls(): void {
 
-    let table_xlsx: any[] = [];
+    const table_xlsx: any[] = [];
 
-    let headersXlsx = [
+    const headersXlsx = [
       'PART',
       '',
       '_1',
