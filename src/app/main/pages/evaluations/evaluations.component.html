@@ -1,0 +1,111 @@
+<div class="container">
+    <h1 style="font-size: 2.5em; margin-left: 20px; font-weight: bold;">Evaluaciones</h1>     
+    <div class="container-body">
+        <mat-tab-group>
+            <mat-tab label="SOLICITUDES">        
+                <app-evaluations-requests></app-evaluations-requests>                
+            </mat-tab>
+            <mat-tab label="EN PROCESO"> PROCESO 2 </mat-tab>
+            <mat-tab label="HISTORIAL"> 
+                <div class="body-container">
+                  <div>   <!-- *ngIf="improvement$ |async" -->
+                      <table mat-table [dataSource]="historyDataSource" class="mat-elevation-z8">
+                
+                        <ng-container matColumnDef="date">
+                          <th mat-header-cell *matHeaderCellDef> Orden de trabajo </th>
+                          <td mat-cell *matCellDef="let element"> {{(element.date.seconds * 1000) | date : 'dd/MM/yy'}} </td>
+                        </ng-container>
+                
+                        <ng-container matColumnDef="name">
+                          <th mat-header-cell *matHeaderCellDef>Segmento/Operacion </th>
+                          <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="component">
+                          <th mat-header-cell *matHeaderCellDef> Correlativo </th>
+                          <td mat-cell *matCellDef="let element"> {{element.component}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="model">
+                          <th mat-header-cell *matHeaderCellDef>N° de parte </th>
+                          <td mat-cell *matCellDef="let element"> {{element.model}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="review">
+                          <th mat-header-cell *matHeaderCellDef>Descripcion </th>
+                          <td mat-cell *matCellDef="let element"> {{element.criticalPart ? 'Si':'No'}} </td>
+                        </ng-container>
+                                
+                        <ng-container matColumnDef="state">
+                          <th mat-header-cell *matHeaderCellDef> Estado </th>
+                          <td mat-cell *matCellDef="let element">
+                            <button mat-button (click)="showImprovementEntry(element)"
+                              [ngClass]="{'btn-state-register': element.state==='registered','btn-state-validate': element.state==='validated'}">
+                              {{element.state === 'registered' ? 'Registrado':'Validado'}}
+                            </button>
+                          </td>
+                        </ng-container>
+                        <ng-container matColumnDef="user">
+                            <th mat-header-cell *matHeaderCellDef> Resultado </th>
+                            <td mat-cell *matCellDef="let element"> {{element.createdBy.name}} </td>
+                          </ng-container>
+                        <ng-container matColumnDef="user1">
+                            <th mat-header-cell *matHeaderCellDef> Observaciones </th>
+                            <td mat-cell *matCellDef="let element"> {{element.createdBy.name}} </td>
+                          </ng-container>
+                        <ng-container matColumnDef="user2">
+                            <th mat-header-cell *matHeaderCellDef> Cantidad </th>
+                            <td mat-cell *matCellDef="let element"> {{element.createdBy.name}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="user3">
+                            <th mat-header-cell *matHeaderCellDef> Taller </th>
+                            <td mat-cell *matCellDef="let element"> {{element.createdBy.name}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="user4">
+                            <th mat-header-cell *matHeaderCellDef>Tipo de atencion </th>
+                            <td mat-cell *matCellDef="let element"> {{element.createdBy.name}} </td>
+                        </ng-container>
+                        <ng-container matColumnDef="user5">
+                            <th mat-header-cell *matHeaderCellDef> Fecha de Solicitud </th>
+                            <td mat-cell *matCellDef="let element"> {{element.createdBy.name}} </td>
+                        </ng-container>
+                
+                        <ng-container matColumnDef="actions" stickyEnd>
+                          <th mat-header-cell *matHeaderCellDef>
+                            Acciones
+                          </th>
+                          <td mat-cell *matCellDef="let element; let i = index">
+                            <ng-container>
+                              <mat-menu #rawMenu="matMenu">
+                                <button class="w3-small" mat-menu-item (click)="openDialog('validate', element, i)">
+                                  <mat-icon>check_circle</mat-icon>
+                                  Validar
+                                </button>
+                                <button class="w3-small" mat-menu-item (click)="openDialog('edit', element, i)">
+                                  <mat-icon>edit</mat-icon>
+                                  Editar
+                                </button>
+                                <button *ngIf="element.state==='registered'" class="w3-small" mat-menu-item (click)="openDialog('delete',element,i)">
+                                  <mat-icon>delete</mat-icon>
+                                  Borrar
+                                </button>
+                              </mat-menu>
+                
+                              <button mat-icon-button [matMenuTriggerFor]="rawMenu">
+                                <mat-icon>more_vert</mat-icon>
+                              </button>
+                            </ng-container>
+                          </td>
+                        </ng-container>
+                
+                        <tr mat-header-row *matHeaderRowDef="improvementDisplayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: improvementDisplayedColumns;"></tr>
+                      </table>
+                    </div>
+                    <mat-paginator #improvementPaginator class="ms-paginator" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+                    </mat-paginator>
+                  </div> 
+            </mat-tab>
+            <mat-tab label="CONFIGURACIONES"> CONFIGURACIONES 3 </mat-tab>
+        </mat-tab-group>
+    </div>
+
+  
+  </div>
