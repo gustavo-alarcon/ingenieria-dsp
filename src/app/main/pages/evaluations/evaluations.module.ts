@@ -6,10 +6,12 @@ import { EvaluationsComponent } from './evaluations.component';
 import { MaterialModule } from 'src/app/material/material.module';
 import { EvaluationsRequestsComponent } from './evaluations-requests/evaluations-requests.component';
 import { EvaluationsProcessComponent } from './evaluations-process/evaluations-process.component';
+import { EvaluationsHistoryComponent } from './evaluations-history/evaluations-history.component';
+import { EvaluationsSettingsComponent } from './evaluations-settings/evaluations-settings.component';
 
 
 @NgModule({
-  declarations: [EvaluationsComponent, EvaluationsRequestsComponent, EvaluationsProcessComponent],
+  declarations: [EvaluationsComponent, EvaluationsRequestsComponent, EvaluationsProcessComponent, EvaluationsHistoryComponent, EvaluationsSettingsComponent],
   exports: [
     EvaluationsComponent
   ],
