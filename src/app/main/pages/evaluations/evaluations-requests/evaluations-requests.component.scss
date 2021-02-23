@@ -1,0 +1,54 @@
+
+
+.requests{
+    display: flex;
+    height: 70px;
+    color: white;
+    border: 1px solid #333333;
+    border-radius: 30px 30px 0px 0px;
+
+    &__title {
+        display: flex;
+        width: 90%;
+        background:#333333;
+        border-radius: 30px 0px 0px 0px;
+
+        &--name{
+            font-size: 2em;
+            padding: 15px;
+            font-weight: bold;
+            margin-left: 20px;
+        }
+        &--icon{
+           padding: 18px; 
+           font-size: 4em;
+           font-weight: bold;
+    
+        }        
+        
+        &--search{
+           margin-left: 200px;
+           margin-top: 10px;
+           padding-top: 15px;            
+           background: white;
+           color: black;
+           height: 30px;
+           width: 600px;
+           font-weight: bold;
+           border: transparent;
+           font-size: 2em;
+            
+        }
+    }
+    
+
+    &__quantity{
+        padding: 20px 15px 15px 15px;
+        margin-right: 0px;
+        background: white;
+        color: #333333;
+        font-weight: bold;
+        font-size: 3em;
+        align-items: flex-end;
+    }
+}
