@@ -12,6 +12,7 @@ import {RequestsSettingDialogComponent} from './requests-setting-dialog/requests
 import {RequestsStartDialogComponent} from './requests-start-dialog/requests-start-dialog.component';
 import {RequestsObservationDialogComponent} from './requests-observation-dialog/requests-observation-dialog.component';
 import {RequestsTimeLineDialogComponent} from './requests-time-line-dialog/requests-time-line-dialog.component';
+import { HistoryCreateDialogComponent } from './history-create-dialog/history-create-dialog.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +24,8 @@ import {RequestsTimeLineDialogComponent} from './requests-time-line-dialog/reque
     RequestsSettingDialogComponent,
     RequestsStartDialogComponent,
     RequestsObservationDialogComponent,
-    RequestsTimeLineDialogComponent
+    RequestsTimeLineDialogComponent,
+    HistoryCreateDialogComponent
   ],
   exports: [EvaluationsComponent],
   imports: [
