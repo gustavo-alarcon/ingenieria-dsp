@@ -7,7 +7,7 @@
     display: flex;
     color: white;
     border: 1px solid #333333;
-    border-radius: 30px 30px 0px 0px;
+    border-radius: 20px 20px 0px 0px;
     margin-top: 20px;
     &__title {
         display: flex;
@@ -81,8 +81,8 @@
         color: #333333;
         font-weight: bold;
         font-size: 3em;
-        border: 1px solid #333333;
-        border-radius: 0px 20px 0px 0px;
+        //border: 1px solid #333333;
+        border-radius: 0px 0px 0px 0px;
     }
 }
 
@@ -90,6 +90,8 @@
     display: flex;
     justify-content: space-evenly;
     padding: 30px;
+    background: #f0eded
+    ;
 }
 
 .box {
