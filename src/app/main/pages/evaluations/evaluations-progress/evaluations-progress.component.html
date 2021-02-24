@@ -29,23 +29,28 @@
         <div>
           <mat-menu #requestsMenu="matMenu">
             <button mat-menu-item (click)="finalizeDialog()">
-              <mat-icon>stop</mat-icon> 
+              <mat-icon>stop</mat-icon>
               Finalizar
             </button>
             <button mat-menu-item (click)="imagesDialog()">
-              <mat-icon>add_photo_alternate</mat-icon> 
+              <mat-icon>add_photo_alternate</mat-icon>
               Imágenes
             </button>
             <button mat-menu-item>
-              <mat-icon>timeline</mat-icon> 
+              <mat-icon>timeline</mat-icon>
               Línea de tiempo
             </button>
             <button mat-menu-item>
-              <mat-icon>remove_red_eye</mat-icon> 
+              <mat-icon>remove_red_eye</mat-icon>
               Observaciones
             </button>
             <button mat-menu-item>
-              <mat-icon>help</mat-icon> Consultar
+              <mat-icon>help</mat-icon>
+              Consultar
+            </button>
+            <button mat-menu-item>
+              <mat-icon>question_answer</mat-icon>
+              Responder
             </button>
           </mat-menu>
           <button mat-icon-button [matMenuTriggerFor]="requestsMenu">

@@ -12,6 +12,7 @@ import { EvaluationsTimeLineDialogComponent } from './dialogs/evaluations-time-l
 // tslint:disable-next-line: max-line-length
 import { EvaluationsObservationsDialogComponent } from './dialogs/evaluations-observations-dialog/evaluations-observations-dialog.component';
 import { EvaluationsConsultsDialogComponent } from './dialogs/evaluations-consults-dialog/evaluations-consults-dialog.component';
+import { EvaluationsResponseDialogComponent } from './dialogs/evaluations-response-dialog/evaluations-response-dialog.component';
 
 
 @NgModule({
@@ -23,6 +24,7 @@ import { EvaluationsConsultsDialogComponent } from './dialogs/evaluations-consul
     EvaluationsTimeLineDialogComponent,
     EvaluationsObservationsDialogComponent,
     EvaluationsConsultsDialogComponent,
+    EvaluationsResponseDialogComponent,
   ],
   exports: [
     EvaluationsProgressComponent
