@@ -3,7 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AuthService } from '../../../../auth/services/auth.service';
+import { AuthService } from '../../../../../../auth/services/auth.service';
 
 @Component({
   selector: 'app-history-create-dialog',
