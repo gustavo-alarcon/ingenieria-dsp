@@ -1,26 +1,31 @@
 
 <div class="body-container">
+  <button type="file" aria-label="add" mat-button class="btn-add" (click)="openDialog('create')">
+    <mat-icon aria-label="agregar" class="icon-add">add</mat-icon>
+    CREAR
+  </button>
+
     <div>   <!-- *ngIf="improvement$ |async" -->
         <table mat-table [dataSource]="historyDataSource" class="mat-elevation-z8">
   
-          <ng-container matColumnDef="date">
+          <ng-container matColumnDef="workOrder">
             <th mat-header-cell *matHeaderCellDef> Orden de trabajo </th>
             <td mat-cell *matCellDef="let element"> {{(element.date.seconds * 1000) | date : 'dd/MM/yy'}} </td>
           </ng-container>
   
-          <ng-container matColumnDef="name">
+          <ng-container matColumnDef="operation">
             <th mat-header-cell *matHeaderCellDef>Segmento/Operacion </th>
             <td mat-cell *matCellDef="let element"> {{element.name}} </td>
           </ng-container>
-          <ng-container matColumnDef="component">
+          <ng-container matColumnDef="correlative">
             <th mat-header-cell *matHeaderCellDef> Correlativo </th>
             <td mat-cell *matCellDef="let element"> {{element.component}} </td>
           </ng-container>
-          <ng-container matColumnDef="model">
+          <ng-container matColumnDef="nPart">
             <th mat-header-cell *matHeaderCellDef>N° de parte </th>
             <td mat-cell *matCellDef="let element"> {{element.model}} </td>
           </ng-container>
-          <ng-container matColumnDef="review">
+          <ng-container matColumnDef="description">
             <th mat-header-cell *matHeaderCellDef>Descripcion </th>
             <td mat-cell *matCellDef="let element"> {{element.criticalPart ? 'Si':'No'}} </td>
           </ng-container>
@@ -34,59 +39,36 @@
               </button>
             </td>
           </ng-container>
-          <ng-container matColumnDef="user">
+          <ng-container matColumnDef="result">
               <th mat-header-cell *matHeaderCellDef> Resultado </th>
               <td mat-cell *matCellDef="let element"> {{element.createdBy.name}} </td>
             </ng-container>
-          <ng-container matColumnDef="user1">
+
+          <ng-container matColumnDef="observations">
               <th mat-header-cell *matHeaderCellDef> Observaciones </th>
               <td mat-cell *matCellDef="let element"> {{element.createdBy.name}} </td>
             </ng-container>
-          <ng-container matColumnDef="user2">
+
+          <ng-container matColumnDef="quantity">
               <th mat-header-cell *matHeaderCellDef> Cantidad </th>
               <td mat-cell *matCellDef="let element"> {{element.createdBy.name}} </td>
           </ng-container>
-          <ng-container matColumnDef="user3">
+
+          <ng-container matColumnDef="workshop">
               <th mat-header-cell *matHeaderCellDef> Taller </th>
               <td mat-cell *matCellDef="let element"> {{element.createdBy.name}} </td>
           </ng-container>
-          <ng-container matColumnDef="user4">
+
+          <ng-container matColumnDef="workshopAttention">
               <th mat-header-cell *matHeaderCellDef>Tipo de atencion </th>
               <td mat-cell *matCellDef="let element"> {{element.createdBy.name}} </td>
           </ng-container>
-          <ng-container matColumnDef="user5">
+
+          <ng-container matColumnDef="applicationDate">
               <th mat-header-cell *matHeaderCellDef> Fecha de Solicitud </th>
               <td mat-cell *matCellDef="let element"> {{element.createdBy.name}} </td>
-          </ng-container>
-  
-          <ng-container matColumnDef="actions" stickyEnd>
-            <th mat-header-cell *matHeaderCellDef>
-              Acciones
-            </th>
-            <td mat-cell *matCellDef="let element; let i = index">
-              <ng-container>
-                <mat-menu #rawMenu="matMenu">
-                  <button class="w3-small" mat-menu-item (click)="openDialog('validate', element, i)">
-                    <mat-icon>check_circle</mat-icon>
-                    Validar
-                  </button>
-                  <button class="w3-small" mat-menu-item (click)="openDialog('edit', element, i)">
-                    <mat-icon>edit</mat-icon>
-                    Editar
-                  </button>
-                  <button *ngIf="element.state==='registered'" class="w3-small" mat-menu-item (click)="openDialog('delete',element,i)">
-                    <mat-icon>delete</mat-icon>
-                    Borrar
-                  </button>
-                </mat-menu>
-  
-                <button mat-icon-button [matMenuTriggerFor]="rawMenu">
-                  <mat-icon>more_vert</mat-icon>
-                </button>
-              </ng-container>
-            </td>
-          </ng-container>
-  
+          </ng-container>  
+            
           <tr mat-header-row *matHeaderRowDef="improvementDisplayedColumns"></tr>
           <tr mat-row *matRowDef="let row; columns: improvementDisplayedColumns;"></tr>
         </table>
