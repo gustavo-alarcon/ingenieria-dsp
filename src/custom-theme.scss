@@ -36,3 +36,7 @@ $ingenieria-dsp-theme: mat-light-theme((
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.ms-fill {
+  flex: auto 1 1;
+}

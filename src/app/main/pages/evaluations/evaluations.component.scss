@@ -5,5 +5,8 @@
 
 .label:active{
     color:#6200EE;
+}
 
+.mat-tab-body.mat-tab-body-active {
+    overflow-y: hidden;
 }
