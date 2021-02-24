@@ -5,7 +5,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../../../../../auth/services/auth.service';
 import { take, switchMap } from 'rxjs/operators';
-import { EvaluationsService } from '../../../../../../auth/services/evaluations.service';
+import { EvaluationsService } from 'src/app/main/services/evaluations.service';
 
 @Component({
   selector: 'app-history-create-dialog',
@@ -27,7 +27,7 @@ export class HistoryCreateDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<HistoryCreateDialogComponent>,
     private snackbar: MatSnackBar,
     private auth: AuthService,
-    public  evaltService: EvaluationsService,
+    private  evaltService: EvaluationsService,
   ) {
   }
 
@@ -49,31 +49,36 @@ export class HistoryCreateDialogComponent implements OnInit {
   }
   save(): void{
     console.log('save data')
-    console.log(this.createEvaluateForm.value)
     this.loading.next(true);
-
-    this.auth.user$.pipe(take(1),
-      switchMap(user => {
-        return this.evaltService.saveRequest(this.createEvaluateForm.value, user);
-      })
+    if (this.createEvaluateForm.invalid) {
+      this.createEvaluateForm.markAllAsTouched();
+      this.loading.next(false);
+      return;
+    } else {
+      this.auth.user$.pipe(
+        take(1),
+        switchMap(user => {
+          return this.evaltService.saveRequest(this.createEvaluateForm.value, user);
+        })
     ).subscribe(batch => {
+      console.log('batch : ',batch)
       if (batch) {
         batch.commit()
           .then(() => {
             this.loading.next(false);
-            this.snackbar.open('✅ Archivo subido correctamente!', 'Aceptar', {
+            this.snackbar.open('✅ se guardo correctamente!', 'Aceptar', {
               duration: 6000
             });
-            ///this.settingDataSource.data = [];
           })
           .catch(err => {
             this.loading.next(false);
-            this.snackbar.open('🚨 Hubo un error subiendo el archivo.', 'Aceptar', {
+            this.snackbar.open('🚨 Hubo un error.', 'Aceptar', {
               duration: 6000
-            })
-          })
+            });
+          });
       }
     });
   }
+}
 
 }

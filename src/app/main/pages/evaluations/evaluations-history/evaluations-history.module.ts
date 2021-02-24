@@ -6,6 +6,7 @@ import { MaterialModule } from 'src/app/material/material.module';
 import { EvaluationsHistoryComponent } from './evaluations-history.component';
 import { HistoryCreateDialogComponent } from './dialogs/history-create-dialog/history-create-dialog.component';
 import { HistoryEditDialogComponent } from './dialogs/history-edit-dialog/history-edit-dialog.component';
+import { HistoryDeleteDialogComponent } from './dialogs/history-delete-dialog/history-delete-dialog.component';
 
 
 @NgModule({
@@ -13,6 +14,7 @@ import { HistoryEditDialogComponent } from './dialogs/history-edit-dialog/histor
     EvaluationsHistoryComponent,
     HistoryCreateDialogComponent,
     HistoryEditDialogComponent,
+    HistoryDeleteDialogComponent,
   ],
   exports: [
     EvaluationsHistoryComponent

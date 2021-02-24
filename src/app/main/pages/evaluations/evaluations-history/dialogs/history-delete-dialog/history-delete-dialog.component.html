@@ -1,0 +1,25 @@
+<div class="container">
+
+    <h2 mat-dialog-title style="display: flex; padding-bottom: 0px;margin-bottom: 0px;">
+        <div style="margin-top: 5px; margin-right: 15px;" mat-dialog-close>
+            <mat-icon mat-list-icon>settings</mat-icon>
+        </div> 
+        Configuraciones 
+        
+        <div  mat-dialog-close style="margin-top: 5px; margin-left: 220px;cursor: pointer;"  >
+            <mat-icon >clear</mat-icon>
+        </div>        
+    </h2>
+    <mat-divider></mat-divider>
+    <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+        <mat-dialog-content style="margin-top: 20px;">
+            <p style="text-align: center;">¿Esta seguro de borrar la solicitud con OT - 00000000000?</p>
+            
+           
+        </mat-dialog-content>
+        <mat-dialog-actions align="end">
+            <button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close>CERRAR</button>
+            <button type="button" mat-raised-button color="primary" class="footer__btn-save">GUARDAR</button>
+        </mat-dialog-actions>
+</div> 
+

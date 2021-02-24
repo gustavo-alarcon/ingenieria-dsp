@@ -4,6 +4,10 @@ import { ImprovementEntry } from '../../../models/improvenents.model';
 import { MatPaginator } from '@angular/material/paginator';
 import { HistoryCreateDialogComponent } from './dialogs/history-create-dialog/history-create-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { Evaluation } from '../../../models/evaluations.model';
+import { Observable } from 'rxjs';
+import { EvaluationsService } from '../../../services/evaluations.service';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-evaluations-history',
@@ -12,8 +16,9 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class EvaluationsHistoryComponent implements OnInit {
 
-  // Improvement
-  historyDataSource = new MatTableDataSource<ImprovementEntry>();
+  evaluation$: Observable<Evaluation[]>;
+
+  historyDataSource = new MatTableDataSource<Evaluation>();
   improvementDisplayedColumns: string[] = [
     'otMain',
     'otChild',
@@ -39,9 +44,18 @@ export class EvaluationsHistoryComponent implements OnInit {
     this.historyDataSource.paginator = paginator;
   }
 
-  constructor( public dialog: MatDialog,) { }
+  constructor( public dialog: MatDialog,
+               private evaltService: EvaluationsService,
+    ) { }
 
   ngOnInit(): void {
+    this.evaluation$ = this.evaltService.getAllEvaluations().pipe(
+      tap(res => {
+        if (res) {
+          this.historyDataSource.data = res;
+        }
+      })
+    );
   }
   openDialog(value: string, entry?: ImprovementEntry, index?: number): void {
     const optionsDialog = {
