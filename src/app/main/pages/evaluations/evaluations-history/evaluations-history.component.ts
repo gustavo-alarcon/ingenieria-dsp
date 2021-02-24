@@ -15,18 +15,22 @@ export class EvaluationsHistoryComponent implements OnInit {
   // Improvement
   historyDataSource = new MatTableDataSource<ImprovementEntry>();
   improvementDisplayedColumns: string[] = [
-    'workOrder',
-    'operation',
-    'correlative',
-    'nPart',
+    'otMain',
+    'otChild',
+    'position',
+    'partNumber',
     'description',
-    'state',
+    'internalStatus',
     'result',
     'observations',
     'quantity',
     'workshop',
-    'workshopAttention',
-    'applicationDate',
+    'status',
+    'registryDate',
+    'user',
+    'wof',
+    'task',
+    'actions',
   ];
 
   @ViewChild('improvementPaginator', { static: false }) set content(

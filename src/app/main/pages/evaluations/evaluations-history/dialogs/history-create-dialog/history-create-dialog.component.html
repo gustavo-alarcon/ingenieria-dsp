@@ -1,45 +1,47 @@
 <div class="container">
-    <h2 mat-dialog-title style="display: flex;">
-        <div style="margin-top: 5px; margin-right: 15px;">
-            <mat-icon mat-list-icon>add</mat-icon>
+    <h2 mat-dialog-title style="display: flex;padding-bottom: 0px;margin-bottom: 0px;">
+        <div style="margin-top: 5px; margin-right: 15px; ">
+            <mat-icon mat-list-icon>add_circle_outline</mat-icon>
         </div> 
-        nueva Solicitud
-       <mat-divider></mat-divider>
-        <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+        Nueva Solicitud    
+        <div  mat-dialog-close style="margin-top: 5px; margin-left: 290px;border:white;cursor: pointer;" >
+            <mat-icon >clear</mat-icon>
+        </div>      
     </h2>
-    
+    <mat-divider></mat-divider>
+    <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
     <form class="container-form" [formGroup]="createEvaluateForm" autocomplete="off">
         <mat-dialog-content class="mat-typography">
             <div class="inputs">
                 
             <mat-form-field appearance="outline" style="width: 200px;">
                 <mat-label>Orden</mat-label>
-                <input matInput placeholder="Orden" formControlName="workOrder">
-                <mat-error *ngIf="createEvaluateForm.controls['workOrder'].errors">
+                <input matInput placeholder="Orden" formControlName="otMain">
+                <mat-error *ngIf="createEvaluateForm.controls['otMain'].errors">
                     Campo <strong>requerido.</strong>
                 </mat-error>
             </mat-form-field>
 
             <mat-form-field appearance="outline" style="width: 200px;">
                 <mat-label>Segmento/Operacion</mat-label>
-                <input matInput placeholder="Segmento/Operacion" formControlName="operation">
-                <mat-error *ngIf="createEvaluateForm.controls['operation'].errors" >
+                <input matInput placeholder="Segmento/Operacion" formControlName="otChild">
+                <mat-error *ngIf="createEvaluateForm.controls['otChild'].errors">
                     Campo <strong>requerido.</strong>
                 </mat-error>
             </mat-form-field>  
 
             <mat-form-field appearance="outline" style="width: 200px;">
                 <mat-label>Correlativo</mat-label>
-                <input matInput placeholder="Correlativo" formControlName="correlative">
-                <mat-error *ngIf="createEvaluateForm.controls['correlative'].errors" >
+                <input matInput placeholder="Correlativo" formControlName="position">
+                <mat-error *ngIf="createEvaluateForm.controls['position'].errors" >
                     Campo <strong>requerido.</strong>
                 </mat-error>
             </mat-form-field>   
 
             <mat-form-field appearance="outline" style="width: 200px;">
                 <mat-label>N° de Partes</mat-label>
-                <input matInput placeholder="N° de partes" formControlName="nPart">
-                <mat-error *ngIf="createEvaluateForm.controls['nPart'].errors" >
+                <input matInput placeholder="N° de partes" formControlName="partNumber">
+                <mat-error *ngIf="createEvaluateForm.controls['partNumber'].errors" >
                     Campo <strong>requerido.</strong>
                 </mat-error>
             </mat-form-field>         
@@ -62,35 +64,34 @@
                 
             <mat-form-field appearance="outline" style="width: 200px;">
                 <mat-label>Tipo de atencion</mat-label>
-                <input matInput placeholder="Tipo de atencion" formControlName="applicationDate">
-                <mat-error *ngIf="createEvaluateForm.controls['applicationDate'].errors">
+                <input matInput placeholder="Tipo de atencion" formControlName="status">
+                <mat-error *ngIf="createEvaluateForm.controls['status'].errors">
                     Campo <strong>requerido.</strong>
                 </mat-error>
             </mat-form-field>                
 
             <mat-form-field appearance="outline" style="width: 200px;">
                 <mat-label>WOF (orden de fabricacion)</mat-label>
-                <input matInput placeholder="Tipo de atencion" formControlName="workshop">
-                <mat-error *ngIf="createEvaluateForm.controls['workshop'].errors">
+                <input matInput placeholder="Tipo de atencion" formControlName="wof">
+                <mat-error *ngIf="createEvaluateForm.controls['wof'].errors">
                     Campo <strong>requerido.</strong>
                 </mat-error>
             </mat-form-field>                
 
             <mat-form-field appearance="outline" style="width: 200px;">
                 <mat-label>Trabajo</mat-label>
-                <input matInput placeholder="Trabajo" formControlName="workshopAttention">
-                <mat-error *ngIf="createEvaluateForm.controls['workshopAttention'].errors">
+                <input matInput placeholder="Trabajo" formControlName="task">
+                <mat-error *ngIf="createEvaluateForm.controls['task'].errors">
                     Campo <strong>requerido.</strong>
                 </mat-error>
-            </mat-form-field>
-      
+            </mat-form-field>     
 
             </div>
                         
         </mat-dialog-content>
         <mat-dialog-actions align="end">
             <button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close>CERRAR</button>
-            <button type="button" mat-raised-button color="primary" class="footer__btn-save" (click)="save()">ENVIAR</button>
+            <button type="submit" mat-raised-button color="primary" class="footer__btn-save"   [disabled]="!createEvaluateForm.valid" (click)="save()">ENVIAR</button>
         </mat-dialog-actions>
     </form>
 </div>
