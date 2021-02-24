@@ -1,1 +1,56 @@
-<p>evaluations-finalize-dialog works!</p>
+<h2 mat-dialog-title>
+    <div class="container-h2">
+        <button mat-icon-button class="container-h2__button">
+            <mat-icon class="container-h2__icon">stop</mat-icon>
+            <span class="container-h2__title">
+                Finalizar
+            </span>
+        </button>
+        <button mat-icon-button mat-dialog-close>
+            <mat-icon class="container-h2__icon-close">close</mat-icon>
+        </button>
+    </div>
+    <mat-divider style="margin-top: 10px;"></mat-divider>
+    <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+</h2>
+<mat-dialog-content class="mat-typography" style="color: gray;">
+    <!-- <mat-list role="list"> -->
+    <mat-list-item role="listitem" class="listitem-content">OT MAIN:</mat-list-item>
+    <mat-list-item role="listitem" class="listitem-content">OT CHILD:</mat-list-item>
+    <mat-list-item role="listitem" class="listitem-content">Correlativo</mat-list-item>
+    <mat-list-item role="listitem" class="listitem-content">Número de Parte</mat-list-item>
+    <mat-list-item role="listitem" class="listitem-content">Descripción</mat-list-item>
+    <mat-list-item role="listitem" class="listitem-content">Tipo de Atención</mat-list-item>
+    <mat-list-item role="listitem" class="listitem-content">Usuario</mat-list-item>
+    <mat-list-item role="listitem" class="listitem-content">WOF (Orden de fabricación)</mat-list-item>
+    <mat-list-item role="listitem" class="listitem-content">Trabajo</mat-list-item>
+    <mat-list-item role="listitem" class="listitem-content">Observaciones</mat-list-item>
+    <mat-divider style="margin-top: 10px;"></mat-divider>
+    <form>
+        <div class="form-inputs">
+
+            <mat-form-field appearance="outline">
+                <mat-label>Resultado</mat-label>
+                <input matInput placeholder="Resultado">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Tipo de ensayo</mat-label>
+                <input matInput placeholder="Tipo de ensayo">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Comentarios</mat-label>
+                <input matInput placeholder="Comentarios">
+            </mat-form-field>
+
+        </div>
+        <div class="card-img">
+            <div class="card-img__background">
+              
+            </div>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close>CERRAR</button>
+    <button type="button" mat-raised-button color="primary" class="footer__btn-save" cdkFocusInitial>Guardar</button>
+</mat-dialog-actions>

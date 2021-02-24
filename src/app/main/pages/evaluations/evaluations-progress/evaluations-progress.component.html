@@ -28,7 +28,7 @@
         <div class="priority"></div>
         <div>
           <mat-menu #requestsMenu="matMenu">
-            <button mat-menu-item>
+            <button mat-menu-item (click)="finalizeDialog()">
               <mat-icon>stop</mat-icon> 
               Finalizar
             </button>
