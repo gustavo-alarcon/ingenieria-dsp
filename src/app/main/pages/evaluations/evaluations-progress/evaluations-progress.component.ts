@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { EvaluationsFinalizeDialogComponent } from './dialogs/evaluations-finalize-dialog/evaluations-finalize-dialog.component';
+import { EvaluationsImagesDialogComponent } from './dialogs/evaluations-images-dialog/evaluations-images-dialog.component';
 import { EvaluationsSettingsDialogComponent } from './dialogs/evaluations-settings-dialog/evaluations-settings-dialog.component';
 
 @Component({
@@ -25,6 +26,13 @@ export class EvaluationsProgressComponent implements OnInit {
 
   finalizeDialog(): void {
     this.dialog.open(EvaluationsFinalizeDialogComponent, {
+      width: '35%',
+      height: '90%'
+    });
+  }
+
+  imagesDialog(): void {
+    this.dialog.open(EvaluationsImagesDialogComponent, {
       width: '35%',
       height: '90%'
     });
