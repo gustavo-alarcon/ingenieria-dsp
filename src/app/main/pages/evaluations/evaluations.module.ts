@@ -14,6 +14,7 @@ import {RequestsObservationDialogComponent} from './requests-observation-dialog/
 import {RequestsTimeLineDialogComponent} from './requests-time-line-dialog/requests-time-line-dialog.component';
 import { HistoryCreateDialogComponent } from './history-create-dialog/history-create-dialog.component';
 
+
 @NgModule({
   declarations: [
     EvaluationsComponent,
@@ -27,11 +28,13 @@ import { HistoryCreateDialogComponent } from './history-create-dialog/history-cr
     RequestsTimeLineDialogComponent,
     HistoryCreateDialogComponent
   ],
-  exports: [EvaluationsComponent],
+  exports: [
+    EvaluationsComponent,
+  ],
   imports: [
     CommonModule,
     EvaluationsRoutingModule,
     MaterialModule,
   ],
 })
-export class EvaluationsModule {}
+export class EvaluationsModule { }
