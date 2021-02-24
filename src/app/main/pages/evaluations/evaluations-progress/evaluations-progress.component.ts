@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { EvaluationsConsultsDialogComponent } from './dialogs/evaluations-consults-dialog/evaluations-consults-dialog.component';
 import { EvaluationsFinalizeDialogComponent } from './dialogs/evaluations-finalize-dialog/evaluations-finalize-dialog.component';
 import { EvaluationsImagesDialogComponent } from './dialogs/evaluations-images-dialog/evaluations-images-dialog.component';
 import { EvaluationsSettingsDialogComponent } from './dialogs/evaluations-settings-dialog/evaluations-settings-dialog.component';
@@ -33,6 +34,13 @@ export class EvaluationsProgressComponent implements OnInit {
 
   imagesDialog(): void {
     this.dialog.open(EvaluationsImagesDialogComponent, {
+      width: '35%',
+      height: '90%'
+    });
+  }
+
+  consultDialog(): void {
+    this.dialog.open(EvaluationsConsultsDialogComponent, {
       width: '35%',
       height: '90%'
     });
