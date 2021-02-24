@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { RequestsObservationDialogComponent } from '../dialogs/requests-observation-dialog/requests-observation-dialog.component';
-import { RequestsSettingDialogComponent } from '../dialogs/requests-setting-dialog/requests-setting-dialog.component';
-import { RequestsStartDialogComponent } from '../dialogs/requests-start-dialog/requests-start-dialog.component';
-import { RequestsTimeLineDialogComponent } from '../dialogs/requests-time-line-dialog/requests-time-line-dialog.component';
+import { RequestsObservationDialogComponent } from './dialogs/requests-observation-dialog/requests-observation-dialog.component';
+import { RequestsSettingDialogComponent } from './dialogs/requests-setting-dialog/requests-setting-dialog.component';
+import { RequestsStartDialogComponent } from './dialogs/requests-start-dialog/requests-start-dialog.component';
+import { RequestsTimeLineDialogComponent } from './dialogs/requests-time-line-dialog/requests-time-line-dialog.component';
+
 
 
 @Component({

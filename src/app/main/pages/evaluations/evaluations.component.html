@@ -1,26 +1,14 @@
 <div class="container">
   <h1 style="font-size: 2.5em; margin-left: 20px; font-weight: bold;">Evaluaciones</h1>
   <div class="container-body">
-    <!-- <mat-tab-group>
-      <mat-tab label="SOLICITUDES">
-        <app-evaluations-requests></app-evaluations-requests>
-      </mat-tab>
-      <mat-tab label="EN PROCESO">
-        <app-evaluations-process></app-evaluations-process>
-      </mat-tab>
-      <mat-tab label="HISTORIAL">
-        <app-evaluations-history></app-evaluations-history>
-      </mat-tab>
-      <mat-tab label="CONFIGURACIONES"> CONFIGURACIONES 3 </mat-tab> -->
-    <!-- </mat-tab-group> -->
-
     <nav mat-tab-nav-bar>
       <a mat-tab-link *ngFor="let link of navLinks" [routerLink]="link.link" routerLinkActive #rla="routerLinkActive"
         [active]="rla.isActive" label="SOLICITUDES">
         {{link.label}}
       </a>
     </nav>
-    <router-outlet></router-outlet>
+    <div class="container-router">
+      <router-outlet></router-outlet>
+    </div>
   </div>
-
 </div>
