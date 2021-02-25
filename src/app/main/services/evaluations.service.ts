@@ -44,7 +44,7 @@ export class EvaluationsService {
       wof: form.wof,
       task: form.task,
       observations: null,
-      workshop: null,
+      workshop: form.workshop,
       images: null,
       imagesCounter: null,
       inquiries: null ,
