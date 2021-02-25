@@ -32,34 +32,82 @@
     <mat-list-item role="listitem" class="listitem-content__second">Inspector:</mat-list-item>
     <div style="margin-top: 30px;"></div>
     <mat-accordion>
-        <mat-expansion-panel>
+        <mat-expansion-panel class="container-panel">
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    <mat-icon class="container-h2__iconp">looks_one</mat-icon>
+                    <div class="container-panel__number--panel">
+                        1
+                    </div>
                 </mat-panel-title>
                 <mat-panel-description>
-                    <span class="container-h2__description">
+                    <span class="container-panel__description">
                         Preguntas
                     </span>
                 </mat-panel-description>
             </mat-expansion-panel-header>
-            <p>agregar preguntas</p>
+            <div class="item-consult">
+                <button mat-icon-button>
+                    <mat-icon>help_center</mat-icon>
+                    <span style="margin-left: 20px;">
+                        Consulta 1
+                    </span>
+                </button>
+            </div>
+            <div style="margin-top: 10px;"></div>
+
+            <div class="container-panel__question-image">
+                <div class="container-panel__question-image--img">
+                    <img src="../../../../../../../assets/img/default.png" alt="" style="width: 100%;">
+                </div>
+                <div class="container-panel__question-image--question">
+                    ¿Como debo realizar el primer ensayo de material?
+                </div>
+
+            </div>
+            <div class="item-consult">
+                <button mat-icon-button>
+                    <mat-icon>help_center</mat-icon>
+                    <span style="margin-left: 20px;">
+                        Respuesta 1
+                    </span>
+                </button>
+            </div>
+            <div style="margin-top: 10px;"></div>
+
+            <div class="container-panel__question-image">
+                <div class="container-panel__question-image--img">
+                    <img src="../../../../../../../assets/img/default.png" alt="" style="width: 100%;">
+                </div>
+                <div class="container-panel__question-image--question">
+                    ¿Como debo realizar el primer ensayo de material?
+                </div>
+
+            </div>
         </mat-expansion-panel>
     </mat-accordion>
     <div style="margin-top: 30px;"></div>
     <mat-accordion>
-        <mat-expansion-panel>
+        <mat-expansion-panel  class="container-panel">
             <mat-expansion-panel-header>
                 <mat-panel-title>
-                    <mat-icon class="container-h2__iconp">looks_two</mat-icon>
+                    <div class="container-panel__number--panel">
+                        2
+                    </div>
                 </mat-panel-title>
                 <mat-panel-description>
-                    <span class="container-h2__description">
+                    <span class="container-panel__description">
                         Imágenes
                     </span>
                 </mat-panel-description>
             </mat-expansion-panel-header>
-            <p>Agregar imagenes</p>
+            <div class="container-panel__image">
+                <mat-card class="mat-elevation-z0">
+                    <img src="../../../../../../../assets/img/default.png" alt="">
+                </mat-card>
+                <mat-card class="mat-elevation-z0">
+                    <img src="../../../../../../../assets/img/default.png" alt="">
+                </mat-card>
+            </div>
         </mat-expansion-panel>
     </mat-accordion>
     <div style="margin-top: 30px;"></div>
