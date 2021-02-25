@@ -3,8 +3,8 @@ import { BehaviorSubject } from 'rxjs';
 import { Evaluation } from '../../../../../models/evaluations.model';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { EvaluationsService } from '../../../../../../auth/services/evaluations.service';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { EvaluationsService } from '../../../../../services/evaluations.service';
 
 @Component({
   selector: 'app-history-observation-dialog',
@@ -27,8 +27,25 @@ export class HistoryObservationDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.observationFormGroup = this.fb.group({
-      area: ['', Validators.required],
+      observation: ['', Validators.required],
     });
+  }
+
+  async save(): Promise<void> {
+    try {
+      const observation = this.observationFormGroup.get('observation').value;
+      await this.evaltService.updateObservation(this.data , observation);
+      // tslint:disable-next-line: no-string-literal
+      this.dialogRef.close('result');
+
+      this.snackbar.open('✅ Se actualizo correctamente', 'Aceptar', {
+        duration: 6000
+      });
+    } catch (error) {
+      this.snackbar.open('✅ Error al actualizar', 'Aceptar', {
+        duration: 6000
+      });
+    }
   }
 
 }

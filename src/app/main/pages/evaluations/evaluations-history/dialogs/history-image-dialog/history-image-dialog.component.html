@@ -39,6 +39,6 @@
         </mat-dialog-content>
         <mat-dialog-actions align="end">
             <button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close>CERRAR</button>
-            <button type="button" mat-raised-button color="primary" class="footer__btn-save" (click)="onSubmitForm()">ACEPTAR</button>
+            <button type="button" mat-raised-button color="primary" class="footer__btn-save" [disabled]="createForm.status != 'VALID'" (click)="onSubmitForm()">ACEPTAR</button>
         </mat-dialog-actions>
 </div> 

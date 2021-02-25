@@ -104,6 +104,7 @@ export class EvaluationsHistoryComponent implements OnInit {
         break;
       case 'oservation':
         dialogRef = this.dialog.open(HistoryObservationDialogComponent,
+          optionsDialog,
         );
 
         dialogRef.afterClosed().subscribe(result => {
