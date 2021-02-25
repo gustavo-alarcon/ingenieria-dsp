@@ -61,9 +61,9 @@ export class EvaluationsHistoryComponent implements OnInit {
       })
     );
   }
+
   openDialog(value: string, entry?: ImprovementEntry, index?: number): void {
     const optionsDialog = {
-      width: '40%',
       data: entry
     };
     let dialogRef;
