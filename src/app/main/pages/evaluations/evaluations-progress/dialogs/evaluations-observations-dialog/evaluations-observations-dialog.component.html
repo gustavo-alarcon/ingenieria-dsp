@@ -1,1 +1,70 @@
-<p>evaluations-observations-dialog works!</p>
+<h2 mat-dialog-title>
+    <div class="container-h2">
+        <button mat-icon-button class="container-h2__button">
+            <mat-icon class="container-h2__icon">remove_red_eye</mat-icon>
+            <span class="container-h2__title">
+                Observaciones
+            </span>
+        </button>
+        <button mat-icon-button mat-dialog-close>
+            <mat-icon class="container-h2__icon-close">close</mat-icon>
+        </button>
+    </div>
+    <mat-divider style="margin-top: 20px;"></mat-divider>
+    <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+</h2>
+<mat-dialog-content class="mat-typography">
+    <!-- <mat-list role="list"> -->
+    <mat-list-item role="listitem" class="listitem-content">OT MAIN:</mat-list-item>
+    <mat-list-item role="listitem" class="listitem-content">OT CHILD:</mat-list-item>
+    <mat-list-item role="listitem" class="listitem-content">Correlativo:</mat-list-item>
+    <mat-list-item role="listitem" class="listitem-content">Número de Parte:</mat-list-item>
+    <mat-list-item role="listitem" class="listitem-content">Descripción:</mat-list-item>
+    <mat-list-item role="listitem" class="listitem-content">Tipo de Atención:</mat-list-item>
+    <mat-list-item role="listitem" class="listitem-content">Usuario:</mat-list-item>
+    <mat-list-item role="listitem" class="listitem-content">WOF (Orden de fabricación)</mat-list-item>
+    <mat-list-item role="listitem" class="listitem-content">Trabajo:</mat-list-item>
+    <mat-list-item role="listitem" class="listitem-content">Taller:</mat-list-item>
+    <mat-list-item role="listitem" class="listitem-content">Observaciones:</mat-list-item>
+    <div style="margin-top: 30px;"></div>
+    <mat-list-item role="listitem" class="listitem-content__second">Resultado:</mat-list-item>
+    <mat-list-item role="listitem" class="listitem-content__second">Tipo de Ensayo:</mat-list-item>
+    <mat-list-item role="listitem" class="listitem-content__second">Inspector:</mat-list-item>
+    <div style="margin-top: 30px;"></div>
+    <mat-accordion>
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <mat-icon class="container-h2__iconp">looks_one</mat-icon>
+                </mat-panel-title>
+                <mat-panel-description>
+                    <span class="container-h2__description">
+                        Preguntas
+                    </span>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <p>agregar preguntas</p>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <div style="margin-top: 30px;"></div>
+    <mat-accordion>
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <mat-icon class="container-h2__iconp">looks_two</mat-icon>
+                </mat-panel-title>
+                <mat-panel-description>
+                    <span class="container-h2__description">
+                        Imágenes
+                    </span>
+                </mat-panel-description>
+            </mat-expansion-panel-header>
+            <p>Agregar imagenes</p>
+        </mat-expansion-panel>
+    </mat-accordion>
+    <div style="margin-top: 30px;"></div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close>CERRAR</button>
+    <button type="button" mat-raised-button color="primary" class="footer__btn-save" cdkFocusInitial>ACEPTAR</button>
+</mat-dialog-actions>
