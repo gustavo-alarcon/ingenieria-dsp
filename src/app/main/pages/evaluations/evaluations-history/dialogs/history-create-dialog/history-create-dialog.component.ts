@@ -4,6 +4,8 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../../../../../auth/services/auth.service';
+import { take, switchMap } from 'rxjs/operators';
+import { EvaluationsService } from 'src/app/main/services/evaluations.service';
 
 @Component({
   selector: 'app-history-create-dialog',
@@ -25,6 +27,7 @@ export class HistoryCreateDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<HistoryCreateDialogComponent>,
     private snackbar: MatSnackBar,
     private auth: AuthService,
+    private  evaltService: EvaluationsService,
   ) {
   }
 
@@ -33,22 +36,47 @@ export class HistoryCreateDialogComponent implements OnInit {
   }
   createForm(): void{
     this.createEvaluateForm = this.fb.group({
-      workOrder: ['', Validators.required],
-      operation: ['', Validators.required],
-      correlative: ['', Validators.required],
-      nPart: ['', Validators.required],
+      otMain: ['', Validators.required],
+      otChild: ['', Validators.required],
+      position: ['', Validators.required],
+      partNumber: ['', Validators.required],
       description: ['', Validators.required],
-      state: ['', Validators.required],
-      result: ['', Validators.required],
-      observations: ['', Validators.required],
       quantity: ['', Validators.required],
-      workshop: ['', Validators.required],
-      workshopAttention: ['', Validators.required],
-      applicationDate: ['', Validators.required],
+      status: ['', Validators.required],
+      wof: ['', Validators.required],
+      task: ['', Validators.required],
     });
   }
-  save(){
-
+  save(): void{
+    this.loading.next(true);
+    if (this.createEvaluateForm.invalid) {
+      this.createEvaluateForm.markAllAsTouched();
+      this.loading.next(false);
+      return;
+    } else {
+      this.auth.user$.pipe(
+        take(1),
+        switchMap(user => {
+          return this.evaltService.saveRequest(this.createEvaluateForm.value, user);
+        })
+    ).subscribe(batch => {
+      if (batch) {
+        batch.commit()
+          .then(() => {
+            this.loading.next(false);
+            this.snackbar.open('✅ se guardo correctamente!', 'Aceptar', {
+              duration: 6000
+            });
+          })
+          .catch(err => {
+            this.loading.next(false);
+            this.snackbar.open('🚨 Hubo un error.', 'Aceptar', {
+              duration: 6000
+            });
+          });
+      }
+    });
   }
+}
 
 }

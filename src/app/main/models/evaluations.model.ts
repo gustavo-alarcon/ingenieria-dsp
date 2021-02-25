@@ -12,7 +12,7 @@ export interface Evaluation {
     partNumber: string; // Nro de parte
     description: string;
     quantity: number;
-    internalStatus: string; // [registrado/solicitado, en proceso, finalizado]
+    internalStatus: string; // [registrado/solicitado, en proceso, finalizado] !!!¡¡¡=> registered //progress// finalized
     status: string; // Tipo de atención
     user?: string;
     wof: string; // Orden de fabricación

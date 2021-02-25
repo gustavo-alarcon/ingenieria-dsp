@@ -1,17 +1,19 @@
 <div class="container">
 
-    <h2 mat-dialog-title style="display: flex;">
-        <div style="margin-top: 5px; margin-right: 15px;">
+    <h2 mat-dialog-title style="display: flex; padding-bottom: 0px;margin-bottom: 0px;">
+        <div style="margin-top: 5px; margin-right: 15px;" mat-dialog-close>
             <mat-icon mat-list-icon>settings</mat-icon>
         </div> 
-        Configuraciones
-       <mat-divider></mat-divider>
-        <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+        Configuraciones 
+        
+        <div  mat-dialog-close style="margin-top: 5px; margin-left: 220px;cursor: pointer;"  >
+            <mat-icon >clear</mat-icon>
+        </div>        
     </h2>
-        <mat-dialog-content >
-
+    <mat-divider></mat-divider>
+    <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+        <mat-dialog-content style="margin-top: 20px;">
             <p style="text-align: center;">Tiempo máximo en solicitud (hh:mm)</p>
-
             <div>
                 <form [formGroup]="timerFormGroup" class="timer-container">
                     <mat-form-field class="timer">
