@@ -8,6 +8,8 @@ import { Evaluation } from '../../../models/evaluations.model';
 import { Observable } from 'rxjs';
 import { EvaluationsService } from '../../../services/evaluations.service';
 import { tap } from 'rxjs/operators';
+import { HistoryEditDialogComponent } from './dialogs/history-edit-dialog/history-edit-dialog.component';
+import { HistoryDeleteDialogComponent } from './dialogs/history-delete-dialog/history-delete-dialog.component';
 
 @Component({
   selector: 'app-evaluations-history',
@@ -69,11 +71,28 @@ export class EvaluationsHistoryComponent implements OnInit {
         dialogRef = this.dialog.open(HistoryCreateDialogComponent,
           optionsDialog,
         );
-
-        /* dialogRef.afterClosed().subscribe(result => {
+        dialogRef.afterClosed().subscribe(result => {
+           console.log(`Dialog result: ${result}`);
+        });
+        break;
+      case 'edit':
+        dialogRef = this.dialog.open(HistoryEditDialogComponent,
+          optionsDialog,
+        );
+        dialogRef.afterClosed().subscribe(result => {
           console.log(`Dialog result: ${result}`);
         });
         break;
+      case 'delete':
+        dialogRef = this.dialog.open(HistoryDeleteDialogComponent, {
+          data: this.historyDataSource.data[index]
+        }
+        );
+        dialogRef.afterClosed().subscribe(result => {
+          console.log(`Dialog result: ${result}`);
+        });
+        break; 
+      /*
       case 'validate':
         dialogRef = this.dialog.open(ValidateDialogImprovenmentsComponent,
           optionsDialog,
@@ -83,26 +102,7 @@ export class EvaluationsHistoryComponent implements OnInit {
           console.log(`Dialog result: ${result}`);
         });
         break;
-      case 'edit':
-        dialogRef = this.dialog.open(EditDialogImprovenmentsComponent,
-          optionsDialog,
-        );
-
-        dialogRef.afterClosed().subscribe(result => {
-          console.log(`Dialog result: ${result}`);
-        });
-        break;
-
-      case 'delete':
-        dialogRef = this.dialog.open(DeleteDialogImprovenmentsComponent, {
-          width: '350px',
-          data: this.improvementDataSource.data[index]
-        }
-        );
-        dialogRef.afterClosed().subscribe(result => {
-          console.log(`Dialog result: ${result}`);
-        });
-        break; */
+     */
     }
   }
 

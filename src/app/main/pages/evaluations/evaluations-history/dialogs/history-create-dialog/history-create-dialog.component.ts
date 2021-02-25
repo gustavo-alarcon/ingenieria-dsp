@@ -48,7 +48,6 @@ export class HistoryCreateDialogComponent implements OnInit {
     });
   }
   save(): void{
-    console.log('save data')
     this.loading.next(true);
     if (this.createEvaluateForm.invalid) {
       this.createEvaluateForm.markAllAsTouched();
@@ -61,7 +60,6 @@ export class HistoryCreateDialogComponent implements OnInit {
           return this.evaltService.saveRequest(this.createEvaluateForm.value, user);
         })
     ).subscribe(batch => {
-      console.log('batch : ',batch)
       if (batch) {
         batch.commit()
           .then(() => {

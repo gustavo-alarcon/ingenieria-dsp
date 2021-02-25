@@ -52,7 +52,6 @@ export class HistoryEditDialogComponent implements OnInit {
     });
   }
   save(): void{
-    console.log('save data')
     this.loading.next(true);
     if (this.createEvaluateForm.invalid) {
       this.createEvaluateForm.markAllAsTouched();
@@ -62,17 +61,17 @@ export class HistoryEditDialogComponent implements OnInit {
       this.auth.user$.pipe(
         take(1),
         switchMap(user => {
-          return this.evaltService.saveRequest(this.createEvaluateForm.value, user);
+          return this.evaltService.editRequest(this.data.id, this.createEvaluateForm.value, user);
         })
     ).subscribe(batch => {
-      console.log('batch : ',batch)
       if (batch) {
         batch.commit()
           .then(() => {
             this.loading.next(false);
-            this.snackbar.open('✅ se guardo correctamente!', 'Aceptar', {
+            this.snackbar.open('✅ se modifico correctamente!', 'Aceptar', {
               duration: 6000
             });
+            this.dialogRef.close();
           })
           .catch(err => {
             this.loading.next(false);
