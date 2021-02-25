@@ -10,6 +10,8 @@ import { EvaluationsService } from '../../../services/evaluations.service';
 import { tap } from 'rxjs/operators';
 import { HistoryEditDialogComponent } from './dialogs/history-edit-dialog/history-edit-dialog.component';
 import { HistoryDeleteDialogComponent } from './dialogs/history-delete-dialog/history-delete-dialog.component';
+import { HistoryImageDialogComponent } from './dialogs/history-image-dialog/history-image-dialog.component';
+import { HistoryObservationDialogComponent } from './dialogs/history-observation-dialog/history-observation-dialog.component';
 
 @Component({
   selector: 'app-evaluations-history',
@@ -92,17 +94,23 @@ export class EvaluationsHistoryComponent implements OnInit {
           console.log(`Dialog result: ${result}`);
         });
         break; 
-      /*
-      case 'validate':
-        dialogRef = this.dialog.open(ValidateDialogImprovenmentsComponent,
-          optionsDialog,
+      case 'image':
+        dialogRef = this.dialog.open(HistoryImageDialogComponent, {
+          data: this.historyDataSource.data[index]
+        }
+        );
+        dialogRef.afterClosed().subscribe(result => {
+          console.log(`Dialog result: ${result}`);
+        });
+        break;
+      case 'oservation':
+        dialogRef = this.dialog.open(HistoryObservationDialogComponent,
         );
 
         dialogRef.afterClosed().subscribe(result => {
           console.log(`Dialog result: ${result}`);
         });
         break;
-     */
     }
   }
 

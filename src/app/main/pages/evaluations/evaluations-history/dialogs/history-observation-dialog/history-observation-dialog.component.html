@@ -1,0 +1,40 @@
+<div class="container">    
+    <h2 mat-dialog-title style="display: flex; padding-bottom: 0px;margin-bottom: 0px;">
+        <div style="margin-top: 5px; margin-right: 15px;" mat-dialog-close>
+            <mat-icon mat-list-icon>visibility</mat-icon>
+        </div> 
+        Observaciones         
+        <div  mat-dialog-close style="margin-top: 5px; margin-left: 220px;cursor: pointer;"  >
+            <mat-icon >clear</mat-icon>
+        </div>        
+    </h2>
+    <mat-divider></mat-divider>
+    <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+    <form [formGroup]="observationFormGroup" class="timer-container" style="margin-top: 20px;">
+        <mat-dialog-content >
+            <p ><span style="font-weight: bold;"> OT MAIN :</span> XXXXXXXx</p>
+            <p ><span style="font-weight: bold;"> OT CHILD :</span> XXXXXXXx</p>
+            <p ><span style="font-weight: bold;"> Correlativo :</span> XXXXXXXx</p>
+            <p ><span style="font-weight: bold;"> N° de parte :</span> XXXXXXXx</p>
+            <p ><span style="font-weight: bold;"> Descripcion :</span> XXXXXXXx</p>
+            <p ><span style="font-weight: bold;"> Tipo de Atencion :</span> XXXXXXXx</p>
+            <p ><span style="font-weight: bold;"> Usuario :</span> XXXXXXXx</p>
+            <p ><span style="font-weight: bold;"> WOF (Orden de Fabricacion) :</span> XXXXXXXx</p>
+            <p ><span style="font-weight: bold;"> Trabajo :</span> XXXXXXXx</p>
+           
+            <mat-form-field appearance="outline" style="width: 400px;">
+                <mat-label>Observaciones</mat-label>
+                <textarea matInput placeholder="XXXXXXXXXXXXXXXx" name="area" required></textarea>
+                <mat-error *ngIf="observationFormGroup.controls['area'].errors">
+                    Campo <strong>requerido.</strong>
+                </mat-error>
+            </mat-form-field>
+            
+                
+            </mat-dialog-content>
+            <mat-dialog-actions align="end">
+                <button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close>CERRAR</button>
+                <button type="button" mat-raised-button color="primary" class="footer__btn-save">GUARDAR</button>
+            </mat-dialog-actions>
+    </form>
+</div> 

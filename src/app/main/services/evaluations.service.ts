@@ -111,8 +111,6 @@ export class EvaluationsService {
     console.log(evaluationDocRef)
     //
     batch.delete(evaluationDocRef);
- 
-
     return of(batch);
   }
 }

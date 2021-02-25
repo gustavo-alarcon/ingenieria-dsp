@@ -1,11 +1,34 @@
 
-.container-table{
-    margin-top: 30px;
-}
+    .container-table{
+        padding-top: 30px;
+        max-width: 100%;
+        overflow: auto;
+    }
 
-table{
+  table {
     width: 100%;
-}
+  }
+  .table-header{
+    font-weight: bold;
+    padding: 10px;
+  }
+  
+  td.mat-column-star {
+    width: 20px;
+    padding-right: 8px;
+  }
+  
+  th.mat-column-position, td.mat-column-position {
+    padding-left: 8px;
+  }
+  
+  .mat-table-sticky-border-elem-right {
+    border-left: 1px solid #e0e0e0;
+  }
+  
+  .mat-table-sticky-border-elem-left {
+    border-right: 1px solid #e0e0e0;
+  }
 
 .btn-add{
     border: 1px #6200EE solid;
