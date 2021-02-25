@@ -106,5 +106,32 @@ mat-card img {
 }
 
 .active {
-  background: #9b27b036;
+  background: rgba($color: #6200EE, $alpha: 0.08);
+  color: #6200EE !important;
+}
+
+::ng-deep .active .mat-item-list-span {
+  color: #6200EE !important;
+}
+
+::ng-deep .mat-expansion-panel-body {
+  padding: 0px 0px !important;
+}
+
+::ng-deep .mat-list-base {
+  margin-top: 0px !important;
+  width: 100%;
+}
+
+.mat-list-item-second {
+  color: #666666;
+  padding-left: 40px !important;
+}
+
+::ng-deep .mat-expansion-panel-header {
+  padding: 0px 0px !important;
+}
+
+::ng-deep .mat-expansion-indicator {
+  margin-right: 20px !important;
 }

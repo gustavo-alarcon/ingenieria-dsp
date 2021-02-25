@@ -13,54 +13,103 @@
       </mat-card-content>
     </mat-card>
     <hr class="hr-line">
-    <mat-nav-list>
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-nav-list>
+              <div>
+                <a mat-list-item>
+                  <mat-icon mat-list-icon class="mat-icon-menu">beenhere</mat-icon>
+                  <span class="mat-item-list-span">
+                    Repuestos
+                  </span>
+                </a>
+              </div>
+            </mat-nav-list>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <div>
+            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/improvements']"
+              routerLinkActive="active" (click)="drawer.toggle()">
+              <mat-icon mat-list-icon class="mat-icon-menu">turned_in</mat-icon>
+              <span class="mat-item-list-span">
+                Mejoras
+              </span>
+            </a>
+            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/replacements']"
+              routerLinkActive="active" (click)="drawer.toggle()">
+              <mat-icon mat-list-icon class="mat-icon-menu">published_with_changes</mat-icon>
+              <span class="mat-item-list-span">
+                Reemplazos
+              </span>
+            </a>
+            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/frequencies']" routerLinkActive="active"
+              (click)="drawer.toggle()">
+              <mat-icon mat-list-icon class="mat-icon-menu">view_stream</mat-icon>
+              <span class="mat-item-list-span">
+                Frecuencia de uso
+              </span>
+            </a>
+            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/summary']" routerLinkActive="active"
+              (click)="drawer.toggle()">
+              <mat-icon mat-list-icon class="mat-icon-menu">description</mat-icon>
+              <span class="mat-item-list-span">
+                Resumen
+              </span>
+            </a>
+            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/spare-parts']" routerLinkActive="active"
+              (click)="drawer.toggle()">
+              <mat-icon mat-list-icon class="mat-icon-menu">verified</mat-icon>
+              <span class="mat-item-list-span">
+                Revisión de repuestos
+              </span>
+            </a>
+            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/settings']" routerLinkActive="active"
+              (click)="drawer.toggle()">
+              <mat-icon mat-list-icon class="mat-icon-menu">settings</mat-icon>
+              <span class="mat-item-list-span">
+                Configuración
+              </span>
+            </a>
+          </div>
+        </mat-nav-list>
+      </mat-expansion-panel>
+    </mat-accordion>
+    <mat-nav-list style="width: 100%">
       <div>
-        <a mat-list-item [routerLink]="['/main/improvements']" routerLinkActive="active" (click)="drawer.toggle()">
-          <mat-icon mat-list-icon class="mat-icon-menu">turned_in</mat-icon>
+        <a mat-list-item [routerLink]="['/main/evaluations']" routerLinkActive="active" (click)="drawer.toggle()">
+          <mat-icon mat-list-icon class="mat-icon-menu">table_view</mat-icon>
           <span class="mat-item-list-span">
-            Mejoras
+            Evalauciones
           </span>
         </a>
-        <a mat-list-item [routerLink]="['/main/spare-parts']" routerLinkActive="active" (click)="drawer.toggle()">
-          <mat-icon mat-list-icon class="mat-icon-menu">verified</mat-icon>
-          <span class="mat-item-list-span">
-            Revisión de repuestos
-          </span>
-        </a>
-        <a mat-list-item [routerLink]="['/main/summary']" routerLinkActive="active" (click)="drawer.toggle()">
+        <a mat-list-item [routerLink]="['/main/budgets']" routerLinkActive="active" (click)="drawer.toggle()">
           <mat-icon mat-list-icon class="mat-icon-menu">fact_check</mat-icon>
           <span class="mat-item-list-span">
-            Resumen
-          </span>
-        </a>
-        <a mat-list-item [routerLink]="['/main/settings']" routerLinkActive="active"  (click)="drawer.toggle()">
-          <mat-icon mat-list-icon class="mat-icon-menu">settings</mat-icon>
-          <span class="mat-item-list-span">
-            Configuración
-          </span>
-        </a>
-        <a mat-list-item [routerLink]="['/main/evaluations']" routerLinkActive="active"  (click)="drawer.toggle()">
-          <mat-icon mat-list-icon class="mat-icon-menu">turned_in</mat-icon>
-          <span class="mat-item-list-span">
-            Evaluaciones
+            Presupuestos
           </span>
         </a>
       </div>
     </mat-nav-list>
+
   </mat-sidenav>
   <mat-sidenav-content>
-    <mat-toolbar class="main_toolbar">
+    <mat-toolbar class="main_toolbar" style="padding: 0px 28px">
       <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      
-      <button type="button" aria-label="Toggle sidenav" mat-button class="btn-exit-app" (click)="exitApp()">
+
+      <span style="font-size: 1em; margin-left: 20px; font-family: 'Poppins', sans-serif; font-weight: 500;">Ingeniería
+        DSP</span>
+
+      <span class="ms-fill"></span>
+
+      <button type="button" aria-label="Toggle sidenav" mat-button (click)="exitApp()">
         CERRAR SESION
         <mat-icon aria-label="Side nav toggle icon">exit_to_app</mat-icon>
       </button>
-      
-      <span>Ingeniería DSP</span>
-      
     </mat-toolbar>
     <div>
       <router-outlet></router-outlet>

@@ -28,6 +28,8 @@ export class MainComponent {
       shareReplay(1)
     );
 
+  panelOpenState = false;
+
   constructor(
     private breakpointObserver: BreakpointObserver,
     public authService: AuthService,

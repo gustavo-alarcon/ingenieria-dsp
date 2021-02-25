@@ -13,9 +13,9 @@ export interface Evaluation {
     description: string;
     quantity: number;
     internalStatus: string; // [registrado/solicitado, en proceso, finalizado]
-    status: string; // Tipo de atención
+    status: string; // Tipo de atención [APA, PARA]
     user?: string;
-    wof: string; // Orden de fabricación
+    wof: string; // Solicitud TR
     task: string; // Trabajo
     observations: string;
     workshop: string; // Taller
@@ -29,7 +29,7 @@ export interface Evaluation {
     processTimer?: EvaluationTimer;
     inquiryDate?: Date;
     inquiryTimer?: EvaluationTimer;
-    result?: string;
+    result?: string; // ESta info viene de una lista standard (pendiente)
     kindOfTest?: string;
     comments?: string;
     createdAt: Date;
