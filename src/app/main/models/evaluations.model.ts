@@ -12,8 +12,8 @@ export interface Evaluation {
     partNumber: string; // Nro de parte
     description: string;
     quantity: number;
-    internalStatus: string; // [registrado/solicitado, en proceso, finalizado]
-    status: string; // Tipo de atención [APA, PARA]
+    internalStatus: string; // [registrado/solicitado, en proceso, finalizado] !!!¡¡¡=> registered //progress// finalized
+    status: string; // Tipo de atención
     user?: string;
     wof: string; // Solicitud TR
     task: string; // Trabajo

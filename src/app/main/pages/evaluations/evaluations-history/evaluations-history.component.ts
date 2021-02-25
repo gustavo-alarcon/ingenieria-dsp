@@ -4,6 +4,14 @@ import { ImprovementEntry } from '../../../models/improvenents.model';
 import { MatPaginator } from '@angular/material/paginator';
 import { HistoryCreateDialogComponent } from './dialogs/history-create-dialog/history-create-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { Evaluation } from '../../../models/evaluations.model';
+import { Observable } from 'rxjs';
+import { EvaluationsService } from '../../../services/evaluations.service';
+import { tap } from 'rxjs/operators';
+import { HistoryEditDialogComponent } from './dialogs/history-edit-dialog/history-edit-dialog.component';
+import { HistoryDeleteDialogComponent } from './dialogs/history-delete-dialog/history-delete-dialog.component';
+import { HistoryImageDialogComponent } from './dialogs/history-image-dialog/history-image-dialog.component';
+import { HistoryObservationDialogComponent } from './dialogs/history-observation-dialog/history-observation-dialog.component';
 
 @Component({
   selector: 'app-evaluations-history',
@@ -12,21 +20,26 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class EvaluationsHistoryComponent implements OnInit {
 
-  // Improvement
-  historyDataSource = new MatTableDataSource<ImprovementEntry>();
+  evaluation$: Observable<Evaluation[]>;
+
+  historyDataSource = new MatTableDataSource<Evaluation>();
   improvementDisplayedColumns: string[] = [
-    'workOrder',
-    'operation',
-    'correlative',
-    'nPart',
+    'otMain',
+    'otChild',
+    'position',
+    'partNumber',
     'description',
-    'state',
+    'internalStatus',
     'result',
     'observations',
     'quantity',
     'workshop',
-    'workshopAttention',
-    'applicationDate',
+    'status',
+    'registryDate',
+    'user',
+    'wof',
+    'task',
+    'actions',
   ];
 
   @ViewChild('improvementPaginator', { static: false }) set content(
@@ -35,13 +48,22 @@ export class EvaluationsHistoryComponent implements OnInit {
     this.historyDataSource.paginator = paginator;
   }
 
-  constructor( public dialog: MatDialog,) { }
+  constructor( public dialog: MatDialog,
+               private evaltService: EvaluationsService,
+    ) { }
 
   ngOnInit(): void {
+    this.evaluation$ = this.evaltService.getAllEvaluations().pipe(
+      tap(res => {
+        if (res) {
+          this.historyDataSource.data = res;
+        }
+      })
+    );
   }
+
   openDialog(value: string, entry?: ImprovementEntry, index?: number): void {
     const optionsDialog = {
-      width: '40%',
       data: entry
     };
     let dialogRef;
@@ -51,40 +73,44 @@ export class EvaluationsHistoryComponent implements OnInit {
         dialogRef = this.dialog.open(HistoryCreateDialogComponent,
           optionsDialog,
         );
-
-        /* dialogRef.afterClosed().subscribe(result => {
-          console.log(`Dialog result: ${result}`);
-        });
-        break;
-      case 'validate':
-        dialogRef = this.dialog.open(ValidateDialogImprovenmentsComponent,
-          optionsDialog,
-        );
-
         dialogRef.afterClosed().subscribe(result => {
-          console.log(`Dialog result: ${result}`);
+           console.log(`Dialog result: ${result}`);
         });
         break;
       case 'edit':
-        dialogRef = this.dialog.open(EditDialogImprovenmentsComponent,
+        dialogRef = this.dialog.open(HistoryEditDialogComponent,
           optionsDialog,
         );
-
         dialogRef.afterClosed().subscribe(result => {
           console.log(`Dialog result: ${result}`);
         });
         break;
-
       case 'delete':
-        dialogRef = this.dialog.open(DeleteDialogImprovenmentsComponent, {
-          width: '350px',
-          data: this.improvementDataSource.data[index]
+        dialogRef = this.dialog.open(HistoryDeleteDialogComponent, {
+          data: this.historyDataSource.data[index]
         }
         );
         dialogRef.afterClosed().subscribe(result => {
           console.log(`Dialog result: ${result}`);
         });
-        break; */
+        break; 
+      case 'image':
+        dialogRef = this.dialog.open(HistoryImageDialogComponent, {
+          data: this.historyDataSource.data[index]
+        }
+        );
+        dialogRef.afterClosed().subscribe(result => {
+          console.log(`Dialog result: ${result}`);
+        });
+        break;
+      case 'oservation':
+        dialogRef = this.dialog.open(HistoryObservationDialogComponent,
+        );
+
+        dialogRef.afterClosed().subscribe(result => {
+          console.log(`Dialog result: ${result}`);
+        });
+        break;
     }
   }
 
