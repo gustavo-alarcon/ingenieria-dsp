@@ -82,16 +82,17 @@
                 <input matInput placeholder="Comentarios" formControlName="comments">
             </mat-form-field>
         </div>
-        <div class="form-container__img">
-            <mat-card class="mat-elevation-z0" *ngFor="let img of images;let i=index;">
-                <img [src]="img" alt="" class="form-container__img--size" onError="this.src='../../../../../../../assets/img/error-image.png'">
-            </mat-card>
+
+        <div *ngFor="let img of images;let i=index;">
+            <img [src]="img" alt="" onError="this.src='../../../../../../../assets/img/error-image.png'">
         </div>
 
 
-        <div class="form-container__image-area" *ngFor="let imgUpload of imagesUpload;let i=index">
+        <div *ngFor="let imgUpload of imagesUpload;let i=index">
             <label [for]="i">
-                <img [src]="imgUpload" onError="this.src='../../../../../../../assets/img/camara.png'" />
+                <mat-card class="mat-elevation-z0">
+                    <img [src]="imgUpload" onError="this.src='../../../../../../../assets/img/camara.png'"/>
+                </mat-card>
             </label>
             <input [id]="i" type="file" style="display: none;" (change)="uploadFile($event,i)"
                 accept="image/x-png, image/jpg, image/jpeg" />

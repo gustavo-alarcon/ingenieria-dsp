@@ -20,8 +20,10 @@ export class EvaluationsFinalizeDialogComponent implements OnInit {
   finalizeForm: FormGroup;
 
   images: string[];
-  imagesUpload: string[] = ['kj'];
+  imagesUpload: string[] = [''];
   image: string = null;
+
+  file = [];
 
   uploadPercent$: Observable<number>;
 
@@ -65,10 +67,14 @@ export class EvaluationsFinalizeDialogComponent implements OnInit {
 
   }
 
-  uploadFile(event, i: number): void {
+  uploadFile(event, i?: number): void {
+
     if (this.image === null) {
       this.image = new Date().toISOString();
     }
+    // if (this.imagesUpload[i] === '') {
+    //   this.imagesUpload.pop();
+    // }
     const file = event.target.files[0];
     const name = `evaluations/${this.data.id}/pictures/${this.data.id}-${this.image}-${event.target.files[0].name}-finalize.png`;
     const fileRef = this.storage.ref(name);
@@ -80,7 +86,8 @@ export class EvaluationsFinalizeDialogComponent implements OnInit {
       finalize(() => {
         fileRef.getDownloadURL().subscribe(url => {
           if (this.imagesUpload[i] === '') {
-            this.imagesUpload[i] = url;
+            this.imagesUpload.pop();
+            this.imagesUpload.push(url);
             this.imagesUpload.push('');
           } else {
             this.imagesUpload[i] = url;
