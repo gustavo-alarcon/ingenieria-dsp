@@ -20,7 +20,6 @@ import { ShowDialogImprovementsComponent } from './dialogs/show-dialog-improveme
 })
 export class ImprovementsComponent implements OnInit {
 
-  dataSource = new MatTableDataSource();
   selected: any;
 
   improvement$: Observable<ImprovementEntry[]>;

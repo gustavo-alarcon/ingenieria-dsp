@@ -1,8 +1,8 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { Improvement } from 'src/app/main/models/improvenents.model';
@@ -13,24 +13,12 @@ import { ImprovementsService } from 'src/app/main/services/improvements.service'
   templateUrl: './create-dialog-improvenments.component.html',
   styleUrls: ['./create-dialog-improvenments.component.scss']
 })
-export class CreateDialogImprovenmentsComponent implements OnInit, OnDestroy {
+export class CreateDialogImprovenmentsComponent implements OnInit {
 
   loading = new BehaviorSubject<boolean>(false);
   loading$ = this.loading.asObservable();
 
   createImprovenmentsForm: FormGroup;
-
-  options1: string[] = [];
-  partsFilteredOptions1: Observable<string[]>;
-  arrParts1 = [];
-
-  options2: string[] = [];
-  partsFilteredOptions2: Observable<string[]>;
-  arrParts2 = [];
-
-  subscriptions: Subscription = new Subscription();
-
-  indexAux: number[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -45,10 +33,6 @@ export class CreateDialogImprovenmentsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.createFormListParts();
-  }
-
-  ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
   }
 
   createFormListParts(): void {
