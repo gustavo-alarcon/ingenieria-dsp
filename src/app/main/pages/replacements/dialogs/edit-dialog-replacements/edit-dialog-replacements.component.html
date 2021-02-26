@@ -1,0 +1,53 @@
+<div class="container">
+    <h2 mat-dialog-title>
+        Editar reemplazo
+        <mat-divider></mat-divider>
+        <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+    </h2>
+    <form class="container-form" [formGroup]="editReplacementForm" autocomplete="off">
+        <mat-dialog-content class="mat-typography">
+            <h3>Detalle</h3>
+
+            <div formArrayName="parts">
+                <div *ngFor="let _ of parts.controls; let i=index" class="form-array">
+                    <div [formGroupName]="i" class="container-form-array">
+
+                        <mat-form-field appearance="outline" style="width: 200px;" class="container-form-array__inputs">
+                            <mat-label>Nº de parte actual</mat-label>
+                            <input matInput type='text' placeholder="Parte" formControlName="currentPart">
+                            <mat-error *ngIf="parts.controls[i].get('currentPart').errors">
+                                Campo <strong>requerido.</strong>
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" style="width: 200px;" class="container-form-array__inputs">
+                            <mat-label>Nº de parte reemplazo</mat-label>
+                            <input matInput type="text" placeholder="Nº de parte reemplazo"
+                                formControlName="replacedPart">
+                            <mat-error *ngIf="parts.controls[i].get('replacedPart').errors">
+                                Campo <strong>requerido.</strong>
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" style="width: 200px;" class="container-form-array__inputs">
+                            <mat-label>Descripción</mat-label>
+                            <input matInput type="text" placeholder="Descripción" formControlName="description">
+                            <mat-error *ngIf="parts.controls[i].get('description').errors">
+                                Campo <strong>requerido.</strong>
+                            </mat-error>
+                        </mat-form-field>
+                        <div class="container-form-array__checked">
+                            <span>Kit</span>
+                            <mat-checkbox class="checked-margin" color="primary" formControlName="kit"></mat-checkbox>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </mat-dialog-content>
+        <mat-dialog-actions align="end">
+            <button type="button" mat-stroked-button color="warn" class="footer__btn-close"
+                mat-dialog-close>CERRAR</button>
+            <button type="button" mat-raised-button color="primary" class="footer__btn-save"
+                (click)="save()">GUARDAR</button>
+        </mat-dialog-actions>
+    </form>
+</div>

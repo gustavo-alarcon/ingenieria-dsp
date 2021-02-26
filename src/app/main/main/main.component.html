@@ -77,18 +77,68 @@
         </mat-nav-list>
       </mat-expansion-panel>
     </mat-accordion>
+
     <mat-nav-list style="width: 100%">
       <div>
         <a mat-list-item [routerLink]="['/main/evaluations']" routerLinkActive="active" (click)="drawer.toggle()">
           <mat-icon mat-list-icon class="mat-icon-menu">table_view</mat-icon>
           <span class="mat-item-list-span">
-            Evalauciones
+            Evaluaciones
           </span>
         </a>
-        <a mat-list-item [routerLink]="['/main/budgets']" routerLinkActive="active" (click)="drawer.toggle()">
-          <mat-icon mat-list-icon class="mat-icon-menu">fact_check</mat-icon>
+      </div>
+    </mat-nav-list>
+
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-nav-list>
+              <div>
+                <a mat-list-item>
+                  <mat-icon mat-list-icon class="mat-icon-menu">fact_check</mat-icon>
+                  <span class="mat-item-list-span">
+                    Presupuestos
+                  </span>
+                </a>
+              </div>
+            </mat-nav-list>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <div>
+            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/budgets-daily-entries']"
+              routerLinkActive="active" (click)="drawer.toggle()">
+              <mat-icon mat-list-icon class="mat-icon-menu">view_day</mat-icon>
+              <span class="mat-item-list-span">
+                Entrada diaria
+              </span>
+            </a>
+            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/budgets']" routerLinkActive="active"
+              (click)="drawer.toggle()">
+              <mat-icon mat-list-icon class="mat-icon-menu">fact_check</mat-icon>
+              <span class="mat-item-list-span">
+                Presupuestos
+              </span>
+            </a>
+            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/budgets-settings']"
+              routerLinkActive="active" (click)="drawer.toggle()">
+              <mat-icon mat-list-icon class="mat-icon-menu">settings</mat-icon>
+              <span class="mat-item-list-span">
+                Configuración
+              </span>
+            </a>
+          </div>
+        </mat-nav-list>
+      </mat-expansion-panel>
+    </mat-accordion>
+
+    <mat-nav-list style="width: 100%">
+      <div>
+        <a mat-list-item [routerLink]="['/main/andon']" routerLinkActive="active" (click)="drawer.toggle()">
+          <mat-icon mat-list-icon class="mat-icon-menu">traffic</mat-icon>
           <span class="mat-item-list-span">
-            Presupuestos
+            AndOn
           </span>
         </a>
       </div>
