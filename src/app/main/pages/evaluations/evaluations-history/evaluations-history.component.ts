@@ -95,9 +95,8 @@ export class EvaluationsHistoryComponent implements OnInit {
         });
         break; 
       case 'image':
-        dialogRef = this.dialog.open(HistoryImageDialogComponent, {
-          data: this.historyDataSource.data[index]
-        }
+        dialogRef = this.dialog.open(HistoryImageDialogComponent,
+          optionsDialog
         );
         dialogRef.afterClosed().subscribe(result => {
           console.log(`Dialog result: ${result}`);
@@ -105,6 +104,7 @@ export class EvaluationsHistoryComponent implements OnInit {
         break;
       case 'oservation':
         dialogRef = this.dialog.open(HistoryObservationDialogComponent,
+          optionsDialog,
         );
 
         dialogRef.afterClosed().subscribe(result => {

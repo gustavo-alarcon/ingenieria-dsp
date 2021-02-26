@@ -44,7 +44,7 @@ export class EvaluationsService {
       wof: form.wof,
       task: form.task,
       observations: null,
-      workshop: null,
+      workshop: form.workshop,
       images: null,
       imagesCounter: null,
       inquiries: null ,
@@ -67,9 +67,9 @@ export class EvaluationsService {
     return of(batch);
   }
   /**
-   * Edit the improvement entry
+   * Edit the evaluation entry
    * @param {string} entryId - id data
-   * @param {improvementsForm} form - Form data passed on evaluation edit
+   * @param {evaluationForm} form - Form data passed on evaluation edit
    * @param {User} user - User's data in actual session
    */
   editRequest(entryId: string, form: EvaluationRegistryForm, user: User): Observable<firebase.default.firestore.WriteBatch>{
@@ -102,7 +102,6 @@ export class EvaluationsService {
    * @param {string} id - ID of the evaluation to be removed
    */
   removeEvaluation(id: string): Observable<firebase.default.firestore.WriteBatch> {
-    console.log(id)
     // create batch
     const batch = this.afs.firestore.batch();
     // create document reference in evaluation collection
@@ -111,6 +110,22 @@ export class EvaluationsService {
     console.log(evaluationDocRef)
     //
     batch.delete(evaluationDocRef);
+    return of(batch);
+  }
+   /**
+   * Delete the passed evaluatiion based in his ID
+   * @param {string} observation - update observation
+   * @param {string} data - ID of the evaluation to be removed
+   */
+  updateObservation( data: Evaluation , observation: string): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    // create document reference in evaluation collection
+    //const evaluationDocRef = this.afs.firestore.doc(`/db/ferreyros/evaluations/${id}`);
+    const evaluationDocRef = this.afs.firestore.collection(`/db/ferreyros/evaluations`).doc(data.id);
+    data.observations = observation;
+
+    batch.update(evaluationDocRef, data);
     return of(batch);
   }
 }
