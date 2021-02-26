@@ -24,7 +24,7 @@ export interface Evaluation {
     inquiries?: Array<EvaluationInquiry>;
     inquiriesCounter: number;
     registryDate?: Date; // Fecha de solicitud
-    registryTime?: EvaluationTimer;
+    registryTimer?: EvaluationTimer;
     processDate?: Date;
     processTimer?: EvaluationTimer;
     inquiryDate?: Date;

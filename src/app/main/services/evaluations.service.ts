@@ -50,7 +50,7 @@ export class EvaluationsService {
       inquiries: null ,
       inquiriesCounter: null,
       registryDate: new Date(),
-      registryTime: null,
+      registryTimer: null,
       processDate: null,
       processTimer: null,
       inquiryDate: null,
