@@ -128,5 +128,11 @@ export class EvaluationsService {
     batch.update(evaluationDocRef, data);
     return of(batch);
   }
+
+  getAllEvaluationsByInternalStatus(state: string): Observable<Evaluation[]> {
+    return this.afs.collection<Evaluation>(`/db/ferreyros/evaluations`,
+      ref => ref.where('internalStatus', '==', state).orderBy('createdAt', 'desc'))
+      .valueChanges();
+  }
 }
 
