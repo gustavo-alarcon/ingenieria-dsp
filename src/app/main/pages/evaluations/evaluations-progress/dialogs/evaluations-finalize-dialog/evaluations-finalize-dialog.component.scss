@@ -24,6 +24,48 @@
     }
 }
 
+.form-container {
+    &__form-inputs {
+        margin-top: 10px;
+        display: flex;
+        flex-direction: column;
+    }
+    &__container-panel {
+        width: 100%;
+        height: 300px;
+    }
+    &__img {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        &--size {
+            width: 100%;
+            height: 300px;
+            object-fit: scale-down;
+        }
+    }
+    &__image-area img {
+        display: block;
+        // width: 225px;
+        // height: 225px;
+        margin: 0 auto;
+        margin: auto;
+        margin-top: 30px;
+        cursor: pointer;
+    }
+}
+
+// .container-panel {
+//     margin-top: 10px;
+//     display: flex;
+//     flex-direction: column;
+//     align-items: center;
+//     &__image{
+//         width: 100px;
+//         height: 100px;
+//     }
+// }
+
 .footer__btn-close {
     color: #b00020;
     border: 1px solid #b00020;
@@ -43,25 +85,28 @@
     font-weight: 500;
     font-size: 18px;
     line-height: 30px;
-    display: flex;
-    align-items: center;
+    flex-direction: column;
     letter-spacing: 1.25px;
     text-transform: capitalize;
     color: #000000;
 }
 
-.form-inputs {
-    margin-top: 10px;
-    display: flex;
-    flex-direction: column;
+// .card-img {
+//     display: flex;
+//     justify-content: space-evenly;
+// }
+
+th,
+td {
+    padding: 0px 0px;
 }
 
-.card-img {
-    display: flex;
-    justify-content: space-evenly;
-    &__background {
-        width: 235px;
-        height: 166.18px;
-        background: url(../../../../../../../assets/img/camara.png);
-    }
+.image-area img {
+    display: block;
+    width: 225px;
+    height: 225px;
+    margin: 0 auto;
+    margin: auto;
+    margin-top: 30px;
+    cursor: pointer;
 }

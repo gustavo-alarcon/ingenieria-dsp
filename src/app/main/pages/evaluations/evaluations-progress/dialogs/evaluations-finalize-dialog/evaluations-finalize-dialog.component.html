@@ -14,44 +14,92 @@
     <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
 </h2>
 <mat-dialog-content class="mat-typography">
-    <!-- <mat-list role="list"> -->
-    <mat-list-item role="listitem" class="listitem-content">OT MAIN:</mat-list-item>
-    <mat-list-item role="listitem" class="listitem-content">OT CHILD:</mat-list-item>
-    <mat-list-item role="listitem" class="listitem-content">Correlativo</mat-list-item>
-    <mat-list-item role="listitem" class="listitem-content">Número de Parte</mat-list-item>
-    <mat-list-item role="listitem" class="listitem-content">Descripción</mat-list-item>
-    <mat-list-item role="listitem" class="listitem-content">Tipo de Atención</mat-list-item>
-    <mat-list-item role="listitem" class="listitem-content">Usuario</mat-list-item>
-    <mat-list-item role="listitem" class="listitem-content">WOF (Orden de fabricación)</mat-list-item>
-    <mat-list-item role="listitem" class="listitem-content">Trabajo</mat-list-item>
-    <mat-list-item role="listitem" class="listitem-content">Taller</mat-list-item>
-    <mat-list-item role="listitem" class="listitem-content">Observaciones</mat-list-item>
+    <table style="width:100%" class="listitem-content">
+        <tr>
+            <td>OT MAIN:</td>
+            <td>{{data.otMain}}</td>
+        </tr>
+        <tr>
+            <td>OT CHILD:</td>
+            <td>{{data.otChild}}</td>
+        </tr>
+        <tr>
+            <td>Correlativo:</td>
+            <td>{{data.position}}</td>
+        </tr>
+        <tr>
+            <td>Número de Parte:</td>
+            <td>{{data.partNumber}}</td>
+        </tr>
+        <tr>
+            <td>Descripción:</td>
+            <td>{{data.description}}</td>
+        </tr>
+        <tr>
+            <td>Tipo de Atención:</td>
+            <td>{{data.status}}</td>
+        </tr>
+        <tr>
+            <td>Usuario:</td>
+            <td>{{data.user}}</td>
+        </tr>
+        <tr>
+            <td>WOF:</td>
+            <td>{{data.wof}}</td>
+        </tr>
+        <tr>
+            <td>Trabajo:</td>
+            <td>{{data.task}}</td>
+        </tr>
+        <tr>
+            <td>Taller:</td>
+            <td>{{data.workshop}}</td>
+        </tr>
+        <tr>
+            <td>Observaciones:</td>
+            <td>{{data.observations}}</td>
+        </tr>
+    </table>
     <mat-divider style="margin-top: 20px;"></mat-divider>
-    <form>
-        <div class="form-inputs">
-
+    <form [formGroup]="finalizeForm" autocomplete="off" class="form-container">
+        <div class="form-container__form-inputs">
             <mat-form-field appearance="outline">
                 <mat-label>Resultado</mat-label>
-                <input matInput placeholder="Resultado">
+                <input matInput placeholder="Resultado" formControlName="result">
+                <mat-error *ngIf="finalizeForm.controls['result'].errors">
+                    Campo <strong>requerido.</strong>
+                </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
                 <mat-label>Tipo de ensayo</mat-label>
-                <input matInput placeholder="Tipo de ensayo">
+                <input matInput placeholder="Tipo de ensayo" formControlName="kindOfTest">
+                <mat-error *ngIf="finalizeForm.controls['kindOfTest'].errors">
+                    Campo <strong>requerido.</strong>
+                </mat-error>
             </mat-form-field>
             <mat-form-field appearance="outline">
-                <mat-label>Comentarios</mat-label>
-                <input matInput placeholder="Comentarios">
+                <mat-label>Comentarios (Opcional)</mat-label>
+                <input matInput placeholder="Comentarios" formControlName="comments">
             </mat-form-field>
-
         </div>
-        <div class="card-img">
-            <div class="card-img__background">
-              
-            </div>
+        <div class="form-container__img">
+            <mat-card class="mat-elevation-z0" *ngFor="let img of images;let i=index;">
+                <img [src]="img" alt="" class="form-container__img--size" onError="this.src='../../../../../../../assets/img/error-image.png'">
+            </mat-card>
+        </div>
+
+
+        <div class="form-container__image-area" *ngFor="let imgUpload of imagesUpload;let i=index">
+            <label [for]="i">
+                <img [src]="imgUpload" onError="this.src='../../../../../../../assets/img/camara.png'" />
+            </label>
+            <input [id]="i" type="file" style="display: none;" (change)="uploadFile($event,i)"
+                accept="image/x-png, image/jpg, image/jpeg" />
         </div>
     </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
     <button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close>CERRAR</button>
-    <button type="button" mat-raised-button color="primary" class="footer__btn-save" cdkFocusInitial>GUARDAR</button>
+    <button type="submit" mat-raised-button color="primary" class="footer__btn-save" cdkFocusInitial
+        (click)="onSave()">GUARDAR</button>
 </mat-dialog-actions>

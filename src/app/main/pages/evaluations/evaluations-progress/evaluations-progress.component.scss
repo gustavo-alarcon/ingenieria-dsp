@@ -88,7 +88,8 @@
 
 .cards-container {
     display: flex;
-    // justify-content: space-evenly;
+    flex-direction: row;
+    justify-content: space-evenly;
     padding: 30px;
     background: #f0eded;
 }
@@ -102,6 +103,7 @@
     border-radius: 10px;
     position: relative;
     width: 250px;
+    // display: flex;
 }
 
 .header-box {

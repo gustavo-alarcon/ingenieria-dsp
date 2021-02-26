@@ -20,7 +20,7 @@
   </div>
 
   <div class="cards-container">
-    <div class="box mat-elevation-z2">
+    <div class="box mat-elevation-z2" *ngFor="let item of evaluations;let i=index">
       <div class="header-box">
         <button mat-icon-button>
           <mat-icon style="color: #6200EE;">help</mat-icon>
@@ -28,7 +28,7 @@
         <div class="priority"></div>
         <div>
           <mat-menu #requestsMenu="matMenu">
-            <button mat-menu-item (click)="finalizeDialog()">
+            <button mat-menu-item (click)="finalizeDialog(item)">
               <mat-icon>stop</mat-icon>
               Finalizar
             </button>
@@ -59,9 +59,9 @@
         </div>
       </div>
       <div class="info-box">
-        <div class="lj">OT 00000</div>
+        <div class="lj">OT {{item.otMain}}</div>
         <div class="info-row">Componente: <span>XXXXXX </span> </div>
-        <div class="info-row"> Nro parte: <span> XXXXXX</span> </div>
+        <div class="info-row"> Nro parte: <span> {{item.partNumber}}</span> </div>
         <div class="info-row"> Fecha: <span>03/03/2020 - 07:30:45 </span> </div>
       </div>
       <div>

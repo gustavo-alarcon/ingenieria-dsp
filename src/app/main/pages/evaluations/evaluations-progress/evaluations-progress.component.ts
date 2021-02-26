@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Observable, Subscription } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { Evaluation } from 'src/app/main/models/evaluations.model';
+import { EvaluationsService } from 'src/app/main/services/evaluations.service';
 
 import { EvaluationsConsultsDialogComponent } from './dialogs/evaluations-consults-dialog/evaluations-consults-dialog.component';
 import { EvaluationsFinalizeDialogComponent } from './dialogs/evaluations-finalize-dialog/evaluations-finalize-dialog.component';
@@ -16,11 +20,19 @@ import { EvaluationsSettingsDialogComponent } from './dialogs/evaluations-settin
 })
 export class EvaluationsProgressComponent implements OnInit {
 
+  evaluations: Evaluation[] = [];
+  subcription: Subscription;
   constructor(
     public dialog: MatDialog,
+    private evaluationServices: EvaluationsService
   ) { }
 
   ngOnInit(): void {
+    // console.log('init');
+    this.evaluationServices.getAllEvaluations().subscribe((resp) => {
+      console.log(resp);
+      this.evaluations = resp;
+    });
   }
 
   settingDialog(): void {
@@ -29,10 +41,14 @@ export class EvaluationsProgressComponent implements OnInit {
     });
   }
 
-  finalizeDialog(): void {
-    this.dialog.open(EvaluationsFinalizeDialogComponent, {
+  finalizeDialog(entry: Evaluation): void {
+    const dialogRef = this.dialog.open(EvaluationsFinalizeDialogComponent, {
       width: '35%',
-      height: '90%'
+      data: entry
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
     });
   }
 
