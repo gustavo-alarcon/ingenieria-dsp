@@ -4,6 +4,10 @@
     <mat-icon aria-label="agregar" class="icon-add">add</mat-icon>
     CREAR
   </button>
+  <button type="file" aria-label="add" mat-button class="btn-add" (click)="uploadFileDialog()">
+    <mat-icon aria-label="agregar" class="icon-add">add</mat-icon>
+    SUBIR ARCHIVO
+  </button>
   
     <div class="container-table" *ngIf="evaluation$ |async">   
         <table mat-table [dataSource]="historyDataSource" class="mat-elevation-z8">
