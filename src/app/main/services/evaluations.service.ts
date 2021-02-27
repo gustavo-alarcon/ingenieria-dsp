@@ -113,9 +113,9 @@ export class EvaluationsService {
     return of(batch);
   }
    /**
-   * Delete the passed evaluatiion based in his ID
+   * update the passed evaluatiion based in his observation
    * @param {string} observation - update observation
-   * @param {string} data - ID of the evaluation to be removed
+   * @param {string} data - data evaluations
    */
   updateObservation( data: Evaluation , observation: string): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
@@ -128,11 +128,33 @@ export class EvaluationsService {
     batch.update(evaluationDocRef, data);
     return of(batch);
   }
-
+  /**
+   * Delete the passed evaluatiion based in his internalStatus
+   * @param {string} state - filter for internalStatus
+   */
   getAllEvaluationsByInternalStatus(state: string): Observable<Evaluation[]> {
     return this.afs.collection<Evaluation>(`/db/ferreyros/evaluations`,
       ref => ref.where('internalStatus', '==', state).orderBy('createdAt', 'desc'))
       .valueChanges();
+  }
+
+   /**
+   * Delete the passed evaluatiion based in his ID
+   * @param {string} data - ID of the evaluation to be removed
+   * @param {string} internalStatus - change internalStatus
+   */
+  startRequest( data: Evaluation , state: string): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    console.log(state)
+    console.log(data)
+    const batch = this.afs.firestore.batch();
+    // create document reference in evaluation collection
+    //const evaluationDocRef = this.afs.firestore.doc(`/db/ferreyros/evaluations/${id}`);
+    const evaluationDocRef = this.afs.firestore.collection(`/db/ferreyros/evaluations`).doc(data.id);
+    data.internalStatus = state;
+   console.log('data d : ',data)
+    batch.update(evaluationDocRef, data);
+    return of(batch);
   }
 }
 

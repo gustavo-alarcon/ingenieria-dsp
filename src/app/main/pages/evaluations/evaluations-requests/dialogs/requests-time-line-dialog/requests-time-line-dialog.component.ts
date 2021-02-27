@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { RequestsStartDialogComponent } from '../requests-start-dialog/requests-start-dialog.component';
+import { Evaluation } from '../../../../../models/evaluations.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { EvaluationsService } from '../../../../../services/evaluations.service';
 
 @Component({
   selector: 'app-requests-time-line-dialog',
@@ -15,6 +18,9 @@ export class RequestsTimeLineDialogComponent implements OnInit {
 
   constructor(
         public dialogRef: MatDialogRef<RequestsStartDialogComponent>,
+        @Inject(MAT_DIALOG_DATA) public data: Evaluation,
+        private snackbar: MatSnackBar,
+        private  evaltService: EvaluationsService,
 
   ) { }
   ngOnInit(): void {

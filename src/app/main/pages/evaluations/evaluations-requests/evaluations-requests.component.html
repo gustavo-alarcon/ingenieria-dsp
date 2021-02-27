@@ -75,13 +75,13 @@
         <div class="priority"></div>
         <div>
           <mat-menu #requestsMenu="matMenu">
-            <button mat-menu-item (click)="initDialog()">
+            <button mat-menu-item (click)="initDialog(item)">
               <mat-icon>play_circle_outline</mat-icon> Iniciar
             </button>
-            <button mat-menu-item (click)="obsDialog()">
+            <button mat-menu-item (click)="obsDialog(item)">
               <mat-icon>visibility</mat-icon> Observacion
             </button>
-            <button mat-menu-item (click)="timeline()">
+            <button mat-menu-item (click)="timeline(item)">
               <mat-icon>timeline</mat-icon> Línea de tiempo
             </button>
           </mat-menu>
