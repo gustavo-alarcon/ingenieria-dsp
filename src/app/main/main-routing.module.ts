@@ -17,6 +17,10 @@ const routes: Routes = [
         loadChildren: () => import('./pages/improvements/improvements.module').then(m => m.ImprovementsModule)
       },
       {
+        path: 'replacements',
+        loadChildren: () => import('./pages/replacements/replacements.module').then(m => m.ReplacementsModule)
+      },
+      {
         path: 'summary',
         loadChildren: () => import('./pages/summary/summary.module').then(m => m.SummaryModule)
       },

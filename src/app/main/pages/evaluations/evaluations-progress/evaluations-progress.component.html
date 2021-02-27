@@ -1,58 +1,77 @@
 <div class="container">
-    <div class="container--search">
-        <mat-toolbar class="container--search__toolbar">
-            <span class="container--search__toolbar--title">
-                En proceso
-            </span>
-            <button mat-icon-button class="container--search__toolbar--icon" (click)="settingDialog()">
-                <mat-icon>settings</mat-icon>
-            </button>
-            <div class="container--search__toolbar--search">
-                <mat-icon matSuffix style="color: rgba(0, 0, 0, 0.6);">search</mat-icon>
-                <input matInput placeholder="Buscar">
-            </div>
-        </mat-toolbar>
-        <div class="container--search__toolbar--number">
-            <span>
-                08
-            </span>
-        </div>
+  <div class="requests">
+    <div class="requests__title">
+      <h1 class="requests__title--name">En proceso</h1>
+      <div class="requests__title--icon" (click)="settingDialog()">
+        <mat-icon mat-list-icon>settings</mat-icon>
+      </div>
+      <span class="ms-fill"></span>
+      <div class="requests__title--search mat-elevation-z4">
+        <button mat-button class="requests__title--button">
+          <mat-icon>search</mat-icon>
+        </button>
+        <input matInput placeholder="Buscar" name="search" class="requests__title--input" />
+      </div>
+
     </div>
-    <div class="body">
-        <div class="box">
-        <div class="header-box">
-            <div class="priority"></div>
-            <div>
-            <mat-menu #requestsMenu="matMenu">
-                <button mat-menu-item>
-                <mat-icon>play_circle_outline</mat-icon> Iniciar
-                </button>
-                <button mat-menu-item>
-                <mat-icon>visibility</mat-icon> Observacion
-                </button>
-                <button mat-menu-item>
-                <mat-icon>timeline</mat-icon> Línea de tiempo
-                </button>
-            </mat-menu>
-            <button mat-icon-button [matMenuTriggerFor]="requestsMenu">
-                <mat-icon>more_vert</mat-icon>
-            </button>
-            </div>
-        </div>
-        <div class="info-box">
-            <div class="lj">OT 00000 - <span>(Orden de trabajo) </span>  </div>
-            <div class="info-row">Componente: <span>XXXXXX </span> </div>
-            <div class="info-row"> Nro parte: <span> XXXXXX</span> </div>
-            <div class="info-row"> Fecha: <span>03/03/2020 - 07:30:45 </span> </div>
-        </div>
+    <div class="requests__quantity">
+      <span>08</span>
+    </div>
+  </div>
+
+  <div class="cards-container">
+    <div class="box mat-elevation-z2">
+      <div class="header-box">
+        <button mat-icon-button>
+          <mat-icon style="color: #6200EE;">help</mat-icon>
+        </button>
+        <div class="priority"></div>
         <div>
-            <div class="progress-time"></div>
-            <div class="progress-dynamic">
-            <div class="progress-transparent"></div>
-            <div class="progress-black"></div>
-            </div>
-            <div class="progress-view">40 min</div>
+          <mat-menu #requestsMenu="matMenu">
+            <button mat-menu-item (click)="finalizeDialog()">
+              <mat-icon>stop</mat-icon>
+              Finalizar
+            </button>
+            <button mat-menu-item (click)="imagesDialog()">
+              <mat-icon>add_photo_alternate</mat-icon>
+              Imágenes
+            </button>
+            <button mat-menu-item>
+              <mat-icon>timeline</mat-icon>
+              Línea de tiempo
+            </button>
+            <button mat-menu-item (click)="observationsDialog()">
+              <mat-icon>remove_red_eye</mat-icon>
+              Observaciones
+            </button>
+            <button mat-menu-item (click)="consultDialog()">
+              <mat-icon>help</mat-icon>
+              Consultar
+            </button>
+            <button mat-menu-item (click)="responseDialog()">
+              <mat-icon>question_answer</mat-icon>
+              Responder
+            </button>
+          </mat-menu>
+          <button mat-icon-button [matMenuTriggerFor]="requestsMenu">
+            <mat-icon>more_vert</mat-icon>
+          </button>
         </div>
+      </div>
+      <div class="info-box">
+        <div class="lj">OT 00000</div>
+        <div class="info-row">Componente: <span>XXXXXX </span> </div>
+        <div class="info-row"> Nro parte: <span> XXXXXX</span> </div>
+        <div class="info-row"> Fecha: <span>03/03/2020 - 07:30:45 </span> </div>
+      </div>
+      <div>
+        <div class="progress-time"></div>
+        <div class="progress-dynamic">
+          <div class="progress-transparent"></div>
+          <div class="progress-black"></div>
         </div>
+        <div class="progress-view">40 min</div>
+      </div>
     </div>
+  </div>
 </div>
