@@ -1,8 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { RequestsStartDialogComponent } from '../requests-start-dialog/requests-start-dialog.component';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { Evaluation } from '../../../../../models/evaluations.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { EvaluationsService } from '../../../../../services/evaluations.service';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-requests-observation-dialog',
@@ -10,17 +14,61 @@ import { FormGroup } from '@angular/forms';
   styleUrls: ['./requests-observation-dialog.component.sass']
 })
 export class RequestsObservationDialogComponent implements OnInit {
-  timerFormGroup: FormGroup;
-
+  
   loading = new BehaviorSubject<boolean>(false);
   loading$ = this.loading.asObservable();
+  observationFormGroup: FormGroup;
 
   constructor(
-        public dialogRef: MatDialogRef<RequestsStartDialogComponent>,
-
-  ) { }
+    private fb: FormBuilder,
+    @Inject(MAT_DIALOG_DATA) public data: Evaluation,
+    public dialogRef: MatDialogRef<RequestsObservationDialogComponent>,
+    private snackbar: MatSnackBar,
+    private  evaltService: EvaluationsService,
+    ) { }
 
   ngOnInit(): void {
+    this.observationFormGroup = this.fb.group({
+      observation: ['', Validators.required],
+    });
+  }
+
+  /* async save(): Promise<void> {
+    try {
+      const observation = this.observationFormGroup.get('observation').value;
+      await this.evaltService.updateObservation(this.data , observation);
+      // tslint:disable-next-line: no-string-literal
+      this.dialogRef.close('result');
+
+      this.snackbar.open('✅ Se actualizo correctamente', 'Aceptar', {
+        duration: 6000
+      });
+    } catch (error) {
+      this.snackbar.open('✅ Error al actualizar', 'Aceptar', {
+        duration: 6000
+      });
+    }
+  } */
+  save(): void {
+    try {
+      const observation = this.observationFormGroup.get('observation').value;
+      this.evaltService
+        .updateObservation(this.data.id, observation)
+        .pipe(take(1))
+        .subscribe((res) => {
+          res.commit().then(() => {
+            this.dialogRef.close('result');
+            this.snackbar.open('✅ Se actualizo correctamente', 'Aceptar', {
+              duration: 6000,
+            });
+          });
+        });
+      // tslint:disable-next-line: no-string-literal
+    } catch (error) {
+      this.snackbar.open('🚨 Error al actualizar', 'Aceptar', {
+        duration: 6000,
+      });
+    }
   }
 
 }

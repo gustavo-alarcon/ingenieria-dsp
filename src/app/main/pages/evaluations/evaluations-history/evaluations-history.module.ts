@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Ng2ImgMaxModule } from 'ng2-img-max'; 
 
 import { EvaluationsHistoryRoutingModule } from './evaluations-history-routing.module';
 import { MaterialModule } from 'src/app/material/material.module';
@@ -26,7 +27,8 @@ import { HistoryObservationDialogComponent } from './dialogs/history-observation
   imports: [
     CommonModule,
     EvaluationsHistoryRoutingModule,
-    MaterialModule
+    MaterialModule,
+    Ng2ImgMaxModule
   ]
 })
 export class EvaluationsHistoryModule { }

@@ -1,33 +1,36 @@
 <div class="container">
 
-    <h2 mat-dialog-title style="display: flex;">
-        <div style="margin-top: 5px; margin-right: 15px;">
-            <mat-icon mat-list-icon>visibility</mat-icon>
+    <h2 mat-dialog-title style="display: flex; padding-bottom: 0px;margin-bottom: 0px;">
+        <div style="margin-top: 5px; margin-right: 15px;" mat-dialog-close>
+            <mat-icon mat-list-icon>timeline</mat-icon>
         </div> 
-        Tiempo de linea  <span style="color: #828282;">OT - 000000000  </span>
-       <mat-divider></mat-divider>
-        <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+        <h2 style="margin-right: 20px;"> Tiempo de linea </h2> <span style="color: #828282;">  OT - {{data.otMain}}  </span>
+        <div  mat-dialog-close style="margin-top: 5px; margin-left: 730px;cursor: pointer;"  >
+            <mat-icon >clear</mat-icon>
+        </div> 
     </h2>
-
-        <mat-dialog-content >
+    <mat-divider></mat-divider>
+    <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+        <mat-dialog-content style="margin-top: 20px;">
             <div class="details">
-                <p ><span style="font-weight: bold;"> OT MAIN :</span> XXXXXXXx</p>
-                <p ><span style="font-weight: bold;"> OT CHILD :</span> XXXXXXXx</p>
-                <p ><span style="font-weight: bold;"> Correlativo :</span> XXXXXXXx</p>
-                <p ><span style="font-weight: bold;"> N° de parte :</span> XXXXXXXx</p>
-                <p ><span style="font-weight: bold;"> Descripcion :</span> XXXXXXXx</p>
-                <p ><span style="font-weight: bold;"> Tipo de Atencion :</span> XXXXXXXx</p>
-                <p ><span style="font-weight: bold;"> Usuario :</span> XXXXXXXx</p>
-                <p ><span style="font-weight: bold;"> WOF (Orden de Fabricacion) :</span> XXXXXXXx</p>
-                <p ><span style="font-weight: bold;"> Trabajo :</span> XXXXXXXx</p>
+                <p ><span style="font-weight: bold;"> OT MAIN :</span> {{data.otMain ? data.otMain : ''}}</p>
+                <p ><span style="font-weight: bold;"> OT CHILD :</span> {{data.otChild ? data.otChild : ''}}</p>
+                <p ><span style="font-weight: bold;"> Correlativo :</span> {{data.position ? data.position : ''}}</p>
+                <p ><span style="font-weight: bold;"> N° de parte :</span> {{data.partNumber ? data.partNumber : ''}}</p>
+                <p ><span style="font-weight: bold;"> Descripcion :</span> {{data.description ? data.description : ''}}</p>
+                <p ><span style="font-weight: bold;"> Tipo de Atencion :</span> {{data.status ? data.status : ''}}</p>
+                <p ><span style="font-weight: bold;"> Usuario :</span> {{data.user ? data.user : ''}} </p>
+                <p ><span style="font-weight: bold;"> WOF (Orden de Fabricacion) :</span> {{data.wof ? data.wof : ''}}</p>
+                <p ><span style="font-weight: bold;"> Trabajo :</span> {{data.task ? data.task : ''}}</p>
+                <p ><span style="font-weight: bold;"> Observaciones :</span> {{data.observations ? data.observations : ''}}</p>
             
-                <mat-form-field appearance="outline" style="width: 400px;">
+                <!-- <mat-form-field appearance="outline" style="width: 400px;">
                     <mat-label>Observaciones</mat-label>
                     <textarea matInput placeholder="XXXXXXXXXXXXXXXx" name="area" readonly></textarea>
-                    <!-- <mat-error *ngIf="createImprovenmentsForm.controls['name'].errors">
+                    <mat-error *ngIf="createImprovenmentsForm.controls['name'].errors">
                         Campo <strong>requerido.</strong>
-                    </mat-error> -->
-                </mat-form-field>
+                    </mat-error>
+                </mat-form-field> -->
             
             </div>
 

@@ -45,6 +45,7 @@ export class HistoryCreateDialogComponent implements OnInit {
       status: ['', Validators.required],
       wof: ['', Validators.required],
       task: ['', Validators.required],
+      workshop: ['', Validators.required],
     });
   }
   save(): void{
@@ -67,6 +68,7 @@ export class HistoryCreateDialogComponent implements OnInit {
             this.snackbar.open('✅ se guardo correctamente!', 'Aceptar', {
               duration: 6000
             });
+            this.dialogRef.close();
           })
           .catch(err => {
             this.loading.next(false);

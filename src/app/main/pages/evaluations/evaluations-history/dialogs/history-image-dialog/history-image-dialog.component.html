@@ -12,23 +12,33 @@
     <mat-divider></mat-divider>
     <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
         <mat-dialog-content style="margin-top: 20px;">
-            <div class="container-h2__image">
+            <div class="container-h2__image" *ngFor="let item of data.images">
                 <mat-card class="mat-elevation-z0">
-                    <img src="../../../../../../../assets/img/default.png" alt="">
-                </mat-card>
-                <mat-card class="mat-elevation-z0">
-                    <img src="../../../../../../../assets/img/default.png" alt="">
-                </mat-card>
-                <div class="card-img">
-                    <div class="card-img__background">
-                      
-                    </div>
+                    <img [src]="item" style="width: 350px; height: 250px;" alt=""  onError="this.src='../../../../../../../assets/img/camara.png'" />
+                </mat-card>                
+            </div>  
+            <form [formGroup]="createForm">
+                <div style="margin: 16px 0; text-align: center">
+                    <img class="w3-card-4" (click)="photoURL.click()" *ngIf="createForm.get('photoURL').value != null"
+                      style="max-width: 100%; max-height: 200px; object-fit: contain" [src]="createForm.get('photoURL').value"
+                      alt="fotografía" />
+                    <img class="w3-card-4" (click)="photoURL.click()" *ngIf="createForm.get('photoURL').value == null"
+                      style="max-width: 100%; max-height: 200px; object-fit: contain" [src]="noImage" alt="sin fotografía" />
+              
+                    <mat-progress-bar *ngIf="photos?.resizing$.photoURL | async" style="width: 100%" mode="indeterminate">
+                    </mat-progress-bar>
+                    <span *ngIf="photos.resizing$.photoURL | async" class="w3-small ms-color-11 ms-font-montserrat"
+                      style="width: 100%">*comprimiendo</span>
+                    <input style="display: none" #photoURL type="file" accept="image/*"
+                      (change)="addNewPhoto('photoURL', photoURL.files)" />
                 </div>
-            </div>                  
+                
+                
+              </form>                 
            
         </mat-dialog-content>
         <mat-dialog-actions align="end">
             <button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close>CERRAR</button>
-            <button type="button" mat-raised-button color="primary" class="footer__btn-save" (click)="save()">ACEPTAR</button>
+            <button type="button" mat-raised-button color="primary" class="footer__btn-save" [disabled]="createForm.status != 'VALID'" (click)="onSubmitForm()">ACEPTAR</button>
         </mat-dialog-actions>
 </div> 
