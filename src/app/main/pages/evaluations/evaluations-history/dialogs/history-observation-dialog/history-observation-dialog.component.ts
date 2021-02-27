@@ -30,8 +30,11 @@ export class HistoryObservationDialogComponent implements OnInit {
       observation: ['', Validators.required],
     });
   }
+  save(): void {
 
-  async save(): Promise<void> {
+  }
+
+  /* async save(): Promise<void> {
     try {
       const observation = this.observationFormGroup.get('observation').value;
       await this.evaltService.updateObservation(this.data , observation);
@@ -46,6 +49,6 @@ export class HistoryObservationDialogComponent implements OnInit {
         duration: 6000
       });
     }
-  }
+  } */
 
 }
