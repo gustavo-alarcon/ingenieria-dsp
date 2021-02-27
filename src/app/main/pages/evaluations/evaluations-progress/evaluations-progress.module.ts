@@ -13,6 +13,8 @@ import { EvaluationsTimeLineDialogComponent } from './dialogs/evaluations-time-l
 import { EvaluationsObservationsDialogComponent } from './dialogs/evaluations-observations-dialog/evaluations-observations-dialog.component';
 import { EvaluationsConsultsDialogComponent } from './dialogs/evaluations-consults-dialog/evaluations-consults-dialog.component';
 import { EvaluationsResponseDialogComponent } from './dialogs/evaluations-response-dialog/evaluations-response-dialog.component';
+import { Ng2ImgMaxModule } from 'ng2-img-max';
+import { LazyLoadImageModule } from 'ng-lazyload-image';
 
 
 @NgModule({
@@ -35,6 +37,8 @@ import { EvaluationsResponseDialogComponent } from './dialogs/evaluations-respon
     MaterialModule,
     ReactiveFormsModule,
     FormsModule,
+    Ng2ImgMaxModule,
+    LazyLoadImageModule
   ]
 })
 export class EvaluationsProgressModule { }
