@@ -12,6 +12,7 @@ import { HistoryEditDialogComponent } from './dialogs/history-edit-dialog/histor
 import { HistoryDeleteDialogComponent } from './dialogs/history-delete-dialog/history-delete-dialog.component';
 import { HistoryImageDialogComponent } from './dialogs/history-image-dialog/history-image-dialog.component';
 import { HistoryObservationDialogComponent } from './dialogs/history-observation-dialog/history-observation-dialog.component';
+import { HistoryUploadFileDialogComponent } from './dialogs/history-upload-file-dialog/history-upload-file-dialog.component';
 
 @Component({
   selector: 'app-evaluations-history',
@@ -112,6 +113,12 @@ export class EvaluationsHistoryComponent implements OnInit {
         });
         break;
     }
+  }
+
+  uploadFileDialog(): void{
+    this.dialog.open(HistoryUploadFileDialogComponent, {
+      width: '100%',
+    });
   }
 
   showImprovementEntry(): void {}
