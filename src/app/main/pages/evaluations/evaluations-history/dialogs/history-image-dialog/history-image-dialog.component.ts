@@ -23,6 +23,7 @@ export class HistoryImageDialogComponent implements OnInit {
 
   createForm: FormGroup;
 
+ // noImage = '../../../../../../../assets/img/camara.png';
   noImage = '../../../../../../../assets/img/camara.png';
   photos: {
     resizing$: {
@@ -55,7 +56,7 @@ export class HistoryImageDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.createForm = this.fb.group({
-      photoURL: ['' , Validators.required],
+      photoURL: [null , Validators.required],
     });
   }
   addNewPhoto(formControlName: string, image: File[]): void {
@@ -87,7 +88,7 @@ export class HistoryImageDialogComponent implements OnInit {
   }
 
   uploadPhoto(id: string, file: File): Observable<string | number> {
-    const path = `/evaluations/pictures/${id}-${file.name}`;
+    const path = `/evaluations/${id}/pictures/${id}-${file.name}.png`;
 
     // Reference to storage bucket
     const ref = this.storage.ref(path);
@@ -112,16 +113,17 @@ export class HistoryImageDialogComponent implements OnInit {
     const imgData = data;
     const batch = this.afs.firestore.batch();
     let arrayImg = [];
-    arrayImg = [...this.data.images];
+    arrayImg = this.data.images ? [...this.data.images] : [];
 
     this.uploadPhoto(this.data.id, photo).pipe(
       takeLast(1),
     ).subscribe((photoUrl) => {
       imgData.photoURL = <string>photoUrl;
-      imgData.photoPath = `/brands/pictures/${this.data.id}-${photo.name}`;
+     // imgData.photoPath = `/evaluations/pictures/${this.data.id}-${photo.name}.png`;
       const url=<string>photoUrl;
       arrayImg.push(url);
       this.data.images = arrayImg;
+      this.data.imagesCounter = arrayImg.length;
 
       batch.update(dataRef, this.data);
 

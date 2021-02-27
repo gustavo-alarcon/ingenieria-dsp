@@ -93,7 +93,7 @@ export class EvaluationsHistoryComponent implements OnInit {
         dialogRef.afterClosed().subscribe(result => {
           console.log(`Dialog result: ${result}`);
         });
-        break; 
+        break;
       case 'image':
         dialogRef = this.dialog.open(HistoryImageDialogComponent,
           optionsDialog
