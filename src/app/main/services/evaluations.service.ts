@@ -189,7 +189,7 @@ export class EvaluationsService {
         imagesCounter: element.imagesCounter ? element.imagesCounter : null,
         inquiries: element.inquiries ? element.inquiries : null,
         inquiriesCounter: element.inquiriesCounter ? element.inquiriesCounter : null,
-        registryDate: element.registryDate ? element.registryDate : null,
+        registryDate: new Date(),
         registryTimer: element.registryTimer ? element.registryTimer : null,
         processDate: element.processDate ? element.processDate : null,
         processTimer: element.processTimer ? element.processTimer : null,
