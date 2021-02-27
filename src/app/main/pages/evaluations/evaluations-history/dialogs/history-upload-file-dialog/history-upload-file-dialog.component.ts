@@ -136,50 +136,49 @@ export class HistoryUploadFileDialogComponent implements OnInit {
   upLoadXlsToTableUpload(xlsx, name): void {
     const xlsxDataUpload = [];
     //delete Row first
-    //xlsx.shift();
-    console.log('xlsx : ',xlsx);
+    xlsx.shift();
+    xlsx.pop();
+    console.log('xlsx ',xlsx)
     if (xlsx.length > 0) {
       xlsx.forEach(el => {
         const temp = Object.values(el);
         const data =
         {
-          id : temp[0],
-          otMain : temp[1],
-          otChild : temp[2],
-          position : temp[3],
+          otMain : temp[0],
+          otChild : temp[1],
+          position : temp[2],
           partNumber : temp[4],
           description : temp[5],
           quantity : temp[6],
           internalStatus : temp[7],
           status : temp[8],
           user : temp[9],
-          wof : temp[10],
-          task : temp[11],
-          observations : temp[12],
-          workshop : temp[13],
-          images : temp[14],
-          imagesCounter : temp[15],
-          inquiries : temp[16],
-          inquiriesCounter : temp[17],
-          registryDate : temp[18],
-          registryTimer : temp[19],
-          processDate : temp[20],
-          processTimer : temp[21],
-          inquiryDate : temp[22],
-          inquiryTimer : temp[23],
-          result : temp[24],
-          kindOfTest : temp[25],
-          comments : temp[26],
-          createdAt : temp[27],
-          createdBy : temp[28],
-          editedAt : temp[29],
-          editedBy : temp[30],
+          wof : temp[11],
+          task : temp[12],
+          observations : temp[13],
+          workshop : temp[14],
+          images : temp[15],
+          imagesCounter : temp[16],
+          inquiries : temp[17],
+          inquiriesCounter : temp[18],
+          registryDate : temp[19],
+          registryTimer : temp[20],
+          processDate : temp[21],
+          processTimer : temp[22],
+          inquiryDate : temp[23],
+          inquiryTimer : temp[24],
+          result : temp[25],
+          kindOfTest : temp[26],
+          comments : temp[27],
+          createdAt : temp[28],
+          createdBy : temp[29],
+          editedAt : temp[30],
+          editedBy : temp[31],
         }
 
         xlsxDataUpload.push(data);
-        console.log('data : ',data);
+        console.log('data : ',data)
       });
-      console.log('xlsxDataUpload : ',xlsxDataUpload)
       this.currentDataUpload = xlsxDataUpload;
 
       this.fileButton.nativeElement.value = null;
