@@ -15,7 +15,7 @@
 
     </div>
     <div class="requests__quantity">
-      <span>08</span>
+      <span>{{evaluations.length}}</span>
     </div>
   </div>
 
@@ -59,10 +59,10 @@
         </div>
       </div>
       <div class="info-box">
-        <div class="lj">OT {{item.otMain}}</div>
-        <div class="info-row">Componente: <span>XXXXXX </span> </div>
+        <div class="lj">OT <span>{{item.otMain}}</span></div>
+        <div class="info-row">OT Child: <span>{{item.otChild}} </span> </div>
         <div class="info-row"> Nro parte: <span> {{item.partNumber}}</span> </div>
-        <div class="info-row"> Fecha: <span>03/03/2020 - 07:30:45 </span> </div>
+        <div class="info-row"> Fecha: <span>{{item.registryDate.toDate() | date:'dd/MM/yyyy - h:mm:ss a'}} </span> </div>
       </div>
       <div>
         <div class="progress-time"></div>

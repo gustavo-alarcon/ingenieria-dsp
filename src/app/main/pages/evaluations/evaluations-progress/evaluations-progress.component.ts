@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -18,21 +18,31 @@ import { EvaluationsSettingsDialogComponent } from './dialogs/evaluations-settin
   templateUrl: './evaluations-progress.component.html',
   styleUrls: ['./evaluations-progress.component.scss']
 })
-export class EvaluationsProgressComponent implements OnInit {
+export class EvaluationsProgressComponent implements OnInit, OnDestroy {
 
   evaluations: Evaluation[] = [];
-  subcription: Subscription;
+  subcription: Subscription = new Subscription();
+  state = 'progress';
+
   constructor(
     public dialog: MatDialog,
     private evaluationServices: EvaluationsService
   ) { }
 
+
   ngOnInit(): void {
-    // console.log('init');
-    this.evaluationServices.getAllEvaluations().subscribe((resp) => {
-      console.log(resp);
-      this.evaluations = resp;
-    });
+    this.subcription.add(
+
+      // this.evaluationServices.getAllEvaluations().subscribe((resp) => {
+      //   console.log(resp);
+      //   this.evaluations = resp;
+      // })
+      this.evaluationServices.getAllEvaluationsByInternalStatus(this.state).subscribe((resp) => {
+        console.log(resp);
+        this.evaluations = resp;
+      })
+
+    );
   }
 
   settingDialog(): void {
@@ -41,10 +51,10 @@ export class EvaluationsProgressComponent implements OnInit {
     });
   }
 
-  finalizeDialog(entry: Evaluation): void {
+  finalizeDialog(item: Evaluation): void {
     const dialogRef = this.dialog.open(EvaluationsFinalizeDialogComponent, {
       width: '35%',
-      data: entry
+      data: item
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -78,6 +88,10 @@ export class EvaluationsProgressComponent implements OnInit {
       width: '35%',
       height: '90%'
     });
+  }
+
+  ngOnDestroy(): void {
+    this.subcription.unsubscribe();
   }
 
 }
