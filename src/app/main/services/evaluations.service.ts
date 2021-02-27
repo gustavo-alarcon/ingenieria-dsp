@@ -115,17 +115,18 @@ export class EvaluationsService {
    /**
    * update the passed evaluatiion based in his observation
    * @param {string} observation - update observation
-   * @param {string} data - data evaluations
+   * @param {string} id - id data evaluations
    */
-  updateObservation( data: Evaluation , observation: string): Observable<firebase.default.firestore.WriteBatch> {
+  updateObservation( id: string , observation: string): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
     // create document reference in evaluation collection
-    //const evaluationDocRef = this.afs.firestore.doc(`/db/ferreyros/evaluations/${id}`);
-    const evaluationDocRef = this.afs.firestore.collection(`/db/ferreyros/evaluations`).doc(data.id);
-    data.observations = observation;
+    const evaluationDocRef = this.afs.firestore.doc(`/db/ferreyros/evaluations/${id}`);
+    const newData = {
+      observations: observation,
+    }
 
-    batch.update(evaluationDocRef, data);
+    batch.update(evaluationDocRef, newData);
     return of(batch);
   }
   /**
@@ -143,17 +144,16 @@ export class EvaluationsService {
    * @param {string} data - ID of the evaluation to be removed
    * @param {string} internalStatus - change internalStatus
    */
-  startRequest( data: Evaluation , state: string): Observable<firebase.default.firestore.WriteBatch> {
+  startRequest( id:string , state: string): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
-    console.log(state)
-    console.log(data)
     const batch = this.afs.firestore.batch();
     // create document reference in evaluation collection
-    //const evaluationDocRef = this.afs.firestore.doc(`/db/ferreyros/evaluations/${id}`);
-    const evaluationDocRef = this.afs.firestore.collection(`/db/ferreyros/evaluations`).doc(data.id);
-    data.internalStatus = state;
-   console.log('data d : ',data)
-    batch.update(evaluationDocRef, data);
+    const evaluationDocRef = this.afs.firestore.doc(`/db/ferreyros/evaluations/${id}`);
+    //const evaluationDocRef = this.afs.firestore.collection(`/db/ferreyros/evaluations`).doc(data.id);
+    const newData = {
+      internalStatus: state,
+    };
+    batch.update(evaluationDocRef, newData);
     return of(batch);
   }
 }

@@ -112,14 +112,14 @@ export class EvaluationsRequestsComponent implements OnInit {
 
   initDialog(item: Evaluation): void{
     this.dialog.open(RequestsStartDialogComponent, {
-      width: '40%',
+      width: '30%',
       data:item
     });
   }
   obsDialog(item): void{
     this.dialog.open(RequestsObservationDialogComponent, {
-      width: '40%',
-      data:item
+      width: '35%',
+      data: item
     });
   }
   timeline(item): void{
