@@ -91,6 +91,19 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
     }
   }
 
+  async deleteImage(imgForDelete: string, index: number): Promise<void> {
+    try {
+      this.loading.next(true);
+      await this.evaluationServices.deleteImage(this.imagesUpload[index]);
+      this.imagesUpload.splice(index, 1);
+      this.loading.next(false);
+    } catch (error) {
+       console.log(error);
+       this.loading.next(false);
+       this.imagesUpload.splice(index, 1);
+    }
+  }
+
   uploadFile(event, i?: number): void {
     if (!event.target.files[0]) {
       return;
@@ -98,7 +111,7 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
     this.loading.next(true);
     const file = event.target.files[0];
     this.subscription.add(this.ng2ImgMax.resize([file], 800, 1000).subscribe((result) => {
-      const name = `evaluations/${this.data.id}/pictures/${this.data.id}-${this.date}-${result.name}-finalize.png`;
+      const name = `evaluations/${this.data.id}/pictures/${this.data.id}-${this.date}-${result.name}.png`;
       const fileRef = this.storage.ref(name);
       const task = this.storage.upload(name, file);
       this.uploadPercent$ = task.percentageChanges();

@@ -3,13 +3,16 @@ import { Observable, of } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { User } from '../models/user-model';
 import { EvaluationRegistryForm, Evaluation, EvaluationInquiry, EvaluationFinishForm } from '../models/evaluations.model';
+import { AngularFireStorage } from '@angular/fire/storage';
 
 @Injectable({
   providedIn: 'root'
 })
 export class EvaluationsService {
 
-  constructor(private afs: AngularFirestore,
+  constructor(
+    private afs: AngularFirestore,
+    private storage: AngularFireStorage,
 
   ) { }
   /**
@@ -172,4 +175,15 @@ export class EvaluationsService {
         { merge: true }
       );
   }
+
+
+  async updateImage(id: string, imagesObj): Promise<void> {
+    return await this.afs.firestore.collection(`/db/ferreyros/evaluations`).doc(id)
+      .set({ images: imagesObj }, { merge: true });
+  }
+
+  async deleteImage(imagesObj: string): Promise<any> {
+    return await this.storage.storage.refFromURL(imagesObj).delete();
+  }
+
 }

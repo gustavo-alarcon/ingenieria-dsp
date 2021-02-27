@@ -32,16 +32,9 @@ export class EvaluationsProgressComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subcription.add(
-
-      // this.evaluationServices.getAllEvaluations().subscribe((resp) => {
-      //   console.log(resp);
-      //   this.evaluations = resp;
-      // })
       this.evaluationServices.getAllEvaluationsByInternalStatus(this.state).subscribe((resp) => {
-        console.log(resp);
         this.evaluations = resp;
       })
-
     );
   }
 
@@ -53,7 +46,7 @@ export class EvaluationsProgressComponent implements OnInit, OnDestroy {
 
   finalizeDialog(item: Evaluation): void {
     const dialogRef = this.dialog.open(EvaluationsFinalizeDialogComponent, {
-      width: '35%',
+      width: '30%',
       data: item
     });
 
@@ -62,10 +55,14 @@ export class EvaluationsProgressComponent implements OnInit, OnDestroy {
     });
   }
 
-  imagesDialog(): void {
-    this.dialog.open(EvaluationsImagesDialogComponent, {
-      width: '35%',
-      height: '90%'
+  imagesDialog(item: Evaluation): void {
+    const dialogRef = this.dialog.open(EvaluationsImagesDialogComponent, {
+      width: '30%',
+      data: item
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
     });
   }
 
