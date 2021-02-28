@@ -27,7 +27,7 @@ export class RequestsStartDialogComponent implements OnInit {
   ngOnInit(): void {}
   save(): void {
     try {
-      const state = 'progress';
+      const state = 'processed';
       this.evaltService
         .startRequest(this.data.id, state)
         .pipe(take(1))

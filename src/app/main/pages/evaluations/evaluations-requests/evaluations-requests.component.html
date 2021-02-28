@@ -12,7 +12,7 @@
         </button>
         <input matInput placeholder="Taller" name="search" class="requests__title--input" />
       </div> -->
-     
+
       <!-- <div *ngIf="taller$ |async as tallers" style="background: white;" >
       <mat-form-field appearance="outline"  >
         <mat-label>Selecione un Taller</mat-label>
@@ -22,7 +22,7 @@
       </mat-form-field>
     </div> -->
 
-    <!-- <mat-form-field class="content w3-small" appearance="outline">
+      <!-- <mat-form-field class="content w3-small" appearance="outline">
       <mat-icon matPrefix></mat-icon>
       <mat-label>Estado</mat-label>
       <mat-select [formControl]="tallerForm">
@@ -33,7 +33,7 @@
       </mat-select>
     </mat-form-field> -->
 
-   <!--  <mat-form-field color="primary" *ngIf="tallerList$ | async as tallers" class="content w3-small toolbar_item"
+      <!--  <mat-form-field color="primary" *ngIf="tallerList$ | async as tallers" class="content w3-small toolbar_item"
       appearance="outline" style="width: 150px;">
       <mat-label>Categoria</mat-label>
       <mat-icon matPrefix></mat-icon>
@@ -58,7 +58,7 @@
           <mat-icon>search</mat-icon>
         </button>
         <form [formGroup]="searchForm" style="text-align: center;margin-top:10px ;">
-           <input matInput placeholder="Buscar" name="search" class="requests__title--input" formControlName="ot" />      
+          <input matInput placeholder="Buscar" name="search" class="requests__title--input" formControlName="ot" />
         </form>
       </div>
 
@@ -67,7 +67,7 @@
       <span>{{counter}}</span>
     </div>
   </div>
- 
+
   <div class="cards-container" *ngIf="evaluation$|async as evaluations">
 
     <div class="box mat-elevation-z2" *ngFor="let item of evaluations">
@@ -94,7 +94,8 @@
         <div class="lj"><span>{{item.otMain}}</span> </div>
         <div class="info-row">OT Child: <span>{{item.otChild}} </span> </div>
         <div class="info-row"> Nro parte: <span> {{item.partNumber}}</span> </div>
-        <div class="info-row"> Fecha: <span>{{(item.registryDate['seconds'] *1000) | date:'dd/MM/yyyy - h:mm:ss'}}</span> </div>
+        <div class="info-row"> Fecha: <span>{{(item.createdAt['seconds'] *1000) | date:'dd/MM/yyyy -
+            h:mm:ss'}}</span> </div>
       </div>
       <div>
         <div class="progress-time"></div>
@@ -105,10 +106,10 @@
         <div class="progress-view">40 min</div>
       </div>
     </div>
-    
+
   </div>
 
 
 
-  
+
 </div>

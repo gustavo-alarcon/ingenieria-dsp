@@ -12,9 +12,9 @@ export interface Evaluation {
     partNumber: string; // Nro de parte
     description: string;
     quantity: number;
-    internalStatus: string; // [registrado/solicitado, en proceso, finalizado] !!!¡¡¡=> registered //progress// finalized
+    internalStatus: string; // registered //processed// finalized
     status: string; // Tipo de atención
-    user?: string;
+    // user?: string;
     wof: string; // Solicitud TR
     task: string; // Trabajo
     observations: string;
@@ -23,13 +23,15 @@ export interface Evaluation {
     imagesCounter: number;
     inquiries?: Array<EvaluationInquiry>;
     inquiriesCounter: number;
-    registryDate?: Date; // Fecha de solicitud
+    // registryDate?: Date; // Fecha de solicitud
     registryTimer?: EvaluationTimer;
-    processDate?: Date;
+    processAt?: Date;
     processTimer?: EvaluationTimer;
-    inquiryDate?: Date;
+    inquiryAt?: Date;
     inquiryTimer?: EvaluationTimer;
-    result?: string; // ESta info viene de una lista standard (pendiente)
+    finalizedAt?: Date;
+    finalizedBy: User;
+    result?: string; // Esta info viene de una lista standard (pendiente)
     kindOfTest?: string;
     comments?: string;
     createdAt: Date;
@@ -65,14 +67,16 @@ export interface EvaluationTimer {
 
 /**
  * Firestore document
- * Path of collection: db/ferreyros/ppmRequests/{id}/inquiries
+ * Path of collection: db/ferreyros/evaluations/{id}/inquiries
  */
 export interface EvaluationInquiry {
     id: string;
     answer: string;
-    image: string;
+    inquiry: string;
+    answerImage?: string;
+    inquiryImage?: string;
     createdAt: Date;
-    CreatedBy: User;
+    createdBy: User;
     answeredAt: Date;
     answeredBy: User;
 }

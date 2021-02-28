@@ -20,7 +20,7 @@ export class HistoryUploadFileDialogComponent implements OnInit {
   loading$ = this.loading.asObservable();
   evaluation$: Observable<Evaluation[]>;
   selected: any;
-  
+
   currentData: Array<Evaluation> = [];
   currentDataUpload: Array<Evaluation> = [];
 
@@ -33,38 +33,37 @@ export class HistoryUploadFileDialogComponent implements OnInit {
     'description',
     'quantity',
     'status',
-    'user',
+    'createdBy',
     'wof',
     'task',
     'observations',
     'workshop',
-    'registryDate',
+    'createdAt',
     'result',
     'kindOfTest',
     'comments',
-    'createdAt',
-    'createdBy',
-    'editedAt',
-    'editedBy',
+    'finalizedBy',
+    'processAt',
+    'finalizedAt',
   ];
-  
+
   @ViewChild("settingPaginator", { static: false }) set content(paginator: MatPaginator) {
     this.settingDataSource.paginator = paginator;
   }
 
-  @ViewChild("fileInput2", {read: ElementRef}) fileButton: ElementRef;
+  @ViewChild("fileInput2", { read: ElementRef }) fileButton: ElementRef;
 
   constructor(public dialogRef: MatDialogRef<HistoryUploadFileDialogComponent>,
-              private snackbar: MatSnackBar,
-              private auth: AuthService,
-              private  evaltService: EvaluationsService) { }
+    private snackbar: MatSnackBar,
+    private auth: AuthService,
+    private evaltService: EvaluationsService) { }
 
   ngOnInit(): void {
   }
-  save(): void{
 
-  }  
   onFileSelected(event): void {
+    this.loading.next(true);
+
     if (event.target.files && event.target.files[0]) {
       const name = event.target.files[0].name
 
@@ -82,7 +81,7 @@ export class HistoryUploadFileDialogComponent implements OnInit {
         this.selected = XLSX.utils.sheet_to_json(ws, { header: 1 });
 
         this.upLoadXlsToTable(this.selected, name.split(".")[0])
-        this.upLoadXlsToTableUpload(this.selected, name.split(".")[0])
+        // this.upLoadXlsToTableUpload(this.selected, name.split(".")[0])
       };
       reader.readAsBinaryString(event.target.files[0]);
     }
@@ -94,114 +93,101 @@ export class HistoryUploadFileDialogComponent implements OnInit {
     xlsx.shift();
     if (xlsx.length > 0) {
       xlsx.forEach(el => {
-        const temp = Object.values(el);
+
+        let internal_status = 'registered';
+        if (el[17]) {
+          internal_status = 'processed';
+        } else if (el[18]) {
+          internal_status = 'finalized';
+        }
+
+        let regDate;
+        let procDate;
+        let finDate;
+
+        if (el[10]) { regDate = this.formatDate(''+el[10])};
+        if (el[17]) { procDate = this.formatDate(''+el[17])};
+        if (el[18]) { finDate = this.formatDate(''+el[18])};
+
         const data =
         {
-          otMain: temp[0],
-          otChild: temp[1],
-          position: temp[3],
-          partNumber: temp[4],
-          description: temp[5],
-          quantity: temp[6],
-          status: temp[8],
-          user: temp[10],
-          wof: temp[11],
-          task: temp[12],
-          observations: temp[13],
-          workshop: temp[14],
-          registryDate: temp[19],
-          result: temp[25],
-          kindOfTest: temp[26],
-          comments: temp[27],
-          createdAt: temp[28],
-          createdBy: temp[29],
-          editedAt: temp[30],
-          editedBy: temp[31],
+          id: null,
+          otMain: el[0] ? el[0] : null,
+          otChild: el[1] ? el[1] : null,
+          position: el[2] ? el[2] : null,
+          partNumber: el[3] ? el[3] : null,
+          description: el[4] ? el[4] : null,
+          quantity: el[5] ? el[5] : null,
+          internalStatus: internal_status,
+          status: el[6] ? el[6] : null,
+          createdBy: el[7] ? el[7] : null,
+          wof: el[8] ? el[8] : null,
+          task: el[9] ? el[9] : null,
+          createdAt: regDate ? new Date(regDate['Y'],regDate['M'],regDate['D'],regDate['h'],regDate['m'],regDate['s']) : null,
+          observations: el[11] ? el[11] : null,
+          workshop: el[12],
+          result: el[13] ? el[13] : null,
+          comments: el[14] ? el[14] : null,
+          kindOfTest: el[15] ? el[15] : null,
+          finalizedBy: el[16] ? el[16] : null,
+          processAt: procDate ? new Date(procDate['Y'],procDate['M'],procDate['D'],procDate['h'],procDate['m'],procDate['s']) : null,
+          finalizedAt: finDate ? new Date(finDate['Y'],finDate['M'],finDate['D'],finDate['h'],finDate['m'],finDate['s']) : null,
+          images: [],
+          imagesCounter: 0,
+          inquiries: [],
+          inquiriesCounter: 0,
+          registryTimer: null,
+          processTimer: null,
+          inquiryAt: null,
+          inquiryTimer: null,
+          editedAt: null,
+          editedBy: null
         }
 
         xlsxData.push(data)
       });
 
       this.currentData = xlsxData;
-
+      
       this.settingDataSource.data = this.currentData;
 
       this.fileButton.nativeElement.value = null;
+      this.loading.next(false);
     } else {
-      this.snackbar.open("el archivo esta vacio ", "Aceptar", {
-        duration: 3000,
-      });
-    }    
-  }
-  upLoadXlsToTableUpload(xlsx, name): void {
-    const xlsxDataUpload = [];
-    //delete Row first
-    xlsx.shift();
-    xlsx.pop();
-    console.log('xlsx ',xlsx)
-    if (xlsx.length > 0) {
-      xlsx.forEach(el => {
-        const temp = Object.values(el);
-        const data =
-        {
-          otMain : temp[0],
-          otChild : temp[1],
-          position : temp[2],
-          partNumber : temp[4],
-          description : temp[5],
-          quantity : temp[6],
-          internalStatus : temp[7],
-          status : temp[8],
-          user : temp[9],
-          wof : temp[11],
-          task : temp[12],
-          observations : temp[13],
-          workshop : temp[14],
-          images : temp[15],
-          imagesCounter : temp[16],
-          inquiries : temp[17],
-          inquiriesCounter : temp[18],
-          registryDate : temp[19],
-          registryTimer : temp[20],
-          processDate : temp[21],
-          processTimer : temp[22],
-          inquiryDate : temp[23],
-          inquiryTimer : temp[24],
-          result : temp[25],
-          kindOfTest : temp[26],
-          comments : temp[27],
-          createdAt : temp[28],
-          createdBy : temp[29],
-          editedAt : temp[30],
-          editedBy : temp[31],
-        }
-
-        xlsxDataUpload.push(data);
-        console.log('data : ',data)
-      });
-      this.currentDataUpload = xlsxDataUpload;
-
-      this.fileButton.nativeElement.value = null;
-    } else {
-      this.snackbar.open("el archivo esta vacio ", "Aceptar", {
+      this.snackbar.open("🚨 Archivo vacío ", "Aceptar", {
         duration: 3000,
       });
     }
   }
-  
+
+  formatDate(excelDate: string): {'D': number, 'M': number, 'Y': number, 'h': number, 'm': number, 's': number} {
+    let entry = excelDate.split(" ");
+    let date = entry[0];
+    let time = entry[1];
+    let dateAray = date.split('.');
+    let timeArray = time.split(':');
+    let day = parseInt(dateAray[0]);
+    let month = parseInt(dateAray[1]) - 1;
+    let year = parseInt(dateAray[2]);
+    let hours = parseInt(timeArray[0]);
+    let minutes = parseInt(timeArray[1]);
+    let seconds = parseInt(timeArray[2]);
+    return {'D': day, 'M': month, 'Y': year, 'h': hours, 'm': minutes, 's': seconds}
+  }
+
   clearDataTable() {
     this.settingDataSource.data = [];
-    document.getElementById("fileInput2").nodeValue = "";
+    this.fileButton.nativeElement.value = null;
   }
 
   saveDataTable() {
-    console.log('this.currentDataUpload : ',this.currentDataUpload)
+    console.log('this.currentDataUpload : ', this.currentData)
     this.loading.next(true);
 
     this.auth.user$.pipe(
       take(1),
       switchMap(user => {
-        return this.evaltService.addSettings(this.currentDataUpload, user);
+        return this.evaltService.addSettings(this.currentData, user);
       })
     ).subscribe(batch => {
       if (batch) {

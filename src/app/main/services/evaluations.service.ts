@@ -40,7 +40,6 @@ export class EvaluationsService {
       quantity: form.quantity,
       internalStatus: 'registered', // =>  [registered / progress /consultation / finalized]
       status: form.status,
-      user: user.name,
       wof: form.wof,
       task: form.task,
       observations: null,
@@ -49,12 +48,14 @@ export class EvaluationsService {
       imagesCounter: null,
       inquiries: null ,
       inquiriesCounter: null,
-      registryDate: new Date(),
+      // registryDate: new Date(),
       registryTimer: null,
-      processDate: null,
+      processAt: null,
       processTimer: null,
-      inquiryDate: null,
+      inquiryAt: null,
       inquiryTimer: null,
+      finalizedBy: null,
+      finalizedAt: null,
       result: null,
       kindOfTest: null,
       comments: null,
@@ -158,8 +159,8 @@ export class EvaluationsService {
   }
 
   /**
-   * Append setting as improvements in firestore's improvements collection
-   * @param {Improvement[]} list - List of improvements uploaded by the user
+   * Append the passed list of evaluations in firestore's evaluations collection
+   * @param {Improvement[]} list - List of evaluations uploaded by the user
    * @param {User} user - User's data in actual session
    */
   addSettings(list: Evaluation[], user): Observable<firebase.default.firestore.WriteBatch> {
@@ -170,42 +171,9 @@ export class EvaluationsService {
       // create reference for document in improvements collection
       const evaluationDocRef = this.afs.firestore.collection(`/db/ferreyros/evaluations`).doc();
       // Structuring the data model
-      const data: Evaluation = {
-        id: evaluationDocRef.id,
-        otMain: element.otMain ? element.otMain : null,
-        otChild: element.otChild ? element.otChild : null,
-        position: element.position ? element.position : null,
-        partNumber: element.partNumber ? element.partNumber : null,
-        description: element.description ? element.description : null,
-        quantity: element.quantity ? element.quantity : null,
-        internalStatus: 'registered', // =>  [registered / progress /consultation / finalized]
-        status: element.status ? element.status : null,
-        user: element.user ? element.user : null,
-        wof: element.wof ? element.wof : null,
-        task: element.task ? element.task : null,
-        observations:element.observations ? element.observations : null,
-        workshop: element.workshop ? element.workshop : null,
-        images: element.images ? element.images : null,
-        imagesCounter: element.imagesCounter ? element.imagesCounter : null,
-        inquiries: element.inquiries ? element.inquiries : null,
-        inquiriesCounter: element.inquiriesCounter ? element.inquiriesCounter : null,
-        registryDate: new Date(),
-        registryTimer: element.registryTimer ? element.registryTimer : null,
-        processDate: element.processDate ? element.processDate : null,
-        processTimer: element.processTimer ? element.processTimer : null,
-        inquiryDate: element.inquiryDate ? element.inquiryDate : null,
-        inquiryTimer: element.inquiryTimer ? element.inquiryTimer : null,
-        result: element.result ? element.result : null,
-        kindOfTest: element.kindOfTest ? element.kindOfTest : null,
-        comments: element.comments ? element.comments : null,
-        createdAt: element.createdAt ? element.createdAt : null,
-        createdBy: user,
-        editedAt: null,
-        editedBy: null,
-        
-      };
-      //
-      batch.set(evaluationDocRef, data);
+      element.id = evaluationDocRef.id;
+
+      batch.set(evaluationDocRef, element);
     });
 
     return of(batch);
