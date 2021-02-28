@@ -5,8 +5,8 @@ import { RequestsSettingDialogComponent } from './dialogs/requests-setting-dialo
 import { RequestsStartDialogComponent } from './dialogs/requests-start-dialog/requests-start-dialog.component';
 import { RequestsTimeLineDialogComponent } from './dialogs/requests-time-line-dialog/requests-time-line-dialog.component';
 import { Evaluation } from '../../../models/evaluations.model';
-import { Observable, combineLatest } from 'rxjs';
-import { tap, map, startWith, filter, share } from 'rxjs/operators';
+import { Observable, combineLatest, BehaviorSubject } from 'rxjs';
+import { tap, map, startWith, filter, share, debounce, debounceTime } from 'rxjs/operators';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../../../auth/services/auth.service';
@@ -20,6 +20,9 @@ import { EvaluationsService } from '../../../services/evaluations.service';
   styleUrls: ['./evaluations-requests.component.scss']
 })
 export class EvaluationsRequestsComponent implements OnInit {
+
+  loading = new BehaviorSubject<boolean>(true);
+  loading$ = this.loading.asObservable();
 
   evaluation$: Observable<Evaluation[]>;
   tallerList$: Observable<Evaluation[]>;
@@ -82,20 +85,25 @@ export class EvaluationsRequestsComponent implements OnInit {
      //this.evaltService.getAllEvaluations(),
      this.evaltService.getAllEvaluationsByInternalStatus(this.state),
        this.searchForm.get('ot').valueChanges.pipe(
+         debounceTime(300),
         filter(input => input !== null),
         startWith<any>(''),
-        map(value => typeof value === 'string' ? value.toLowerCase() : value.internalStatus.toLowerCase())),
+        map(value => typeof value === 'string' ? value.toLowerCase() : value.internalStatus.toLowerCase()),
+        tap(rs => {
+          this.loading.next(true);
+        })),
      
     ).pipe(
       map(([evaluations, name  ]) => {
-        console.log('evaluations : ', evaluations);
-        console.log('name : ', name);
-        return evaluations.filter(el => name ? el.otMain.toLowerCase().includes(name) : true);
+        return evaluations.filter(el => { return String(el.otMain).toLowerCase().includes(name) ||
+          String(el.otChild).toLowerCase().includes(name) ||
+          String(el.partNumber).toLowerCase().includes(name)
+         });
       }),
       tap(res => {
-          console.log('evaluations : ', res);
           this.dataEvaluations = res;
           this.counter = this.dataEvaluations.length;
+          this.loading.next(false);
           return  this.dataEvaluations;
       })
     )

@@ -18,7 +18,8 @@
       <span>{{evaluations.length}}</span>
     </div>
   </div>
-
+  <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+  
   <div class="cards-container">
     <div class="box mat-elevation-z2" *ngFor="let item of evaluations;let i=index">
       <div class="header-box">
@@ -62,7 +63,8 @@
         <div class="lj">OT <span>{{item.otMain}}</span></div>
         <div class="info-row">OT Child: <span>{{item.otChild}} </span> </div>
         <div class="info-row"> Nro parte: <span> {{item.partNumber}}</span> </div>
-        <div class="info-row"> Fecha: <span>{{item.registryDate.toDate() | date:'dd/MM/yyyy - h:mm:ss a'}} </span> </div>
+        <div class="info-row"> Fecha: <span>{{(item.createdAt.seconds * 1000) | date:'dd/MM/yyyy - h:mm:ss a'}} </span>
+        </div>
       </div>
       <div>
         <div class="progress-time"></div>

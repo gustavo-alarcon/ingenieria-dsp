@@ -67,7 +67,7 @@
       <span>{{counter}}</span>
     </div>
   </div>
-
+  <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
   <div class="cards-container" *ngIf="evaluation$|async as evaluations">
 
     <div class="box mat-elevation-z2" *ngFor="let item of evaluations">

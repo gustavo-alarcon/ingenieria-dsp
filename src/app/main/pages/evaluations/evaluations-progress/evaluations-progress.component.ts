@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Evaluation } from 'src/app/main/models/evaluations.model';
 import { EvaluationsService } from 'src/app/main/services/evaluations.service';
@@ -19,10 +19,12 @@ import { EvaluationsSettingsDialogComponent } from './dialogs/evaluations-settin
   styleUrls: ['./evaluations-progress.component.scss']
 })
 export class EvaluationsProgressComponent implements OnInit, OnDestroy {
+  loading = new BehaviorSubject<boolean>(true);
+  loading$ = this.loading.asObservable();
 
   evaluations: Evaluation[] = [];
   subcription: Subscription = new Subscription();
-  state = 'progress';
+  state = 'processed';
 
   constructor(
     public dialog: MatDialog,
@@ -34,6 +36,7 @@ export class EvaluationsProgressComponent implements OnInit, OnDestroy {
     this.subcription.add(
       this.evaluationServices.getAllEvaluationsByInternalStatus(this.state).subscribe((resp) => {
         this.evaluations = resp;
+        this.loading.next(false);
       })
     );
   }
