@@ -1,5 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Observable, Subscription } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { Evaluation } from 'src/app/main/models/evaluations.model';
+import { EvaluationsService } from 'src/app/main/services/evaluations.service';
 
 import { EvaluationsConsultsDialogComponent } from './dialogs/evaluations-consults-dialog/evaluations-consults-dialog.component';
 import { EvaluationsFinalizeDialogComponent } from './dialogs/evaluations-finalize-dialog/evaluations-finalize-dialog.component';
@@ -14,13 +18,24 @@ import { EvaluationsSettingsDialogComponent } from './dialogs/evaluations-settin
   templateUrl: './evaluations-progress.component.html',
   styleUrls: ['./evaluations-progress.component.scss']
 })
-export class EvaluationsProgressComponent implements OnInit {
+export class EvaluationsProgressComponent implements OnInit, OnDestroy {
+
+  evaluations: Evaluation[] = [];
+  subcription: Subscription = new Subscription();
+  state = 'progress';
 
   constructor(
     public dialog: MatDialog,
+    private evaluationServices: EvaluationsService
   ) { }
 
+
   ngOnInit(): void {
+    this.subcription.add(
+      this.evaluationServices.getAllEvaluationsByInternalStatus(this.state).subscribe((resp) => {
+        this.evaluations = resp;
+      })
+    );
   }
 
   settingDialog(): void {
@@ -29,17 +44,25 @@ export class EvaluationsProgressComponent implements OnInit {
     });
   }
 
-  finalizeDialog(): void {
-    this.dialog.open(EvaluationsFinalizeDialogComponent, {
-      width: '35%',
-      height: '90%'
+  finalizeDialog(item: Evaluation): void {
+    const dialogRef = this.dialog.open(EvaluationsFinalizeDialogComponent, {
+      width: '30%',
+      data: item
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
     });
   }
 
-  imagesDialog(): void {
-    this.dialog.open(EvaluationsImagesDialogComponent, {
-      width: '35%',
-      height: '90%'
+  imagesDialog(item: Evaluation): void {
+    const dialogRef = this.dialog.open(EvaluationsImagesDialogComponent, {
+      width: '30%',
+      data: item
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
     });
   }
 
@@ -62,6 +85,10 @@ export class EvaluationsProgressComponent implements OnInit {
       width: '35%',
       height: '90%'
     });
+  }
+
+  ngOnDestroy(): void {
+    this.subcription.unsubscribe();
   }
 
 }

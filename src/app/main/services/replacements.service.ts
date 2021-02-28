@@ -63,7 +63,6 @@ export class ReplacementsService {
     const replacementDocRef = this.afs.firestore.doc(`db/ferreyros/replacements/${replacementId}`);
     // Structuring the data model
 
-    console.log(form);
     
     const data: any = {
       currentPart: form.parts[0].currentPart,
@@ -95,7 +94,6 @@ export class ReplacementsService {
   }
   async removeImprovementFef(id: string): Promise<void> {
     await this.afs.collection(`db/ferreyros/replacements/`).doc(id).delete().then(() => {
-      console.log('Document successfully deleted!');
     }).catch((error) => {
       console.error('Error removing document: ', error);
     });
