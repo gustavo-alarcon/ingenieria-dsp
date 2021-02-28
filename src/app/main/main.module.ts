@@ -10,7 +10,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 @NgModule({
   declarations: [
     MainComponent,
-
   ],
   exports: [
     MainComponent
@@ -19,7 +18,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     MainRoutingModule,
     MaterialModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ]
 })
 export class MainModule { }

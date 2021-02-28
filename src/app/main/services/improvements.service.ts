@@ -167,7 +167,6 @@ export class ImprovementsService {
   }
   async removeImprovementFef(id: string): Promise<void> {
     await this.afs.collection(`db/ferreyros/improvementEntries/`).doc(id).delete().then(() => {
-      console.log('Document successfully deleted!');
     }).catch((error) => {
       console.error('Error removing document: ', error);
     });
@@ -229,8 +228,6 @@ export class ImprovementsService {
           if (res.length) {
             res.forEach(doc => {
               let evaluatedPart;
-              console.log(doc);
-
               if (doc.stock > 0 && !doc.availability) {
                 evaluatedPart = doc.improvedPart;
               } else {

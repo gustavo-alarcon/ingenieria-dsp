@@ -1,0 +1,38 @@
+<h2 mat-dialog-title>
+    <div class="container-image">
+        <button mat-icon-button class="container-image__button">
+            <mat-icon class="container-image__icon">add_photo_alternate</mat-icon>
+            <span class="container-image__title">
+                Imágenes
+            </span>
+        </button>
+        <button mat-icon-button mat-dialog-close>
+            <mat-icon class="container-image__icon-close">close</mat-icon>
+        </button>
+    </div>
+    <mat-divider style="margin-top: 20px;"></mat-divider>
+    <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+</h2>
+<mat-dialog-content class="mat-typography">
+    <div *ngFor="let img of images;let i=index;">
+        <img [src]="img" alt="" onError="this.src='../../../../../../../assets/img/error-image.png'">
+    </div>
+    <div *ngFor="let imgUpload of imagesUpload;let i=index">
+        <label [for]="i">
+            <mat-card class="mat-elevation-z0">
+                <img [src]="imgUpload" onError="this.src='../../../../../../../assets/img/camara.png'" class="pointer" />
+                <mat-card-actions *ngIf="imgUpload" align="end">
+                    <button mat-icon-button (click)="deleteImage(imgForDelete, i)">
+                        <mat-icon color="warn">delete</mat-icon>
+                    </button>
+                </mat-card-actions>
+            </mat-card>
+            <mat-divider></mat-divider>
+        </label>
+        <input [id]="i" type="file" style="display: none;" (change)="uploadFile($event,i)" accept="image/x-png, image/jpg, image/jpeg" />
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close>CERRAR</button>
+    <button type="button" mat-raised-button color="primary" class="footer__btn-save" (click)="onSubmit()" cdkFocusInitial>ACEPTAR</button>
+</mat-dialog-actions>

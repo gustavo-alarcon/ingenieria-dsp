@@ -23,6 +23,8 @@
     "@angular/platform-browser-dynamic": "~11.2.0",
     "@angular/router": "~11.2.0",
     "firebase": "^7.0 || ^8.0",
+    "ng-lazyload-image": "^9.1.0",
+    "ng2-img-max": "^2.2.4",
     "ngx-mask": "^11.1.4",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",

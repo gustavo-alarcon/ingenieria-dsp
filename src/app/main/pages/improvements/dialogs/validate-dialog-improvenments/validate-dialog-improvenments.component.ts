@@ -28,7 +28,6 @@ export class ValidateDialogImprovenmentsComponent implements OnInit {
     private impService: ImprovementsService,
     private snackbar: MatSnackBar
   ) {
-    console.log(data);
   }
 
   ngOnInit(): void {

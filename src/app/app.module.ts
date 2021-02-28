@@ -8,12 +8,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuthModule } from '@angular/fire/auth';
-import { AngularFireStorageModule } from '@angular/fire/storage';
+import { AngularFireStorageModule, BUCKET } from '@angular/fire/storage';
 import { HttpClientModule } from '@angular/common/http';
-import { environment } from '../environments/environment';
-
-import { NotFoundComponent } from './shared/not-found/not-found.component';
 import { NgxMaskModule } from 'ngx-mask';
+import { LazyLoadImageModule } from 'ng-lazyload-image';
+
+import { environment } from '../environments/environment';
+import { NotFoundComponent } from './shared/not-found/not-found.component';
 
 @NgModule({
   declarations: [
@@ -30,8 +31,11 @@ import { NgxMaskModule } from 'ngx-mask';
     AngularFireStorageModule,
     HttpClientModule,
     NgxMaskModule.forRoot(),
+    LazyLoadImageModule,
   ],
-  providers: [],
+  providers: [
+    { provide: BUCKET, useValue: environment.firebase.storageBucket },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

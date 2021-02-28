@@ -1,0 +1,177 @@
+<div class="container">
+
+  <h2 mat-dialog-title style="display: flex; padding-bottom: 0px;margin-bottom: 0px;">
+    <div style="margin-top: 5px; margin-right: 15px;" mat-dialog-close>
+      <mat-icon mat-list-icon>add</mat-icon>
+    </div>
+    CREAR LOTE
+  </h2>
+  <mat-divider></mat-divider>
+  <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+
+  <input #fileInput2 style="display: none" type="file" (change)=" onFileSelected($event)" accept=".xls,.xlsx"
+    id="fileInput2">
+  <button aria-label="add" mat-button class="btn-add" accept=".xls,.xlsx" (click)="fileInput2.click()">
+    <mat-icon aria-label="agregar" class="icon-add">add</mat-icon>
+    SELECIONE ARCHIVO
+  </button>
+  <mat-dialog-content style="margin-top: 20px;">
+    <ng-container *ngIf="settingDataSource.data.length; else default">
+      <div style="overflow: auto;">
+        <table mat-table [dataSource]="settingDataSource" matSort class="mat-elevation-z8">
+
+          <ng-container matColumnDef="otMain">
+            <th mat-header-cell *matHeaderCellDef class="table__cell">MAIN</th>
+            <td mat-cell *matCellDef="let element" class="table__cell"> {{element.otMain ? element.otMain : '---'}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="otChild">
+            <th mat-header-cell *matHeaderCellDef class="table__cell">CHILD</th>
+            <td mat-cell *matCellDef="let element" class="table__cell"> {{element.otChild ? element.otChild : '---'}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="position">
+            <th mat-header-cell *matHeaderCellDef class="table__cell">Posición</th>
+            <td mat-cell *matCellDef="let element" class="table__cell"> {{element.position ? element.position : '---'}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="partNumber">
+            <th mat-header-cell *matHeaderCellDef class="table__cell">NP</th>
+            <td mat-cell *matCellDef="let element" class="table__cell"> {{element.partNumber ? element.partNumber : '---'}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef class="table__cell">Descripción</th>
+            <td mat-cell *matCellDef="let element" class="table__cell"> {{element.description ? element.description : '---'}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="quantity">
+            <th mat-header-cell *matHeaderCellDef class="table__cell">Cantidad</th>
+            <td mat-cell *matCellDef="let element" class="table__cell"> {{element.quantity ? element.quantity : '---'}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="internalStatus">
+            <th mat-header-cell *matHeaderCellDef class="table__cell">Estado</th>
+            <td mat-cell *matCellDef="let element" class="table__cell">
+              <button mat-button (click)="showImprovementEntry(element)" [ngClass]="{'btn-state-registered': element.internalStatus==='registered'
+                               ,'btn-state-progress': element.internalStatus==='processed'
+                               ,'btn-state-consultation': element.internalStatus==='consultation'
+                               ,'btn-state-finalizado': element.internalStatus==='finalized'
+                              }">
+                <span *ngIf="element.internalStatus==='registered'">Registrado</span>
+                <span *ngIf="element.internalStatus==='processed'">Proceso</span>
+                <span *ngIf="element.internalStatus==='consultation'">Consulta</span>
+                <span *ngIf="element.internalStatus==='finalized'">Finalizado</span>
+              </button>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef class="table__cell"> Atención </th>
+            <td mat-cell *matCellDef="let element" class="table__cell"> {{element.status ? element.status : '---'}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="createdBy">
+            <th mat-header-cell *matHeaderCellDef class="table__cell">Usuario</th>
+            <td mat-cell *matCellDef="let element" class="table__cell"> {{element.createdBy ? element.createdBy :
+              '---'}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="wof">
+            <th mat-header-cell *matHeaderCellDef class="table__cell">WOF</th>
+            <td mat-cell *matCellDef="let element" class="table__cell"> {{element.wof ? element.wof : '---'}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="task">
+            <th mat-header-cell *matHeaderCellDef class="table__cell">Tarea</th>
+            <td mat-cell *matCellDef="let element" class="table__cell"> {{element.task ? element.task : '---'}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="observations">
+            <th mat-header-cell *matHeaderCellDef class="table__cell">Observaciones</th>
+            <td mat-cell *matCellDef="let element" class="table__cell"> {{element.observations ? element.observations : '---'}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="workshop">
+            <th mat-header-cell *matHeaderCellDef class="table__cell">Taller</th>
+            <td mat-cell *matCellDef="let element" class="table__cell"> {{element.workshop ? element.workshop : '---'}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="createdAt">
+            <th mat-header-cell *matHeaderCellDef class="table__cell">Fecha de solicitud</th>
+            <td mat-cell *matCellDef="let element" class="table__cell"><span
+                *ngIf="element.createdAt; else defaultcreatedAt">{{element.createdAt | date :
+                'dd/MM/yy hh:mm:ss'}}</span>
+              <ng-template #defaultProcessAt>---</ng-template>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="result">
+            <th mat-header-cell *matHeaderCellDef class="table__cell">Resultado</th>
+            <td mat-cell *matCellDef="let element" class="table__cell"> {{element.result ? element.result : '---'}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="kindOfTest">
+            <th mat-header-cell *matHeaderCellDef class="table__cell">Ensayo</th>
+            <td mat-cell *matCellDef="let element" class="table__cell"> {{element.kindOfTest ? element.kindOfTest :
+              '---'}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="comments">
+            <th mat-header-cell *matHeaderCellDef class="table__cell">Comentarios</th>
+            <td mat-cell *matCellDef="let element" class="table__cell"> {{element.comments ? element.comments : '---'}}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="finalizedBy">
+            <th mat-header-cell *matHeaderCellDef class="table__cell">Inspector</th>
+            <td mat-cell *matCellDef="let element" class="table__cell"> {{element.finalizedBy ?
+              element.finalizedBy : '---'}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="processAt">
+            <th mat-header-cell *matHeaderCellDef class="table__cell">Fecha Proceso</th>
+            <td mat-cell *matCellDef="let element" class="table__cell">
+              <span *ngIf="element.processAt; else defaultProcessAt">{{element.processAt | date :
+                'dd/MM/yy hh:mm:ss'}}</span>
+              <ng-template #defaultProcessAt>---</ng-template>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="finalizedAt">
+            <th mat-header-cell *matHeaderCellDef class="table__cell">Fecha Cierre</th>
+            <td mat-cell *matCellDef="let element" class="table__cell"><span
+                *ngIf="element.finalizedAt; else defaultfinalizedAt">{{element.finalizedAt | date :
+                'dd/MM/yy hh:mm:ss'}}</span>
+              <ng-template #defaultfinalizedAt>---</ng-template>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="settingDisplayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: settingDisplayedColumns;"></tr>
+        </table>
+      </div>
+      <mat-paginator #settingPaginator class="ms-paginator" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+      </mat-paginator>
+    </ng-container>
+    <ng-template #default>
+      <div class="default">
+        <span>
+          <mat-icon style="vertical-align: middle;">upload</mat-icon> Adjunte archivo
+        </span>
+      </div>
+    </ng-template>
+
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button type="file" aria-label="add" mat-button class="footer__btn-close" mat-dialog-close>
+      CANCELAR
+    </button>
+    <button type="file" aria-label="add" mat-button class="footer__btn-save" (click)="saveDataTable()"
+      [disabled]="!settingDataSource.data.length">
+      GUARDAR
+    </button>
+  </mat-dialog-actions>
+</div>

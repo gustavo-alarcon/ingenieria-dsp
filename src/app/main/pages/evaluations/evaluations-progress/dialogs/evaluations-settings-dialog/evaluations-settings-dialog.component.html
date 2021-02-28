@@ -1,0 +1,33 @@
+<div class="container">
+
+    <h2 mat-dialog-title style="display: flex;">
+        <div style="margin-top: 5px; margin-right: 15px;">
+            <mat-icon mat-list-icon>settings</mat-icon>
+        </div> 
+        Configuraciones
+       <mat-divider></mat-divider>
+        <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+    </h2>
+        <mat-dialog-content >
+
+            <p style="text-align: center;">Tiempo máximo en solicitud (hh:mm)</p>
+
+            <div>
+                <form [formGroup]="timerFormGroup" class="timer-container">
+                    <mat-form-field class="timer">
+                        <input matInput type="number" min="0" formControlName="hours" autocomplete="off" required>
+                    </mat-form-field>
+                    <span class="timer puntos"> : </span>
+                    <mat-form-field class="timer">
+                        <input matInput type="number" min="0" formControlName="minutes" autocomplete="off" required>    
+                    </mat-form-field>
+                </form>
+            </div>
+           
+        </mat-dialog-content>
+        <mat-dialog-actions align="end">
+            <button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close>CERRAR</button>
+            <button type="button" mat-raised-button color="primary" class="footer__btn-save">GUARDAR</button>
+        </mat-dialog-actions>
+</div> 
+

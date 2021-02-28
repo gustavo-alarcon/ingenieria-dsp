@@ -1,0 +1,38 @@
+<div class="container">    
+    <h2 mat-dialog-title style="display: flex; padding-bottom: 0px;margin-bottom: 0px;">
+        <div style="margin-top: 5px; margin-right: 15px;" mat-dialog-close>
+            <mat-icon mat-list-icon>visibility</mat-icon>
+        </div> 
+        Observaciones         
+        <div  mat-dialog-close style="margin-top: 5px; margin-left: 220px;cursor: pointer;"  >
+            <mat-icon >clear</mat-icon>
+        </div>        
+    </h2>
+    <mat-divider></mat-divider>
+    <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+    <mat-dialog-content >
+        <form [formGroup]="observationFormGroup" class="timer-container" style="margin-top: 20px;">
+            <p ><span style="font-weight: bold;"> OT MAIN :</span> {{data.otMain ? data.otMain : ''}}</p>
+            <p ><span style="font-weight: bold;"> OT CHILD :</span> {{data.otChild ? data.otChild : ''}}</p>
+            <p ><span style="font-weight: bold;"> Correlativo :</span> {{data.position ? data.position : ''}}</p>
+            <p ><span style="font-weight: bold;"> N° de parte :</span> {{data.partNumber ? data.partNumber : ''}}</p>
+            <p ><span style="font-weight: bold;"> Descripcion :</span> {{data.description ? data.description : ''}}</p>
+            <p ><span style="font-weight: bold;"> Tipo de Atencion :</span> {{data.status ? data.status : ''}}</p>
+            <p ><span style="font-weight: bold;"> Usuario :</span> {{data.createdBy ? data.createdBy : ''}} </p>
+            <p ><span style="font-weight: bold;"> WOF (Orden de Fabricacion) :</span> {{data.wof ? data.wof : ''}}</p>
+            <p ><span style="font-weight: bold;"> Trabajo :</span> {{data.task ? data.task : ''}}</p>
+           
+            <mat-form-field appearance="outline" style="width: 400px;">
+                <mat-label>Observaciones</mat-label>
+                <textarea matInput placeholder="Observaciones" formControlName="observation" required></textarea>
+                <mat-error *ngIf="observationFormGroup.controls['observation'].errors">
+                    Campo <strong>requerido.</strong>
+                </mat-error>
+            </mat-form-field>
+        </form>                           
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close>CERRAR</button>
+        <button type="button" mat-raised-button color="primary"   [disabled]="observationFormGroup.status != 'VALID'" class="footer__btn-save" (click)="save()">GUARDAR</button>
+    </mat-dialog-actions>
+</div> 

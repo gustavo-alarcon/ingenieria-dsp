@@ -1,0 +1,17 @@
+<div class="container">
+  <div class="header-container">
+    <mat-icon mat-list-icon class="mat-icon-menu" style="font-size: 2.5em;">table_view</mat-icon>
+    <h1 style="font-size: 2.2em; margin-left: 20px; font-family: 'Poppins', sans-serif; font-weight: 700;">Evaluaciones</h1>
+  </div>
+  <div class="container-body">
+    <nav mat-tab-nav-bar>
+      <a mat-tab-link *ngFor="let link of navLinks" [routerLink]="link.link" routerLinkActive #rla="routerLinkActive"
+        [active]="rla.isActive" label="SOLICITUDES">
+        {{link.label}}
+      </a>
+    </nav>
+    <div class="container-router">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

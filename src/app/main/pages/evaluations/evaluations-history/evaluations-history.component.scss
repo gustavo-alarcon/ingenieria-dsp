@@ -1,0 +1,51 @@
+.container-table {
+  padding-top: 30px;
+  max-width: 100%;
+  overflow: auto;
+}
+
+.mat-table-sticky-border-elem-right {
+  border-left: 1px solid #e0e0e0;
+}
+
+.mat-table-sticky-border-elem-left {
+  border-right: 1px solid #e0e0e0;
+}
+
+.btn-add {
+  border: 1px #6200ee solid;
+  color: #6200ee;
+  margin-left: 10px;
+  padding: 0px 30px 0px 30px;
+}
+
+.btn-state-registered {
+  background: rgba(98, 0, 238, 0.38);
+  color: black;
+  width: 100px;
+}
+
+.btn-state-progress {
+  background: #f2c94c;
+  color: black;
+  width: 100px;
+}
+
+.btn-state-finalizado {
+  background: #27ae60;
+  color: white;
+  width: 100px;
+}
+
+.btn-state-consultation {
+  background: #f2994a;
+  color: white;
+  width: 100px;
+}
+
+table {
+  .table__cell {
+    min-width: 90px;
+    padding: 0px 8px;
+  }
+}
