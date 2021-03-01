@@ -41,6 +41,7 @@ export class CreateDialogReplacementsComponent implements OnInit {
           replacedPart: [null, Validators.required],
           description: ['', Validators.required],
           kit: [false],
+          support: [false],
         })
       ])
     });
@@ -90,6 +91,7 @@ export class CreateDialogReplacementsComponent implements OnInit {
       replacedPart: [null, Validators.required],
       description: ['', Validators.required],
       kit: [false],
+      support: [false]
     });
 
     this.parts.push(group);

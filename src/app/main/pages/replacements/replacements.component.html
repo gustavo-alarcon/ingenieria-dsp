@@ -1,11 +1,16 @@
 <div class="container">
     <div class="header-container">
         <mat-icon mat-list-icon class="mat-icon-menu" style="font-size: 2.5em;">published_with_changes</mat-icon>
-        <h1 style="font-size: 2.2em; margin-left: 20px; font-family: 'Poppins', sans-serif; font-weight: 700;">Reemplazos
+        <h1 style="font-size: 2.2em; margin-left: 20px; font-family: 'Poppins', sans-serif; font-weight: 700;">
+            Reemplazos
         </h1>
-        <button type="file" aria-label="add" mat-button class="btn-add" (click)="openDialog('create')">
+        <button aria-label="add" mat-button class="btn-add" (click)="openDialog('create')">
             <mat-icon aria-label="agregar" class="icon-add">add</mat-icon>
             CREAR
+        </button>
+        <button aria-label="add" mat-button class="btn-add" (click)="openDialog('create-bulk')">
+            <mat-icon aria-label="agregar" class="icon-add">add</mat-icon>
+            CREAR LOTE
         </button>
     </div>
     <div class="body-container">
@@ -13,29 +18,39 @@
             <table mat-table [dataSource]="replacementDataSource" class="mat-elevation-z8">
 
                 <ng-container matColumnDef="date">
-                    <th mat-header-cell *matHeaderCellDef> Fecha </th>
-                    <td mat-cell *matCellDef="let element"> {{(element.createdAt.seconds * 1000) | date : 'dd/MM/yy'}} </td>
+                    <th mat-header-cell *matHeaderCellDef class="table__cell"> Fecha </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell"> {{(element.createdAt.seconds * 1000) |
+                        date : 'dd/MM/yy'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="replacedPart">
+                    <th mat-header-cell *matHeaderCellDef class="table__cell"> N/P Reemplazado </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell"> {{element.replacedPart}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="currentPart">
-                    <th mat-header-cell *matHeaderCellDef> N/P Actual </th>
-                    <td mat-cell *matCellDef="let element"> {{element.currentPart}} </td>
+                    <th mat-header-cell *matHeaderCellDef class="table__cell"> N/P Actual </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell"> {{element.currentPart}} </td>
                 </ng-container>
-                <ng-container matColumnDef="replacedPart">
-                    <th mat-header-cell *matHeaderCellDef> N/P Reemplazo </th>
-                    <td mat-cell *matCellDef="let element"> {{element.replacedPart}} </td>
-                </ng-container>
+
                 <ng-container matColumnDef="description">
-                    <th mat-header-cell *matHeaderCellDef> Descripción </th>
-                    <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+                    <th mat-header-cell *matHeaderCellDef class="table__cell"> Descripción </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell"> {{element.description}} </td>
                 </ng-container>
+
                 <ng-container matColumnDef="kit">
-                    <th mat-header-cell *matHeaderCellDef> Kit </th>
-                    <td mat-cell *matCellDef="let element"> {{element.kit ? 'Si':'No'}} </td>
+                    <th mat-header-cell *matHeaderCellDef class="table__cell"> Kit </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell"> {{element.kit ? 'Si':'No'}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="support">
+                    <th mat-header-cell *matHeaderCellDef class="table__cell"> support </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell"> {{element.support ? 'Si':'No'}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="actions" stickyEnd>
-                    <th mat-header-cell *matHeaderCellDef>
+                    <th mat-header-cell *matHeaderCellDef class="table__cell">
                         Acciones
                     </th>
                     <td mat-cell *matCellDef="let element; let i = index">
@@ -45,8 +60,7 @@
                                     <mat-icon>edit</mat-icon>
                                     Editar
                                 </button>
-                                <button class="w3-small" mat-menu-item
-                                    (click)="openDialog('delete',element,i)">
+                                <button class="w3-small" mat-menu-item (click)="openDialog('delete',element,i)">
                                     <mat-icon>delete</mat-icon>
                                     Borrar
                                 </button>

@@ -22,8 +22,8 @@ export class ReplacementsService {
   }
 
   /**
-   * Creates the improvement list passed into firestore's replacements collection
-   * @param {ReplacementsForm} form - Form data passed on improvements creation
+   * Creates the replacement list passed into firestore's replacements collection
+   * @param {ReplacementsForm} form - Form data passed on replacement creation
    * @param {User} user - User's data in actual session
    */
   createReplacements(form: ReplacementsForm, user: User): Observable<firebase.default.firestore.WriteBatch> {
@@ -40,7 +40,39 @@ export class ReplacementsService {
         replacedPart: part.replacedPart,
         description: part.description,
         kit: part.kit,
+        support: part.support,
         createdAt: new Date(),
+        createdBy: user,
+        editedAt: null,
+        editedBy: null,
+      };
+      batch.set(replacementDocRef, data);
+    });
+
+    return of(batch);
+  }
+
+  /**
+   * Creates a bulk of replacements from uploaded file to firestore's replacements collection
+   * @param {Replacement[]} list - list of replacements
+   * @param {User} user - User's data in actual session
+   */
+  createBulkReplacements(list: Replacement[], user: User): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+
+    list.forEach(part => {
+      // create reference for document in replacements collection
+      const replacementDocRef = this.afs.firestore.collection(`db/ferreyros/replacements`).doc();
+
+      const data: Replacement = {
+        id: replacementDocRef.id,
+        currentPart: part.currentPart,
+        replacedPart: part.replacedPart,
+        description: part.description,
+        kit: part.kit,
+        support: part.support,
+        createdAt: part.createdAt,
         createdBy: user,
         editedAt: null,
         editedBy: null,
@@ -69,6 +101,7 @@ export class ReplacementsService {
       replacedPart: form.parts[0].replacedPart,
       description: form.parts[0].description,
       kit: form.parts[0].kit,
+      support: form.parts[0].support,
       editedAt: new Date(),
       editedBy: user
     };
