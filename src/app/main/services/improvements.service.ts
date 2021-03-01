@@ -6,7 +6,8 @@ import { improvementsForm, Improvement, ImprovementEntry, SparePart } from '../m
 import * as firebase from 'firebase';
 
 import { User } from '../models/user-model';
-import { map, take } from 'rxjs/operators';
+import { map, switchMap, take } from 'rxjs/operators';
+import { Replacement } from '../models/replacements.models';
 @Injectable({
   providedIn: 'root'
 })
@@ -215,20 +216,24 @@ export class ImprovementsService {
 
   /**
    * Check if the part number passed have stock or availability date
+   * Cehck if part number had a replacement
    * @param {string} part - Part number to be evaluated
    */
   checkPart(part: any): Observable<SparePart> {
-
-    return this.afs.collection<Improvement>(`/db/ferreyros/improvements`, ref => ref.where('improvedPart', '==', part[0]))
+    console.log(part);
+    
+    return this.afs.collection<Improvement>(`/db/ferreyros/improvements`, ref => ref.where('improvedPart', '==', ('' + part[0])))
       .valueChanges()
       .pipe(
         take(1),
         map(res => {
           let data;
+          console.log(res);
+          
           if (res.length) {
             res.forEach(doc => {
               let evaluatedPart;
-              if (doc.stock > 0 && !doc.availability) {
+              if (doc.stock > 0 && !!doc.availability) {
                 evaluatedPart = doc.improvedPart;
               } else {
                 evaluatedPart = doc.currentPart;
@@ -238,7 +243,7 @@ export class ImprovementsService {
                 description: doc.description,
                 quantity: doc.quantity,
                 improvedPart: doc.improvedPart,
-                evaluatedPart,
+                evaluatedPart: evaluatedPart,
                 kit: doc.kit,
                 match: true
               };
@@ -256,6 +261,24 @@ export class ImprovementsService {
           }
 
           return data;
+        }),
+        switchMap(firstEvaluation => {
+          console.log(firstEvaluation);
+          
+          return this.afs.collection<Replacement>(`/db/ferreyros/replacements`, ref => ref.where('replacedPart', '==', firstEvaluation.evaluatedPart))
+            .valueChanges()
+            .pipe(
+              map(res => {
+                if (res.length) {
+                  res.forEach(doc => {
+                    console.log(doc);
+                    
+                    firstEvaluation.evaluatedPart = doc.currentPart;
+                  });
+                }
+                return firstEvaluation
+              })
+            )
         })
       );
   }
