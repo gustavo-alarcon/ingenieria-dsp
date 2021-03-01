@@ -7756,6 +7756,13 @@ next-tick@~1.0.0:
   resolved "https://registry.yarnpkg.com/next-tick/-/next-tick-1.0.0.tgz#ca86d1fe8828169b0120208e3dc8424b9db8342c"
   integrity sha1-yobR/ogoFpsBICCOPchCS524NCw=
 
+ng-lazyload-image@^9.1.0:
+  version "9.1.0"
+  resolved "https://registry.yarnpkg.com/ng-lazyload-image/-/ng-lazyload-image-9.1.0.tgz#2f887b85ef5829565a0fc875a66f568d7c3e2b32"
+  integrity sha512-ZdfCXMTaehfzxcSRRThpz9YZbEA+8LPA086Od6JiylrGj0yNM7Aq830A1x6NE/M8o2VuVq93emH9m8T6SFBHlA==
+  dependencies:
+    tslib "^2.0.0"
+
 ng2-img-max@^2.2.4:
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/ng2-img-max/-/ng2-img-max-2.2.4.tgz#0c783c8d6c3afdcc9616bdd597e7cedac78c2d68"

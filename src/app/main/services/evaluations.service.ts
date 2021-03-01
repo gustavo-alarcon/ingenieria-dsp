@@ -139,6 +139,16 @@ export class EvaluationsService {
    * Delete the passed evaluatiion based in his internalStatus
    * @param {string} state - filter for internalStatus
    */
+  getAllEvaluationsByTaller(item: Evaluation): Observable<Evaluation[]> {
+    console.log('workShop : ', item)
+    return this.afs.collection<Evaluation>(`/db/ferreyros/evaluations`,
+      ref => ref.where('workshop', '==', item.workshop))
+      .valueChanges();
+  }
+  /**
+   * Delete the passed evaluatiion based in his internalStatus
+   * @param {string} state - filter for internalStatus
+   */
   getAllEvaluationsByInternalStatus(state: string): Observable<Evaluation[]> {
     return this.afs.collection<Evaluation>(`/db/ferreyros/evaluations`,
       ref => ref.where('internalStatus', '==', state).orderBy('createdAt', 'desc'))
