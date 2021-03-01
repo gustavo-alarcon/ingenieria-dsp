@@ -136,8 +136,8 @@ export class EvaluationsService {
     return of(batch);
   }
   /**
-   * Delete the passed evaluatiion based in his internalStatus
-   * @param {string} state - filter for internalStatus
+   * Delete the passed evaluatiion based in his workShop
+   * @param {string} item - filter for workShop
    */
   getAllEvaluationsByTaller(item: Evaluation): Observable<Evaluation[]> {
     console.log('workShop : ', item)
