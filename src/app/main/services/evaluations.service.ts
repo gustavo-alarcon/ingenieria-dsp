@@ -210,3 +210,20 @@ export class EvaluationsService {
   }
 
 }
+
+
+/*
+// Example on callable functions
+import { AngularFireFunctions } from '@angular/fire/functions';
+
+data$: Observable<any>;
+constructor(private fns: AngularFireFunctions) {
+
+    const callable = fns.httpsCallable('sendMail');
+    this.data$ = callable({ name: 'Miguel' });
+    this.data$.subscribe(val => {
+      console.log(val);
+    });
+
+  }
+*/
