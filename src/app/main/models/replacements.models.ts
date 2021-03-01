@@ -6,6 +6,7 @@ export interface Replacement {
     replacedPart: string;
     description: string;
     kit: boolean;
+    support: boolean;
     createdAt: Date;
     createdBy: User;
     editedAt: Date;
@@ -21,4 +22,5 @@ export interface ReplacementPart {
     replacedPart: string;
     description: string;
     kit: boolean;
+    support: boolean;
 }

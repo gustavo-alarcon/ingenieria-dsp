@@ -41,6 +41,7 @@ export class EditDialogReplacementsComponent implements OnInit {
           replacedPart: [this.data.replacedPart ? this.data.replacedPart: null, Validators.required],
           description: [this.data.description ? this.data.description: null, Validators.required],
           kit: [this.data.kit ? this.data.kit : false],
+          support: [this.data.support ? this.data.support : false],
         })
       ])
     });

@@ -53,10 +53,12 @@ export class HistoryUploadFileDialogComponent implements OnInit {
 
   @ViewChild("fileInput2", { read: ElementRef }) fileButton: ElementRef;
 
-  constructor(public dialogRef: MatDialogRef<HistoryUploadFileDialogComponent>,
+  constructor(
+    public dialogRef: MatDialogRef<HistoryUploadFileDialogComponent>,
     private snackbar: MatSnackBar,
     private auth: AuthService,
-    private evaltService: EvaluationsService) { }
+    private evaltService: EvaluationsService
+    ) { }
 
   ngOnInit(): void {
   }

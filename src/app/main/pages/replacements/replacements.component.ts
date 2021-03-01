@@ -9,6 +9,8 @@ import { ReplacementsService } from '../../services/replacements.service';
 import { CreateDialogReplacementsComponent } from './dialogs/create-dialog-replacements/create-dialog-replacements.component';
 import { DeleteDialogReplacementsComponent } from './dialogs/delete-dialog-replacements/delete-dialog-replacements.component';
 import { EditDialogReplacementsComponent } from './dialogs/edit-dialog-replacements/edit-dialog-replacements.component';
+import { UploadFileDialogReplacementsComponent } from './dialogs/upload-file-dialog-replacements/upload-file-dialog-replacements.component';
+
 
 @Component({
   selector: 'app-replacements',
@@ -21,7 +23,7 @@ export class ReplacementsComponent implements OnInit {
 
   // replacement
   replacementDataSource = new MatTableDataSource<Replacement>();
-  replacementDisplayedColumns: string[] = ['date', 'currentPart', 'replacedPart', 'description', 'kit', 'actions'];
+  replacementDisplayedColumns: string[] = ['date', 'replacedPart', 'currentPart', 'description', 'kit', 'support', 'actions'];
 
   @ViewChild('replacementPaginator', { static: false }) set content(paginator: MatPaginator) {
     this.replacementDataSource.paginator = paginator;
@@ -42,6 +44,8 @@ export class ReplacementsComponent implements OnInit {
     );
   }
 
+
+
   openDialog(value: string, entry?: Replacement, index?: number): void {
     const optionsDialog = {
       width: '100%',
@@ -52,6 +56,15 @@ export class ReplacementsComponent implements OnInit {
     switch (value) {
       case 'create':
         dialogRef = this.dialog.open(CreateDialogReplacementsComponent,
+          optionsDialog,
+        );
+
+        dialogRef.afterClosed().subscribe(result => {
+          console.log(`Dialog result: ${result}`);
+        });
+        break;
+      case 'create-bulk':
+        dialogRef = this.dialog.open(UploadFileDialogReplacementsComponent,
           optionsDialog,
         );
 

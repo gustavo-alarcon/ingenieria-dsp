@@ -13,18 +13,17 @@
                     <div [formGroupName]="i" class="container-form-array">
 
                         <mat-form-field appearance="outline" style="width: 200px;" class="container-form-array__inputs">
-                            <mat-label>Nº de parte actual</mat-label>
-                            <input matInput type='text' placeholder="Parte" formControlName="currentPart">
-                            <mat-error *ngIf="parts.controls[i].get('currentPart').errors">
+                            <mat-label>Antiguo SAP</mat-label>
+                            <input matInput type='text' placeholder="Antiguo SAP" formControlName="replacedPart">
+                            <mat-error *ngIf="parts.controls[i].get('replacedPart').errors">
                                 Campo <strong>requerido.</strong>
                             </mat-error>
                         </mat-form-field>
 
                         <mat-form-field appearance="outline" style="width: 200px;" class="container-form-array__inputs">
-                            <mat-label>Nº de parte reemplazo</mat-label>
-                            <input matInput type="text" placeholder="Nº de parte reemplazo"
-                                formControlName="replacedPart">
-                            <mat-error *ngIf="parts.controls[i].get('replacedPart').errors">
+                            <mat-label>Nuevo SAP</mat-label>
+                            <input matInput type="text" placeholder="Nuevo SAP" formControlName="currentPart">
+                            <mat-error *ngIf="parts.controls[i].get('currentPart').errors">
                                 Campo <strong>requerido.</strong>
                             </mat-error>
                         </mat-form-field>
@@ -38,6 +37,11 @@
                         <div class="container-form-array__checked">
                             <span>Kit</span>
                             <mat-checkbox class="checked-margin" color="primary" formControlName="kit"></mat-checkbox>
+                        </div>
+                        <div class="container-form-array__checked">
+                            <span>Soporte</span>
+                            <mat-checkbox class="checked-margin" color="primary" formControlName="support">
+                            </mat-checkbox>
                         </div>
                     </div>
                 </div>
