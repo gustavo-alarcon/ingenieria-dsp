@@ -23,7 +23,7 @@
   <div class="cards-container">
     <div class="box mat-elevation-z2" *ngFor="let item of evaluations;let i=index">
       <div class="header-box">
-        <button mat-icon-button>
+        <button mat-icon-button *ngIf="item.internalStatus ==='consultation'">
           <mat-icon style="color: #6200EE;">help</mat-icon>
         </button>
         <div class="priority"></div>
@@ -45,11 +45,11 @@
               <mat-icon>remove_red_eye</mat-icon>
               Observaciones
             </button>
-            <button mat-menu-item (click)="consultDialog(item)">
+            <button mat-menu-item (click)="consultDialog(item)" *ngIf="item.internalStatus === 'processed'">
               <mat-icon>help</mat-icon>
               Consultar
             </button>
-            <button mat-menu-item (click)="responseDialog(item)">
+            <button mat-menu-item (click)="responseDialog(item)" *ngIf="item.internalStatus === 'consultation'">
               <mat-icon>question_answer</mat-icon>
               Responder
             </button>

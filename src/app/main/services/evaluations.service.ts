@@ -120,6 +120,7 @@ export class EvaluationsService {
     batch.delete(evaluationDocRef);
     return of(batch);
   }
+
   /**
    * update the passed evaluatiion based in his observation
    * @param {string} observation - update observation
@@ -139,6 +140,7 @@ export class EvaluationsService {
     batch.update(evaluationDocRef, newData);
     return of(batch);
   }
+
   /**
    * Delete the passed evaluatiion based in his workShop
    * @param {string} item - filter for workShop
@@ -149,6 +151,7 @@ export class EvaluationsService {
       ref => ref.where('workshop', '==', item.workshop))
       .valueChanges();
   }
+
   /**
    * Delete the passed evaluatiion based in his internalStatus
    * @param {string} state - filter for internalStatus
@@ -156,6 +159,15 @@ export class EvaluationsService {
   getAllEvaluationsByInternalStatus(state: string): Observable<Evaluation[]> {
     return this.afs.collection<Evaluation>(`/db/ferreyros/evaluations`,
       ref => ref.where('internalStatus', '==', state).orderBy('createdAt', 'desc'))
+      .valueChanges();
+  }
+
+  /**
+   * Get all evaluations in process and consultation state
+   */
+  getAllEvaluationsInProcess(): Observable<Evaluation[]> {
+    return this.afs.collection<Evaluation>(`/db/ferreyros/evaluations`,
+      ref => ref.where('internalStatus', 'in', ['processed', 'consultation']).orderBy('createdAt', 'desc'))
       .valueChanges();
   }
 
@@ -233,12 +245,18 @@ export class EvaluationsService {
     return await this.storage.storage.refFromURL(imagesObj).delete();
   }
 
-  saveInquery(form: EvaluationInquiry, user: User, id: string): Observable<firebase.default.firestore.WriteBatch> {
+  
+  saveInquiry(form: EvaluationInquiry, user: User, id: string): Observable<firebase.default.firestore.WriteBatch> {
+    // Create batch
     const batch = this.afs.firestore.batch();
-    console.log(id, form, user)
-    const evaluationDocRef = this.afs.firestore.collection(`db/ferreyros/evaluations/${id}/inquiries/`).doc();
+    // Create references
+    const inquiryDocRef = this.afs.firestore.collection(`db/ferreyros/evaluations/${id}/inquiries/`).doc();
+    const evaluationDocRef = this.afs.firestore.doc(`db/ferreyros/evaluations/${id}`);
+
+    // FIRST - Save inquiry in collection
+    // Constructing inquiry data
     const sendDataInquiry = {
-      id: evaluationDocRef.id,
+      id: inquiryDocRef.id,
       answer: null,
       inquiry: form.inquiry,
       answerImage: null,
@@ -248,12 +266,53 @@ export class EvaluationsService {
       answeredAt: null,
       answeredBy: null,
     };
-    batch.set(evaluationDocRef, sendDataInquiry);
+    // Set inquiry 
+    batch.set(inquiryDocRef, sendDataInquiry);
+
+
+    // SECOND - Update inquiries counter and internalStatus
+    // Update counter with atomic operation
+    batch.update(evaluationDocRef, {inquiriesCounter: firebase.default.firestore.FieldValue.increment(1), internalStatus: 'consultation'});
+
+    // Return batch
     return of(batch);
   }
 
-  getEvaluationInqueryById(id: string): Observable<EvaluationInquiry[]> {
-    return this.afs.collection<EvaluationInquiry>(`db/ferreyros/evaluations/${id}/inquiries/`, ref => ref.orderBy('createdAt', 'desc'))
+  saveAnswer(form: EvaluationInquiry, user: User, evaluationId: string, inquiryId: string): Observable<firebase.default.firestore.WriteBatch> {
+    // Create batch
+    const batch = this.afs.firestore.batch();
+    // Create references
+    const inquiryDocRef = this.afs.firestore.doc(`db/ferreyros/evaluations/${evaluationId}/inquiries/${inquiryId}`);
+    const evaluationDocRef = this.afs.firestore.doc(`db/ferreyros/evaluations/${evaluationId}`);
+
+    // FIRST - Update inquiry document
+    // Update inquiry 
+    batch.update(inquiryDocRef, {answer: form.answer, answerImage: form.answerImage, answerAt: new Date(), answerBy: user});
+
+
+    // SECOND - Update evaluation internalStatus
+    // Update evaluation
+    batch.update(evaluationDocRef, {internalStatus: 'processed'});
+
+    // Return batch
+    return of(batch);
+  }
+
+  /**
+   * Get all inquiries by evaluation's id reference
+   * @param {string} evaluationId - Evaluation ID
+   */
+  getEvaluationInquiriesById(evaluationId: string): Observable<EvaluationInquiry[]> {
+    return this.afs.collection<EvaluationInquiry>(`db/ferreyros/evaluations/${evaluationId}/inquiries/`, ref => ref.orderBy('createdAt', 'asc'))
+      .valueChanges();
+  }
+
+  /**
+   * Get evaluation by id reference
+   * @param {string} evaluationId - Evaluation ID
+   */
+  getEvaluationById(evaluationId: string): Observable<Evaluation> {
+    return this.afs.doc<Evaluation>(`db/ferreyros/evaluations/${evaluationId}`)
       .valueChanges();
   }
 
