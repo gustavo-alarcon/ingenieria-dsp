@@ -9,6 +9,7 @@
     border: 1px solid #333333;
     border-radius: 20px 20px 0px 0px;
     margin-top: 20px;
+    
     &__title {
         display: flex;
         align-items: stretch;
@@ -103,12 +104,13 @@
 }
 
 .cards-container {
-    //display: flex;
-    //justify-content: space-evenly;
+    display: flex;
+    justify-content: space-evenly;
     padding: 20px;
     background: #f0eded;
     display: grid;
     grid-column-gap: 5px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 
 }
