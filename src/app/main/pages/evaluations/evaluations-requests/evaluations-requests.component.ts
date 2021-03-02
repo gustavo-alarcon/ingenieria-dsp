@@ -74,15 +74,15 @@ export class EvaluationsRequestsComponent implements OnInit {
     ).pipe(
       map(([evaluations, workshop, name]) => {
 
-        const searchTerm = name.toLowerCase();
+        let searchTerm = name.toLowerCase();
         let preFilterSearch = [...evaluations];
 
         if (workshop.code) {
-          const preFilterWorkshop = evaluations.filter(evaluation => evaluation.workshop === workshop.code);
+          let preFilterWorkshop = evaluations.filter(evaluation => evaluation.workshop === workshop.code);
 
           preFilterSearch = preFilterWorkshop.filter(evaluation => {
-            return evaluation.otMain.toLowerCase().includes(searchTerm) ||
-            evaluation.otChild.toLowerCase().includes(searchTerm);
+            return evaluation.otMain.includes(searchTerm) ||
+            evaluation.otChild.includes(searchTerm);
           });
         } else {
           preFilterSearch = evaluations.filter(evaluation => {
@@ -120,6 +120,7 @@ export class EvaluationsRequestsComponent implements OnInit {
   settingDialog(): void {
     this.dialog.open(RequestsSettingDialogComponent, {
       width: '35%',
+      data: this.dataEvaluations,
     });
   }
 

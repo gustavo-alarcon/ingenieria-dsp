@@ -140,7 +140,6 @@ export class EvaluationsService {
    * @param {string} item - filter for workShop
    */
   getAllEvaluationsByTaller(item: Evaluation): Observable<Evaluation[]> {
-    console.log('workShop : ', item)
     return this.afs.collection<Evaluation>(`/db/ferreyros/evaluations`,
       ref => ref.where('workshop', '==', item.workshop))
       .valueChanges();
@@ -209,7 +208,6 @@ export class EvaluationsService {
       );
   }
 
-
   async updateImage(id: string, imagesObj): Promise<void> {
     return await this.afs.firestore.collection(`/db/ferreyros/evaluations`).doc(id)
       .set({ images: imagesObj }, { merge: true });
@@ -217,6 +215,25 @@ export class EvaluationsService {
 
   async deleteImage(imagesObj: string): Promise<any> {
     return await this.storage.storage.refFromURL(imagesObj).delete();
+  }
+
+  /**
+   * update the passed evaluatiion based in his registryTimer
+   * @param {string} state - update registryTimer
+   * @param {string} id - id data evaluations
+   */
+  addTimerInRequest(state: string, timer: number): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+
+    // create document reference in evaluation collection
+    const evaluationDocRef = this.afs.firestore.doc(`/db/ferreyros/evaluations`);
+    const newData = {
+      registryTimer: timer,
+    };
+
+    batch.update(evaluationDocRef, newData);
+    return of(batch);
   }
 
 }
