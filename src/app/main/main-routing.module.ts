@@ -38,6 +38,10 @@ const routes: Routes = [
         loadChildren: () => import('./pages/evaluations/evaluations.module').then(m => m.EvaluationsModule)
       },
       {
+        path: 'budgets-daily-entries',
+        loadChildren: () => import('./pages/budgets-daily-entries/budgets-daily-entries.module').then(m => m.BudgetsDailyEntriesModule)
+      },
+      {
         path: '**',
         component: NotFoundComponent
       }
