@@ -5,14 +5,16 @@ import { MatPaginator } from '@angular/material/paginator';
 import { HistoryCreateDialogComponent } from './dialogs/history-create-dialog/history-create-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Evaluation } from '../../../models/evaluations.model';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { EvaluationsService } from '../../../services/evaluations.service';
-import { tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, startWith, tap } from 'rxjs/operators';
 import { HistoryEditDialogComponent } from './dialogs/history-edit-dialog/history-edit-dialog.component';
 import { HistoryDeleteDialogComponent } from './dialogs/history-delete-dialog/history-delete-dialog.component';
 import { HistoryImageDialogComponent } from './dialogs/history-image-dialog/history-image-dialog.component';
 import { HistoryObservationDialogComponent } from './dialogs/history-observation-dialog/history-observation-dialog.component';
 import { HistoryUploadFileDialogComponent } from './dialogs/history-upload-file-dialog/history-upload-file-dialog.component';
+import { AuthService } from 'src/app/auth/services/auth.service';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-evaluations-history',
@@ -49,18 +51,64 @@ export class EvaluationsHistoryComponent implements OnInit {
     this.historyDataSource.paginator = paginator;
   }
 
-  constructor( public dialog: MatDialog,
-               private evaltService: EvaluationsService,
-    ) { }
+  statusControl = new FormControl('');
+  searchControl = new FormControl('');
+
+  statusList = [
+    { status: 'registered', name: 'Registrado' },
+    { status: 'processed', name: 'En proceso' },
+    { status: 'finalized', name: 'Finalizado' },
+    { status: 'consultation', name: 'Consulta' },
+  ]
+
+  constructor(
+    public dialog: MatDialog,
+    private evaltService: EvaluationsService,
+    public auth: AuthService
+  ) { }
 
   ngOnInit(): void {
-    this.evaluation$ = this.evaltService.getAllEvaluations().pipe(
+    this.evaluation$ = combineLatest(
+      this.evaltService.getAllEvaluations(),
+      this.statusControl.valueChanges.pipe(startWith('')),
+      this.searchControl.valueChanges.pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        startWith('')
+      )
+    ).pipe(
+      map(([evaluations, status, search]) => {
+        console.log(status);
+        console.log(search);
+        
+        let searchTerm = search.toLowerCase();
+
+        let preFilterStatus = [];
+        let preFilterSearch = [...evaluations];
+
+        if (status.length > 1) {
+          preFilterStatus = evaluations.filter(evaluation => evaluation.internalStatus === status);
+          preFilterSearch = preFilterStatus.filter(evaluation => {
+            return String(evaluation.otMain).includes(searchTerm) ||
+            String(evaluation.otChild).includes(searchTerm)
+          })
+        } else {
+          preFilterSearch = evaluations.filter(evaluation => {
+            return String(evaluation.otMain).includes(searchTerm) ||
+            String(evaluation.otChild).includes(searchTerm)
+          })
+        }
+
+        return preFilterSearch;
+      })
+    ).pipe(
       tap(res => {
         if (res) {
           this.historyDataSource.data = res;
         }
       })
-    );
+    )
+
   }
 
   openDialog(value: string, entry?: ImprovementEntry, index?: number): void {
@@ -75,7 +123,7 @@ export class EvaluationsHistoryComponent implements OnInit {
           optionsDialog,
         );
         dialogRef.afterClosed().subscribe(result => {
-           console.log(`Dialog result: ${result}`);
+          console.log(`Dialog result: ${result}`);
         });
         break;
       case 'edit':
@@ -115,12 +163,12 @@ export class EvaluationsHistoryComponent implements OnInit {
     }
   }
 
-  uploadFileDialog(): void{
+  uploadFileDialog(): void {
     this.dialog.open(HistoryUploadFileDialogComponent, {
       width: '100%',
     });
   }
 
-  showImprovementEntry(): void {}
+  showImprovementEntry(): void { }
 
 }

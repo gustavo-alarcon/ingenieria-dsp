@@ -91,9 +91,11 @@ export class EvaluationsProgressComponent implements OnInit, OnDestroy {
     });
   }
 
-  observationsDialog(): void {
+  observationsDialog(item: Evaluation): void {
     this.dialog.open(EvaluationsObservationsDialogComponent, {
       width: '35%',
+      height: '90%',
+      data: item
     });
   }
 
