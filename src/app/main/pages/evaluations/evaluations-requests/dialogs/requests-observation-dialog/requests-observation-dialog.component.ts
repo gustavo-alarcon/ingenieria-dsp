@@ -32,23 +32,6 @@ export class RequestsObservationDialogComponent implements OnInit {
       observation: ['', Validators.required],
     });
   }
-
-  /* async save(): Promise<void> {
-    try {
-      const observation = this.observationFormGroup.get('observation').value;
-      await this.evaltService.updateObservation(this.data , observation);
-      // tslint:disable-next-line: no-string-literal
-      this.dialogRef.close('result');
-
-      this.snackbar.open('✅ Se actualizo correctamente', 'Aceptar', {
-        duration: 6000
-      });
-    } catch (error) {
-      this.snackbar.open('✅ Error al actualizar', 'Aceptar', {
-        duration: 6000
-      });
-    }
-  } */
   save(): void {
     try {
       const observation = this.observationFormGroup.get('observation').value;
@@ -63,7 +46,6 @@ export class RequestsObservationDialogComponent implements OnInit {
             });
           });
         });
-      // tslint:disable-next-line: no-string-literal
     } catch (error) {
       this.snackbar.open('🚨 Error al actualizar', 'Aceptar', {
         duration: 6000,
