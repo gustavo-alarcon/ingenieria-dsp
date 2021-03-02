@@ -80,7 +80,7 @@ export class EvaluationsHistoryComponent implements OnInit {
       map(([evaluations, status, search]) => {
         console.log(status);
         console.log(search);
-        
+
         let searchTerm = search.toLowerCase();
 
         let preFilterStatus = [];
@@ -90,12 +90,12 @@ export class EvaluationsHistoryComponent implements OnInit {
           preFilterStatus = evaluations.filter(evaluation => evaluation.internalStatus === status);
           preFilterSearch = preFilterStatus.filter(evaluation => {
             return String(evaluation.otMain).includes(searchTerm) ||
-            String(evaluation.otChild).includes(searchTerm)
+              String(evaluation.otChild).includes(searchTerm)
           })
         } else {
           preFilterSearch = evaluations.filter(evaluation => {
             return String(evaluation.otMain).includes(searchTerm) ||
-            String(evaluation.otChild).includes(searchTerm)
+              String(evaluation.otChild).includes(searchTerm)
           })
         }
 
@@ -118,14 +118,6 @@ export class EvaluationsHistoryComponent implements OnInit {
     let dialogRef;
 
     switch (value) {
-      case 'create':
-        dialogRef = this.dialog.open(HistoryCreateDialogComponent,
-          optionsDialog,
-        );
-        dialogRef.afterClosed().subscribe(result => {
-          console.log(`Dialog result: ${result}`);
-        });
-        break;
       case 'edit':
         dialogRef = this.dialog.open(HistoryEditDialogComponent,
           optionsDialog,
@@ -151,7 +143,7 @@ export class EvaluationsHistoryComponent implements OnInit {
           console.log(`Dialog result: ${result}`);
         });
         break;
-      case 'oservation':
+      case 'observation':
         dialogRef = this.dialog.open(HistoryObservationDialogComponent,
           optionsDialog,
         );

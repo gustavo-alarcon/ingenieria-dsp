@@ -7,12 +7,12 @@
       </div>
       <span class="ms-fill"></span>
       
-      <!-- <div class="requests__title--select" >
-        <mat-form-field style="border: transparent;" >
+      <!-- <div class="requests__title--select" style="width: 300px">
+        <mat-form-field style="border: transparent;" style="width: 300px">
           <mat-select [formControl]="workshopControl" >
             <mat-option>Seleccione</mat-option>
-            <mat-option *ngFor="let item of tallerList$ | async" [value]="item">
-              {{item.workshop}}
+            <mat-option *ngFor="let item of workshops" [value]="item">
+              {{item.name}}
             </mat-option>
           </mat-select>
         </mat-form-field>

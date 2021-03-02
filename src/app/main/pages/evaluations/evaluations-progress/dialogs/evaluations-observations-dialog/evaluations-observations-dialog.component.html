@@ -58,7 +58,7 @@
 
                     <div class="container-panel__question-image">
                         <div class="container-panel__question-image--img">
-                            <img [src]="item.inquiryImage" alt="" style="width: 100%;">
+                            <img [src]="item.inquiryImage" alt="" style="height: 80px">
                         </div>
                         <div class="container-panel__question-image--question">
                             {{item.inquiry}}
@@ -76,10 +76,10 @@
 
                     <div class="container-panel__question-image">
                         <div class="container-panel__question-image--img">
-                            <img [src]="item.answerImage" alt="" style="width: 100%;">
+                            <img [src]="item.answerImage" alt="" style="height: 80px;">
                         </div>
                         <div class="container-panel__question-image--question">
-                            {{item.answer}}
+                            {{item.answer ? item.answer : 'Sin respuesta'}}
                         </div>
                     </div>
                     <mat-divider color="accent"></mat-divider>

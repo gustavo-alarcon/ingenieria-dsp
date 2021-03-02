@@ -1,10 +1,11 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { Evaluation } from '../../../../../models/evaluations.model';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { Evaluation, EvaluationInquiry } from '../../../../../models/evaluations.model';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { EvaluationsService } from '../../../../../services/evaluations.service';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-history-observation-dialog',
@@ -15,40 +16,25 @@ export class HistoryObservationDialogComponent implements OnInit {
 
   loading = new BehaviorSubject<boolean>(false);
   loading$ = this.loading.asObservable();
-  observationFormGroup: FormGroup;
+
+  inquiries$: Observable<EvaluationInquiry[]>;
+  images$: Observable<string[]>;
 
   constructor(
     private fb: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: Evaluation,
     public dialogRef: MatDialogRef<HistoryObservationDialogComponent>,
-    private snackbar: MatSnackBar,
-    private  evaltService: EvaluationsService,
+    private evalService: EvaluationsService
     ) { }
 
   ngOnInit(): void {
-    this.observationFormGroup = this.fb.group({
-      observation: ['', Validators.required],
-    });
+    this.inquiries$ = this.evalService.getEvaluationInquiriesById(this.data.id);
+    this.images$ = this.evalService.getEvaluationById(this.data.id)
+    .pipe(
+      map(res => {
+        return Object.values(res.images)
+      })
+    )
   }
-  save(): void {
-
-  }
-
-  /* async save(): Promise<void> {
-    try {
-      const observation = this.observationFormGroup.get('observation').value;
-      await this.evaltService.updateObservation(this.data , observation);
-      // tslint:disable-next-line: no-string-literal
-      this.dialogRef.close('result');
-
-      this.snackbar.open('✅ Se actualizo correctamente', 'Aceptar', {
-        duration: 6000
-      });
-    } catch (error) {
-      this.snackbar.open('✅ Error al actualizar', 'Aceptar', {
-        duration: 6000
-      });
-    }
-  } */
 
 }
