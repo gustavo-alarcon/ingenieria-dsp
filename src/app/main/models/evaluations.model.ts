@@ -1,4 +1,4 @@
-import { User } from "./user-model";
+import { User } from './user-model';
 
 /**
  * Firestore document
@@ -6,7 +6,7 @@ import { User } from "./user-model";
  */
 export interface Evaluation {
     id: string;
-    otMain: string; //Orden de trabajo
+    otMain: string; // Orden de trabajo
     otChild: string; // Segmento / Operación
     position: number; // Correlativo
     partNumber: string; // Nro de parte
@@ -41,7 +41,7 @@ export interface Evaluation {
 }
 
 export interface EvaluationRegistryForm {
-    otMain: string; //Orden de trabajo
+    otMain: string; // Orden de trabajo
     otChild: string; // Segmento / Operación
     position: number; // Correlativo
     partNumber: string; // Nro de parte
@@ -80,6 +80,16 @@ export interface EvaluationInquiry {
     answeredAt: Date;
     answeredBy: User;
 }
+
+// id: 'd9asd6759s5';
+// answer: null;
+// inquiry: 'Como debemos hacer el primer ensayo de materiales?';
+// answerImage: 'https://firebase.09ad9asdysa9da8dasdas.com';
+// inquiryImage: null;
+// createdAt: Fecha de creación;
+// createdBy: Usuario que consulto;
+// answeredAt: null;
+// answeredBy: null;
 
 /**
  * Firestore document

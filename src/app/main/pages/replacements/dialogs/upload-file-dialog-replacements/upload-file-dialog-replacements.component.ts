@@ -14,7 +14,7 @@ import * as XLSX from 'xlsx';
 @Component({
   selector: 'app-upload-file-dialog-replacements',
   templateUrl: './upload-file-dialog-replacements.component.html',
-  styleUrls: ['./upload-file-dialog-replacements.component.sass']
+  styleUrls: ['./upload-file-dialog-replacements.component.scss']
 })
 export class UploadFileDialogReplacementsComponent implements OnInit {
   loading = new BehaviorSubject<boolean>(false);

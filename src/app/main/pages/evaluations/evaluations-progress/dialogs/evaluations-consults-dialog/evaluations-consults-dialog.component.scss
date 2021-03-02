@@ -1,4 +1,4 @@
-.container-h2 {
+.container-inquery {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -43,29 +43,52 @@
     font-weight: 500;
     font-size: 18px;
     line-height: 30px;
-    display: flex;
-    align-items: center;
+    flex-direction: column;
     letter-spacing: 1.25px;
     text-transform: capitalize;
     color: #000000;
 }
 
-.item-consult{
+th,
+td {
+    padding: 0px 0px;
+}
+
+mat-card {
+    max-width: 100%;
+    max-height: auto;
+}
+
+img {
+    width: 100%;
+    height: 300px;
+}
+
+.pointer {
+    object-fit: contain;
+    cursor: pointer;
+}
+
+.item-consult {
+    width: 100%;
     margin-top: 20px;
+    &__question {
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 17.6591px;
+        line-height: 25px;
+        letter-spacing: 0.315341px;
+        color: rgba(0, 0, 0, 0.6);
+        height: auto;
+        word-wrap: break-word;
+        margin-top: 10px;
+        margin-left: 46px;
+    }
 }
 
 .form-inputs {
     margin-top: 10px;
     display: flex;
     flex-direction: column;
-}
-
-.card-img {
-    display: flex;
-    justify-content: space-evenly;
-    &__background {
-        width: 235px;
-        height: 166.18px;
-        background: url(../../../../../../../assets/img/camara.png);
-    }
 }

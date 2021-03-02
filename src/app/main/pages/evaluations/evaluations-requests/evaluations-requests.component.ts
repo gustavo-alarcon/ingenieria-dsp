@@ -6,22 +6,8 @@ import { RequestsStartDialogComponent } from './dialogs/requests-start-dialog/re
 import { RequestsTimeLineDialogComponent } from './dialogs/requests-time-line-dialog/requests-time-line-dialog.component';
 import { Evaluation } from '../../../models/evaluations.model';
 import { Observable, combineLatest, BehaviorSubject } from 'rxjs';
-import {
-  tap,
-  map,
-  startWith,
-  filter,
-  share,
-  debounce,
-  debounceTime,
-  switchMap,
-} from 'rxjs/operators';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { tap, map, startWith, filter, debounceTime } from 'rxjs/operators';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../../../auth/services/auth.service';
 import { EvaluationsService } from '../../../services/evaluations.service';
@@ -41,18 +27,33 @@ export class EvaluationsRequestsComponent implements OnInit {
   searchForm: FormGroup;
   state = 'registered';
 
-  tallerObservable$: Observable<[any, Evaluation[]]>;
+  tallerObservable$: Observable<[any, Evaluation[]]>
+  tallerSelected: boolean = false;
 
-  workshopControl: FormControl;
-  tallerList$: Observable<Evaluation[]>;
+  workshopControl = new FormControl(null);
+
+  workshops = [
+    { code: '201301412', name: 'GSP-LIM-DC-SERVICIO TALLER CRC', location: 'LIMA' },
+    { code: '201301409', name: 'GSP-LIMA-DA - SERVICIO TALLER DE MÁQUINA', location: 'LIMA' },
+    { code: '201301410', name: 'GSP-LIMA-DN -SERVICIO TALLER CARRILERIA', location: 'LIMA' },
+    { code: '201301413', name: 'GSP-LIMA-DR - SERVICIO TALLER RECUPERACI', location: 'LIMA' },
+    { code: '201301414', name: 'GSP-LIMA-DH - SERVICIO TALLER HIDRAULICO', location: 'LIMA' },
+    { code: '201301415', name: 'GSP-LIMA-DO - SERVICIO TALLER SOLDADURA', location: 'LIMA' },
+    { code: '201301411', name: 'GSP-LIMA-DE - LABORATORIO DE FLUÍDOS', location: 'LIMA' },
+    { code: '201306412', name: 'GSP-LA JOYA-DC - SERVICIO TALLER CRC', location: 'LA JOYA' },
+    { code: '201306413', name: 'GSP-LA JOYA-DR - SERVICIO TALLER RECUPER', location: 'LA JOYA' },
+    { code: '201306415', name: 'GSP-LA JOYA-DO - SERVICIO TALLER SOLDADU', location: 'LA JOYA' },
+    { code: '201306409', name: 'GSP-LA JOYA-DA - SERVICIO TALLER DE MÁQU', location: 'LA JOYA' },
+    { code: '201306411', name: 'GSP-LA JOYA-DE- LABORATORIO DE FLUÍDOS', location: 'LA JOYA' }
+  ]
 
   constructor(
     public dialog: MatDialog,
     private fb: FormBuilder,
     private snackbar: MatSnackBar,
     private auth: AuthService,
-    private evaltService: EvaluationsService
-  ) {}
+    private evaltService: EvaluationsService,
+  ) { }
 
   ngOnInit(): void {
     this.searchForm = this.fb.group({
@@ -62,7 +63,6 @@ export class EvaluationsRequestsComponent implements OnInit {
 
     this.evaluation$ = combineLatest(
       this.evaltService.getAllEvaluationsByInternalStatus(this.state),
-      this.workshopControl.valueChanges.pipe(startWith('')),
       this.searchForm.get('ot').valueChanges.pipe(
         debounceTime(300),
         filter(input => input !== null),
@@ -70,9 +70,10 @@ export class EvaluationsRequestsComponent implements OnInit {
         map(value => typeof value === 'string' ? value.toLowerCase() : value.internalStatus.toLowerCase()),
         tap(rs => {
           this.loading.next(true);
-        }))
+        })),
+      this.workshopControl.valueChanges.pipe(startWith(''))
     ).pipe(
-      map(([evaluations, workshop, name]) => {
+      map(([evaluations, name, workshop]) => {
 
         let searchTerm = name.toLowerCase();
         let preFilterSearch = [...evaluations];
@@ -86,9 +87,9 @@ export class EvaluationsRequestsComponent implements OnInit {
           });
         } else {
           preFilterSearch = evaluations.filter(evaluation => {
-            return evaluation.otMain.toLowerCase().includes(searchTerm) ||
-            evaluation.otChild.toLowerCase().includes(searchTerm);
-          });
+            return String(evaluation.otMain).toLowerCase().includes(searchTerm) ||
+            String(evaluation.otChild).toLowerCase().includes(searchTerm)
+          })
         }
 
         return preFilterSearch;
@@ -100,20 +101,6 @@ export class EvaluationsRequestsComponent implements OnInit {
         return this.dataEvaluations;
       })
     );
-
-    this.tallerList$ = this.evaltService.getAllEvaluationsByInternalStatus(
-      this.state
-    );
-    /* this.evaluation$ = this.evaltService.getAllEvaluationsByInternalStatus(this.state).pipe(
-      tap(res => {
-        console.log('res : ', res)
-        if (res) {
-          this.dataEvaluations = res;
-          this.counter = this.dataEvaluations.length;
-          this.loading.next(false);
-        }
-      })
-    ); */
 
   }
 
@@ -127,7 +114,7 @@ export class EvaluationsRequestsComponent implements OnInit {
   initDialog(item: Evaluation): void {
     this.dialog.open(RequestsStartDialogComponent, {
       width: '30%',
-      data: item,
+      data: item
     });
   }
   obsDialog(item): void {
@@ -139,7 +126,8 @@ export class EvaluationsRequestsComponent implements OnInit {
   timeline(item): void {
     this.dialog.open(RequestsTimeLineDialogComponent, {
       width: '90%',
-      data: item,
+      data: item
+
     });
   }
 }

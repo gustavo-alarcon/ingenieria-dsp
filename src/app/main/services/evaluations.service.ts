@@ -4,6 +4,9 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { User } from '../models/user-model';
 import { EvaluationRegistryForm, Evaluation, EvaluationInquiry, EvaluationFinishForm } from '../models/evaluations.model';
 import { AngularFireStorage } from '@angular/fire/storage';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { shareReplay, switchMap } from 'rxjs/operators';
+import * as firebase from 'firebase/app';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +16,7 @@ export class EvaluationsService {
   constructor(
     private afs: AngularFirestore,
     private storage: AngularFireStorage,
+    private afAuth: AngularFireAuth,
 
   ) { }
   /**
@@ -177,20 +181,30 @@ export class EvaluationsService {
    * @param {Improvement[]} list - List of evaluations uploaded by the user
    * @param {User} user - User's data in actual session
    */
-  addSettings(list: Evaluation[], user): Observable<firebase.default.firestore.WriteBatch> {
-    // create batch
-    const batch = this.afs.firestore.batch();
+  addSettings(list: Evaluation[]): Observable<firebase.default.firestore.WriteBatch[]> {
 
-    list.forEach(element => {
-      // create reference for document in improvements collection
-      const evaluationDocRef = this.afs.firestore.collection(`/db/ferreyros/evaluations`).doc();
-      // Structuring the data model
-      element.id = evaluationDocRef.id;
+    let batchCount = Math.ceil(list.length / 500);
+    let batchArray = [];
 
-      batch.set(evaluationDocRef, element);
-    });
+    for (let index = 0; index < batchCount; index++) {
+      // create batch
+      const batch = this.afs.firestore.batch();
+      let limit = 500 * (index + 1) > list.length ? list.length : 500 * (index + 1);
 
-    return of(batch);
+      for (let j = 500 * index; j < limit; j++) {
+        // create reference for document in improvements collection
+        const evaluationDocRef = this.afs.firestore.collection(`/db/ferreyros/evaluations`).doc();
+        // Structuring the data model
+        list[j].id = evaluationDocRef.id;
+
+        batch.set(evaluationDocRef, list[j]);
+      };
+
+      batchArray.push(batch)
+    }
+
+
+    return of(batchArray);
   }
 
 
@@ -217,6 +231,30 @@ export class EvaluationsService {
     return await this.storage.storage.refFromURL(imagesObj).delete();
   }
 
+  saveInquery(form: EvaluationInquiry, user: User, id: string): Observable<firebase.default.firestore.WriteBatch> {
+    const batch = this.afs.firestore.batch();
+    console.log(id, form, user)
+    const evaluationDocRef = this.afs.firestore.collection(`db/ferreyros/evaluations/${id}/inquiries/`).doc();
+    const sendDataInquiry = {
+      id: evaluationDocRef.id,
+      answer: null,
+      inquiry: form.inquiry,
+      answerImage: null,
+      inquiryImage: form.inquiryImage,
+      createdAt: new Date(),
+      createdBy: user,
+      answeredAt: null,
+      answeredBy: null,
+    };
+    batch.set(evaluationDocRef, sendDataInquiry);
+    return of(batch);
+  }
+
+  getEvaluationInqueryById(id: string): Observable<EvaluationInquiry[]> {
+    return this.afs.collection<EvaluationInquiry>(`db/ferreyros/evaluations/${id}/inquiries/`, ref => ref.orderBy('createdAt', 'desc'))
+      .valueChanges();
+  }
+
   /**
    * update the passed evaluatiion based in his registryTimer
    * @param {string} state - update registryTimer
@@ -237,3 +275,20 @@ export class EvaluationsService {
   }
 
 }
+
+
+/*
+// Example on callable functions
+import { AngularFireFunctions } from '@angular/fire/functions';
+
+data$: Observable<any>;
+constructor(private fns: AngularFireFunctions) {
+
+    const callable = fns.httpsCallable('sendMail');
+    this.data$ = callable({ name: 'Miguel' });
+    this.data$.subscribe(val => {
+      console.log(val);
+    });
+
+  }
+*/

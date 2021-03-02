@@ -15,11 +15,13 @@ import { LazyLoadImageModule } from 'ng-lazyload-image';
 
 import { environment } from '../environments/environment';
 import { NotFoundComponent } from './shared/not-found/not-found.component';
+import { LandingComponent } from './shared/landing/landing.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    LandingComponent
   ],
   imports: [
     BrowserModule,

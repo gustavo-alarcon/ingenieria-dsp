@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { LandingComponent } from '../shared/landing/landing.component';
 import { NotFoundComponent } from '../shared/not-found/not-found.component';
 import { MainComponent } from './main/main.component';
 
@@ -10,7 +11,7 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        loadChildren: () => import('./pages/improvements/improvements.module').then(m => m.ImprovementsModule)
+        component: LandingComponent
       },
       {
         path: 'improvements',
