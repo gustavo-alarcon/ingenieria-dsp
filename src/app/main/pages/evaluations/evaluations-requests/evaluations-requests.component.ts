@@ -22,6 +22,7 @@ export class EvaluationsRequestsComponent implements OnInit {
   loading$ = this.loading.asObservable();
 
   evaluation$: Observable<Evaluation[]>;
+  tallerList$: Observable<Evaluation[]>;
   dataEvaluations: Evaluation[] = [];
   counter: number;
   searchForm: FormGroup;
@@ -45,7 +46,7 @@ export class EvaluationsRequestsComponent implements OnInit {
     { code: '201306415', name: 'GSP-LA JOYA-DO - SERVICIO TALLER SOLDADU', location: 'LA JOYA' },
     { code: '201306409', name: 'GSP-LA JOYA-DA - SERVICIO TALLER DE MÁQU', location: 'LA JOYA' },
     { code: '201306411', name: 'GSP-LA JOYA-DE- LABORATORIO DE FLUÍDOS', location: 'LA JOYA' }
-  ]
+  ];
 
   constructor(
     public dialog: MatDialog,
@@ -61,6 +62,10 @@ export class EvaluationsRequestsComponent implements OnInit {
     });
     this.workshopControl = this.fb.control('', Validators.required);
 
+    this.tallerList$ = this.evaltService.getAllEvaluationsByInternalStatus(
+      this.state
+    );
+
     this.evaluation$ = combineLatest(
       this.evaltService.getAllEvaluationsByInternalStatus(this.state),
       this.searchForm.get('ot').valueChanges.pipe(
@@ -75,11 +80,11 @@ export class EvaluationsRequestsComponent implements OnInit {
     ).pipe(
       map(([evaluations, name, workshop]) => {
 
-        let searchTerm = name.toLowerCase();
+        const searchTerm = name.toLowerCase();
         let preFilterSearch = [...evaluations];
 
         if (workshop.code) {
-          let preFilterWorkshop = evaluations.filter(evaluation => evaluation.workshop === workshop.code);
+          const preFilterWorkshop = evaluations.filter(evaluation => evaluation.workshop === workshop.code);
 
           preFilterSearch = preFilterWorkshop.filter(evaluation => {
             return evaluation.otMain.includes(searchTerm) ||
