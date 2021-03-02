@@ -52,6 +52,15 @@
         <span *ngIf="tallerForm.errors?.invalid">Dato inválido. Complete con alguna opción válida.</span>
       </mat-error>
     </mat-form-field> -->
+      <div class="requests__title--search mat-elevation-z4">
+        <mat-form-field>
+          <mat-select [formControl]="workshopControl" appearence="outline">
+            <mat-option value="">-Todos-</mat-option>
+            <mat-option *ngFor="let item of workshops" [value]="item">{{item.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
 
       <div class="requests__title--search mat-elevation-z4">
         <button mat-button class="requests__title--button">

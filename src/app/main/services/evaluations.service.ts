@@ -168,20 +168,30 @@ export class EvaluationsService {
    * @param {Improvement[]} list - List of evaluations uploaded by the user
    * @param {User} user - User's data in actual session
    */
-  addSettings(list: Evaluation[], user): Observable<firebase.default.firestore.WriteBatch> {
-    // create batch
-    const batch = this.afs.firestore.batch();
+  addSettings(list: Evaluation[]): Observable<firebase.default.firestore.WriteBatch[]> {
 
-    list.forEach(element => {
-      // create reference for document in improvements collection
-      const evaluationDocRef = this.afs.firestore.collection(`/db/ferreyros/evaluations`).doc();
-      // Structuring the data model
-      element.id = evaluationDocRef.id;
+    let batchCount = Math.ceil(list.length / 500);
+    let batchArray = [];
 
-      batch.set(evaluationDocRef, element);
-    });
+    for (let index = 0; index < batchCount; index++) {
+      // create batch
+      const batch = this.afs.firestore.batch();
+      let limit = 500 * (index + 1) > list.length ? list.length : 500 * (index + 1);
 
-    return of(batch);
+      for (let j = 500 * index; j < limit; j++) {
+        // create reference for document in improvements collection
+        const evaluationDocRef = this.afs.firestore.collection(`/db/ferreyros/evaluations`).doc();
+        // Structuring the data model
+        list[j].id = evaluationDocRef.id;
+
+        batch.set(evaluationDocRef, list[j]);
+      };
+
+      batchArray.push(batch)
+    }
+
+
+    return of(batchArray);
   }
 
 

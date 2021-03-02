@@ -26,7 +26,7 @@ export class EvaluationsComponent implements OnInit {
         link: './progress',
         index: 1
       }, {
-        label: 'HISTORIAL',
+        label: 'RESULTADOS',
         link: './history',
         index: 2
       }, {
