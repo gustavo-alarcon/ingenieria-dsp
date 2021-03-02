@@ -6,24 +6,8 @@ import { RequestsStartDialogComponent } from './dialogs/requests-start-dialog/re
 import { RequestsTimeLineDialogComponent } from './dialogs/requests-time-line-dialog/requests-time-line-dialog.component';
 import { Evaluation } from '../../../models/evaluations.model';
 import { Observable, combineLatest, BehaviorSubject } from 'rxjs';
-import {
-  tap,
-  map,
-  startWith,
-  filter,
-  share,
-  debounce,
-  debounceTime,
-  switchMap,
-} from 'rxjs/operators';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
-import { tap, map, startWith, filter, share, debounce, debounceTime } from 'rxjs/operators';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { tap, map, startWith, filter, debounceTime } from 'rxjs/operators';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../../../auth/services/auth.service';
 import { EvaluationsService } from '../../../services/evaluations.service';
@@ -116,7 +100,7 @@ export class EvaluationsRequestsComponent implements OnInit {
         this.loading.next(false);
         return this.dataEvaluations;
       })
-    ); */
+    );
 
   }
 
