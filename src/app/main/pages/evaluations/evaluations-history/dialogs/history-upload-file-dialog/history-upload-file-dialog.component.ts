@@ -18,6 +18,9 @@ import { AuthService } from '../../../../../../auth/services/auth.service';
 export class HistoryUploadFileDialogComponent implements OnInit {
   loading = new BehaviorSubject<boolean>(false);
   loading$ = this.loading.asObservable();
+
+  uploading = 0;
+
   evaluation$: Observable<Evaluation[]>;
   selected: any;
 
@@ -56,15 +59,15 @@ export class HistoryUploadFileDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<HistoryUploadFileDialogComponent>,
     private snackbar: MatSnackBar,
-    private auth: AuthService,
     private evaltService: EvaluationsService
-    ) { }
+  ) { }
 
   ngOnInit(): void {
   }
 
   onFileSelected(event): void {
     this.loading.next(true);
+    this.uploading = 0;
 
     if (event.target.files && event.target.files[0]) {
       const name = event.target.files[0].name
@@ -82,24 +85,29 @@ export class HistoryUploadFileDialogComponent implements OnInit {
         /* save data */
         this.selected = XLSX.utils.sheet_to_json(ws, { header: 1 });
 
-        this.upLoadXlsToTable(this.selected, name.split(".")[0])
-        // this.upLoadXlsToTableUpload(this.selected, name.split(".")[0])
+        this.upLoadXlsToTable(this.selected);
       };
       reader.readAsBinaryString(event.target.files[0]);
     }
   }
 
-  upLoadXlsToTable(xlsx, name): void {
+  upLoadXlsToTable(xlsx): void {
     const xlsxData = [];
-    //delete Row first 
+    let buffer = 0;
+
     xlsx.shift();
     if (xlsx.length > 0) {
       xlsx.forEach(el => {
+        buffer++;
+        this.uploading = buffer/xlsx.length;
 
         let internal_status = 'registered';
+
         if (el[17]) {
           internal_status = 'processed';
-        } else if (el[18]) {
+        }
+
+        if (el[18]) {
           internal_status = 'finalized';
         }
 
@@ -107,9 +115,9 @@ export class HistoryUploadFileDialogComponent implements OnInit {
         let procDate;
         let finDate;
 
-        if (el[10]) { regDate = this.formatDate(''+el[10])};
-        if (el[17]) { procDate = this.formatDate(''+el[17])};
-        if (el[18]) { finDate = this.formatDate(''+el[18])};
+        if (el[10]) { regDate = this.formatDate('' + el[10]) };
+        if (el[17]) { procDate = this.formatDate('' + el[17]) };
+        if (el[18]) { finDate = this.formatDate('' + el[18]) };
 
         const data =
         {
@@ -125,15 +133,15 @@ export class HistoryUploadFileDialogComponent implements OnInit {
           createdBy: el[7] ? el[7] : null,
           wof: el[8] ? el[8] : null,
           task: el[9] ? el[9] : null,
-          createdAt: regDate ? new Date(regDate['Y'],regDate['M'],regDate['D'],regDate['h'],regDate['m'],regDate['s']) : null,
+          createdAt: regDate ? new Date(regDate['Y'], regDate['M'], regDate['D'], regDate['h'], regDate['m'], regDate['s']) : null,
           observations: el[11] ? el[11] : null,
           workshop: el[12],
           result: el[13] ? el[13] : null,
           comments: el[14] ? el[14] : null,
           kindOfTest: el[15] ? el[15] : null,
           finalizedBy: el[16] ? el[16] : null,
-          processAt: procDate ? new Date(procDate['Y'],procDate['M'],procDate['D'],procDate['h'],procDate['m'],procDate['s']) : null,
-          finalizedAt: finDate ? new Date(finDate['Y'],finDate['M'],finDate['D'],finDate['h'],finDate['m'],finDate['s']) : null,
+          processAt: procDate ? new Date(procDate['Y'], procDate['M'], procDate['D'], procDate['h'], procDate['m'], procDate['s']) : null,
+          finalizedAt: finDate ? new Date(finDate['Y'], finDate['M'], finDate['D'], finDate['h'], finDate['m'], finDate['s']) : null,
           images: [],
           imagesCounter: 0,
           inquiries: [],
@@ -150,7 +158,7 @@ export class HistoryUploadFileDialogComponent implements OnInit {
       });
 
       this.currentData = xlsxData;
-      
+
       this.settingDataSource.data = this.currentData;
 
       this.fileButton.nativeElement.value = null;
@@ -162,19 +170,23 @@ export class HistoryUploadFileDialogComponent implements OnInit {
     }
   }
 
-  formatDate(excelDate: string): {'D': number, 'M': number, 'Y': number, 'h': number, 'm': number, 's': number} {
-    let entry = excelDate.split(" ");
+  formatDate(excelDate: string): { 'D': number, 'M': number, 'Y': number, 'h': number, 'm': number, 's': number } {
+    let singleSpaces = excelDate.replace(/  +/g, ' ');
+    let entry = singleSpaces.split(" ");
+
     let date = entry[0];
     let time = entry[1];
+    let timeFrame = entry[2];
     let dateAray = date.split('.');
     let timeArray = time.split(':');
+
     let day = parseInt(dateAray[0]);
     let month = parseInt(dateAray[1]) - 1;
     let year = parseInt(dateAray[2]);
-    let hours = parseInt(timeArray[0]);
+    let hours = timeFrame === 'PM' ? (parseInt(timeArray[0]) + 12) : parseInt(timeArray[0]);
     let minutes = parseInt(timeArray[1]);
     let seconds = parseInt(timeArray[2]);
-    return {'D': day, 'M': month, 'Y': year, 'h': hours, 'm': minutes, 's': seconds}
+    return { 'D': day, 'M': month, 'Y': year, 'h': hours, 'm': minutes, 's': seconds }
   }
 
   clearDataTable() {
@@ -186,30 +198,28 @@ export class HistoryUploadFileDialogComponent implements OnInit {
     console.log('this.currentDataUpload : ', this.currentData)
     this.loading.next(true);
 
-    this.auth.user$.pipe(
-      take(1),
-      switchMap(user => {
-        return this.evaltService.addSettings(this.currentData, user);
-      })
-    ).subscribe(batch => {
-      if (batch) {
-        batch.commit()
-          .then(() => {
-            this.loading.next(false);
-            this.snackbar.open('✅ Archivo subido correctamente!', 'Aceptar', {
-              duration: 6000
-            });
-            this.settingDataSource.data = [];
-            this.dialogRef.close();
+    this.evaltService.addSettings(this.currentData)
+      .subscribe(batchArray => {
+        if (batchArray.length > 0) {
+          batchArray.forEach(batch => {
+            batch.commit()
+              .then(() => {
+                this.loading.next(false);
+                this.snackbar.open('✅ Archivo subido correctamente!', 'Aceptar', {
+                  duration: 6000
+                });
+                this.settingDataSource.data = [];
+                this.dialogRef.close();
+              })
+              .catch(err => {
+                this.loading.next(false);
+                this.snackbar.open('🚨 Hubo un error subiendo el archivo.', 'Aceptar', {
+                  duration: 6000
+                })
+              })
           })
-          .catch(err => {
-            this.loading.next(false);
-            this.snackbar.open('🚨 Hubo un error subiendo el archivo.', 'Aceptar', {
-              duration: 6000
-            })
-          })
-      }
-    });
+        }
+      });
 
   }
 

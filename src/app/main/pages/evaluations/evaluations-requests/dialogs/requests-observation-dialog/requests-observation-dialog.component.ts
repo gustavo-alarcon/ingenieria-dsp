@@ -11,7 +11,7 @@ import { take } from 'rxjs/operators';
 @Component({
   selector: 'app-requests-observation-dialog',
   templateUrl: './requests-observation-dialog.component.html',
-  styleUrls: ['./requests-observation-dialog.component.sass']
+  styleUrls: ['./requests-observation-dialog.component.scss']
 })
 export class RequestsObservationDialogComponent implements OnInit {
   

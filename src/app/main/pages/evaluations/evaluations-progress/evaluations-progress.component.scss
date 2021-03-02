@@ -95,7 +95,7 @@
     background: #f0eded;
     display: grid;
     grid-column-gap: 5px;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 
 }
 
