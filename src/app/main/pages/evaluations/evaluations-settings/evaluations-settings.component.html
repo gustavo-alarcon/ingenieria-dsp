@@ -1,21 +1,82 @@
 <div class="container-settings">
     <mat-accordion>
-        <mat-expansion-panel>
-            <mat-expansion-panel-header>
-                <mat-panel-title>
+        <mat-expansion-panel class="container-settings__color-expantion">
+            <mat-expansion-panel-header style="height: 58px;">
+                <mat-panel-title class="container-settings__header-title">
                     Envío de Notificaciones
                 </mat-panel-title>
             </mat-expansion-panel-header>
+            <mat-card class="mat-elevation-z0">
+                <mat-card-header>
+                    <mat-card-title>
+                        <span>
+                            Lista de correos
+                        </span>
+                        <button type="file" aria-label="add" mat-button class="container-settings__btn-add">
+                            <mat-icon aria-label="agregar" class="icon-add">add</mat-icon>
+                            SUBIR ARCHIVO
+                        </button>
+                        <button type="file" aria-label="add" mat-button class="container-settings__btn-save">
+                            GUARDAR
+                        </button>
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <!-- <div class="container-settings__filter">
+                        <mat-form-field>
+                            <mat-label>Filter</mat-label>
+                            <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
+                        </mat-form-field>
+                    </div> -->
+                    <div class="container-expansion">
+                        <table mat-table [dataSource]="dataSource" matSort>
+
+                            <!-- ID Column -->
+                            <ng-container matColumnDef="id">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+                                <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+                            </ng-container>
+
+                            <!-- Progress Column -->
+                            <ng-container matColumnDef="progress">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Progress </th>
+                                <td mat-cell *matCellDef="let row"> {{row.progress}}% </td>
+                            </ng-container>
+
+                            <!-- Name Column -->
+                            <ng-container matColumnDef="name">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+                                <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+                            </ng-container>
+
+                            <!-- Color Column -->
+                            <ng-container matColumnDef="color">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Color </th>
+                                <td mat-cell *matCellDef="let row" [style.color]="row.color"> {{row.color}} </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                            <tr class="mat-row" *matNoDataRow>
+                                <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+                            </tr>
+                        </table>
+                        <div style="margin-top: 10px;"></div>
+
+                        <mat-paginator [pageSizeOptions]="[5,10,15]"></mat-paginator>
+                    </div>
+                </mat-card-content>
+            </mat-card>
         </mat-expansion-panel>
-    </mat-accordion>
-    <div style="margin-top: 30px;"></div>
-    <mat-accordion>
-        <mat-expansion-panel>
-            <mat-expansion-panel-header>
-                <mat-panel-title>
+        <div style="margin-top: 30px;"></div>
+        <mat-expansion-panel class="container-settings__color-expantion" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+            <mat-expansion-panel-header style="height: 58px;">
+                <mat-panel-title class="container-settings__header-title">
                     Lista desplegables
                 </mat-panel-title>
             </mat-expansion-panel-header>
+            <div style="border: 10px;"></div>
         </mat-expansion-panel>
     </mat-accordion>
 </div>
