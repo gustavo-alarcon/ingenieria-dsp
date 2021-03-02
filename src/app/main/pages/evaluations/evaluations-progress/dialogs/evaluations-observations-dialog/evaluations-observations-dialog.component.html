@@ -1,113 +1,117 @@
-<div mat-dialog-title class="header">
-    <mat-icon class="header__icon">remove_red_eye</mat-icon>
-    <h3 class="header__title">
-        Observaciones
-    </h3>
-    <span class="ms-fill"></span>
-    <button mat-icon-button mat-dialog-close>
-        <mat-icon class="header__icon">close</mat-icon>
-    </button>
+<div style="max-width: 500px; width: 100%">
+
+    <div mat-dialog-title class="header">
+        <mat-icon class="header__icon">remove_red_eye</mat-icon>
+        <h3 class="header__title">
+            Observaciones
+        </h3>
+        <span class="ms-fill"></span>
+        <button mat-icon-button mat-dialog-close>
+            <mat-icon class="header__icon">close</mat-icon>
+        </button>
+    </div>
+    <mat-divider style="margin-top: 20px;"></mat-divider>
+    <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+
+    <mat-dialog-content class="mat-typography">
+        <p><span style="font-weight: bold;"> OT MAIN :</span> {{data.otMain ? data.otMain : ''}}</p>
+        <p><span style="font-weight: bold;"> OT CHILD :</span> {{data.otChild ? data.otChild : ''}}</p>
+        <p><span style="font-weight: bold;"> Correlativo :</span> {{data.position ? data.position : ''}}</p>
+        <p><span style="font-weight: bold;"> N° de parte :</span> {{data.partNumber ? data.partNumber : ''}}</p>
+        <p><span style="font-weight: bold;"> Descripcion :</span> {{data.description ? data.description : ''}}</p>
+        <p><span style="font-weight: bold;"> Tipo de Atencion :</span> {{data.status ? data.status : ''}}</p>
+        <p><span style="font-weight: bold;"> Usuario :</span> {{data.createdBy.name ? data.createdBy.name :
+            data.createdBy}}
+        </p>
+        <p><span style="font-weight: bold;"> WOF (Orden de Fabricacion) :</span> {{data.wof ? data.wof : ''}}</p>
+        <p><span style="font-weight: bold;"> Trabajo :</span> {{data.task ? data.task : ''}}</p>
+        <p><span style="font-weight: bold;"> Observaciones :</span> {{data.observations ? data.observations : ''}}</p>
+        <mat-divider style="margin: 16px 0px"></mat-divider>
+        <p><span style="font-weight: bold;"> Resultados :</span> {{data.result ? data.result : ''}}</p>
+        <p><span style="font-weight: bold;"> Tipo de ensayo :</span> {{data.kindOfTest ? data.kindOfTest : ''}}</p>
+        <p><span style="font-weight: bold;"> Inspector :</span> {{data.finalizedBy ? data.finalizedBy : ''}}</p>
+        <div style="margin-top: 30px;"></div>
+        <mat-accordion>
+            <mat-expansion-panel class="container-panel" *ngIf="inquiries$ | async as inquiries">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <div class="container-panel__number--panel">
+                            1
+                        </div>
+                    </mat-panel-title>
+                    <mat-panel-description>
+                        <span class="container-panel__description">
+                            Preguntas
+                        </span>
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+                <div *ngFor="let item of inquiries; index as i">
+                    <div class="item-consult">
+                        <button mat-icon-button>
+                            <mat-icon>help_center</mat-icon>
+                            <span style="margin-left: 20px;">
+                                Consulta {{i+1}}
+                            </span>
+                        </button>
+                    </div>
+                    <div style="margin-top: 10px;"></div>
+
+                    <div class="container-panel__question-image">
+                        <div class="container-panel__question-image--img">
+                            <img [src]="item.inquiryImage" alt="" style="width: 100%;">
+                        </div>
+                        <div class="container-panel__question-image--question">
+                            {{item.inquiry}}
+                        </div>
+                    </div>
+                    <div class="item-consult">
+                        <button mat-icon-button>
+                            <mat-icon>help_center</mat-icon>
+                            <span style="margin-left: 20px;">
+                                Respuesta {{i+1}}
+                            </span>
+                        </button>
+                    </div>
+                    <div style="margin-top: 10px;"></div>
+
+                    <div class="container-panel__question-image">
+                        <div class="container-panel__question-image--img">
+                            <img [src]="item.answerImage" alt="" style="width: 100%;">
+                        </div>
+                        <div class="container-panel__question-image--question">
+                            {{item.answer}}
+                        </div>
+                    </div>
+                    <mat-divider color="accent"></mat-divider>
+                </div>
+            </mat-expansion-panel>
+        </mat-accordion>
+        <div style="margin-top: 30px;"></div>
+        <mat-accordion>
+            <mat-expansion-panel class="container-panel">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <div class="container-panel__number--panel">
+                            2
+                        </div>
+                    </mat-panel-title>
+                    <mat-panel-description>
+                        <span class="container-panel__description">
+                            Imágenes
+                        </span>
+                    </mat-panel-description>
+                </mat-expansion-panel-header>
+                <div class="container-panel__image" *ngIf="images$ | async as images">
+
+                    <mat-card class="mat-elevation-z0" *ngFor="let item of images; index as i">
+                        <img [src]="item" alt="" style="width: 100%">
+                    </mat-card>
+                </div>
+            </mat-expansion-panel>
+        </mat-accordion>
+        <div style="margin-top: 30px;"></div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close>CERRAR</button>
+    </mat-dialog-actions>
 </div>
-<mat-divider style="margin-top: 20px;"></mat-divider>
-<mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
-
-<mat-dialog-content class="mat-typography">
-    <p><span style="font-weight: bold;"> OT MAIN :</span> {{data.otMain ? data.otMain : ''}}</p>
-    <p><span style="font-weight: bold;"> OT CHILD :</span> {{data.otChild ? data.otChild : ''}}</p>
-    <p><span style="font-weight: bold;"> Correlativo :</span> {{data.position ? data.position : ''}}</p>
-    <p><span style="font-weight: bold;"> N° de parte :</span> {{data.partNumber ? data.partNumber : ''}}</p>
-    <p><span style="font-weight: bold;"> Descripcion :</span> {{data.description ? data.description : ''}}</p>
-    <p><span style="font-weight: bold;"> Tipo de Atencion :</span> {{data.status ? data.status : ''}}</p>
-    <p><span style="font-weight: bold;"> Usuario :</span> {{data.createdBy ? data.createdBy : ''}} </p>
-    <p><span style="font-weight: bold;"> WOF (Orden de Fabricacion) :</span> {{data.wof ? data.wof : ''}}</p>
-    <p><span style="font-weight: bold;"> Trabajo :</span> {{data.task ? data.task : ''}}</p>
-    <p><span style="font-weight: bold;"> Observaciones :</span> {{data.observations ? data.observations : ''}}</p>
-    <mat-divider style="margin: 16px 0px"></mat-divider>
-    <p><span style="font-weight: bold;"> Resultados :</span> {{data.result ? data.result : ''}}</p>
-    <p><span style="font-weight: bold;"> Tipo de ensayo :</span> {{data.kindOfTest ? data.kindOfTest : ''}}</p>
-    <p><span style="font-weight: bold;"> Inspector :</span> {{data.finalizedBy ? data.finalizedBy : ''}}</p>
-    <div style="margin-top: 30px;"></div>
-    <mat-accordion>
-        <mat-expansion-panel class="container-panel">
-            <mat-expansion-panel-header>
-                <mat-panel-title>
-                    <div class="container-panel__number--panel">
-                        1
-                    </div>
-                </mat-panel-title>
-                <mat-panel-description>
-                    <span class="container-panel__description">
-                        Preguntas
-                    </span>
-                </mat-panel-description>
-            </mat-expansion-panel-header>
-            <div class="item-consult">
-                <button mat-icon-button>
-                    <mat-icon>help_center</mat-icon>
-                    <span style="margin-left: 20px;">
-                        Consulta 1
-                    </span>
-                </button>
-            </div>
-            <div style="margin-top: 10px;"></div>
-
-            <div class="container-panel__question-image">
-                <div class="container-panel__question-image--img">
-                    <img src="../../../../../../../assets/img/default.png" alt="" style="width: 100%;">
-                </div>
-                <div class="container-panel__question-image--question">
-                    ¿Como debo realizar el primer ensayo de material?
-                </div>
-
-            </div>
-            <div class="item-consult">
-                <button mat-icon-button>
-                    <mat-icon>help_center</mat-icon>
-                    <span style="margin-left: 20px;">
-                        Respuesta 1
-                    </span>
-                </button>
-            </div>
-            <div style="margin-top: 10px;"></div>
-
-            <div class="container-panel__question-image">
-                <div class="container-panel__question-image--img">
-                    <img src="../../../../../../../assets/img/default.png" alt="" style="width: 100%;">
-                </div>
-                <div class="container-panel__question-image--question">
-                    ¿Como debo realizar el primer ensayo de material?
-                </div>
-
-            </div>
-        </mat-expansion-panel>
-    </mat-accordion>
-    <div style="margin-top: 30px;"></div>
-    <mat-accordion>
-        <mat-expansion-panel class="container-panel">
-            <mat-expansion-panel-header>
-                <mat-panel-title>
-                    <div class="container-panel__number--panel">
-                        2
-                    </div>
-                </mat-panel-title>
-                <mat-panel-description>
-                    <span class="container-panel__description">
-                        Imágenes
-                    </span>
-                </mat-panel-description>
-            </mat-expansion-panel-header>
-            <div class="container-panel__image">
-                <mat-card class="mat-elevation-z0">
-                    <img src="../../../../../../../assets/img/default.png" alt="">
-                </mat-card>
-                <mat-card class="mat-elevation-z0">
-                    <img src="../../../../../../../assets/img/default.png" alt="">
-                </mat-card>
-            </div>
-        </mat-expansion-panel>
-    </mat-accordion>
-    <div style="margin-top: 30px;"></div>
-</mat-dialog-content>
-<mat-dialog-actions align="end">
-    <button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close>CERRAR</button>
-</mat-dialog-actions>

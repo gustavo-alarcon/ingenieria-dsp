@@ -34,7 +34,7 @@ export class EvaluationsProgressComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.subcription.add(
-      this.evaluationServices.getAllEvaluationsByInternalStatus(this.state).subscribe((resp) => {
+      this.evaluationServices.getAllEvaluationsInProcess().subscribe((resp) => {
         this.evaluations = resp;
         this.loading.next(false);
       })
@@ -43,13 +43,11 @@ export class EvaluationsProgressComponent implements OnInit, OnDestroy {
 
   settingDialog(): void {
     this.dialog.open(EvaluationsSettingsDialogComponent, {
-      width: '35%',
     });
   }
 
   finalizeDialog(item: Evaluation): void {
     const dialogRef = this.dialog.open(EvaluationsFinalizeDialogComponent, {
-      width: '35%',
       data: item
     });
 
@@ -60,7 +58,6 @@ export class EvaluationsProgressComponent implements OnInit, OnDestroy {
 
   imagesDialog(item: Evaluation): void {
     const dialogRef = this.dialog.open(EvaluationsImagesDialogComponent, {
-      width: '35%',
       data: item
     });
 
@@ -71,7 +68,6 @@ export class EvaluationsProgressComponent implements OnInit, OnDestroy {
 
   consultDialog(item: Evaluation): void {
     const dialogRef = this.dialog.open(EvaluationsConsultsDialogComponent, {
-      width: '35%',
       data: item
     });
 
@@ -82,7 +78,6 @@ export class EvaluationsProgressComponent implements OnInit, OnDestroy {
 
   responseDialog(item: Evaluation): void {
     const dialogRef = this.dialog.open(EvaluationsResponseDialogComponent, {
-      width: '35%',
       data: item
     });
 
@@ -93,8 +88,6 @@ export class EvaluationsProgressComponent implements OnInit, OnDestroy {
 
   observationsDialog(item: Evaluation): void {
     this.dialog.open(EvaluationsObservationsDialogComponent, {
-      width: '35%',
-      height: '90%',
       data: item
     });
   }

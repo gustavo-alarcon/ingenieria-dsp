@@ -93,8 +93,12 @@ export class EvaluationsImagesDialogComponent implements OnInit, OnDestroy {
       return;
     }
     this.loading.next(true);
+    this.snackBar.open('🗜️ Comprimiendo', 'Aceptar', {
+      duration: 3000
+    });
+
     const file = event.target.files[0];
-    this.subscription.add(this.ng2ImgMax.resize([file], 800, 1000).subscribe((result) => {
+    this.subscription.add(this.ng2ImgMax.resize([file], 800, 10000).subscribe((result) => {
       const name = `evaluations/${this.data.id}/pictures/${this.data.id}-${this.date}-${result.name}.png`;
       const fileRef = this.storage.ref(name);
       const task = this.storage.upload(name, file);

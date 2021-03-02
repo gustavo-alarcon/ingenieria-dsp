@@ -55,7 +55,7 @@ export class EvaluationsConsultsDialogComponent implements OnInit, OnDestroy {
     }));
 
     this.subscription.add(
-      this.evaluationServices.getEvaluationInqueryById(this.data.id).subscribe((resp) => {
+      this.evaluationServices.getEvaluationInquiriesById(this.data.id).subscribe((resp) => {
         this.evaluationsById = resp;
         console.log(resp)
       })
@@ -80,21 +80,21 @@ export class EvaluationsConsultsDialogComponent implements OnInit, OnDestroy {
     }
 
     try {
-      const resp = this.evaluationServices.saveInquery(this.consultForm.value, this.user, this.data.id);
+      const resp = this.evaluationServices.saveInquiry(this.consultForm.value, this.user, this.data.id);
       this.subscription.add(resp.subscribe(
         batch => {
           if (batch) {
             batch.commit()
               .then(() => {
                 this.loading.next(false);
-                this.snackBar.open('✅ se guardo correctamente!', 'Aceptar', {
+                this.snackBar.open('✅ Consulta creada!', 'Aceptar', {
                   duration: 6000
                 });
                 this.dialogRef.close(true);
               })
               .catch(err => {
                 this.loading.next(false);
-                this.snackBar.open('🚨 Hubo un error.', 'Aceptar', {
+                this.snackBar.open('🚨 Hubo un error creando la consulta!', 'Aceptar', {
                   duration: 6000
                 });
               });
@@ -125,9 +125,14 @@ export class EvaluationsConsultsDialogComponent implements OnInit, OnDestroy {
     if (!event.target.files[0]) {
       return;
     }
+
     this.loading.next(true);
+    this.snackBar.open('🗜️ Comprimiendo', 'Aceptar', {
+      duration: 3000
+    });
+
     const file = event.target.files[0];
-    this.subscription.add(this.ng2ImgMax.resize([file], 800, 1000).subscribe((result) => {
+    this.subscription.add(this.ng2ImgMax.resize([file], 800, 10000).subscribe((result) => {
       const name = `evaluations/${this.data.id}/pictures/${this.data.id}-${this.date}-${result.name}.png`;
       const fileRef = this.storage.ref(name);
       const task = this.storage.upload(name, file);
