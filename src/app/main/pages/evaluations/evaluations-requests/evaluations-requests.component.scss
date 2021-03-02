@@ -38,6 +38,20 @@
             }
         }
 
+        &--select {
+            display: flex;
+            min-width: 50px;
+            width: 17%;
+            padding-left: 15px;
+            font-family: "Montserrat", sans-serif;
+            font-size: 14px;
+            font-weight: 300;
+            background-color: #fff;
+            height: 40px;
+            align-self: center;
+            border-radius: 20px 20px;
+            margin-right: 20px;
+        }
         &--search {
             display: flex;
             min-width: 100px;
