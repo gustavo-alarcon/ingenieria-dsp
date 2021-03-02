@@ -4,6 +4,9 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { User } from '../models/user-model';
 import { EvaluationRegistryForm, Evaluation, EvaluationInquiry, EvaluationFinishForm } from '../models/evaluations.model';
 import { AngularFireStorage } from '@angular/fire/storage';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { shareReplay, switchMap } from 'rxjs/operators';
+import * as firebase from 'firebase/app';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +16,7 @@ export class EvaluationsService {
   constructor(
     private afs: AngularFirestore,
     private storage: AngularFireStorage,
+    private afAuth: AngularFireAuth,
 
   ) { }
   /**
@@ -207,6 +211,30 @@ export class EvaluationsService {
 
   async deleteImage(imagesObj: string): Promise<any> {
     return await this.storage.storage.refFromURL(imagesObj).delete();
+  }
+
+  saveInquery(form: EvaluationInquiry, user: User, id: string): Observable<firebase.default.firestore.WriteBatch> {
+    const batch = this.afs.firestore.batch();
+    console.log(id, form, user)
+    const evaluationDocRef = this.afs.firestore.collection(`db/ferreyros/evaluations/${id}/inquiries/`).doc();
+    const sendDataInquiry = {
+      id: evaluationDocRef.id,
+      answer: null,
+      inquiry: form.inquiry,
+      answerImage: null,
+      inquiryImage: form.inquiryImage,
+      createdAt: new Date(),
+      createdBy: user,
+      answeredAt: null,
+      answeredBy: null,
+    };
+    batch.set(evaluationDocRef, sendDataInquiry);
+    return of(batch);
+  }
+
+  getEvaluationInqueryById(id: string): Observable<EvaluationInquiry[]> {
+    return this.afs.collection<EvaluationInquiry>(`db/ferreyros/evaluations/${id}/inquiries/`, ref => ref.orderBy('createdAt', 'desc'))
+      .valueChanges();
   }
 
 }

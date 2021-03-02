@@ -49,7 +49,7 @@ export class EvaluationsProgressComponent implements OnInit, OnDestroy {
 
   finalizeDialog(item: Evaluation): void {
     const dialogRef = this.dialog.open(EvaluationsFinalizeDialogComponent, {
-      width: '30%',
+      width: '35%',
       data: item
     });
 
@@ -60,7 +60,7 @@ export class EvaluationsProgressComponent implements OnInit, OnDestroy {
 
   imagesDialog(item: Evaluation): void {
     const dialogRef = this.dialog.open(EvaluationsImagesDialogComponent, {
-      width: '30%',
+      width: '35%',
       data: item
     });
 
@@ -69,24 +69,31 @@ export class EvaluationsProgressComponent implements OnInit, OnDestroy {
     });
   }
 
-  consultDialog(): void {
-    this.dialog.open(EvaluationsConsultsDialogComponent, {
+  consultDialog(item: Evaluation): void {
+    const dialogRef = this.dialog.open(EvaluationsConsultsDialogComponent, {
       width: '35%',
-      height: '90%'
+      data: item
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
     });
   }
 
-  responseDialog(): void {
-    this.dialog.open(EvaluationsResponseDialogComponent, {
+  responseDialog(item: Evaluation): void {
+    const dialogRef = this.dialog.open(EvaluationsResponseDialogComponent, {
       width: '35%',
-      height: '90%'
+      data: item
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
     });
   }
 
   observationsDialog(): void {
     this.dialog.open(EvaluationsObservationsDialogComponent, {
       width: '35%',
-      height: '90%'
     });
   }
 
