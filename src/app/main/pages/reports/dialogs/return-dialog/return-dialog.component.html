@@ -1,0 +1,56 @@
+<h2 mat-dialog-title>
+    <div class="container-header">
+        <button mat-icon-button>
+            <mat-icon>play_circle</mat-icon>
+            <span>
+                Retomar
+            </span>
+        </button>
+        <button mat-icon-button mat-dialog-close>
+            <mat-icon style="color: gray;">close</mat-icon>
+        </button>
+    </div>
+    <mat-divider></mat-divider>
+</h2>
+<mat-dialog-content class="mat-typography" style="color: gray;">
+    <form [formGroup]="detailsForm" autocomplete="off" class="form-container" style="margin-left: 15px;" >
+        <div class="form-container__form-inputs">
+            <mat-form-field appearance="outline" id="result" style="width: 400px;"> 
+                <mat-label>Comentarios</mat-label>
+                <textarea matInput placeholder="Comentarios" formControlName="comments" ></textarea>
+                <mat-error *ngIf="detailsForm.controls['comments'].errors">
+                    Campo <strong>requerido.</strong>
+                </mat-error>
+            </mat-form-field>
+            
+        </div>
+
+        <div *ngFor="let img of images;let i=index;">
+            <a [href]="img" target="_blank" style="cursor: zoom-in">
+                <img [src]="img" *ngIf="img">
+            </a>
+        </div>
+
+
+        <div style="text-align: center;margin: 15px;" *ngFor="let imgUpload of imagesUpload;let i=index">
+            <label [for]="i">
+                <mat-card class="mat-elevation-z0">
+                    <img [src]="imgUpload" onError="this.src='../../../../../../../assets/img/camara.png'"
+                        class="pointer" style="width: 300px; height: 200px;"/>
+                    <mat-card-actions *ngIf="imgUpload" align="end">
+                        <button mat-icon-button >  <!-- (click)="deleteImage(imgForDelete, i)" -->
+                             <mat-icon color="warn">delete</mat-icon>
+                        </button>
+                    </mat-card-actions>
+                </mat-card>
+                <mat-divider></mat-divider>
+            </label>
+            <input [id]="i" type="file" style="display: none;" (change)="uploadFile($event,i)"
+                accept="image/x-png, image/jpg, image/jpeg" />
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close>CERRAR</button>
+    <button type="button" mat-raised-button color="primary" class="footer__btn-save" cdkFocusInitial > RETOMAR</button>
+</mat-dialog-actions>
