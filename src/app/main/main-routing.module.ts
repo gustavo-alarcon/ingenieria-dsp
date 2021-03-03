@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { LandingComponent } from '../shared/landing/landing.component';
 import { NotFoundComponent } from '../shared/not-found/not-found.component';
 import { MainComponent } from './main/main.component';
+import { DashboardModule } from './pages/dashboard/dashboard.module';
 
 const routes: Routes = [
   {
@@ -40,6 +41,10 @@ const routes: Routes = [
       {
         path: 'budgets-daily-entries',
         loadChildren: () => import('./pages/budgets-daily-entries/budgets-daily-entries.module').then(m => m.BudgetsDailyEntriesModule)
+      },
+      {
+        path: 'dashboard',
+        loadChildren: () => import('./pages/dashboard/dashboard.module').then(m => m.DashboardModule)
       },
       {
         path: '**',
