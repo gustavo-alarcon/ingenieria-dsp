@@ -29,7 +29,7 @@ export class RequestsObservationDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.observationFormGroup = this.fb.group({
-      observation: ['', Validators.required],
+      observation: [this.data.observations ? this.data.observations : null, Validators.required],
     });
   }
   save(): void {

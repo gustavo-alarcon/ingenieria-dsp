@@ -18,6 +18,7 @@
         <p><span style="font-weight: bold;"> OT CHILD :</span> {{data.otChild ? data.otChild : ''}}</p>
         <p><span style="font-weight: bold;"> Correlativo :</span> {{data.position ? data.position : ''}}</p>
         <p><span style="font-weight: bold;"> N° de parte :</span> {{data.partNumber ? data.partNumber : ''}}</p>
+        <p><span style="font-weight: bold;"> Cantidad :</span> {{data.quantity ? data.quantity : ''}}</p>
         <p><span style="font-weight: bold;"> Descripcion :</span> {{data.description ? data.description : ''}}</p>
         <p><span style="font-weight: bold;"> Tipo de Atencion :</span> {{data.status ? data.status : ''}}</p>
         <p><span style="font-weight: bold;"> Usuario :</span> {{data.createdBy.name ? data.createdBy.name :
@@ -58,7 +59,9 @@
 
                     <div class="container-panel__question-image">
                         <div class="container-panel__question-image--img">
-                            <img [src]="item.inquiryImage" alt="" style="width: 100%;">
+                            <a [href]="item.inquiryImage" target="_blank" style="cursor: zoom-in">
+                                <img [src]="item.inquiryImage" alt="" style="height: 80px">
+                            </a>
                         </div>
                         <div class="container-panel__question-image--question">
                             {{item.inquiry}}
@@ -76,10 +79,12 @@
 
                     <div class="container-panel__question-image">
                         <div class="container-panel__question-image--img">
-                            <img [src]="item.answerImage" alt="" style="width: 100%;">
+                            <a [href]="item.answerImage" target="_blank" style="cursor: zoom-in">
+                                <img [src]="item.answerImage" alt="" style="height: 80px;">
+                            </a>
                         </div>
                         <div class="container-panel__question-image--question">
-                            {{item.answer}}
+                            {{item.answer ? item.answer : 'Sin respuesta'}}
                         </div>
                     </div>
                     <mat-divider color="accent"></mat-divider>
@@ -104,7 +109,9 @@
                 <div class="container-panel__image" *ngIf="images$ | async as images">
 
                     <mat-card class="mat-elevation-z0" *ngFor="let item of images; index as i">
-                        <img [src]="item" alt="" style="width: 100%">
+                        <a [href]="item" target="_blank" style="cursor: zoom-in">
+                            <img [src]="item" alt="" style="width: 100%">
+                        </a>
                     </mat-card>
                 </div>
             </mat-expansion-panel>

@@ -49,7 +49,6 @@ export class EvaluationsConsultsDialogComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loading.next(true);
     this.createForm();
-    console.log();
     this.subscription.add(this.authService.user$.subscribe(user => {
       this.user = user;
     }));
@@ -57,7 +56,6 @@ export class EvaluationsConsultsDialogComponent implements OnInit, OnDestroy {
     this.subscription.add(
       this.evaluationServices.getEvaluationInquiriesById(this.data.id).subscribe((resp) => {
         this.evaluationsById = resp;
-        console.log(resp)
       })
     );
     this.loading.next(false);

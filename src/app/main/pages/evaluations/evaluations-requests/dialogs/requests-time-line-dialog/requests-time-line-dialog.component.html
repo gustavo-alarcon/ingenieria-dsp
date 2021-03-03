@@ -1,40 +1,42 @@
 <div class="container">
-
-    <h2 mat-dialog-title style="display: flex; padding-bottom: 0px;margin-bottom: 0px;">
-        <div style="margin-top: 5px; margin-right: 15px;" mat-dialog-close>
-            <mat-icon mat-list-icon>timeline</mat-icon>
-        </div> 
-        <h2 style="margin-right: 20px;"> Tiempo de linea </h2> <span style="color: #828282;">  OT - {{data.otMain}}  </span>
-        <div  mat-dialog-close style="margin-top: 5px; margin-left: 730px;cursor: pointer;"  >
-            <mat-icon >clear</mat-icon>
-        </div> 
-    </h2>
+    <div mat-dialog-title class="header">
+        <mat-icon class="header__icon">timeline</mat-icon>
+        <h3 class="header__title">
+            Línea de tiempo <span style="font-size: 0.8rem; color: grey; margin-left: 1rem">OT - {{data.otMain}}</span>
+        </h3>
+        <span class="ms-fill"></span>
+        <button mat-icon-button mat-dialog-close>
+            <mat-icon class="header__icon">close</mat-icon>
+        </button>
+    </div>
     <mat-divider></mat-divider>
     <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
-        <mat-dialog-content style="margin-top: 20px;">
-            <div class="details">
-                <p ><span style="font-weight: bold;"> OT MAIN :</span> {{data.otMain ? data.otMain : ''}}</p>
-                <p ><span style="font-weight: bold;"> OT CHILD :</span> {{data.otChild ? data.otChild : ''}}</p>
-                <p ><span style="font-weight: bold;"> Correlativo :</span> {{data.position ? data.position : ''}}</p>
-                <p ><span style="font-weight: bold;"> N° de parte :</span> {{data.partNumber ? data.partNumber : ''}}</p>
-                <p ><span style="font-weight: bold;"> Descripcion :</span> {{data.description ? data.description : ''}}</p>
-                <p ><span style="font-weight: bold;"> Tipo de Atencion :</span> {{data.status ? data.status : ''}}</p>
-                <p ><span style="font-weight: bold;"> Usuario :</span> {{data.createdBy ? data.createdBy : ''}} </p>
-                <p ><span style="font-weight: bold;"> WOF (Orden de Fabricacion) :</span> {{data.wof ? data.wof : ''}}</p>
-                <p ><span style="font-weight: bold;"> Trabajo :</span> {{data.task ? data.task : ''}}</p>
-                <p ><span style="font-weight: bold;"> Observaciones :</span> {{data.observations ? data.observations : ''}}</p>
-            
-                <!-- <mat-form-field appearance="outline" style="width: 400px;">
+    <mat-dialog-content style="margin-top: 20px;">
+        <div class="details">
+            <p><span style="font-weight: bold;"> OT MAIN :</span> {{data.otMain ? data.otMain : ''}}</p>
+            <p><span style="font-weight: bold;"> OT CHILD :</span> {{data.otChild ? data.otChild : ''}}</p>
+            <p><span style="font-weight: bold;"> Correlativo :</span> {{data.position ? data.position : ''}}</p>
+            <p><span style="font-weight: bold;"> N° de parte :</span> {{data.partNumber ? data.partNumber : ''}}</p>
+            <p><span style="font-weight: bold;"> Cantidad :</span> {{data.quantity ? data.quantity : ''}}</p>
+            <p><span style="font-weight: bold;"> Descripcion :</span> {{data.description ? data.description : ''}}</p>
+            <p><span style="font-weight: bold;"> Tipo de Atencion :</span> {{data.status ? data.status : ''}}</p>
+            <p><span style="font-weight: bold;"> Usuario :</span> {{data.createdBy ? data.createdBy : ''}} </p>
+            <p><span style="font-weight: bold;"> WOF (Orden de Fabricacion) :</span> {{data.wof ? data.wof : ''}}</p>
+            <p><span style="font-weight: bold;"> Trabajo :</span> {{data.task ? data.task : ''}}</p>
+            <p><span style="font-weight: bold;"> Observaciones :</span> {{data.observations ? data.observations : ''}}
+            </p>
+
+            <!-- <mat-form-field appearance="outline" style="width: 400px;">
                     <mat-label>Observaciones</mat-label>
                     <textarea matInput placeholder="XXXXXXXXXXXXXXXx" name="area" readonly></textarea>
                     <mat-error *ngIf="createImprovenmentsForm.controls['name'].errors">
                         Campo <strong>requerido.</strong>
                     </mat-error>
                 </mat-form-field> -->
-            
-            </div>
 
-            <!-- <div class="line">
+        </div>
+
+        <!-- <div class="line">
                 <div class="md-stepper-horizontal green">
                     <div class="md-step active">
                         <div class="md-step-title">Ingreso</div>
@@ -114,8 +116,8 @@
                         min</div>
                 </div>
             </div> -->
-            
-                
-            </mat-dialog-content>
-           
-</div> 
+
+
+    </mat-dialog-content>
+
+</div>
