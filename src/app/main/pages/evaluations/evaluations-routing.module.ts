@@ -26,7 +26,8 @@ const routes: Routes = [
       },
       {
         path: 'settings',
-        loadChildren: () => import('./evaluations-settings/evaluations-settings.module').then(m => m.EvaluationsSettingsModule)
+        component: NotFoundComponent
+        // loadChildren: () => import('./evaluations-settings/evaluations-settings.module').then(m => m.EvaluationsSettingsModule)
       },
       { path: '**', component: NotFoundComponent }
     ]

@@ -1,12 +1,27 @@
-<div class="body-container">
-  <button type="file" aria-label="add" mat-button class="btn-add" (click)="openDialog('create')">
-    <mat-icon aria-label="agregar" class="icon-add">add</mat-icon>
-    CREAR
-  </button>
-  <button type="file" aria-label="add" mat-button class="btn-add" (click)="uploadFileDialog()">
-    <mat-icon aria-label="agregar" class="icon-add">add</mat-icon>
-    CREAR LOTE
-  </button>
+<div class="body-container" *ngIf="auth.user$ | async as user">
+  <ng-container *ngIf="user.role == 'Administrador'">
+    <button type="file" aria-label="add" mat-button class="btn-add" (click)="openDialog('create')">
+      <mat-icon aria-label="agregar" class="icon-add">add</mat-icon>
+      CREAR
+    </button>
+    <button type="file" aria-label="add" mat-button class="btn-add" (click)="uploadFileDialog()">
+      <mat-icon aria-label="agregar" class="icon-add">add</mat-icon>
+      CREAR LOTE
+    </button>
+  </ng-container>
+  
+  <mat-form-field appearance="outline" style="margin-left: 16px; font-size: 12px;">
+    <mat-select [formControl]="statusControl" placeholder="Estados">
+      <mat-option value="">-Todos-</mat-option>
+      <mat-option *ngFor="let item of statusList" [value]="item.status">{{item.name}}</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" style="margin-left: 16px; font-size: 12px;">
+    <mat-icon matPrefix style="margin-right: 12px">search</mat-icon>
+    <input matInput type="text" [formControl]="searchControl" placeholder="Escribir">
+    <mat-hint>La tabla se filtrará mientras escribe</mat-hint>
+  </mat-form-field>
 
   <div class="container-table" *ngIf="evaluation$ |async">
     <table mat-table [dataSource]="historyDataSource" class="mat-elevation-z8">
@@ -136,15 +151,17 @@
         <td mat-cell *matCellDef="let element; let i = index">
           <ng-container>
             <mat-menu #rawMenu="matMenu">
-              <button class="w3-small" mat-menu-item (click)="openDialog('edit', element, i)">
+              <button class="w3-small" mat-menu-item (click)="openDialog('edit', element, i)"
+                *ngIf="user.role == 'Administrador'">
                 <mat-icon>edit</mat-icon>
                 Editar
               </button>
-              <button class="w3-small" mat-menu-item (click)="openDialog('delete',element,i)">
+              <button class="w3-small" mat-menu-item (click)="openDialog('delete',element,i)"
+                *ngIf="user.role == 'Administrador'">
                 <mat-icon>delete</mat-icon>
                 Borrar
               </button>
-              <button class="w3-small" mat-menu-item (click)="openDialog('oservation', element, i)">
+              <button class="w3-small" mat-menu-item (click)="openDialog('observation', element, i)">
                 <mat-icon>remove_red_eye</mat-icon>
                 Observaciones
               </button>

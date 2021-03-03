@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    margin: 8px 0px;
 
     &__title {
         font-family: Poppins !important;
@@ -13,8 +14,9 @@
         margin: 0px 0px;
     }
 
-    &__icon-close {
+    &__icon {
         color: gray;
+        margin-right: 1rem;
     }
 }
 
@@ -34,7 +36,7 @@
         margin-top: 2px;
         border-radius: 50%;
     }
-    
+
     &__description {
         font-family: Roboto;
         font-style: normal;

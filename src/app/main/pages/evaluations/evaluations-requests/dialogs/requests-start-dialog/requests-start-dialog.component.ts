@@ -10,7 +10,7 @@ import { take } from 'rxjs/operators';
 @Component({
   selector: 'app-requests-start-dialog',
   templateUrl: './requests-start-dialog.component.html',
-  styleUrls: ['./requests-start-dialog.component.sass'],
+  styleUrls: ['./requests-start-dialog.component.scss'],
 })
 export class RequestsStartDialogComponent implements OnInit {
   loading = new BehaviorSubject<boolean>(false);
@@ -21,10 +21,12 @@ export class RequestsStartDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<RequestsStartDialogComponent>,
     private snackbar: MatSnackBar,
     private evaltService: EvaluationsService,
-    private afs: AngularFirestore
-  ) {}
+  ) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+
+  }
+
   save(): void {
     try {
       const state = 'processed';

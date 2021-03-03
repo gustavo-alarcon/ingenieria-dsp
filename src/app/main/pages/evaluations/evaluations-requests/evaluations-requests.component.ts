@@ -6,136 +6,141 @@ import { RequestsStartDialogComponent } from './dialogs/requests-start-dialog/re
 import { RequestsTimeLineDialogComponent } from './dialogs/requests-time-line-dialog/requests-time-line-dialog.component';
 import { Evaluation } from '../../../models/evaluations.model';
 import { Observable, combineLatest, BehaviorSubject } from 'rxjs';
-import { tap, map, startWith, filter, share, debounce, debounceTime } from 'rxjs/operators';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { tap, map, startWith, filter, debounceTime } from 'rxjs/operators';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../../../auth/services/auth.service';
 import { EvaluationsService } from '../../../services/evaluations.service';
-
-
+import { LazyLoadImageDirective } from 'ng-lazyload-image';
 
 @Component({
   selector: 'app-evaluations-requests',
   templateUrl: './evaluations-requests.component.html',
-  styleUrls: ['./evaluations-requests.component.scss']
+  styleUrls: ['./evaluations-requests.component.scss'],
 })
 export class EvaluationsRequestsComponent implements OnInit {
-
   loading = new BehaviorSubject<boolean>(true);
   loading$ = this.loading.asObservable();
 
   evaluation$: Observable<Evaluation[]>;
-  tallerList$: Observable<Evaluation[]>;
   dataEvaluations: Evaluation[] = [];
   counter: number;
   searchForm: FormGroup;
-  tallerForm: FormGroup;
   state = 'registered';
 
-  tallerObservable$: Observable<[any, Evaluation[]]>
-  tallerSelected: boolean  = false;
+  workshopControl = new FormControl('');
 
+  workshops = [
+    {
+      code: [
+        '201301412',
+        '201301409',
+        '201301410',
+        '201301413',
+        '201301414',
+        '201301415',
+        '201301411'], location: 'LIMA'
+    },
+    {
+      code: [
+        '201306412',
+        '201306413',
+        '201306415',
+        '201306409',
+        '201306411'], location: 'LA JOYA'
+    }
+  ];
 
   constructor(
-             public dialog: MatDialog,
-             private fb: FormBuilder,
-             private snackbar: MatSnackBar,
-             private auth: AuthService,
-             private  evaltService: EvaluationsService,
-    ) { }
+    public dialog: MatDialog,
+    private fb: FormBuilder,
+    private evaltService: EvaluationsService,
+  ) { }
 
   ngOnInit(): void {
     this.searchForm = this.fb.group({
       ot: null,
     });
 
-    /* this.tallerObservable$ = combineLatest(
-      this.tallerForm.valueChanges.pipe(startWith('')),
-      this.evaltService.getAllEvaluationsByInternalStatus(this.state)
-    ).pipe(share());
-    
-    this.tallerList$ = this.tallerObservable$.pipe(map(([formValue, tallers]) => {
-      console.log('formValue : ',formValue)
-      console.log('tallers : ',tallers)
-      // sanitazing form input
-      let cleanFormValue = formValue.name ? formValue.name : '';
-      // Flagging category selection
-      this.tallerSelected = formValue.name ? true : false;
+    this.evaluation$ = combineLatest(
+      this.evaltService.getAllEvaluationsByInternalStatus(this.state),
+      this.searchForm.get('ot').valueChanges.pipe(
+        debounceTime(300),
+        filter(input => input !== null),
+        startWith<any>('')),
+      this.workshopControl.valueChanges.pipe(startWith(''))
+    ).pipe(
+      map(([evaluations, search, workshopCodes]) => {
+        console.log(search, workshopCodes);
 
-      let filter = tallers.filter(el => {
-        return el.workshop.toLocaleLowerCase().includes(cleanFormValue.toLocaleLowerCase());
-      });
 
-      if (!(filter.length == 1 && filter[0] === formValue) && formValue.length) {
-        this.tallerForm.setErrors({ invalid: true });
-      }
-      return filter;
-    })); */
+        const searchTerm = search.toLowerCase().trim();
+        let preFilterWorkshop: Evaluation[] = [];
+        let preFilterSearch: Evaluation[] = [...evaluations];
 
-    /* this.taller$ = this.evaltService.getAllEvaluationsByInternalStatus(this.state).pipe(
-      tap(res => {
-        if (res) {
-          this.dataEvaluations = res;
+        if (workshopCodes) {
+          preFilterWorkshop = evaluations.filter(evaluation => {
+            let match = false;
+            workshopCodes.every(code => {
+              match = String(evaluation.workshop) === code;
+              return !match;
+            });
+            return match;
+          });
+
+          preFilterSearch = preFilterWorkshop.filter(evaluation => {
+            return String(evaluation.otMain).toLowerCase().includes(searchTerm) ||
+              String(evaluation.otChild).toLowerCase().includes(searchTerm) ||
+              String(evaluation.partNumber).toLowerCase().includes(searchTerm);
+          });
+        } else {
+          preFilterSearch = evaluations.filter(evaluation => {
+            return String(evaluation.otMain).toLowerCase().includes(searchTerm) ||
+              String(evaluation.otChild).toLowerCase().includes(searchTerm) ||
+              String(evaluation.partNumber).toLowerCase().includes(searchTerm);
+          })
         }
 
-      })
-    ) */
-
-    this.evaluation$ = combineLatest(
-     //this.evaltService.getAllEvaluations(),
-     this.evaltService.getAllEvaluationsByInternalStatus(this.state),
-       this.searchForm.get('ot').valueChanges.pipe(
-         debounceTime(300),
-        filter(input => input !== null),
-        startWith<any>(''),
-        map(value => typeof value === 'string' ? value.toLowerCase() : value.internalStatus.toLowerCase()),
-        tap(rs => {
-          this.loading.next(true);
-        })),
-     
-    ).pipe(
-      map(([evaluations, name  ]) => {
-        return evaluations.filter(el => { return String(el.otMain).toLowerCase().includes(name) ||
-          String(el.otChild).toLowerCase().includes(name) ||
-          String(el.partNumber).toLowerCase().includes(name)
-         });
+        return preFilterSearch;
       }),
       tap(res => {
-          this.dataEvaluations = res;
-          this.counter = this.dataEvaluations.length;
-          this.loading.next(false);
-          return  this.dataEvaluations;
+        this.dataEvaluations = res;
+        this.counter = this.dataEvaluations.length;
+        this.loading.next(false);
+        return this.dataEvaluations;
       })
-    )
-  }
-  showTaller(taller: any): string | null {
-    return taller ? taller.workshop : null
+    );
+
   }
 
-  settingDialog(): void{
+  settingDialog(): void {
     this.dialog.open(RequestsSettingDialogComponent, {
-      width: '35%',
-    });
-   }
-
-  initDialog(item: Evaluation): void{
-    this.dialog.open(RequestsStartDialogComponent, {
-      width: '30%',
-      data:item
+      maxWidth: 500,
+      width: '90vw',
+      data: this.dataEvaluations,
     });
   }
-  obsDialog(item): void{
+
+  initDialog(item: Evaluation): void {
+    this.dialog.open(RequestsStartDialogComponent, {
+      maxWidth: 500,
+      width: '90vw',
+      data: item,
+    });
+  }
+
+  obsDialog(item): void {
     this.dialog.open(RequestsObservationDialogComponent, {
-      width: '35%',
+      maxWidth: 500,
+      width: '90vw',
+      data: item,
+    });
+  }
+
+  timeline(item): void {
+    this.dialog.open(RequestsTimeLineDialogComponent, {
+      width: '90vw',
       data: item
     });
   }
-  timeline(item): void{
-    this.dialog.open(RequestsTimeLineDialogComponent, {
-      width: '90%',
-      data:item
-
-    });
-  }
-
 }
