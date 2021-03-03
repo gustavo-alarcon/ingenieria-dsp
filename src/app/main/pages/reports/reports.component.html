@@ -1,0 +1,350 @@
+<div class="container">
+    <div class="header-container">
+        <mat-icon mat-list-icon class="mat-icon-menu" style="font-size: 2.5em;">arrow_back</mat-icon>
+        <h1 style="font-size: 2.2em; margin-left: 20px; font-family: 'Poppins', sans-serif; font-weight: 700;">REPORTES</h1> 
+        
+        <div class="header-container__search" >
+            <button mat-button class="header-container__search--button">
+              <mat-icon>search</mat-icon>
+            </button>
+            <form [formGroup]="searchForm" style="text-align: center;margin-top:10px ;">
+              <input matInput placeholder="Buscar" name="search" class="header-container__search--input" formControlName="ot" />
+            </form>
+        </div>       
+    </div>
+    <mat-divider></mat-divider>
+    <div class="body-container">
+
+        <div class="cards">
+            <div class="cards__header">
+                <h3 class="cards__header--title">
+                    Bahia 1
+                </h3>
+                <div class="cards__header--menu">
+                    <mat-menu #rawMenu="matMenu">
+                      <button class="w3-small" mat-menu-item (click)="editDialog()"
+                        >
+                        <mat-icon>edit</mat-icon>
+                        Editar
+                      </button>
+                      <button class="w3-small" mat-menu-item (click)="deleteDialog()"
+                        >
+                        <mat-icon>delete</mat-icon>
+                        Borrar
+                      </button>                  
+                    </mat-menu>
+        
+                    <button mat-icon-button [matMenuTriggerFor]="rawMenu">
+                      <mat-icon>more_vert</mat-icon>
+                    </button>   
+                </div>
+            </div>
+            
+            <div class="cards__body">
+                <div class="cards__body--round">
+                </div> 
+                <h3 class="cards__body--timer"> 01:00:49</h3>
+                <button class="cards__body--supplies">INSUMOS</button>              
+                <button class="cards__body--return">RETOMAR</button>       
+            </div>
+        </div>
+        <div class="cards">
+            <div class="cards__header">
+                <h3 class="cards__header--title">
+                    Bahia 1
+                </h3>
+                <div class="cards__header--menu">
+                    <mat-menu #rawMenu="matMenu">
+                      <button class="w3-small" mat-menu-item (click)="editDialog()"
+                        >
+                        <mat-icon>edit</mat-icon>
+                        Editar
+                      </button>
+                      <button class="w3-small" mat-menu-item (click)="deleteDialog()"
+                        >
+                        <mat-icon>delete</mat-icon>
+                        Borrar
+                      </button>                  
+                    </mat-menu>
+        
+                    <button mat-icon-button [matMenuTriggerFor]="rawMenu">
+                      <mat-icon>more_vert</mat-icon>
+                    </button>   
+                </div>
+            </div>
+            
+            <div class="cards__body">
+                <div class="cards__body--round">
+                </div> 
+                <h3 class="cards__body--timer"> 01:00:49</h3>
+                <button class="cards__body--supplies">INSUMOS</button>              
+                <button class="cards__body--return">RETOMAR</button>       
+            </div>
+        </div>
+        <div class="cards">
+            <div class="cards__header">
+                <h3 class="cards__header--title">
+                    Bahia 1
+                </h3>
+                <div class="cards__header--menu">
+                    <mat-menu #rawMenu="matMenu">
+                      <button class="w3-small" mat-menu-item (click)="editDialog()"
+                        >
+                        <mat-icon>edit</mat-icon>
+                        Editar
+                      </button>
+                      <button class="w3-small" mat-menu-item (click)="deleteDialog()"
+                        >
+                        <mat-icon>delete</mat-icon>
+                        Borrar
+                      </button>                  
+                    </mat-menu>
+        
+                    <button mat-icon-button [matMenuTriggerFor]="rawMenu">
+                      <mat-icon>more_vert</mat-icon>
+                    </button>   
+                </div>
+            </div>
+            
+            <div class="cards__body">
+                <div class="cards__body--round">
+                </div> 
+                <h3 class="cards__body--timer"> 01:00:49</h3>
+                <button class="cards__body--supplies">INSUMOS</button>              
+                <button class="cards__body--return">RETOMAR</button>       
+            </div>
+        </div>
+        <div class="cards">
+            <div class="cards__header">
+                <h3 class="cards__header--title">
+                    Bahia 1
+                </h3>
+                <div class="cards__header--menu">
+                    <mat-menu #rawMenu="matMenu">
+                      <button class="w3-small" mat-menu-item (click)="editDialog()"
+                        >
+                        <mat-icon>edit</mat-icon>
+                        Editar
+                      </button>
+                      <button class="w3-small" mat-menu-item (click)="deleteDialog()"
+                        >
+                        <mat-icon>delete</mat-icon>
+                        Borrar
+                      </button>                  
+                    </mat-menu>
+        
+                    <button mat-icon-button [matMenuTriggerFor]="rawMenu">
+                      <mat-icon>more_vert</mat-icon>
+                    </button>   
+                </div>
+            </div>
+            
+            <div class="cards__body">
+                <div class="cards__body--round">
+                </div> 
+                <h3 class="cards__body--timer"> 01:00:49</h3>
+                <button class="cards__body--supplies">INSUMOS</button>              
+                <button class="cards__body--return">RETOMAR</button>       
+            </div>
+        </div>
+        <div class="cards">
+            <div class="cards__header">
+                <h3 class="cards__header--title">
+                    Bahia 1
+                </h3>
+                <div class="cards__header--menu">
+                    <mat-menu #rawMenu="matMenu">
+                      <button class="w3-small" mat-menu-item (click)="editDialog()"
+                        >
+                        <mat-icon>edit</mat-icon>
+                        Editar
+                      </button>
+                      <button class="w3-small" mat-menu-item (click)="deleteDialog()"
+                        >
+                        <mat-icon>delete</mat-icon>
+                        Borrar
+                      </button>                  
+                    </mat-menu>
+        
+                    <button mat-icon-button [matMenuTriggerFor]="rawMenu">
+                      <mat-icon>more_vert</mat-icon>
+                    </button>   
+                </div>
+            </div>
+            
+            <div class="cards__body">
+                <div class="cards__body--round">
+                </div> 
+                <h3 class="cards__body--timer"> 01:00:49</h3>
+                <button class="cards__body--supplies">INSUMOS</button>              
+                <button class="cards__body--return">RETOMAR</button>       
+            </div>
+        </div>
+        <div class="cards">
+            <div class="cards__header">
+                <h3 class="cards__header--title">
+                    Bahia 1
+                </h3>
+                <div class="cards__header--menu">
+                    <mat-menu #rawMenu="matMenu">
+                      <button class="w3-small" mat-menu-item (click)="editDialog()"
+                        >
+                        <mat-icon>edit</mat-icon>
+                        Editar
+                      </button>
+                      <button class="w3-small" mat-menu-item (click)="deleteDialog()"
+                        >
+                        <mat-icon>delete</mat-icon>
+                        Borrar
+                      </button>                  
+                    </mat-menu>
+        
+                    <button mat-icon-button [matMenuTriggerFor]="rawMenu">
+                      <mat-icon>more_vert</mat-icon>
+                    </button>   
+                </div>
+            </div>
+            
+            <div class="cards__body">
+                <div class="cards__body--round">
+                </div> 
+                <h3 class="cards__body--timer"> 01:00:49</h3>
+                <button class="cards__body--supplies">INSUMOS</button>              
+                <button class="cards__body--return">RETOMAR</button>       
+            </div>
+        </div>
+        <div class="cards">
+            <div class="cards__header">
+                <h3 class="cards__header--title">
+                    Bahia 1
+                </h3>
+                <div class="cards__header--menu">
+                    <mat-menu #rawMenu="matMenu">
+                      <button class="w3-small" mat-menu-item (click)="editDialog()"
+                        >
+                        <mat-icon>edit</mat-icon>
+                        Editar
+                      </button>
+                      <button class="w3-small" mat-menu-item (click)="deleteDialog()"
+                        >
+                        <mat-icon>delete</mat-icon>
+                        Borrar
+                      </button>                  
+                    </mat-menu>
+        
+                    <button mat-icon-button [matMenuTriggerFor]="rawMenu">
+                      <mat-icon>more_vert</mat-icon>
+                    </button>   
+                </div>
+            </div>
+            
+            <div class="cards__body">
+                <div class="cards__body--round">
+                </div> 
+                <h3 class="cards__body--timer"> 01:00:49</h3>
+                <button class="cards__body--supplies">INSUMOS</button>              
+                <button class="cards__body--return">RETOMAR</button>       
+            </div>
+        </div>
+        <div class="cards">
+            <div class="cards__header">
+                <h3 class="cards__header--title">
+                    Bahia 1
+                </h3>
+                <div class="cards__header--menu">
+                    <mat-menu #rawMenu="matMenu">
+                      <button class="w3-small" mat-menu-item (click)="editDialog()"
+                        >
+                        <mat-icon>edit</mat-icon>
+                        Editar
+                      </button>
+                      <button class="w3-small" mat-menu-item (click)="deleteDialog()"
+                        >
+                        <mat-icon>delete</mat-icon>
+                        Borrar
+                      </button>                  
+                    </mat-menu>
+        
+                    <button mat-icon-button [matMenuTriggerFor]="rawMenu">
+                      <mat-icon>more_vert</mat-icon>
+                    </button>   
+                </div>
+            </div>
+            
+            <div class="cards__body">
+                <div class="cards__body--round">
+                </div> 
+                <h3 class="cards__body--timer"> 01:00:49</h3>
+                <button class="cards__body--supplies">INSUMOS</button>              
+                <button class="cards__body--return">RETOMAR</button>       
+            </div>
+        </div>
+        <div class="cards">
+            <div class="cards__header">
+                <h3 class="cards__header--title">
+                    Bahia 1
+                </h3>
+                <div class="cards__header--menu">
+                    <mat-menu #rawMenu="matMenu">
+                      <button class="w3-small" mat-menu-item (click)="editDialog()"
+                        >
+                        <mat-icon>edit</mat-icon>
+                        Editar
+                      </button>
+                      <button class="w3-small" mat-menu-item (click)="deleteDialog()"
+                        >
+                        <mat-icon>delete</mat-icon>
+                        Borrar
+                      </button>                  
+                    </mat-menu>
+        
+                    <button mat-icon-button [matMenuTriggerFor]="rawMenu">
+                      <mat-icon>more_vert</mat-icon>
+                    </button>   
+                </div>
+            </div>
+            
+            <div class="cards__body">
+                <div class="cards__body--round">
+                </div> 
+                <h3 class="cards__body--timer"> 01:00:49</h3>
+                <button class="cards__body--supplies">INSUMOS</button>              
+                <button class="cards__body--return">RETOMAR</button>       
+            </div>
+        </div>
+        <div class="cards">
+            <div class="cards__header">
+                <h3 class="cards__header--title">
+                    Bahia 1
+                </h3>
+                <div class="cards__header--menu">
+                    <mat-menu #rawMenu="matMenu">
+                      <button class="w3-small" mat-menu-item (click)="editDialog()"
+                        >
+                        <mat-icon>edit</mat-icon>
+                        Editar
+                      </button>
+                      <button class="w3-small" mat-menu-item (click)="deleteDialog()"
+                        >
+                        <mat-icon>delete</mat-icon>
+                        Borrar
+                      </button>                  
+                    </mat-menu>
+        
+                    <button mat-icon-button [matMenuTriggerFor]="rawMenu">
+                      <mat-icon>more_vert</mat-icon>
+                    </button>   
+                </div>
+            </div>
+            
+            <div class="cards__body">
+                <div class="cards__body--round">
+                </div> 
+                <h3 class="cards__body--timer"> 01:00:49</h3>
+                <button class="cards__body--supplies">INSUMOS</button>              
+                <button class="cards__body--return">RETOMAR</button>       
+            </div>
+        </div>
+        
+    </div>
+</div>
