@@ -17,10 +17,8 @@ export class RequestsTimeLineDialogComponent implements OnInit {
   loading$ = this.loading.asObservable();
 
   constructor(
-        public dialogRef: MatDialogRef<RequestsStartDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public data: Evaluation,
-        private snackbar: MatSnackBar,
-        private  evaltService: EvaluationsService,
+    public dialogRef: MatDialogRef<RequestsStartDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: Evaluation
 
   ) { }
   ngOnInit(): void {

@@ -25,16 +25,20 @@ export class HistoryObservationDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: Evaluation,
     public dialogRef: MatDialogRef<HistoryObservationDialogComponent>,
     private evalService: EvaluationsService
-    ) { }
+  ) { }
 
   ngOnInit(): void {
     this.inquiries$ = this.evalService.getEvaluationInquiriesById(this.data.id);
     this.images$ = this.evalService.getEvaluationById(this.data.id)
-    .pipe(
-      map(res => {
-        return Object.values(res.images)
-      })
-    )
+      .pipe(
+        map(res => {
+          if (res.images) {
+            return Object.values(res.images)
+          } else {
+            return [];
+          }
+        })
+      )
   }
 
 }

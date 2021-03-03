@@ -8,7 +8,7 @@
                     Imágenes
                 </span>
             </button>
-            <button mat-icon-button mat-dialog-close>
+            <button mat-icon-button mat-dialog-close [disabled]="loading$ | async">
                 <mat-icon class="container-image__icon-close">close</mat-icon>
             </button>
         </div>
@@ -17,7 +17,9 @@
     </h2>
     <mat-dialog-content class="mat-typography">
         <div *ngFor="let img of images;let i=index;">
-            <img [src]="img" alt="" onError="this.src='../../../../../../../assets/img/error-image.png'">
+            <a [href]="img" target="_blank" style="cursor: zoom-in">
+                <img [src]="img" *ngIf="img">
+            </a>
         </div>
         <div *ngFor="let imgUpload of imagesUpload;let i=index">
             <label [for]="i">
@@ -37,8 +39,9 @@
         </div>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
-        <button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close>CERRAR</button>
+        <button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close
+            [disabled]="loading$ | async">CERRAR</button>
         <button type="button" mat-raised-button color="primary" class="footer__btn-save" (click)="onSubmit()"
-            cdkFocusInitial>ACEPTAR</button>
+            cdkFocusInitial [disabled]="loading$ | async">ACEPTAR</button>
     </mat-dialog-actions>
 </div>

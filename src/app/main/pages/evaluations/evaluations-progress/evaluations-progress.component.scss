@@ -53,6 +53,21 @@
             margin-right: 20px;
         }
 
+        &--select {
+            display: flex;
+            min-width: 50px;
+            width: 20%;
+            padding-left: 25px;
+            font-family: "Montserrat", sans-serif;
+            font-size: 14px;
+            font-weight: 300;
+            background-color: #fff;
+            height: 40px;
+            align-self: center;
+            border-radius: 20px 20px;
+            margin-right: 20px;
+        }
+
         &--input {
             width: 100%;
             margin-top: 0;
