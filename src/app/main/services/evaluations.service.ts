@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { User } from '../models/user-model';
-import { EvaluationRegistryForm, Evaluation, EvaluationInquiry, EvaluationFinishForm } from '../models/evaluations.model';
+import { EvaluationRegistryForm, Evaluation, EvaluationInquiry, EvaluationFinishForm, EvaluationsUser } from '../models/evaluations.model';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { shareReplay, switchMap } from 'rxjs/operators';
@@ -243,7 +243,7 @@ export class EvaluationsService {
     return await this.storage.storage.refFromURL(imagesObj).delete();
   }
 
-  
+
   saveInquiry(form: EvaluationInquiry, user: User, id: string): Observable<firebase.default.firestore.WriteBatch> {
     // Create batch
     const batch = this.afs.firestore.batch();
@@ -270,7 +270,7 @@ export class EvaluationsService {
 
     // SECOND - Update inquiries counter and internalStatus
     // Update counter with atomic operation
-    batch.update(evaluationDocRef, {inquiriesCounter: firebase.default.firestore.FieldValue.increment(1), internalStatus: 'consultation'});
+    batch.update(evaluationDocRef, { inquiriesCounter: firebase.default.firestore.FieldValue.increment(1), internalStatus: 'consultation' });
 
     // Return batch
     return of(batch);
@@ -285,12 +285,12 @@ export class EvaluationsService {
 
     // FIRST - Update inquiry document
     // Update inquiry 
-    batch.update(inquiryDocRef, {answer: form.answer, answerImage: form.answerImage, answerAt: new Date(), answerBy: user});
+    batch.update(inquiryDocRef, { answer: form.answer, answerImage: form.answerImage, answerAt: new Date(), answerBy: user });
 
 
     // SECOND - Update evaluation internalStatus
     // Update evaluation
-    batch.update(evaluationDocRef, {internalStatus: 'processed'});
+    batch.update(evaluationDocRef, { internalStatus: 'processed' });
 
     // Return batch
     return of(batch);
@@ -332,6 +332,19 @@ export class EvaluationsService {
     batch.update(evaluationDocRef, newData);
     return of(batch);
   }
+
+  addEvaluationsSettings(listEvaluationsSettings: EvaluationsUser[]): Observable<firebase.default.firestore.WriteBatch> {
+    const date = new Date();
+    const batch = this.afs.firestore.batch();
+    listEvaluationsSettings.forEach((el) => {
+      const evaluationDocRef = this.afs.firestore.collection(`/evaluations-settings`).doc();
+      el.id = evaluationDocRef.id;
+      el.createdAt = date;
+      batch.set(evaluationDocRef, el);
+    });
+    return of(batch);
+  }
+
 
 }
 

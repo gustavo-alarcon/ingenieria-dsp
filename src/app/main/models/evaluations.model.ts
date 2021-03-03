@@ -101,3 +101,20 @@ export interface EvaluationsBroadcastUser {
     createdAt: Date;
     createdBy: User;
 }
+
+export interface EvaluationsUser {
+    id: string;
+    code: string;
+    name: string;
+    oficc: string;
+    workingArea: string;
+    description: string;
+    email: string;
+    userName: string;
+    boss: string;
+    bossEmail: string;
+    createdAt: Date;
+    createdBy: User;
+    editedAt: Date;
+    editedBy: User;
+}

@@ -17,55 +17,68 @@
                             <mat-icon aria-label="agregar" class="icon-add">add</mat-icon>
                             SUBIR ARCHIVO
                         </button>
-                        <button type="file" aria-label="add" mat-button class="container-settings__btn-save">
+                        <button type="file" aria-label="saveData" mat-button class="container-settings__btn-save" (click)="saveData()">
                             GUARDAR
                         </button>
                     </mat-card-title>
                 </mat-card-header>
                 <mat-card-content>
-                    <!-- <div class="container-settings__filter">
-                        <mat-form-field>
-                            <mat-label>Filter</mat-label>
-                            <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Mia" #input>
-                        </mat-form-field>
-                    </div> -->
                     <div class="container-expansion">
-                        <table mat-table [dataSource]="dataSource" matSort>
+                        <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+                        <table mat-table [dataSource]="settingsDataSource" matSort>
 
-                            <!-- ID Column -->
-                            <ng-container matColumnDef="id">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
-                                <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+                            <ng-container matColumnDef="code">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Código </th>
+                                <td mat-cell *matCellDef="let element"> {{element.code}} </td>
                             </ng-container>
 
-                            <!-- Progress Column -->
-                            <ng-container matColumnDef="progress">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Progress </th>
-                                <td mat-cell *matCellDef="let row"> {{row.progress}}% </td>
-                            </ng-container>
-
-                            <!-- Name Column -->
                             <ng-container matColumnDef="name">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
-                                <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre Completo </th>
+                                <td mat-cell *matCellDef="let element"> {{element.name | titlecase}} </td>
                             </ng-container>
 
-                            <!-- Color Column -->
-                            <ng-container matColumnDef="color">
-                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Color </th>
-                                <td mat-cell *matCellDef="let row" [style.color]="row.color"> {{row.color}} </td>
+                            <ng-container matColumnDef="oficc">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> OFICC </th>
+                                <td mat-cell *matCellDef="let element"> {{element.oficc}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="workingArea">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Área del personal </th>
+                                <td mat-cell *matCellDef="let element"> {{element.workingArea | titlecase}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="description">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripción </th>
+                                <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="email">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Correo </th>
+                                <td mat-cell *matCellDef="let element"> {{element.email | lowercase}} </td>
                             </ng-container>
 
-                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                            <ng-container matColumnDef="userName">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Usuario windows </th>
+                                <td mat-cell *matCellDef="let element" align="center"> {{element.userName | lowercase}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="boss">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Jefe </th>
+                                <td mat-cell *matCellDef="let element"> {{element.boss | titlecase}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="bossEmail">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Correo jefe </th>
+                                <td mat-cell *matCellDef="let element"> {{element.bossEmail}} </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="settingsDisplayedColumns"></tr>
+                            <tr mat-row *matRowDef="let element; columns: settingsDisplayedColumns;"></tr>
 
                             <tr class="mat-row" *matNoDataRow>
-                                <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+                                <td class="mat-cell" colspan="4">No hay ningun dato cargado</td>
                             </tr>
                         </table>
                         <div style="margin-top: 10px;"></div>
 
-                        <mat-paginator [pageSizeOptions]="[5,10,15]"></mat-paginator>
+                        <mat-paginator #settingsPaginator [pageSizeOptions]="[5,10,15]"></mat-paginator>
                     </div>
                 </mat-card-content>
             </mat-card>
