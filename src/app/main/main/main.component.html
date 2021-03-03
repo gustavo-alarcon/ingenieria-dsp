@@ -133,16 +133,49 @@
       </mat-expansion-panel>
     </mat-accordion>
 
-    <mat-nav-list style="width: 100%">
-      <div>
-        <a mat-list-item [routerLink]="['/main/andon']" routerLinkActive="active" (click)="drawer.toggle()">
-          <mat-icon mat-list-icon class="mat-icon-menu">traffic</mat-icon>
-          <span class="mat-item-list-span">
-            AndOn
-          </span>
-        </a>
-      </div>
-    </mat-nav-list>
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-nav-list>
+              <div>
+                <a mat-list-item>
+                  <mat-icon mat-list-icon  class="mat-icon-menu">traffic</mat-icon> <!-- [routerLink]="['/main/andon']" -->
+                  <span class="mat-item-list-span">
+                    AndOn
+                  </span>
+                </a>
+              </div>
+            </mat-nav-list>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <div>
+            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/andon-reports']"
+              routerLinkActive="active" (click)="drawer.toggle()">
+              <mat-icon mat-list-icon class="mat-icon-menu">radio_button_checked</mat-icon>
+              <span class="mat-item-list-span">
+                Reportar
+              </span>
+            </a>
+            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/dashboard']" routerLinkActive="active"
+              (click)="drawer.toggle()">
+              <mat-icon mat-list-icon class="mat-icon-menu">dashboard</mat-icon>
+              <span class="mat-item-list-span">
+                DashBoard
+              </span>
+            </a>
+            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/andon-history']"
+              routerLinkActive="active" (click)="drawer.toggle()">
+              <mat-icon mat-list-icon class="mat-icon-menu">history</mat-icon>
+              <span class="mat-item-list-span">
+                Historial
+              </span>
+            </a>
+          </div>
+        </mat-nav-list>
+      </mat-expansion-panel>
+    </mat-accordion>
 
   </mat-sidenav>
   <mat-sidenav-content>

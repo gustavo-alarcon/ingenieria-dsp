@@ -6,7 +6,7 @@
                 Consultar
             </span>
         </button>
-        <button mat-icon-button mat-dialog-close>
+        <button mat-icon-button mat-dialog-close [disabled]="loading$ | async">
             <mat-icon class="container-inquery__icon-close">close</mat-icon>
         </button>
     </div>
@@ -18,9 +18,11 @@
     <p><span style="font-weight: bold;"> OT CHILD :</span> {{data.otChild ? data.otChild : ''}}</p>
     <p><span style="font-weight: bold;"> Correlativo :</span> {{data.position ? data.position : ''}}</p>
     <p><span style="font-weight: bold;"> N° de parte :</span> {{data.partNumber ? data.partNumber : ''}}</p>
+    <p><span style="font-weight: bold;"> Cantidad :</span> {{data.quantity ? data.quantity : ''}}</p>
     <p><span style="font-weight: bold;"> Descripcion :</span> {{data.description ? data.description : ''}}</p>
     <p><span style="font-weight: bold;"> Tipo de Atencion :</span> {{data.status ? data.status : ''}}</p>
-    <p><span style="font-weight: bold;"> Usuario :</span> {{data.createdBy.name ? data.createdBy.name : data.createdBy}} </p>
+    <p><span style="font-weight: bold;"> Usuario :</span> {{data.createdBy.name ? data.createdBy.name : data.createdBy}}
+    </p>
     <p><span style="font-weight: bold;"> WOF (Orden de Fabricacion) :</span> {{data.wof ? data.wof : ''}}</p>
     <p><span style="font-weight: bold;"> Trabajo :</span> {{data.task ? data.task : ''}}</p>
     <p><span style="font-weight: bold;"> Observaciones :</span> {{data.observations ? data.observations : ''}}</p>
@@ -37,8 +39,9 @@
                 <p class="item-consult__question">
                     {{item.inquiry}}
                 </p>
-                <img [src]="item.inquiryImage" onError="this.src='../../../../../../../assets/img/error-image.png'"
-                    *ngIf="item.inquiryImage" />
+                <a [href]="item.inquiryImage" target="_blank" style="cursor: zoom-in">
+                    <img [src]="item.inquiryImage" *ngIf="item.inquiryImage">
+                </a>
             </mat-card-content>
         </mat-card>
     </div>
@@ -77,7 +80,8 @@
     </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-    <button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close>CERRAR</button>
+    <button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close
+        [disabled]="loading$ | async">CERRAR</button>
     <button type="submit" mat-raised-button color="primary" class="footer__btn-save" cdkFocusInitial
-        (click)="onSubmit()">ENVIAR</button>
+        (click)="onSubmit()" [disabled]="loading$ | async">ENVIAR</button>
 </mat-dialog-actions>

@@ -11,6 +11,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../../../auth/services/auth.service';
 import { EvaluationsService } from '../../../services/evaluations.service';
+import { LazyLoadImageDirective } from 'ng-lazyload-image';
 
 @Component({
   selector: 'app-evaluations-requests',
@@ -27,31 +28,32 @@ export class EvaluationsRequestsComponent implements OnInit {
   searchForm: FormGroup;
   state = 'registered';
 
-  tallerObservable$: Observable<[any, Evaluation[]]>
-  tallerSelected: boolean = false;
-
-  workshopControl = new FormControl(null);
+  workshopControl = new FormControl('');
 
   workshops = [
-    { code: '201301412', name: 'GSP-LIM-DC-SERVICIO TALLER CRC', location: 'LIMA' },
-    { code: '201301409', name: 'GSP-LIMA-DA - SERVICIO TALLER DE MÁQUINA', location: 'LIMA' },
-    { code: '201301410', name: 'GSP-LIMA-DN -SERVICIO TALLER CARRILERIA', location: 'LIMA' },
-    { code: '201301413', name: 'GSP-LIMA-DR - SERVICIO TALLER RECUPERACI', location: 'LIMA' },
-    { code: '201301414', name: 'GSP-LIMA-DH - SERVICIO TALLER HIDRAULICO', location: 'LIMA' },
-    { code: '201301415', name: 'GSP-LIMA-DO - SERVICIO TALLER SOLDADURA', location: 'LIMA' },
-    { code: '201301411', name: 'GSP-LIMA-DE - LABORATORIO DE FLUÍDOS', location: 'LIMA' },
-    { code: '201306412', name: 'GSP-LA JOYA-DC - SERVICIO TALLER CRC', location: 'LA JOYA' },
-    { code: '201306413', name: 'GSP-LA JOYA-DR - SERVICIO TALLER RECUPER', location: 'LA JOYA' },
-    { code: '201306415', name: 'GSP-LA JOYA-DO - SERVICIO TALLER SOLDADU', location: 'LA JOYA' },
-    { code: '201306409', name: 'GSP-LA JOYA-DA - SERVICIO TALLER DE MÁQU', location: 'LA JOYA' },
-    { code: '201306411', name: 'GSP-LA JOYA-DE- LABORATORIO DE FLUÍDOS', location: 'LA JOYA' }
-  ]
+    {
+      code: [
+        '201301412',
+        '201301409',
+        '201301410',
+        '201301413',
+        '201301414',
+        '201301415',
+        '201301411'], location: 'LIMA'
+    },
+    {
+      code: [
+        '201306412',
+        '201306413',
+        '201306415',
+        '201306409',
+        '201306411'], location: 'LA JOYA'
+    }
+  ];
 
   constructor(
     public dialog: MatDialog,
     private fb: FormBuilder,
-    private snackbar: MatSnackBar,
-    private auth: AuthService,
     private evaltService: EvaluationsService,
   ) { }
 
@@ -59,36 +61,43 @@ export class EvaluationsRequestsComponent implements OnInit {
     this.searchForm = this.fb.group({
       ot: null,
     });
-    this.workshopControl = this.fb.control('', Validators.required);
 
     this.evaluation$ = combineLatest(
       this.evaltService.getAllEvaluationsByInternalStatus(this.state),
       this.searchForm.get('ot').valueChanges.pipe(
         debounceTime(300),
         filter(input => input !== null),
-        startWith<any>(''),
-        map(value => typeof value === 'string' ? value.toLowerCase() : value.internalStatus.toLowerCase()),
-        tap(rs => {
-          this.loading.next(true);
-        })),
+        startWith<any>('')),
       this.workshopControl.valueChanges.pipe(startWith(''))
     ).pipe(
-      map(([evaluations, name, workshop]) => {
+      map(([evaluations, search, workshopCodes]) => {
+        console.log(search, workshopCodes);
 
-        let searchTerm = name.toLowerCase();
-        let preFilterSearch = [...evaluations];
 
-        if (workshop.code) {
-          let preFilterWorkshop = evaluations.filter(evaluation => evaluation.workshop === workshop.code);
+        const searchTerm = search.toLowerCase().trim();
+        let preFilterWorkshop: Evaluation[] = [];
+        let preFilterSearch: Evaluation[] = [...evaluations];
+
+        if (workshopCodes) {
+          preFilterWorkshop = evaluations.filter(evaluation => {
+            let match = false;
+            workshopCodes.every(code => {
+              match = String(evaluation.workshop) === code;
+              return !match;
+            });
+            return match;
+          });
 
           preFilterSearch = preFilterWorkshop.filter(evaluation => {
             return String(evaluation.otMain).toLowerCase().includes(searchTerm) ||
-            String(evaluation.otChild).toLowerCase().includes(searchTerm)
-          })
+              String(evaluation.otChild).toLowerCase().includes(searchTerm) ||
+              String(evaluation.partNumber).toLowerCase().includes(searchTerm);
+          });
         } else {
           preFilterSearch = evaluations.filter(evaluation => {
             return String(evaluation.otMain).toLowerCase().includes(searchTerm) ||
-            String(evaluation.otChild).toLowerCase().includes(searchTerm)
+              String(evaluation.otChild).toLowerCase().includes(searchTerm) ||
+              String(evaluation.partNumber).toLowerCase().includes(searchTerm);
           })
         }
 
@@ -106,29 +115,32 @@ export class EvaluationsRequestsComponent implements OnInit {
 
   settingDialog(): void {
     this.dialog.open(RequestsSettingDialogComponent, {
-      width: '35%',
+      maxWidth: 500,
+      width: '90vw',
+      data: this.dataEvaluations,
     });
   }
 
   initDialog(item: Evaluation): void {
     this.dialog.open(RequestsStartDialogComponent, {
-      width: '30%',
-      data: item
+      maxWidth: 500,
+      width: '90vw',
+      data: item,
     });
   }
 
   obsDialog(item): void {
     this.dialog.open(RequestsObservationDialogComponent, {
-      width: '35%',
+      maxWidth: 500,
+      width: '90vw',
       data: item,
     });
   }
-  
+
   timeline(item): void {
     this.dialog.open(RequestsTimeLineDialogComponent, {
-      width: '90%',
+      width: '90vw',
       data: item
-
     });
   }
 }

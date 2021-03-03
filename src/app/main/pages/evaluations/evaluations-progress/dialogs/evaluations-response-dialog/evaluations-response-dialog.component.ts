@@ -49,8 +49,8 @@ export class EvaluationsResponseDialogComponent implements OnInit {
     this.inquiry$ = this.evalService.getEvaluationInquiriesById(this.data.id)
       .pipe(
         map(list => {
-          this.inquiry = list[0];
-          return list[0]
+          this.inquiry = list[list.length - 1];
+          return list[list.length - 1];
         })
       )
 
