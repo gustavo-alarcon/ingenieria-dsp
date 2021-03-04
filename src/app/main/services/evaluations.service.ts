@@ -19,6 +19,25 @@ export class EvaluationsService {
     private afAuth: AngularFireAuth,
 
   ) { }
+  
+  getCurrentMonthOfViewDate(): { from: Date, to: Date } {
+    const date = new Date();
+    const fromMonth = date.getMonth();
+    const fromYear = date.getFullYear();
+
+    const actualFromDate = new Date(fromYear, fromMonth, 1);
+
+    const toMonth = (fromMonth + 1) % 12;
+    let toYear = fromYear;
+
+    if (fromMonth + 1 >= 12) {
+      toYear++;
+    }
+
+    const toDate = new Date(toYear, toMonth, 1);
+
+    return { from: actualFromDate, to: toDate };
+  }
   /**
    * Get all documents from evaluations collection
    */

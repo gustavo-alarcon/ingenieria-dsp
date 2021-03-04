@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Chart } from 'node_modules/chart.js';
+import { FormGroup, FormControl } from '@angular/forms';
+import { EvaluationsService } from '../../services/evaluations.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -7,10 +9,24 @@ import { Chart } from 'node_modules/chart.js';
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
-  constructor() {}
+
+  dateForm: FormGroup;
+
+  constructor(private dbs: EvaluationsService) {}
 
   ngOnInit(): void {
-    let nameProductMax = [
+    const view = this.dbs.getCurrentMonthOfViewDate();
+
+    const beginDate = view.from;
+    const endDate = new Date();
+    endDate.setHours(23, 59, 59);
+
+    this.dateForm = new FormGroup({
+      start: new FormControl(beginDate),
+      end: new FormControl(endDate)
+    });
+
+    const nameProductMax = [
       'Seguridad',
       'Insumos',
       'Calidad',
@@ -18,7 +34,7 @@ export class DashboardComponent implements OnInit {
       'Administrativo',
       'Soporte',
     ];
-    let colors = [
+    const colors = [
       '#F2C94C',
       '#F2994A',
       '#FF2D2D',
@@ -26,7 +42,7 @@ export class DashboardComponent implements OnInit {
       '#27AE60',
       '#018786',
     ];
-    let stockProductMax = [2, 3, 4, 5, 6, 2];
+    let stockProductMax = [2, 3, 4, 5, 6, 3];
 
     new Chart(document.getElementById('problem'), {
       type: 'horizontalBar',
@@ -60,7 +76,7 @@ export class DashboardComponent implements OnInit {
     });
 
     new Chart(document.getElementById('answer'), {
-      type: 'verticalBar',
+      type: 'bar',
       data: {
         labels: nameProductMax,
         datasets: [
@@ -76,10 +92,10 @@ export class DashboardComponent implements OnInit {
         legend: { display: false },
         title: {
           display: true,
-          text: 'incidencia',
+          text: 'answer',
         },
         scales: {
-          xAxes: [
+          yAxes: [
             {
               ticks: {
                 beginAtZero: true,
