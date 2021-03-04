@@ -76,8 +76,6 @@
                                 <td class="mat-cell" colspan="4">No hay ningun dato cargado</td>
                             </tr>
                         </table>
-                        <!-- <div style="margin-top: 10px;"></div> -->
-
                         <mat-paginator #settingsPaginator [pageSizeOptions]="[5,10,15]"></mat-paginator>
                     </div>
                     <mat-card class="mat-elevation-z0" style="margin-left: -10px;margin-top: 10px;">
@@ -86,7 +84,7 @@
                                 <span>
                                     Lista de difusión
                                 </span>
-                                <button type="button" aria-label="saveDataDifusion" mat-button class="container-settings__btn-save">
+                                <button type="button" aria-label="saveDataDifusion" mat-button class="container-settings__btn-save" (click)="saveDataNotify()">
                                     GUARDAR
                                 </button>
                             </mat-card-title>
@@ -112,9 +110,9 @@
                         <mat-card-content class="container-expansion1__content-card-content">
                             <div role="list" *ngFor="let notify of listNotifyArray;let i=index">
                                 <div class="item-list">
-                                    <span>{{notify}}</span>
+                                    <span>{{notify.email}}</span>
                                     <span>
-                                        <button mat-icon-button color="primary" aria-label="deletelistNotify" (click)="addDeleteListNotify('delete')">
+                                        <button mat-icon-button color="primary" aria-label="deletelistNotify" (click)="addDeleteListNotify('delete',i)">
                                             <mat-icon style="color: #828282">delete</mat-icon>
                                         </button>
                                     </span>
@@ -141,13 +139,14 @@
                                 <span>
                                     Tipo de resultado
                                 </span>
-                                <button type="button" aria-label="saveDataDifusion" mat-button class="container-settings__btn-save">
+                                <button type="button" aria-label="saveDataDifusion" mat-button class="container-settings__btn-save" (click)="saveDataResult()">
                                     GUARDAR
                                 </button>
                             </mat-card-title>
                         </mat-card-header>
                     </mat-card>
                     <mat-card class="mat-elevation-z0 container-expansion1__content-card">
+                        <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
                         <mat-card-header class="container-expansion1__content-card--header">
                             <mat-form-field>
                                 <mat-label>Escribir</mat-label>
@@ -162,11 +161,11 @@
                             </mat-form-field>
                         </mat-card-header>
                         <mat-card-content class="container-expansion1__content-card-content">
-                            <div role="list" *ngFor="let notify of listResultArray;let i=index">
+                            <div role="list" *ngFor="let result of listResultArray;let i=index">
                                 <div class="item-list">
-                                    <span>{{notify}}</span>
+                                    <span>{{result.resultType}}</span>
                                     <span>
-                                        <button mat-icon-button aria-label="deletelistResult" (click)="addDeleteListResult('delete')">
+                                        <button mat-icon-button aria-label="deletelistResult" (click)="addDeleteListResult('delete',i)">
                                             <mat-icon style="color: #828282">delete</mat-icon>
                                         </button>
                                     </span>

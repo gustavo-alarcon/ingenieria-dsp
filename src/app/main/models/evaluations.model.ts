@@ -92,9 +92,9 @@ export interface EvaluationsBroadcastUser {
     createdBy: User;
 }
 
-export interface EvaluationsResultUser {
+export interface EvaluationsResultTypeUser {
     id: string;
-    result: string;
+    resultType: string;
     createdAt: Date;
     createdBy: User;
 }

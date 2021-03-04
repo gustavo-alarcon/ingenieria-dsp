@@ -5,7 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from 'src/app/auth/services/auth.service';
-import { EvaluationsUser } from 'src/app/main/models/evaluations.model';
+import { EvaluationsBroadcastUser, EvaluationsResultTypeUser, EvaluationsUser } from 'src/app/main/models/evaluations.model';
 import { User } from 'src/app/main/models/user-model';
 import * as XLSX from 'xlsx';
 import { EvaluationsService } from 'src/app/main/services/evaluations.service';
@@ -57,11 +57,11 @@ export class EvaluationsSettingsComponent implements OnInit, OnDestroy {
 
   user: User;
 
-  listNotifyFormControl = new FormControl('', [Validators.required, Validators.email]);
-  listResultFormControl = new FormControl('', [Validators.required]);
+  listNotifyFormControl = new FormControl(null, [Validators.required, Validators.email]);
+  listResultFormControl = new FormControl(null, [Validators.required]);
 
-  listNotifyArray: string[] = [];
-  listResultArray: string[] = [];
+  listNotifyArray: EvaluationsBroadcastUser[] = [];
+  listResultArray: EvaluationsResultTypeUser[] = [];
 
   matcher = new MyErrorStateMatcher();
 
@@ -77,11 +77,42 @@ export class EvaluationsSettingsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loading.next(true);
-    this.settingsDataSource.data = [];
     this.settingsDataSource.sort = this.sort;
     this.subscription.add(this.auth.user$.subscribe(user => {
       this.user = user;
     }));
+
+    this.subscription.add(
+      this.evalService.getAllEvaluationsSettings().subscribe((resp) => {
+        if (resp) {
+          this.settingsDataSource.data = resp;
+          this.settingsDataSource.sort = this.sort;
+        } else {
+          this.settingsDataSource.data = [];
+        }
+      })
+    );
+    this.subscription.add(
+      this.evalService.getAllEvaluationsSettingsNotify().subscribe((resp) => {
+        if (resp) {
+          this.listNotifyArray = resp;
+        } else {
+          this.listNotifyArray = [];
+        }
+      })
+    );
+
+    this.subscription.add(
+      this.evalService.getAllEvaluationsSettingsResultType().subscribe((resp) => {
+        if (resp) {
+          this.listResultArray = resp;
+        } else {
+          this.listResultArray = [];
+        }
+      })
+    );
+
+
     this.loading.next(false);
   }
 
@@ -119,98 +150,123 @@ export class EvaluationsSettingsComponent implements OnInit, OnDestroy {
   }
 
   saveDataNotify(): void {
-    if (this.settingsDataSource.data.length > 0) {
-      // try {
-      //   const resp = this.evalService.addEvaluationsSettings(this.settingsDataSource.data);
-      //   this.loading.next(true);
-      //   this.subscription.add(resp.subscribe(
-      //     batch => {
-      //       if (batch) {
-      //         batch.commit()
-      //           .then(() => {
-      //             this.loading.next(false);
-      //             this.snackbar.open('✅ Lista de notificaciones creada!', 'Aceptar', {
-      //               duration: 6000
-      //             });
-      //           })
-      //           .catch(err => {
-      //             this.loading.next(false);
-      //             this.snackbar.open('🚨 Hubo un error creando la lista de notificaciones creada!', 'Aceptar', {
-      //               duration: 6000
-      //             });
-      //           });
-      //       }
-      //     }
-      //   ));
-      // } catch (error) {
-      //   console.log(error);
-      //   this.loading.next(false);
-      // }
-    } else {
-      this.loading.next(false);
-      return;
+    if (this.listNotifyArray.length > 0) {
+      try {
+        const resp = this.evalService.addEvaluationsSettingsNotify(this.listNotifyArray, this.user);
+        this.loading.next(true);
+        this.subscription.add(resp.subscribe(
+          batch => {
+            if (batch) {
+              batch.commit()
+                .then(() => {
+                  this.loading.next(false);
+                  this.snackbar.open('✅ Lista difución creada!', 'Aceptar', {
+                    duration: 6000
+                  });
+                })
+                .catch(err => {
+                  this.loading.next(false);
+                  this.snackbar.open('🚨 Hubo un error creando la lista de difución!', 'Aceptar', {
+                    duration: 6000
+                  });
+                });
+            }
+          }
+        ));
+      } catch (error) {
+        console.log(error);
+        this.loading.next(false);
+      }
     }
   }
 
   saveDataResult(): void {
-    if (this.settingsDataSource.data.length > 0) {
-      // try {
-      //   const resp = this.evalService.addEvaluationsSettings(this.settingsDataSource.data);
-      //   this.loading.next(true);
-      //   this.subscription.add(resp.subscribe(
-      //     batch => {
-      //       if (batch) {
-      //         batch.commit()
-      //           .then(() => {
-      //             this.loading.next(false);
-      //             this.snackbar.open('✅ Lista de notificaciones creada!', 'Aceptar', {
-      //               duration: 6000
-      //             });
-      //           })
-      //           .catch(err => {
-      //             this.loading.next(false);
-      //             this.snackbar.open('🚨 Hubo un error creando la lista de notificaciones creada!', 'Aceptar', {
-      //               duration: 6000
-      //             });
-      //           });
-      //       }
-      //     }
-      //   ));
-      // } catch (error) {
-      //   console.log(error);
-      //   this.loading.next(false);
-      // }
-    } else {
+    try {
+      const resp = this.evalService.addEvaluationsSettingsResultType(this.listResultArray, this.user);
+      this.loading.next(true);
+      this.subscription.add(resp.subscribe(
+        batch => {
+          if (batch) {
+            batch.commit()
+              .then(() => {
+                this.loading.next(false);
+                this.snackbar.open('✅ Lista tipo de resultado creada!', 'Aceptar', {
+                  duration: 6000
+                });
+              })
+              .catch(err => {
+                this.loading.next(false);
+                this.snackbar.open('🚨 Hubo un error creando tipo de resultado!', 'Aceptar', {
+                  duration: 6000
+                });
+              });
+          }
+        }
+      ));
+    } catch (error) {
+      console.log(error);
       this.loading.next(false);
-      return;
     }
   }
 
-  addDeleteListNotify(validate: string, index?: number): void {
+  async addDeleteListNotify(validate: string, index?: number): Promise<void> {
     switch (validate) {
       case 'add':
         if (this.listNotifyFormControl.valid) {
-          this.listNotifyArray.push(this.listNotifyFormControl.value);
+          const objAux: EvaluationsBroadcastUser = {
+            id: null,
+            email: this.listNotifyFormControl.value.trim().toLowerCase(),
+            createdAt: null,
+            createdBy: null,
+          };
+          const valueIsEquals = (currentValue) => currentValue.email !== objAux.email;
+          if (this.listNotifyArray.every(valueIsEquals)) {
+            this.listNotifyArray.push(objAux);
+          }
           this.listNotifyFormControl.reset();
         }
         break;
       case 'delete':
+        if (this.listNotifyArray[index].id) {
+          this.loading.next(true);
+          await this.evalService.deleteEvaluationsSettingsNotify(this.listNotifyArray[index].id);
+          this.snackbar.open('✅ Elemento borrado correctamente', 'Aceptar', {
+            duration: 6000
+          });
+          this.loading.next(false);
+        }
         this.listNotifyArray.splice(index, 1);
         break;
     }
   }
 
 
-  addDeleteListResult(validate: string, index?: number): void {
+  async addDeleteListResult(validate: string, index?: number): Promise<void> {
     switch (validate) {
       case 'add':
         if (this.listResultFormControl.valid) {
-          const value = this.listResultFormControl.value;
-          this.listResultArray.push(value.trim());
+          const objAux: EvaluationsResultTypeUser = {
+            id: null,
+            resultType: this.listResultFormControl.value.trim().toLowerCase(),
+            createdAt: null,
+            createdBy: null,
+          };
+          const valueIsEquals = (currentValue) => currentValue.resultType !== objAux.resultType;
+          if (this.listResultArray.every(valueIsEquals)) {
+            this.listResultArray.push(objAux);
+          }
           this.listResultFormControl.reset();
         }
         break;
       case 'delete':
+        if (this.listResultArray[index].id) {
+          this.loading.next(true);
+          await this.evalService.deleteEvaluationsSettingsResultType(this.listResultArray[index].id);
+          this.snackbar.open('✅ Elemento borrado correctamente', 'Aceptar', {
+            duration: 6000
+          });
+          this.loading.next(false);
+        }
         this.listResultArray.splice(index, 1);
         break;
     }
@@ -256,7 +312,7 @@ export class EvaluationsSettingsComponent implements OnInit, OnDestroy {
           obj.userName = element['Usuario Windows'] ? element['Usuario Windows'] : null;
           objArray.push({ ...obj });
         });
-        this.settingsDataSource.data = [...objArray];
+        this.settingsDataSource.data = [...this.settingsDataSource.data, ...objArray];
         this.settingsDataSource.sort = this.sort;
         this.loading.next(false);
       };
