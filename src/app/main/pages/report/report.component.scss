@@ -1,0 +1,51 @@
+.container {
+    margin: 30px 70px 30px 70px;
+}
+
+.header-container {
+    display: inline-flex;
+    margin-bottom: 10px;
+}
+
+.body-container{
+    text-align: center;
+}
+
+.report{
+    margin-top: 50px;
+    &__title{
+        font-weight: bold;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+    }
+    &__form{
+        
+    }
+}
+
+.btn{
+    background:transparent;
+    border: none;
+}
+.btn:active{
+    background:transparent;
+    border: none;
+}
+
+#toggle { display: none; }
+#boton {
+	display: block;
+	margin: auto;
+	width: 200px;
+	height: 200px;
+	background-image: url('../../../../assets/img/boton/btn1.png') ;
+	text-align: center;
+	font-size: 70px;
+	color: #777;	
+	cursor: pointer;
+}
+
+#toggle:checked + #boton {
+	background-image: url('../../../../assets/img/boton/btn2.png');
+	
+}

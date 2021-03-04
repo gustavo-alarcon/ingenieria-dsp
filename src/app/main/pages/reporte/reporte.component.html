@@ -1,0 +1,44 @@
+<div class="container">
+    <div class="header-container">
+        <mat-icon mat-list-icon class="mat-icon-menu" style="font-size: 2.5em;">radio_button_checked</mat-icon>
+        <h1 style="font-size: 2.2em; margin-left: 20px; font-family: 'Poppins', sans-serif; font-weight: 700;">Reportar</h1>              
+    </div>
+    <mat-divider></mat-divider>
+    <div class="body-container">
+        <div class="report">
+            <h1 class="report__title">Reportar</h1>
+            <form action="" [formGroup]="reportForm" autocomplete="off" class="form" >
+                <p style="margin-left: 0px;">OT CHILD Número </p>
+                <mat-form-field appearance="outline" id="result" style="width: 350px;"> 
+                    <mat-label>Tipo de problema</mat-label>
+                    <input matInput placeholder="Tipo de problema" formControlName="typeProblem"/>
+                    <mat-error *ngIf="reportForm.controls['typeProblem'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
+                <br/>
+                <mat-form-field appearance="outline" id="result" style="width: 350px;"> 
+                    <mat-label>Descripcion</mat-label>
+                    <textarea matInput placeholder="Descripcion" formControlName="descripcion">
+
+                    </textarea>
+                    <mat-error *ngIf="reportForm.controls['descripcion'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
+                <div>
+                    <img src='../../../../../../../assets/img/camara.png'
+                class="pointer" style="width: 300px; height: 200px;"/>
+                <br/>
+
+                </div>
+                
+                <button mat-button type="submit" class="btn" (click)="save()" >
+                   GUARDAR
+                </button >
+                        
+            </form>
+        </div>
+    </div>
+</div>
+

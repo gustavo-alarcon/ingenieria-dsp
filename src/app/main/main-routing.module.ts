@@ -48,12 +48,20 @@ const routes: Routes = [
         loadChildren: () => import('./pages/dashboard/dashboard.module').then(m => m.DashboardModule)
       },
       {
+        path: 'andon-record',
+        loadChildren: () => import('./pages/record/record.module').then(m => m.RecordModule)
+      },
+      {
         path: 'andon-reports',
         loadChildren: () => import('./pages/reports/reports.module').then(m => m.ReportsModule)
       },
       {
-        path: 'andon-record',
-        loadChildren: () => import('./pages/record/record.module').then(m => m.RecordModule)
+        path: 'report',
+        loadChildren: () => import('./pages/report/report.module').then(m => m.ReportModule)
+      },
+      {
+        path: 'reporte',
+        loadChildren: () => import('./pages/reporte/reporte.module').then(m => m.ReporteModule)
       },
       {
         path: '**',
