@@ -122,21 +122,24 @@ export class EvaluationsSettingsComponent implements OnInit, OnDestroy {
         const resp = this.evalService.addEvaluationsSettings(this.settingsDataSource.data);
         this.loading.next(true);
         this.subscription.add(resp.subscribe(
-          batch => {
-            if (batch) {
-              batch.commit()
-                .then(() => {
-                  this.loading.next(false);
-                  this.snackbar.open('✅ Lista de notificaciones creada!', 'Aceptar', {
-                    duration: 6000
+          batchList => {
+
+            if (batchList) {
+              batchList.forEach(batch => {
+                batch.commit()
+                  .then(() => {
+                    this.loading.next(false);
+                    this.snackbar.open('✅ Lista de notificaciones creada!', 'Aceptar', {
+                      duration: 6000
+                    });
+                  })
+                  .catch(err => {
+                    this.loading.next(false);
+                    this.snackbar.open('🚨 Hubo un error creando la lista de notificaciones creada!', 'Aceptar', {
+                      duration: 6000
+                    });
                   });
-                })
-                .catch(err => {
-                  this.loading.next(false);
-                  this.snackbar.open('🚨 Hubo un error creando la lista de notificaciones creada!', 'Aceptar', {
-                    duration: 6000
-                  });
-                });
+              })
             }
           }
         ));

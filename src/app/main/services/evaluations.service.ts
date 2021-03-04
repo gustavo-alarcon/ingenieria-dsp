@@ -354,18 +354,30 @@ export class EvaluationsService {
 
   //#region Services Evaluation settings ***********************
 
-  addEvaluationsSettings(listEvaluationsSettings: EvaluationsUser[]): Observable<firebase.default.firestore.WriteBatch> {
-    const date = new Date();
-    const batch = this.afs.firestore.batch();
-    listEvaluationsSettings.forEach((el) => {
-      const evaluationDocRef = this.afs.firestore.collection(`/evaluations-settings`).doc();
-      if (!el.id) {
-        el.id = evaluationDocRef.id;
-        el.createdAt = date;
-        batch.set(evaluationDocRef, el);
-      }
-    });
-    return of(batch);
+  addEvaluationsSettings(listEvaluationsSettings: EvaluationsUser[]): Observable<firebase.default.firestore.WriteBatch[]> {
+    let batchCount = Math.ceil(listEvaluationsSettings.length / 500);
+    let batchArray = [];
+
+    for (let index = 0; index < batchCount; index++) {
+      // create batch
+      const batch = this.afs.firestore.batch();
+      let limit = 500 * (index + 1) > listEvaluationsSettings.length ? listEvaluationsSettings.length : 500 * (index + 1);
+
+      for (let j = 500 * index; j < limit; j++) {
+        // create reference for document in improvements collection
+        const evaluationDocRef = this.afs.firestore.collection(`/db/ferreyros/evaluations`).doc();
+        // Structuring the data model
+        listEvaluationsSettings[j].id = evaluationDocRef.id;
+        listEvaluationsSettings[j].createdAt = new Date();
+
+        batch.set(evaluationDocRef, listEvaluationsSettings[j]);
+      };
+
+      batchArray.push(batch)
+    }
+
+
+    return of(batchArray);
   }
 
   getAllEvaluationsSettings(): Observable<EvaluationsUser[]> {

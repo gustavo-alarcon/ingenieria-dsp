@@ -94,7 +94,7 @@
                         <mat-card-header class="container-expansion1__content-card--header">
                             <mat-form-field>
                                 <mat-label>Escribir</mat-label>
-                                <input type="email" matInput placeholder="Escribir" [formControl]="listNotifyFormControl" (keyup.enter)="addDeleteListNotify('add')" [errorStateMatcher]="matcher">
+                                <input type="email" matInput placeholder="Escribir" [formControl]="listNotifyFormControl" (keyup.enter)="addDeleteListNotify('add')" [errorStateMatcher]="matcher" autocomplete="off">
                                 <button mat-button *ngIf="listNotifyFormControl.value" matSuffix mat-icon-button aria-label="clearMail" (click)="listNotifyFormControl.reset()">
                                     <mat-icon>close</mat-icon>
                                 </button>
@@ -150,7 +150,7 @@
                         <mat-card-header class="container-expansion1__content-card--header">
                             <mat-form-field>
                                 <mat-label>Escribir</mat-label>
-                                <input type="text" matInput placeholder="Escribir" [formControl]="listResultFormControl" (keyup.enter)="addDeleteListResult('add')" [errorStateMatcher]="matcher">
+                                <input type="text" matInput placeholder="Escribir" [formControl]="listResultFormControl" (keyup.enter)="addDeleteListResult('add')" [errorStateMatcher]="matcher" autocomplete="off">
                                 <button mat-button *ngIf="listResultFormControl.value" matSuffix mat-icon-button aria-label="clearResult" (click)="listResultFormControl.reset()">
                                     <mat-icon>close</mat-icon>
                                 </button>
