@@ -28,10 +28,10 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
 
 
   uploadPercent$: Observable<number>;
+  filteredOptions: Observable<string[]>;
+
   private subscription = new Subscription();
 
-  options: string[] = ['One', 'Two', 'Three'];
-  filteredOptions: Observable<string[]>;
 
   constructor(
     private fb: FormBuilder,
@@ -55,7 +55,7 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
     this.createFormFinalize();
     this.filteredOptions = this.finalizeForm.controls.result.valueChanges
       .pipe(
-        tap(val=>{
+        tap(() => {
           this.loading.next(true);
         }),
         startWith(''),
@@ -63,13 +63,13 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
         distinctUntilChanged(),
         switchMap(val => {
           this.loading.next(false);
-          return this.filter(val || '')
-        })
+          return this.filter(val || '');
+        }),
+        tap(() => {
+          this.loading.next(false);
+        }),
       );
     this.loading.next(false);
-    //   map(value => this._filter(value))
-    // );
-
   }
 
   createFormFinalize(): void {
@@ -162,11 +162,6 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  private addControl(img: string): void {
-    const control = this.fb.control([img]);
-    this.imagesArray.push(control);
-  }
-
   private scrollToFirstInvalidControl(): void {
     if (this.finalizeForm.get('result').errors) {
       document.getElementById('result').scrollIntoView();
@@ -181,6 +176,6 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
         map(response => response.filter(option => {
           return option.resultType.toLowerCase().indexOf(val.toLowerCase()) === 0;
         }))
-      )
+      );
   }
 }
