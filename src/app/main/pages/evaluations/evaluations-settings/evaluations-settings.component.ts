@@ -9,6 +9,15 @@ import { EvaluationsUser } from 'src/app/main/models/evaluations.model';
 import { User } from 'src/app/main/models/user-model';
 import * as XLSX from 'xlsx';
 import { EvaluationsService } from 'src/app/main/services/evaluations.service';
+import { FormControl, FormGroupDirective, NgForm, Validators } from '@angular/forms';
+import { ErrorStateMatcher } from '@angular/material/core';
+
+export class MyErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+    const isSubmitted = form && form.submitted;
+    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
+  }
+}
 
 @Component({
   selector: 'app-evaluations-settings',
@@ -48,6 +57,13 @@ export class EvaluationsSettingsComponent implements OnInit, OnDestroy {
 
   user: User;
 
+  listNotifyFormControl = new FormControl('', [Validators.required, Validators.email]);
+  listResultFormControl = new FormControl('', [Validators.required]);
+
+  listNotifyArray: string[] = [];
+  listResultArray: string[] = [];
+
+  matcher = new MyErrorStateMatcher();
 
   private subscription = new Subscription();
 
@@ -69,7 +85,7 @@ export class EvaluationsSettingsComponent implements OnInit, OnDestroy {
     this.loading.next(false);
   }
 
-  saveData(): void {
+  saveDataList(): void {
     if (this.settingsDataSource.data.length > 0) {
       try {
         const resp = this.evalService.addEvaluationsSettings(this.settingsDataSource.data);
@@ -97,9 +113,106 @@ export class EvaluationsSettingsComponent implements OnInit, OnDestroy {
         console.log(error);
         this.loading.next(false);
       }
-      // this.settingsDataSource.data = [];
     } else {
       return;
+    }
+  }
+
+  saveDataNotify(): void {
+    if (this.settingsDataSource.data.length > 0) {
+      // try {
+      //   const resp = this.evalService.addEvaluationsSettings(this.settingsDataSource.data);
+      //   this.loading.next(true);
+      //   this.subscription.add(resp.subscribe(
+      //     batch => {
+      //       if (batch) {
+      //         batch.commit()
+      //           .then(() => {
+      //             this.loading.next(false);
+      //             this.snackbar.open('✅ Lista de notificaciones creada!', 'Aceptar', {
+      //               duration: 6000
+      //             });
+      //           })
+      //           .catch(err => {
+      //             this.loading.next(false);
+      //             this.snackbar.open('🚨 Hubo un error creando la lista de notificaciones creada!', 'Aceptar', {
+      //               duration: 6000
+      //             });
+      //           });
+      //       }
+      //     }
+      //   ));
+      // } catch (error) {
+      //   console.log(error);
+      //   this.loading.next(false);
+      // }
+    } else {
+      this.loading.next(false);
+      return;
+    }
+  }
+
+  saveDataResult(): void {
+    if (this.settingsDataSource.data.length > 0) {
+      // try {
+      //   const resp = this.evalService.addEvaluationsSettings(this.settingsDataSource.data);
+      //   this.loading.next(true);
+      //   this.subscription.add(resp.subscribe(
+      //     batch => {
+      //       if (batch) {
+      //         batch.commit()
+      //           .then(() => {
+      //             this.loading.next(false);
+      //             this.snackbar.open('✅ Lista de notificaciones creada!', 'Aceptar', {
+      //               duration: 6000
+      //             });
+      //           })
+      //           .catch(err => {
+      //             this.loading.next(false);
+      //             this.snackbar.open('🚨 Hubo un error creando la lista de notificaciones creada!', 'Aceptar', {
+      //               duration: 6000
+      //             });
+      //           });
+      //       }
+      //     }
+      //   ));
+      // } catch (error) {
+      //   console.log(error);
+      //   this.loading.next(false);
+      // }
+    } else {
+      this.loading.next(false);
+      return;
+    }
+  }
+
+  addDeleteListNotify(validate: string, index?: number): void {
+    switch (validate) {
+      case 'add':
+        if (this.listNotifyFormControl.valid) {
+          this.listNotifyArray.push(this.listNotifyFormControl.value);
+          this.listNotifyFormControl.reset();
+        }
+        break;
+      case 'delete':
+        this.listNotifyArray.splice(index, 1);
+        break;
+    }
+  }
+
+
+  addDeleteListResult(validate: string, index?: number): void {
+    switch (validate) {
+      case 'add':
+        if (this.listResultFormControl.valid) {
+          const value = this.listResultFormControl.value;
+          this.listResultArray.push(value.trim());
+          this.listResultFormControl.reset();
+        }
+        break;
+      case 'delete':
+        this.listResultArray.splice(index, 1);
+        break;
     }
   }
 
