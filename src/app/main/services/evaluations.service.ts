@@ -427,12 +427,14 @@ export class EvaluationsService {
   deleteEvaluationsSettingsNotify(id: string): void {
     this.afs.firestore.collection(`/db/generalConfig/evaluationsBroadcast`).doc(id).delete().then(() => {
     }).catch((error) => {
+      console.log(error);
     });
   }
 
   deleteEvaluationsSettingsResultType(id: string): void {
     this.afs.firestore.collection(`/db/generalConfig/evaluationsResultType`).doc(id).delete().then(() => {
     }).catch((error) => {
+      console.log(error);
     });
   }
 

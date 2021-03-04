@@ -286,7 +286,7 @@ export class EvaluationsSettingsComponent implements OnInit, OnDestroy {
         const date = new Date();
         arrAux.forEach((element) => {
           const obj: EvaluationsUser = {
-            id: '',
+            id: null,
             code: '',
             name: '',
             oficc: '',
