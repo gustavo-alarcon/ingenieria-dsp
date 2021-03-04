@@ -34,7 +34,12 @@
             <div class="form-container__form-inputs">
                 <mat-form-field appearance="outline" id="result">
                     <mat-label>Resultado</mat-label>
-                    <input matInput placeholder="Resultado" formControlName="result">
+                    <input matInput placeholder="Resultado" formControlName="result" [matAutocomplete]="auto">
+                    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                            {{option.resultType}}
+                        </mat-option>
+                    </mat-autocomplete>
                     <mat-error *ngIf="finalizeForm.controls['result'].errors">
                         Campo <strong>requerido.</strong>
                     </mat-error>
@@ -51,19 +56,15 @@
                     <input matInput placeholder="Comentarios" formControlName="comments">
                 </mat-form-field>
             </div>
-
             <div *ngFor="let img of images;let i=index;">
                 <a [href]="img" target="_blank" style="cursor: zoom-in">
                     <img [src]="img" *ngIf="img">
                 </a>
             </div>
-
-
             <div *ngFor="let imgUpload of imagesUpload;let i=index">
                 <label [for]="i">
                     <mat-card class="mat-elevation-z0">
-                        <img [src]="imgUpload" onError="this.src='../../../../../../../assets/img/camara.png'"
-                            class="pointer" />
+                        <img [src]="imgUpload" onError="this.src='../../../../../../../assets/img/camara.png'" class="pointer" />
                         <mat-card-actions *ngIf="imgUpload" align="end">
                             <button mat-icon-button (click)="deleteImage(imgForDelete, i)">
                                 <mat-icon color="warn">delete</mat-icon>
@@ -72,15 +73,12 @@
                     </mat-card>
                     <mat-divider></mat-divider>
                 </label>
-                <input [id]="i" type="file" style="display: none;" (change)="uploadFile($event,i)"
-                    accept="image/x-png, image/jpg, image/jpeg" />
+                <input [id]="i" type="file" style="display: none;" (change)="uploadFile($event,i)" accept="image/x-png, image/jpg, image/jpeg" />
             </div>
         </form>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
-        <button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close
-            [disabled]="loading$ | async">CERRAR</button>
-        <button type="submit" mat-raised-button color="primary" class="footer__btn-save" cdkFocusInitial
-            (click)="onSubmit()" [disabled]="loading$ | async">GUARDAR</button>
+        <button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close [disabled]="loading$ | async">CERRAR</button>
+        <button type="submit" mat-raised-button color="primary" class="footer__btn-save" cdkFocusInitial (click)="onSubmit()" [disabled]="loading$ | async">GUARDAR</button>
     </mat-dialog-actions>
 </div>
