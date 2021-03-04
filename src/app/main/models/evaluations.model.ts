@@ -81,16 +81,6 @@ export interface EvaluationInquiry {
     answeredBy: User;
 }
 
-// id: 'd9asd6759s5';
-// answer: null;
-// inquiry: 'Como debemos hacer el primer ensayo de materiales?';
-// answerImage: 'https://firebase.09ad9asdysa9da8dasdas.com';
-// inquiryImage: null;
-// createdAt: Fecha de creación;
-// createdBy: Usuario que consulto;
-// answeredAt: null;
-// answeredBy: null;
-
 /**
  * Firestore document
  * Path of collection: db/generalConfig/evaluationsBroadcast
@@ -100,4 +90,28 @@ export interface EvaluationsBroadcastUser {
     email: string;
     createdAt: Date;
     createdBy: User;
+}
+
+export interface EvaluationsResultTypeUser {
+    id: string;
+    resultType: string;
+    createdAt: Date;
+    createdBy: User;
+}
+
+export interface EvaluationsUser {
+    id: string;
+    code: string;
+    name: string;
+    oficc: string;
+    workingArea: string;
+    description: string;
+    email: string;
+    userName: string;
+    boss: string;
+    bossEmail: string;
+    createdAt: Date;
+    createdBy: User;
+    editedAt: Date;
+    editedBy: User;
 }
