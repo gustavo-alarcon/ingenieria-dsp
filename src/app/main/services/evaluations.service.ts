@@ -5,7 +5,6 @@ import { User } from '../models/user-model';
 import { EvaluationRegistryForm, Evaluation, EvaluationInquiry, EvaluationFinishForm } from '../models/evaluations.model';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { shareReplay, switchMap } from 'rxjs/operators';
 import * as firebase from 'firebase/app';
 
 @Injectable({

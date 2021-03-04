@@ -7,9 +7,6 @@ import { Evaluation } from '../../../../../models/evaluations.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import * as XLSX from 'xlsx';
-import { switchMap, take } from 'rxjs/operators';
-import { AuthService } from '../../../../../../auth/services/auth.service';
-
 @Component({
   selector: 'app-history-upload-file-dialog',
   templateUrl: './history-upload-file-dialog.component.html',
