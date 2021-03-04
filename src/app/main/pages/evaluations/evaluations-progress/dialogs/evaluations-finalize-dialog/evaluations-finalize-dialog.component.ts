@@ -1,10 +1,10 @@
-import { Component, OnInit, Inject, OnDestroy, ElementRef } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy, ElementRef, AfterViewInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Evaluation } from 'src/app/main/models/evaluations.model';
+import { Evaluation, EvaluationsResultTypeUser } from 'src/app/main/models/evaluations.model';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { finalize } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, finalize, map, startWith, switchMap, tap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Ng2ImgMaxService } from 'ng2-img-max';
 import { EvaluationsService } from 'src/app/main/services/evaluations.service';
@@ -30,6 +30,8 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
   uploadPercent$: Observable<number>;
   private subscription = new Subscription();
 
+  options: string[] = ['One', 'Two', 'Three'];
+  filteredOptions: Observable<string[]>;
 
   constructor(
     private fb: FormBuilder,
@@ -49,7 +51,25 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.loading.next(true);
     this.createFormFinalize();
+    this.filteredOptions = this.finalizeForm.controls.result.valueChanges
+      .pipe(
+        tap(val=>{
+          this.loading.next(true);
+        }),
+        startWith(''),
+        debounceTime(400),
+        distinctUntilChanged(),
+        switchMap(val => {
+          this.loading.next(false);
+          return this.filter(val || '')
+        })
+      );
+    this.loading.next(false);
+    //   map(value => this._filter(value))
+    // );
+
   }
 
   createFormFinalize(): void {
@@ -98,9 +118,9 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
       this.imagesUpload.splice(index, 1);
       this.loading.next(false);
     } catch (error) {
-       console.log(error);
-       this.loading.next(false);
-       this.imagesUpload.splice(index, 1);
+      console.log(error);
+      this.loading.next(false);
+      this.imagesUpload.splice(index, 1);
     }
   }
 
@@ -153,5 +173,14 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
     } else if (this.finalizeForm.get('kindOfTest').errors) {
       document.getElementById('kindOfTest').scrollIntoView();
     }
+  }
+
+  filter(val: string): Observable<any> {
+    return this.evaluationServices.getAllEvaluationsSettingsResultType()
+      .pipe(
+        map(response => response.filter(option => {
+          return option.resultType.toLowerCase().indexOf(val.toLowerCase()) === 0;
+        }))
+      )
   }
 }
