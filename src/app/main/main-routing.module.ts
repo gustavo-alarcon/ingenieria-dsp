@@ -4,6 +4,7 @@ import { LandingComponent } from '../shared/landing/landing.component';
 import { NotFoundComponent } from '../shared/not-found/not-found.component';
 import { MainComponent } from './main/main.component';
 import { DashboardModule } from './pages/dashboard/dashboard.module';
+import { RecordModule } from './pages/record/record.module';
 
 const routes: Routes = [
   {
@@ -49,6 +50,10 @@ const routes: Routes = [
       {
         path: 'andon-reports',
         loadChildren: () => import('./pages/reports/reports.module').then(m => m.ReportsModule)
+      },
+      {
+        path: 'andon-record',
+        loadChildren: () => import('./pages/record/record.module').then(m => m.RecordModule)
       },
       {
         path: '**',
