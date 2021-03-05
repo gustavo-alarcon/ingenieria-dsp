@@ -10,6 +10,20 @@ import { Router } from '@angular/router';
 export class ReporteComponent implements OnInit {
   reportForm: FormGroup;
 
+  typeProblem = [
+    {name: 'Seguridad'},
+    {name: 'Insumos'},
+    {name: 'Calidad'},
+    {name: 'Maquinas'},
+    {name: 'Administrativo'},
+    {name: 'Soporte'},
+  ];
+
+
+
+
+
+
   constructor(
     private fb: FormBuilder,
     public router: Router,

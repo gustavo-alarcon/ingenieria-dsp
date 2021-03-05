@@ -19,6 +19,13 @@
         margin-bottom: 30px;
     }
     &__form{
+        &--input{
+            width: 350px;
+        }
+        &--img{
+            width: 300px; 
+            height: 200px;
+        }
         
     }
 }
@@ -29,4 +36,72 @@
     padding: 4px 40px 4px 40px;
     border: none;
 }
+
+
+ /* 
+  ##Dispositivo = Tablets de baja resolucion y telefnos Mobiles (horizontal)
+  ##Resolucion = B/w 481px to 767px
+*/
+
+@media (min-width: 481px) and (max-width: 767px) {  
+    .report{
+        margin-top: 50px;
+        &__title{
+            font-weight: bold;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+        }
+        &__form{
+            &--input{
+                width: 350px;
+            }
+            &--img{
+                width: 300px; 
+                height: 200px;
+            }
+        }
+    }
+    
+  }
+  
+  /* 
+    ##Dispositivo = Mayoria de telefonos moviles (vertical)
+    ##Resolucion = B/w 320px to 479px
+  */
+  
+  @media (min-width: 320px) and (max-width: 480px) {    
+    .report{
+        margin-top: 50px;
+        &__title{
+            font-weight: bold;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+        }
+        &__form{
+            &--input{
+                width: 250px;
+            }
+            &--img{
+                width: 250px; 
+                height: 150px;
+            }
+            
+        }
+
+        .btn{
+            margin-top: 30px;
+            background: #6200EE;
+            color:white;
+            padding: 4px 40px 4px 40px;
+            border: none;
+        }
+    }
+    
+  }
+
+
+    
+    
+
+ 
 

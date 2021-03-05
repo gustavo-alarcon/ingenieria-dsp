@@ -110,6 +110,10 @@
                 height: 170px;
                 cursor: pointer;
             }
+            &-name{
+                font-family: 'Poppins', sans-serif;
+                 font-size: 1.5em;
+            }
 
         }
 
@@ -122,4 +126,129 @@
 
 .container-date{
     margin-left: 30px;
+}
+
+
+ /* 
+  ##Dispositivo = Tablets de baja resolucion y telefnos Mobiles (horizontal)
+  ##Resolucion = B/w 481px to 767px
+*/
+
+@media (min-width: 481px) and (max-width: 767px) { 
+    
+    .container {
+        margin: 30px 20px 30px 20px;
+    }
+    .container-date{
+        display: none;
+    }   
+    
+    .container1{
+        display: none;
+    }
+    .container2{
+        width: 100%;
+        margin: 5px;
+        &__taller{
+            border-radius: 30px;
+            box-shadow: 0px 0px 5.66077px 5.66077px rgba(177, 175, 175, 0.25);   
+            
+            &--title{
+                text-align: center;
+                border-radius: 30px 30px 0px 0px; 
+                padding: 20px;
+                font-weight: bold;
+                background: #D3D3D3;
+                color: black;
+                height: 30px;
+            }
+            &--cards{            
+                display: grid;
+                column-gap: 0.7em;
+                row-gap: 0.7em;
+                grid-template-columns: 1fr 1fr;
+                border-radius: 30px 30px 0px 0px; 
+
+                &-card{
+                    box-shadow: 0px 0px 5.66077px 5.66077px rgba(177, 175, 175, 0.25);   
+                    margin: 20px 20px 10px 20px;
+                    background: #F2C94C;
+                    border-radius: 30px;
+                    height: 170px;
+                    cursor: pointer;
+                }
+                &-name{
+                    margin-left: 6px;
+                    font-family: 'Poppins', sans-serif;
+                     font-size: 1em;
+                }
+
+            }
+
+        }
+    }
+
+
+}
+
+/* 
+  ##Dispositivo = Mayoria de telefonos moviles (vertical)
+  ##Resolucion = B/w 320px to 479px
+*/
+
+@media (min-width: 320px) and (max-width: 480px) {  
+    
+    .container {
+        margin: 30px 20px 30px 20px;
+    }
+    .container-date{
+        display: none;
+    }   
+    
+    .container1{
+        display: none;
+    }
+
+    .container2{
+        width: 100%;
+        margin: 5px;
+        &__taller{
+            border-radius: 30px;
+            box-shadow: 0px 0px 5.66077px 5.66077px rgba(177, 175, 175, 0.25);   
+            
+            &--title{
+                text-align: center;
+                border-radius: 30px 30px 0px 0px; 
+                padding: 20px;
+                font-weight: bold;
+                background: #D3D3D3;
+                color: black;
+                height: 30px;
+            }
+            &--cards{            
+                display: grid;
+                column-gap: 0.5em;
+                row-gap: 0.5em;
+                grid-template-columns: 1fr 1fr;
+                border-radius: 30px 30px 0px 0px; 
+    
+                &-card{
+                    box-shadow: 0px 0px 5.66077px 5.66077px rgba(177, 175, 175, 0.25);   
+                    margin: 20px 20px 10px 20px;
+                    background: #F2C94C;
+                    border-radius: 30px;
+                    height: 170px;
+                    cursor: pointer;
+                }
+                &-name{
+                    margin-left: 1px;
+                    font-family: 'Poppins', sans-serif;
+                     font-size: 0.9em;
+                }
+    
+            }
+    
+        }
+    }
+    
 }

@@ -179,17 +179,16 @@
 
   </mat-sidenav>
   <mat-sidenav-content>
-    <mat-toolbar class="main_toolbar" style="padding: 0px 28px">
+    <mat-toolbar class="main_toolbar" >
       <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
 
-      <span style="font-size: 1em; margin-left: 20px; font-family: 'Poppins', sans-serif; font-weight: 500;">Ingeniería
-        DSP</span>
+      <span class="name-toolbar">Ingeniería DSP</span>
 
       <span class="ms-fill"></span>
 
-      <button type="button" aria-label="Toggle sidenav" mat-button (click)="exitApp()">
+      <button type="button" aria-label="Toggle sidenav" class="btn-exit-app" mat-button (click)="exitApp()">
         CERRAR SESION
         <mat-icon aria-label="Side nav toggle icon">exit_to_app</mat-icon>
       </button>
