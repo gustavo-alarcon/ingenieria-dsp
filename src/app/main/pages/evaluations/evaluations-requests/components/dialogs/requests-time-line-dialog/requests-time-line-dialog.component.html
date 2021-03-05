@@ -1,0 +1,37 @@
+<h2 mat-dialog-title>
+    <div class="container-h2">
+        <button mat-icon-button class="container-h2__button">
+            <mat-icon class="container-h2__icon">timeline</mat-icon>
+            <span class="container-h2__title">
+                Línea de tiempo OT - {{data.otMain}}
+            </span>
+        </button>
+        <button mat-icon-button mat-dialog-close>
+            <mat-icon class="container-h2__icon-close">close</mat-icon>
+        </button>
+    </div>
+    <mat-divider style="margin-top: 20px; width: 100%;" cdkFocusInitial></mat-divider>
+    <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+</h2>
+<div class="container-content">
+    <mat-dialog-content class="mat-typography" class="container-content__items">
+        <p><span style="font-weight: bold;"> OT MAIN :</span> {{data.otMain ? data.otMain : ''}}</p>
+        <p><span style="font-weight: bold;"> OT CHILD :</span> {{data.otChild ? data.otChild : ''}}</p>
+        <p><span style="font-weight: bold;"> Correlativo :</span> {{data.position ? data.position : ''}}</p>
+        <p><span style="font-weight: bold;"> N° de parte :</span> {{data.partNumber ? data.partNumber : ''}}</p>
+        <p><span style="font-weight: bold;"> Cantidad :</span> {{data.quantity ? data.quantity : ''}}</p>
+        <p><span style="font-weight: bold;"> Descripcion :</span> {{data.description ? data.description : ''}}</p>
+        <p><span style="font-weight: bold;"> Tipo de Atencion :</span> {{data.status ? data.status : ''}}</p>
+        <p><span style="font-weight: bold;"> Usuario :</span> {{data.createdBy ? data.createdBy : ''}} </p>
+        <p><span style="font-weight: bold;"> WOF (Orden de Fabricacion) :</span> {{data.wof ? data.wof : ''}}</p>
+        <p><span style="font-weight: bold;"> Trabajo :</span> {{data.task ? data.task : ''}}</p>
+        <p><span style="font-weight: bold;"> Observaciones :</span> {{data.observations ? data.observations : ''}}</p>
+    </mat-dialog-content>
+    <mat-dialog-content class="mat-typography" class="container-content__canvas">
+        <app-time-line></app-time-line>
+    </mat-dialog-content>
+</div>
+<mat-divider style="margin: 16px 0px"></mat-divider>
+<mat-dialog-actions align="end">
+    <button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close [disabled]="loading$ | async">CERRAR</button>
+</mat-dialog-actions>

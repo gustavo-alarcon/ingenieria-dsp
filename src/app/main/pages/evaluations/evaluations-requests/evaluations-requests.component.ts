@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { RequestsObservationDialogComponent } from './dialogs/requests-observation-dialog/requests-observation-dialog.component';
-import { RequestsSettingDialogComponent } from './dialogs/requests-setting-dialog/requests-setting-dialog.component';
-import { RequestsStartDialogComponent } from './dialogs/requests-start-dialog/requests-start-dialog.component';
-import { RequestsTimeLineDialogComponent } from './dialogs/requests-time-line-dialog/requests-time-line-dialog.component';
 import { Evaluation } from '../../../models/evaluations.model';
 import { Observable, combineLatest, BehaviorSubject } from 'rxjs';
 import { tap, map, startWith, filter, debounceTime } from 'rxjs/operators';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { EvaluationsService } from '../../../services/evaluations.service';
+import { RequestsSettingDialogComponent } from './components/dialogs/requests-setting-dialog/requests-setting-dialog.component';
+import { RequestsStartDialogComponent } from './components/dialogs/requests-start-dialog/requests-start-dialog.component';
+import { RequestsObservationDialogComponent } from './components/dialogs/requests-observation-dialog/requests-observation-dialog.component';
+import { RequestsTimeLineDialogComponent } from './components/dialogs/requests-time-line-dialog/requests-time-line-dialog.component';
 
 @Component({
   selector: 'app-evaluations-requests',
@@ -136,7 +136,7 @@ export class EvaluationsRequestsComponent implements OnInit {
 
   timeline(item): void {
     this.dialog.open(RequestsTimeLineDialogComponent, {
-      width: '90vw',
+      width: '1000px',
       data: item
     });
   }

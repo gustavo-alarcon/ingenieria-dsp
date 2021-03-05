@@ -1,0 +1,46 @@
+.container-h2 {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    &__button {
+        width: 80px;
+        height: 80px;
+    }
+    &__icon {
+        color: #464646;
+        font-size: 40px;
+        margin-right: 23px;
+    }
+    &__title {
+        font-family: Poppins !important;
+        font-style: normal !important;
+        font-weight: bold !important;
+        font-size: 18px !important;
+        line-height: 27px !important;
+        color: rgba(43, 43, 43, 0.87) !important;
+    }
+    &__icon-close {
+        color: gray;
+    }
+}
+
+.footer__btn-close {
+    color: #b00020;
+    border: 1px solid #b00020;
+    margin-right: 20px;
+    padding: 0px 30px 0px 30px;
+}
+
+.container-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    &__items {
+        width: 380px;
+    }
+    &__canvas {
+        width: 600px;
+        height: 100%;
+        margin-left: 20px;
+    }
+}
