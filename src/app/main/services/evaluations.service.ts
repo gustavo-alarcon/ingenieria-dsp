@@ -37,6 +37,7 @@ export class EvaluationsService {
 
     return { from: actualFromDate, to: toDate };
   }
+
   /**
    * Get all documents from evaluations collection
    */
@@ -44,6 +45,7 @@ export class EvaluationsService {
     return this.afs.collection<Evaluation>(`db/ferreyros/evaluations`, ref => ref.orderBy('createdAt', 'desc'))
       .valueChanges();
   }
+
   /**
    * Creates the evaluations entry into firestore's Evaluations collection
    * @param {EvaluationRegistryForm} form - Form data passed on request creation
@@ -92,13 +94,13 @@ export class EvaluationsService {
     batch.set(evaluationDocRef, data);
     return of(batch);
   }
+
   /**
    * Edit the evaluation entry
    * @param {string} entryId - id data
    * @param {evaluationForm} form - Form data passed on evaluation edit
    * @param {User} user - User's data in actual session
    */
-
   editRequest(entryId: string, form: EvaluationRegistryForm, user: User): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
@@ -128,7 +130,6 @@ export class EvaluationsService {
    * Delete the passed evaluatiion based in his ID
    * @param {string} id - ID of the evaluation to be removed
    */
-
   removeEvaluation(id: string): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
@@ -232,8 +233,6 @@ export class EvaluationsService {
 
       batchArray.push(batch)
     }
-
-
     return of(batchArray);
   }
 

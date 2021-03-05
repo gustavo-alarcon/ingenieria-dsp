@@ -1,7 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { FormGroup } from '@angular/forms';
 import { Evaluation, EvaluationInquiry } from 'src/app/main/models/evaluations.model';
 import { EvaluationsService } from 'src/app/main/services/evaluations.service';
 import { map } from 'rxjs/operators';

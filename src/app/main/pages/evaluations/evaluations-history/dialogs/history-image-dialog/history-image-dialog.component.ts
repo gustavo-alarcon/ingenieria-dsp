@@ -1,15 +1,12 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { BehaviorSubject, concat, Observable, of, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Evaluation } from '../../../../../models/evaluations.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AuthService } from '../../../../../../auth/services/auth.service';
 import { EvaluationsService } from '../../../../../services/evaluations.service';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { take, switchMap, takeLast, finalize } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 import { Ng2ImgMaxService } from 'ng2-img-max';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { AngularFirestore } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-history-image-dialog',

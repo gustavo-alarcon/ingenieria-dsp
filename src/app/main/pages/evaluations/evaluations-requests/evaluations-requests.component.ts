@@ -7,11 +7,8 @@ import { RequestsTimeLineDialogComponent } from './dialogs/requests-time-line-di
 import { Evaluation } from '../../../models/evaluations.model';
 import { Observable, combineLatest, BehaviorSubject } from 'rxjs';
 import { tap, map, startWith, filter, debounceTime } from 'rxjs/operators';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { AuthService } from '../../../../auth/services/auth.service';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { EvaluationsService } from '../../../services/evaluations.service';
-import { LazyLoadImageDirective } from 'ng-lazyload-image';
 
 @Component({
   selector: 'app-evaluations-requests',
