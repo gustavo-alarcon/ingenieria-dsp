@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Chart } from 'node_modules/chart.js';
 import { FormGroup, FormControl } from '@angular/forms';
 import { EvaluationsService } from '../../services/evaluations.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,7 +13,9 @@ export class DashboardComponent implements OnInit {
 
   dateForm: FormGroup;
 
-  constructor(private dbs: EvaluationsService) {}
+  constructor(private dbs: EvaluationsService,
+              public router: Router,
+    ) {}
 
   ngOnInit(): void {
     const view = this.dbs.getCurrentMonthOfViewDate();
@@ -105,5 +108,9 @@ export class DashboardComponent implements OnInit {
         },
       },
     });
+  }
+
+  reports(): void{
+    this.router.navigate(['main/andon-reports']);
   }
 }
