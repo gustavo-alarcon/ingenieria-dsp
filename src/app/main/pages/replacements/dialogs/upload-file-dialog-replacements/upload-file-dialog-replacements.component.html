@@ -83,11 +83,11 @@
     </mat-dialog-content>
 
     <mat-dialog-actions align="end">
-        <button type="file" aria-label="add" mat-button class="footer__btn-close" mat-dialog-close>
+        <button type="file" aria-label="add" mat-button class="footer__btn-close" mat-dialog-close [disabled]="loading$ | async">
             CANCELAR
         </button>
         <button type="file" aria-label="add" mat-button class="footer__btn-save" (click)="save()"
-            [disabled]="!replacementsDataSource.data.length">
+            [disabled]="!replacementsDataSource.data.length || (loading$ | async)">
             GUARDAR
         </button>
     </mat-dialog-actions>
