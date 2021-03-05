@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteDialogComponent } from './dialogs/delete-dialog/delete-dialog.component';
 import { DetailsDialogComponent } from './dialogs/details-dialog/details-dialog.component';
 import { ReturnDialogComponent } from './dialogs/return-dialog/return-dialog.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-reports',
@@ -13,10 +14,17 @@ import { ReturnDialogComponent } from './dialogs/return-dialog/return-dialog.com
 export class ReportsComponent implements OnInit {
   searchForm: FormGroup;
 
-  constructor(    public dialog: MatDialog,
+  constructor(
+              public dialog: MatDialog,
+              public router: Router,
+              private fb: FormBuilder,
+
     ) { }
 
   ngOnInit(): void {
+    this.searchForm = this.fb.group({
+      search: ['', Validators.required]
+    })
   }
   editDialog(): void{
 
@@ -43,5 +51,8 @@ export class ReportsComponent implements OnInit {
         //data: item,
       });
     }
+  dashboard(): void{
+    this.router.navigate(['main/dashboard']);
+  }
 
 }
