@@ -32,6 +32,8 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
 
   private subscription = new Subscription();
 
+  obsAutoComplete$: Observable<EvaluationsResultTypeUser[]>;
+
 
   constructor(
     private fb: FormBuilder,
@@ -48,6 +50,7 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
     } else {
       this.images = [];
     }
+    this.obsAutoComplete$ = this.evaluationServices.getAllEvaluationsSettingsResultType();
   }
 
   ngOnInit(): void {
@@ -59,7 +62,7 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
           this.loading.next(true);
         }),
         startWith(''),
-        debounceTime(400),
+        debounceTime(200),
         distinctUntilChanged(),
         switchMap(val => {
           this.loading.next(false);
@@ -171,7 +174,7 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
   }
 
   filter(val: string): Observable<any> {
-    return this.evaluationServices.getAllEvaluationsSettingsResultType()
+    return this.obsAutoComplete$
       .pipe(
         map(response => response.filter(option => {
           return option.resultType.toLowerCase().indexOf(val.toLowerCase()) === 0;

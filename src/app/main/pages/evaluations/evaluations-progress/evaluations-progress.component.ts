@@ -73,9 +73,6 @@ export class EvaluationsProgressComponent implements OnInit {
       this.workshopControl.valueChanges.pipe(startWith(''))
     ).pipe(
       map(([evaluations, search, workshopCodes]) => {
-        console.log(search, workshopCodes);
-        
-
         const searchTerm = search.toLowerCase().trim();
         let preFilterWorkshop: Evaluation[] = [];
         let preFilterSearch: Evaluation[] = [...evaluations];
