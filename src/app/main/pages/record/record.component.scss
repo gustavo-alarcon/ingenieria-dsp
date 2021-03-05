@@ -57,3 +57,18 @@ table {
     color: white;
     width: 100px;
 }
+
+
+.footer-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-right: 50px;
+    margin-top: 30px;
+    
+    &__download{
+        background: #6200EE;
+        color: white;
+    }
+
+}

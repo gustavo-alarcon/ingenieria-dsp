@@ -69,6 +69,9 @@ export class RecordComponent implements OnInit {
   deleteDialog(): void{
 
   }
+  download(){
+    
+  }
 
 }
 
