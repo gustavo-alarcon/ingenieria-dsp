@@ -15,6 +15,7 @@ import { HistoryObservationDialogComponent } from './dialogs/history-observation
 import { HistoryUploadFileDialogComponent } from './dialogs/history-upload-file-dialog/history-upload-file-dialog.component';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { FormControl } from '@angular/forms';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-evaluations-history',
@@ -165,6 +166,70 @@ export class EvaluationsHistoryComponent implements OnInit {
     });
   }
 
-  showImprovementEntry(): void { }
+  downloadXlsx(evaluations: Evaluation[]): void {
+    let table_xlsx: any[] = [];
+
+    let headersXlsx = [
+      'otMain',
+      'otChild',
+      'position',
+      'partNumber',
+      'description',
+      'internalStatus',
+      'result',
+      'comments',
+      'kindOfTest',
+      'observations',
+      'quantity',
+      'workshop',
+      'status',
+      'wof',
+      'task',
+      'finilizedBy',
+      'createdAt',
+      'finilizedAt',
+      'processAt',
+      'inquiryAt']
+
+    table_xlsx.push(headersXlsx);
+
+    evaluations.forEach(evaluation => {
+      const temp = [
+        evaluation.otMain ? evaluation.otMain : "---",
+        evaluation.otChild ? evaluation.otChild : "---",
+        evaluation.position ? evaluation.position : "---",
+        evaluation.partNumber ? evaluation.partNumber : "---",
+        evaluation.description ? evaluation.description : "---",
+        evaluation.internalStatus ? evaluation.internalStatus : "---",
+        evaluation.result ? evaluation.result : "---",
+        evaluation.comments ? evaluation.comments : "---",
+        evaluation.kindOfTest ? evaluation.kindOfTest : "---",
+        evaluation.observations ? evaluation.observations : "---",
+        evaluation.quantity ? evaluation.quantity : "---",
+        evaluation.workshop ? evaluation.workshop : "---",
+        evaluation.status ? evaluation.status : "---",
+        evaluation.wof ? evaluation.wof : "---",
+        evaluation.task ? evaluation.task : "---",
+        evaluation.finalizedBy ? evaluation.finalizedBy : "---",
+        evaluation.finalizedAt ? evaluation.finalizedAt : "---",
+        evaluation.processAt ? evaluation.processAt : "---",
+        evaluation.inquiryAt ? evaluation.inquiryAt : "---",
+      ]
+
+      table_xlsx.push(temp);
+    })
+    
+
+    /* generate worksheet */
+    const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(table_xlsx);
+
+    /* generate workbook and add the worksheet */
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Evaluaciones');
+
+    /* save to file */
+    const name = 'Evaluaciones_Resultados' + '.xlsx';
+    XLSX.writeFile(wb, name);
+  }
 
 }

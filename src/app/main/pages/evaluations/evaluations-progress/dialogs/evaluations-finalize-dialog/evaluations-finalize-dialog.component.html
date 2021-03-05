@@ -36,7 +36,7 @@
                     <mat-label>Resultado</mat-label>
                     <input matInput placeholder="Resultado" formControlName="result" [matAutocomplete]="auto">
                     <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                        <mat-option *ngFor="let option of filteredOptions | async" [value]="option.resultType">
                             {{option.resultType}}
                         </mat-option>
                     </mat-autocomplete>

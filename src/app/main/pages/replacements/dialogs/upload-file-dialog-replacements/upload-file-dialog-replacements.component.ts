@@ -115,23 +115,26 @@ export class UploadFileDialogReplacementsComponent implements OnInit {
       switchMap(user => {
         return this.repService.createBulkReplacements(this.currentData, user);
       })
-    ).subscribe(batch => {
-      if (batch) {
-        batch.commit()
-          .then(() => {
-            this.loading.next(false);
-            this.snackbar.open('✅ Archivo subido correctamente!', 'Aceptar', {
-              duration: 6000
-            });
-            this.replacementsDataSource.data = [];
-            this.dialogRef.close();
-          })
-          .catch(err => {
-            this.loading.next(false);
-            this.snackbar.open('🚨 Hubo un error subiendo el archivo.', 'Aceptar', {
-              duration: 6000
+    ).subscribe(batchList => {
+      if (batchList) {
+        batchList.forEach(batch => {
+          batch.commit()
+            .then(() => {
+              this.loading.next(false);
+              this.snackbar.open('✅ Archivo subido correctamente!', 'Aceptar', {
+                duration: 6000
+              });
+              this.replacementsDataSource.data = [];
+              this.dialogRef.close();
             })
-          })
+            .catch(err => {
+              this.loading.next(false);
+              this.snackbar.open('🚨 Hubo un error subiendo el archivo.', 'Aceptar', {
+                duration: 6000
+              })
+            })
+        })
+
       }
     });
   }

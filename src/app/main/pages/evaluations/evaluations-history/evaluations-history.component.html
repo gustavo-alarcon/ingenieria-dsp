@@ -8,6 +8,11 @@
       <mat-icon aria-label="agregar" class="icon-add">add</mat-icon>
       CREAR LOTE
     </button>
+
+    <button aria-label="add" mat-button class="btn-add" (click)="downloadXlsx(historyDataSource.data)">
+      <mat-icon aria-label="agregar" class="icon-add">download</mat-icon>
+      DESCARGAR
+    </button>
   </ng-container>
   
   <mat-form-field appearance="outline" style="margin-left: 16px; font-size: 12px;">
