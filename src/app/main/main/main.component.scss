@@ -4,6 +4,14 @@ $base-font: "Poppins", sans-serif;
   display: flex;
   background: #333333;
   color: white;
+  padding: 0px 28px
+}
+.name-toolbar{
+  font-size: 1em;
+  margin-left: 20px;
+  font-family: 'Poppins',
+  sans-serif; font-weight: 500;
+  
 }
 .btn-exit-app {
   position: absolute;
@@ -138,4 +146,44 @@ mat-card img {
 
 ::ng-deep .mat-expansion-panel {
   box-shadow: 0px 0px 0px 0px white !important;
+}
+
+
+ /* 
+  ##Dispositivo = Tablets de baja resolucion y telefnos Mobiles (horizontal)
+  ##Resolucion = B/w 481px to 767px
+*/
+
+@media (min-width: 481px) and (max-width: 767px) {  
+  .btn-exit-app{    
+    position: absolute;
+    right: 20px;   
+  }
+  
+}
+
+/* 
+  ##Dispositivo = Mayoria de telefonos moviles (vertical)
+  ##Resolucion = B/w 320px to 479px
+*/
+
+@media (min-width: 320px) and (max-width: 480px) {    
+  .main_toolbar {
+    display: flex;
+    background: #333333;
+    color: white;
+    padding: 0px 10px
+  }
+  .name-toolbar{
+    font-size:0.9em;
+    margin-left: 10px;
+    font-family: 'Poppins',sans-serif; 
+    font-weight: 400;    
+  }
+  .btn-exit-app{
+    font-size: 0.7em;
+    font-weight: 300; 
+    position: absolute;
+    right: 8px;   
+  }
 }

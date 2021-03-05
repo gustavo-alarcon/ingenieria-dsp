@@ -7,8 +7,8 @@
     <div class="body-container">
         <div class="report">
             <h1 class="report__title">Reportar</h1>
-            <form action="" [formGroup]="reportForm" autocomplete="off" class="form" >
-                <mat-form-field appearance="outline" id="result" style="width: 350px;"> 
+            <form action="" [formGroup]="reportForm" autocomplete="off" class="report__form" >
+                <mat-form-field appearance="outline" id="result" class="report__form--input" > 
                     <mat-label>Nombre de bahia</mat-label>
                     <input matInput placeholder="Nombre de bahia" formControlName="name"/>
                     <mat-error *ngIf="reportForm.controls['name'].errors">
@@ -16,7 +16,7 @@
                     </mat-error>
                 </mat-form-field>
                 <br/>
-                <mat-form-field appearance="outline" id="result" style="width: 350px;"> 
+                <mat-form-field appearance="outline" id="result" class="report__form--input"> 
                     <mat-label>OT CHILD</mat-label>
                     <input matInput placeholder="OT CHILD" formControlName="child"/>
                     <mat-error *ngIf="reportForm.controls['child'].errors">
