@@ -11,7 +11,7 @@
     </div>
     <mat-divider></mat-divider>
     <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
-    <mat-dialog-content style="margin-top: 20px;">
+    <mat-dialog-content style="margin-top: 12px; display: flex; align-items: center;; justify-content: space-between;">
         <div class="details">
             <p><span style="font-weight: bold;"> OT MAIN :</span> {{data.otMain ? data.otMain : ''}}</p>
             <p><span style="font-weight: bold;"> OT CHILD :</span> {{data.otChild ? data.otChild : ''}}</p>
@@ -20,103 +20,43 @@
             <p><span style="font-weight: bold;"> Cantidad :</span> {{data.quantity ? data.quantity : ''}}</p>
             <p><span style="font-weight: bold;"> Descripcion :</span> {{data.description ? data.description : ''}}</p>
             <p><span style="font-weight: bold;"> Tipo de Atencion :</span> {{data.status ? data.status : ''}}</p>
-            <p><span style="font-weight: bold;"> Usuario :</span> {{data.createdBy ? data.createdBy : ''}} </p>
-            <p><span style="font-weight: bold;"> WOF (Orden de Fabricacion) :</span> {{data.wof ? data.wof : ''}}</p>
+            <p><span style="font-weight: bold;"> Usuario :</span> {{data.createdBy.name ? data.createdBy.name : (data.createdBy ? data.createdBy : '')}} </p>
+            <p><span style="font-weight: bold;"> WOF  :</span> {{data.wof ? data.wof : ''}}</p>
             <p><span style="font-weight: bold;"> Trabajo :</span> {{data.task ? data.task : ''}}</p>
             <p><span style="font-weight: bold;"> Observaciones :</span> {{data.observations ? data.observations : ''}}
             </p>
-
-            <!-- <mat-form-field appearance="outline" style="width: 400px;">
-                    <mat-label>Observaciones</mat-label>
-                    <textarea matInput placeholder="XXXXXXXXXXXXXXXx" name="area" readonly></textarea>
-                    <mat-error *ngIf="createImprovenmentsForm.controls['name'].errors">
-                        Campo <strong>requerido.</strong>
-                    </mat-error>
-                </mat-form-field> -->
-
         </div>
 
-        <!-- <div class="line">
-                <div class="md-stepper-horizontal green">
-                    <div class="md-step active">
-                        <div class="md-step-title">Ingreso</div>
-                        <div class="md-step-circle"><span>01</span></div>
-                        <div class="md-step-bar-left"></div>
-                        <div class="md-step-bar-right"></div>
-                        <div [className]="process?'md-step-bar-bottom border':'md-step-bar-bottom register'"></div>
-                    </div>
-                    <div [className]="register?'md-step active':'md-step'">
-                        <div class="md-step-title">Registro</div>
-                        <div class="md-step-circle"><span>02</span></div>
-                        <div class="md-step-bar-left"></div>
-                        <div class="md-step-bar-right"></div>
-                        <div *ngIf="register" class="md-step-bar-bottom"></div>
-                    </div>
-                    <div [className]="process?'md-step active':'md-step'">
-                        <div class="md-step-title">Inicio</div>
-                        <div class="md-step-circle"><span>03</span></div>
-                        <div class="md-step-bar-left"></div>
-                        <div class="md-step-bar-right"></div>
-                        <div *ngIf="process" [className]="process?'md-step-bar-bottom register':'md-step-bar-bottom'"></div>
-                    </div>
-                    <div [className]="finish?'md-step active':'md-step'">
-                        <div class="md-step-title">Finalizado</div>
-                        <div class="md-step-circle"><span>04</span></div>
-                        <div class="md-step-bar-left"></div>
-                        <div class="md-step-bar-right"></div>
-                        <div *ngIf="finish" class="md-step-bar-bottom"></div>
-                    </div>
-                    <div [className]="out?'md-step active':'md-step'">
-                        <div class="md-step-title">Despacho</div>
-                        <div class="md-step-circle"><span>05</span></div>
-                        <div class="md-step-bar-left"></div>
-                        <div class="md-step-bar-right"></div>
-                        <div class="md-step-bar-bottom border" *ngIf="out"></div>
-                    </div>
+        <div class="time-line">
+            <div class="time-line__registry">
+                <div>
+                    {{data.registryTimeElapsed?.days | number : '2.'}} /
+                    {{data.registryTimeElapsed?.hours | number : '2.'}} :
+                    {{data.registryTimeElapsed?.minutes | number : '2.'}} :
+                    {{data.registryTimeElapsed?.seconds | number : '2.'}}
                 </div>
-                <div class="md-step-times" *ngIf="register" [ngStyle]="{'width': width + '%'}">
-                    <div class="times-div">
-                        <div class="time">Δt espera IN</div>
-                        <div class="minutes">
-                            {{getTimers(data['internalWashEnterData']['enterDate'], data['internalWashRegisterData']['registerDate'])}}
-                            min
-                        </div>
-                    </div>
-                    <div *ngIf="process" class="times-div">
-                        <div class="time">Δt registro</div>
-                        <div class="minutes">
-                            {{getTimers(data['internalWashRegisterData']['registerDate'], data['internalWashBeginData']['washBeginDate'])}}
-                            min
-                        </div>
-                    </div>
-                    <div *ngIf="finish" class="times-div">
-                        <div class="time">Δt lavado</div>
-                        <div class="minutes">
-                            {{getTimers(data['internalWashBeginData']['washBeginDate'], data['internalWashEndData']['washEndDate'])}}
-                            min</div>
-                    </div>
-                    <div *ngIf="out" class="times-div">
-                        <div class="time">Δt espera OUT</div>
-                        <div class="minutes">
-                            {{getTimers(data['internalWashEndData']['washEndDate'], data['internalWashDispatchData']['dispatchDate'])}}
-                            min
-                        </div>
-                    </div>
-                </div>
-                <div class="md-step-register" *ngIf="process">
-                    <div class="time">Δt Ingreso</div>
-                    <div class="minutes">
-                        {{getTimers(data['internalWashEnterData']['enterDate'], data['internalWashBeginData']['washBeginDate'])}}
-                        min</div>
-                </div>
-                <div class="md-step-total" [ngStyle]="{'width': (out?width:width+25) + '%'}">
-                    <div class="time">Δt atención</div>
-                    <div class="minutes">
-                        {{out?getTimers(data['internalWashEnterData']['enterDate'], data['internalWashDispatchData']['dispatchDate']):getTime(data['internalWashEnterData']['enterDate'])}}
-                        min</div>
-                </div>
-            </div> -->
+            </div>
 
+            <div class="time-line__attention">
+                <div>
+                    {{data.attentionTimeElapsed?.days | number : '2.'}} /
+                    {{data.attentionTimeElapsed?.hours | number : '2.'}} :
+                    {{data.attentionTimeElapsed?.minutes | number : '2.'}} :
+                    {{data.attentionTimeElapsed?.seconds | number : '2.'}}
+                </div>
+            </div>
+
+            <div class="time-line__processed">
+                <div>
+                    {{data.processTimeElapsed?.days | number : '2.'}} /
+                    {{data.processTimeElapsed?.hours | number : '2.'}} :
+                    {{data.processTimeElapsed?.minutes | number : '2.'}} :
+                    {{data.processTimeElapsed?.seconds | number : '2.'}}
+                </div>
+            </div>
+
+            <img src="../../../../../../../assets/img/timeline-s2.png" alt="" style="width: 100%">
+        </div>
 
     </mat-dialog-content>
 

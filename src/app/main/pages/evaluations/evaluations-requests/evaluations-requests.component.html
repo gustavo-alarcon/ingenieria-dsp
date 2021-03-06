@@ -56,19 +56,22 @@
         </div>
       </div>
       <div class="info-box">
-        <div class="lj"><span>{{item.otMain}}</span> </div>
-        <div class="info-row">OT Child: <span>{{item.otChild}} </span> </div>
-        <div class="info-row"> Nro parte: <span> {{item.partNumber}}</span> </div>
-        <div class="info-row"> Fecha: <span>{{(item.createdAt['seconds'] *1000) | date:'dd/MM/yyyy -
-            h:mm:ss'}}</span> </div>
+        <div class="lj" matTooltip="WOF" matTooltipPosition="above"><span>{{item.wof}}</span> </div>
+        <div class="info-row">WO Child: <span>{{item.otChild}} </span> </div>
+        <div class="info-row"> WO Main: <span> {{item.otMain}}</span> </div>
+        <div class="info-row"> Nro Parte: <span> {{item.partNumber}}</span></div>
       </div>
-      <div>
-        <div class="progress-time"></div>
-        <div class="progress-dynamic">
-          <div class="progress-transparent"></div>
-          <div class="progress-black"></div>
+      <div class="timer-container">
+        <div class="timer-color">
         </div>
-        <div class="progress-view">40 min</div>
+        <div class="timer-black" [ngStyle]="{'width.%': item.registryPercentageElapsed }">
+        </div>
+        <div class="progress-view">
+          {{item.registryTimeElapsed?.days | number : '2.'}} /
+          {{item.registryTimeElapsed?.hours | number : '2.'}} :
+          {{item.registryTimeElapsed?.minutes | number : '2.'}} :
+          {{item.registryTimeElapsed?.seconds | number : '2.'}}
+        </div>
       </div>
     </div>
 

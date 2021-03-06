@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { User } from '../models/user-model';
-import { EvaluationRegistryForm, Evaluation, EvaluationInquiry, EvaluationFinishForm, EvaluationsUser, EvaluationsBroadcastUser, EvaluationsResultTypeUser } from '../models/evaluations.model';
+import { EvaluationRegistryForm, Evaluation, EvaluationInquiry, EvaluationFinishForm, EvaluationsUser, EvaluationsBroadcastUser, EvaluationsResultTypeUser, EvaluationTimer } from '../models/evaluations.model';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
@@ -194,14 +194,17 @@ export class EvaluationsService {
    * @param {string} data - ID of the evaluation to be removed
    * @param {string} internalStatus - change internalStatus
    */
-  startRequest(id: string, state: string): Observable<firebase.default.firestore.WriteBatch> {
+  startRequest(evaluation: Evaluation, state: string): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
     // create document reference in evaluation collection
-    const evaluationDocRef = this.afs.firestore.doc(`/db/ferreyros/evaluations/${id}`);
+    const evaluationDocRef = this.afs.firestore.doc(`/db/ferreyros/evaluations/${evaluation.id}`);
     // const evaluationDocRef = this.afs.firestore.collection(`/db/ferreyros/evaluations`).doc(data.id);
     const newData = {
       internalStatus: state,
+      registryTimeElapsed: evaluation.registryTimeElapsed,
+      registryPercentageElapsed: evaluation.registryPercentageElapsed,
+      processAt: new Date()
     };
     batch.update(evaluationDocRef, newData);
     return of(batch);
@@ -284,10 +287,9 @@ export class EvaluationsService {
     // Set inquiry 
     batch.set(inquiryDocRef, sendDataInquiry);
 
-
     // SECOND - Update inquiries counter and internalStatus
     // Update counter with atomic operation
-    batch.update(evaluationDocRef, { inquiriesCounter: firebase.default.firestore.FieldValue.increment(1), internalStatus: 'consultation' });
+    batch.update(evaluationDocRef, { inquiriesCounter: firebase.default.firestore.FieldValue.increment(1), internalStatus: 'consultation', inquiryAt: new Date() });
 
     // Return batch
     return of(batch);
@@ -333,17 +335,34 @@ export class EvaluationsService {
 
   /**
    * update the passed evaluatiion based in his registryTimer
-   * @param {string} state - update registryTimer
-   * @param {string} id - id data evaluations
+   * @param {string} timer - time object
    */
-  addTimerInRequest(state: string, timer: number): Observable<firebase.default.firestore.WriteBatch> {
+  addTimerInRequest(timer: EvaluationTimer): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
 
     // create document reference in evaluation collection
-    const evaluationDocRef = this.afs.firestore.doc(`/db/ferreyros/evaluations`);
+    const evaluationDocRef = this.afs.firestore.doc(`/db/generalConfig`);
     const newData = {
       registryTimer: timer,
+    };
+
+    batch.update(evaluationDocRef, newData);
+    return of(batch);
+  }
+
+  /**
+   * update the passed evaluatiion based in his processTimer
+   * @param {EvaluationTimer} timer - time object
+   */
+   addTimerInProcess(timer: EvaluationTimer): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+
+    // create document reference in evaluation collection
+    const evaluationDocRef = this.afs.firestore.doc(`/db/generalConfig`);
+    const newData = {
+      processTimer: timer,
     };
 
     batch.update(evaluationDocRef, newData);

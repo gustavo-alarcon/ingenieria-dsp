@@ -1,10 +1,12 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { take } from 'rxjs/operators';
+import { take, tap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EvaluationsService } from '../../../../../services/evaluations.service';
+import { AuthService } from 'src/app/auth/services/auth.service';
+import { GeneralConfig } from 'src/app/auth/models/generalConfig.model';
 
 @Component({
   selector: 'app-requests-setting-dialog',
@@ -18,32 +20,40 @@ export class RequestsSettingDialogComponent implements OnInit {
   loading = new BehaviorSubject<boolean>(false);
   loading$ = this.loading.asObservable();
 
+  generalConfig$ : Observable<GeneralConfig>;
+
   constructor(
-        @Inject(MAT_DIALOG_DATA) public data: any,
         public dialogRef: MatDialogRef<RequestsSettingDialogComponent>,
         private snackbar: MatSnackBar,
         private fb: FormBuilder,
         private  evaltService: EvaluationsService,
+        private auth: AuthService
   ) { }
 
   ngOnInit(): void {
-    console.log('data : ',this.data)
-    this.timerFormGroup = this.fb.group({
-      hours: [null, Validators.required],
-      minutes: [null, [Validators.required]]
-    });
+    
+    this.generalConfig$ = this.auth.getGeneralConfig()
+      .pipe(
+        tap(res => {
+          this.timerFormGroup = this.fb.group({
+            days: [res.registryTimer.days, Validators.required],
+            hours: [res.registryTimer.hours, Validators.required],
+            minutes: [res.registryTimer.minutes, [Validators.required]]
+          });
+        })
+      )
+    
   }
+
   save(): void {
     try {
-      const state = 'registered';
-      const newTime = this.timerFormGroup.get('hours').value * 3600 * 1000 + this.timerFormGroup.get('minutes').value * 60 * 1000;
       this.evaltService
-        .addTimerInRequest(state, newTime)
+        .addTimerInRequest(this.timerFormGroup.value)
         .pipe(take(1))
         .subscribe((res) => {
           res.commit().then(() => {
             this.dialogRef.close('result');
-            this.snackbar.open('✅ inicio timer', 'Aceptar', {
+            this.snackbar.open('✅ Timer guardado', 'Aceptar', {
               duration: 6000,
             });
           });
@@ -53,7 +63,6 @@ export class RequestsSettingDialogComponent implements OnInit {
         duration: 6000,
       });
     }
-
   }
 
 }

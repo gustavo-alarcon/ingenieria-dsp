@@ -23,12 +23,19 @@ export interface Evaluation {
     imagesCounter: number;
     inquiries?: Array<EvaluationInquiry>;
     inquiriesCounter: number;
-    // registryDate?: Date; // Fecha de solicitud
-    registryTimer?: EvaluationTimer;
+    registryTimer?: any;
+    registryTimeElapsed?: EvaluationTimer;
+    registryPercentageElapsed?: number;
     processAt?: Date;
-    processTimer?: EvaluationTimer;
+    processTimer?: any;
+    processTimeElapsed?: EvaluationTimer;
+    processPercentageElapsed?: number;
     inquiryAt?: Date;
-    inquiryTimer?: EvaluationTimer;
+    inquiryTimer?: any;
+    inquiryTimeElapsed?: EvaluationTimer;
+    inquiryPercentageElapsed?: number;
+    inquiryProcessedTimeElapsed?: EvaluationTimer;
+    attentionTimeElapsed?: EvaluationTimer;
     finalizedAt?: Date;
     finalizedBy: User;
     result?: string; // Esta info viene de una lista standard (pendiente)
@@ -60,9 +67,10 @@ export interface EvaluationFinishForm {
 }
 
 export interface EvaluationTimer {
+    days: number;
     hours: number;
     minutes: number;
-    seconds: number;
+    seconds: number
 }
 
 /**

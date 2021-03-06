@@ -15,6 +15,7 @@ import { HistoryUploadFileDialogComponent } from './dialogs/history-upload-file-
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { FormControl } from '@angular/forms';
 import * as XLSX from 'xlsx';
+import { HistoryCreateDialogComponent } from './dialogs/history-create-dialog/history-create-dialog.component';
 
 @Component({
   selector: 'app-evaluations-history',
@@ -122,6 +123,14 @@ export class EvaluationsHistoryComponent implements OnInit {
     let dialogRef;
 
     switch (value) {
+      case 'create':
+        dialogRef = this.dialog.open(HistoryCreateDialogComponent,
+          optionsDialog,
+        );
+        dialogRef.afterClosed().subscribe(result => {
+          console.log(`Dialog result: ${result}`);
+        });
+        break;
       case 'edit':
         dialogRef = this.dialog.open(HistoryEditDialogComponent,
           optionsDialog,
