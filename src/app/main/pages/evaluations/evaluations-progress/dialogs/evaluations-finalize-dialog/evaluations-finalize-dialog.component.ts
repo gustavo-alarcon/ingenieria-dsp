@@ -4,10 +4,11 @@ import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Evaluation, EvaluationsResultTypeUser } from 'src/app/main/models/evaluations.model';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { debounceTime, distinctUntilChanged, finalize, map, startWith, switchMap, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, finalize, map, startWith, switchMap, take, tap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Ng2ImgMaxService } from 'ng2-img-max';
 import { EvaluationsService } from 'src/app/main/services/evaluations.service';
+import { AuthService } from 'src/app/auth/services/auth.service';
 
 @Component({
   selector: 'app-evaluations-finalize-dialog',
@@ -42,7 +43,8 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
     @Inject(MAT_DIALOG_DATA) public data: Evaluation,
     public dialogRef: MatDialogRef<EvaluationsFinalizeDialogComponent>,
     private storage: AngularFireStorage,
-    private evaluationServices: EvaluationsService
+    private evaluationServices: EvaluationsService,
+    private auth: AuthService
   ) {
     if (data.images) {
       const arr = Object.values(data.images);
@@ -100,12 +102,29 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
       this.images.forEach((value, index) => {
         imagesObj[index] = value;
       });
-      await this.evaluationServices.updateImagesFinalizeData(this.data.id, imagesObj, this.finalizeForm.value);
-      this.loading.next(false);
-      this.snackBar.open('✅ se guardo correctamente!', 'Aceptar', {
-        duration: 6000
-      });
-      this.dialogRef.close('true');
+
+      this.auth.user$
+        .pipe(
+          take(1)
+        ).subscribe(user => {
+          this.evaluationServices.updateImagesFinalizeData(this.data, imagesObj, this.finalizeForm.value, user)
+            .pipe(
+              take(1)
+            ).subscribe(batch => {
+              if (batch) {
+                batch.commit()
+                  .then(() => {
+                    this.loading.next(false);
+                    this.snackBar.open('✅ se guardo correctamente!', 'Aceptar', {
+                      duration: 6000
+                    });
+                    this.dialogRef.close('true');
+                  })
+              }
+            })
+
+        })
+
     } catch (error) {
       this.loading.next(false);
       this.snackBar.open('🚨 Hubo un error.', 'Aceptar', {

@@ -18,7 +18,7 @@ export class EvaluationsService {
     private afAuth: AngularFireAuth,
 
   ) { }
-  
+
   getCurrentMonthOfViewDate(): { from: Date, to: Date } {
     const date = new Date();
     const fromMonth = date.getMonth();
@@ -80,7 +80,6 @@ export class EvaluationsService {
       processAt: null,
       processTimer: null,
       inquiryAt: null,
-      inquiryTimer: null,
       finalizedBy: null,
       finalizedAt: null,
       result: null,
@@ -240,18 +239,30 @@ export class EvaluationsService {
   }
 
 
-  async updateImagesFinalizeData(id: string, imagesObj, entry: EvaluationFinishForm): Promise<void> {
-    return await this.afs.firestore.collection(`/db/ferreyros/evaluations`).doc(id)
-      .set(
-        {
-          result: entry.result,
-          kindOfTest: entry.kindOfTest,
-          comments: entry.comments,
-          images: imagesObj,
-          internalStatus: 'finalized'
-        },
-        { merge: true }
-      );
+  updateImagesFinalizeData(evaluation: Evaluation, imagesObj, entry: EvaluationFinishForm, user: User): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    let batch = this.afs.firestore.batch();
+
+    // create docuemnt reference
+    let evaluationDocRef = this.afs.firestore.doc(`/db/ferreyros/evaluations/${evaluation.id}`)
+
+    let data =
+    {
+      result: entry.result,
+      kindOfTest: entry.kindOfTest,
+      comments: entry.comments,
+      images: imagesObj,
+      internalStatus: 'finalized',
+      finalizedAt: new Date(),
+      finalizedBy: user,
+      processTimeElapsed: evaluation.processTimeElapsed,
+      processPercentageElapsed: evaluation.processPercentageElapsed,
+      attentionTimeElapsed: evaluation.attentionTimeElapsed,
+    }
+
+    batch.update(evaluationDocRef, data);
+
+    return of(batch);
   }
 
   async updateImage(id: string, imagesObj): Promise<void> {
@@ -355,7 +366,7 @@ export class EvaluationsService {
    * update the passed evaluatiion based in his processTimer
    * @param {EvaluationTimer} timer - time object
    */
-   addTimerInProcess(timer: EvaluationTimer): Observable<firebase.default.firestore.WriteBatch> {
+  addTimerInProcess(timer: EvaluationTimer): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
 

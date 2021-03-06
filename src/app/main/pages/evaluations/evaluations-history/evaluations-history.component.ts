@@ -16,6 +16,7 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 import { FormControl } from '@angular/forms';
 import * as XLSX from 'xlsx';
 import { HistoryCreateDialogComponent } from './dialogs/history-create-dialog/history-create-dialog.component';
+import { HistoryTimeLineComponent } from './dialogs/history-time-line/history-time-line.component';
 
 @Component({
   selector: 'app-evaluations-history',
@@ -165,6 +166,19 @@ export class EvaluationsHistoryComponent implements OnInit {
           console.log(`Dialog result: ${result}`);
         });
         break;
+      case 'time-line':
+        dialogRef = this.dialog.open(HistoryTimeLineComponent,
+          {
+            width: '90vw',
+            disableClose: true,
+            data: entry
+          }
+        );
+
+        dialogRef.afterClosed().subscribe(result => {
+          console.log(`Dialog result: ${result}`);
+        });
+        break;
     }
   }
 
@@ -226,7 +240,7 @@ export class EvaluationsHistoryComponent implements OnInit {
 
       table_xlsx.push(temp);
     })
-    
+
 
     /* generate worksheet */
     const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(table_xlsx);

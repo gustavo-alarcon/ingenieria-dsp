@@ -166,6 +166,10 @@
                 <mat-icon>delete</mat-icon>
                 Borrar
               </button>
+              <button class="w3-small" mat-menu-item (click)="openDialog('time-line', element, i)">
+                <mat-icon>timeline</mat-icon>
+                Linea de tiempo
+              </button>
               <button class="w3-small" mat-menu-item (click)="openDialog('observation', element, i)">
                 <mat-icon>remove_red_eye</mat-icon>
                 Observaciones

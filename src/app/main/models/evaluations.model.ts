@@ -31,10 +31,6 @@ export interface Evaluation {
     processTimeElapsed?: EvaluationTimer;
     processPercentageElapsed?: number;
     inquiryAt?: Date;
-    inquiryTimer?: any;
-    inquiryTimeElapsed?: EvaluationTimer;
-    inquiryPercentageElapsed?: number;
-    inquiryProcessedTimeElapsed?: EvaluationTimer;
     attentionTimeElapsed?: EvaluationTimer;
     finalizedAt?: Date;
     finalizedBy: User;
