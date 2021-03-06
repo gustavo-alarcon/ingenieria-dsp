@@ -11,6 +11,7 @@ export interface Andon {
   otChild: number;
   problemType?: string;
   description?: string;
+  images?: Array<string>;
   atentionTime: Date;
   user: string;
   state: string; //=> stopped //retaken

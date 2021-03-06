@@ -58,8 +58,12 @@ const routes: Routes = [
         loadChildren: () => import('./pages/andon/report/report.module').then(m => m.ReportModule)
       },
       {
-        path: 'reporte',
+        path: 'reporte/:id',
         loadChildren: () => import('./pages/andon/report-2nd-step/report-2nd-step.module').then(m => m.report2ndStepModule)
+      },
+      {
+        path: 'andon-settings',
+        loadChildren: () => import('./pages/andon/settings/settings.module').then(m => m.SettingsModule)
       },
       {
         path: '**',

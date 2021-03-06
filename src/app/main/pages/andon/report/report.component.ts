@@ -44,29 +44,13 @@ export class ReportComponent implements OnInit, OnDestroy {
       this.loading.next(false);
       return;
     } else {
-      this.auth.user$.pipe(
-        take(1),
-        switchMap(user => {
-          return this.andonService.addAndon(this.reportForm.value, user);
-        })
-    ).subscribe(batch => {
-      if (batch) {
-        batch.commit()
-          .then(() => {
-            this.loading.next(false);
-            this.snackbar.open('✅ se guardo correctamente!', 'Aceptar', {
-              duration: 6000
-            });
-            this.router.navigate(['main/reporte']);
-          })
-          .catch(err => {
-            this.loading.next(false);
-            this.snackbar.open('🚨 Hubo un error.', 'Aceptar', {
-              duration: 6000
-            });
-          });
-        }
-      });
+      const name =this.reportForm.value['name'];
+      const otChild = this.reportForm.value['otChild'];
+      const id = `${name}-${otChild}`
+
+      this.router.navigate(['main/reporte',id]);
+      
+      this.loading.next(false);
     }
 
   }
