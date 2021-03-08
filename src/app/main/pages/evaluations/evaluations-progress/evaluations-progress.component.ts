@@ -93,13 +93,17 @@ export class EvaluationsProgressComponent implements OnInit {
           preFilterSearch = preFilterWorkshop.filter(evaluation => {
             return String(evaluation.otMain).toLowerCase().includes(searchTerm) ||
               String(evaluation.otChild).toLowerCase().includes(searchTerm) ||
-              String(evaluation.partNumber).toLowerCase().includes(searchTerm);
+              String(evaluation.wof).toLowerCase().includes(searchTerm) ||
+              String(evaluation.partNumber).toLowerCase().includes(searchTerm) ||
+              String(evaluation.description).toLowerCase().includes(searchTerm);
           });
         } else {
           preFilterSearch = evaluations.filter(evaluation => {
             return String(evaluation.otMain).toLowerCase().includes(searchTerm) ||
               String(evaluation.otChild).toLowerCase().includes(searchTerm) ||
-              String(evaluation.partNumber).toLowerCase().includes(searchTerm);
+              String(evaluation.wof).toLowerCase().includes(searchTerm) ||
+              String(evaluation.partNumber).toLowerCase().includes(searchTerm) ||
+              String(evaluation.description).toLowerCase().includes(searchTerm);
           })
         }
 

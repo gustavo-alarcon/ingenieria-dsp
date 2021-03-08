@@ -91,13 +91,19 @@ export class EvaluationsHistoryComponent implements OnInit {
         if (status.length > 1) {
           preFilterStatus = evaluations.filter(evaluation => evaluation.internalStatus === status);
           preFilterSearch = preFilterStatus.filter(evaluation => {
-            return String(evaluation.otMain).includes(searchTerm) ||
-              String(evaluation.otChild).includes(searchTerm)
+            return String(evaluation.otMain).toLowerCase().includes(searchTerm) ||
+              String(evaluation.otChild).toLowerCase().includes(searchTerm) ||
+              String(evaluation.wof).toLowerCase().includes(searchTerm) ||
+              String(evaluation.partNumber).toLowerCase().includes(searchTerm) ||
+              String(evaluation.description).toLowerCase().includes(searchTerm);
           })
         } else {
           preFilterSearch = evaluations.filter(evaluation => {
-            return String(evaluation.otMain).includes(searchTerm) ||
-              String(evaluation.otChild).includes(searchTerm)
+            return String(evaluation.otMain).toLowerCase().includes(searchTerm) ||
+              String(evaluation.otChild).toLowerCase().includes(searchTerm) ||
+              String(evaluation.wof).toLowerCase().includes(searchTerm) ||
+              String(evaluation.partNumber).toLowerCase().includes(searchTerm)||
+              String(evaluation.description).toLowerCase().includes(searchTerm);
           })
         }
 
