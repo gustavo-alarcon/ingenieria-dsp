@@ -4,35 +4,51 @@
         <h1 style="font-size: 2.2em; margin-left: 20px; font-family: 'Poppins', sans-serif; font-weight: 700;">Reportar</h1>              
     </div>
     <mat-divider></mat-divider>
+    <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+
     <div class="body-container">
         <div class="report">
             <h1 class="report__title">Reportar</h1>
             <form action="" [formGroup]="reportForm" autocomplete="off" class="report__form" >
-                <p style="margin-left: 0px;">OT CHILD Número </p>
-                <mat-form-field appearance="outline" id="result" class="report__form--input"> 
+                <p style="margin-left: 0px;">OT CHILD : {{otChild}} </p>
+                <mat-form-field *ngIf="typeProblem$ | async as typeProblem" appearance="outline" id="result" class="report__form--input"> 
                     <mat-label>Tipo de problema</mat-label>
-                    <mat-select  formControlName="typeProblem">
-                        <mat-option *ngFor="let item of typeProblem" [value]="item.name">{{item.name}}</mat-option>
+                    <mat-select   formControlName="problemType">
+                        <mat-option *ngFor="let item of typeProblem" [value]="item.problemType">{{item.problemType}}</mat-option>
                     </mat-select>
-                    <mat-error *ngIf="reportForm.controls['typeProblem'].errors">
+                    <mat-error *ngIf="reportForm.controls['problemType'].errors">
                         Campo <strong>requerido.</strong>
                     </mat-error>
                 </mat-form-field>
                 <br/>
                 <mat-form-field appearance="outline" id="result" class="report__form--input"> 
                     <mat-label>Descripcion</mat-label>
-                    <textarea matInput placeholder="Descripcion" formControlName="descripcion">
+                    <textarea matInput placeholder="Descripcion" formControlName="description">
 
                     </textarea>
-                    <mat-error *ngIf="reportForm.controls['descripcion'].errors">
+                    <mat-error *ngIf="reportForm.controls['description'].errors">
                         Campo <strong>requerido.</strong>
                     </mat-error>
                 </mat-form-field>
-                <div >
-                    <img src='../../../../../../../assets/img/camara.png'
-                   class="report__form--img" />
-                <br/>
 
+                <div *ngFor="let img of images;let i=index;">
+                    <a [href]="img" target="_blank" style="cursor: zoom-in" class="report__form--img" class="pointer">
+                        <img [src]="img" *ngIf="img">
+                    </a>
+                </div>
+                <div *ngFor="let imgUpload of imagesUpload;let i=index">
+                    <label [for]="i">
+                        <mat-card class="mat-elevation-z0">
+                            <img [src]="imgUpload" onError="this.src='../../../../../../../assets/img/camara.png'" class="report__form--img"/>
+                            <mat-card-actions *ngIf="imgUpload" align="end">
+                                <button mat-icon-button (click)="deleteImage(imgForDelete,i)">
+                                    <mat-icon color="warn">delete</mat-icon>
+                                </button>
+                            </mat-card-actions>
+                        </mat-card>
+                        <br>
+                    </label>
+                    <input [id]="i" type="file" style="display: none;" (change)="uploadFile($event,i)" accept="image/x-png, image/jpg, image/jpeg" />
                 </div>
                 
                 <button mat-button type="submit" class="btn" (click)="save()" >
