@@ -11,10 +11,10 @@
             <h1 class="report__title">Reportar</h1>
             <form action="" [formGroup]="reportForm" autocomplete="off" class="report__form" >
                 <p style="margin-left: 0px;">OT CHILD : {{otChild}} </p>
-                <mat-form-field appearance="outline" id="result" class="report__form--input"> 
+                <mat-form-field *ngIf="typeProblem$ | async as typeProblem" appearance="outline" id="result" class="report__form--input"> 
                     <mat-label>Tipo de problema</mat-label>
-                    <mat-select  formControlName="problemType">
-                        <mat-option *ngFor="let item of typeProblem" [value]="item.name">{{item.name}}</mat-option>
+                    <mat-select   formControlName="problemType">
+                        <mat-option *ngFor="let item of typeProblem" [value]="item.problemType">{{item.problemType}}</mat-option>
                     </mat-select>
                     <mat-error *ngIf="reportForm.controls['problemType'].errors">
                         Campo <strong>requerido.</strong>

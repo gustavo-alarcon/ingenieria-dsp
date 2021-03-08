@@ -1,11 +1,10 @@
-import { Andon } from './../models/andon.model';
 import { Injectable } from '@angular/core';
 import { User } from '../models/user-model';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable, of } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { AndonProblemType, AndonListBahias } from '../models/andon.model';
+import { AndonProblemType, AndonListBahias, Andon } from '../models/andon.model';
 
 @Injectable({
   providedIn: 'root',
@@ -49,6 +48,12 @@ export class AndonService {
       console.log(error);
     });
   }
+
+  // get all andonListBahias
+  getAllAndonSettingsListBahias(): Observable<AndonListBahias[]> {
+    return this.afs.collection<AndonListBahias>(`/db/generalConfig/andonListBahias`, ref => ref.orderBy('createdAt', 'asc'))
+      .valueChanges();
+  }
   /**
    * Creates the andonListBahias entry into firestore's andonListBahias collection
    * @param {AndonListBahias} form - Form data passed on request creation
@@ -73,6 +78,58 @@ export class AndonService {
     });
     return of(batch);
   }
+
+  /**
+   * getByID the passed andon
+   * @param {string} item - filter for id
+   */
+   getAndonById(id: string): Observable<any> {
+    return this.afs
+      .collection<any>(`/db/ferreyros/andon`, (ref) =>
+        ref.where('id', '==', id)
+      )
+      .valueChanges();
+  }
+  /**
+   * workShop the passed andon
+   * @param {string} workShop - filter for workShop
+   */
+   getAndonByWorkShop(workShop: string): Observable<Andon[]> {
+    return this.afs
+      .collection<Andon>(`/db/ferreyros/andon`, (ref) =>
+        ref.where('workShop', '==', workShop)
+      )
+      .valueChanges();
+  }
+
+  /**
+   * update the evaluation entry
+   * @param {string} entryId - id data
+   * @param {Andon} form - Form data passed on andon edit
+   * @param {string} imges - imgs
+   */
+   updateAndon(entryId: string, form, imags): Observable<firebase.default.firestore.WriteBatch> {
+
+     console.log(entryId)
+     console.log(form)
+     console.log(imags)
+     // create batch
+     const batch = this.afs.firestore.batch();
+      // create reference for document in evaluation entries collection
+     const evaluationDocRef = this.afs.firestore
+        .doc(`/db/ferreyros/andon/${entryId}`);
+      // Structuring the data model
+     const data: any = {
+        problemType: form.problemType,
+        description: form.description,
+        images: imags,
+      };
+     batch.update(evaluationDocRef, data);
+
+     return of(batch);
+  }
+
+
 
 
 
@@ -119,42 +176,8 @@ export class AndonService {
     return of(batch);
   }
 
-  /**
-   * update the evaluation entry
-   * @param {string} entryId - id data
-   * @param {Andon} form - Form data passed on andon edit
-   */
-  updateAndon(
-    entryId: string,
-    form,
-    imags
-  ): Observable<firebase.default.firestore.WriteBatch> {
-    // create batch
-    const batch = this.afs.firestore.batch();
-    // create reference for document in evaluation entries collection
-    const evaluationDocRef = this.afs.firestore
-      .collection(`db/ferreyros/andon/${entryId}`)
-      .doc();
-    // Structuring the data model
-    const data: any = {
-      problemType: null,
-      description: null,
-      images: null,
-    };
-    batch.update(evaluationDocRef, data);
-    return of(batch);
-  }
-  /**
-   * getByID the passed andon
-   * @param {string} item - filter for id
-   */
-  getAndonById(id: string): Observable<Andon[]> {
-    return this.afs
-      .collection<Andon>(`/db/ferreyros/andon`, (ref) =>
-        ref.where('id', '==', id)
-      )
-      .valueChanges();
-  }
+  
+  
   getProduct(id: string): Observable<Andon> {
     return this.afs
       .doc<Andon>(`/db/ferreyros/andon/${id}`)

@@ -1,4 +1,3 @@
-import { Andon } from './../../../models/andon.model';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -9,6 +8,7 @@ import { Ng2ImgMaxService } from 'ng2-img-max';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { take, tap, switchMap, finalize } from 'rxjs/operators';
 import { AuthService } from '../../../../auth/services/auth.service';
+import { Andon, AndonProblemType} from './../../../models/andon.model';
 
 @Component({
   selector: 'app-report-2nd-step',
@@ -28,17 +28,10 @@ export class report2ndStepComponent implements OnInit, OnDestroy {
   uploadPercent$: Observable<number>;
   filteredOptions: Observable<string[]>;
 
-  name: string;
-  otChild: string;
-
-  typeProblem = [
-    { name: 'Seguridad' },
-    { name: 'Insumos' },
-    { name: 'Calidad' },
-    { name: 'Maquinas' },
-    { name: 'Administrativo' },
-    { name: 'Soporte' },
-  ];
+  wrokShop: string;
+  otChild: number;
+  typeProblem$: Observable<AndonProblemType[]>;
+  andOn$: Observable<Andon>;
 
   private subscription = new Subscription();
   constructor(
@@ -52,13 +45,7 @@ export class report2ndStepComponent implements OnInit, OnDestroy {
     private auth: AuthService
   ) {
     this.currentId = this.route.snapshot.paramMap.get('id');
-    let sep = '-';
-    let arrayText = this.currentId.split(sep);
-    this.name = arrayText[0];
-    this.otChild = arrayText[1];
 
-    console.log(this.name);
-    console.log(this.otChild);
   }
 
   ngOnInit(): void {
@@ -66,74 +53,65 @@ export class report2ndStepComponent implements OnInit, OnDestroy {
       problemType: ['', Validators.required],
       description: ['', Validators.required],
     });
+    this.loading.next(true);
 
-    console.log(this.currentId);
+    this.subscription.add(
+      this.andonService.getAndonById(this.currentId).subscribe((res: Andon) => {
+        let andon: Andon;
+        andon = res['0'];
+        console.log('andon : ', andon);
+        this.otChild = andon.otChild;
+        this.wrokShop = andon.workShop;
+      })
+    );
+
+    this.typeProblem$ = this.andonService.getAllAndonSettingsProblemType().pipe(
+      tap((res) => {
+        return res;
+      })
+    );
+    this.loading.next(false);
   }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
   save(): void {
-    this.loading.next(true);
-    if (this.reportForm.invalid) {
-      this.reportForm.markAllAsTouched();
-      this.loading.next(false);
-      return;
-    } else {
-      this.auth.user$
-        .pipe(
-          take(1),
-          switchMap((user) => {
-            this.images = [];
-            const imagesObj = {};
-            this.images = [...this.images, ...this.imagesUpload];
-            this.images.pop();
-            this.images.forEach((value, index) => {
-              imagesObj[index] = value;
-            });
-            return this.andonService.addAndon(
-              this.reportForm.value,
-              imagesObj,
-              user,
-              this.name,
-              parseInt(this.otChild)
-            );
-          })
-        )
-        .subscribe((batch) => {
-          if (batch) {
-            batch
-              .commit()
-              .then(() => {
-                this.loading.next(false);
-                this.snackbar.open('✅ se guardo correctamente!', 'Aceptar', {
-                  duration: 6000,
-                });
-                this.router.navigate(['main/andon-reports']);
-              })
-              .catch((err) => {
-                this.loading.next(false);
-                this.snackbar.open('🚨 Hubo un error.', 'Aceptar', {
-                  duration: 6000,
-                });
-              });
-          }
-        });
-    }
-  }
-
-  async deleteImage(imgForDelete: string, index: number): Promise<void> {
     try {
       this.loading.next(true);
-      await this.andonService.deleteImage(this.imagesUpload[index]);
-      this.imagesUpload.splice(index, 1);
+      if (this.reportForm.invalid) {
+        this.reportForm.markAllAsTouched();
+        this.loading.next(false);
+        return;
+      } else {
+        this.images = [];
+        const imagesObj = {};
+        this.images = [...this.images, ...this.imagesUpload];
+        this.images.pop();
+        this.images.forEach((value, index) => {
+          imagesObj[index] = value;
+        });
+        this.andonService.updateAndon(this.currentId, this.reportForm.value, imagesObj )
+          .pipe(take(1))
+          .subscribe((res) => {
+            res.commit().then(() => {
+              this.snackbar.open('✅ Se actualizo correctamente', 'Aceptar', {
+                duration: 6000,
+              });
+              const code =  this.wrokShop;
+              this.router.navigate(['main/andon-reports', code]);
+              this.loading.next(false);
+
+            });
+            });
+      }
+    }catch (error) {
+      this.snackbar.open( '🚨 Error al actualizar' + `${error}`, 'Aceptar', {
+        duration: 6000,
+      });
       this.loading.next(false);
-    } catch (error) {
-      console.log(error);
-      this.loading.next(false);
-      this.imagesUpload.splice(index, 1);
+
     }
   }
-
   uploadFile(event, i?: number): void {
     if (!event.target.files[0]) {
       return;
@@ -142,7 +120,7 @@ export class report2ndStepComponent implements OnInit, OnDestroy {
     const file = event.target.files[0];
     this.subscription.add(
       this.ng2ImgMax.resize([file], 800, 1000).subscribe((result) => {
-        const name = `andon/${this.otChild}/pictures/${this.otChild}-${this.date}-${result.name}.png`;
+        const name = `andon/${this.currentId}/pictures/${this.currentId}-${this.date}-${result.name}.png`;
         const fileRef = this.storage.ref(name);
         const task = this.storage.upload(name, file);
         this.uploadPercent$ = task.percentageChanges();
@@ -162,8 +140,7 @@ export class report2ndStepComponent implements OnInit, OnDestroy {
                 });
                 this.loading.next(false);
               })
-            )
-            .subscribe()
+            ).subscribe()
         );
       })
     );

@@ -50,7 +50,7 @@ const routes: Routes = [
         loadChildren: () => import('./pages/andon/record/record.module').then(m => m.RecordModule)
       },
       {
-        path: 'andon-reports',
+        path: 'andon-reports/:code',
         loadChildren: () => import('./pages/andon/reports/reports.module').then(m => m.ReportsModule)
       },
       {
