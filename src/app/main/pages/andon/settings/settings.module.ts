@@ -3,13 +3,15 @@ import { CommonModule } from '@angular/common';
 
 import { SettingsRoutingModule } from './settings-routing.module';
 import { SettingsComponent } from './settings.component';
+import { MaterialModule } from '../../../../material/material.module';
 
 
 @NgModule({
   declarations: [SettingsComponent],
   imports: [
     CommonModule,
-    SettingsRoutingModule
+    SettingsRoutingModule,
+    MaterialModule
   ]
 })
 export class SettingsModule { }

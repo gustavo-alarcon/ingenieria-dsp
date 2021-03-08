@@ -5,6 +5,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable, of } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 import { AngularFireStorage } from '@angular/fire/storage';
+import { AndonProblemType } from '../models/andon.model';
 
 @Injectable({
   providedIn: 'root'
@@ -86,4 +87,41 @@ export class AndonService {
   async deleteImage(imagesObj: string): Promise<any> {
     return await this.storage.storage.refFromURL(imagesObj).delete();
   }
+  addAndonSettingsProblemType(listProblemType, user: User): Observable<firebase.default.firestore.WriteBatch> {
+      const date = new Date();
+      const batch = this.afs.firestore.batch();
+      //listEvaluationsResult.forEach((el) => {
+        const evaluationDocRef = this.afs.firestore.collection(`/db/generalConfig/andonProblemType`).doc();
+  
+       // if (!el.id) {
+          const objAux: any = {
+            id: evaluationDocRef.id,
+            resultType: listProblemType,
+            createdBy: user,
+            createdAt: date
+          };
+          batch.set(evaluationDocRef, objAux);
+       // }
+      //});
+      return of(batch);
+    }
+
+    createListBahiasAndon(listBahias, user: User): Observable<firebase.default.firestore.WriteBatch> {
+      const date = new Date();
+      const batch = this.afs.firestore.batch();
+      //listEvaluationsResult.forEach((el) => {
+        const evaluationDocRef = this.afs.firestore.collection(`/db/generalConfig/andonProblemType`).doc();
+  
+       // if (!el.id) {
+      const objAux: any = {
+            id: evaluationDocRef.id,
+            resultType: listBahias,
+            createdBy: user,
+            createdAt: date
+          };
+          batch.set(evaluationDocRef, objAux);
+       // }
+      //});
+      return of(batch);
+    }
 }

@@ -19,3 +19,10 @@ export interface Andon {
   comments?: string;
   returnUser?: string;
 }
+
+export interface AndonProblemType{
+  id: string;
+  problemType: string;
+  createdAt: Date;
+  createdBy: User;
+}
