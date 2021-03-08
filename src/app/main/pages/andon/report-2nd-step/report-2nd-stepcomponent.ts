@@ -149,4 +149,16 @@ export class report2ndStepComponent implements OnInit, OnDestroy {
   get imagesArray(): FormArray {
     return this.reportForm.get('images') as FormArray;
   }
+  async deleteImage(imgForDelete: string, index: number): Promise<void> {
+    try {
+      this.loading.next(true);
+      await this.andonService.deleteImage(this.imagesUpload[index]);
+      this.imagesUpload.splice(index, 1);
+      this.loading.next(false);
+    } catch (error) {
+      console.log(error);
+      this.loading.next(false);
+      this.imagesUpload.splice(index, 1);
+    }
+  }
 }

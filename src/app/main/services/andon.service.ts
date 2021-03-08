@@ -128,6 +128,9 @@ export class AndonService {
 
      return of(batch);
   }
+  async deleteImage(imagesObj: string): Promise<any> {
+    return await this.storage.storage.refFromURL(imagesObj).delete();
+  }
 
 
 
@@ -184,8 +187,5 @@ export class AndonService {
       .valueChanges()
       .pipe(shareReplay(1));
   }
-  async deleteImage(imagesObj: string): Promise<any> {
-    return await this.storage.storage.refFromURL(imagesObj).delete();
-  }
-
+  
 }

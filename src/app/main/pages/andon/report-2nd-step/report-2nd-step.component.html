@@ -32,16 +32,16 @@
                 </mat-form-field>
 
                 <div *ngFor="let img of images;let i=index;">
-                    <a [href]="img" target="_blank" style="cursor: zoom-in" class="report__form--img">
+                    <a [href]="img" target="_blank" style="cursor: zoom-in" class="report__form--img" class="pointer">
                         <img [src]="img" *ngIf="img">
                     </a>
                 </div>
                 <div *ngFor="let imgUpload of imagesUpload;let i=index">
                     <label [for]="i">
-                        <mat-card class="report__form--card">
+                        <mat-card class="mat-elevation-z0">
                             <img [src]="imgUpload" onError="this.src='../../../../../../../assets/img/camara.png'" class="report__form--img"/>
                             <mat-card-actions *ngIf="imgUpload" align="end">
-                                <button mat-icon-button (click)="deleteImage(i)">
+                                <button mat-icon-button (click)="deleteImage(imgForDelete,i)">
                                     <mat-icon color="warn">delete</mat-icon>
                                 </button>
                             </mat-card-actions>
