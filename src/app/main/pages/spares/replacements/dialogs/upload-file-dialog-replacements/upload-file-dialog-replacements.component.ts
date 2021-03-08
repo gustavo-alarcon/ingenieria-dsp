@@ -38,6 +38,7 @@ export class UploadFileDialogReplacementsComponent implements OnInit {
   }
 
   @ViewChild("fileInput2", { read: ElementRef }) fileButton: ElementRef;
+  
   constructor(
     public dialogRef: MatDialogRef<UploadFileDialogReplacementsComponent>,
     private snackbar: MatSnackBar,
