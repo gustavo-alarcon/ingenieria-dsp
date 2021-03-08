@@ -1,0 +1,36 @@
+.container {
+    margin: 40px 70px 40px 70px;
+}
+
+.header-container {
+    display: inline-flex;
+}
+
+.btn-add {
+    border: 1px #6200ee solid;
+    color: #6200ee;
+    margin-left: 40px;
+    padding: 5px 30px 5px 30px;
+}
+
+.icon-add {
+    color: #6200ee;
+}
+
+.body-container {
+    margin-top: 40px;
+}
+
+table {
+    width: 100%;
+}
+
+.btn-state-validate {
+    background: #27ae60;
+    color: white;
+}
+
+.btn-state-register {
+    background: #f2c94c;
+    color: black;
+}

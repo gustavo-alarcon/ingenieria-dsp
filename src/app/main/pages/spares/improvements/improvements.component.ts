@@ -35,7 +35,6 @@ export class ImprovementsComponent implements OnInit {
   constructor(
     private impvServices: ImprovementsService,
     public dialog: MatDialog,
-    private fb: FormBuilder,
   ) { }
 
   ngOnInit(): void {

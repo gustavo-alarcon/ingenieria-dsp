@@ -22,6 +22,10 @@ const routes: Routes = [
         loadChildren: () => import('./pages/spares/replacements/replacements.module').then(m => m.ReplacementsModule)
       },
       {
+        path: 'frequencies',
+        loadChildren: () => import('./pages/spares/frequency/frequency.module').then(m => m.FrequencyModule)
+      },
+      {
         path: 'summary',
         loadChildren: () => import('./pages/spares/summary/summary.module').then(m => m.SummaryModule)
       },
