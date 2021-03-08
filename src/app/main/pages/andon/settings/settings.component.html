@@ -27,8 +27,8 @@
                         </mat-card-header>
                     </mat-card>
                     <mat-card class="mat-elevation-z0 container-expansion1__content-card">
-<!--                         <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
- -->                        <mat-card-header class="container-expansion1__content-card--header">
+                        <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+                        <mat-card-header class="container-expansion1__content-card--header">
                             <mat-form-field>
                                 <mat-label>Escribir</mat-label>
                                 <input type="text" matInput placeholder="Escribir" [formControl]="listProblemTypeFormControl" (keyup.enter)="addListProblemType()" [errorStateMatcher]="matcher" autocomplete="off">

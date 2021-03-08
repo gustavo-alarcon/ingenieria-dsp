@@ -26,3 +26,10 @@ export interface AndonProblemType{
   createdAt: Date;
   createdBy: User;
 }
+export interface AndonListBahias{
+  id: string;
+  name: string;
+  workShop: string;
+  createdAt: Date;
+  createdBy: User;
+}

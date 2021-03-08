@@ -51,8 +51,49 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.subscription.add(this.auth.user$.subscribe(user => {
       this.user = user;
     }));
+
+    this.subscription.add(
+      this.andonService.getAllAndonSettingsProblemType().subscribe((resp) => {
+        if (resp) {
+          this.listProblemTypeArray = resp;
+        } else {
+          this.listProblemTypeArray = [];
+        }
+      })
+    );
+
+    this.loading.next(false);
   }
 
+  addListProblemType(): void{
+    if (this.listProblemTypeFormControl.valid) {
+      const objAux: AndonProblemType = {
+        id: null,
+        problemType: this.listProblemTypeFormControl.value.trim().toLowerCase(),
+        createdAt: null,
+        createdBy: null,
+      };
+      const valueIsEquals = (currentValue) => currentValue.resultType !== objAux.problemType;
+      if (this.listProblemTypeArray.every(valueIsEquals)) {
+        this.listProblemTypeArray.push(objAux);
+      }
+      this.listProblemTypeFormControl.reset();
+    }
+  }
+ async deleteListProblemType(index: number): Promise<void>{
+     if (this.listProblemTypeArray[index].id) {
+      this.loading.next(true);
+      await this.andonService.deleteAndonSettingsProblemType(this.listProblemTypeArray[index].id);
+      this.snackbar.open('✅ Elemento borrado correctamente', 'Aceptar', {
+        duration: 6000
+      });
+      this.loading.next(false);
+    }
+
+     this.listProblemTypeArray.splice(index, 1);
+     this.loading.next(false);
+
+  }
   saveDataProblemType(): void{
     try {
       const resp = this.andonService.addAndonSettingsProblemType(this.listProblemTypeArray, this.user);
@@ -82,36 +123,10 @@ export class SettingsComponent implements OnInit, OnDestroy {
     }
   }
 
-  addListProblemType(): void{
-    if (this.listProblemTypeFormControl.valid) {
-      const objAux: AndonProblemType = {
-        id: null,
-        problemType: this.listProblemTypeFormControl.value.trim().toLowerCase(),
-        createdAt: null,
-        createdBy: null,
-      };
-      const valueIsEquals = (currentValue) => currentValue.resultType !== objAux.problemType;
-      if (this.listProblemTypeArray.every(valueIsEquals)) {
-        this.listProblemTypeArray.push(objAux);
-      }
-      this.listProblemTypeFormControl.reset();
-    }
-  }
-  deleteListProblemType(index: number): void{
-
-    /* if (this.listProblemTypeArray[index].id) {
-      this.loading.next(true);
-      await this.evalService.deleteEvaluationsSettingsResultType(this.listResultArray[index].id);
-      this.snackbar.open('✅ Elemento borrado correctamente', 'Aceptar', {
-        duration: 6000
-      });
-      this.loading.next(false);
-    } */
-    this.listProblemTypeArray.splice(index, 1);
-  }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
+
   get bahias(): FormArray {
     return this.listBahiasForm.get('bahias') as FormArray;
   }
@@ -137,7 +152,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
       this.auth.user$.pipe(
         take(1),
         switchMap(user => {
-          return this.andonService.createListBahiasAndon(this.listBahiasForm.value, user);
+          return this.andonService.createListBahiasAndon( this.listBahiasForm.value, user);
         })
       ).subscribe(batch => {
         if (batch) {
@@ -147,6 +162,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
               this.snackbar.open('✅ Mejoras registradas!', 'Aceptar', {
                 duration: 6000
               });
+              this.listBahiasForm.reset();
             })
             .catch(err => {
               this.loading.next(false);

@@ -5,51 +5,118 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable, of } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { AndonProblemType } from '../models/andon.model';
+import { AndonProblemType, AndonListBahias } from '../models/andon.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AndonService {
-
   constructor(
-             private afs: AngularFirestore,
-             private storage: AngularFireStorage,
-    ) { }
+    private afs: AngularFirestore,
+    private storage: AngularFireStorage
+  ) {}
+  // get all andonProblemType
+  getAllAndonSettingsProblemType(): Observable<AndonProblemType[]> {
+    return this.afs.collection<AndonProblemType>(`/db/generalConfig/andonProblemType`, ref => ref.orderBy('createdAt', 'asc'))
+      .valueChanges();
+  }
+   /**
+   * Creates the listProblemType entry into firestore's listProblemType collection
+   * @param {AndonProblemType} form - Form data passed on request creation
+   * @param {User} user - User's data in actual session
+   */
+  addAndonSettingsProblemType( listProblemType: AndonProblemType[], user: User ): Observable<firebase.default.firestore.WriteBatch> {
+    const date = new Date();
+    const batch = this.afs.firestore.batch();
+    listProblemType.forEach((el) => {
+      const evaluationDocRef = this.afs.firestore.collection(`/db/generalConfig/andonProblemType`).doc();
+
+      if (!el.id) {
+        const objAux: any = {
+          id: evaluationDocRef.id,
+          problemType: el.problemType,
+          createdBy: user,
+          createdAt: date,
+        };
+        batch.set(evaluationDocRef, objAux);
+      }
+    });
+    return of(batch);
+  }
+  deleteAndonSettingsProblemType(id: string): void {
+    this.afs.firestore.collection(`/db/generalConfig/andonProblemType`).doc(id).delete().then(() => {
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+  /**
+   * Creates the andonListBahias entry into firestore's andonListBahias collection
+   * @param {AndonListBahias} form - Form data passed on request creation
+   * @param {User} user - User's data in actual session
+   */
+  createListBahiasAndon(listBahias: AndonListBahias[], user: User ): Observable<firebase.default.firestore.WriteBatch> {
+    const date = new Date();
+    const batch = this.afs.firestore.batch();
+    listBahias['bahias'].forEach((el) => {
+      const evaluationDocRef = this.afs.firestore.collection(`/db/generalConfig/andonListBahias`)
+        .doc();
+      if (!el.id) {
+        const objAux: any = {
+          id: evaluationDocRef.id,
+          name: el.name,
+          workShop: el.workShop,
+          createdBy: user,
+          createdAt: date,
+        };
+        batch.set(evaluationDocRef, objAux);
+      }
+    });
+    return of(batch);
+  }
+
+
 
   /**
    * Creates the repot entry into firestore's Andon collection
    * @param {Andon} form - Form data passed on request creation
    * @param {User} user - User's data in actual session
    */
-  addAndon(form: Andon, imagesObj, user: User, name: string, otChild: number): Observable<firebase.default.firestore.WriteBatch> {
-     // create batch
-     const batch = this.afs.firestore.batch();
-     // create reference for document in andon entries collection
-     const andonDocRef = this.afs.firestore.collection(`db/ferreyros/andon`).doc();
-     // Structuring the data model
-     const data: Andon = {
-       id: andonDocRef.id,
-       createdAt: new Date,
-       createdBy: user,
-       editedAt: null,
-       edited: null,
-       reportDate: new Date(),
-       workShop: null,
-       name: name,
-       otChild: otChild,
-       problemType: form.problemType,
-       description: form.description,
-       images: imagesObj,
-       atentionTime: new Date(),
-       user: user.name,
-       state: 'stopped', //=> stopped //retaken
-       workReturnDate: null,
-       comments: null,
-       returnUser: null,
-     };
-     batch.set(andonDocRef, data);
-     return of(batch);
+  addAndon(
+    form: Andon,
+    imagesObj,
+    user: User,
+    name: string,
+    otChild: number
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    // create reference for document in andon entries collection
+    const andonDocRef = this.afs.firestore
+      .collection(`db/ferreyros/andon`)
+      .doc();
+    // Structuring the data model
+    const data: Andon = {
+      id: andonDocRef.id,
+      createdAt: new Date(),
+      createdBy: user,
+      editedAt: null,
+      edited: null,
+      reportDate: new Date(),
+      workShop: null,
+      name: name,
+      otChild: otChild,
+      problemType: form.problemType,
+      description: form.description,
+      images: imagesObj,
+      atentionTime: new Date(),
+      user: user.name,
+      state: 'stopped', //=> stopped //retaken
+      workReturnDate: null,
+      comments: null,
+      returnUser: null,
+    };
+    batch.set(andonDocRef, data);
+    return of(batch);
   }
 
   /**
@@ -57,71 +124,45 @@ export class AndonService {
    * @param {string} entryId - id data
    * @param {Andon} form - Form data passed on andon edit
    */
-   updateAndon(entryId: string, form ,imags): Observable<firebase.default.firestore.WriteBatch> {
+  updateAndon(
+    entryId: string,
+    form,
+    imags
+  ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
     // create reference for document in evaluation entries collection
-    const evaluationDocRef = this.afs.firestore.collection(`db/ferreyros/andon/${entryId}`).doc();
+    const evaluationDocRef = this.afs.firestore
+      .collection(`db/ferreyros/andon/${entryId}`)
+      .doc();
     // Structuring the data model
     const data: any = {
       problemType: null,
       description: null,
-      images:null,
+      images: null,
     };
     batch.update(evaluationDocRef, data);
     return of(batch);
   }
   /**
-   * getByID the passed andon 
+   * getByID the passed andon
    * @param {string} item - filter for id
    */
-   getAndonById(id: string): Observable<Andon[]> {
-    return this.afs.collection<Andon>(`/db/ferreyros/andon`,
-      ref => ref.where('id', '==', id))
+  getAndonById(id: string): Observable<Andon[]> {
+    return this.afs
+      .collection<Andon>(`/db/ferreyros/andon`, (ref) =>
+        ref.where('id', '==', id)
+      )
       .valueChanges();
   }
   getProduct(id: string): Observable<Andon> {
-    return this.afs.doc<Andon>(`/db/ferreyros/andon/${id}`)
-      .valueChanges().pipe (shareReplay(1));
+    return this.afs
+      .doc<Andon>(`/db/ferreyros/andon/${id}`)
+      .valueChanges()
+      .pipe(shareReplay(1));
   }
   async deleteImage(imagesObj: string): Promise<any> {
     return await this.storage.storage.refFromURL(imagesObj).delete();
   }
-  addAndonSettingsProblemType(listProblemType, user: User): Observable<firebase.default.firestore.WriteBatch> {
-      const date = new Date();
-      const batch = this.afs.firestore.batch();
-      //listEvaluationsResult.forEach((el) => {
-        const evaluationDocRef = this.afs.firestore.collection(`/db/generalConfig/andonProblemType`).doc();
-  
-       // if (!el.id) {
-          const objAux: any = {
-            id: evaluationDocRef.id,
-            resultType: listProblemType,
-            createdBy: user,
-            createdAt: date
-          };
-          batch.set(evaluationDocRef, objAux);
-       // }
-      //});
-      return of(batch);
-    }
 
-    createListBahiasAndon(listBahias, user: User): Observable<firebase.default.firestore.WriteBatch> {
-      const date = new Date();
-      const batch = this.afs.firestore.batch();
-      //listEvaluationsResult.forEach((el) => {
-        const evaluationDocRef = this.afs.firestore.collection(`/db/generalConfig/andonProblemType`).doc();
-  
-       // if (!el.id) {
-      const objAux: any = {
-            id: evaluationDocRef.id,
-            resultType: listBahias,
-            createdBy: user,
-            createdAt: date
-          };
-          batch.set(evaluationDocRef, objAux);
-       // }
-      //});
-      return of(batch);
-    }
 }
