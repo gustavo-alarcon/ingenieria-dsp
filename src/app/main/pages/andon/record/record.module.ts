@@ -4,10 +4,11 @@ import { CommonModule } from '@angular/common';
 import { RecordRoutingModule } from './record-routing.module';
 import { RecordComponent } from './record.component';
 import { MaterialModule } from '../../../../material/material.module';
+import { ImageDialogComponent } from './dialog/image-dialog/image-dialog.component';
 
 
 @NgModule({
-  declarations: [RecordComponent],
+  declarations: [RecordComponent, ImageDialogComponent],
   imports: [
     CommonModule,
     RecordRoutingModule,

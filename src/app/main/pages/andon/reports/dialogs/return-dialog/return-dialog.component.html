@@ -13,44 +13,42 @@
     <mat-divider></mat-divider>
 </h2>
 <mat-dialog-content class="mat-typography" style="color: gray;">
-    <form [formGroup]="detailsForm" autocomplete="off" class="form" style="margin-left: 15px;" >
+    <form [formGroup]="returnForm" autocomplete="off" class="form" style="margin-left: 15px;" >
         <div class="form-container__form-inputs">
             <mat-form-field appearance="outline" id="result" class="form__input" > 
                 <mat-label>Comentarios</mat-label>
                 <textarea matInput placeholder="Comentarios" formControlName="comments" ></textarea>
-                <mat-error *ngIf="detailsForm.controls['comments'].errors">
+                <mat-error *ngIf="returnForm.controls['comments'].errors">
                     Campo <strong>requerido.</strong>
                 </mat-error>
             </mat-form-field>
             
         </div>
 
-        <div *ngFor="let img of images;let i=index;">
+        <div *ngFor="let img of images;let i=index;" class="form__image1">
             <a [href]="img" target="_blank" style="cursor: zoom-in">
-                <img [src]="img" *ngIf="img">
+                <img [src]="img" *ngIf="img" class="form__image1--image">
             </a>
         </div>
 
-
-        <div style="text-align: center;margin: 15px;" *ngFor="let imgUpload of imagesUpload;let i=index">
+        <div *ngFor="let imgUpload of imagesUpload;let i=index" class="form__image2">
             <label [for]="i">
                 <mat-card class="mat-elevation-z0">
-                    <img [src]="imgUpload" onError="this.src='../../../../../../../assets/img/camara.png'"
-                        class="image" />
+                    <img [src]="imgUpload" onError="this.src='../../../../../../../assets/img/camara.png'" class="form__image2--imgUpload"/>
                     <mat-card-actions *ngIf="imgUpload" align="end">
-                        <button mat-icon-button >  <!-- (click)="deleteImage(imgForDelete, i)" -->
-                             <mat-icon color="warn">delete</mat-icon>
+                        <button mat-icon-button (click)="deleteImage(imgForDelete,i)">
+                            <mat-icon color="warn">delete</mat-icon>
                         </button>
                     </mat-card-actions>
                 </mat-card>
-                <mat-divider></mat-divider>
+                <br>
             </label>
-            <input [id]="i" type="file" style="display: none;" (change)="uploadFile($event,i)"
-                accept="image/x-png, image/jpg, image/jpeg" />
+            <input [id]="i" type="file" style="display: none;" (change)="uploadFile($event,i)" accept="image/x-png, image/jpg, image/jpeg" />
         </div>
+
     </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
     <button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close>CERRAR</button>
-    <button type="button" mat-raised-button color="primary" class="footer__btn-save" cdkFocusInitial > RETOMAR</button>
+    <button type="button" mat-raised-button color="primary" class="footer__btn-save" cdkFocusInitial (click)="save()" > RETOMAR</button>
 </mat-dialog-actions>

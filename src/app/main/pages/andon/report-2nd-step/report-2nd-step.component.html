@@ -31,11 +31,6 @@
                     </mat-error>
                 </mat-form-field>
 
-                <div *ngFor="let img of images;let i=index;">
-                    <a [href]="img" target="_blank" style="cursor: zoom-in" class="report__form--img" class="pointer">
-                        <img [src]="img" *ngIf="img">
-                    </a>
-                </div>
                 <div *ngFor="let imgUpload of imagesUpload;let i=index">
                     <label [for]="i">
                         <mat-card class="mat-elevation-z0">

@@ -5,10 +5,10 @@ import { DeleteDialogComponent } from './dialogs/delete-dialog/delete-dialog.com
 import { DetailsDialogComponent } from './dialogs/details-dialog/details-dialog.component';
 import { ReturnDialogComponent } from './dialogs/return-dialog/return-dialog.component';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import { Andon } from '../../../models/andon.model';
 import { AndonService } from '../../../services/andon.service';
-import { tap } from 'rxjs/operators';
+import { tap, debounceTime, filter, startWith, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-reports',
@@ -19,6 +19,7 @@ export class ReportsComponent implements OnInit {
   searchForm: FormGroup;
   currentWorkShop: string;
   workShop$: Observable<Andon[]>;
+  state = 'stopped';
   constructor(
               public dialog: MatDialog,
               public router: Router,
@@ -35,20 +36,35 @@ export class ReportsComponent implements OnInit {
       search: ['', Validators.required]
     });
 
-    this.workShop$ = this.andonService.getAndonByWorkShop(this.currentWorkShop).pipe(
-      tap((res) => {
-        return res;
-      })
+    this.workShop$ = combineLatest(
+      this.andonService.getAndonByWorkShop(this.currentWorkShop, this.state) ,
+       this.searchForm.get('search').valueChanges.pipe(
+        debounceTime(300),
+        filter(input => input !== null),
+        startWith<any>('')),
+    ).pipe(
+      map(([andons, search]) => {
+
+        const searchTerm = search.toLowerCase().trim();
+        let preFilterSearch: Andon[] = [...andons];
+
+        preFilterSearch = andons.filter(andon => {
+            return String(andon.name).toLowerCase().includes(searchTerm) ||
+              String(andon.otChild).toLowerCase().includes(searchTerm)
+          });
+
+        return preFilterSearch;
+      }),
     );
   }
   editDialog(): void{
 
   }
-  returnDialog(): void{
+  returnDialog(item): void{
     this.dialog.open(ReturnDialogComponent, {
       maxWidth: 500,
       width: '90vw',
-      //data: item,
+      data: item,
     });
   }
   detailsDialog(item): void{
