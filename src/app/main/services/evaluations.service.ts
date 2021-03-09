@@ -6,6 +6,7 @@ import { EvaluationRegistryForm, Evaluation, EvaluationInquiry, EvaluationFinish
 import { AngularFireStorage } from '@angular/fire/storage';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -42,8 +43,13 @@ export class EvaluationsService {
    * Get all documents from evaluations collection
    */
   getAllEvaluations(): Observable<Evaluation[]> {
-    return this.afs.collection<Evaluation>(`db/ferreyros/evaluations`, ref => ref.orderBy('createdAt', 'desc'))
-      .valueChanges();
+    return this.afs.collection<Evaluation>(`db/ferreyros/evaluations`, ref => ref.orderBy('createdAt', 'asc'))
+      .valueChanges()
+      .pipe(
+        map(list => {
+          return list.sort((a, b) => a['createdAt']['seconds'] - b['createdAt']['seconds'])
+        })
+      )
   }
 
   /**
@@ -175,8 +181,13 @@ export class EvaluationsService {
    */
   getAllEvaluationsByInternalStatus(state: string): Observable<Evaluation[]> {
     return this.afs.collection<Evaluation>(`/db/ferreyros/evaluations`,
-      ref => ref.where('internalStatus', '==', state).orderBy('createdAt', 'desc'))
-      .valueChanges();
+      ref => ref.where('internalStatus', '==', state))
+      .valueChanges()
+      .pipe(
+        map(list => {
+          return list.sort((a, b) => a['createdAt']['seconds'] - b['createdAt']['seconds'])
+        })
+      )
   }
 
   /**
@@ -184,8 +195,13 @@ export class EvaluationsService {
    */
   getAllEvaluationsInProcess(): Observable<Evaluation[]> {
     return this.afs.collection<Evaluation>(`/db/ferreyros/evaluations`,
-      ref => ref.where('internalStatus', 'in', ['processed', 'consultation']).orderBy('createdAt', 'desc'))
-      .valueChanges();
+      ref => ref.where('internalStatus', 'in', ['processed', 'consultation']))
+      .valueChanges()
+      .pipe(
+        map(list => {
+          return list.sort((a, b) => a['createdAt']['seconds'] - b['createdAt']['seconds'])
+        })
+      )
   }
 
   /**
