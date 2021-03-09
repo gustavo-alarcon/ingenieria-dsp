@@ -4,13 +4,17 @@
         <h1 style="font-size: 2.2em; margin-left: 20px; font-family: 'Poppins', sans-serif; font-weight: 700;">Reportar</h1>              
     </div>
     <mat-divider></mat-divider>
+    <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+
     <div class="body-container">
         <div class="report">
             <h1 class="report__title">Reportar</h1>
-            <form action="" [formGroup]="reportForm" autocomplete="off" class="report__form" >
-                <mat-form-field appearance="outline" id="result" class="report__form--input" > 
-                    <mat-label>Nombre de bahia</mat-label>
-                    <input matInput placeholder="Nombre de bahia" formControlName="name"/>
+            <form [formGroup]="reportForm" autocomplete="off" class="report__form" >
+                <mat-form-field *ngIf="nameBahias$ | async as bahias" appearance="outline" id="result" class="report__form--input"> 
+                    <mat-label>Tipo de problema</mat-label>
+                    <mat-select  formControlName="name">
+                        <mat-option   *ngFor="let item of bahias" [value]="item">{{ item.workShop + " - " +item.name}}</mat-option>
+                    </mat-select>
                     <mat-error *ngIf="reportForm.controls['name'].errors">
                         Campo <strong>requerido.</strong>
                     </mat-error>
@@ -18,15 +22,15 @@
                 <br/>
                 <mat-form-field appearance="outline" id="result" class="report__form--input"> 
                     <mat-label>OT CHILD</mat-label>
-                    <input matInput placeholder="OT CHILD" formControlName="child"/>
-                    <mat-error *ngIf="reportForm.controls['child'].errors">
+                    <input matInput type="number" placeholder="OT CHILD" formControlName="otChild"/>
+                    <mat-error *ngIf="reportForm.controls['otChild'].errors">
                         Campo <strong>requerido.</strong>
                     </mat-error>
                 </mat-form-field>
                 <br/>
-                <button  style="background: transparent;" type="submit" class="btn" (click)="report()">
+                <button type="submit" style="background: transparent;" class="btn">
                     <input type="checkbox" id="toggle">
-                    <label for="toggle" id="boton" >        
+                    <label for="toggle" id="boton"  (click)="report()">        
                     </label>
                 </button >
                         

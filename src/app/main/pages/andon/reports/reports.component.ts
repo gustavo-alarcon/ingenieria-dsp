@@ -4,7 +4,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { DeleteDialogComponent } from './dialogs/delete-dialog/delete-dialog.component';
 import { DetailsDialogComponent } from './dialogs/details-dialog/details-dialog.component';
 import { ReturnDialogComponent } from './dialogs/return-dialog/return-dialog.component';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs';
+import { Andon } from '../../../models/andon.model';
+import { AndonService } from '../../../services/andon.service';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-reports',
@@ -13,18 +17,30 @@ import { Router } from '@angular/router';
 })
 export class ReportsComponent implements OnInit {
   searchForm: FormGroup;
-
+  currentWorkShop: string;
+  workShop$: Observable<Andon[]>;
   constructor(
               public dialog: MatDialog,
               public router: Router,
               private fb: FormBuilder,
+              private route: ActivatedRoute,
+              private andonService: AndonService,
 
-    ) { }
+    ) {
+      this.currentWorkShop = this.route.snapshot.paramMap.get('code');
+    console.log('currentId : ', this.currentWorkShop);
+     }
 
-  ngOnInit(): void {
+  ngOnInit(): void {  
     this.searchForm = this.fb.group({
       search: ['', Validators.required]
-    })
+    });
+
+    this.workShop$ = this.andonService.getAndonByWorkShop(this.currentWorkShop).pipe(
+      tap((res) => {
+        return res;
+      })
+    );
   }
   editDialog(): void{
 
