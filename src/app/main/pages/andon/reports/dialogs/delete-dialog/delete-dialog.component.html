@@ -12,10 +12,12 @@
     </div>
     <mat-divider></mat-divider>
 </h2>
+<mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+
 <mat-dialog-content class="mat-typography" style="color: gray;">
-    <p>¿Esta seguro de borrar el reporte de (Nombre de bahia)?</p>
+    <p>¿Esta seguro de borrar el reporte de ({{data.name}})?</p>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
     <button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close>CERRAR</button>
-    <button type="button" mat-raised-button color="primary" class="footer__btn-save" cdkFocusInitial >SI, BORRAR</button>
+    <button type="button" mat-raised-button color="primary" class="footer__btn-save" cdkFocusInitial (click)="deleteAndon()" >SI, BORRAR</button>
 </mat-dialog-actions>

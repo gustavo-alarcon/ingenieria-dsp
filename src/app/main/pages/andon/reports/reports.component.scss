@@ -43,13 +43,16 @@
     
     &__header{
         display: flex;
+        flex-direction: row;
+        justify-content: space-between;
 
         &--title{
             font-weight: bolder; 
-            margin: 10px;
+            padding-top: 5px;
+            margin-left: 5px;
         }
         &--menu{
-            margin-left: 50px;
+            
     
         }
 

@@ -28,10 +28,9 @@ export class ReportsComponent implements OnInit {
 
     ) {
       this.currentWorkShop = this.route.snapshot.paramMap.get('code');
-    console.log('currentId : ', this.currentWorkShop);
      }
 
-  ngOnInit(): void {  
+  ngOnInit(): void {
     this.searchForm = this.fb.group({
       search: ['', Validators.required]
     });
@@ -52,19 +51,19 @@ export class ReportsComponent implements OnInit {
       //data: item,
     });
   }
-  detailsDialog(): void{
+  detailsDialog(item): void{
     this.dialog.open(DetailsDialogComponent, {
       maxWidth: 500,
       width: '60vw',
-      //data: item,
+      data: item,
     });
   }
 
-  deleteDialog(): void{
+  deleteDialog(item): void{
       this.dialog.open(DeleteDialogComponent, {
         maxWidth: 500,
         width: '90vw',
-        //data: item,
+        data: item,
       });
     }
   dashboard(): void{

@@ -132,6 +132,20 @@ export class AndonService {
     return await this.storage.storage.refFromURL(imagesObj).delete();
   }
 
+  /**
+   * Delete the passed Andon based in his ID
+   * @param {string} id - ID of the Andon to be removed
+   */
+   removeAndon(id: string): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    const AndonDocRef = this.afs.firestore.doc(`/db/ferreyros/andon/${id}`);
+    //
+    batch.delete(AndonDocRef);
+    return of(batch);
+  }
+
+
 
 
 
@@ -169,7 +183,7 @@ export class AndonService {
       description: form.description,
       images: imagesObj,
       atentionTime: new Date(),
-      user: user.name,
+      reportUser: user.name,
       state: 'stopped', //=> stopped //retaken
       workReturnDate: null,
       comments: null,
