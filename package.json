@@ -25,6 +25,7 @@
     "chart.js": "^2.9.4",
     "firebase": "^7.0 || ^8.0",
     "ng-lazyload-image": "^9.1.0",
+    "ng2-charts": "^2.4.2",
     "ng2-img-max": "^2.2.4",
     "ngx-mask": "^11.1.4",
     "rxjs": "~6.6.0",

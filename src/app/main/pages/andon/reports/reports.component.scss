@@ -43,13 +43,16 @@
     
     &__header{
         display: flex;
+        flex-direction: row;
+        justify-content: space-between;
 
         &--title{
             font-weight: bolder; 
-            margin: 10px;
+            padding-top: 5px;
+            margin-left: 5px;
         }
         &--menu{
-            margin-left: 50px;
+            
     
         }
 
@@ -75,7 +78,7 @@
             font-weight: bold;
             color: black;
             border-radius: 10px;
-            padding: 5px 30px 5px 30px;
+            padding: 10px 30px 10px 30px;
             border: transparent;
             margin-bottom: 15px;
         }
@@ -84,7 +87,7 @@
             color: white;
             font-weight: bold;
             border-radius: 10px;
-            padding: 5px 30px 5px 30px;
+            padding: 10px 30px 10px 30px;
             border: transparent;
         }
     }  

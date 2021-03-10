@@ -11,9 +11,9 @@
             <h1 class="report__title">Reportar</h1>
             <form [formGroup]="reportForm" autocomplete="off" class="report__form" >
                 <mat-form-field *ngIf="nameBahias$ | async as bahias" appearance="outline" id="result" class="report__form--input"> 
-                    <mat-label>Tipo de problema</mat-label>
+                    <mat-label>Nombre de bahia</mat-label>
                     <mat-select  formControlName="name">
-                        <mat-option   *ngFor="let item of bahias" [value]="item">{{ item.workShop + " - " +item.name}}</mat-option>
+                        <mat-option  *ngFor="let item of bahias" [value]="item">{{item.name}} - <span style="color: #8f8a8a;">{{item.workShop}}</span></mat-option>
                     </mat-select>
                     <mat-error *ngIf="reportForm.controls['name'].errors">
                         Campo <strong>requerido.</strong>

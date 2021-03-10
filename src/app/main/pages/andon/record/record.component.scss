@@ -2,8 +2,14 @@
     margin: 30px 70px 30px 70px;
 }
 
+.header{
+    display: flex;
+    flex-direction: row;
+    justify-content:space-between ;
+}
+
 .header-container {
-    display: inline-flex;
+    display: flex;
     margin-bottom: 25px;
     
     &__search{
@@ -21,9 +27,33 @@
                 outline: none;
             }
         }  
+    }    
+}
+
+.btn{   
+    margin-right: 30px;
+    margin-top: 10px;
+
+    &__download{
+        border: 1px solid #6200EE;
+        background: white;
+        color: #6200EE;
     }
 }
 
+.footer-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin-right: 50px;
+    margin-top: 30px;
+    
+    &__download{
+        background: #6200EE;
+        color: white;
+    }
+
+}
 .container-table {
     margin-top: 30px;
     max-width: 100%;
@@ -59,16 +89,4 @@ table {
 }
 
 
-.footer-container{
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
-    margin-right: 50px;
-    margin-top: 30px;
-    
-    &__download{
-        background: #6200EE;
-        color: white;
-    }
 
-}

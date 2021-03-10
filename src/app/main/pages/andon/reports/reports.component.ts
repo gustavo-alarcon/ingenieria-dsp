@@ -5,10 +5,10 @@ import { DeleteDialogComponent } from './dialogs/delete-dialog/delete-dialog.com
 import { DetailsDialogComponent } from './dialogs/details-dialog/details-dialog.component';
 import { ReturnDialogComponent } from './dialogs/return-dialog/return-dialog.component';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import { Andon } from '../../../models/andon.model';
 import { AndonService } from '../../../services/andon.service';
-import { tap } from 'rxjs/operators';
+import { tap, debounceTime, filter, startWith, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-reports',
@@ -19,6 +19,7 @@ export class ReportsComponent implements OnInit {
   searchForm: FormGroup;
   currentWorkShop: string;
   workShop$: Observable<Andon[]>;
+  state = 'stopped';
   constructor(
               public dialog: MatDialog,
               public router: Router,
@@ -28,47 +29,77 @@ export class ReportsComponent implements OnInit {
 
     ) {
       this.currentWorkShop = this.route.snapshot.paramMap.get('code');
-    console.log('currentId : ', this.currentWorkShop);
      }
 
-  ngOnInit(): void {  
+  ngOnInit(): void {
     this.searchForm = this.fb.group({
       search: ['', Validators.required]
     });
 
-    this.workShop$ = this.andonService.getAndonByWorkShop(this.currentWorkShop).pipe(
-      tap((res) => {
-        return res;
-      })
+    this.workShop$ = combineLatest(
+      this.andonService.getAndonByWorkShop(this.currentWorkShop, this.state) ,
+       this.searchForm.get('search').valueChanges.pipe(
+        debounceTime(300),
+        filter(input => input !== null),
+        startWith<any>('')),
+    ).pipe(
+      map(([andons, search]) => {
+
+        const searchTerm = search.toLowerCase().trim();
+        let preFilterSearch: Andon[] = [...andons];
+       
+        preFilterSearch = andons.filter(andon => {
+            return String(andon.name).toLowerCase().includes(searchTerm) ||
+              String(andon.otChild).toLowerCase().includes(searchTerm)
+          });
+
+        return preFilterSearch;
+      }),
     );
   }
   editDialog(): void{
 
   }
-  returnDialog(): void{
+  returnDialog(item): void{
     this.dialog.open(ReturnDialogComponent, {
       maxWidth: 500,
       width: '90vw',
-      //data: item,
+      data: item,
     });
   }
-  detailsDialog(): void{
+  detailsDialog(item): void{
     this.dialog.open(DetailsDialogComponent, {
       maxWidth: 500,
       width: '60vw',
-      //data: item,
+      data: item,
     });
   }
 
-  deleteDialog(): void{
+  deleteDialog(item): void{
       this.dialog.open(DeleteDialogComponent, {
         maxWidth: 500,
         width: '90vw',
-        //data: item,
+        data: item,
       });
     }
   dashboard(): void{
     this.router.navigate(['main/dashboard']);
+  }
+
+  getTime(time) {
+    let milis = new Date().getTime() - time.toMillis()
+    function addZ(n) {
+      return (n < 10 ? '0' : '') + n;
+    }
+    let ms = milis % 1000;
+    milis = (milis - ms) / 1000;
+    let secs = milis % 60;
+    milis = (milis - secs) / 60;
+    let mins = milis % 60;
+    let hrs = (milis - mins) / 60;
+
+    return addZ(hrs) + ':' + addZ(mins) + ':' + addZ(secs);
+
   }
 
 }

@@ -13,7 +13,7 @@ export interface Andon {
   description?: string;
   images?: Array<string>;
   atentionTime: Date;
-  user: string;
+  reportUser: string;
   state: string; //=> stopped //retaken
   workReturnDate?: Date;
   comments?: string;

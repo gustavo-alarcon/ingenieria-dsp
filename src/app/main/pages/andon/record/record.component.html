@@ -1,4 +1,5 @@
 <div class="container">
+  <div class="header">  
     <div class="header-container">
         <mat-icon mat-list-icon class="mat-icon-menu" style="font-size: 2.5em;">history</mat-icon>
         <h1 style="font-size: 2.2em; margin-left: 20px; font-family: 'Poppins', sans-serif; font-weight: 700;">Historial</h1> 
@@ -6,18 +7,26 @@
             <button mat-button class="header-container__search--button">
               <mat-icon>search</mat-icon>
             </button>
-            <form [formGroup]="searchForm" style="text-align: center;margin-top:10px ;">
-              <input matInput placeholder="Buscar" name="search" class="header-container__search--input" formControlName="search" />
+            <form [formGroup]="searchForm" autocomplete="off" style="text-align: center;margin-top:10px ;">
+              <input  placeholder="Buscar" name="search" class="header-container__search--input" formControlName="search" />
             </form>
-        </div>       
+        </div> 
     </div>
+    <div class="btn">
+      <button mat-button (click)="downloadXls()" 
+      class="btn__download">
+        DESCARGAR
+      </button>
+    </div> 
+  </div>     
     <div class="body-container">
-        <div class="container-table">
+        <div class="container-table" *ngIf="records$ | async">
             <table mat-table [dataSource]="historyDataSource" class="mat-elevation-z8">
         
               <ng-container matColumnDef="reportDate">
                 <th mat-header-cell *matHeaderCellDef class="table__cell theader">Fecha Reporte</th>
-                <td mat-cell *matCellDef="let element" class="table__cell"> {{element.reportDate ? element.reportDate : '---'}} </td>
+                <td mat-cell *matCellDef="let element" class="table__cell"> {{(element.reportDate.seconds * 1000) | date :
+                  'dd/MM/yy hh:mm:ss'}} </td>
               </ng-container>
         
               <ng-container matColumnDef="workShop">
@@ -31,9 +40,9 @@
                 </td>
               </ng-container>
         
-              <ng-container matColumnDef="child">
+              <ng-container matColumnDef="otChild">
                 <th mat-header-cell *matHeaderCellDef class="table__cell theader">OT CHILD</th>
-                <td mat-cell *matCellDef="let element" class="table__cell"> {{element.child ? element.child : '---'}}
+                <td mat-cell *matCellDef="let element" class="table__cell"> {{element.otChild ? element.otChild : '---'}}
                 </td>
               </ng-container>
         
@@ -51,77 +60,63 @@
         
               <ng-container matColumnDef="atentionTime">
                 <th mat-header-cell *matHeaderCellDef class="table__cell theader">Tiempo Atencion</th>
-                <td mat-cell *matCellDef="let element" class="table__cell"> {{element.atentionTime ? element.atentionTime : '---'}}
+                <td mat-cell *matCellDef="let element" class="table__cell">{{(element.atentionTime.seconds * 1000) | date :
+                  'dd/MM/yy hh:mm:ss'}} 
                 </td>
               </ng-container>
         
-              <ng-container matColumnDef="user">
+              <ng-container matColumnDef="reportUser">
                 <th mat-header-cell *matHeaderCellDef class="table__cell theader">Usuario reporte</th>
-                <td mat-cell *matCellDef="let element" class="table__cell"> {{element.user ? element.user : '---'}}
+                <td mat-cell *matCellDef="let element" class="table__cell"> {{element.reportUser ? element.reportUser : '---'}}
                 </td>
               </ng-container>
         
               <ng-container matColumnDef="state">
                 <th mat-header-cell *matHeaderCellDef class="table__cell theader">Estado</th>
                 <td mat-cell *matCellDef="let element" class="table__cell">
-                  <button mat-button [ngClass]="{'btn-state-parado': element.state==='Parado'
-                                   ,'btn-state-retomado': element.state==='Retomado'
-                                  }">
-                    <span *ngIf="element.state==='Parado'">Parado</span>
-                    <span *ngIf="element.state==='Retomado'">Retomado</span>
+                  <button mat-button [ngClass]="{'btn-state-parado': element.state==='stopped'
+                                   ,'btn-state-retomado': element.state==='retaken' }">
+                    <span *ngIf="element.state==='stopped'">Parado</span> 
+                    <span *ngIf="element.state==='retaken'">Retomado</span>
                   </button>
                 </td>
               </ng-container>
         
               <ng-container matColumnDef="workReturnDate">
                 <th mat-header-cell *matHeaderCellDef class="table__cell theader"> Fecha retorno Trabajo </th>
-                <td mat-cell *matCellDef="let element" class="table__cell"> {{element.workReturnDate ? element.workReturnDate : '---'  | date :
-                    'dd/MM/yy'}} </td>
+                <td mat-cell *matCellDef="let element" class="table__cell"> {{element.workReturnDate ? ((element.workReturnDate.seconds * 1000) | date :
+                  'dd/MM/yy hh:mm:ss'): '---'}} </td>
               </ng-container>
         
               <ng-container matColumnDef="comments">
                 <th mat-header-cell *matHeaderCellDef class="table__cell theader"> Comentarios </th>
-                <td mat-cell *matCellDef="let element" class="table__cell"> {{element.comments ? element.comments : '---'  | date :
-                    'dd/MM/yy'}} </td>
+                <td mat-cell *matCellDef="let element" class="table__cell"> {{element.comments ? element.comments : '---' }} </td>
               </ng-container>
 
               <ng-container matColumnDef="returnUser">
                 <th mat-header-cell *matHeaderCellDef class="table__cell theader"> Usuario retorno </th>
-                <td mat-cell *matCellDef="let element" class="table__cell"> {{element.returnUser ? element.returnUser : '---'  | date :
-                    'dd/MM/yy'}} </td>
+                <td mat-cell *matCellDef="let element" class="table__cell"> {{element.returnUser ? element.returnUser : '---'}} </td>
               </ng-container>
-             <!--  <ng-container matColumnDef="processDate">
-                <th mat-header-cell *matHeaderCellDef class="table__cell">Fecha Proceso</th>
-                <td mat-cell *matCellDef="let element" class="table__cell"> {{(element.processDate.seconds * 1000) | date :
-                  'dd/MM/yy'}} </td>
-              </ng-container> -->
         
-              <!-- <ng-container matColumnDef="actions" stickyEnd>
-                <th mat-header-cell *matHeaderCellDef class="table__cell">
+              <ng-container matColumnDef="actions" stickyEnd>
+                <th mat-header-cell *matHeaderCellDef class="table__cell theader">
                   Acciones
                 </th>
-                <td mat-cell *matCellDef="let element; let i = index">
+                <td mat-cell *matCellDef="let element; let i = index" class="table__cell" >
                   <ng-container>
                     <mat-menu #rawMenu="matMenu">
-                      <button class="w3-small" mat-menu-item (click)="editDialog()"
+                      <button class="w3-small" mat-menu-item (click)="imageDialog(element)"
                        >
-                        <mat-icon>edit</mat-icon>
-                        Editar
-                      </button>
-                      <button class="w3-small" mat-menu-item (click)="deleteDialog()"
-                       >
-                        <mat-icon>delete</mat-icon>
-                        Borrar
-                      </button>
-                     
-                    </mat-menu>
-        
+                        <mat-icon>image</mat-icon>
+                        Imagenes
+                      </button>                     
+                    </mat-menu>        
                     <button mat-icon-button [matMenuTriggerFor]="rawMenu">
                       <mat-icon>more_vert</mat-icon>
                     </button>
                   </ng-container>
                 </td>
-              </ng-container> -->
+              </ng-container>
 
               
             <tr mat-header-row *matHeaderRowDef="historyDisplayedColumns"></tr>
@@ -132,11 +127,6 @@
         </mat-paginator>
         
     </div>
-    <div class="footer-container">
-      <button mat-button (click)="download()" 
-      class="footer-container__download">
-        DESCARGAR
-      </button>
-</div>
+    
     
 </div>

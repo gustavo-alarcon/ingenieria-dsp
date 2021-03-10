@@ -79,7 +79,7 @@ export class ReportComponent implements OnInit, OnDestroy {
             description: null,
             images: null,
             atentionTime: new Date(),
-            user: user.name,
+            reportUser: user.name,
             state: 'stopped', // => stopped //retaken
             workReturnDate: null,
             comments: null,
