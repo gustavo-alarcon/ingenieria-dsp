@@ -1,4 +1,5 @@
 <div class="container">
+  <div class="header">  
     <div class="header-container">
         <mat-icon mat-list-icon class="mat-icon-menu" style="font-size: 2.5em;">history</mat-icon>
         <h1 style="font-size: 2.2em; margin-left: 20px; font-family: 'Poppins', sans-serif; font-weight: 700;">Historial</h1> 
@@ -7,10 +8,17 @@
               <mat-icon>search</mat-icon>
             </button>
             <form [formGroup]="searchForm" autocomplete="off" style="text-align: center;margin-top:10px ;">
-              <input matInput placeholder="Buscar" name="search" class="header-container__search--input" formControlName="search" />
+              <input  placeholder="Buscar" name="search" class="header-container__search--input" formControlName="search" />
             </form>
-        </div>       
+        </div> 
     </div>
+    <div class="btn">
+      <button mat-button (click)="downloadXls()" 
+      class="btn__download">
+        DESCARGAR
+      </button>
+    </div> 
+  </div>     
     <div class="body-container">
         <div class="container-table" *ngIf="records$ | async">
             <table mat-table [dataSource]="historyDataSource" class="mat-elevation-z8">
@@ -119,11 +127,6 @@
         </mat-paginator>
         
     </div>
-    <div class="footer-container">
-      <button mat-button (click)="downloadXls()" 
-      class="footer-container__download">
-        DESCARGAR
-      </button>
-</div>
+    
     
 </div>

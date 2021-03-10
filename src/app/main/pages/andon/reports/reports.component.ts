@@ -47,7 +47,7 @@ export class ReportsComponent implements OnInit {
 
         const searchTerm = search.toLowerCase().trim();
         let preFilterSearch: Andon[] = [...andons];
-
+       
         preFilterSearch = andons.filter(andon => {
             return String(andon.name).toLowerCase().includes(searchTerm) ||
               String(andon.otChild).toLowerCase().includes(searchTerm)
@@ -84,6 +84,22 @@ export class ReportsComponent implements OnInit {
     }
   dashboard(): void{
     this.router.navigate(['main/dashboard']);
+  }
+
+  getTime(time) {
+    let milis = new Date().getTime() - time.toMillis()
+    function addZ(n) {
+      return (n < 10 ? '0' : '') + n;
+    }
+    let ms = milis % 1000;
+    milis = (milis - ms) / 1000;
+    let secs = milis % 60;
+    milis = (milis - secs) / 60;
+    let mins = milis % 60;
+    let hrs = (milis - mins) / 60;
+
+    return addZ(hrs) + ':' + addZ(mins) + ':' + addZ(secs);
+
   }
 
 }
