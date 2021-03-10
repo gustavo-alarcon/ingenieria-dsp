@@ -30,7 +30,7 @@ export class RequestsStartDialogComponent implements OnInit {
     try {
       const state = 'processed';
       this.evaltService
-        .startRequest(this.data.id, state)
+        .startRequest(this.data, state)
         .pipe(take(1))
         .subscribe((res) => {
           res.commit().then(() => {

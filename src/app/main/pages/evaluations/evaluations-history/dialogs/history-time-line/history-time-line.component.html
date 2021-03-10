@@ -11,7 +11,7 @@
     </div>
     <mat-divider></mat-divider>
     <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
-    <mat-dialog-content style="display: flex; align-items: center;; justify-content: space-between;">
+    <mat-dialog-content style="margin-top: 12px; display: flex; align-items: center;; justify-content: space-between;">
         <div class="details">
             <p><span style="font-weight: bold;"> OT MAIN :</span> {{data.otMain ? data.otMain : ''}}</p>
             <p><span style="font-weight: bold;"> OT CHILD :</span> {{data.otChild ? data.otChild : ''}}</p>
@@ -20,7 +20,8 @@
             <p><span style="font-weight: bold;"> Cantidad :</span> {{data.quantity ? data.quantity : ''}}</p>
             <p><span style="font-weight: bold;"> Descripcion :</span> {{data.description ? data.description : ''}}</p>
             <p><span style="font-weight: bold;"> Tipo de Atencion :</span> {{data.status ? data.status : ''}}</p>
-            <p><span style="font-weight: bold;"> Usuario :</span> {{data.createdBy.name ? data.createdBy.name : (data.createdBy ? data.createdBy : '')}} </p>
+            <p><span style="font-weight: bold;"> Usuario :</span> {{data.createdBy.name ? data.createdBy.name :
+                (data.createdBy ? data.createdBy : '')}} </p>
             <p><span style="font-weight: bold;"> WOF :</span> {{data.wof ? data.wof : ''}}</p>
             <p><span style="font-weight: bold;"> Trabajo :</span> {{data.task ? data.task : ''}}</p>
             <p><span style="font-weight: bold;"> Observaciones :</span> {{data.observations ? data.observations : ''}}
@@ -45,9 +46,18 @@
                     {{data.attentionTimeElapsed?.seconds | number : '2.'}}
                 </div>
             </div>
-            <img src="../../../../../../../assets/img/timeline-s1.png" alt="" style="width: 100%">
-        </div>
 
+            <div class="time-line__processed">
+                <div>
+                    {{data.processTimeElapsed?.days | number : '2.'}} /
+                    {{data.processTimeElapsed?.hours | number : '2.'}} :
+                    {{data.processTimeElapsed?.minutes | number : '2.'}} :
+                    {{data.processTimeElapsed?.seconds | number : '2.'}}
+                </div>
+            </div>
+
+            <img src="../../../../../../../assets/img/timeline-s3.png" alt="" style="width: 100%">
+        </div>
 
     </mat-dialog-content>
 

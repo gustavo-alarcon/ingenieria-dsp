@@ -15,6 +15,8 @@ import { HistoryUploadFileDialogComponent } from './dialogs/history-upload-file-
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { FormControl } from '@angular/forms';
 import * as XLSX from 'xlsx';
+import { HistoryCreateDialogComponent } from './dialogs/history-create-dialog/history-create-dialog.component';
+import { HistoryTimeLineComponent } from './dialogs/history-time-line/history-time-line.component';
 
 @Component({
   selector: 'app-evaluations-history',
@@ -89,13 +91,19 @@ export class EvaluationsHistoryComponent implements OnInit {
         if (status.length > 1) {
           preFilterStatus = evaluations.filter(evaluation => evaluation.internalStatus === status);
           preFilterSearch = preFilterStatus.filter(evaluation => {
-            return String(evaluation.otMain).includes(searchTerm) ||
-              String(evaluation.otChild).includes(searchTerm)
+            return String(evaluation.otMain).toLowerCase().includes(searchTerm) ||
+              String(evaluation.otChild).toLowerCase().includes(searchTerm) ||
+              String(evaluation.wof).toLowerCase().includes(searchTerm) ||
+              String(evaluation.partNumber).toLowerCase().includes(searchTerm) ||
+              String(evaluation.description).toLowerCase().includes(searchTerm);
           })
         } else {
           preFilterSearch = evaluations.filter(evaluation => {
-            return String(evaluation.otMain).includes(searchTerm) ||
-              String(evaluation.otChild).includes(searchTerm)
+            return String(evaluation.otMain).toLowerCase().includes(searchTerm) ||
+              String(evaluation.otChild).toLowerCase().includes(searchTerm) ||
+              String(evaluation.wof).toLowerCase().includes(searchTerm) ||
+              String(evaluation.partNumber).toLowerCase().includes(searchTerm)||
+              String(evaluation.description).toLowerCase().includes(searchTerm);
           })
         }
 
@@ -122,6 +130,14 @@ export class EvaluationsHistoryComponent implements OnInit {
     let dialogRef;
 
     switch (value) {
+      case 'create':
+        dialogRef = this.dialog.open(HistoryCreateDialogComponent,
+          optionsDialog,
+        );
+        dialogRef.afterClosed().subscribe(result => {
+          console.log(`Dialog result: ${result}`);
+        });
+        break;
       case 'edit':
         dialogRef = this.dialog.open(HistoryEditDialogComponent,
           optionsDialog,
@@ -150,6 +166,19 @@ export class EvaluationsHistoryComponent implements OnInit {
       case 'observation':
         dialogRef = this.dialog.open(HistoryObservationDialogComponent,
           optionsDialog,
+        );
+
+        dialogRef.afterClosed().subscribe(result => {
+          console.log(`Dialog result: ${result}`);
+        });
+        break;
+      case 'time-line':
+        dialogRef = this.dialog.open(HistoryTimeLineComponent,
+          {
+            width: '90vw',
+            disableClose: true,
+            data: entry
+          }
         );
 
         dialogRef.afterClosed().subscribe(result => {
@@ -217,7 +246,7 @@ export class EvaluationsHistoryComponent implements OnInit {
 
       table_xlsx.push(temp);
     })
-    
+
 
     /* generate worksheet */
     const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(table_xlsx);

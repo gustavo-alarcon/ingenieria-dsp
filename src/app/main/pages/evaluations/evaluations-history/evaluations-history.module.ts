@@ -11,6 +11,7 @@ import { HistoryDeleteDialogComponent } from './dialogs/history-delete-dialog/hi
 import { HistoryImageDialogComponent } from './dialogs/history-image-dialog/history-image-dialog.component';
 import { HistoryObservationDialogComponent } from './dialogs/history-observation-dialog/history-observation-dialog.component';
 import { HistoryUploadFileDialogComponent } from './dialogs/history-upload-file-dialog/history-upload-file-dialog.component';
+import { HistoryTimeLineComponent } from './dialogs/history-time-line/history-time-line.component';
 
 
 @NgModule({
@@ -22,6 +23,7 @@ import { HistoryUploadFileDialogComponent } from './dialogs/history-upload-file-
     HistoryImageDialogComponent,
     HistoryObservationDialogComponent,
     HistoryUploadFileDialogComponent,
+    HistoryTimeLineComponent,
   ],
   exports: [
     EvaluationsHistoryComponent
