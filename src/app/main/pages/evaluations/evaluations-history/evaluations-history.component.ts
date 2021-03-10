@@ -41,6 +41,8 @@ export class EvaluationsHistoryComponent implements OnInit {
     'workshop',
     'status',
     'createdAt',
+    'processAt',
+    'finalizedAt',
     'createdBy',
     'wof',
     'task',

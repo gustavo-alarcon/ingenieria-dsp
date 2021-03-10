@@ -114,6 +114,18 @@
           'dd/MM/yy hh:mm:ss'}} </td>
       </ng-container>
 
+      <ng-container matColumnDef="processAt">
+        <th mat-header-cell *matHeaderCellDef class="table__cell">Fecha de proceso</th>
+        <td mat-cell *matCellDef="let element" class="table__cell"> {{(element.processAt.seconds * 1000) | date :
+          'dd/MM/yy hh:mm:ss'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="finalizedAt">
+        <th mat-header-cell *matHeaderCellDef class="table__cell">Fecha de finalizado</th>
+        <td mat-cell *matCellDef="let element" class="table__cell"> {{(element.finalizedAt.seconds * 1000) | date :
+          'dd/MM/yy hh:mm:ss'}} </td>
+      </ng-container>
+
       <ng-container matColumnDef="result">
         <th mat-header-cell *matHeaderCellDef class="table__cell">Resultado</th>
         <td mat-cell *matCellDef="let element" class="table__cell"> {{element.result ? element.result : '---'}} </td>
