@@ -8,6 +8,7 @@ import { AndonService } from '../../../services/andon.service';
 import { tap, debounceTime, filter, startWith, map } from 'rxjs/operators';
 import { MatDialog } from '@angular/material/dialog';
 import { ImageDialogComponent } from './dialog/image-dialog/image-dialog.component';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-record',
@@ -52,13 +53,6 @@ export class RecordComponent implements OnInit {
       search: ['', Validators.required],
     });
 
-    /*  this.records$ = this.andonService.getAllAndon().pipe(
-      tap((res) => {
-        console.log('res : ', res);
-        this.historyDataSource.data = res;
-      })
-    ); */
-
     this.records$ = combineLatest(
       this.andonService.getAllAndon(),
       this.searchForm.get('search').valueChanges.pipe(
@@ -93,5 +87,42 @@ export class RecordComponent implements OnInit {
     });
   }
 
-  download(): void {}
+  downloadXls(): void {
+    let table_xlsx: any[] = [];
+    const headersXlsx = [
+      'Fecha de reporte', 'Taller', 'Nombre de bahia', 'OT CHILD', 'Tipo de problema', 'Descripcion', 'Tiempo de atencion', 'Usuario de reporte',
+       'Estado', 'Fecha de retorno trabajo', 'Comentarios', 'Usuario de retorno' ]
+
+    table_xlsx.push(headersXlsx);
+
+    this.historyDataSource.filteredData.forEach(item => {
+      const temp = [
+        item.reportDate,
+        item.workShop,
+        item.name,
+        item.otChild,
+        item.problemType,
+        item.description,
+        item.atentionTime,
+        item.reportUser,
+        item.state,
+        item.workReturnDate,
+        item.comments,
+        item.returnUser,
+      ];
+
+      table_xlsx.push(temp);
+    })
+
+    /* generate worksheet */
+    const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(table_xlsx);
+
+    /* generate workbook and add the worksheet */
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'reports');
+
+    /* save to file */
+    const name = 'report_list' + '.xlsx';
+    XLSX.writeFile(wb, name);
+  }
 }
