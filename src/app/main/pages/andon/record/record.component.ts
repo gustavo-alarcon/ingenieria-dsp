@@ -2,86 +2,127 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
+import { Observable, combineLatest } from 'rxjs';
+import { Andon } from '../../../models/andon.model';
+import { AndonService } from '../../../services/andon.service';
+import { tap, debounceTime, filter, startWith, map } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';
+import { ImageDialogComponent } from './dialog/image-dialog/image-dialog.component';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-record',
   templateUrl: './record.component.html',
-  styleUrls: ['./record.component.scss']
+  styleUrls: ['./record.component.scss'],
 })
 export class RecordComponent implements OnInit {
   searchForm: FormGroup;
+  records$: Observable<Andon[]>;
 
-  historyDataSource = new MatTableDataSource<Record>();
+  historyDataSource = new MatTableDataSource<Andon>();
   historyDisplayedColumns: string[] = [
     'reportDate',
     'workShop',
     'name',
-    'child',
+    'otChild',
     'problemType',
     'description',
     'atentionTime',
-    'user',
+    'reportUser',
     'state',
     'workReturnDate',
     'comments',
     'returnUser',
+    'actions',
   ];
 
-  @ViewChild("historyPaginator", { static: false }) set content(paginator: MatPaginator) {
+  @ViewChild('historyPaginator', { static: false }) set content(
+    paginator: MatPaginator
+  ) {
     this.historyDataSource.paginator = paginator;
   }
-  data: Record[] = [
-    { reportDate: '18/02/2021', workShop: 'CRC Lima', name: 'Bahia 1', child: 850013192, problemType: 'Seguridad', description: 'Descripcion', atentionTime: '01:00:12', user: 'Juan Perez', state: 'Retomado', workReturnDate: '03/03/2021', comments: 'Comentarios', returnUser: 'Juan Perez' },
-    { reportDate: '18/02/2021', workShop: 'CRC Lima', name: 'Bahia 1', child: 850013192, problemType: 'Seguridad', description: 'Descripcion', atentionTime: '01:00:12', user: 'Juan Perez', state: 'Parado', workReturnDate: '03/03/2021', comments: 'Comentarios', returnUser: 'Juan Perez' },
-    { reportDate: '18/02/2021', workShop: 'CRC Lima', name: 'Bahia 1', child: 850013192, problemType: 'Seguridad', description: 'Descripcion', atentionTime: '01:00:12', user: 'Juan Perez', state: 'Retomado', workReturnDate: '03/03/2021', comments: 'Comentarios', returnUser: 'Juan Perez' },
-    { reportDate: '18/02/2021', workShop: 'CRC Lima', name: 'Bahia 1', child: 850013192, problemType: 'Seguridad', description: 'Descripcion', atentionTime: '01:00:12', user: 'Juan Perez', state: 'Parado', workReturnDate: '03/03/2021', comments: 'Comentarios', returnUser: 'Juan Perez' },
-    { reportDate: '18/02/2021', workShop: 'CRC Lima', name: 'Bahia 1', child: 850013192, problemType: 'Seguridad', description: 'Descripcion', atentionTime: '01:00:12', user: 'Juan Perez', state: 'Retomado', workReturnDate: '03/03/2021', comments: 'Comentarios', returnUser: 'Juan Perez' },
-    { reportDate: '18/02/2021', workShop: 'CRC Lima', name: 'Bahia 1', child: 850013192, problemType: 'Seguridad', description: 'Descripcion', atentionTime: '01:00:12', user: 'Juan Perez', state: 'Retomado', workReturnDate: '03/03/2021', comments: 'Comentarios', returnUser: 'Juan Perez' },
-    { reportDate: '18/02/2021', workShop: 'CRC Lima', name: 'Bahia 1', child: 850013192, problemType: 'Seguridad', description: 'Descripcion', atentionTime: '01:00:12', user: 'Juan Perez', state: 'Parado', workReturnDate: '03/03/2021', comments: 'Comentarios', returnUser: 'Juan Perez' },
-    { reportDate: '18/02/2021', workShop: 'CRC Lima', name: 'Bahia 1', child: 850013192, problemType: 'Seguridad', description: 'Descripcion', atentionTime: '01:00:12', user: 'Juan Perez', state: 'Parado', workReturnDate: '03/03/2021', comments: 'Comentarios', returnUser: 'Juan Perez' },
-    { reportDate: '18/02/2021', workShop: 'CRC Lima', name: 'Bahia 1', child: 850013192, problemType: 'Seguridad', description: 'Descripcion', atentionTime: '01:00:12', user: 'Juan Perez', state: 'Retomado', workReturnDate: '03/03/2021', comments: 'Comentarios', returnUser: 'Juan Perez' },
-    { reportDate: '18/02/2021', workShop: 'CRC Lima', name: 'Bahia 1', child: 850013192, problemType: 'Seguridad', description: 'Descripcion', atentionTime: '01:00:12', user: 'Juan Perez', state: 'Parado', workReturnDate: '03/03/2021', comments: 'Comentarios', returnUser: 'Juan Perez' },
-    { reportDate: '18/02/2021', workShop: 'CRC Lima', name: 'Bahia 1', child: 850013192, problemType: 'Seguridad', description: 'Descripcion', atentionTime: '01:00:12', user: 'Juan Perez', state: 'Retomado', workReturnDate: '03/03/2021', comments: 'Comentarios', returnUser: 'Juan Perez' },
-  ];
 
-  constructor(private fb: FormBuilder,) { }
+  constructor(
+     private fb: FormBuilder,
+     private andonService: AndonService,
+     public dialog: MatDialog,
+     ) {}
 
   ngOnInit(): void {
-
     this.searchForm = this.fb.group({
       search: ['', Validators.required],
     });
 
-    this.historyDataSource.data = this.data;
+    this.records$ = combineLatest(
+      this.andonService.getAllAndon(),
+      this.searchForm.get('search').valueChanges.pipe(
+        debounceTime(300),
+        filter((input) => input !== null),
+        startWith<any>('')
+      )
+    ).pipe(
+      map(([andons, search]) => {
+        const searchTerm = search.toLowerCase().trim();
+        let preFilterSearch: Andon[] = [...andons];
 
+        preFilterSearch = andons.filter((andon) => {
+          return (
+            String(andon.name).toLowerCase().includes(searchTerm) ||
+            String(andon.otChild).toLowerCase().includes(searchTerm)
+          );
+        });
+        return preFilterSearch;
+      }),
+      tap(res => {
+        this.historyDataSource.data = res;
+      })
+    );
   }
 
-  editDialog(): void {
-
+  imageDialog(item): void {
+    this.dialog.open(ImageDialogComponent, {
+      maxWidth: 500,
+      width: '90vw',
+      data: item,
+    });
   }
 
-  deleteDialog(): void {
+  downloadXls(): void {
+    let table_xlsx: any[] = [];
+    const headersXlsx = [
+      'Fecha de reporte', 'Taller', 'Nombre de bahia', 'OT CHILD', 'Tipo de problema', 'Descripcion', 'Tiempo de atencion', 'Usuario de reporte',
+       'Estado', 'Fecha de retorno trabajo', 'Comentarios', 'Usuario de retorno' ]
 
+    table_xlsx.push(headersXlsx);
+
+    this.historyDataSource.filteredData.forEach(item => {
+      const temp = [
+        item.reportDate,
+        item.workShop,
+        item.name,
+        item.otChild,
+        item.problemType,
+        item.description,
+        item.atentionTime,
+        item.reportUser,
+        item.state,
+        item.workReturnDate,
+        item.comments,
+        item.returnUser,
+      ];
+
+      table_xlsx.push(temp);
+    })
+
+    /* generate worksheet */
+    const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(table_xlsx);
+
+    /* generate workbook and add the worksheet */
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'reports');
+
+    /* save to file */
+    const name = 'report_list' + '.xlsx';
+    XLSX.writeFile(wb, name);
   }
-  
-  download() {
-
-  }
-
-}
-
-
-export interface Record {
-  reportDate: string;
-  workShop: string;
-  name: string;
-  child: number;
-  problemType: string;
-  description: string;
-  atentionTime: string;
-  user: string;
-  state: string;
-  workReturnDate: string;
-  comments: string;
-  returnUser: string;
 }

@@ -14,6 +14,15 @@ export class AndonService {
     private afs: AngularFirestore,
     private storage: AngularFireStorage
   ) {}
+
+   /**
+   * Get all documents from evaluations collection
+   */
+    getAllAndon(): Observable<Andon[]> {
+      return this.afs.collection<Andon>(`db/ferreyros/andon`, ref => ref.orderBy('createdAt', 'desc'))
+        .valueChanges();
+    }
+
   // get all andonProblemType
   getAllAndonSettingsProblemType(): Observable<AndonProblemType[]> {
     return this.afs.collection<AndonProblemType>(`/db/generalConfig/andonProblemType`, ref => ref.orderBy('createdAt', 'asc'))
@@ -94,10 +103,10 @@ export class AndonService {
    * workShop the passed andon
    * @param {string} workShop - filter for workShop
    */
-   getAndonByWorkShop(workShop: string): Observable<Andon[]> {
+   getAndonByWorkShop(workShop: string, state: string): Observable<Andon[]> {
     return this.afs
       .collection<Andon>(`/db/ferreyros/andon`, (ref) =>
-        ref.where('workShop', '==', workShop)
+        ref.where('workShop', '==', workShop).where('state', '==', state)
       )
       .valueChanges();
   }
@@ -110,9 +119,6 @@ export class AndonService {
    */
    updateAndon(entryId: string, form, imags): Observable<firebase.default.firestore.WriteBatch> {
 
-     console.log(entryId)
-     console.log(form)
-     console.log(imags)
      // create batch
      const batch = this.afs.firestore.batch();
       // create reference for document in evaluation entries collection
@@ -131,6 +137,48 @@ export class AndonService {
   async deleteImage(imagesObj: string): Promise<any> {
     return await this.storage.storage.refFromURL(imagesObj).delete();
   }
+  /**
+   * update the evaluation entry
+   * @param {string} entryId - id data
+   * @param {Andon} form - Form data passed on andon edit
+   * @param {string} imges - imgs
+   * @param {User} user - imgs
+   */
+   updateAndonAddComments(entryId: string, form, imags, user: User): Observable<firebase.default.firestore.WriteBatch> {
+
+     // create batch
+     const batch = this.afs.firestore.batch();
+      // create reference for document in evaluation entries collection
+     const evaluationDocRef = this.afs.firestore
+        .doc(`/db/ferreyros/andon/${entryId}`);
+      // Structuring the data model
+     const data: any = {
+        editedAt: new Date(),
+        edited: user,
+        comments: form.comments,
+        images: imags,
+        state: 'retaken', //=> stopped //retaken
+        workReturnDate: new Date(),
+        returnUser: user.name,
+      };
+     batch.update(evaluationDocRef, data);
+
+     return of(batch);
+  }
+
+  /**
+   * Delete the passed Andon based in his ID
+   * @param {string} id - ID of the Andon to be removed
+   */
+   removeAndon(id: string): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    const AndonDocRef = this.afs.firestore.doc(`/db/ferreyros/andon/${id}`);
+    //
+    batch.delete(AndonDocRef);
+    return of(batch);
+  }
+
 
 
 
@@ -169,7 +217,7 @@ export class AndonService {
       description: form.description,
       images: imagesObj,
       atentionTime: new Date(),
-      user: user.name,
+      reportUser: user.name,
       state: 'stopped', //=> stopped //retaken
       workReturnDate: null,
       comments: null,

@@ -30,7 +30,7 @@
                         <mat-icon>remove_red_eye</mat-icon>
                         Detalle
                       </button>
-                      <button class="w3-small" mat-menu-item (click)="deleteDialog()"
+                      <button class="w3-small" mat-menu-item (click)="deleteDialog(item)"
                         >
                         <mat-icon>delete</mat-icon>
                         Borrar
@@ -48,12 +48,9 @@
                 </div> 
                 <h3 class="cards__body--timer"> {{(item.reportDate['seconds'] * 1000) | date:'h:mm:ss'}}</h3>
                 <button class="cards__body--supplies" >{{item.problemType}}</button>              
-                <button class="cards__body--return" (click)="returnDialog()">RETOMAR</button>       
+                <button class="cards__body--return" (click)="returnDialog(item)">RETOMAR</button>       
             </div>
         </div>
-      </div>
-        
-        
-        
+      </div>       
     </div>
 </div>
