@@ -31,7 +31,7 @@ export class RequestsSettingDialogComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    
+
     this.generalConfig$ = this.auth.getGeneralConfig()
       .pipe(
         tap(res => {
@@ -42,7 +42,7 @@ export class RequestsSettingDialogComponent implements OnInit {
           });
         })
       )
-    
+
   }
 
   save(): void {

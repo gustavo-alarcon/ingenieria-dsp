@@ -13,7 +13,7 @@ import { tap, debounceTime, filter, startWith, map } from 'rxjs/operators';
 @Component({
   selector: 'app-reports',
   templateUrl: './reports.component.html',
-  styleUrls: ['./reports.component.scss']
+  styleUrls: ['./reports.component.scss'],
 })
 export class ReportsComponent implements OnInit {
   searchForm: FormGroup;
@@ -21,53 +21,84 @@ export class ReportsComponent implements OnInit {
   workShop$: Observable<Andon[]>;
   state = 'stopped';
   constructor(
-              public dialog: MatDialog,
-              public router: Router,
-              private fb: FormBuilder,
-              private route: ActivatedRoute,
-              private andonService: AndonService,
-
-    ) {
-      this.currentWorkShop = this.route.snapshot.paramMap.get('code');
-     }
+    public dialog: MatDialog,
+    public router: Router,
+    private fb: FormBuilder,
+    private route: ActivatedRoute,
+    private andonService: AndonService
+  ) {
+    this.currentWorkShop = this.route.snapshot.paramMap.get('code');
+  }
 
   ngOnInit(): void {
     this.searchForm = this.fb.group({
-      search: ['', Validators.required]
+      search: ['', Validators.required],
     });
 
     this.workShop$ = combineLatest(
-      this.andonService.getAndonByWorkShop(this.currentWorkShop, this.state) ,
-       this.searchForm.get('search').valueChanges.pipe(
+      this.andonService.getAndonByWorkShop(this.currentWorkShop, this.state),
+      this.searchForm.get('search').valueChanges.pipe(
         debounceTime(300),
-        filter(input => input !== null),
-        startWith<any>('')),
+        filter((input) => input !== null),
+        startWith<any>('')
+      )
     ).pipe(
       map(([andons, search]) => {
-
         const searchTerm = search.toLowerCase().trim();
         let preFilterSearch: Andon[] = [...andons];
-       
-        preFilterSearch = andons.filter(andon => {
-            return String(andon.name).toLowerCase().includes(searchTerm) ||
-              String(andon.otChild).toLowerCase().includes(searchTerm)
-          });
+
+        preFilterSearch = andons.filter((andon) => {
+          return (
+            String(andon.name).toLowerCase().includes(searchTerm) ||
+            String(andon.otChild).toLowerCase().includes(searchTerm)
+          );
+        });
+
+        preFilterSearch.map((andon) => {
+          if (andon.registryTimer) {
+            clearInterval(andon.registryTimer);
+          }
+
+          andon.registryTimer = setInterval (() => {
+            // Get today's date and time
+            const now = new Date().getTime();
+            const registry = andon.createdAt['seconds'] * 1000;
+            // Find the distance between now and the count down date
+            const distance = now - registry;
+
+            // Time calculations for days, hours, minutes and seconds
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor(
+              (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+            );
+            const minutes = Math.floor(
+              (distance % (1000 * 60 * 60)) / (1000 * 60)
+            );
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Output the result in an element with id="demo"
+            andon.atentionTime = {
+              days: days,
+              hours: hours,
+              minutes: minutes,
+              seconds: seconds,
+            };
+          }, 1000);
+        });
 
         return preFilterSearch;
-      }),
+      })
     );
   }
-  editDialog(): void{
-
-  }
-  returnDialog(item): void{
+  editDialog(): void {}
+  returnDialog(item): void {
     this.dialog.open(ReturnDialogComponent, {
       maxWidth: 500,
       width: '90vw',
       data: item,
     });
   }
-  detailsDialog(item): void{
+  detailsDialog(item): void {
     this.dialog.open(DetailsDialogComponent, {
       maxWidth: 500,
       width: '60vw',
@@ -75,19 +106,19 @@ export class ReportsComponent implements OnInit {
     });
   }
 
-  deleteDialog(item): void{
-      this.dialog.open(DeleteDialogComponent, {
-        maxWidth: 500,
-        width: '90vw',
-        data: item,
-      });
-    }
-  dashboard(): void{
+  deleteDialog(item): void {
+    this.dialog.open(DeleteDialogComponent, {
+      maxWidth: 500,
+      width: '90vw',
+      data: item,
+    });
+  }
+  dashboard(): void {
     this.router.navigate(['main/dashboard']);
   }
 
   getTime(time) {
-    let milis = new Date().getTime() - time.toMillis()
+    let milis = new Date().getTime() - time.toMillis();
     function addZ(n) {
       return (n < 10 ? '0' : '') + n;
     }
@@ -99,7 +130,5 @@ export class ReportsComponent implements OnInit {
     let hrs = (milis - mins) / 60;
 
     return addZ(hrs) + ':' + addZ(mins) + ':' + addZ(secs);
-
   }
-
 }
