@@ -106,9 +106,23 @@ export class RecordComponent implements OnInit {
         const searchTerm = search.toLowerCase().trim();
         let preFilterSearch: Andon[] = [...andons];
 
-       
+        if (search) {
+          let filterDate = [];
+          filterDate = preFilterSearch.filter((andon) => {
+            return this.getFilterTime(andon.reportDate, date);
+          });
 
-
+          preFilterSearch = filterDate.filter((andon) => {
+            return (
+              String(andon.name ).toLowerCase().includes(searchTerm) ||
+              String(andon.otChild).toLowerCase().includes(searchTerm)
+            );
+          });
+        } else{
+          preFilterSearch = andons.filter((andon) => {
+            return this.getFilterTime(andon.reportDate, date);
+          });
+        }
         return preFilterSearch;
 
       }),
