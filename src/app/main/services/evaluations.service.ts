@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { User } from '../models/user-model';
-import { EvaluationRegistryForm, Evaluation, EvaluationInquiry, EvaluationFinishForm, EvaluationsUser, EvaluationsBroadcastUser, EvaluationsResultTypeUser, EvaluationTimer } from '../models/evaluations.model';
+import { EvaluationRegistryForm, Evaluation, EvaluationInquiry, EvaluationFinishForm, EvaluationsUser, EvaluationsBroadcastUser, EvaluationsResultTypeUser, EvaluationTimer, EvaluationsKindOfTest } from '../models/evaluations.model';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
@@ -426,18 +426,23 @@ export class EvaluationsService {
   }
 
   getAllEvaluationsSettings(): Observable<EvaluationsUser[]> {
-    return this.afs.collection<EvaluationsUser>(`/evaluations-settings/`, ref => ref.orderBy('createdAt', 'asc'))
+    return this.afs.collection<EvaluationsUser>(`/evaluations-settings/`, ref => ref.orderBy('createdAt', 'desc'))
       .valueChanges();
   }
 
 
   getAllEvaluationsSettingsNotify(): Observable<EvaluationsBroadcastUser[]> {
-    return this.afs.collection<EvaluationsBroadcastUser>(`/db/generalConfig/evaluationsBroadcast`, ref => ref.orderBy('createdAt', 'asc'))
+    return this.afs.collection<EvaluationsBroadcastUser>(`/db/generalConfig/evaluationsBroadcast`, ref => ref.orderBy('createdAt', 'desc'))
       .valueChanges();
   }
 
   getAllEvaluationsSettingsResultType(): Observable<EvaluationsResultTypeUser[]> {
-    return this.afs.collection<EvaluationsResultTypeUser>(`/db/generalConfig/evaluationsResultType`, ref => ref.orderBy('createdAt', 'asc'))
+    return this.afs.collection<EvaluationsResultTypeUser>(`/db/generalConfig/evaluationsResultType`, ref => ref.orderBy('createdAt', 'desc'))
+      .valueChanges();
+  }
+
+  getAllEvaluationsSettingsKindOfTest(): Observable<EvaluationsKindOfTest[]> {
+    return this.afs.collection<EvaluationsKindOfTest>(`/db/generalConfig/evaluationsKindOfTest`, ref => ref.orderBy('createdAt', 'desc'))
       .valueChanges();
   }
 
@@ -480,6 +485,26 @@ export class EvaluationsService {
     return of(batch);
   }
 
+  addEvaluationsSettingsKindOfTest(listEvaluationsKindOfTest: EvaluationsKindOfTest[], user: User
+    ): Observable<firebase.default.firestore.WriteBatch> {
+      const date = new Date();
+      const batch = this.afs.firestore.batch();
+      listEvaluationsKindOfTest.forEach((el) => {
+        const evaluationDocRef = this.afs.firestore.collection(`/db/generalConfig/evaluationsKindOfTest`).doc();
+  
+        if (!el.id) {
+          const objAux: EvaluationsKindOfTest = {
+            id: evaluationDocRef.id,
+            kindOfTest: el.kindOfTest,
+            createdBy: user,
+            createdAt: date
+          };
+          batch.set(evaluationDocRef, objAux);
+        }
+      });
+      return of(batch);
+    }
+
   deleteEvaluationsSettingsNotify(id: string): void {
     this.afs.firestore.collection(`/db/generalConfig/evaluationsBroadcast`).doc(id).delete().then(() => {
     }).catch((error) => {
@@ -489,6 +514,13 @@ export class EvaluationsService {
 
   deleteEvaluationsSettingsResultType(id: string): void {
     this.afs.firestore.collection(`/db/generalConfig/evaluationsResultType`).doc(id).delete().then(() => {
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+
+  deleteEvaluationsSettingsKindOfTest(id: string): void {
+    this.afs.firestore.collection(`/db/generalConfig/evaluationsKindOfTest`).doc(id).delete().then(() => {
     }).catch((error) => {
       console.log(error);
     });

@@ -96,7 +96,7 @@ export class HistoryUploadFileDialogComponent implements OnInit {
     if (xlsx.length > 0) {
       xlsx.forEach(el => {
         buffer++;
-        this.uploading = buffer/xlsx.length;
+        this.uploading = buffer / xlsx.length;
 
         let internal_status = 'registered';
 
@@ -167,6 +167,91 @@ export class HistoryUploadFileDialogComponent implements OnInit {
     }
   }
 
+  onFileSelected2(event): void {
+    this.loading.next(true);
+    this.uploading = 0;
+
+    if (event.target.files && event.target.files[0]) {
+      const name = event.target.files[0].name
+
+      var reader = new FileReader();
+      reader.onload = (e: any) => {
+        /* read workbook */
+        const bstr: string = e.target.result;
+        const wb: XLSX.WorkBook = XLSX.read(bstr, { type: 'binary', cellDates: true });
+
+        /* grab first sheet */
+        const wsname: string = wb.SheetNames[0];
+        const ws: XLSX.WorkSheet = wb.Sheets[wsname];
+
+        /* save data */
+        this.selected = XLSX.utils.sheet_to_json(ws, { header: 1 });
+
+        this.upLoadXlsToTable2(this.selected);
+      };
+      reader.readAsBinaryString(event.target.files[0]);
+    }
+  }
+
+  upLoadXlsToTable2(xlsx): void {
+    const xlsxData = [];
+    let buffer = 0;
+
+    xlsx.shift();
+    if (xlsx.length > 0) {
+      xlsx.forEach(el => {
+        buffer++;
+        this.uploading = buffer / xlsx.length;
+
+        const data =
+        {
+          id: null,
+          otMain: el[0] ? (el[0] === '---' ? '' : el[0]) : null,
+          otChild: el[1] ? (el[1] === '---' ? '' : el[1]) : null,
+          position: el[2] ? (el[2] === '---' ? '' : el[2]) : null,
+          partNumber: el[3] ? (el[3] === '---' ? '' : el[3]) : null,
+          description: el[4] ? (el[4] === '---' ? '' : el[4]) : null,
+          internatlStatus: el[5] ? (el[5] === '---' ? '' : el[5]) : null,
+          result: el[6] ? (el[6] === '---' ? '' : el[6]) : null,
+          comments: el[7] ? (el[7] === '---' ? '' : el[7]) : null,
+          kindOfTest: el[8] ? (el[8] === '---' ? '' : el[8]) : null,
+          observations: el[9] ? (el[9] === '---' ? '' : el[9]) : null,
+          quantity: el[10] ? (el[10] === '---' ? '' : el[10]) : null,
+          workshop: el[11] ? (el[11] === '---' ? '' : el[11]) : null,
+          status: el[12] ? (el[12] === '---' ? '' : el[12]) : null,
+          wof: el[13] ? (el[13] === '---' ? '' : el[13]) : null,
+          task: el[14] ? (el[14] === '---' ? '' : el[14]) : null,
+          finalizedBy: el[15] ? (el[15] === '---' ? '' : el[15]) : null,
+          createdAt: el[16] ? (el[16] === '---' ? '' : new Date(el[16])) : null,
+          finalizedAt: el[17] ? (el[17] === '---' ? '' : new Date(el[17])) : null,
+          processAt: el[18] ? (el[18] === '---' ? '' : new Date(el[18])) : null,
+          inquiryAt: el[19] ? (el[19] === '---' ? '' : new Date(el[19])) : null,
+          images: [],
+          imagesCounter: 0,
+          inquiries: [],
+          inquiriesCounter: 0,
+          registryTimer: null,
+          processTimer: null,
+          inquiryTimer: null,
+          editedAt: null,
+          editedBy: null
+        }
+        xlsxData.push(data)
+      });
+
+      this.currentData = xlsxData;
+
+      this.settingDataSource.data = this.currentData;
+
+      this.fileButton.nativeElement.value = null;
+      this.loading.next(false);
+    } else {
+      this.snackbar.open("🚨 Archivo vacío ", "Aceptar", {
+        duration: 3000,
+      });
+    }
+  }
+
   formatDate(excelDate: string): { 'D': number, 'M': number, 'Y': number, 'h': number, 'm': number, 's': number } {
     let singleSpaces = excelDate.replace(/  +/g, ' ');
     let entry = singleSpaces.split(" ");
@@ -192,7 +277,6 @@ export class HistoryUploadFileDialogComponent implements OnInit {
   }
 
   saveDataTable() {
-    console.log('this.currentDataUpload : ', this.currentData)
     this.loading.next(true);
 
     this.evaltService.addSettings(this.currentData)

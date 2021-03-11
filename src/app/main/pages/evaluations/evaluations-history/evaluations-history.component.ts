@@ -215,9 +215,9 @@ export class EvaluationsHistoryComponent implements OnInit {
       'status',
       'wof',
       'task',
-      'finilizedBy',
+      'finalizedBy',
       'createdAt',
-      'finilizedAt',
+      'finalizedAt',
       'processAt',
       'inquiryAt']
 
@@ -240,12 +240,12 @@ export class EvaluationsHistoryComponent implements OnInit {
         evaluation.status ? evaluation.status : "---",
         evaluation.wof ? evaluation.wof : "---",
         evaluation.task ? evaluation.task : "---",
-        evaluation.finalizedBy ? evaluation.finalizedBy : "---",
-        evaluation.finalizedAt ? evaluation.finalizedAt : "---",
-        evaluation.processAt ? evaluation.processAt : "---",
-        evaluation.inquiryAt ? evaluation.inquiryAt : "---",
+        evaluation.finalizedBy ? (evaluation.finalizedBy.name ? evaluation.finalizedBy.name : evaluation.finalizedBy) : "---",
+        evaluation.finalizedAt ? new Date(evaluation.finalizedAt['seconds'] * 1000) : "---",
+        evaluation.processAt ? new Date(evaluation.processAt['seconds'] * 1000) : "---",
+        evaluation.inquiryAt ? new Date(evaluation.inquiryAt['seconds'] * 1000) : "---",
       ]
-
+      
       table_xlsx.push(temp);
     })
 

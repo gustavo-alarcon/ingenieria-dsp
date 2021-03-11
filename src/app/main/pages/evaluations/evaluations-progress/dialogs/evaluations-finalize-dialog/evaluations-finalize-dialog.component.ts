@@ -1,8 +1,8 @@
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Evaluation, EvaluationsResultTypeUser } from 'src/app/main/models/evaluations.model';
+import { Evaluation, EvaluationsKindOfTest, EvaluationsResultTypeUser } from 'src/app/main/models/evaluations.model';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { debounceTime, distinctUntilChanged, finalize, map, startWith, switchMap, take, tap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -34,6 +34,7 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
   private subscription = new Subscription();
 
   obsAutoComplete$: Observable<EvaluationsResultTypeUser[]>;
+  kindOfTests$: Observable<EvaluationsKindOfTest[]>;
 
 
   constructor(
@@ -52,11 +53,12 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
     } else {
       this.images = [];
     }
+
     this.obsAutoComplete$ = this.evaluationServices.getAllEvaluationsSettingsResultType();
+
   }
 
   ngOnInit(): void {
-    this.loading.next(true);
     this.createFormFinalize();
     this.filteredOptions = this.finalizeForm.controls.result.valueChanges
       .pipe(
@@ -74,7 +76,25 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
           this.loading.next(false);
         }),
       );
-    this.loading.next(false);
+
+
+    this.kindOfTests$ = combineLatest(
+      this.evaluationServices.getAllEvaluationsSettingsKindOfTest(),
+      this.finalizeForm.controls.kindOfTest.valueChanges
+        .pipe(
+          startWith(''),
+          debounceTime(200),
+          distinctUntilChanged(),
+          map(val => val.kindOfTest ? val.kindOfTest : val)
+        )
+    ).pipe(
+      map(([list, term]) => {
+        let search = term.trim().toLowerCase();
+        return list.filter(element => element.kindOfTest.includes(search));
+      })
+    )
+
+
   }
 
   createFormFinalize(): void {
