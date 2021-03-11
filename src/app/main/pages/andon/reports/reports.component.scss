@@ -17,6 +17,8 @@
         &--input{
             border: transparent;
             height: 30px;
+            margin-bottom: 10px;
+
             &::placeholder {
                 color: #aeaeae;
             }
@@ -85,9 +87,8 @@
         &--return{
             background: #27AE60;
             color: white;
-            font-weight: bold;
             border-radius: 10px;
-            padding: 10px 30px 10px 30px;
+            padding: 0px 30px 0px 30px;
             border: transparent;
         }
     }  
@@ -119,6 +120,8 @@
             &--input{
                 border: transparent;
                 height: 30px;
+                margin-bottom: 10px;
+
                 &::placeholder {
                     color: #aeaeae;
                 }
@@ -187,10 +190,13 @@
                 color: white;
                 font-weight: bold;
                 border-radius: 10px;
-                padding: 5px 30px 5px 30px;
+                padding: 0px 30px 0px 30px;
                 border: transparent;
             }
         }  
+    }
+    .divider{
+        display:none;
     }
 }
   /* 
@@ -211,11 +217,12 @@
         }
         &__search{
             display: flex;
-            margin-left: 50px;
+            margin-left: 10px;
             border : 1px solid #D8D8D8;  
             &--input{
                 border: transparent;
-                height: 30px;
+                height: 20px;
+                margin-bottom: 10px;
                 &::placeholder {
                     color: #aeaeae;
                 }
@@ -284,11 +291,13 @@
                 color: white;
                 font-weight: bold;
                 border-radius: 10px;
-                padding: 5px 20px 5px 20px;
+                padding: 0px 20px 0px 20px;
                 border: transparent;
             }
         }  
     }
-       
+     .divider{
+        display:none;
+    }  
         
   }
