@@ -8,6 +8,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { map, take } from 'rxjs/operators';
 import { Improvement } from '../../../models/improvenents.model';
 import { ImprovementsService } from '../../../services/improvements.service';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-summary',
@@ -21,7 +22,7 @@ export class SummaryComponent implements OnInit, AfterViewInit {
   summaryDataSource = new MatTableDataSource<Improvement>();
   summaryDisplayedColumns: string[] = ['date', 'component', 'model', 'media', 'description', 'criticalPart', 'name', 'quantity', 'improvedPart', 'currentPart', 'stock', 'availability', 'actions'];
 
-  @ViewChild("summaryPaginator", { static: false }) set content(paginator: MatPaginator) {
+  @ViewChild('summaryPaginator', { static: false }) set content(paginator: MatPaginator) {
     this.summaryDataSource.paginator = paginator;
   }
 
@@ -45,10 +46,10 @@ export class SummaryComponent implements OnInit, AfterViewInit {
               return this.summaryDataSource.data = [];
             }
           })
-        )
+        );
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.summaryDataSource.sort = this.sort;
   }
 
@@ -62,7 +63,7 @@ export class SummaryComponent implements OnInit, AfterViewInit {
         if (batch) {
           batch.commit()
             .then(() => {
-              this.loading.next(false)
+              this.loading.next(false);
               this.snackbar.open('🗑️ Elemento removido!', 'Aceptar', {
                 duration: 6000
               });
@@ -72,11 +73,69 @@ export class SummaryComponent implements OnInit, AfterViewInit {
               this.loading.next(false);
               this.snackbar.open('🚨 Hubo un error guardando las mejoras!', 'Aceptar', {
                 duration: 6000
-              })
-            })
+              });
+            });
         }
-      })
+      });
 
+  }
+
+  downloadXlsx(improvement: Improvement[]): void {
+    const tableXlsx: any[] = [];
+    const headersXlsx = [
+      'date',
+      'component',
+      'model',
+      'media',
+      'description',
+      'criticalPart',
+      'name',
+      'quantity',
+      'improvedPart',
+      'currentPart',
+      'createdAt',
+      'stock',
+      'availability',
+      // 'createdBy',
+      // 'editedAt',
+      // 'editedBy',
+      // 'id',
+      // 'kit',
+      // 'rate',
+    ];
+
+
+    tableXlsx.push(headersXlsx);
+
+    improvement.forEach(item => {
+      const temp = [
+        item.date ? new Date(item.date['seconds'] * 1000) : '---',
+        item.component ? item.component : '---',
+        item.model ? item.model : '---',
+        item.media ? 'SI' : 'NO',
+        item.description ? item.description : '---',
+        item.criticalPart ? 'SI' : 'NO',
+        item.name ? item.name : '---',
+        item.quantity ? item.quantity : '---',
+        item.improvedPart ? item.improvedPart : '---',
+        item.currentPart ? item.currentPart : '---',
+        item.createdAt ? new Date(item.createdAt['seconds'] * 1000) : '---',
+        item.stock ? item.stock : '---',
+        item.availability ? new Date(item.availability['seconds'] * 1000) : '---',
+      ];
+      tableXlsx.push(temp);
+    });
+
+
+    /* generate worksheet */
+    const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(tableXlsx);
+
+    /* generate workbook and add the worksheet */
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Tabla_Resumen');
+    /* save to file */
+    const name = `Tabla_Resumen.xlsx`;
+    XLSX.writeFile(wb, name);
   }
 
 }

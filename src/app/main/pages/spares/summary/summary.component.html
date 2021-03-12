@@ -1,7 +1,14 @@
 <div class="container">
     <div class="header-container">
         <mat-icon mat-list-icon class="mat-icon-menu" style="font-size: 2.5em;">description</mat-icon>
-        <h1 style="font-size: 2.2em; margin-left: 20px; font-family: 'Poppins', sans-serif; font-weight: 700;">Resumen</h1>
+        <h1 style="font-size: 2.2em; margin-left: 20px; font-family: 'Poppins', sans-serif; font-weight: 700;">
+            Resumen
+        </h1>
+        <button aria-label="add" mat-button class="btn-add" (click)="downloadXlsx(summaryDataSource.data)"
+            [disabled]="summaryDataSource.data.length < 1">
+            <mat-icon aria-label="agregar" class="icon-add">download</mat-icon>
+            DESCARGAR
+        </button>
     </div>
     <div class="body-container">
         <ng-container *ngIf="summary$ | async; else default">
@@ -90,7 +97,9 @@
                     <ng-container matColumnDef="availability">
                         <th mat-header-cell *matHeaderCellDef class="table__cell" mat-sort-header> Disponibilidad </th>
                         <td mat-cell *matCellDef="let element" class="table__cell">
-                            <span *ngIf="element.availability?.seconds; else noAvailability">{{(element.availability.seconds * 1000) |
+                            <span
+                                *ngIf="element.availability?.seconds; else noAvailability">{{(element.availability.seconds
+                                * 1000) |
                                 date:"dd/MM/yyyy"}}</span>
                             <ng-template #noAvailability>{{'---'}}</ng-template>
                         </td>
