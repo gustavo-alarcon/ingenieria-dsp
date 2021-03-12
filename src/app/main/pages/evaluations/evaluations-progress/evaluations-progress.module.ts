@@ -15,6 +15,7 @@ import { EvaluationsConsultsDialogComponent } from './dialogs/evaluations-consul
 import { EvaluationsResponseDialogComponent } from './dialogs/evaluations-response-dialog/evaluations-response-dialog.component';
 import { Ng2ImgMaxModule } from 'ng2-img-max';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
+import { ComponentsModule } from 'src/app/shared/components/components.module';
 
 
 @NgModule({
@@ -38,7 +39,8 @@ import { LazyLoadImageModule } from 'ng-lazyload-image';
     ReactiveFormsModule,
     FormsModule,
     Ng2ImgMaxModule,
-    LazyLoadImageModule
+    LazyLoadImageModule,
+    ComponentsModule
   ]
 })
 export class EvaluationsProgressModule { }
