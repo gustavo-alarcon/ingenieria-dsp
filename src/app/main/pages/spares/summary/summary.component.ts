@@ -84,50 +84,50 @@ export class SummaryComponent implements OnInit, AfterViewInit {
     const tableXlsx: any[] = [];
     const headersXlsx = [
       'date',
-      'availability',
       'component',
-      'createdAt',
-      'createdBy',
-      'criticalPart',
-      'currentPart',
-      'description',
-      // 'editedAt',
-      // 'editedBy',
-      'improvedPart',
-      // 'id',
-      'kit',
-      'media',
       'model',
+      'media',
+      'description',
+      'criticalPart',
       'name',
       'quantity',
-      'rate',
+      'improvedPart',
+      'currentPart',
+      'createdAt',
       'stock',
+      'availability',
+      // 'createdBy',
+      // 'editedAt',
+      // 'editedBy',
+      // 'id',
+      // 'kit',
+      // 'rate',
     ];
 
 
     tableXlsx.push(headersXlsx);
 
-    improvement.forEach(item => {
-      const temp = [
-        item.date ? new Date(item.date['seconds'] * 1000) : '---',
-        item.availability ? new Date(item.availability['seconds'] * 1000) : '---',
-        item.component ? item.component : '---',
-        item.createdAt ? new Date(item.createdAt['seconds'] * 1000) : '---',
-        item.createdBy ? item.createdBy['name'] : '---',
-        item.criticalPart ? 'SI' : 'NO',
-        item.currentPart ? item.currentPart : '---',
-        item.description ? item.description : '---',
-        item.improvedPart ? item.improvedPart : '---',
-        item.kit ? 'SI' : 'NO',
-        item.media ? 'SI' : 'NO',
-        item.model ? item.model : '---',
-        item.name ? item.name : '---',
-        item.quantity ? item.quantity : '---',
-        item.rate ? 'SI' : 'NO',
-        item.stock ? item.stock : '---',
-      ];
-      tableXlsx.push(temp);
-    });
+    // improvement.forEach(item => {
+    //   const temp = [
+    //     item.date ? new Date(item.date['seconds'] * 1000) : '---',
+    //     item.availability ? new Date(item.availability['seconds'] * 1000) : '---',
+    //     item.component ? item.component : '---',
+    //     item.createdAt ? new Date(item.createdAt['seconds'] * 1000) : '---',
+    //     item.createdBy ? item.createdBy['name'] : '---',
+    //     item.criticalPart ? 'SI' : 'NO',
+    //     item.currentPart ? item.currentPart : '---',
+    //     item.description ? item.description : '---',
+    //     item.improvedPart ? item.improvedPart : '---',
+    //     item.kit ? 'SI' : 'NO',
+    //     item.media ? 'SI' : 'NO',
+    //     item.model ? item.model : '---',
+    //     item.name ? item.name : '---',
+    //     item.quantity ? item.quantity : '---',
+    //     item.rate ? 'SI' : 'NO',
+    //     item.stock ? item.stock : '---',
+    //   ];
+    //   tableXlsx.push(temp);
+    // });
 
 
     /* generate worksheet */
@@ -135,7 +135,7 @@ export class SummaryComponent implements OnInit, AfterViewInit {
 
     /* generate workbook and add the worksheet */
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Resumen');
+    XLSX.utils.book_append_sheet(wb, ws, 'Tabla_Resumen');
     /* save to file */
     const name = `Tabla_Resumen.xlsx`;
     XLSX.writeFile(wb, name);
