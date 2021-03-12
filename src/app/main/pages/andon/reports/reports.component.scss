@@ -17,6 +17,8 @@
         &--input{
             border: transparent;
             height: 30px;
+            margin-bottom: 10px;
+
             &::placeholder {
                 color: #aeaeae;
             }
@@ -85,9 +87,8 @@
         &--return{
             background: #27AE60;
             color: white;
-            font-weight: bold;
             border-radius: 10px;
-            padding: 10px 30px 10px 30px;
+            padding: 0px 30px 0px 30px;
             border: transparent;
         }
     }  
@@ -101,7 +102,7 @@
 
 @media (min-width: 481px) and (max-width: 767px) {  
     .container {
-        margin: 30px 70px 30px 70px;
+        margin: 30px 30px 30px 30px;
     }
     
     .header-container {
@@ -114,11 +115,15 @@
         
         &__search{
             display: flex;
-            margin-left: 50px;
+            margin-left: 30px;
+            margin-right: 30px;
             border : 1px solid #D8D8D8;  
             &--input{
                 border: transparent;
                 height: 30px;
+                margin-bottom: 10px;
+                width: 50vw;
+
                 &::placeholder {
                     color: #aeaeae;
                 }
@@ -131,8 +136,8 @@
     
     .body-container{
         display: grid;
-        row-gap: 0.6em;
-        column-gap: 0.6em;
+        row-gap: 0.5em;
+        column-gap: 0.5em;
         grid-template-columns: 1fr 1fr; 
     
     }
@@ -187,10 +192,13 @@
                 color: white;
                 font-weight: bold;
                 border-radius: 10px;
-                padding: 5px 30px 5px 30px;
+                padding: 0px 30px 0px 30px;
                 border: transparent;
             }
         }  
+    }
+    .divider{
+        display:none;
     }
 }
   /* 
@@ -211,11 +219,14 @@
         }
         &__search{
             display: flex;
-            margin-left: 50px;
+            margin-left: 10px;
             border : 1px solid #D8D8D8;  
             &--input{
                 border: transparent;
-                height: 30px;
+                height: 20px;
+                margin-bottom: 10px;
+                width: 60vw;
+
                 &::placeholder {
                     color: #aeaeae;
                 }
@@ -264,7 +275,7 @@
                 height: 50px;
                 width: 50px;
                 border: 1px solid black;
-                margin: 10px 30px 10px 50px ;
+                margin: 10px 30px 10px 40px ;
             }
             &--timer{
                 font-weight: bold;
@@ -275,7 +286,7 @@
                 font-weight: bold;
                 color: black;
                 border-radius: 10px;
-                padding: 5px 20px 5px 20px;
+                padding: 10px 20px 10px 20px;
                 border: transparent;
                 margin-bottom: 15px;
             }
@@ -284,11 +295,13 @@
                 color: white;
                 font-weight: bold;
                 border-radius: 10px;
-                padding: 5px 20px 5px 20px;
+                padding: 0px 20px 0px 20px;
                 border: transparent;
             }
         }  
     }
-       
+     .divider{
+        display:none;
+    }  
         
   }

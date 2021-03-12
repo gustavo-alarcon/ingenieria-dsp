@@ -76,7 +76,7 @@ export class ReturnDialogComponent implements OnInit {
         this.images.forEach((value, index) => {
           imagesObj[index] = value;
         });
-        this.andonService.updateAndonAddComments(this.data.id, this.returnForm.value, imagesObj, this.user )
+        this.andonService.updateAndonAddComments(this.data, this.returnForm.value, imagesObj, this.user )
           .pipe(take(1))
           .subscribe((res) => {
             res.commit().then(() => {

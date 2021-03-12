@@ -1,6 +1,10 @@
 .container {
     margin: 30px 70px 30px 70px;
 }
+.title-containe{
+    display: flex;
+    flex-direction: row;
+}
 
 .header{
     display: flex;
@@ -10,12 +14,21 @@
 
 .header-container {
     display: flex;
-    margin-bottom: 25px;
+    margin-bottom: 0px;
+    
+    &__title{
+        display: flex;
+    }
+    &__date{
+        margin-left: 20px;   
+    }
     
     &__search{
         display: flex;
         margin-left: 50px;
-        border : 1px solid #D8D8D8;  
+        border : 1px solid #D8D8D8; 
+        height: 50px; 
+        margin-top: 4px;
         &--input{
             border: transparent;
             height: 30px;
@@ -88,5 +101,152 @@ table {
     width: 100px;
 }
 
+.body-mobil{
+    visibility: hidden
+}
 
+/* 
+##Dispositivo = Tablets de baja resolucion y telefnos Mobiles (horizontal)
+##Resolucion = B/w 481px to 767px
+*/
+
+@media (min-width: 481px) and (max-width: 767px) {  
+
+    .container {
+        margin: 20px 20px 20px 20px;
+    }
+       
+    .header-container {
+        display: inline;
+        margin-bottom: 10px;
+
+        &__title{
+            display: flex;
+        }
+        &__date{
+            width: 70vw;
+
+        }
+        
+        &__search{
+            display: flex;
+            margin-left: 10px;
+            border : 1px solid #D8D8D8;  
+            margin-bottom: 0px;
+
+            &--input{
+                border: transparent;
+                height: 30px;
+                width: 70vw;
+                &::placeholder {
+                    color: #aeaeae;
+                }
+                &:focus {
+                    outline: none;
+                }
+            }  
+        }    
+    }
+    
+    .btn{   
+       display: none;
+    }
+    .body-container{
+        display: none;
+    }
+    .body-mobil{
+        margin-top: 0px;
+        visibility: visible;
+    } 
+    
+    .btn-state-parado{
+        background: #FF2D2D;
+        width: 30px;
+        height: 30px;
+        border-radius: 20px;
+        border:transparent;
+    }
+        
+    .btn-state-retomado{
+        background: #27AE60;
+        width: 30px;
+        height: 30px;
+        border-radius: 20px;
+        border:transparent;
+    }
+  }
+  
+  /* 
+    ##Dispositivo = Mayoria de telefonos moviles (vertical)
+    ##Resolucion = B/w 320px to 479px
+  */
+  
+  @media (min-width: 320px) and (max-width: 480px) { 
+    .container {
+        margin: 20px 20px 20px 20px;
+    }   
+    
+    .header-container {
+        display: inline;
+        margin-bottom: 25px;
+
+        &__title{
+            display: flex;
+        }
+
+        &__date{
+            width: 70vw;
+
+        }
+
+        
+        &__search{
+            display: flex;
+            margin-left: 10px;
+            border : 1px solid #D8D8D8;  
+            margin-bottom: 0px;
+            &--input{
+                border: transparent;
+                height: 30px;
+                width: 70vw;
+                &::placeholder {
+                    color: #aeaeae;
+                }
+                &:focus {
+                    outline: none;
+                }
+            }  
+        }    
+    }
+    .btn{   
+        display: none;
+     }
+
+    .body-container{
+          display: none;
+      }
+
+    .body-mobil{
+        margin-top: 0px;
+        visibility: visible;
+    }
+    
+    .btn-state-parado{
+        background: #FF2D2D;
+        width: 30px;
+        height: 30px;
+        border-radius: 20px;
+        border:transparent;
+    }
+        
+    .btn-state-retomado{
+        background: #27AE60;
+        width: 30px;
+        height: 30px;
+        border-radius: 20px;
+        border:transparent;
+    }
+    
+    
+  }
 
