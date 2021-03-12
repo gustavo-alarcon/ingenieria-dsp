@@ -103,6 +103,13 @@ export interface EvaluationsResultTypeUser {
     createdBy: User;
 }
 
+export interface EvaluationsKindOfTest {
+    id: string;
+    kindOfTest: string;
+    createdAt: Date;
+    createdBy: User;
+}
+
 export interface EvaluationsUser {
     id: string;
     code: string;

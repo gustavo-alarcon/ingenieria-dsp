@@ -9,12 +9,13 @@
       CREAR LOTE
     </button>
 
-    <button aria-label="add" mat-button class="btn-add" (click)="downloadXlsx(historyDataSource.data)">
+    <button aria-label="add" mat-button class="btn-add" (click)="downloadXlsx(historyDataSource.data)"
+      [disabled]="historyDataSource.data.length < 1">
       <mat-icon aria-label="agregar" class="icon-add">download</mat-icon>
       DESCARGAR
     </button>
   </ng-container>
-  
+
   <mat-form-field appearance="outline" style="margin-left: 16px; font-size: 12px;">
     <mat-select [formControl]="statusControl" placeholder="Estados">
       <mat-option value="">-Todos-</mat-option>
@@ -114,6 +115,18 @@
           'dd/MM/yy hh:mm:ss'}} </td>
       </ng-container>
 
+      <ng-container matColumnDef="processAt">
+        <th mat-header-cell *matHeaderCellDef class="table__cell">Fecha de proceso</th>
+        <td mat-cell *matCellDef="let element" class="table__cell"> {{(element.processAt?.seconds * 1000) | date :
+          'dd/MM/yy hh:mm:ss'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="finalizedAt">
+        <th mat-header-cell *matHeaderCellDef class="table__cell">Fecha de finalizado</th>
+        <td mat-cell *matCellDef="let element" class="table__cell"> {{(element.finalizedAt?.seconds * 1000) | date :
+          'dd/MM/yy hh:mm:ss'}} </td>
+      </ng-container>
+
       <ng-container matColumnDef="result">
         <th mat-header-cell *matHeaderCellDef class="table__cell">Resultado</th>
         <td mat-cell *matCellDef="let element" class="table__cell"> {{element.result ? element.result : '---'}} </td>
@@ -133,7 +146,8 @@
 
       <ng-container matColumnDef="createdBy">
         <th mat-header-cell *matHeaderCellDef class="table__cell">Inspector</th>
-        <td mat-cell *matCellDef="let element" class="table__cell"> {{element.createdBy ? element.createdBy :
+        <td mat-cell *matCellDef="let element" class="table__cell"> {{element.createdBy ? (element.createdBy.name ?
+          element.createdBy.name : element.createdBy) :
           '---'}} </td>
       </ng-container>
 
@@ -191,6 +205,6 @@
       <tr mat-row *matRowDef="let row; columns: improvementDisplayedColumns;"></tr>
     </table>
   </div>
-  <mat-paginator #improvementPaginator class="ms-paginator" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+  <mat-paginator #improvementPaginator class="ms-paginator" [pageSizeOptions]="[20, 30, 40]" showFirstLastButtons>
   </mat-paginator>
 </div>

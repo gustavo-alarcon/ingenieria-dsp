@@ -5,7 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from 'src/app/auth/services/auth.service';
-import { EvaluationsBroadcastUser, EvaluationsResultTypeUser, EvaluationsUser } from 'src/app/main/models/evaluations.model';
+import { EvaluationsBroadcastUser, EvaluationsKindOfTest, EvaluationsResultTypeUser, EvaluationsUser } from 'src/app/main/models/evaluations.model';
 import { User } from 'src/app/main/models/user-model';
 import * as XLSX from 'xlsx';
 import { EvaluationsService } from 'src/app/main/services/evaluations.service';
@@ -29,6 +29,8 @@ export class EvaluationsSettingsComponent implements OnInit, OnDestroy {
 
   loading = new BehaviorSubject<boolean>(true);
   loading$ = this.loading.asObservable();
+  loadingKindOfTest = new BehaviorSubject<boolean>(true);
+  loadingKindOfTest$ = this.loadingKindOfTest.asObservable();
 
   settingsDataSource = new MatTableDataSource<EvaluationsUser>();
   settingsDisplayedColumns: string[] = [
@@ -59,9 +61,11 @@ export class EvaluationsSettingsComponent implements OnInit, OnDestroy {
 
   listNotifyFormControl = new FormControl(null, [Validators.required, Validators.email]);
   listResultFormControl = new FormControl(null, [Validators.required]);
+  listKindOfTestFormControl = new FormControl(null, [Validators.required]);
 
   listNotifyArray: EvaluationsBroadcastUser[] = [];
   listResultArray: EvaluationsResultTypeUser[] = [];
+  listKindOfTestArray: EvaluationsKindOfTest[] = [];
 
   matcher = new MyErrorStateMatcher();
 
@@ -108,6 +112,16 @@ export class EvaluationsSettingsComponent implements OnInit, OnDestroy {
           this.listResultArray = resp;
         } else {
           this.listResultArray = [];
+        }
+      })
+    );
+
+    this.subscription.add(
+      this.evalService.getAllEvaluationsSettingsKindOfTest().subscribe((resp) => {
+        if (resp) {
+          this.listKindOfTestArray = resp;
+        } else {
+          this.listKindOfTestArray = [];
         }
       })
     );
@@ -212,6 +226,35 @@ export class EvaluationsSettingsComponent implements OnInit, OnDestroy {
     }
   }
 
+  saveKindOfTest(): void {
+    try {
+      const resp = this.evalService.addEvaluationsSettingsKindOfTest(this.listKindOfTestArray, this.user);
+      this.loadingKindOfTest.next(true);
+      this.subscription.add(resp.subscribe(
+        batch => {
+          if (batch) {
+            batch.commit()
+              .then(() => {
+                this.loading.next(false);
+                this.snackbar.open('✅ Lista tipo de ensayo, creada!', 'Aceptar', {
+                  duration: 6000
+                });
+              })
+              .catch(err => {
+                this.loadingKindOfTest.next(false);
+                this.snackbar.open('🚨 Hubo un error creando tipo de ensayo!', 'Aceptar', {
+                  duration: 6000
+                });
+              });
+          }
+        }
+      ));
+    } catch (error) {
+      console.log(error);
+      this.loading.next(false);
+    }
+  }
+
   async addDeleteListNotify(validate: string, index?: number): Promise<void> {
     switch (validate) {
       case 'add':
@@ -250,7 +293,7 @@ export class EvaluationsSettingsComponent implements OnInit, OnDestroy {
         if (this.listResultFormControl.valid) {
           const objAux: EvaluationsResultTypeUser = {
             id: null,
-            resultType: this.listResultFormControl.value.trim().toLowerCase(),
+            resultType: this.listResultFormControl.value.trim(),
             createdAt: null,
             createdBy: null,
           };
@@ -271,6 +314,37 @@ export class EvaluationsSettingsComponent implements OnInit, OnDestroy {
           this.loading.next(false);
         }
         this.listResultArray.splice(index, 1);
+        break;
+    }
+  }
+
+  async addDeleteListKindOfTest(validate: string, index?: number): Promise<void> {
+    switch (validate) {
+      case 'add':
+        if (this.listKindOfTestFormControl.valid) {
+          const objAux: EvaluationsKindOfTest = {
+            id: null,
+            kindOfTest: this.listKindOfTestFormControl.value.trim(),
+            createdAt: null,
+            createdBy: null,
+          };
+          const valueIsEquals = (currentValue) => currentValue.kindOfTest !== objAux.kindOfTest;
+          if (this.listKindOfTestArray.every(valueIsEquals)) {
+            this.listKindOfTestArray.push(objAux);
+          }
+          this.listKindOfTestFormControl.reset();
+        }
+        break;
+      case 'delete':
+        if (this.listKindOfTestArray[index].id) {
+          this.loading.next(true);
+          await this.evalService.deleteEvaluationsSettingsKindOfTest(this.listKindOfTestArray[index].id);
+          this.snackbar.open('✅ Elemento borrado correctamente', 'Aceptar', {
+            duration: 6000
+          });
+          this.loading.next(false);
+        }
+        this.listKindOfTestArray.splice(index, 1);
         break;
     }
   }
