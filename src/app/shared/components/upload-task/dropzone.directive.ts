@@ -30,5 +30,5 @@ export class DropzoneDirective {
     $event.preventDefault();
     this.hovered.emit(false);
   }
-  
+
 }

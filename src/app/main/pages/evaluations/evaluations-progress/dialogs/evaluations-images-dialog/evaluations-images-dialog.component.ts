@@ -31,17 +31,18 @@ export class EvaluationsImagesDialogComponent implements OnInit, OnDestroy {
 
   files: File[] = [];
 
+  pathStorage: string;
+  pathDb: string;
+
   private subscription = new Subscription();
 
   constructor(
-    private snackBar: MatSnackBar,
-    private ng2ImgMax: Ng2ImgMaxService,
     @Inject(MAT_DIALOG_DATA) public data: Evaluation,
     public dialogRef: MatDialogRef<EvaluationsImagesDialogComponent>,
-    private storage: AngularFireStorage,
     private evaluationServices: EvaluationsService
 
   ) {
+
     if (data.images) {
       const arr = Object.values(data.images);
       this.images = [...arr];
@@ -51,6 +52,8 @@ export class EvaluationsImagesDialogComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.pathStorage = `evaluations/${this.data.id}/pictures/${this.data.id}`;
+    this.pathDb = `/db/ferreyros/evaluations`;
   }
 
   ngOnDestroy(): void {
@@ -72,57 +75,12 @@ export class EvaluationsImagesDialogComponent implements OnInit, OnDestroy {
     } catch (error) {
       console.log(error);
     }
-
-
-
   }
 
-  async deleteImage(imgForDelete: string, index: number): Promise<void> {
-    try {
-      this.loading.next(true);
-      await this.evaluationServices.deleteImage(this.imagesUpload[index]);
-      this.imagesUpload.splice(index, 1);
-      this.loading.next(false);
-    } catch (error) {
-      console.log(error);
-      this.loading.next(false);
-      this.imagesUpload.splice(index, 1);
-    }
-  }
-
-
-  uploadFile(event, i?: number): void {
-    if (!event.target.files[0]) {
-      return;
-    }
-    this.loading.next(true);
-    this.snackBar.open('🗜️ Comprimiendo', 'Aceptar', {
-      duration: 3000
-    });
-
-    const file = event.target.files[0];
-    this.subscription.add(this.ng2ImgMax.resize([file], 800, 10000).subscribe((result) => {
-      const name = `evaluations/${this.data.id}/pictures/${this.data.id}-${this.date}-${result.name}.png`;
-      const fileRef = this.storage.ref(name);
-      const task = this.storage.upload(name, file);
-      this.uploadPercent$ = task.percentageChanges();
-      this.subscription.add(task.snapshotChanges().pipe(
-        finalize(() => {
-          fileRef.getDownloadURL().subscribe(url => {
-            if (this.imagesUpload[i] === '') {
-              this.imagesUpload.pop();
-              this.imagesUpload.push(url);
-              this.imagesUpload.push('');
-            } else {
-              this.imagesUpload[i] = url;
-            }
-          });
-          this.loading.next(false);
-        })
-      ).subscribe()
-      );
-    }));
-
+  addNewImage(image: string): void {
+    this.imagesUpload.pop();
+    this.imagesUpload.push(image);
+    this.imagesUpload.push('');
   }
 
   toggleHover(event: boolean): void {
@@ -136,3 +94,51 @@ export class EvaluationsImagesDialogComponent implements OnInit, OnDestroy {
   }
 }
 
+
+
+ // async deleteImage(imgForDelete: string, index: number): Promise<void> {
+  //   try {
+  //     this.loading.next(true);
+  //     await this.evaluationServices.deleteImage(this.imagesUpload[index]);
+  //     this.imagesUpload.splice(index, 1);
+  //     this.loading.next(false);
+  //   } catch (error) {
+  //     console.log(error);
+  //     this.loading.next(false);
+  //     this.imagesUpload.splice(index, 1);
+  //   }
+  // }
+
+   // uploadFile(event, i?: number): void {
+  //   if (!event.target.files[0]) {
+  //     return;
+  //   }
+  //   this.loading.next(true);
+  //   this.snackBar.open('🗜️ Comprimiendo', 'Aceptar', {
+  //     duration: 3000
+  //   });
+
+  //   const file = event.target.files[0];
+  //   this.ng2ImgMax.resize([file], 800, 10000).subscribe((result) => {
+  //     const name = `evaluations/${this.data.id}/pictures/${this.data.id}-${this.date}-${result.name}.png`;
+  //     const fileRef = this.storage.ref(name);
+  //     const task = this.storage.upload(name, file);
+  //     this.uploadPercent$ = task.percentageChanges();
+  //     this.subscription.add(task.snapshotChanges().pipe(
+  //       finalize(() => {
+  //         fileRef.getDownloadURL().subscribe(url => {
+  //           if (this.imagesUpload[i] === '') {
+  //             this.imagesUpload.pop();
+  //             this.imagesUpload.push(url);
+  //             this.imagesUpload.push('');
+  //           } else {
+  //             this.imagesUpload[i] = url;
+  //           }
+  //         });
+  //         this.loading.next(false);
+  //       })
+  //     ).subscribe()
+  //     );
+  //   });
+
+  // }
