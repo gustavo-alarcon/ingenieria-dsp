@@ -23,9 +23,10 @@
         <div class="dropzone" appDropzone (hovered)="toggleHover($event)" (dropped)="onDrop($event)"
             [class.hovering]="isHovering">
             <h3>Drop Zone</h3>
-            <p>Arrastra tus imajenes Aquí</p>
+            <p>Arrastrar imágenes aquí</p>
+            <!-- <button>HOLA</button> -->
         </div>
-        <h3>Uploads</h3>
+        <!-- <h3>Uploads</h3> -->
         <div *ngFor="let file of files;let i = index">
             <app-upload-task [file]="file" [pathStorage]="pathStorage" (onNewImage)="addNewImage($event)">
             </app-upload-task>
