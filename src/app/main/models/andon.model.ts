@@ -12,12 +12,20 @@ export interface Andon {
   problemType?: string;
   description?: string;
   images?: Array<string>;
-  atentionTime: Date;
+  registryTimer?: any;
+  atentionTime: EvaluationTimer;
   reportUser: string;
   state: string; //=> stopped //retaken
   workReturnDate?: Date;
   comments?: string;
   returnUser?: string;
+}
+
+export interface EvaluationTimer {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number
 }
 
 export interface AndonProblemType{

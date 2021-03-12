@@ -144,13 +144,12 @@ export class AndonService {
    * @param {string} imges - imgs
    * @param {User} user - imgs
    */
-   updateAndonAddComments(entryId: string, form, imags, user: User): Observable<firebase.default.firestore.WriteBatch> {
-
+   updateAndonAddComments(andon: Andon, form, imags, user: User): Observable<firebase.default.firestore.WriteBatch> {
      // create batch
      const batch = this.afs.firestore.batch();
       // create reference for document in evaluation entries collection
      const evaluationDocRef = this.afs.firestore
-        .doc(`/db/ferreyros/andon/${entryId}`);
+        .doc(`/db/ferreyros/andon/${andon.id}`);
       // Structuring the data model
      const data: any = {
         editedAt: new Date(),
@@ -160,6 +159,7 @@ export class AndonService {
         state: 'retaken', //=> stopped //retaken
         workReturnDate: new Date(),
         returnUser: user.name,
+        atentionTime: andon.atentionTime,
       };
      batch.update(evaluationDocRef, data);
 
@@ -216,7 +216,7 @@ export class AndonService {
       problemType: form.problemType,
       description: form.description,
       images: imagesObj,
-      atentionTime: new Date(),
+      atentionTime: null,
       reportUser: user.name,
       state: 'stopped', //=> stopped //retaken
       workReturnDate: null,
