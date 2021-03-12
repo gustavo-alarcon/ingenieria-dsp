@@ -47,8 +47,8 @@ export class RecordComponent implements OnInit {
   historyMobilDisplayedColumns: string[] = [
     'state',
     'reportDate',
-    'workShop',
     'name',
+    'workShop',
     'otChild',
     'problemType',
     'description',

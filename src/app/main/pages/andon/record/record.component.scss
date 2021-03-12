@@ -124,7 +124,8 @@ table {
             display: flex;
         }
         &__date{
-            display: none;
+            width: 70vw;
+
         }
         
         &__search{
@@ -194,8 +195,10 @@ table {
         }
 
         &__date{
-            display: none;
+            width: 70vw;
+
         }
+
         
         &__search{
             display: flex;
