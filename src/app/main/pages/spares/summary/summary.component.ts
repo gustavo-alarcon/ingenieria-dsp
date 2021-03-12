@@ -107,27 +107,24 @@ export class SummaryComponent implements OnInit, AfterViewInit {
 
     tableXlsx.push(headersXlsx);
 
-    // improvement.forEach(item => {
-    //   const temp = [
-    //     item.date ? new Date(item.date['seconds'] * 1000) : '---',
-    //     item.availability ? new Date(item.availability['seconds'] * 1000) : '---',
-    //     item.component ? item.component : '---',
-    //     item.createdAt ? new Date(item.createdAt['seconds'] * 1000) : '---',
-    //     item.createdBy ? item.createdBy['name'] : '---',
-    //     item.criticalPart ? 'SI' : 'NO',
-    //     item.currentPart ? item.currentPart : '---',
-    //     item.description ? item.description : '---',
-    //     item.improvedPart ? item.improvedPart : '---',
-    //     item.kit ? 'SI' : 'NO',
-    //     item.media ? 'SI' : 'NO',
-    //     item.model ? item.model : '---',
-    //     item.name ? item.name : '---',
-    //     item.quantity ? item.quantity : '---',
-    //     item.rate ? 'SI' : 'NO',
-    //     item.stock ? item.stock : '---',
-    //   ];
-    //   tableXlsx.push(temp);
-    // });
+    improvement.forEach(item => {
+      const temp = [
+        item.date ? new Date(item.date['seconds'] * 1000) : '---',
+        item.component ? item.component : '---',
+        item.model ? item.model : '---',
+        item.media ? 'SI' : 'NO',
+        item.description ? item.description : '---',
+        item.criticalPart ? 'SI' : 'NO',
+        item.name ? item.name : '---',
+        item.quantity ? item.quantity : '---',
+        item.improvedPart ? item.improvedPart : '---',
+        item.currentPart ? item.currentPart : '---',
+        item.createdAt ? new Date(item.createdAt['seconds'] * 1000) : '---',
+        item.stock ? item.stock : '---',
+        item.availability ? new Date(item.availability['seconds'] * 1000) : '---',
+      ];
+      tableXlsx.push(temp);
+    });
 
 
     /* generate worksheet */
