@@ -28,6 +28,7 @@
         margin-left: 50px;
         border : 1px solid #D8D8D8; 
         height: 50px; 
+        margin-top: 4px;
         &--input{
             border: transparent;
             height: 30px;
@@ -110,10 +111,14 @@ table {
 */
 
 @media (min-width: 481px) and (max-width: 767px) {  
+
+    .container {
+        margin: 20px 20px 20px 20px;
+    }
        
     .header-container {
         display: inline;
-        margin-bottom: 25px;
+        margin-bottom: 10px;
 
         &__title{
             display: flex;
@@ -131,7 +136,7 @@ table {
             &--input{
                 border: transparent;
                 height: 30px;
-                width: 50vw;
+                width: 70vw;
                 &::placeholder {
                     color: #aeaeae;
                 }
@@ -175,7 +180,10 @@ table {
     ##Resolucion = B/w 320px to 479px
   */
   
-  @media (min-width: 320px) and (max-width: 480px) {    
+  @media (min-width: 320px) and (max-width: 480px) { 
+    .container {
+        margin: 20px 20px 20px 20px;
+    }   
     
     .header-container {
         display: inline;
@@ -183,6 +191,10 @@ table {
 
         &__title{
             display: flex;
+        }
+
+        &__date{
+            display: none;
         }
         
         &__search{
@@ -193,7 +205,7 @@ table {
             &--input{
                 border: transparent;
                 height: 30px;
-                width: 50vw;
+                width: 70vw;
                 &::placeholder {
                     color: #aeaeae;
                 }
