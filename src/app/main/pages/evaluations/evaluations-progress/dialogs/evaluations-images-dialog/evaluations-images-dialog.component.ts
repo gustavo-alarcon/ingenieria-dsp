@@ -27,6 +27,10 @@ export class EvaluationsImagesDialogComponent implements OnInit, OnDestroy {
 
   uploadPercent$: Observable<number>;
 
+  isHovering: boolean;
+
+  files: File[] = [];
+
   private subscription = new Subscription();
 
   constructor(
@@ -38,7 +42,6 @@ export class EvaluationsImagesDialogComponent implements OnInit, OnDestroy {
     private evaluationServices: EvaluationsService
 
   ) {
-    console.log(data)
     if (data.images) {
       const arr = Object.values(data.images);
       this.images = [...arr];
@@ -81,9 +84,9 @@ export class EvaluationsImagesDialogComponent implements OnInit, OnDestroy {
       this.imagesUpload.splice(index, 1);
       this.loading.next(false);
     } catch (error) {
-       console.log(error);
-       this.loading.next(false);
-       this.imagesUpload.splice(index, 1);
+      console.log(error);
+      this.loading.next(false);
+      this.imagesUpload.splice(index, 1);
     }
   }
 
@@ -120,6 +123,16 @@ export class EvaluationsImagesDialogComponent implements OnInit, OnDestroy {
       );
     }));
 
+  }
+
+  toggleHover(event: boolean): void {
+    this.isHovering = event;
+  }
+
+  onDrop(files: FileList): void {
+    for (let i = 0; i < files.length; i++) {
+      this.files.push(files.item(i));
+    }
   }
 }
 
