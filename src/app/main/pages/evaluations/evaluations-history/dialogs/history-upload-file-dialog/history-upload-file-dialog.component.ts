@@ -211,7 +211,7 @@ export class HistoryUploadFileDialogComponent implements OnInit {
           position: el[2] ? (el[2] === '---' ? '' : el[2]) : null,
           partNumber: el[3] ? (el[3] === '---' ? '' : el[3]) : null,
           description: el[4] ? (el[4] === '---' ? '' : el[4]) : null,
-          internatlStatus: el[5] ? (el[5] === '---' ? '' : el[5]) : null,
+          internalStatus: el[5] ? (el[5] === '---' ? '' : el[5]) : null,
           result: el[6] ? (el[6] === '---' ? '' : el[6]) : null,
           comments: el[7] ? (el[7] === '---' ? '' : el[7]) : null,
           kindOfTest: el[8] ? (el[8] === '---' ? '' : el[8]) : null,
