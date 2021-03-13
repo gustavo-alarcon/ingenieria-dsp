@@ -37,7 +37,7 @@ export class report2ndStepComponent implements OnInit, OnDestroy {
 
   isHovering: boolean;
   files: File[] = [];
-
+  pathStorage: string;
   private subscription = new Subscription();
   constructor(
     private fb: FormBuilder,
@@ -59,6 +59,7 @@ export class report2ndStepComponent implements OnInit, OnDestroy {
       description: ['', Validators.required],
     });
     this.loading.next(true);
+    this.pathStorage = `andon/${this.currentId}/pictures/${this.currentId}`;
 
     this.subscription.add(
       this.andonService.getAndonById(this.currentId).subscribe((res: Andon) => {
@@ -94,7 +95,7 @@ export class report2ndStepComponent implements OnInit, OnDestroy {
         this.images.forEach((value, index) => {
           imagesObj[index] = value;
         });
-        this.andonService.updateAndon(this.currentId, this.reportForm.value)
+        this.andonService.updateAndon(this.currentId, this.reportForm.value, imagesObj)
           .pipe(take(1))
           .subscribe((res) => {
             res.commit().then(() => {
@@ -173,5 +174,10 @@ export class report2ndStepComponent implements OnInit, OnDestroy {
     for (let i = 0; i < files.length; i++) {
       this.files.push(files.item(i));
     }
+  }
+  addNewImage(image: string): void {
+    this.imagesUpload.pop();
+    this.imagesUpload.push(image);
+    this.imagesUpload.push('');
   }
 }

@@ -50,7 +50,7 @@
         <h3>Uploads</h3>
 
         <div *ngFor="let file of files">
-            <app-upload-task [file]="file" [id]="data.id" [module]="module"></app-upload-task>
+            <app-upload-task [file]="file" [pathStorage]="pathStorage" (onNewImage)="addNewImage($event)"> </app-upload-task> 
         </div>                          
 
     </form>

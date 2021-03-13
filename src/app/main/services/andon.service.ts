@@ -118,7 +118,7 @@ export class AndonService {
    * @param {Andon} form - Form data passed on andon edit
    * @param {string} imges - imgs
    */
-   updateAndon(entryId: string, form): Observable<firebase.default.firestore.WriteBatch> {
+   updateAndon(entryId: string, form, imagesObj): Observable<firebase.default.firestore.WriteBatch> {
 
      // create batch
      const batch = this.afs.firestore.batch();
@@ -129,6 +129,8 @@ export class AndonService {
      const data: any = {
         problemType: form.problemType,
         description: form.description,
+        images: imagesObj,
+
       };
      batch.update(evaluationDocRef, data);
 
@@ -158,7 +160,7 @@ export class AndonService {
    * @param {string} imges - imgs
    * @param {User} user - imgs
    */
-   updateAndonAddComments(andon: Andon, form, user: User): Observable<firebase.default.firestore.WriteBatch> {
+   updateAndonAddComments(andon: Andon, form, user: User , imagesObj): Observable<firebase.default.firestore.WriteBatch> {
      // create batch
      const batch = this.afs.firestore.batch();
       // create reference for document in evaluation entries collection
@@ -173,6 +175,8 @@ export class AndonService {
         workReturnDate: new Date(),
         returnUser: user.name,
         atentionTime: andon.atentionTime,
+        images: imagesObj,
+
       };
      batch.update(evaluationDocRef, data);
 

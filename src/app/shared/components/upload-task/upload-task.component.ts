@@ -2,12 +2,10 @@ import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angu
 import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable, Subscription } from 'rxjs';
-import { finalize, take, tap } from 'rxjs/operators';
-import { Andon } from 'src/app/main/models/andon.model';
-import { AndonService } from '../../../main/services/andon.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { finalize, tap } from 'rxjs/operators';
 import { Ng2ImgMaxService } from 'ng2-img-max';
-
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { EvaluationsService } from 'src/app/main/services/evaluations.service';
 
 @Component({
   selector: 'app-upload-task',
@@ -16,16 +14,13 @@ import { Ng2ImgMaxService } from 'ng2-img-max';
 })
 export class UploadTaskComponent implements OnInit, OnDestroy {
 
-  
   @Input() file: File;
-  @Input() id: string;
-  @Input() module: string;
+  @Input() pathStorage: string;
 
   // tslint:disable-next-line: no-output-on-prefix
   @Output() onNewImage: EventEmitter<string> = new EventEmitter<string>();
 
   task: AngularFireUploadTask;
-  date: string = new Date().toISOString();
 
   percentage: Observable<number>;
   snapshot: Observable<any>;
@@ -33,59 +28,29 @@ export class UploadTaskComponent implements OnInit, OnDestroy {
 
   subcription = new Subscription();
   constructor(
-    private storage: AngularFireStorage, 
-    private db: AngularFirestore,
-    private andonService: AndonService,
-    private snackbar: MatSnackBar,
+    private storage: AngularFireStorage,
     private ng2ImgMax: Ng2ImgMaxService,
-
-    ) { }
+  ) { }
 
   ngOnInit(): void {
     this.startUpload();
   }
 
   startUpload(): void {
-
-    this.ng2ImgMax.resize([this.file], 800, 1000).subscribe((result) => {
-    // The storage path   module
-    const path = `${this.module}/${this.id}/pictures/${this.id}-${this.date}-${result.name}.png`;
-
-    // Reference to storage bucket
-    const ref = this.storage.ref(path);
-
-    // The main task
-    this.task = this.storage.upload(path, result);
-
-    // Progress monitoring
-    this.percentage = this.task.percentageChanges();
-
-    this.snapshot = this.task.snapshotChanges().pipe(
-      tap(console.log),
-      // The file's download URL
-        finalize(async () => {
-          this.downloadURL = await ref.getDownloadURL().toPromise();
-
-          switch (this.module) {
-            case 'andon':
-              this.andonService.updateAndonImage(this.id, this.downloadURL)
-              .pipe(take(1))
-              .subscribe((res) => {
-                res.commit().then(() => {
-                  this.snackbar.open('✅ upload success', 'Aceptar', {
-                    duration: 6000,
-                  });
-                });
-              });
-              break;
-
-            default:
-              break;
-          }
-
-        }),
-      );
-   });
+    this.subcription.add(
+      this.ng2ImgMax.resize([this.file], 800, 10000).subscribe((result) => {
+        const path = `${this.pathStorage}-${new Date()}-${result.name}.png`;
+        const ref = this.storage.ref(path);
+        this.task = this.storage.upload(path, result);
+        this.percentage = this.task.percentageChanges();
+        this.snapshot = this.task.snapshotChanges().pipe(
+          finalize(async () => {
+            this.downloadURL = await ref.getDownloadURL().toPromise();
+            this.onNewImage.emit(this.downloadURL);
+          }),
+        );
+      })
+    );
   }
 
   isActive(snapshot): boolean {

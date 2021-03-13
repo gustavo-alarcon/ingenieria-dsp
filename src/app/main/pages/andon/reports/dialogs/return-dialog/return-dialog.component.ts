@@ -30,7 +30,7 @@ export class ReturnDialogComponent implements OnInit {
   filteredOptions: Observable<string[]>;
   user: User;
   module = 'andon';
-
+  pathStorage: string;
   isHovering: boolean;
   files: File[] = [];
   private subscription = new Subscription();
@@ -56,6 +56,8 @@ export class ReturnDialogComponent implements OnInit {
     this.returnForm = this.fb.group({
       comments: ['', Validators.required],
     });
+    this.pathStorage = `andon/${this.data.id}/pictures/${this.data.id}`;
+
     this.loading.next(true);
     this.subscription.add(this.authService.user$.subscribe(user => {
       this.user = user;
@@ -79,7 +81,7 @@ export class ReturnDialogComponent implements OnInit {
         this.images.forEach((value, index) => {
           imagesObj[index] = value;
         });
-        this.andonService.updateAndonAddComments(this.data, this.returnForm.value, this.user )
+        this.andonService.updateAndonAddComments(this.data, this.returnForm.value, this.user, imagesObj )
           .pipe(take(1))
           .subscribe((res) => {
             res.commit().then(() => {
@@ -158,4 +160,10 @@ export class ReturnDialogComponent implements OnInit {
       this.files.push(files.item(i));
     }
   }
+  addNewImage(image: string): void {
+    this.imagesUpload.pop();
+    this.imagesUpload.push(image);
+    this.imagesUpload.push('');
+  }
+
 }
