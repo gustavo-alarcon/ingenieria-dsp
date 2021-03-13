@@ -25,15 +25,23 @@
             
         </div>
 
+        <div *ngFor="let img of images; let i = index;" class="form__image1" >
+            <a [href] = "img" target="_blank" style="cursor:zoom-in">
+                <img [src]="img" *ngIf="img" class="form__image1--image">
+
+            </a>
+            
+        </div>
+
         <div class="dropzone" appDropzone (hovered)="toggleHover($event)" (dropped)="onDrop($event)"
             [class.hovering]="isHovering">
-            <p>Drag and Drop a Files</p>
+            <p>Arrastra aqui imagenes</p>
             <div class="file">
                 <label class="file-label">
                 <input class="file-input" type="file" (change)="onDrop($event.target.files)">                    
                 <span class="file-cta">
                     <span class="file-label">
-                    or choose a file…
+                    seleccione un imagen
                     </span>
                 </span>
                 </label>
