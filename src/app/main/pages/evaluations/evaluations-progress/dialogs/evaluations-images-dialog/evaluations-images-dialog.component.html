@@ -40,9 +40,9 @@
         <div class="dropzone" appDropzone (hovered)="toggleHover($event)" (dropped)="onDrop($event)"
             [class.hovering]="isHovering">
 
-
             <h3>AngularFire Drop Zone</h3>
             <p>Drag and Drop a File</p>
+            
         </div>
 
         <h3>Uploads</h3>
@@ -50,6 +50,7 @@
         <div *ngFor="let file of files">
             <app-upload-task [file]="file"></app-upload-task>
         </div>
+        
     </mat-dialog-content>
     <mat-dialog-actions align="end">
         <button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close

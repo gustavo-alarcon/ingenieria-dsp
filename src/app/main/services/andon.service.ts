@@ -5,6 +5,7 @@ import { Observable, of } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { AndonProblemType, AndonListBahias, Andon } from '../models/andon.model';
+import * as firebase from 'firebase/app';
 
 @Injectable({
   providedIn: 'root',
@@ -117,7 +118,7 @@ export class AndonService {
    * @param {Andon} form - Form data passed on andon edit
    * @param {string} imges - imgs
    */
-   updateAndon(entryId: string, form, imags): Observable<firebase.default.firestore.WriteBatch> {
+   updateAndon(entryId: string, form): Observable<firebase.default.firestore.WriteBatch> {
 
      // create batch
      const batch = this.afs.firestore.batch();
@@ -128,7 +129,20 @@ export class AndonService {
      const data: any = {
         problemType: form.problemType,
         description: form.description,
-        images: imags,
+      };
+     batch.update(evaluationDocRef, data);
+
+     return of(batch);
+  }
+   updateAndonImage(entryId: string, url: string): Observable<firebase.default.firestore.WriteBatch> {
+     // create batch
+     const batch = this.afs.firestore.batch();
+      // create reference for document in evaluation entries collection
+     const evaluationDocRef = this.afs.firestore
+        .doc(`/db/ferreyros/andon/${entryId}`);
+      // Structuring the data model
+     const data: any = {
+        images: firebase.default.firestore.FieldValue.arrayUnion(url),
       };
      batch.update(evaluationDocRef, data);
 
@@ -144,7 +158,7 @@ export class AndonService {
    * @param {string} imges - imgs
    * @param {User} user - imgs
    */
-   updateAndonAddComments(andon: Andon, form, imags, user: User): Observable<firebase.default.firestore.WriteBatch> {
+   updateAndonAddComments(andon: Andon, form, user: User): Observable<firebase.default.firestore.WriteBatch> {
      // create batch
      const batch = this.afs.firestore.batch();
       // create reference for document in evaluation entries collection
@@ -155,7 +169,6 @@ export class AndonService {
         editedAt: new Date(),
         edited: user,
         comments: form.comments,
-        images: imags,
         state: 'retaken', //=> stopped //retaken
         workReturnDate: new Date(),
         returnUser: user.name,

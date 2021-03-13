@@ -8,6 +8,7 @@ import { DetailsDialogComponent } from './dialogs/details-dialog/details-dialog.
 import { ReturnDialogComponent } from './dialogs/return-dialog/return-dialog.component';
 import { DeleteDialogComponent } from './dialogs/delete-dialog/delete-dialog.component';
 import { Ng2ImgMaxModule } from 'ng2-img-max';
+import { ComponentsModule } from 'src/app/shared/components/components.module';
 
 
 @NgModule({
@@ -17,6 +18,7 @@ import { Ng2ImgMaxModule } from 'ng2-img-max';
     ReportsRoutingModule,
     MaterialModule,
     Ng2ImgMaxModule,
+    ComponentsModule
   ]
 })
 export class ReportsModule { }

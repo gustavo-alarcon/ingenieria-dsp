@@ -27,6 +27,66 @@
 }
 
 
+.dropzone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 400px;
+    font-weight: 200;
+    height: 300px;
+    border: 2px dashed #f16624;
+    border-radius: 5px;
+    background: white;
+    margin: 10px 0;
+}
+.dropzone.hovering {
+    border: 2px solid #f16624;
+    color: #dadada !important;
+}
+.dropzone .file-label {
+    font-size: 1.2em;
+}
+progress::-webkit-progress-value {
+    transition: width 0.1s ease;
+}
+
+.file-input{
+    display: none;
+}
+
+.file-cta, .file-name {
+    border-color: #dbdbdb;
+    border-radius: 4px;
+    font-size: 1em;
+    white-space: nowrap;
+}
+.file-cta {
+    background-color: #f5f5f5;
+    color: #4a4a4a;
+}
+
+ .file-cta, .file-name, .input {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    align-items: center;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    box-shadow: none;
+    display: inline-flex;
+    font-size: 1rem;
+    height: 2.25em;
+    justify-content: flex-start;
+    line-height: 1.5;
+    padding-bottom: calc(.375em - 1px);
+    padding-left: calc(.625em - 1px);
+    padding-right: calc(.625em - 1px);
+    padding-top: calc(.375em - 1px);
+    position: relative;
+    vertical-align: top;
+}
+
+
  /* 
   ##Dispositivo = Tablets de baja resolucion y telefnos Mobiles (horizontal)
   ##Resolucion = B/w 481px to 767px
