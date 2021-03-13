@@ -20,6 +20,7 @@ export class report2ndStepComponent implements OnInit, OnDestroy {
   loading$ = this.loading.asObservable();
   reportForm: FormGroup;
   currentId: string;
+  module = 'andon';
 
   images: string[];
   imagesUpload: string[] = [''];
@@ -32,6 +33,10 @@ export class report2ndStepComponent implements OnInit, OnDestroy {
   otChild: number;
   typeProblem$: Observable<AndonProblemType[]>;
   andOn$: Observable<Andon>;
+
+
+  isHovering: boolean;
+  files: File[] = [];
 
   private subscription = new Subscription();
   constructor(
@@ -59,7 +64,6 @@ export class report2ndStepComponent implements OnInit, OnDestroy {
       this.andonService.getAndonById(this.currentId).subscribe((res: Andon) => {
         let andon: Andon;
         andon = res['0'];
-        console.log('andon : ', andon);
         this.otChild = andon.otChild;
         this.wrokShop = andon.workShop;
       })
@@ -90,7 +94,7 @@ export class report2ndStepComponent implements OnInit, OnDestroy {
         this.images.forEach((value, index) => {
           imagesObj[index] = value;
         });
-        this.andonService.updateAndon(this.currentId, this.reportForm.value, imagesObj )
+        this.andonService.updateAndon(this.currentId, this.reportForm.value)
           .pipe(take(1))
           .subscribe((res) => {
             res.commit().then(() => {
@@ -159,6 +163,15 @@ export class report2ndStepComponent implements OnInit, OnDestroy {
       console.log(error);
       this.loading.next(false);
       this.imagesUpload.splice(index, 1);
+    }
+  }
+  toggleHover(event: boolean): void {
+    this.isHovering = event;
+  }
+
+  onDrop(files: FileList): void {
+    for (let i = 0; i < files.length; i++) {
+      this.files.push(files.item(i));
     }
   }
 }

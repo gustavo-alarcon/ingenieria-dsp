@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { MaterialModule } from 'src/app/material/material.module';
 import { UploadTaskComponent } from './upload-task/upload-task.component';
 import { DropzoneDirective } from './upload-task/dropzone.directive';
-
+import { Ng2ImgMaxModule } from 'ng2-img-max';
 
 
 @NgModule({
@@ -17,7 +17,8 @@ import { DropzoneDirective } from './upload-task/dropzone.directive';
   ],
   imports: [
     CommonModule,
-    MaterialModule
+    MaterialModule,
+    Ng2ImgMaxModule
   ]
 })
 export class ComponentsModule { }

@@ -29,7 +29,10 @@ export class ReturnDialogComponent implements OnInit {
   uploadPercent$: Observable<number>;
   filteredOptions: Observable<string[]>;
   user: User;
+  module = 'andon';
 
+  isHovering: boolean;
+  files: File[] = [];
   private subscription = new Subscription();
   constructor(
     private fb: FormBuilder,
@@ -76,7 +79,7 @@ export class ReturnDialogComponent implements OnInit {
         this.images.forEach((value, index) => {
           imagesObj[index] = value;
         });
-        this.andonService.updateAndonAddComments(this.data, this.returnForm.value, imagesObj, this.user )
+        this.andonService.updateAndonAddComments(this.data, this.returnForm.value, this.user )
           .pipe(take(1))
           .subscribe((res) => {
             res.commit().then(() => {
@@ -143,6 +146,16 @@ export class ReturnDialogComponent implements OnInit {
       console.log(error);
       this.loading.next(false);
       this.imagesUpload.splice(index, 1);
+    }
+  }
+
+  toggleHover(event: boolean): void {
+    this.isHovering = event;
+  }
+
+  onDrop(files: FileList): void {
+    for (let i = 0; i < files.length; i++) {
+      this.files.push(files.item(i));
     }
   }
 }

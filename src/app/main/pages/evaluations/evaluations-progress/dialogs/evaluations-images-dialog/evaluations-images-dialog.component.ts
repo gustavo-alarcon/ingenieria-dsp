@@ -72,9 +72,6 @@ export class EvaluationsImagesDialogComponent implements OnInit, OnDestroy {
     } catch (error) {
       console.log(error);
     }
-
-
-
   }
 
   async deleteImage(imgForDelete: string, index: number): Promise<void> {
