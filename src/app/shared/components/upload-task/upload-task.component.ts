@@ -16,6 +16,7 @@ import { Ng2ImgMaxService } from 'ng2-img-max';
 })
 export class UploadTaskComponent implements OnInit, OnDestroy {
 
+  
   @Input() file: File;
   @Input() id: string;
   @Input() module: string;
