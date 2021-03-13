@@ -14,6 +14,7 @@ import { EvaluationsService } from 'src/app/main/services/evaluations.service';
 })
 export class UploadTaskComponent implements OnInit, OnDestroy {
 
+  
   @Input() file: File;
   @Input() pathStorage: string;
 
