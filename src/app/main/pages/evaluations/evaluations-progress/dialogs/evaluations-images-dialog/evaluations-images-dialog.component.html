@@ -1,5 +1,4 @@
 <div style="max-width: 500px">
-
     <h2 mat-dialog-title>
         <div class="container-image">
             <button mat-icon-button class="container-image__button">
@@ -16,39 +15,22 @@
         <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
     </h2>
     <mat-dialog-content class="mat-typography">
-        <!-- <div *ngFor="let img of images;let i=index;">
+        <div *ngFor="let img of images;let i=index;">
             <a [href]="img" target="_blank" style="cursor: zoom-in">
                 <img [src]="img" *ngIf="img">
             </a>
         </div>
-        <div *ngFor="let imgUpload of imagesUpload;let i=index">
-            <label [for]="i">
-                <mat-card class="mat-elevation-z0">
-                    <img [src]="imgUpload" onError="this.src='../../../../../../../assets/img/camara.png'"
-                        class="pointer" />
-                    <mat-card-actions *ngIf="imgUpload" align="end">
-                        <button mat-icon-button (click)="deleteImage(imgForDelete, i)">
-                            <mat-icon color="warn">delete</mat-icon>
-                        </button>
-                    </mat-card-actions>
-                </mat-card>
-                <mat-divider></mat-divider>
-            </label>
-            <input [id]="i" type="file" style="display: none;" (change)="uploadFile($event,i)"
-                accept="image/x-png, image/jpg, image/jpeg" />
-        </div> -->
         <div class="dropzone" appDropzone (hovered)="toggleHover($event)" (dropped)="onDrop($event)"
             [class.hovering]="isHovering">
-
-            <h3>AngularFire Drop Zone</h3>
-            <p>Drag and Drop a File</p>
-            
+            <h3>Drop Zone</h3>
+            <p>Arrastrar imágenes aquí</p>
+            <!-- <button>HOLA</button> -->
         </div>
-
-        <h3>Uploads</h3>
-
-        <div *ngFor="let file of files">
-            <app-upload-task [file]="file"></app-upload-task>
+        <!-- <h3>Uploads</h3> -->
+        <div *ngFor="let file of files;let i = index">
+            <app-upload-task [file]="file" [pathStorage]="pathStorage" (onNewImage)="addNewImage($event)">
+            </app-upload-task>
+            <mat-divider></mat-divider>
         </div>
         
     </mat-dialog-content>
