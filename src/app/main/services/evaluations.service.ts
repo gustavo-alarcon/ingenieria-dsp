@@ -126,6 +126,9 @@ export class EvaluationsService {
       task: form.task,
       editedAt: new Date(),
       editedBy: user,
+      result: form.result,
+      comments: form.comments,
+      kindOfTest: form.kindOfTest
     };
     batch.update(evaluationDocRef, data);
     return of(batch);
@@ -486,24 +489,24 @@ export class EvaluationsService {
   }
 
   addEvaluationsSettingsKindOfTest(listEvaluationsKindOfTest: EvaluationsKindOfTest[], user: User
-    ): Observable<firebase.default.firestore.WriteBatch> {
-      const date = new Date();
-      const batch = this.afs.firestore.batch();
-      listEvaluationsKindOfTest.forEach((el) => {
-        const evaluationDocRef = this.afs.firestore.collection(`/db/generalConfig/evaluationsKindOfTest`).doc();
-  
-        if (!el.id) {
-          const objAux: EvaluationsKindOfTest = {
-            id: evaluationDocRef.id,
-            kindOfTest: el.kindOfTest,
-            createdBy: user,
-            createdAt: date
-          };
-          batch.set(evaluationDocRef, objAux);
-        }
-      });
-      return of(batch);
-    }
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    const date = new Date();
+    const batch = this.afs.firestore.batch();
+    listEvaluationsKindOfTest.forEach((el) => {
+      const evaluationDocRef = this.afs.firestore.collection(`/db/generalConfig/evaluationsKindOfTest`).doc();
+
+      if (!el.id) {
+        const objAux: EvaluationsKindOfTest = {
+          id: evaluationDocRef.id,
+          kindOfTest: el.kindOfTest,
+          createdBy: user,
+          createdAt: date
+        };
+        batch.set(evaluationDocRef, objAux);
+      }
+    });
+    return of(batch);
+  }
 
   deleteEvaluationsSettingsNotify(id: string): void {
     this.afs.firestore.collection(`/db/generalConfig/evaluationsBroadcast`).doc(id).delete().then(() => {
