@@ -81,6 +81,7 @@ export class EvaluationsSettingsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loading.next(true);
+    this.loadingKindOfTest.next(true);
     this.settingsDataSource.sort = this.sort;
     this.subscription.add(this.auth.user$.subscribe(user => {
       this.user = user;
@@ -128,6 +129,7 @@ export class EvaluationsSettingsComponent implements OnInit, OnDestroy {
 
 
     this.loading.next(false);
+    this.loadingKindOfTest.next(false);
   }
 
   saveDataList(): void {
@@ -228,8 +230,8 @@ export class EvaluationsSettingsComponent implements OnInit, OnDestroy {
 
   saveKindOfTest(): void {
     try {
-      const resp = this.evalService.addEvaluationsSettingsKindOfTest(this.listKindOfTestArray, this.user);
       this.loadingKindOfTest.next(true);
+      const resp = this.evalService.addEvaluationsSettingsKindOfTest(this.listKindOfTestArray, this.user);
       this.subscription.add(resp.subscribe(
         batch => {
           if (batch) {

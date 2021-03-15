@@ -84,7 +84,36 @@
                 <mat-error *ngIf="createEvaluateForm.controls['task'].errors">
                     Campo <strong>requerido.</strong>
                 </mat-error>
-            </mat-form-field>     
+            </mat-form-field>   
+            
+            <mat-form-field appearance="outline" id="result">
+                <mat-label>Resultado</mat-label>
+                <input matInput placeholder="Resultado" formControlName="result" [matAutocomplete]="auto">
+                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option.resultType">
+                        {{option.resultType}}
+                    </mat-option>
+                </mat-autocomplete>
+                <mat-error *ngIf="createEvaluateForm.controls['result'].errors">
+                    Campo <strong>requerido.</strong>
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline" id="kindOfTest">
+                <mat-label>Tipo de ensayo</mat-label>
+                <input matInput placeholder="Resultado" formControlName="kindOfTest" [matAutocomplete]="autoKindOfTest">
+                <mat-autocomplete autoActiveFirstOption #autoKindOfTest="matAutocomplete">
+                    <mat-option *ngFor="let option of kindOfTests$ | async" [value]="option.kindOfTest">
+                        {{option.kindOfTest}}
+                    </mat-option>
+                </mat-autocomplete>
+                <mat-error *ngIf="createEvaluateForm.controls['kindOfTest'].errors">
+                    Campo <strong>requerido.</strong>
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Comentarios (Opcional)</mat-label>
+                <input matInput placeholder="Comentarios" formControlName="comments">
+            </mat-form-field>
 
             </div>
                         
