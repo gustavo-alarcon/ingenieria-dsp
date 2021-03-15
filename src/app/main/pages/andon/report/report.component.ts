@@ -9,6 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Andon, AndonListBahias } from '../../../models/andon.model';
 import { AngularFirestore } from '@angular/fire/firestore';
 
+
 @Component({
   selector: 'app-report',
   templateUrl: './report.component.html',
@@ -48,6 +49,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   }
   ngOnDestroy(): void {
+
     this.subscription.unsubscribe();
   }
   report(): void{

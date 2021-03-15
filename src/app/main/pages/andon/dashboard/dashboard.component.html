@@ -22,8 +22,20 @@
                 </h1>
                 
                 <div class="charts">
-                    <canvas id="problem" width="400" height="200"></canvas>
-                  </div>
+                    <div class="chartjs-container">
+                        <canvas baseChart 
+                            [datasets]="lineChartData" 
+                            [labels]="lineChartLabels" 
+                            [options]="lineChartOptions"
+                            [colors]="lineChartColors" 
+                            [legend]="lineChartLegend" 
+                            [chartType]="lineChartType" 
+                            [plugins]="lineChartPlugins"
+                            (chartHover)="chartHovered($event)" 
+                            (chartClick)="chartClicked($event)">
+                        </canvas>
+                    </div>
+                </div>
 
             </div>
             <div class="container1__top">
@@ -70,8 +82,8 @@
                 </h1>
                 
                 <div class="charts">
-                    <canvas id="answer" width="400" height="200"></canvas>
-                  </div>
+                    
+                </div>
 
             </div>
         </div>
@@ -99,3 +111,4 @@
         </div>
     </div>
 </div>
+
