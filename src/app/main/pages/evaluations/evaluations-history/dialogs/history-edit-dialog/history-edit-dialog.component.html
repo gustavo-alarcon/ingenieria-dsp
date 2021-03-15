@@ -2,125 +2,146 @@
     <h2 mat-dialog-title style="display: flex;padding-bottom: 0px;margin-bottom: 0px;">
         <div style="margin-top: 5px; margin-right: 15px; ">
             <mat-icon mat-list-icon>edit</mat-icon>
-        </div> 
-        Editar solicitud    
-        <div  mat-dialog-close style="margin-top: 5px; margin-left: 290px;border:white;cursor: pointer;" >
-            <mat-icon >clear</mat-icon>
-        </div>      
+        </div>
+        Editar solicitud
+        <div mat-dialog-close style="margin-top: 5px; margin-left: 290px;border:white;cursor: pointer;">
+            <mat-icon>clear</mat-icon>
+        </div>
     </h2>
     <mat-divider></mat-divider>
     <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
     <form class="container-form" [formGroup]="createEvaluateForm" autocomplete="off">
         <mat-dialog-content class="mat-typography">
             <div class="inputs">
-                
-            <mat-form-field appearance="outline" style="width: 200px;">
-                <mat-label>Orden</mat-label>
-                <input type="text" matInput placeholder="Orden" formControlName="otMain">
-                <mat-error *ngIf="createEvaluateForm.controls['otMain'].errors">
-                    Campo <strong>requerido.</strong>
-                </mat-error>
-            </mat-form-field>
 
-            <mat-form-field appearance="outline" style="width: 200px;">
-                <mat-label>Segmento/Operacion</mat-label>
-                <input matInput placeholder="Segmento/Operacion" formControlName="otChild">
-                <mat-error type="text" *ngIf="createEvaluateForm.controls['otChild'].errors">
-                    Campo <strong>requerido.</strong>
-                </mat-error>
-            </mat-form-field>  
+                <mat-form-field appearance="outline" style="width: 200px;">
+                    <mat-label>Orden</mat-label>
+                    <input type="text" matInput placeholder="Orden" formControlName="otMain">
+                    <mat-error *ngIf="createEvaluateForm.controls['otMain'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
 
-            <mat-form-field appearance="outline" style="width: 200px;">
-                <mat-label>Correlativo</mat-label>
-                <input type="number" matInput placeholder="Correlativo" formControlName="position">
-                <mat-error *ngIf="createEvaluateForm.controls['position'].errors" >
-                    Campo <strong>requerido.</strong>
-                </mat-error>
-            </mat-form-field>   
+                <mat-form-field appearance="outline" style="width: 200px;">
+                    <mat-label>Segmento/Operacion</mat-label>
+                    <input matInput placeholder="Segmento/Operacion" formControlName="otChild">
+                    <mat-error type="text" *ngIf="createEvaluateForm.controls['otChild'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
 
-            <mat-form-field appearance="outline" style="width: 200px;">
-                <mat-label>N° de Partes</mat-label>
-                <input type="text" matInput placeholder="N° de partes" formControlName="partNumber">
-                <mat-error *ngIf="createEvaluateForm.controls['partNumber'].errors" >
-                    Campo <strong>requerido.</strong>
-                </mat-error>
-            </mat-form-field>         
+                <mat-form-field appearance="outline" style="width: 200px;">
+                    <mat-label>Correlativo</mat-label>
+                    <input type="number" matInput placeholder="Correlativo" formControlName="position">
+                    <mat-error *ngIf="createEvaluateForm.controls['position'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
 
-            <mat-form-field appearance="outline" style="width: 200px;">
-                <mat-label>Descripcion</mat-label>
-                <input type="text" matInput placeholder="Descripcion" formControlName="description">
-                <mat-error *ngIf="createEvaluateForm.controls['description'].errors">
-                    Campo <strong>requerido.</strong>
-                </mat-error>
-            </mat-form-field>                
+                <mat-form-field appearance="outline" style="width: 200px;">
+                    <mat-label>N° de Partes</mat-label>
+                    <input type="text" matInput placeholder="N° de partes" formControlName="partNumber">
+                    <mat-error *ngIf="createEvaluateForm.controls['partNumber'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
 
-            <mat-form-field appearance="outline" style="width: 200px;">
-                <mat-label>Cantidad</mat-label>
-                <input type="number" matInput placeholder="Cantidad" formControlName="quantity">
-                <mat-error *ngIf="createEvaluateForm.controls['quantity'].errors">
-                    Campo <strong>requerido.</strong>
-                </mat-error>
-            </mat-form-field>            
-                
-            <mat-form-field appearance="outline" style="width: 200px;">
-                <mat-label>Tipo de atencion</mat-label>
-                <input type="text" matInput placeholder="Tipo de atencion" formControlName="status">
-                <mat-error *ngIf="createEvaluateForm.controls['status'].errors">
-                    Campo <strong>requerido.</strong>
-                </mat-error>
-            </mat-form-field>                
+                <mat-form-field appearance="outline" style="width: 200px;">
+                    <mat-label>Descripcion</mat-label>
+                    <input type="text" matInput placeholder="Descripcion" formControlName="description">
+                    <mat-error *ngIf="createEvaluateForm.controls['description'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
 
-            <mat-form-field appearance="outline" style="width: 200px;">
-                <mat-label>WOF (orden de fabricacion)</mat-label>
-                <input type="text" matInput placeholder="Tipo de atencion" formControlName="wof">
-                <mat-error *ngIf="createEvaluateForm.controls['wof'].errors">
-                    Campo <strong>requerido.</strong>
-                </mat-error>
-            </mat-form-field>                
+                <mat-form-field appearance="outline" style="width: 200px;">
+                    <mat-label>Cantidad</mat-label>
+                    <input type="number" matInput placeholder="Cantidad" formControlName="quantity">
+                    <mat-error *ngIf="createEvaluateForm.controls['quantity'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
 
-            <mat-form-field appearance="outline" style="width: 200px;">
-                <mat-label>Trabajo</mat-label>
-                <input type="text" matInput placeholder="Trabajo" formControlName="task">
-                <mat-error *ngIf="createEvaluateForm.controls['task'].errors">
-                    Campo <strong>requerido.</strong>
-                </mat-error>
-            </mat-form-field>   
-            
-            <mat-form-field appearance="outline" id="result">
-                <mat-label>Resultado</mat-label>
-                <input matInput placeholder="Resultado" formControlName="result" [matAutocomplete]="auto">
-                <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option.resultType">
-                        {{option.resultType}}
-                    </mat-option>
-                </mat-autocomplete>
-                <mat-error *ngIf="createEvaluateForm.controls['result'].errors">
-                    Campo <strong>requerido.</strong>
-                </mat-error>
-            </mat-form-field>
-            <mat-form-field appearance="outline" id="kindOfTest">
-                <mat-label>Tipo de ensayo</mat-label>
-                <input matInput placeholder="Resultado" formControlName="kindOfTest" [matAutocomplete]="autoKindOfTest">
-                <mat-autocomplete autoActiveFirstOption #autoKindOfTest="matAutocomplete">
-                    <mat-option *ngFor="let option of kindOfTests$ | async" [value]="option.kindOfTest">
-                        {{option.kindOfTest}}
-                    </mat-option>
-                </mat-autocomplete>
-                <mat-error *ngIf="createEvaluateForm.controls['kindOfTest'].errors">
-                    Campo <strong>requerido.</strong>
-                </mat-error>
-            </mat-form-field>
-            <mat-form-field appearance="outline">
-                <mat-label>Comentarios (Opcional)</mat-label>
-                <input matInput placeholder="Comentarios" formControlName="comments">
-            </mat-form-field>
+                <mat-form-field appearance="outline" style="width: 200px;">
+                    <mat-label>Tipo de atencion</mat-label>
+                    <input type="text" matInput placeholder="Tipo de atencion" formControlName="status">
+                    <mat-error *ngIf="createEvaluateForm.controls['status'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
 
+                <mat-form-field appearance="outline" style="width: 200px;">
+                    <mat-label>WOF (orden de fabricacion)</mat-label>
+                    <input type="text" matInput placeholder="Tipo de atencion" formControlName="wof">
+                    <mat-error *ngIf="createEvaluateForm.controls['wof'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" style="width: 200px;">
+                    <mat-label>Trabajo</mat-label>
+                    <input type="text" matInput placeholder="Trabajo" formControlName="task">
+                    <mat-error *ngIf="createEvaluateForm.controls['task'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" id="result">
+                    <mat-label>Resultado</mat-label>
+                    <input matInput placeholder="Resultado" formControlName="result" [matAutocomplete]="auto">
+                    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                        <mat-option *ngFor="let option of filteredOptions | async" [value]="option.resultType">
+                            {{option.resultType}}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <mat-error *ngIf="createEvaluateForm.controls['result'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" id="kindOfTest">
+                    <mat-label>Tipo de ensayo</mat-label>
+                    <input matInput placeholder="Resultado" formControlName="kindOfTest"
+                        [matAutocomplete]="autoKindOfTest">
+                    <mat-autocomplete autoActiveFirstOption #autoKindOfTest="matAutocomplete">
+                        <mat-option *ngFor="let option of kindOfTests$ | async" [value]="option.kindOfTest">
+                            {{option.kindOfTest}}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <mat-error *ngIf="createEvaluateForm.controls['kindOfTest'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Comentarios (Opcional)</mat-label>
+                    <input matInput placeholder="Comentarios" formControlName="comments">
+                </mat-form-field>
             </div>
-                        
+            <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>Longitud</mat-label>
+                <input type="text" matInput placeholder="Longitud" formControlName="length">
+            </mat-form-field>
+            <div formArrayName="extends">
+                <div *ngFor="let item of getExtendsArray.controls;let i=index" style="width: 100%;">
+                    <mat-form-field appearance="outline" style="width: 100%;">
+                        <mat-label>Ampliar</mat-label>
+                        <input type="text" matInput placeholder="Longitud" [formControlName]="i">
+                        <mat-icon style="cursor: pointer;" *ngIf="i>0" matSuffix color="warn"
+                            (click)="deleteControlExtends(i)">delete</mat-icon>
+                    </mat-form-field>
+                </div>
+                <button type="file" aria-label="add" mat-button class="btn-add" (click)="addControlExtends()">
+                    <mat-icon aria-label="agregar" class="icon-add">add</mat-icon>
+                    AMPLIAR
+                </button>
+            </div>
+
         </mat-dialog-content>
         <mat-dialog-actions align="end">
-            <button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close>CERRAR</button>
-            <button type="submit" mat-raised-button color="primary" class="footer__btn-save"   [disabled]="!createEvaluateForm.valid" (click)="save()">GUARDAR</button>
+            <button type="button" mat-stroked-button color="warn" class="footer__btn-close"
+                mat-dialog-close>CERRAR</button>
+            <button type="submit" mat-raised-button color="primary" class="footer__btn-save"
+                [disabled]="!createEvaluateForm.valid" (click)="save()">GUARDAR</button>
         </mat-dialog-actions>
     </form>
 </div>

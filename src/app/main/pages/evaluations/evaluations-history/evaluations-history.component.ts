@@ -82,10 +82,8 @@ export class EvaluationsHistoryComponent implements OnInit {
       )
     ).pipe(
       map(([evaluations, status, search]) => {
-        console.log(status);
-        console.log(search);
 
-        let searchTerm = search.toLowerCase();
+        const searchTerm = search.toLowerCase();
 
         let preFilterStatus = [];
         let preFilterSearch = [...evaluations];
