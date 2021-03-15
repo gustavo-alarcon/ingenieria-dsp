@@ -71,9 +71,6 @@ export class EvaluationsRequestsComponent implements OnInit {
       this.auth.getGeneralConfig()
     ).pipe(
       map(([evaluations, search, workshopCodes, generalConfig]) => {
-        console.log(search, workshopCodes);
-
-
         const searchTerm = search.toLowerCase().trim();
         let preFilterWorkshop: Evaluation[] = [];
         let preFilterSearch: Evaluation[] = [...evaluations];
@@ -105,7 +102,6 @@ export class EvaluationsRequestsComponent implements OnInit {
           })
         }
 
-        // console.log(preFilterSearch[0].createdAt['seconds']);
         preFilterSearch.map(evaluation => {
           if (evaluation.registryTimer) {
             clearInterval(evaluation.registryTimer);
