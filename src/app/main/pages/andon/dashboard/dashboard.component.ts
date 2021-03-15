@@ -23,12 +23,36 @@ export class DashboardComponent implements OnInit {
   // Define chart options
   lineChartOptions: ChartOptions = {};
   // Define colors of chart segments
-  lineChartColors: Color[] = [];
+  lineChartType;
+
+  // Array of different segments in chart
+  lineChartData2: ChartDataSets[] = [];
+  //Labels shown on the x-axis
+  lineChartLabels2: Label[] = [];
+  // Define chart options
+  lineChartOptions2: ChartOptions = {};
+  // Define colors of chart segments
+  lineChartType2;
+
+  colors = [
+    '#F2C94C',
+    '#F2994A',
+    '#FF2D2D',
+    'rgba(98, 0, 238, 0.24)',
+    '#27AE60',
+    '#018786',
+  ];
+
+  lineChartColors: Color[] = [
+    {
+      backgroundColor: this.colors,
+      borderColor: this.colors,
+    },
+  ];
 
   // Set true to show legends
   lineChartLegend = true;
   // Define type of chart
-  lineChartType ;
   lineChartPlugins = [];
 
   // events
@@ -43,8 +67,8 @@ export class DashboardComponent implements OnInit {
   dateForm: FormGroup;
 
   andon$: Observable<Andon[]>;
-  groupByWorkShop = [];
   chart: any = [];
+  groupByWorkShop = [];
 
   constructor(
     private dbs: EvaluationsService,
@@ -127,23 +151,8 @@ export class DashboardComponent implements OnInit {
           return res;
         }, {});
 
-        // report for type problem
-        const reportTypeProblem = [];
-
-        andonArray.reduce((res, value) => {
-          if (!res[value.problemType]) {
-            res[value.problemType] = {
-              problemType: value.problemType,
-              quantity: 0,
-            };
-            reportTypeProblem.push(res[value.problemType]);
-          }
-          res[value.problemType].quantity += 1;
-
-          return res;
-        }, {});
-
-        this.reportProblemType(reportTypeProblem);
+        this.reportProblemType(andonArray);
+        this.averageQuestions(andonArray);
 
         /*  const nameProductMax = [
           'Seguridad',
@@ -196,62 +205,93 @@ export class DashboardComponent implements OnInit {
       })
     );
   }
-  topTenDelayed(): void {
+  topTenDelayed(): void {}
 
-
-  }
-
-  reportProblemType(reportTypeProblem: any): void {
+  reportProblemType(andonArray: any): void {
     const nameProblemType = [];
     const quantityProblem = [];
+
+    // report for type problem
+    const reportTypeProblem = [];
+
+    andonArray.reduce((res, value) => {
+      if (!res[value.problemType]) {
+        res[value.problemType] = {
+          problemType: value.problemType,
+          quantity: 0,
+        };
+        reportTypeProblem.push(res[value.problemType]);
+      }
+      res[value.problemType].quantity += 1;
+
+      return res;
+    }, {});
 
     reportTypeProblem.map((res) => {
       nameProblemType.push(res.problemType);
       quantityProblem.push(res.quantity);
     });
 
-    const colors = [
-      '#F2C94C',
-      '#F2994A',
-      '#FF2D2D',
-      'rgba(98, 0, 238, 0.24)',
-      '#27AE60',
-      '#018786',
-    ];
-
     this.lineChartData = [{ data: quantityProblem, label: 'prueba' }];
 
-    this.lineChartLabels =  nameProblemType;
-    this.lineChartColors = [
-      {
-      backgroundColor: colors,
-      borderColor: colors,
-      },
-    ];
+    this.lineChartLabels = nameProblemType;
 
     this.lineChartOptions = {
       responsive: true,
       scales: {
-        xAxes: [{
-        }],
-        yAxes: [{
-          ticks: {
-            beginAtZero: true
-            }
-          }]
+        xAxes: [{}],
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero: true,
+            },
+          },
+        ],
+      },
+      plugins: {
+        datalabels: {
+          anchor: 'end',
+          align: 'end',
         },
-        plugins: {
-          datalabels: {
-            anchor: 'end',
-            align: 'end',
-          }
-        }
+      },
     };
 
     this.lineChartType = 'horizontalBar';
   }
 
-  averageQuestions(): void {}
+  averageQuestions(andonArray: any): void {
+    const nameProblemType = [];
+    const quantityProblem = [];
+
+    console.log('andonArray: ', andonArray);
+
+    this.lineChartData2 = [{ data: quantityProblem, label: 'prueba' }];
+
+    this.lineChartLabels2 = nameProblemType;
+
+    this.lineChartOptions2 = {
+      responsive: true,
+      scales: {
+        xAxes: [
+          {
+            ticks: {
+              beginAtZero: true,
+            },
+          },
+        ],
+        yAxes: [{}],
+      },
+      plugins: {
+        datalabels: {
+          anchor: 'end',
+          align: 'end',
+        },
+      },
+    };
+
+    this.lineChartType2 = 'bar';
+  }
+
   reports(item): void {
     const code = item.workShop;
     this.router.navigate(['main/andon-reports/', code]);
