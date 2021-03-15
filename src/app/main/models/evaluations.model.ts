@@ -41,7 +41,7 @@ export interface Evaluation {
     createdBy: User;
     editedAt: Date;
     editedBy: User;
-    length?: string;
+    length?: number;
     extends?: string[];
 }
 

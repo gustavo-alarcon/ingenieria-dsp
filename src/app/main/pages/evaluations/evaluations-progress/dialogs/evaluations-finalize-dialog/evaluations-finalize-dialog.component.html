@@ -63,7 +63,8 @@
                 </mat-form-field>
                 <mat-form-field appearance="outline" style="width: 100%;">
                     <mat-label>Longitud</mat-label>
-                    <input type="text" matInput placeholder="Longitud" formControlName="length">
+                    <span matSuffix><b> [mm]</b></span>
+                    <input type="number" matInput placeholder="Longitud" formControlName="length" min="0" step="0.01">
                 </mat-form-field>
                 <div formArrayName="extends" style="margin-bottom: 10px;">
                     <div *ngFor="let item of getExtendsArray.controls;let i=index" style="width: 100%;">
