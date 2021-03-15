@@ -1,0 +1,18 @@
+
+<div *ngIf="percentage | async as pct">
+  <progress class="progress is-info" [value]="pct" max="100"></progress>
+  {{ pct | number }}%
+</div>
+
+<div *ngIf="snapshot | async as snap">
+  {{ snap.bytesTransferred }} of {{ snap.totalBytes }}
+
+  <mat-card *ngIf="downloadURL as url" class="mat-elevation-z0">
+    <a [href]="url" target="_blank" style="cursor: zoom-in">
+      <img [src]="url" class="imageUpload" />
+    </a>
+  </mat-card>
+  <hr />
+  
+
+</div>

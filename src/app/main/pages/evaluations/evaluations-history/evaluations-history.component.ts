@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ImprovementEntry } from '../../../models/improvenents.model';
 import { MatPaginator } from '@angular/material/paginator';
-import { HistoryCreateDialogComponent } from './dialogs/history-create-dialog/history-create-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Evaluation } from '../../../models/evaluations.model';
 import { combineLatest, Observable } from 'rxjs';
@@ -15,6 +14,9 @@ import { HistoryObservationDialogComponent } from './dialogs/history-observation
 import { HistoryUploadFileDialogComponent } from './dialogs/history-upload-file-dialog/history-upload-file-dialog.component';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { FormControl } from '@angular/forms';
+import * as XLSX from 'xlsx';
+import { HistoryCreateDialogComponent } from './dialogs/history-create-dialog/history-create-dialog.component';
+import { HistoryTimeLineComponent } from './dialogs/history-time-line/history-time-line.component';
 
 @Component({
   selector: 'app-evaluations-history',
@@ -39,6 +41,8 @@ export class EvaluationsHistoryComponent implements OnInit {
     'workshop',
     'status',
     'createdAt',
+    'processAt',
+    'finalizedAt',
     'createdBy',
     'wof',
     'task',
@@ -89,13 +93,19 @@ export class EvaluationsHistoryComponent implements OnInit {
         if (status.length > 1) {
           preFilterStatus = evaluations.filter(evaluation => evaluation.internalStatus === status);
           preFilterSearch = preFilterStatus.filter(evaluation => {
-            return String(evaluation.otMain).includes(searchTerm) ||
-              String(evaluation.otChild).includes(searchTerm)
+            return String(evaluation.otMain).toLowerCase().includes(searchTerm) ||
+              String(evaluation.otChild).toLowerCase().includes(searchTerm) ||
+              String(evaluation.wof).toLowerCase().includes(searchTerm) ||
+              String(evaluation.partNumber).toLowerCase().includes(searchTerm) ||
+              String(evaluation.description).toLowerCase().includes(searchTerm);
           })
         } else {
           preFilterSearch = evaluations.filter(evaluation => {
-            return String(evaluation.otMain).includes(searchTerm) ||
-              String(evaluation.otChild).includes(searchTerm)
+            return String(evaluation.otMain).toLowerCase().includes(searchTerm) ||
+              String(evaluation.otChild).toLowerCase().includes(searchTerm) ||
+              String(evaluation.wof).toLowerCase().includes(searchTerm) ||
+              String(evaluation.partNumber).toLowerCase().includes(searchTerm)||
+              String(evaluation.description).toLowerCase().includes(searchTerm);
           })
         }
 
@@ -122,6 +132,14 @@ export class EvaluationsHistoryComponent implements OnInit {
     let dialogRef;
 
     switch (value) {
+      case 'create':
+        dialogRef = this.dialog.open(HistoryCreateDialogComponent,
+          optionsDialog,
+        );
+        dialogRef.afterClosed().subscribe(result => {
+          console.log(`Dialog result: ${result}`);
+        });
+        break;
       case 'edit':
         dialogRef = this.dialog.open(HistoryEditDialogComponent,
           optionsDialog,
@@ -156,6 +174,19 @@ export class EvaluationsHistoryComponent implements OnInit {
           console.log(`Dialog result: ${result}`);
         });
         break;
+      case 'time-line':
+        dialogRef = this.dialog.open(HistoryTimeLineComponent,
+          {
+            width: '90vw',
+            disableClose: true,
+            data: entry
+          }
+        );
+
+        dialogRef.afterClosed().subscribe(result => {
+          console.log(`Dialog result: ${result}`);
+        });
+        break;
     }
   }
 
@@ -165,6 +196,70 @@ export class EvaluationsHistoryComponent implements OnInit {
     });
   }
 
-  showImprovementEntry(): void { }
+  downloadXlsx(evaluations: Evaluation[]): void {
+    let table_xlsx: any[] = [];
+
+    let headersXlsx = [
+      'otMain',
+      'otChild',
+      'position',
+      'partNumber',
+      'description',
+      'internalStatus',
+      'result',
+      'comments',
+      'kindOfTest',
+      'observations',
+      'quantity',
+      'workshop',
+      'status',
+      'wof',
+      'task',
+      'finalizedBy',
+      'createdAt',
+      'finalizedAt',
+      'processAt',
+      'inquiryAt']
+
+    table_xlsx.push(headersXlsx);
+
+    evaluations.forEach(evaluation => {
+      const temp = [
+        evaluation.otMain ? evaluation.otMain : "---",
+        evaluation.otChild ? evaluation.otChild : "---",
+        evaluation.position ? evaluation.position : "---",
+        evaluation.partNumber ? evaluation.partNumber : "---",
+        evaluation.description ? evaluation.description : "---",
+        evaluation.internalStatus ? evaluation.internalStatus : "---",
+        evaluation.result ? evaluation.result : "---",
+        evaluation.comments ? evaluation.comments : "---",
+        evaluation.kindOfTest ? evaluation.kindOfTest : "---",
+        evaluation.observations ? evaluation.observations : "---",
+        evaluation.quantity ? evaluation.quantity : "---",
+        evaluation.workshop ? evaluation.workshop : "---",
+        evaluation.status ? evaluation.status : "---",
+        evaluation.wof ? evaluation.wof : "---",
+        evaluation.task ? evaluation.task : "---",
+        evaluation.finalizedBy ? (evaluation.finalizedBy.name ? evaluation.finalizedBy.name : evaluation.finalizedBy) : "---",
+        evaluation.finalizedAt ? new Date(evaluation.finalizedAt['seconds'] * 1000) : "---",
+        evaluation.processAt ? new Date(evaluation.processAt['seconds'] * 1000) : "---",
+        evaluation.inquiryAt ? new Date(evaluation.inquiryAt['seconds'] * 1000) : "---",
+      ]
+      
+      table_xlsx.push(temp);
+    })
+
+
+    /* generate worksheet */
+    const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(table_xlsx);
+
+    /* generate workbook and add the worksheet */
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Evaluaciones');
+
+    /* save to file */
+    const name = 'Evaluaciones_Resultados' + '.xlsx';
+    XLSX.writeFile(wb, name);
+  }
 
 }

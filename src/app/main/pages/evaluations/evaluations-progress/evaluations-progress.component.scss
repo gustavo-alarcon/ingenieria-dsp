@@ -111,19 +111,19 @@
     display: grid;
     grid-column-gap: 5px;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-
 }
 
 .box {
     margin: 10px 15px;
-    border: solid 1px #ccc;
     color: rgba(0, 0, 0, 0.87);
     box-sizing: border-box;
     background: #ffffff;
-    border-radius: 10px;
+    border-radius: 10px 10px 0px 0px;
     position: relative;
     width: 200px;
-}    
+    display: flex;
+    flex-direction: column;
+}
 
 .header-box {
     border-bottom: 1px solid #9e9e9e;
@@ -195,48 +195,46 @@
 
 /*progress bar*/
 
-.progress-dynamic {
-    border-radius: 0px 0px 10px 10px;
-    background: linear-gradient(90deg, #77b254 0%, #ffcc4d 51.04%, #de2e43 100%);
-    display: flex;
-    flex-wrap: wrap;
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    justify-content: right;
-}
+.timer-container {
+    position: relative;
+    height: 35px;
 
-.progress-transparent {
-    border-radius: 0px 0px 0px 10px;
-    height: 30px;
-    background-color: transparent;
-}
+    .timer-color {
+        background: linear-gradient(90deg, #77b254 0%, #ffcc4d 51.04%, #de2e43 100%);
+        position: absolute;
+        width: 100%;
+        height: 35px;
+        // border-radius: 0px 0px 10px 10px;
+    }
 
-.progress-black {
-    border-radius: 0px 0px 10px 0px;
-    height: 30px;
-    background-color: black;
-}
+    .timer-black {
+        background: black;
+        position: absolute;
+        width: 100%;
+        height: 35px;
+        right: 0;
+        // border-radius: 0px 0px 10px 10px;
+    }
 
-.progress-view {
-    position: absolute;
-    bottom: -4px;
-    left: -3px;
-    width: 100%;
-    height: 30px;
-    background-color: transparent;
-    color: white;
-    text-align: center;
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: bold;
-    line-height: 30px;
-    border-bottom: 4px solid #efefef;
-    border-left: 3px solid #efefef;
-    box-sizing: content-box;
-    border-radius: 0px 0px 10px 10px;
+    .progress-view {
+        position: absolute;
+        // bottom: -4px;
+        // left: -3px;
+        width: 100%;
+        height: 35px;
+        background-color: transparent;
+        color: white;
+        text-align: center;
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: bold;
+        line-height: 30px;
+        // border-bottom: 4px solid #efefef;
+        // border-left: 3px solid #efefef;
+        box-sizing: content-box;
+        // border-radius: 0px 0px 10px 10px;
+    }
 }
-
 
 input {
     border: none;

@@ -1,0 +1,42 @@
+<h2 mat-dialog-title>
+    <div class="container-header">
+        <button mat-icon-button>
+            <mat-icon>remove_red_eye</mat-icon>
+            <span>
+             Detalle
+            </span>
+        </button>
+        <button mat-icon-button mat-dialog-close>
+            <mat-icon style="color: gray;">close</mat-icon>
+        </button>
+    </div>
+    <mat-divider></mat-divider>
+</h2>
+<mat-dialog-content class="mat-typography" style="margin: 1px;">
+    <div style="display: flex; flex-direction: row; justify-content: space-between;">
+        <h1 style="color:#828282;">{{data.name}}</h1>
+        <div style="display: flex;margin-top: 10px;">
+            <div style="background:#FF2D2D; height: 20px; width: 20px; border-radius: 10px;margin-right: 15px;"></div>
+            <span style="font-weight: bold;color: black;">
+                {{data.atentionTime?.days | number : '2.'}} /
+                {{data.atentionTime?.hours | number : '2.'}} :
+                {{data.atentionTime?.minutes | number : '2.'}} :
+                {{data.atentionTime?.seconds | number : '2.'}}
+            </span>
+        </div>
+    </div>
+
+    <p><span style="font-weight: bold;">OT CLILD : </span> {{data.otChild}}</p>
+    <p><span style="font-weight: bold;">Tipo de problema : </span> {{data.problemType}}</p>
+    <p><span style="font-weight: bold;">Descripcion : </span> {{data.description}}</p>
+    <p><span style="font-weight: bold;">Fecha de reporte : </span> {{(data.reportDate['seconds'] *1000) | date:'dd/MM/yyyy - h:mm'}} </p>
+    <p><span style="font-weight: bold;">Usuario Reporte : </span>{{data.reportUser}}</p>
+    
+    <div *ngFor="let item of imageArray">
+        <div style="text-align: center;margin: 15px;" >
+            <img class="imge" [src]="item" onError="this.src='../../../../../../../assets/img/camara.png'"/>
+        </div>
+    </div>
+    
+   
+</mat-dialog-content>

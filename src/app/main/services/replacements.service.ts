@@ -57,30 +57,39 @@ export class ReplacementsService {
    * @param {Replacement[]} list - list of replacements
    * @param {User} user - User's data in actual session
    */
-  createBulkReplacements(list: Replacement[], user: User): Observable<firebase.default.firestore.WriteBatch> {
-    // create batch
-    const batch = this.afs.firestore.batch();
+  createBulkReplacements(list: Replacement[], user: User): Observable<firebase.default.firestore.WriteBatch[]> {
+    let batchCount = Math.ceil(list.length / 500);
+    let batchArray = [];
 
-    list.forEach(part => {
-      // create reference for document in replacements collection
-      const replacementDocRef = this.afs.firestore.collection(`db/ferreyros/replacements`).doc();
+    for (let index = 0; index < batchCount; index++) {
+      // create batch
+      const batch = this.afs.firestore.batch();
+      let limit = 500 * (index + 1) > list.length ? list.length : 500 * (index + 1);
 
-      const data: Replacement = {
-        id: replacementDocRef.id,
-        currentPart: part.currentPart,
-        replacedPart: part.replacedPart,
-        description: part.description,
-        kit: part.kit,
-        support: part.support,
-        createdAt: part.createdAt,
-        createdBy: user,
-        editedAt: null,
-        editedBy: null,
+      for (let j = 500 * index; j < limit; j++) {
+
+        // create reference for document in replacements collection
+        const replacementDocRef = this.afs.firestore.collection(`db/ferreyros/replacements`).doc();
+
+        const data: Replacement = {
+          id: replacementDocRef.id,
+          currentPart: list[j].currentPart,
+          replacedPart: list[j].replacedPart,
+          description: list[j].description,
+          kit: list[j].kit,
+          support: list[j].support,
+          createdAt: list[j].createdAt,
+          createdBy: user,
+          editedAt: null,
+          editedBy: null,
+        };
+        batch.set(replacementDocRef, data);
       };
-      batch.set(replacementDocRef, data);
-    });
 
-    return of(batch);
+      batchArray.push(batch)
+    }
+
+    return of(batchArray);
   }
 
   /**
@@ -95,7 +104,7 @@ export class ReplacementsService {
     const replacementDocRef = this.afs.firestore.doc(`db/ferreyros/replacements/${replacementId}`);
     // Structuring the data model
 
-    
+
     const data: any = {
       currentPart: form.parts[0].currentPart,
       replacedPart: form.parts[0].replacedPart,

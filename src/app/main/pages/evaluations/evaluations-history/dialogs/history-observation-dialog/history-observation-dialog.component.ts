@@ -2,8 +2,6 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Evaluation, EvaluationInquiry } from '../../../../../models/evaluations.model';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { EvaluationsService } from '../../../../../services/evaluations.service';
 import { map } from 'rxjs/operators';
 
@@ -21,7 +19,6 @@ export class HistoryObservationDialogComponent implements OnInit {
   images$: Observable<string[]>;
 
   constructor(
-    private fb: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: Evaluation,
     public dialogRef: MatDialogRef<HistoryObservationDialogComponent>,
     private evalService: EvaluationsService

@@ -133,30 +133,69 @@
       </mat-expansion-panel>
     </mat-accordion>
 
-    <mat-nav-list style="width: 100%">
-      <div>
-        <a mat-list-item [routerLink]="['/main/andon']" routerLinkActive="active" (click)="drawer.toggle()">
-          <mat-icon mat-list-icon class="mat-icon-menu">traffic</mat-icon>
-          <span class="mat-item-list-span">
-            AndOn
-          </span>
-        </a>
-      </div>
-    </mat-nav-list>
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-nav-list>
+              <div>
+                <a mat-list-item>
+                  <mat-icon mat-list-icon  class="mat-icon-menu">traffic</mat-icon> <!-- [routerLink]="['/main/andon']" -->
+                  <span class="mat-item-list-span">
+                    AndOn
+                  </span>
+                </a>
+              </div>
+            </mat-nav-list>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <div>
+            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/report']"
+              routerLinkActive="active" (click)="drawer.toggle()">
+              <mat-icon mat-list-icon class="mat-icon-menu">radio_button_checked</mat-icon>
+              <span class="mat-item-list-span">
+                Reportar
+              </span>
+            </a>
+            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/dashboard']" routerLinkActive="active"
+              (click)="drawer.toggle()">
+              <mat-icon mat-list-icon class="mat-icon-menu">dashboard</mat-icon>
+              <span class="mat-item-list-span">
+                DashBoard
+              </span>
+            </a>
+            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/andon-record']"
+              routerLinkActive="active" (click)="drawer.toggle()">
+              <mat-icon mat-list-icon class="mat-icon-menu">history</mat-icon>
+              <span class="mat-item-list-span">
+                Historial
+              </span>
+            </a>
+            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/andon-settings']"
+              routerLinkActive="active" (click)="drawer.toggle()">
+              <mat-icon mat-list-icon class="mat-icon-menu">settings</mat-icon>
+              <span class="mat-item-list-span">
+                Configuraciones
+              </span>
+            </a>
+          </div>
+        </mat-nav-list>
+      </mat-expansion-panel>
+    </mat-accordion>
 
   </mat-sidenav>
   <mat-sidenav-content>
-    <mat-toolbar class="main_toolbar" style="padding: 0px 28px">
+    <mat-toolbar class="main_toolbar" >
       <button type="button" aria-label="Toggle sidenav" mat-icon-button (click)="drawer.toggle()">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
 
-      <span style="font-size: 1em; margin-left: 20px; font-family: 'Poppins', sans-serif; font-weight: 500;">Ingeniería
-        DSP</span>
+      <span class="name-toolbar">Ingeniería DSP</span>
 
       <span class="ms-fill"></span>
 
-      <button type="button" aria-label="Toggle sidenav" mat-button (click)="exitApp()">
+      <button type="button" aria-label="Toggle sidenav" class="btn-exit-app" mat-button (click)="exitApp()">
         CERRAR SESION
         <mat-icon aria-label="Side nav toggle icon">exit_to_app</mat-icon>
       </button>

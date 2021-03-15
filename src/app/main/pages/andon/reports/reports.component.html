@@ -1,0 +1,61 @@
+<div class="container">
+    <div class="header-container">
+        <div class="header-container__title">
+          <mat-icon mat-list-icon class="mat-icon-menu" style="cursor: pointer; font-size: 2.5em;"
+           (click)="dashboard()">arrow_back</mat-icon>
+          <h1 style="font-size: 2.2em; margin-left: 20px; font-family: 'Poppins', sans-serif; font-weight: 700;">REPORTES</h1> 
+        </div>
+        
+        <div class="header-container__search" >
+            <button mat-button class="header-container__search--button">
+              <mat-icon>search</mat-icon>
+            </button>
+            <form [formGroup]="searchForm" style="text-align: center;margin-top:10px ;">
+              <input  placeholder="Buscar" name="search" autocomplete="off" class="header-container__search--input" formControlName="search" />
+            </form>
+        </div>       
+    </div>
+    <mat-divider class="divider" ></mat-divider>
+    <div class="body-container" *ngIf="workShop$ | async as workShops">
+      <div *ngFor="let item of workShops">
+        <div class="cards"  >
+            <div class="cards__header">
+                <h3 class="cards__header--title">
+                  {{item.name}}
+                </h3>
+                <div class="cards__header--menu">
+                    <mat-menu #rawMenu="matMenu">
+                      <button class="w3-small" mat-menu-item (click)="detailsDialog(item)"
+                        >
+                        <mat-icon>remove_red_eye</mat-icon>
+                        Detalle
+                      </button>
+                      <button class="w3-small" mat-menu-item (click)="deleteDialog(item)"
+                        >
+                        <mat-icon>delete</mat-icon>
+                        Borrar
+                      </button>                  
+                    </mat-menu>
+        
+                    <button mat-icon-button [matMenuTriggerFor]="rawMenu">
+                      <mat-icon>more_vert</mat-icon>
+                    </button>   
+                </div>
+            </div>
+            
+            <div class="cards__body">
+                <div class="cards__body--round">
+                </div> 
+                <h3 class="cards__body--timer"> 
+                  {{item.atentionTime?.days | number : '2.'}} /
+                  {{item.atentionTime?.hours | number : '2.'}} :
+                  {{item.atentionTime?.minutes | number : '2.'}} :
+                  {{item.atentionTime?.seconds | number : '2.'}}
+                </h3>
+                <button class="cards__body--supplies" >{{item.problemType}}</button>              
+                <button mat-raised-button class="cards__body--return" (click)="returnDialog(item)">RETOMAR</button>       
+            </div>
+        </div>
+      </div>       
+    </div>
+</div>

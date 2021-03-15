@@ -1,7 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
-import { ImprovementEntry } from '../../models/improvenents.model';
-import { MatPaginator } from '@angular/material/paginator';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -42,7 +39,3 @@ export class EvaluationsComponent implements OnInit {
     });
   }
 }
-
-  // ngOnInit(): void {}
-  // configTimeDialog(value): void {}
-// }

@@ -4,7 +4,6 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Evaluation } from '../../../../../models/evaluations.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EvaluationsService } from '../../../../../services/evaluations.service';
-import { AngularFirestore } from '@angular/fire/firestore';
 import { take } from 'rxjs/operators';
 
 @Component({
@@ -31,7 +30,7 @@ export class RequestsStartDialogComponent implements OnInit {
     try {
       const state = 'processed';
       this.evaltService
-        .startRequest(this.data.id, state)
+        .startRequest(this.data, state)
         .pipe(take(1))
         .subscribe((res) => {
           res.commit().then(() => {

@@ -23,12 +23,15 @@ export interface Evaluation {
     imagesCounter: number;
     inquiries?: Array<EvaluationInquiry>;
     inquiriesCounter: number;
-    // registryDate?: Date; // Fecha de solicitud
-    registryTimer?: EvaluationTimer;
+    registryTimer?: any;
+    registryTimeElapsed?: EvaluationTimer;
+    registryPercentageElapsed?: number;
     processAt?: Date;
-    processTimer?: EvaluationTimer;
+    processTimer?: any;
+    processTimeElapsed?: EvaluationTimer;
+    processPercentageElapsed?: number;
     inquiryAt?: Date;
-    inquiryTimer?: EvaluationTimer;
+    attentionTimeElapsed?: EvaluationTimer;
     finalizedAt?: Date;
     finalizedBy: User;
     result?: string; // Esta info viene de una lista standard (pendiente)
@@ -51,6 +54,9 @@ export interface EvaluationRegistryForm {
     wof: string; // Orden de fabricación
     task: string; // Trabajo
     workshop: string;
+    result: string;
+    kindOfTest: string;
+    comments: string;
 }
 
 export interface EvaluationFinishForm {
@@ -60,9 +66,10 @@ export interface EvaluationFinishForm {
 }
 
 export interface EvaluationTimer {
+    days: number;
     hours: number;
     minutes: number;
-    seconds: number;
+    seconds: number
 }
 
 /**
@@ -81,16 +88,6 @@ export interface EvaluationInquiry {
     answeredBy: User;
 }
 
-// id: 'd9asd6759s5';
-// answer: null;
-// inquiry: 'Como debemos hacer el primer ensayo de materiales?';
-// answerImage: 'https://firebase.09ad9asdysa9da8dasdas.com';
-// inquiryImage: null;
-// createdAt: Fecha de creación;
-// createdBy: Usuario que consulto;
-// answeredAt: null;
-// answeredBy: null;
-
 /**
  * Firestore document
  * Path of collection: db/generalConfig/evaluationsBroadcast
@@ -100,4 +97,35 @@ export interface EvaluationsBroadcastUser {
     email: string;
     createdAt: Date;
     createdBy: User;
+}
+
+export interface EvaluationsResultTypeUser {
+    id: string;
+    resultType: string;
+    createdAt: Date;
+    createdBy: User;
+}
+
+export interface EvaluationsKindOfTest {
+    id: string;
+    kindOfTest: string;
+    createdAt: Date;
+    createdBy: User;
+}
+
+export interface EvaluationsUser {
+    id: string;
+    code: string;
+    name: string;
+    oficc: string;
+    workingArea: string;
+    description: string;
+    email: string;
+    userName: string;
+    boss: string;
+    bossEmail: string;
+    createdAt: Date;
+    createdBy: User;
+    editedAt: Date;
+    editedBy: User;
 }

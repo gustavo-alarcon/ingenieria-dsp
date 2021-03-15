@@ -1,0 +1,61 @@
+<div class="container">
+    <div class="header-container">
+        <mat-icon mat-list-icon class="mat-icon-menu" style="font-size: 2.5em;">radio_button_checked</mat-icon>
+        <h1 style="font-size: 2.2em; margin-left: 20px; font-family: 'Poppins', sans-serif; font-weight: 700;">Reportar</h1>              
+    </div>
+    <mat-divider></mat-divider>
+    <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+
+    <div class="body-container">
+        <div class="report">
+            <h1 class="report__title">Reportar</h1>
+            <form action="" [formGroup]="reportForm" autocomplete="off" class="report__form" >
+                <p style="margin-left: 0px;">OT CHILD : {{otChild}} </p>
+                <mat-form-field *ngIf="typeProblem$ | async as typeProblem" appearance="outline" id="result" class="report__form--input"> 
+                    <mat-label>Tipo de problema</mat-label>
+                    <mat-select   formControlName="problemType">
+                        <mat-option *ngFor="let item of typeProblem" [value]="item.problemType">{{item.problemType}}</mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="reportForm.controls['problemType'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
+                <br/>
+                <mat-form-field appearance="outline" id="result" class="report__form--input"> 
+                    <mat-label>Descripcion</mat-label>
+                    <textarea matInput placeholder="Descripcion" formControlName="description">
+
+                    </textarea>
+                    <mat-error *ngIf="reportForm.controls['description'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
+                    <div class="dropzone" appDropzone (hovered)="toggleHover($event)" (dropped)="onDrop($event)"
+                        [class.hovering]="isHovering">
+                        <p>Arrastra imagenes aqui</p>
+                        <div class="file">
+                            <label class="file-label">
+                            <input class="file-input" type="file" (change)="onDrop($event.target.files)" >                    
+                              <span class="file-cta">
+                                <span class="file-label">
+                                  Seleccione una imagen
+                                </span>
+                              </span>
+                            </label>
+                          </div>
+                        </div>
+                    <h3>Uploads</h3>
+
+                    <div *ngFor="let file of files">
+                        <app-upload-task [file]="file" [pathStorage]="pathStorage" (onNewImage)="addNewImage($event)"> </app-upload-task> 
+                    </div>               
+                
+                <button mat-button type="submit" class="btn" (click)="save()" >
+                   GUARDAR
+                </button >
+                        
+            </form>
+        </div>
+    </div>
+</div>
+

@@ -3,8 +3,6 @@ import { BehaviorSubject } from 'rxjs';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { RequestsStartDialogComponent } from '../requests-start-dialog/requests-start-dialog.component';
 import { Evaluation } from '../../../../../models/evaluations.model';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { EvaluationsService } from '../../../../../services/evaluations.service';
 
 @Component({
   selector: 'app-requests-time-line-dialog',

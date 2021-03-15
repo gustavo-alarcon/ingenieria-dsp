@@ -180,3 +180,23 @@ ul {
     position: absolute;
     bottom: -25px;
 }
+
+.time-line {
+    position: relative;
+
+    &__registry {
+        font-weight: 700;
+        color: #2b2b2bb8;
+        position: absolute;
+        left: 19%;
+        top: 53%;
+    }
+
+    &__attention {
+        font-weight: 700;
+        color: #2b2b2bb8;
+        position: absolute;
+        left: 43%;
+        top: 88%;
+    }
+}

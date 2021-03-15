@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { User } from '../models/user-model';
-import { EvaluationRegistryForm, Evaluation, EvaluationInquiry, EvaluationFinishForm } from '../models/evaluations.model';
+import { EvaluationRegistryForm, Evaluation, EvaluationInquiry, EvaluationFinishForm, EvaluationsUser, EvaluationsBroadcastUser, EvaluationsResultTypeUser, EvaluationTimer, EvaluationsKindOfTest } from '../models/evaluations.model';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { shareReplay, switchMap } from 'rxjs/operators';
 import * as firebase from 'firebase/app';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -19,13 +19,39 @@ export class EvaluationsService {
     private afAuth: AngularFireAuth,
 
   ) { }
+
+  getCurrentMonthOfViewDate(): { from: Date, to: Date } {
+    const date = new Date();
+    const fromMonth = date.getMonth();
+    const fromYear = date.getFullYear();
+
+    const actualFromDate = new Date(fromYear, fromMonth, 1);
+
+    const toMonth = (fromMonth + 1) % 12;
+    let toYear = fromYear;
+
+    if (fromMonth + 1 >= 12) {
+      toYear++;
+    }
+
+    const toDate = new Date(toYear, toMonth, 1);
+
+    return { from: actualFromDate, to: toDate };
+  }
+
   /**
    * Get all documents from evaluations collection
    */
   getAllEvaluations(): Observable<Evaluation[]> {
-    return this.afs.collection<Evaluation>(`db/ferreyros/evaluations`, ref => ref.orderBy('createdAt', 'desc'))
-      .valueChanges();
+    return this.afs.collection<Evaluation>(`db/ferreyros/evaluations`, ref => ref.orderBy('createdAt', 'asc'))
+      .valueChanges()
+      .pipe(
+        map(list => {
+          return list.sort((a, b) => a['createdAt']['seconds'] - b['createdAt']['seconds'])
+        })
+      )
   }
+
   /**
    * Creates the evaluations entry into firestore's Evaluations collection
    * @param {EvaluationRegistryForm} form - Form data passed on request creation
@@ -60,7 +86,6 @@ export class EvaluationsService {
       processAt: null,
       processTimer: null,
       inquiryAt: null,
-      inquiryTimer: null,
       finalizedBy: null,
       finalizedAt: null,
       result: null,
@@ -74,13 +99,13 @@ export class EvaluationsService {
     batch.set(evaluationDocRef, data);
     return of(batch);
   }
+
   /**
    * Edit the evaluation entry
    * @param {string} entryId - id data
    * @param {evaluationForm} form - Form data passed on evaluation edit
    * @param {User} user - User's data in actual session
    */
-
   editRequest(entryId: string, form: EvaluationRegistryForm, user: User): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
@@ -101,6 +126,9 @@ export class EvaluationsService {
       task: form.task,
       editedAt: new Date(),
       editedBy: user,
+      result: form.result,
+      comments: form.comments,
+      kindOfTest: form.kindOfTest
     };
     batch.update(evaluationDocRef, data);
     return of(batch);
@@ -110,7 +138,6 @@ export class EvaluationsService {
    * Delete the passed evaluatiion based in his ID
    * @param {string} id - ID of the evaluation to be removed
    */
-
   removeEvaluation(id: string): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
@@ -157,8 +184,13 @@ export class EvaluationsService {
    */
   getAllEvaluationsByInternalStatus(state: string): Observable<Evaluation[]> {
     return this.afs.collection<Evaluation>(`/db/ferreyros/evaluations`,
-      ref => ref.where('internalStatus', '==', state).orderBy('createdAt', 'desc'))
-      .valueChanges();
+      ref => ref.where('internalStatus', '==', state))
+      .valueChanges()
+      .pipe(
+        map(list => {
+          return list.sort((a, b) => a['createdAt']['seconds'] - b['createdAt']['seconds'])
+        })
+      )
   }
 
   /**
@@ -166,8 +198,13 @@ export class EvaluationsService {
    */
   getAllEvaluationsInProcess(): Observable<Evaluation[]> {
     return this.afs.collection<Evaluation>(`/db/ferreyros/evaluations`,
-      ref => ref.where('internalStatus', 'in', ['processed', 'consultation']).orderBy('createdAt', 'desc'))
-      .valueChanges();
+      ref => ref.where('internalStatus', 'in', ['processed', 'consultation']))
+      .valueChanges()
+      .pipe(
+        map(list => {
+          return list.sort((a, b) => a['createdAt']['seconds'] - b['createdAt']['seconds'])
+        })
+      )
   }
 
   /**
@@ -175,14 +212,17 @@ export class EvaluationsService {
    * @param {string} data - ID of the evaluation to be removed
    * @param {string} internalStatus - change internalStatus
    */
-  startRequest(id: string, state: string): Observable<firebase.default.firestore.WriteBatch> {
+  startRequest(evaluation: Evaluation, state: string): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
     // create document reference in evaluation collection
-    const evaluationDocRef = this.afs.firestore.doc(`/db/ferreyros/evaluations/${id}`);
+    const evaluationDocRef = this.afs.firestore.doc(`/db/ferreyros/evaluations/${evaluation.id}`);
     // const evaluationDocRef = this.afs.firestore.collection(`/db/ferreyros/evaluations`).doc(data.id);
     const newData = {
       internalStatus: state,
+      registryTimeElapsed: evaluation.registryTimeElapsed,
+      registryPercentageElapsed: evaluation.registryPercentageElapsed,
+      processAt: new Date()
     };
     batch.update(evaluationDocRef, newData);
     return of(batch);
@@ -214,24 +254,34 @@ export class EvaluationsService {
 
       batchArray.push(batch)
     }
-
-
     return of(batchArray);
   }
 
 
-  async updateImagesFinalizeData(id: string, imagesObj, entry: EvaluationFinishForm): Promise<void> {
-    return await this.afs.firestore.collection(`/db/ferreyros/evaluations`).doc(id)
-      .set(
-        {
-          result: entry.result,
-          kindOfTest: entry.kindOfTest,
-          comments: entry.comments,
-          images: imagesObj,
-          internalStatus: 'finalized'
-        },
-        { merge: true }
-      );
+  updateImagesFinalizeData(evaluation: Evaluation, imagesObj, entry: EvaluationFinishForm, user: User): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    let batch = this.afs.firestore.batch();
+
+    // create docuemnt reference
+    let evaluationDocRef = this.afs.firestore.doc(`/db/ferreyros/evaluations/${evaluation.id}`)
+
+    let data =
+    {
+      result: entry.result,
+      kindOfTest: entry.kindOfTest,
+      comments: entry.comments,
+      images: imagesObj,
+      internalStatus: 'finalized',
+      finalizedAt: new Date(),
+      finalizedBy: user,
+      processTimeElapsed: evaluation.processTimeElapsed,
+      processPercentageElapsed: evaluation.processPercentageElapsed,
+      attentionTimeElapsed: evaluation.attentionTimeElapsed,
+    }
+
+    batch.update(evaluationDocRef, data);
+
+    return of(batch);
   }
 
   async updateImage(id: string, imagesObj): Promise<void> {
@@ -243,7 +293,7 @@ export class EvaluationsService {
     return await this.storage.storage.refFromURL(imagesObj).delete();
   }
 
-  
+
   saveInquiry(form: EvaluationInquiry, user: User, id: string): Observable<firebase.default.firestore.WriteBatch> {
     // Create batch
     const batch = this.afs.firestore.batch();
@@ -267,10 +317,9 @@ export class EvaluationsService {
     // Set inquiry 
     batch.set(inquiryDocRef, sendDataInquiry);
 
-
     // SECOND - Update inquiries counter and internalStatus
     // Update counter with atomic operation
-    batch.update(evaluationDocRef, {inquiriesCounter: firebase.default.firestore.FieldValue.increment(1), internalStatus: 'consultation'});
+    batch.update(evaluationDocRef, { inquiriesCounter: firebase.default.firestore.FieldValue.increment(1), internalStatus: 'consultation', inquiryAt: new Date() });
 
     // Return batch
     return of(batch);
@@ -285,12 +334,12 @@ export class EvaluationsService {
 
     // FIRST - Update inquiry document
     // Update inquiry 
-    batch.update(inquiryDocRef, {answer: form.answer, answerImage: form.answerImage, answerAt: new Date(), answerBy: user});
+    batch.update(inquiryDocRef, { answer: form.answer, answerImage: form.answerImage, answerAt: new Date(), answerBy: user });
 
 
     // SECOND - Update evaluation internalStatus
     // Update evaluation
-    batch.update(evaluationDocRef, {internalStatus: 'processed'});
+    batch.update(evaluationDocRef, { internalStatus: 'processed' });
 
     // Return batch
     return of(batch);
@@ -316,15 +365,14 @@ export class EvaluationsService {
 
   /**
    * update the passed evaluatiion based in his registryTimer
-   * @param {string} state - update registryTimer
-   * @param {string} id - id data evaluations
+   * @param {string} timer - time object
    */
-  addTimerInRequest(state: string, timer: number): Observable<firebase.default.firestore.WriteBatch> {
+  addTimerInRequest(timer: EvaluationTimer): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
 
     // create document reference in evaluation collection
-    const evaluationDocRef = this.afs.firestore.doc(`/db/ferreyros/evaluations`);
+    const evaluationDocRef = this.afs.firestore.doc(`/db/generalConfig`);
     const newData = {
       registryTimer: timer,
     };
@@ -332,6 +380,156 @@ export class EvaluationsService {
     batch.update(evaluationDocRef, newData);
     return of(batch);
   }
+
+  /**
+   * update the passed evaluatiion based in his processTimer
+   * @param {EvaluationTimer} timer - time object
+   */
+  addTimerInProcess(timer: EvaluationTimer): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+
+    // create document reference in evaluation collection
+    const evaluationDocRef = this.afs.firestore.doc(`/db/generalConfig`);
+    const newData = {
+      processTimer: timer,
+    };
+
+    batch.update(evaluationDocRef, newData);
+    return of(batch);
+  }
+
+
+  //#region Services Evaluation settings ***********************
+
+  addEvaluationsSettings(listEvaluationsSettings: EvaluationsUser[]): Observable<firebase.default.firestore.WriteBatch[]> {
+    let batchCount = Math.ceil(listEvaluationsSettings.length / 500);
+    let batchArray = [];
+
+    for (let index = 0; index < batchCount; index++) {
+      // create batch
+      const batch = this.afs.firestore.batch();
+      let limit = 500 * (index + 1) > listEvaluationsSettings.length ? listEvaluationsSettings.length : 500 * (index + 1);
+
+      for (let j = 500 * index; j < limit; j++) {
+        // create reference for document in improvements collection
+        const evaluationDocRef = this.afs.firestore.collection(`/db/ferreyros/evaluations`).doc();
+        // Structuring the data model
+        listEvaluationsSettings[j].id = evaluationDocRef.id;
+        listEvaluationsSettings[j].createdAt = new Date();
+
+        batch.set(evaluationDocRef, listEvaluationsSettings[j]);
+      };
+
+      batchArray.push(batch)
+    }
+
+
+    return of(batchArray);
+  }
+
+  getAllEvaluationsSettings(): Observable<EvaluationsUser[]> {
+    return this.afs.collection<EvaluationsUser>(`/evaluations-settings/`, ref => ref.orderBy('createdAt', 'desc'))
+      .valueChanges();
+  }
+
+
+  getAllEvaluationsSettingsNotify(): Observable<EvaluationsBroadcastUser[]> {
+    return this.afs.collection<EvaluationsBroadcastUser>(`/db/generalConfig/evaluationsBroadcast`, ref => ref.orderBy('createdAt', 'desc'))
+      .valueChanges();
+  }
+
+  getAllEvaluationsSettingsResultType(): Observable<EvaluationsResultTypeUser[]> {
+    return this.afs.collection<EvaluationsResultTypeUser>(`/db/generalConfig/evaluationsResultType`, ref => ref.orderBy('createdAt', 'desc'))
+      .valueChanges();
+  }
+
+  getAllEvaluationsSettingsKindOfTest(): Observable<EvaluationsKindOfTest[]> {
+    return this.afs.collection<EvaluationsKindOfTest>(`/db/generalConfig/evaluationsKindOfTest`, ref => ref.orderBy('createdAt', 'desc'))
+      .valueChanges();
+  }
+
+  addEvaluationsSettingsNotify(listEvaluationsNotify: EvaluationsBroadcastUser[], user: User
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    const date = new Date();
+    const batch = this.afs.firestore.batch();
+    listEvaluationsNotify.forEach((el) => {
+      const evaluationDocRef = this.afs.firestore.collection(`/db/generalConfig/evaluationsBroadcast`).doc();
+      if (!el.id) {
+        const objAux: EvaluationsBroadcastUser = {
+          id: evaluationDocRef.id,
+          email: el.email,
+          createdBy: user,
+          createdAt: date
+        };
+        batch.set(evaluationDocRef, objAux);
+      }
+    });
+    return of(batch);
+  }
+
+  addEvaluationsSettingsResultType(listEvaluationsResult: EvaluationsResultTypeUser[], user: User
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    const date = new Date();
+    const batch = this.afs.firestore.batch();
+    listEvaluationsResult.forEach((el) => {
+      const evaluationDocRef = this.afs.firestore.collection(`/db/generalConfig/evaluationsResultType`).doc();
+
+      if (!el.id) {
+        const objAux: EvaluationsResultTypeUser = {
+          id: evaluationDocRef.id,
+          resultType: el.resultType,
+          createdBy: user,
+          createdAt: date
+        };
+        batch.set(evaluationDocRef, objAux);
+      }
+    });
+    return of(batch);
+  }
+
+  addEvaluationsSettingsKindOfTest(listEvaluationsKindOfTest: EvaluationsKindOfTest[], user: User
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    const date = new Date();
+    const batch = this.afs.firestore.batch();
+    listEvaluationsKindOfTest.forEach((el) => {
+      const evaluationDocRef = this.afs.firestore.collection(`/db/generalConfig/evaluationsKindOfTest`).doc();
+
+      if (!el.id) {
+        const objAux: EvaluationsKindOfTest = {
+          id: evaluationDocRef.id,
+          kindOfTest: el.kindOfTest,
+          createdBy: user,
+          createdAt: date
+        };
+        batch.set(evaluationDocRef, objAux);
+      }
+    });
+    return of(batch);
+  }
+
+  deleteEvaluationsSettingsNotify(id: string): void {
+    this.afs.firestore.collection(`/db/generalConfig/evaluationsBroadcast`).doc(id).delete().then(() => {
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+
+  deleteEvaluationsSettingsResultType(id: string): void {
+    this.afs.firestore.collection(`/db/generalConfig/evaluationsResultType`).doc(id).delete().then(() => {
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+
+  deleteEvaluationsSettingsKindOfTest(id: string): void {
+    this.afs.firestore.collection(`/db/generalConfig/evaluationsKindOfTest`).doc(id).delete().then(() => {
+    }).catch((error) => {
+      console.log(error);
+    });
+  }
+
+  //#endregion
 
 }
 

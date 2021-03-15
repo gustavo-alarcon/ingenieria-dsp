@@ -1,5 +1,4 @@
 <div style="max-width: 500px">
-
     <h2 mat-dialog-title>
         <div class="container-image">
             <button mat-icon-button class="container-image__button">
@@ -21,22 +20,26 @@
                 <img [src]="img" *ngIf="img">
             </a>
         </div>
-        <div *ngFor="let imgUpload of imagesUpload;let i=index">
-            <label [for]="i">
-                <mat-card class="mat-elevation-z0">
-                    <img [src]="imgUpload" onError="this.src='../../../../../../../assets/img/camara.png'"
-                        class="pointer" />
-                    <mat-card-actions *ngIf="imgUpload" align="end">
-                        <button mat-icon-button (click)="deleteImage(imgForDelete, i)">
-                            <mat-icon color="warn">delete</mat-icon>
-                        </button>
-                    </mat-card-actions>
-                </mat-card>
-                <mat-divider></mat-divider>
-            </label>
-            <input [id]="i" type="file" style="display: none;" (change)="uploadFile($event,i)"
-                accept="image/x-png, image/jpg, image/jpeg" />
+        <div class="dropzone" appDropzone (hovered)="toggleHover($event)" (dropped)="onDrop($event)"
+            [class.hovering]="isHovering">
+            <p>Arrastra aqui imagenes</p>
+            <div class="file">
+                <label class="file-label">
+                    <input class="file-input" type="file" (change)="onDrop($event.target.files)">
+                    <span class="file-cta">
+                        <span class="file-label">
+                            Seleccione una imagen
+                        </span>
+                    </span>
+                </label>
+            </div>
         </div>
+        <!-- <h3>Uploads</h3> -->
+        <div *ngFor="let file of files;let i = index" style="display: flex;flex-direction: column;align-items: center;">
+            <app-upload-task [file]="file" [pathStorage]="pathStorage" (onNewImage)="addNewImage($event)">
+            </app-upload-task>
+        </div>
+
     </mat-dialog-content>
     <mat-dialog-actions align="end">
         <button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close

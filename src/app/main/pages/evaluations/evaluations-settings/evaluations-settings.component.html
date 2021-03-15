@@ -1,1 +1,249 @@
-<app-not-found></app-not-found>
+<div class="container-settings">
+    <mat-accordion>
+        <mat-expansion-panel class="container-settings__color-expantion">
+            <mat-expansion-panel-header style="height: 58px;">
+                <mat-panel-title class="container-settings__header-title">
+                    Envío de Notificaciones
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-card class="mat-elevation-z0">
+                <mat-card-header>
+                    <mat-card-title>
+                        <span>
+                            Lista de correos
+                        </span>
+                        <input #fileInput2 style="display: none" type="file" (change)=" onFileSelected($event)"
+                            accept=".xls,.xlsx" id="fileInput2">
+                        <button aria-label="add" mat-button class="container-settings__btn-add" accept=".xls,.xlsx"
+                            (click)="fileInput2.click()">
+                            <mat-icon aria-label="agregar" class="icon-add">add</mat-icon>
+                            SUBIR ARCHIVO
+                        </button>
+                        <button type="file" aria-label="saveDataList" mat-button class="container-settings__btn-save"
+                            (click)="saveDataList()">
+                            GUARDAR
+                        </button>
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="container-expansion1">
+                        <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+                        <table mat-table [dataSource]="settingsDataSource" matSort>
+
+                            <ng-container matColumnDef="code">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Código </th>
+                                <td mat-cell *matCellDef="let element"> {{element.code}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="name">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre Completo </th>
+                                <td mat-cell *matCellDef="let element"> {{element.name | titlecase}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="oficc">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> OFICC </th>
+                                <td mat-cell *matCellDef="let element"> {{element.oficc}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="workingArea">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Área del personal </th>
+                                <td mat-cell *matCellDef="let element"> {{element.workingArea | titlecase}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="description">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Descripción </th>
+                                <td mat-cell *matCellDef="let element"> {{element.description}} </td>
+                            </ng-container>
+                            <ng-container matColumnDef="email">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Correo </th>
+                                <td mat-cell *matCellDef="let element"> {{element.email | lowercase}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="userName">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Usuario windows </th>
+                                <td mat-cell *matCellDef="let element" align="center"> {{element.userName | lowercase}}
+                                </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="boss">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Jefe </th>
+                                <td mat-cell *matCellDef="let element"> {{element.boss | titlecase}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="bossEmail">
+                                <th mat-header-cell *matHeaderCellDef mat-sort-header> Correo jefe </th>
+                                <td mat-cell *matCellDef="let element"> {{element.bossEmail}} </td>
+                            </ng-container>
+
+                            <tr mat-header-row *matHeaderRowDef="settingsDisplayedColumns"></tr>
+                            <tr mat-row *matRowDef="let element; columns: settingsDisplayedColumns;"></tr>
+
+                            <tr class="mat-row" *matNoDataRow>
+                                <td class="mat-cell" colspan="4">No hay ningun dato cargado</td>
+                            </tr>
+                        </table>
+                        <mat-paginator #settingsPaginator [pageSizeOptions]="[20,30,40]"></mat-paginator>
+                    </div>
+                    <mat-card class="mat-elevation-z0" style="margin-left: -10px;margin-top: 10px;">
+                        <mat-card-header>
+                            <mat-card-title>
+                                <span>
+                                    Lista de difusión
+                                </span>
+                                <button type="button" aria-label="saveDataDifusion" mat-button
+                                    class="container-settings__btn-save" (click)="saveDataNotify()">
+                                    GUARDAR
+                                </button>
+                            </mat-card-title>
+                        </mat-card-header>
+                    </mat-card>
+                    <mat-card class="mat-elevation-z0 container-expansion1__content-card">
+                        <mat-card-header class="container-expansion1__content-card--header">
+                            <mat-form-field>
+                                <mat-label>Escribir</mat-label>
+                                <input type="email" matInput placeholder="Escribir"
+                                    [formControl]="listNotifyFormControl" (keyup.enter)="addDeleteListNotify('add')"
+                                    [errorStateMatcher]="matcher" autocomplete="off">
+                                <button mat-button *ngIf="listNotifyFormControl.value" matSuffix mat-icon-button
+                                    aria-label="clearMail" (click)="listNotifyFormControl.reset()">
+                                    <mat-icon>close</mat-icon>
+                                </button>
+                                <mat-hint>Presione ENTER para agregar</mat-hint>
+                                <mat-error
+                                    *ngIf="listNotifyFormControl.hasError('email') && !listNotifyFormControl.hasError('required')">
+                                    Por favor ingrese un correo valido
+                                </mat-error>
+                                <mat-error *ngIf="listNotifyFormControl.hasError('required')">
+                                    El correo electronico es <strong>Requerido</strong>
+                                </mat-error>
+                            </mat-form-field>
+                        </mat-card-header>
+                        <mat-card-content class="container-expansion1__content-card-content">
+                            <div role="list" *ngFor="let notify of listNotifyArray;let i=index">
+                                <div class="item-list">
+                                    <span>{{notify.email}}</span>
+                                    <span>
+                                        <button mat-icon-button color="primary" aria-label="deletelistNotify"
+                                            (click)="addDeleteListNotify('delete',i)">
+                                            <mat-icon style="color: #828282">delete</mat-icon>
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+                </mat-card-content>
+            </mat-card>
+        </mat-expansion-panel>
+        <div style="margin-top: 30px;"></div>
+        <mat-expansion-panel class="container-settings__color-expantion" (opened)="panelOpenState = true"
+            (closed)="panelOpenState = false">
+            <mat-expansion-panel-header style="height: 58px;">
+                <mat-panel-title class="container-settings__header-title">
+                    Lista desplegables
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div style="display: flex; flex-wrap: wrap">
+                <div style="border: 10px;"></div>
+                <mat-card class="mat-elevation-z0">
+                    <mat-card-content>
+                        <mat-card class="mat-elevation-z0" style="margin-left: -10px;margin-top: 10px;">
+                            <mat-card-header>
+                                <mat-card-title>
+                                    <span>
+                                        Tipo de resultado
+                                    </span>
+                                    <button type="button" aria-label="saveDataDifusion" mat-button
+                                        class="container-settings__btn-save" (click)="saveDataResult()">
+                                        GUARDAR
+                                    </button>
+                                </mat-card-title>
+                            </mat-card-header>
+                        </mat-card>
+                        <mat-card class="mat-elevation-z0 container-expansion1__content-card">
+                            <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+                            <mat-card-header class="container-expansion1__content-card--header">
+                                <mat-form-field>
+                                    <mat-label>Escribir</mat-label>
+                                    <input type="text" matInput placeholder="Escribir"
+                                        [formControl]="listResultFormControl" (keyup.enter)="addDeleteListResult('add')"
+                                        [errorStateMatcher]="matcher" autocomplete="off">
+                                    <button mat-button *ngIf="listResultFormControl.value" matSuffix mat-icon-button
+                                        aria-label="clearResult" (click)="listResultFormControl.reset()">
+                                        <mat-icon>close</mat-icon>
+                                    </button>
+                                    <mat-hint>Presione ENTER para agregar</mat-hint>
+                                    <mat-error *ngIf="listResultFormControl.hasError('required')">
+                                        El campo es <strong>Requerido</strong>
+                                    </mat-error>
+                                </mat-form-field>
+                            </mat-card-header>
+                            <mat-card-content class="container-expansion1__content-card-content">
+                                <div role="list" *ngFor="let result of listResultArray;let i=index">
+                                    <div class="item-list">
+                                        <span>{{result.resultType}}</span>
+                                        <span>
+                                            <button mat-icon-button aria-label="deletelistResult"
+                                                (click)="addDeleteListResult('delete',i)">
+                                                <mat-icon style="color: #828282">delete</mat-icon>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </mat-card-content>
+                        </mat-card>
+                    </mat-card-content>
+                </mat-card>
+
+                <mat-card class="mat-elevation-z0">
+                    <mat-card-content>
+                        <mat-card class="mat-elevation-z0" style="margin-left: -10px;margin-top: 10px;">
+                            <mat-card-header>
+                                <mat-card-title>
+                                    <span>
+                                        Tipo de ensayo
+                                    </span>
+                                    <button type="button" aria-label="saveDataDifusion" mat-button
+                                        class="container-settings__btn-save" (click)="saveKindOfTest()">
+                                        GUARDAR
+                                    </button>
+                                </mat-card-title>
+                            </mat-card-header>
+                        </mat-card>
+                        <mat-card class="mat-elevation-z0 container-expansion1__content-card">
+                            <mat-progress-bar mode="indeterminate" *ngIf="loadingKindOfTest$ | async"></mat-progress-bar>
+                            <mat-card-header class="container-expansion1__content-card--header">
+                                <mat-form-field>
+                                    <mat-label>Escribir</mat-label>
+                                    <input type="text" matInput placeholder="Escribir"
+                                        [formControl]="listKindOfTestFormControl" (keyup.enter)="addDeleteListKindOfTest('add')"
+                                        [errorStateMatcher]="matcher" autocomplete="off">
+                                    <button mat-button *ngIf="listKindOfTestFormControl.value" matSuffix mat-icon-button
+                                        aria-label="clearResult" (click)="listKindOfTestFormControl.reset()">
+                                        <mat-icon>close</mat-icon>
+                                    </button>
+                                    <mat-hint>Presione ENTER para agregar</mat-hint>
+                                    <mat-error *ngIf="listKindOfTestFormControl.hasError('required')">
+                                        El campo es <strong>Requerido</strong>
+                                    </mat-error>
+                                </mat-form-field>
+                            </mat-card-header>
+                            <mat-card-content class="container-expansion1__content-card-content">
+                                <div role="list" *ngFor="let result of listKindOfTestArray;let i=index">
+                                    <div class="item-list">
+                                        <span>{{result.kindOfTest}}</span>
+                                        <span>
+                                            <button mat-icon-button aria-label="deletelistResult"
+                                                (click)="addDeleteListKindOfTest('delete',i)">
+                                                <mat-icon style="color: #828282">delete</mat-icon>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </mat-card-content>
+                        </mat-card>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>

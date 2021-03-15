@@ -1,13 +1,14 @@
-import { Component, OnInit, Inject, OnDestroy, ElementRef } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Evaluation } from 'src/app/main/models/evaluations.model';
+import { Evaluation, EvaluationsKindOfTest, EvaluationsResultTypeUser } from 'src/app/main/models/evaluations.model';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { finalize } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, finalize, map, startWith, switchMap, take, tap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Ng2ImgMaxService } from 'ng2-img-max';
 import { EvaluationsService } from 'src/app/main/services/evaluations.service';
+import { AuthService } from 'src/app/auth/services/auth.service';
 
 @Component({
   selector: 'app-evaluations-finalize-dialog',
@@ -28,7 +29,12 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
 
 
   uploadPercent$: Observable<number>;
+  filteredOptions: Observable<string[]>;
+
   private subscription = new Subscription();
+
+  obsAutoComplete$: Observable<EvaluationsResultTypeUser[]>;
+  kindOfTests$: Observable<EvaluationsKindOfTest[]>;
 
 
   constructor(
@@ -38,7 +44,8 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
     @Inject(MAT_DIALOG_DATA) public data: Evaluation,
     public dialogRef: MatDialogRef<EvaluationsFinalizeDialogComponent>,
     private storage: AngularFireStorage,
-    private evaluationServices: EvaluationsService
+    private evaluationServices: EvaluationsService,
+    private auth: AuthService
   ) {
     if (data.images) {
       const arr = Object.values(data.images);
@@ -46,10 +53,48 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
     } else {
       this.images = [];
     }
+
+    this.obsAutoComplete$ = this.evaluationServices.getAllEvaluationsSettingsResultType();
+
   }
 
   ngOnInit(): void {
     this.createFormFinalize();
+    this.filteredOptions = this.finalizeForm.controls.result.valueChanges
+      .pipe(
+        tap(() => {
+          this.loading.next(true);
+        }),
+        startWith(''),
+        debounceTime(200),
+        distinctUntilChanged(),
+        switchMap(val => {
+          this.loading.next(false);
+          return this.filter(val || '');
+        }),
+        tap(() => {
+          this.loading.next(false);
+        }),
+      );
+
+
+    this.kindOfTests$ = combineLatest(
+      this.evaluationServices.getAllEvaluationsSettingsKindOfTest(),
+      this.finalizeForm.controls.kindOfTest.valueChanges
+        .pipe(
+          startWith(''),
+          debounceTime(200),
+          distinctUntilChanged(),
+          map(val => val.kindOfTest ? val.kindOfTest : val)
+        )
+    ).pipe(
+      map(([list, term]) => {
+        let search = term.trim().toLowerCase();
+        return list.filter(element => element.kindOfTest.includes(search));
+      })
+    )
+
+
   }
 
   createFormFinalize(): void {
@@ -77,12 +122,29 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
       this.images.forEach((value, index) => {
         imagesObj[index] = value;
       });
-      await this.evaluationServices.updateImagesFinalizeData(this.data.id, imagesObj, this.finalizeForm.value);
-      this.loading.next(false);
-      this.snackBar.open('✅ se guardo correctamente!', 'Aceptar', {
-        duration: 6000
-      });
-      this.dialogRef.close('true');
+
+      this.auth.user$
+        .pipe(
+          take(1)
+        ).subscribe(user => {
+          this.evaluationServices.updateImagesFinalizeData(this.data, imagesObj, this.finalizeForm.value, user)
+            .pipe(
+              take(1)
+            ).subscribe(batch => {
+              if (batch) {
+                batch.commit()
+                  .then(() => {
+                    this.loading.next(false);
+                    this.snackBar.open('✅ se guardo correctamente!', 'Aceptar', {
+                      duration: 6000
+                    });
+                    this.dialogRef.close('true');
+                  })
+              }
+            })
+
+        })
+
     } catch (error) {
       this.loading.next(false);
       this.snackBar.open('🚨 Hubo un error.', 'Aceptar', {
@@ -98,9 +160,9 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
       this.imagesUpload.splice(index, 1);
       this.loading.next(false);
     } catch (error) {
-       console.log(error);
-       this.loading.next(false);
-       this.imagesUpload.splice(index, 1);
+      console.log(error);
+      this.loading.next(false);
+      this.imagesUpload.splice(index, 1);
     }
   }
 
@@ -142,16 +204,20 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  private addControl(img: string): void {
-    const control = this.fb.control([img]);
-    this.imagesArray.push(control);
-  }
-
   private scrollToFirstInvalidControl(): void {
     if (this.finalizeForm.get('result').errors) {
       document.getElementById('result').scrollIntoView();
     } else if (this.finalizeForm.get('kindOfTest').errors) {
       document.getElementById('kindOfTest').scrollIntoView();
     }
+  }
+
+  filter(val: string): Observable<any> {
+    return this.obsAutoComplete$
+      .pipe(
+        map(response => response.filter(option => {
+          return option.resultType.toLowerCase().indexOf(val.toLowerCase()) === 0;
+        }))
+      );
   }
 }
