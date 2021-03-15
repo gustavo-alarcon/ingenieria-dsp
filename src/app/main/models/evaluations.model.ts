@@ -54,6 +54,9 @@ export interface EvaluationRegistryForm {
     wof: string; // Orden de fabricación
     task: string; // Trabajo
     workshop: string;
+    result: string;
+    kindOfTest: string;
+    comments: string;
 }
 
 export interface EvaluationFinishForm {

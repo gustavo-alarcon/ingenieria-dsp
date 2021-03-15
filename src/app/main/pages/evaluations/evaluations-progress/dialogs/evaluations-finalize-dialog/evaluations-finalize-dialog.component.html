@@ -46,7 +46,8 @@
                 </mat-form-field>
                 <mat-form-field appearance="outline" id="kindOfTest">
                     <mat-label>Tipo de ensayo</mat-label>
-                    <input matInput placeholder="Resultado" formControlName="kindOfTest" [matAutocomplete]="autoKindOfTest">
+                    <input matInput placeholder="Resultado" formControlName="kindOfTest"
+                        [matAutocomplete]="autoKindOfTest">
                     <mat-autocomplete autoActiveFirstOption #autoKindOfTest="matAutocomplete">
                         <mat-option *ngFor="let option of kindOfTests$ | async" [value]="option.kindOfTest">
                             {{option.kindOfTest}}
@@ -67,20 +68,23 @@
                 </a>
             </div>
             <div *ngFor="let imgUpload of imagesUpload;let i=index">
-                <label [for]="i">
-                    <mat-card class="mat-elevation-z0">
-                        <img [src]="imgUpload" onError="this.src='../../../../../../../assets/img/camara.png'"
+                <div *ngIf="i<2" style="margin-bottom: 40px;">
+                    <label [for]="i">
+                        <mat-card class="mat-elevation-z0">
+                            Imagen {{i+1}}
+                            <img [src]="imgUpload" onError="this.src='../../../../../../../assets/img/camara.png'"
                             class="pointer" />
-                        <mat-card-actions *ngIf="imgUpload" align="end">
-                            <button mat-icon-button (click)="deleteImage(imgForDelete, i)">
-                                <mat-icon color="warn">delete</mat-icon>
-                            </button>
-                        </mat-card-actions>
-                    </mat-card>
-                    <mat-divider></mat-divider>
-                </label>
-                <input [id]="i" type="file" style="display: none;" (change)="uploadFile($event,i)"
+                            <mat-card-actions *ngIf="imgUpload" align="end">
+                                <button mat-icon-button (click)="deleteImage(imgForDelete, i)">
+                                    <mat-icon color="warn">delete</mat-icon>
+                                </button>
+                            </mat-card-actions>
+                        </mat-card>
+                    </label>
+                    <input [id]="i" type="file" style="display: none;" (change)="uploadFile($event,i)"
                     accept="image/x-png, image/jpg, image/jpeg" />
+                </div>
+                <mat-divider></mat-divider>
             </div>
         </form>
     </mat-dialog-content>
