@@ -61,6 +61,26 @@
                     <mat-label>Comentarios (Opcional)</mat-label>
                     <input matInput placeholder="Comentarios" formControlName="comments">
                 </mat-form-field>
+                <mat-form-field appearance="outline" style="width: 100%;">
+                    <mat-label>Longitud</mat-label>
+                    <span matSuffix><b> [mm]</b></span>
+                    <input type="number" matInput placeholder="Longitud" formControlName="length" min="0" step="0.01">
+                </mat-form-field>
+                <div formArrayName="extends" style="margin-bottom: 10px;">
+                    <div *ngFor="let item of getExtendsArray.controls;let i=index" style="width: 100%;">
+                        <mat-form-field appearance="outline" style="width: 100%;">
+                            <mat-label>Ampliar</mat-label>
+                            <input type="text" matInput placeholder="Longitud" [formControlName]="i">
+                            <mat-icon style="cursor: pointer;" *ngIf="i>0" matSuffix color="warn"
+                                (click)="deleteControlExtends(i)">delete</mat-icon>
+                        </mat-form-field>
+                    </div>
+                    <button type="file" aria-label="add" mat-button class="btn-add" (click)="addControlExtends()">
+                        <mat-icon aria-label="agregar" class="icon-add">add</mat-icon>
+                        AMPLIAR
+                    </button>
+                </div>
+                <mat-divider style="margin: 16px 0px"></mat-divider>
             </div>
             <div *ngFor="let img of images;let i=index;">
                 <a [href]="img" target="_blank" style="cursor: zoom-in">
@@ -73,7 +93,7 @@
                         <mat-card class="mat-elevation-z0">
                             Imagen {{i+1}}
                             <img [src]="imgUpload" onError="this.src='../../../../../../../assets/img/camara.png'"
-                            class="pointer" />
+                                class="pointer" />
                             <mat-card-actions *ngIf="imgUpload" align="end">
                                 <button mat-icon-button (click)="deleteImage(imgForDelete, i)">
                                     <mat-icon color="warn">delete</mat-icon>
@@ -82,7 +102,7 @@
                         </mat-card>
                     </label>
                     <input [id]="i" type="file" style="display: none;" (change)="uploadFile($event,i)"
-                    accept="image/x-png, image/jpg, image/jpeg" />
+                        accept="image/x-png, image/jpg, image/jpeg" />
                 </div>
                 <mat-divider></mat-divider>
             </div>

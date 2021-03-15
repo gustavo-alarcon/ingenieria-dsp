@@ -12,6 +12,7 @@ import { HistoryImageDialogComponent } from './dialogs/history-image-dialog/hist
 import { HistoryObservationDialogComponent } from './dialogs/history-observation-dialog/history-observation-dialog.component';
 import { HistoryUploadFileDialogComponent } from './dialogs/history-upload-file-dialog/history-upload-file-dialog.component';
 import { HistoryTimeLineComponent } from './dialogs/history-time-line/history-time-line.component';
+import { ComponentsModule } from 'src/app/shared/components/components.module';
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import { HistoryTimeLineComponent } from './dialogs/history-time-line/history-ti
     CommonModule,
     EvaluationsHistoryRoutingModule,
     MaterialModule,
-    Ng2ImgMaxModule
+    Ng2ImgMaxModule,
+    ComponentsModule
   ]
 })
 export class EvaluationsHistoryModule { }

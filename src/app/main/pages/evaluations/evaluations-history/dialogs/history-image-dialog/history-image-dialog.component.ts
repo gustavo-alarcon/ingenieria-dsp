@@ -1,10 +1,9 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Evaluation } from '../../../../../models/evaluations.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EvaluationsService } from '../../../../../services/evaluations.service';
-import { finalize } from 'rxjs/operators';
 import { Ng2ImgMaxService } from 'ng2-img-max';
 import { AngularFireStorage } from '@angular/fire/storage';
 
@@ -13,7 +12,7 @@ import { AngularFireStorage } from '@angular/fire/storage';
   templateUrl: './history-image-dialog.component.html',
   styleUrls: ['./history-image-dialog.component.scss']
 })
-export class HistoryImageDialogComponent implements OnInit {
+export class HistoryImageDialogComponent implements OnInit, OnDestroy {
 
   loading = new BehaviorSubject<boolean>(false);
   loading$ = this.loading.asObservable();
@@ -25,6 +24,13 @@ export class HistoryImageDialogComponent implements OnInit {
 
   uploadPercent$: Observable<number>;
 
+  isHovering: boolean;
+
+  files: File[] = [];
+
+  pathStorage: string;
+  pathDb: string;
+
   private subscription = new Subscription();
 
   constructor(
@@ -35,7 +41,7 @@ export class HistoryImageDialogComponent implements OnInit {
     private storage: AngularFireStorage,
     private evaluationServices: EvaluationsService
 
-    ) { }
+  ) { }
 
   ngOnInit(): void {
     if (this.data.images) {
@@ -44,6 +50,8 @@ export class HistoryImageDialogComponent implements OnInit {
     } else {
       this.images = [];
     }
+    this.pathStorage = `evaluations/${this.data.id}/pictures/${this.data.id}`;
+    this.pathDb = `/db/ferreyros/evaluations`;
   }
 
   ngOnDestroy(): void {
@@ -66,56 +74,22 @@ export class HistoryImageDialogComponent implements OnInit {
       console.log(error);
     }
 
-
-
   }
 
-  async deleteImage(imgForDelete: string, index: number): Promise<void> {
-    try {
-      this.loading.next(true);
-      await this.evaluationServices.deleteImage(this.imagesUpload[index]);
-      this.imagesUpload.splice(index, 1);
-      this.loading.next(false);
-    } catch (error) {
-       console.log(error);
-       this.loading.next(false);
-       this.imagesUpload.splice(index, 1);
-    }
+  addNewImage(image: string): void {
+    this.imagesUpload.pop();
+    this.imagesUpload.push(image);
+    this.imagesUpload.push('');
   }
 
+  toggleHover(event: boolean): void {
+    this.isHovering = event;
+  }
 
-  uploadFile(event, i?: number): void {
-    if (!event.target.files[0]) {
-      return;
+  onDrop(files: FileList): void {
+    for (let i = 0; i < files.length; i++) {
+      this.files.push(files.item(i));
     }
-    this.loading.next(true);
-    this.snackBar.open('🗜️ Comprimiendo', 'Aceptar', {
-      duration: 3000
-    });
-
-    const file = event.target.files[0];
-    this.subscription.add(this.ng2ImgMax.resize([file], 800, 10000).subscribe((result) => {
-      const name = `evaluations/${this.data.id}/pictures/${this.data.id}-${this.date}-${result.name}.png`;
-      const fileRef = this.storage.ref(name);
-      const task = this.storage.upload(name, file);
-      this.uploadPercent$ = task.percentageChanges();
-      this.subscription.add(task.snapshotChanges().pipe(
-        finalize(() => {
-          fileRef.getDownloadURL().subscribe(url => {
-            if (this.imagesUpload[i] === '') {
-              this.imagesUpload.pop();
-              this.imagesUpload.push(url);
-              this.imagesUpload.push('');
-            } else {
-              this.imagesUpload[i] = url;
-            }
-          });
-          this.loading.next(false);
-        })
-      ).subscribe()
-      );
-    }));
-
   }
 
 }

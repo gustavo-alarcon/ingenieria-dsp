@@ -128,7 +128,10 @@ export class EvaluationsService {
       editedBy: user,
       result: form.result,
       comments: form.comments,
-      kindOfTest: form.kindOfTest
+      kindOfTest: form.kindOfTest,
+      length: form.length,
+      extends: form.extends,
+      // Agrregar lista Length Extend
     };
     batch.update(evaluationDocRef, data);
     return of(batch);
@@ -260,17 +263,19 @@ export class EvaluationsService {
 
   updateImagesFinalizeData(evaluation: Evaluation, imagesObj, entry: EvaluationFinishForm, user: User): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
-    let batch = this.afs.firestore.batch();
+    const batch = this.afs.firestore.batch();
 
     // create docuemnt reference
-    let evaluationDocRef = this.afs.firestore.doc(`/db/ferreyros/evaluations/${evaluation.id}`)
+    const evaluationDocRef = this.afs.firestore.doc(`/db/ferreyros/evaluations/${evaluation.id}`)
 
-    let data =
+    const data =
     {
       result: entry.result,
       kindOfTest: entry.kindOfTest,
       comments: entry.comments,
       images: imagesObj,
+      length: entry.length,
+      extends: entry.extends,
       internalStatus: 'finalized',
       finalizedAt: new Date(),
       finalizedBy: user,
