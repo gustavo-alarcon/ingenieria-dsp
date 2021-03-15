@@ -82,6 +82,19 @@
                 </h1>
                 
                 <div class="charts">
+                    <div class="chartjs-container">
+                        <canvas baseChart 
+                            [datasets]="lineChartData2" 
+                            [labels]="lineChartLabels2" 
+                            [options]="lineChartOptions2"
+                            [chartType]="lineChartType2" 
+                            [colors]="lineChartColors" 
+                            [legend]="lineChartLegend" 
+                            [plugins]="lineChartPlugins"
+                            (chartHover)="chartHovered($event)" 
+                            (chartClick)="chartClicked($event)">
+                        </canvas>
+                    </div>
                     
                 </div>
 
