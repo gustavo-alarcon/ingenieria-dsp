@@ -7,6 +7,8 @@ import { Andon } from '../../../models/andon.model';
 import { tap } from 'rxjs/operators';
 import { AndonService } from 'src/app/main/services/andon.service';
 import { Chart } from 'node_modules/chart.js';
+import { ChartDataSets, ChartOptions } from 'chart.js';
+import { Color, Label } from 'ng2-charts';
 
 @Component({
   selector: 'app-dashboard',
@@ -14,19 +16,41 @@ import { Chart } from 'node_modules/chart.js';
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
+  // Array of different segments in chart
+  lineChartData: ChartDataSets[] = [];
+  //Labels shown on the x-axis
+  lineChartLabels: Label[] = [];
+  // Define chart options
+  lineChartOptions: ChartOptions = {};
+  // Define colors of chart segments
+  lineChartColors: Color[] = [];
+
+  // Set true to show legends
+  lineChartLegend = true;
+  // Define type of chart
+  lineChartType ;
+  lineChartPlugins = [];
+
+  // events
+  chartClicked({ event, active }: { event: MouseEvent; active: {}[] }): void {
+    console.log(event, active);
+  }
+
+  chartHovered({ event, active }: { event: MouseEvent; active: {}[] }): void {
+    console.log(event, active);
+  }
+
   dateForm: FormGroup;
 
   andon$: Observable<Andon[]>;
   groupByWorkShop = [];
-  chart: any = []   ;
+  chart: any = [];
 
   constructor(
     private dbs: EvaluationsService,
     public router: Router,
     private andonService: AndonService
-  ) {
- 
-  }
+  ) {}
 
   ngOnInit(): void {
     const view = this.dbs.getCurrentMonthOfViewDate();
@@ -40,8 +64,7 @@ export class DashboardComponent implements OnInit {
       end: new FormControl(endDate),
     });
 
-
-    const nameProductMax = [
+    /*    const nameProductMax = [
       'Seguridad',
       'Insumos',
       'Calidad',
@@ -88,7 +111,7 @@ export class DashboardComponent implements OnInit {
           }]
         }
       }
-    })
+    }) */
 
     this.andon$ = this.andonService.getAllAndon().pipe(
       tap((res: Andon[]) => {
@@ -106,8 +129,6 @@ export class DashboardComponent implements OnInit {
 
         // report for type problem
         const reportTypeProblem = [];
-        let nameProblemType = [];
-        let quantityProblem = [];
 
         andonArray.reduce((res, value) => {
           if (!res[value.problemType]) {
@@ -122,13 +143,9 @@ export class DashboardComponent implements OnInit {
           return res;
         }, {});
 
-        reportTypeProblem.map((res) => {
-          nameProblemType.push(res.problemType);
-          quantityProblem.push(res.quantity);
-          
-        })
-        console.log('reportTypeProblem : ', reportTypeProblem);
-       /*  const nameProductMax = [
+        this.reportProblemType(reportTypeProblem);
+
+        /*  const nameProductMax = [
           'Seguridad',
           'Insumos',
           'Calidad',
@@ -176,17 +193,63 @@ export class DashboardComponent implements OnInit {
             },
           },
         }); */
-
-
       })
     );
-
   }
   topTenDelayed(): void {
 
+
   }
 
-  reportProblemType(): void {}
+  reportProblemType(reportTypeProblem: any): void {
+    const nameProblemType = [];
+    const quantityProblem = [];
+
+    reportTypeProblem.map((res) => {
+      nameProblemType.push(res.problemType);
+      quantityProblem.push(res.quantity);
+    });
+
+    const colors = [
+      '#F2C94C',
+      '#F2994A',
+      '#FF2D2D',
+      'rgba(98, 0, 238, 0.24)',
+      '#27AE60',
+      '#018786',
+    ];
+
+    this.lineChartData = [{ data: quantityProblem, label: 'prueba' }];
+
+    this.lineChartLabels =  nameProblemType;
+    this.lineChartColors = [
+      {
+      backgroundColor: colors,
+      borderColor: colors,
+      },
+    ];
+
+    this.lineChartOptions = {
+      responsive: true,
+      scales: {
+        xAxes: [{
+        }],
+        yAxes: [{
+          ticks: {
+            beginAtZero: true
+            }
+          }]
+        },
+        plugins: {
+          datalabels: {
+            anchor: 'end',
+            align: 'end',
+          }
+        }
+    };
+
+    this.lineChartType = 'horizontalBar';
+  }
 
   averageQuestions(): void {}
   reports(item): void {
