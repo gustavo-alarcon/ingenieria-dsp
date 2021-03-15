@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Evaluation, EvaluationsKindOfTest, EvaluationsResultTypeUser } from 'src/app/main/models/evaluations.model';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { debounceTime, distinctUntilChanged, finalize, map, startWith, switchMap, take, tap } from 'rxjs/operators';
@@ -36,6 +36,7 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
   obsAutoComplete$: Observable<EvaluationsResultTypeUser[]>;
   kindOfTests$: Observable<EvaluationsKindOfTest[]>;
 
+  arrayAux: string[];
 
   constructor(
     private fb: FormBuilder,
@@ -52,6 +53,11 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
       this.images = [...arr];
     } else {
       this.images = [];
+    }
+    if (data.extends) {
+      this.arrayAux = data.extends;
+    } else {
+      this.arrayAux = [null];
     }
 
     this.obsAutoComplete$ = this.evaluationServices.getAllEvaluationsSettingsResultType();
@@ -102,7 +108,26 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
       result: ['', Validators.required],
       kindOfTest: ['', Validators.required],
       comments: [''],
+      length: [this.data.length ? this.data.length : null],
+      extends: this.fb.array([])
     });
+
+    this.arrayAux.forEach(val => {
+      this.getExtendsArray.push(new FormControl(val));
+    });
+  }
+
+  addControlExtends(): void {
+    const control = this.fb.control([null]);
+    this.getExtendsArray.push(control);
+  }
+
+  deleteControlExtends(i: number): void {
+    this.getExtendsArray.removeAt(i);
+  }
+
+  get getExtendsArray(): FormArray {
+    return this.finalizeForm.get('extends') as FormArray;
   }
 
   async onSubmit(): Promise<void> {

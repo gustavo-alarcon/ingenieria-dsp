@@ -41,6 +41,8 @@ export interface Evaluation {
     createdBy: User;
     editedAt: Date;
     editedBy: User;
+    length?: string;
+    extends?: string[];
 }
 
 export interface EvaluationRegistryForm {
@@ -57,19 +59,23 @@ export interface EvaluationRegistryForm {
     result: string;
     kindOfTest: string;
     comments: string;
+    length: string;
+    extends: string[];
 }
 
 export interface EvaluationFinishForm {
     result: string;
     kindOfTest: string;
     comments: string;
+    length: string;
+    extends: string[];
 }
 
 export interface EvaluationTimer {
     days: number;
     hours: number;
     minutes: number;
-    seconds: number
+    seconds: number;
 }
 
 /**
