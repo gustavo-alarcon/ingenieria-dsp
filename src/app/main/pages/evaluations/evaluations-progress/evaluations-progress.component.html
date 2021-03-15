@@ -8,10 +8,11 @@
       <span class="ms-fill"></span>
 
       <div class="requests__title--select">
-        <mat-form-field style="width: 90%">
-          <mat-select [formControl]="workshopControl" class="requests__title--input">
-            <mat-option value="">-Todos-</mat-option>
-            <mat-option *ngFor="let item of workshops" [value]="item.code">
+        <mat-form-field style="width: 90%" appearance="null"  >
+          <mat-icon matPrefix class="requests__title--select-icon" >local_convenience_store</mat-icon>
+          <mat-select [formControl]="workshopControl" class="requests__title--select-input">
+            <mat-option value=""  >Todos</mat-option>
+            <mat-option *ngFor=" let item of workshops" [value]="item.code">
               {{item.location}}
             </mat-option>
           </mat-select>

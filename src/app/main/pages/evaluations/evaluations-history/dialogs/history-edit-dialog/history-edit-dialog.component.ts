@@ -1,5 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../../../../../auth/services/auth.service';
@@ -28,6 +28,7 @@ export class HistoryEditDialogComponent implements OnInit {
   subscriptions: Subscription = new Subscription();
 
   indexAux: number[] = [];
+  arrayAux: string[];
 
   constructor(
     private fb: FormBuilder,
@@ -37,7 +38,11 @@ export class HistoryEditDialogComponent implements OnInit {
     private auth: AuthService,
     private evaltService: EvaluationsService,
   ) {
-    console.log(data)
+    if (data.extends) {
+      this.arrayAux = data.extends;
+    } else {
+      this.arrayAux = [null];
+    }
     this.obsAutoComplete$ = this.evaltService.getAllEvaluationsSettingsResultType();
   }
 
@@ -71,12 +76,12 @@ export class HistoryEditDialogComponent implements OnInit {
         )
     ).pipe(
       map(([list, term]) => {
-        let search = term.trim().toLowerCase();
+        const search = term.trim().toLowerCase();
         return list.filter(element => element.kindOfTest.includes(search));
       })
-    )
+    );
   }
-  
+
   createForm(): void {
     this.createEvaluateForm = this.fb.group({
       otMain: [this.data.otMain ? this.data.otMain : null, Validators.required],
@@ -91,7 +96,26 @@ export class HistoryEditDialogComponent implements OnInit {
       result: [this.data.result ? this.data.result : null, Validators.required],
       kindOfTest: [this.data.kindOfTest ? this.data.kindOfTest : null, Validators.required],
       comments: [this.data.comments ? this.data.comments : null],
+      length: [this.data.length ? this.data.length : null],
+      extends: this.fb.array([])
     });
+
+    this.arrayAux.forEach(val => {
+      this.getExtendsArray.push(new FormControl(val));
+    });
+  }
+
+  addControlExtends(): void {
+    const control = this.fb.control([null]);
+    this.getExtendsArray.push(control);
+  }
+
+  deleteControlExtends(i: number): void {
+    this.getExtendsArray.removeAt(i);
+  }
+
+  get getExtendsArray(): FormArray {
+    return this.createEvaluateForm.get('extends') as FormArray;
   }
 
   save(): void {
