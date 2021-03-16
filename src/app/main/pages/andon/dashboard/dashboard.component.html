@@ -108,14 +108,14 @@
                 </h1>
                 <div class="container2__taller--cards"  > 
                     <div class="container2__taller--cards-card" (click)="reports(item)" *ngFor="let item of groupByWorkShop">
-                        <div style="display: flex; text-align: center; margin: 20px 15px 10px 15px;">
-                            <mat-icon mat-list-icon class="mat-icon-menu" style="font-size: 1.5em;margin-top: 1px;">domain</mat-icon>
-                            <p class="container2__taller--cards-name">
+                        <div class="title-card" >
+                            <mat-icon mat-list-icon class="icon">domain</mat-icon>
+                            <h3 class="title">
                              {{item.workShop}}
-                            </p>  
+                            </h3>  
                         </div>
-                        <h1 style="font-weight: 700; text-align: center; font-size: 7em; margin-top: 30px;">
-                            {{item.quantity}}
+                        <h1 class="value-card">
+                            {{item.quantity | number : '2.'}}
                         </h1>
                     </div>                    
                     

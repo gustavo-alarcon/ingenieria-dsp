@@ -2,12 +2,13 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subscription, Observable } from 'rxjs';
-import { take, switchMap, tap } from 'rxjs/operators';
+import { take, tap } from 'rxjs/operators';
 import { AndonService } from 'src/app/main/services/andon.service';
 import { AuthService } from '../../../../auth/services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Andon, AndonListBahias } from '../../../models/andon.model';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 
 @Component({
@@ -22,21 +23,42 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   nameBahias$: Observable<AndonListBahias[]>;
 
-  private subscription = new Subscription();
+  isMobile = false;
+  containerStyle: any;
+  reportStyle: any;
+
+  subscription = new Subscription();
+  
   constructor(
     private afs: AngularFirestore,
     private fb: FormBuilder,
     public router: Router,
     private andonService: AndonService,
     private auth: AuthService,
-    private snackbar: MatSnackBar
-  ) {}
+    private snackbar: MatSnackBar,
+    private breakpoint: BreakpointObserver
+  ) { }
 
   ngOnInit(): void {
+    this.subscription.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
+      .subscribe(res => {
+        if (res.matches) {
+          this.isMobile= true;
+          this.setHandsetContainer();
+          this.setHandsetReport();
+        } else {
+          this.isMobile= false;
+          this.setDesktopContainer();
+          this.setDesktopReport();
+        }
+      })
+    )
+
     this.reportForm = this.fb.group({
       name: ['', Validators.required],
       otChild: ['', Validators.required],
     });
+
     this.loading.next(true);
 
 
@@ -48,11 +70,12 @@ export class ReportComponent implements OnInit, OnDestroy {
     this.loading.next(false);
 
   }
-  ngOnDestroy(): void {
 
+  ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
-  report(): void{
+
+  report(): void {
     this.loading.next(true);
     if (this.reportForm.invalid) {
       this.reportForm.markAllAsTouched();
@@ -107,20 +130,35 @@ export class ReportComponent implements OnInit, OnDestroy {
     }
 
   }
-/* 
-  report(): void {
-    this.loading.next(true);
-    if (this.reportForm.invalid) {
-      this.reportForm.markAllAsTouched();
-      this.loading.next(false);
-      return;
-    } else {
-      const name = this.reportForm.value['name'];
-      const otChild = this.reportForm.value['otChild'];
-      const id = `${name}-${otChild}`;
 
-      this.router.navigate(['main/reporte', id]);
-      this.loading.next(false);
+  setHandsetContainer(): void {
+    this.containerStyle = {
+      'margin': '30px 24px 30px 24px'
     }
-  } */
+  }
+
+  setDesktopContainer(): void {
+    this.containerStyle = {
+      'margin': '30px 80px 30px 80px',
+    }
+  }
+
+  setHandsetReport(): void {
+    this.reportStyle = {
+      'width': 'fit-content',
+      'margin': '24px auto',
+    }
+  }
+
+  setDesktopReport(): void {
+    this.reportStyle = {
+      'padding': '24px 24px',
+      'border': '1px solid lightgrey',
+      'border-radius': '10px 10px 10px 10px',
+      'width': 'fit-content',
+      'margin': '24px auto',
+      'box-shadow': '2px 2px 4px lightgrey'
+    }
+  }
+
 }

@@ -46,8 +46,8 @@ export class RecordComponent implements OnInit {
   historyMobilDataSource = new MatTableDataSource<Andon>();
   historyMobilDisplayedColumns: string[] = [
     'state',
-    'reportDate',
     'name',
+    'reportDate',
     'workShop',
     'otChild',
     'problemType',

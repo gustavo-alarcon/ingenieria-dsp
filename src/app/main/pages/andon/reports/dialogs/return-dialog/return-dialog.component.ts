@@ -73,7 +73,11 @@ export class ReturnDialogComponent implements OnInit {
       if (this.returnForm.invalid) {
         this.returnForm.markAllAsTouched();
         this.loading.next(false);
+        this.snackbar.open('Complete lso comentarios', 'Aceptar', {
+          duration: 6000
+        });
         return;
+        
       } else {
         const imagesObj = {};
         this.images = [...this.images, ...this.imagesUpload];
@@ -101,6 +105,7 @@ export class ReturnDialogComponent implements OnInit {
 
     }
   }
+
   uploadFile(event, i?: number): void {
     if (!event.target.files[0]) {
       return;

@@ -54,7 +54,8 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
-    width: 500px;
+    width: 100%;
+    max-width: 500px;
     font-weight: 200;
     height: 300px;
     border: 2px dashed #f16624;

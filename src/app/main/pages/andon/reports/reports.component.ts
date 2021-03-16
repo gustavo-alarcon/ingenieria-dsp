@@ -5,10 +5,11 @@ import { DeleteDialogComponent } from './dialogs/delete-dialog/delete-dialog.com
 import { DetailsDialogComponent } from './dialogs/details-dialog/details-dialog.component';
 import { ReturnDialogComponent } from './dialogs/return-dialog/return-dialog.component';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Observable, combineLatest } from 'rxjs';
+import { Observable, combineLatest, Subscription } from 'rxjs';
 import { Andon } from '../../../models/andon.model';
 import { AndonService } from '../../../services/andon.service';
 import { tap, debounceTime, filter, startWith, map } from 'rxjs/operators';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-reports',
@@ -20,17 +21,39 @@ export class ReportsComponent implements OnInit {
   currentWorkShop: string;
   workShop$: Observable<Andon[]>;
   state = 'stopped';
+
+  isMobile = false;
+  containerStyle: any;
+  searchStyle: any;
+
+  subscription = new Subscription();
+
   constructor(
     public dialog: MatDialog,
     public router: Router,
     private fb: FormBuilder,
     private route: ActivatedRoute,
-    private andonService: AndonService
+    private andonService: AndonService,
+    private breakpoint: BreakpointObserver
   ) {
     this.currentWorkShop = this.route.snapshot.paramMap.get('code');
   }
 
   ngOnInit(): void {
+    this.subscription.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
+      .subscribe(res => {
+        if (res.matches) {
+          this.isMobile= true;
+          this.setHandsetContainer();
+          this.setHandsetSearch();
+        } else {
+          this.isMobile= false;
+          this.setDesktopContainer();
+          this.setDesktopSearch();
+        }
+      })
+    )
+
     this.searchForm = this.fb.group({
       search: ['', Validators.required],
     });
@@ -101,7 +124,7 @@ export class ReportsComponent implements OnInit {
   detailsDialog(item): void {
     this.dialog.open(DetailsDialogComponent, {
       maxWidth: 500,
-      width: '60vw',
+      width: '90vw',
       data: item,
     });
   }
@@ -130,5 +153,29 @@ export class ReportsComponent implements OnInit {
     let hrs = (milis - mins) / 60;
 
     return addZ(hrs) + ':' + addZ(mins) + ':' + addZ(secs);
+  }
+
+  setHandsetContainer(): void {
+    this.containerStyle = {
+      'margin': '30px 24px 30px 24px'
+    }
+  }
+
+  setDesktopContainer(): void {
+    this.containerStyle = {
+      'margin': '30px 80px 30px 80px',
+    }
+  }
+
+  setHandsetSearch(): void {
+    this.searchStyle = {
+      'margin': '12px 0px'
+    }
+  }
+
+  setDesktopSearch(): void {
+    this.searchStyle = {
+      'margin': '0px',
+    }
   }
 }

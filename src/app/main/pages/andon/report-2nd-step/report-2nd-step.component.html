@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" [ngStyle]="containerStyle">
     <div class="header-container">
         <mat-icon mat-list-icon class="mat-icon-menu" style="font-size: 2.5em;">radio_button_checked</mat-icon>
         <h1 style="font-size: 2.2em; margin-left: 20px; font-family: 'Poppins', sans-serif; font-weight: 700;">Reportar</h1>              
@@ -7,15 +7,18 @@
     <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
 
     <div class="body-container">
-        <div class="report">
-            <h1 class="report__title">Reportar</h1>
+        <div class="report" [ngStyle]="reportStyle">
             <form action="" [formGroup]="reportForm" autocomplete="off" class="report__form" >
-                <p style="margin-left: 0px;">OT CHILD : {{otChild}} </p>
-                <mat-form-field *ngIf="typeProblem$ | async as typeProblem" appearance="outline" id="result" class="report__form--input"> 
+                <p style="margin-left: 0px;">OT CHILD : {{otChild ? otChild : '---'}} </p>
+                <mat-form-field appearance="outline" id="result" class="report__form--input"> 
                     <mat-label>Tipo de problema</mat-label>
                     <mat-select   formControlName="problemType">
-                        <mat-option *ngFor="let item of typeProblem" [value]="item.problemType">{{item.problemType}}</mat-option>
+                        <mat-option *ngFor="let item of typeProblem$ | async" [value]="item.problemType">{{item.problemType}}</mat-option>
                     </mat-select>
+                    <mat-hint *ngIf="!(typeProblem$ | async)">
+                        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                        <p>Cargando lista ...</p>
+                    </mat-hint>
                     <mat-error *ngIf="reportForm.controls['problemType'].errors">
                         Campo <strong>requerido.</strong>
                     </mat-error>
@@ -32,7 +35,7 @@
                 </mat-form-field>
                     <div class="dropzone" appDropzone (hovered)="toggleHover($event)" (dropped)="onDrop($event)"
                         [class.hovering]="isHovering">
-                        <p>Arrastra imagenes aqui</p>
+                        <p>Arrastrar imágenes</p>
                         <div class="file">
                             <label class="file-label">
                             <input class="file-input" type="file" (change)="onDrop($event.target.files)" >                    

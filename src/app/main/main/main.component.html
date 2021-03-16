@@ -1,6 +1,6 @@
 <mat-sidenav-container class="sidenav-container" fullscreen>
   <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-    [mode]="(isHandset$ | async) ? 'over' : 'over'" [opened]="(isHandset$ | async) === !false">
+    [mode]="(isHandset$ | async) ? 'over' : 'push'">
     <mat-toolbar class="color-toolbar-sidebar"></mat-toolbar>
     <mat-card class="mat-elevation-z0 mat-card-user" *ngFor="let item of items | async">
       <div mat-card-avatar style="margin-top: 40px;margin-bottom: 30px;">
