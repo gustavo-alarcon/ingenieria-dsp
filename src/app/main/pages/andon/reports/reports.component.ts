@@ -116,7 +116,7 @@ export class ReportsComponent implements OnInit {
   editDialog(): void {}
   returnDialog(item): void {
     this.dialog.open(ReturnDialogComponent, {
-      maxWidth: 500,
+      maxWidth: 450,
       width: '90vw',
       data: item,
     });

@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { Observable, combineLatest } from 'rxjs';
+import { Observable, combineLatest, Subscription } from 'rxjs';
 import { Andon } from '../../../models/andon.model';
 import { AndonService } from '../../../services/andon.service';
 import { tap, debounceTime, filter, startWith, map } from 'rxjs/operators';
@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ImageDialogComponent } from './dialog/image-dialog/image-dialog.component';
 import * as XLSX from 'xlsx';
 import { EvaluationsService } from '../../../services/evaluations.service';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-record',
@@ -61,14 +62,38 @@ export class RecordComponent implements OnInit {
   ) {
     this.historyMobilDataSource.paginator = paginator;
   }
+
+  isMobile = false;
+  containerStyle: any;
+  searchStyle: any;
+  downloadStyle: any;
+
+  subscription = new Subscription();
   constructor(
      private dbs: EvaluationsService,
      private fb: FormBuilder,
      private andonService: AndonService,
      public dialog: MatDialog,
+     private breakpoint: BreakpointObserver
      ) {}
 
   ngOnInit(): void {
+    this.subscription.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
+      .subscribe(res => {
+        if (res.matches) {
+          this.isMobile= true;
+          this.setHandsetContainer();
+          this.setHandsetSearch();
+          this.setHandsetDownload();
+        } else {
+          this.isMobile= false;
+          this.setDesktopSearch();
+          this.setDesktopContainer();
+          this.setDesktopDownload();
+        }
+      })
+    )
+
     this.searchForm = this.fb.group({
       search: ['', Validators.required],
     });
@@ -185,5 +210,43 @@ export class RecordComponent implements OnInit {
     /* save to file */
     const name = 'report_list' + '.xlsx';
     XLSX.writeFile(wb, name);
+  }
+
+  setHandsetContainer(): void {
+    this.containerStyle = {
+      'margin': '30px 24px 30px 24px'
+    }
+  }
+
+  setDesktopContainer(): void {
+    this.containerStyle = {
+      'margin': '30px 80px 30px 80px',
+    }
+  }
+
+  setHandsetSearch(): void {
+    this.searchStyle = {
+      'margin': '8px 0px 0px 0px',
+      'width': '100%'
+    }
+  }
+
+  setDesktopSearch(): void {
+    this.searchStyle = {
+      'margin': '0px 6px',
+    }
+  }
+
+  setHandsetDownload(): void {
+    this.downloadStyle = {
+      'margin': '16px 0px 0px 0px',
+      'width': '100%'
+    }
+  }
+
+  setDesktopDownload(): void {
+    this.downloadStyle = {
+      'margin': '0px 6px',
+    }
   }
 }

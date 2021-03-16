@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" [ngStyle]="containerStyle">
     <div class="header-container">
         <mat-icon mat-list-icon class="mat-icon-menu" style="font-size: 2.5em;">settings</mat-icon>
         <h1 style="font-size: 2.2em; margin-left: 20px; font-family: 'Poppins', sans-serif; font-weight: 700;">Configuraciones</h1>  
@@ -26,6 +26,7 @@
                             </mat-card-title>
                         </mat-card-header>
                     </mat-card>
+                    
                     <mat-card class="mat-elevation-z0 container-expansion1__content-card">
                         <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
                         <mat-card-header class="container-expansion1__content-card--header">

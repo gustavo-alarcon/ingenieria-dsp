@@ -52,7 +52,7 @@
                   {{item.atentionTime?.minutes | number : '2.'}} :
                   {{item.atentionTime?.seconds | number : '2.'}}
                 </h3>
-                <button class="cards__body--supplies" >{{item.problemType | slice : 0:9}}</button>              
+                <div class="cards__body--supplies" >{{item.problemType | slice : 0:9}}</div>              
                 <button mat-raised-button class="cards__body--return" (click)="returnDialog(item)">RETOMAR</button>       
             </div>
         </div>
