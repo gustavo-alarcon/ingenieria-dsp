@@ -102,6 +102,10 @@ progress::-webkit-progress-value {
             width: 300px;
         }
     }
+    .dropzone {
+        width: 400px;
+        height: 300px;
+    }
 }
 
 /* 
@@ -118,5 +122,9 @@ progress::-webkit-progress-value {
         &__input{
             width: 300px;
         }
+    }
+    .dropzone {
+        width: 300px;
+        height: 200px;
     }
 }
