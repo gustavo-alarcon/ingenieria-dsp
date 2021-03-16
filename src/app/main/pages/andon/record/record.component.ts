@@ -72,7 +72,7 @@ export class RecordComponent implements OnInit {
     this.searchForm = this.fb.group({
       search: ['', Validators.required],
     });
-    const view = this.dbs.getCurrentMonthOfViewDate();
+    const view = this.andonService.getCurrentMonthOfViewDate();
 
     const beginDate = view.from;
     const endDate = new Date();

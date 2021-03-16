@@ -49,13 +49,7 @@
             color: black;
             height: 30px;
         }
-        &--table{
-            margin: 30px;
-            margin-left: 50px;
-            padding-bottom: 30px;
-
-        }
-        
+                
     }    
     &__answer{
         margin-top: 20px;
@@ -79,6 +73,26 @@
     }
 }   
 
+.top-ten{
+    display: flex;
+    
+    &__list1{
+        list-style: none;
+        &--item{
+            margin: 10px;
+            
+        }
+        
+    }
+    &__list2{
+        list-style: none;
+        &--item{
+            margin: 10px;
+            
+        }
+
+    }
+}
 .container2{
     width: 50%;
     margin: 15px;
@@ -101,24 +115,32 @@
             row-gap: 1em;
             grid-template-columns: 1fr 1fr;
             border-radius: 30px 30px 0px 0px; 
-
-            &-card{
-                box-shadow: 0px 0px 5.66077px 5.66077px rgba(177, 175, 175, 0.25);   
-                margin: 20px 20px 10px 20px;
-                background: #F2C94C;
-                border-radius: 30px;
-                height: 170px;
-                cursor: pointer;
-            }
-            &-name{
-                font-family: 'Poppins', sans-serif;
-                 font-size: 1.5em;
-            }
+            margin: 0px 20px 0px 20px;
 
         }
+    }
 
+    &__card{
+        box-shadow: 0px 0px 5.66077px 5.66077px rgba(177, 175, 175, 0.25);   
+        margin: 20px 20px 10px 20px;
+        background: #F2C94C;
+        border-radius: 30px;
+        height: 170px;
+        cursor: pointer;
+        &--name{
+            font-family: 'Poppins', sans-serif;
+             font-size: 1.5em;
+        }
+        &--quatity{
+            font-weight: 700; 
+            text-align: center; 
+            font-size: 7em; 
+            margin-top: 30px;
+
+        }
     }
 }
+
 
 .charts{
     margin: 20px;
@@ -164,27 +186,32 @@
             }
             &--cards{            
                 display: grid;
-                column-gap: 0.7em;
-                row-gap: 0.7em;
+                column-gap: 0.3em;
+                row-gap: 0.3em;
                 grid-template-columns: 1fr 1fr;
                 border-radius: 30px 30px 0px 0px; 
 
-                &-card{
-                    box-shadow: 0px 0px 5.66077px 5.66077px rgba(177, 175, 175, 0.25);   
-                    margin: 20px 20px 10px 20px;
-                    background: #F2C94C;
-                    border-radius: 30px;
-                    height: 170px;
-                    cursor: pointer;
-                }
-                &-name{
-                    margin-left: 6px;
-                    font-family: 'Poppins', sans-serif;
-                     font-size: 1em;
-                }
-
             }
-
+            
+        }
+        &__card{
+            box-shadow: 0px 0px 5.66077px 5.66077px rgba(177, 175, 175, 0.25);   
+            margin: 10px 10px 10px 10px;
+            background: #F2C94C;
+            border-radius: 30px;
+            height: 170px;
+            cursor: pointer;
+            &--name{
+                font-family: 'Poppins', sans-serif;
+                 font-size: 1.5em;
+            }
+            &--quatity{
+                font-weight: 700; 
+                text-align: center; 
+                font-size: 6em; 
+                margin-top: 30px;
+    
+            }
         }
     }
 
@@ -211,7 +238,7 @@
 
     .container2{
         width: 100%;
-        margin: 5px;
+        margin: 0px;
         &__taller{
             border-radius: 30px;
             box-shadow: 0px 0px 5.66077px 5.66077px rgba(177, 175, 175, 0.25);   
@@ -227,27 +254,32 @@
             }
             &--cards{            
                 display: grid;
-                column-gap: 0.5em;
-                row-gap: 0.5em;
+                column-gap: 0.3em;
+                row-gap: 0.3em;
                 grid-template-columns: 1fr 1fr;
                 border-radius: 30px 30px 0px 0px; 
     
-                &-card{
-                    box-shadow: 0px 0px 5.66077px 5.66077px rgba(177, 175, 175, 0.25);   
-                    margin: 20px 20px 10px 20px;
-                    background: #F2C94C;
-                    border-radius: 30px;
-                    height: 170px;
-                    cursor: pointer;
-                }
-                &-name{
-                    margin-left: 1px;
-                    font-family: 'Poppins', sans-serif;
-                     font-size: 0.9em;
-                }
-    
             }
     
+        }
+        &__card{
+            box-shadow: 0px 0px 5.66077px 5.66077px rgba(177, 175, 175, 0.25);   
+            margin: 10px 10px 10px 10px;
+            background: #F2C94C;
+            border-radius: 30px;
+            height: 170px;
+            cursor: pointer;
+            &--name{
+                font-family: 'Poppins', sans-serif;
+                 font-size: 1.5em;
+            }
+            &--quatity{
+                font-weight: 700; 
+                text-align: center; 
+                font-size: 5em; 
+                margin-top: 30px;
+    
+            }
         }
     }
     
