@@ -92,11 +92,11 @@
                         <div style="display: flex; text-align: center; margin: 20px 15px 10px 15px;">
                             <mat-icon mat-list-icon class="mat-icon-menu" style="font-size: 1.5em;margin-top: 1px;">domain</mat-icon>
                             <p class="container2__card--name">
-                             {{item.workShop}}
+                             {{item.workShop | slice : 0:15}}
                             </p>  
                         </div>
                         <h1 class="container2__card--quatity">
-                            {{item.quantity}}
+                            {{item.quantity | number : '2.'}}
                         </h1>
                     </div>                    
                     
