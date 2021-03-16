@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" [ngStyle]="containerStyle">
     <div class="header-container">
         <div class="header-container__title">
           <mat-icon mat-list-icon class="mat-icon-menu" style="cursor: pointer; font-size: 2.5em;"
@@ -6,7 +6,7 @@
           <h1 style="font-size: 2.2em; margin-left: 20px; font-family: 'Poppins', sans-serif; font-weight: 700;">REPORTES</h1> 
         </div>
         
-        <div class="header-container__search" >
+        <div class="header-container__search" [ngStyle]="searchStyle">
             <button mat-button class="header-container__search--button">
               <mat-icon>search</mat-icon>
             </button>
@@ -52,7 +52,7 @@
                   {{item.atentionTime?.minutes | number : '2.'}} :
                   {{item.atentionTime?.seconds | number : '2.'}}
                 </h3>
-                <button class="cards__body--supplies" >{{item.problemType}}</button>              
+                <button class="cards__body--supplies" >{{item.problemType | slice : 0:9}}</button>              
                 <button mat-raised-button class="cards__body--return" (click)="returnDialog(item)">RETOMAR</button>       
             </div>
         </div>

@@ -2,33 +2,46 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-}
+    flex-wrap: wrap;
+    align-items: stretch;
 
-.imge{
-    width: 300px;
-    height: 200px;
-}
+    h1 {
+        margin: 0px;
+        align-self: center;
+    }
 
- /* 
-  ##Dispositivo = Tablets de baja resolucion y telefnos Mobiles (horizontal)
-  ##Resolucion = B/w 481px to 767px
-*/
+    &--border {
+        border: 1px dashed lightcoral;
+        padding: 12px;
+        border-radius: 10px;
+        margin-bottom: 12px;
+    }
 
-@media (min-width: 481px) and (max-width: 767px) {  
-    .imge{
-        width: 200px;
-        height: 150px;
+    .timer {
+        display: flex;
+        align-self: center;
     }
 }
 
-/* 
-  ##Dispositivo = Mayoria de telefonos moviles (vertical)
-  ##Resolucion = B/w 320px to 479px
-*/
+.imge{
+    width: 100%;
+}
 
-@media (min-width: 320px) and (max-width: 480px) {    
-    .imge{
-        width: 150px;
-        height: 100px;
+.container-images {
+    margin-top: 24px;
+}
+
+.container-title {
+    display: flex;
+    align-items: stretch;
+
+    .icon {
+        align-self: center;
+        margin-right: 8px;
+    }
+
+    .title {
+        margin: 0px;
+        align-self: center;
     }
 }

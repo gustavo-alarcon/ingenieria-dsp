@@ -1,41 +1,51 @@
-<div class="container">
+<div class="container" [ngStyle]="containerStyle">
     <div class="header-container">
         <mat-icon mat-list-icon class="mat-icon-menu" style="font-size: 2.5em;">radio_button_checked</mat-icon>
-        <h1 style="font-size: 2.2em; margin-left: 20px; font-family: 'Poppins', sans-serif; font-weight: 700;">Reportar</h1>              
+        <h1 style="font-size: 2.2em; margin-left: 20px; font-family: 'Poppins', sans-serif; font-weight: 700;">Reportar
+        </h1>
     </div>
     <mat-divider></mat-divider>
     <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
 
     <div class="body-container">
-        <div class="report">
-            <h1 class="report__title">Reportar</h1>
-            <form [formGroup]="reportForm" autocomplete="off" class="report__form" >
-                <mat-form-field *ngIf="nameBahias$ | async as bahias" appearance="outline" id="result" class="report__form--input"> 
+        <div class="report" [ngStyle]="reportStyle">
+            <form [formGroup]="reportForm" autocomplete="off" class="report__form">
+                <mat-form-field appearance="outline" id="result" class="report__form--input">
                     <mat-label>Nombre de bahia</mat-label>
-                    <mat-select  formControlName="name">
-                        <mat-option  *ngFor="let item of bahias" [value]="item">{{item.name}} - <span style="color: #8f8a8a;">{{item.workShop}}</span></mat-option>
+                    <mat-select formControlName="name">
+                        <mat-option *ngFor="let item of nameBahias$ | async" [value]="item">{{item.name}} - <span
+                                style="color: #8f8a8a;">{{item.workShop}}</span></mat-option>
                     </mat-select>
+                    <mat-hint *ngIf="!(nameBahias$ | async)">
+                        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                        <p>Cargando lista ...</p>
+                    </mat-hint>
+
                     <mat-error *ngIf="reportForm.controls['name'].errors">
                         Campo <strong>requerido.</strong>
                     </mat-error>
                 </mat-form-field>
-                <br/>
-                <mat-form-field appearance="outline" id="result" class="report__form--input"> 
+                <br />
+                <mat-form-field appearance="outline" id="result" class="report__form--input">
                     <mat-label>OT CHILD</mat-label>
-                    <input matInput type="number" placeholder="OT CHILD" formControlName="otChild"/>
+                    <input matInput type="number" placeholder="OT CHILD" formControlName="otChild" />
                     <mat-error *ngIf="reportForm.controls['otChild'].errors">
                         Campo <strong>requerido.</strong>
                     </mat-error>
                 </mat-form-field>
-                <br/>
+                <br />
+
+                <ng-template #loadingInput>
+                    <div class="placeholder-content">
+                    </div>
+                </ng-template>
                 <button type="submit" style="background: transparent;" class="btn">
                     <input type="checkbox" id="toggle">
-                    <label for="toggle" id="boton"  (click)="report()">        
+                    <label for="toggle" id="boton" (click)="report()">
                     </label>
-                </button >
-                        
+                </button>
+
             </form>
         </div>
     </div>
 </div>
-
