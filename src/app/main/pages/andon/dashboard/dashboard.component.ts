@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { EvaluationsService } from '../../../services/evaluations.service';
 import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import { Andon } from '../../../models/andon.model';
-import { tap } from 'rxjs/operators';
+import { tap, startWith, map } from 'rxjs/operators';
 import { AndonService } from 'src/app/main/services/andon.service';
 import { Chart } from 'node_modules/chart.js';
 import { ChartDataSets, ChartOptions } from 'chart.js';
@@ -16,6 +16,7 @@ import { Color, Label } from 'ng2-charts';
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
+  state = 'retaken';
   // Array of different segments in chart
   lineChartData: ChartDataSets[] = [];
   //Labels shown on the x-axis
@@ -57,18 +58,20 @@ export class DashboardComponent implements OnInit {
 
   // events
   chartClicked({ event, active }: { event: MouseEvent; active: {}[] }): void {
-    console.log(event, active);
+    //console.log(event, active);
   }
 
   chartHovered({ event, active }: { event: MouseEvent; active: {}[] }): void {
-    console.log(event, active);
+    //console.log(event, active);
   }
 
   dateForm: FormGroup;
 
   andon$: Observable<Andon[]>;
+  andonGroupBy$: Observable<any[]>;
+  andonAverageQuestions$: Observable<Andon[]>;
+  topDelay$: Observable<any>;
   chart: any = [];
-  groupByWorkShop = [];
 
   constructor(
     private dbs: EvaluationsService,
@@ -77,7 +80,7 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const view = this.dbs.getCurrentMonthOfViewDate();
+    const view = this.andonService.getCurrentMonthOfViewDate();
 
     const beginDate = view.from;
     const endDate = new Date();
@@ -88,124 +91,246 @@ export class DashboardComponent implements OnInit {
       end: new FormControl(endDate),
     });
 
-    /*    const nameProductMax = [
-      'Seguridad',
-      'Insumos',
-      'Calidad',
-      'Maquinas',
-      'Administrativo',
-      'Soporte'
-    ];
-    const colors = [
-      '#F2C94C',
-      '#F2994A',
-      '#FF2D2D',
-      'rgba(98, 0, 238, 0.24)',
-      '#27AE60',
-      '#018786'
-    ];
+    this.andon$ = combineLatest(
+      this.andonService.getAllAndon(),
+      this.dateForm.get('start').valueChanges.pipe(
+        startWith(beginDate),
+        map((begin) => begin.setHours(0, 0, 0, 0))
+      ),
+      this.dateForm.get('end').valueChanges.pipe(
+        startWith(endDate),
+        map((end) => (end ? end.setHours(23, 59, 59) : null))
+      )
+    ).pipe(
+      map(([andons, startdate, enddate]) => {
+        const date = { begin: startdate, end: enddate };
 
-    //['#F2C94C','#F2994A','#FF2D2D','rgba(98, 0, 238, 0.24)','#27AE60','#018786'],
-    const stockProductMax = [2,3,4,5,6,3];
+        let preFilterSearch: Andon[] = [...andons];
+        preFilterSearch = andons.filter((andon) => {
+          return this.getFilterTime(andon.reportDate, date);
+        });
 
-    new Chart(document.getElementById("problem"),{
-      type: 'horizontalBar',
-      data: {
-        labels: ['Seguridad','Insumos','Calidad','Maquinas','Administrativo','Soporte'],
-        datasets: [
-          {
-            label: "mas vendido",
-            backgroundColor:['#F2C94C','#F2994A','#FF2D2D','#27AE60','#27AE60','#018786'],
-            data: [2,3,4,5,6,3],
-            fill:false,
-          }
-        ],
-      },
-      options: {
-        legend: { display: false },
-        title: {
-          display: true,
-          text: '% de ventas'
-        },
-        scales: {
-          xAxes: [{
-              ticks: {
-                  beginAtZero: true
-              }
-          }]
-        }
-      }
-    }) */
+        return preFilterSearch;
+      }),
+      tap((res) => {
+        this.reportProblemType(res);
+      })
+    );
 
-    this.andon$ = this.andonService.getAllAndon().pipe(
-      tap((res: Andon[]) => {
-        let andonArray: Andon[] = [];
-        andonArray = res;
+    this.topDelay$ = combineLatest(
+      this.andonService.getAndonRetaken(this.state),
+      this.dateForm.get('start').valueChanges.pipe(
+        startWith(beginDate),
+        map((begin) => begin.setHours(0, 0, 0, 0))
+      ),
+      this.dateForm.get('end').valueChanges.pipe(
+        startWith(endDate),
+        map((end) => (end ? end.setHours(23, 59, 59) : null))
+      )
+    ).pipe(
+      map(([andons, startdate, enddate]) => {
+        const date = { begin: startdate, end: enddate };
 
-        andonArray.reduce((res, value) => {
+        let preFilterSearch: Andon[] = [...andons];
+        preFilterSearch = andons.filter((andon) => {
+          return this.getFilterTime(andon.reportDate, date);
+        });
+
+        let result;
+        let sumTimer;
+
+        result = preFilterSearch.reduce((groups, item) => {
+          const val = item.otChild;
+          groups[val] = groups[val] || {
+            otChild: item.otChild,
+            days: 0,
+            hours: 0,
+            minutes: 0,
+            seconds: 0,
+            quatity: 0,
+          };
+          groups[val].days += item.atentionTime.days;
+          groups[val].hours += item.atentionTime.hours;
+          groups[val].minutes += item.atentionTime.minutes;
+          groups[val].seconds += item.atentionTime.seconds;
+          groups[val].quatity += 1;
+          return groups;
+        }, {});
+        sumTimer = Object.values(result);
+
+        let result1;
+        let reportJoinTimer;
+
+        result1 = sumTimer.reduce((groups, item) => {
+          const val = item.otChild;
+          groups[val] = groups[val] || {
+            otChild: item.otChild,
+            timer: 0,
+            date: '',
+          };
+          groups[val].timer =
+            (item.days +
+              item.hours / 24 +
+              item.minutes / 60 / 24 +
+              item.seconds / 60 / 60 / 24) /
+            item.quatity;
+          groups[val].date = `${
+            item.days +
+            '/' +
+            item.hours +
+            ':' +
+            item.minutes +
+            ':' +
+            item.seconds
+          }`;
+
+          return groups;
+        }, {});
+        reportJoinTimer = Object.values(result1);
+
+        reportJoinTimer.sort((a, b) => b.timer - a.timer);
+
+        const top = reportJoinTimer.slice(0, 10);
+        const firts = top.slice(0, 5);
+        const second = top.slice(5, 10);
+
+        const topTen = {
+          firts: firts,
+          second: second,
+        };
+
+        return topTen;
+      })
+    );
+
+    this.andonGroupBy$ = combineLatest(
+      this.andonService.getAllAndon(),
+      this.dateForm.get('start').valueChanges.pipe(
+        startWith(beginDate),
+        map((begin) => begin.setHours(0, 0, 0, 0))
+      ),
+      this.dateForm.get('end').valueChanges.pipe(
+        startWith(endDate),
+        map((end) => (end ? end.setHours(23, 59, 59) : null))
+      )
+    ).pipe(
+      map(([andons, startdate, enddate]) => {
+        const date = { begin: startdate, end: enddate };
+        const groupByWorkShop = [];
+
+        let preFilterSearch: Andon[] = [...andons];
+        preFilterSearch = andons.filter((andon) => {
+          return this.getFilterTime(andon.reportDate, date);
+        });
+
+        preFilterSearch.reduce((res, value) => {
           if (!res[value.workShop]) {
             res[value.workShop] = { workShop: value.workShop, quantity: 0 };
-            this.groupByWorkShop.push(res[value.workShop]);
+            groupByWorkShop.push(res[value.workShop]);
           }
           res[value.workShop].quantity += 1;
           return res;
         }, {});
+        return groupByWorkShop;
+      })
+    );
 
-        this.reportProblemType(andonArray);
-        this.averageQuestions(andonArray);
+    this.andonAverageQuestions$ = combineLatest(
+      this.andonService.getAndonRetaken(this.state),
+      this.dateForm.get('start').valueChanges.pipe(
+        startWith(beginDate),
+        map((begin) => begin.setHours(0, 0, 0, 0))
+      ),
+      this.dateForm.get('end').valueChanges.pipe(
+        startWith(endDate),
+        map((end) => (end ? end.setHours(23, 59, 59) : null))
+      )
+    ).pipe(
+      map(([andons, startdate, enddate]) => {
+        const date = { begin: startdate, end: enddate };
 
-        /*  const nameProductMax = [
-          'Seguridad',
-          'Insumos',
-          'Calidad',
-          'Maquinas',
-          'Administrativo',
-          'Soporte',
-        ];
-        const colors = [
-          '#F2C94C',
-          '#F2994A',
-          '#FF2D2D',
-          'rgba(98, 0, 238, 0.24)',
-          '#27AE60',
-          '#018786',
-        ];
-        let stockProductMax = [2, 3, 4, 5, 6, 3];
+        let preFilterSearch: Andon[] = [...andons];
+        preFilterSearch = andons.filter((andon) => {
+          return this.getFilterTime(andon.reportDate, date);
+        });
 
-        new Chart(document.getElementById('problem'), {
-          type: 'horizontalBar',
-          data: {
-            labels: nameProductMax,
-            datasets: [
-              {
-                label: 'mas vendido',
-                backgroundColor: colors,
-                data: stockProductMax,
-                fill: false,
-              },
-            ],
-          },
-          options: {
-            legend: { display: false },
-            title: {
-              display: true,
-              text: '% de ventas',
-            },
-            scales: {
-              xAxes: [
-                {
-                  ticks: {
-                    beginAtZero: true,
-                  },
-                },
-              ],
-            },
-          },
-        }); */
+        const reportTypeQuestions = [];
+
+        andons.reduce((res, value) => {
+          if (!res[value.problemType]) {
+            res[value.problemType] = {
+              problemType: value.problemType,
+              days: 0,
+              hours: 0,
+              minutes: 0,
+              seconds: 0,
+              quatity: 0,
+            };
+            reportTypeQuestions.push(res[value.problemType]);
+          }
+          res[value.problemType].days += value.atentionTime.days;
+          res[value.problemType].hours += value.atentionTime.hours;
+          res[value.problemType].minutes += value.atentionTime.minutes;
+          res[value.problemType].seconds += value.atentionTime.seconds;
+          res[value.problemType].quatity += 1;
+
+          return res;
+        }, {});
+
+        let result;
+        let sumTimer;
+
+        result = preFilterSearch.reduce((groups, item) => {
+          const val = item.problemType;
+          groups[val] = groups[val] || {
+            problemType: item.problemType,
+            days: 0,
+            hours: 0,
+            minutes: 0,
+            seconds: 0,
+            quatity: 0,
+          };
+          groups[val].days += item.atentionTime.days;
+          groups[val].hours += item.atentionTime.hours;
+          groups[val].minutes += item.atentionTime.minutes;
+          groups[val].seconds += item.atentionTime.seconds;
+          groups[val].quatity += 1;
+          return groups;
+        }, {});
+        sumTimer = Object.values(result);
+
+        let result1;
+        let reportJoinTimer;
+
+        result1 = sumTimer.reduce((groups, item) => {
+          const val = item.problemType;
+          groups[val] = groups[val] || {
+            problemType: item.problemType,
+            timer: 0,
+          };
+          groups[val].timer =
+            (item.days +
+              item.hours / 24 +
+              item.minutes / 60 / 24 +
+              item.seconds / 60 / 60 / 24) /
+            item.quatity;
+          return groups;
+        }, {});
+        reportJoinTimer = Object.values(result1);
+        return reportJoinTimer;
+      }),
+      tap((res) => {
+        this.averageQuestions(res);
       })
     );
   }
-  topTenDelayed(): void {}
+
+  getFilterTime(el, time): any {
+    const date = el.toMillis();
+    const begin = time.begin;
+    const end = time.end;
+    return date >= begin && date <= end;
+  }
 
   reportProblemType(andonArray: any): void {
     const nameProblemType = [];
@@ -232,7 +357,7 @@ export class DashboardComponent implements OnInit {
       quantityProblem.push(res.quantity);
     });
 
-    this.lineChartData = [{ data: quantityProblem, label: 'prueba' }];
+    this.lineChartData = [{ data: quantityProblem, label: 'reportes' }];
 
     this.lineChartLabels = nameProblemType;
 
@@ -259,13 +384,16 @@ export class DashboardComponent implements OnInit {
     this.lineChartType = 'horizontalBar';
   }
 
-  averageQuestions(andonArray: any): void {
+  averageQuestions(reportJoinTimer): void {
     const nameProblemType = [];
-    const quantityProblem = [];
+    const averageTime = [];
 
-    console.log('andonArray: ', andonArray);
+    reportJoinTimer.map((res) => {
+      nameProblemType.push(res.problemType);
+      averageTime.push(res.timer);
+    });
 
-    this.lineChartData2 = [{ data: quantityProblem, label: 'prueba' }];
+    this.lineChartData2 = [{ data: averageTime, label: 'reportes' }];
 
     this.lineChartLabels2 = nameProblemType;
 

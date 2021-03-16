@@ -60,3 +60,46 @@
     position: relative;
     vertical-align: top;
 }
+
+
+ /* 
+  ##Dispositivo = Tablets de baja resolucion y telefnos Mobiles (horizontal)
+  ##Resolucion = B/w 481px to 767px
+*/
+
+@media (min-width: 481px) and (max-width: 767px) {  
+    .imge{
+        width: 200px;
+        height: 150px;
+    }
+    .form{
+        &__input{
+            width: 300px;
+        }
+    }
+    .dropzone {
+        width: 400px;
+        height: 300px;
+    }
+}
+
+/* 
+  ##Dispositivo = Mayoria de telefonos moviles (vertical)
+  ##Resolucion = B/w 320px to 479px
+*/
+
+@media (min-width: 320px) and (max-width: 480px) {    
+    .imge{
+        width: 150px;
+        height: 100px;
+    }
+    .form{
+        &__input{
+            width: 300px;
+        }
+    }
+    .dropzone {
+        width: 300px;
+        height: 200px;
+    }
+}

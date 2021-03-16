@@ -134,6 +134,11 @@ progress::-webkit-progress-value {
             }
         }
     }
+
+    .dropzone {
+        width: 400px;
+        height: 300px;
+    }
     
   }
   
@@ -169,6 +174,12 @@ progress::-webkit-progress-value {
             border: none;
         }
     }
+
+    .dropzone {
+        width: 300px;
+        height: 200px;
+    }
+    
     
   }
 
