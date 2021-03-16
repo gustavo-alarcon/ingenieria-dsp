@@ -357,7 +357,7 @@ export class DashboardComponent implements OnInit {
       quantityProblem.push(res.quantity);
     });
 
-    this.lineChartData = [{ data: quantityProblem, label: null }];
+    this.lineChartData = [{ data: quantityProblem, label: 'reportes' }];
 
     this.lineChartLabels = nameProblemType;
 
@@ -393,7 +393,7 @@ export class DashboardComponent implements OnInit {
       averageTime.push(res.timer);
     });
 
-    this.lineChartData2 = [{ data: averageTime, label: null }];
+    this.lineChartData2 = [{ data: averageTime, label: 'reportes' }];
 
     this.lineChartLabels2 = nameProblemType;
 
