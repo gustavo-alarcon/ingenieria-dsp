@@ -145,12 +145,12 @@ export class ReportsComponent implements OnInit {
     function addZ(n) {
       return (n < 10 ? '0' : '') + n;
     }
-    let ms = milis % 1000;
+    const ms = milis % 1000;
     milis = (milis - ms) / 1000;
-    let secs = milis % 60;
+    const secs = milis % 60;
     milis = (milis - secs) / 60;
-    let mins = milis % 60;
-    let hrs = (milis - mins) / 60;
+    const mins = milis % 60;
+    const hrs = (milis - mins) / 60;
 
     return addZ(hrs) + ':' + addZ(mins) + ':' + addZ(secs);
   }
