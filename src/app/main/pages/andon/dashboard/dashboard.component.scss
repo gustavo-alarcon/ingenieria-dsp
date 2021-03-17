@@ -3,12 +3,19 @@
 }
 
 .header-container {
-    display: inline-flex;
+    display: flex;
+    flex-direction: row;
+}
+
+.container-title{
+    display: flex;
+    flex-direction: row;    
 }
 
 .body-container {
     display: flex;
 }
+
 
 .container1 {
     width: 50%;
@@ -77,7 +84,7 @@
     &__list1{
         list-style: none;
         &--item{
-            margin: 10px;
+            width: 200px;
             
         }
         
@@ -85,7 +92,7 @@
     &__list2{
         list-style: none;
         &--item{
-            margin: 10px;
+            width: 200px;
             
         }
 
@@ -193,13 +200,99 @@
     .container {
         margin: 30px 20px 30px 20px;
     }
-    .container-date {
-        display: none;
+    
+    .header-container {
+        display: flex;
+        flex-direction: column
+    }
+
+    .body-container{
+        display: flex;
+        flex-direction: column;
     }
 
     .container1 {
-        display: none;
+        width: 100%;
+        margin: 15px;
+    
+        &__problem {
+            border-radius: 30px;
+            box-shadow: 0px 0px 5.66077px 5.66077px rgba(177, 175, 175, 0.25);
+    
+            &--title {
+                text-align: center;
+                border-radius: 30px 30px 0px 0px;
+                padding: 20px;
+                font-weight: bold;
+                background: #d3d3d3;
+                color: black;
+                height: 30px;
+            }
+            &--report {
+                background: #f9f9f9;
+                border-radius: 0px 0px 30px 30px;
+                margin: 20px;
+            }
+        }
+        &__top {
+            border-radius: 30px;
+            margin: 10px;
+            box-shadow: 0px 0px 5.66077px 5.66077px rgba(177, 175, 175, 0.25);
+    
+            &--title1 {
+                text-align: center;
+                border-radius: 30px 30px 0px 0px;
+                padding: 20px;
+                font-weight: bold;
+                background: #d3d3d3;
+                color: black;
+                height: 30px;
+            }
+                    
+        }    
+        &__answer{
+            margin-top: 20px;
+            border-radius: 30px;
+            box-shadow: 0px 0px 5.66077px 5.66077px rgba(177, 175, 175, 0.25);
+    
+            &--title {
+                text-align: center;
+                border-radius: 30px 30px 0px 0px;
+                padding: 20px;
+                font-weight: bold;
+                background: #d3d3d3;
+                color: black;
+                height: 30px;
+            }
+            &--report {
+                background: #f9f9f9;
+                border-radius: 0px 0px 30px 30px;
+                margin: 20px;
+            }
+        }
     }
+    
+    .top-ten{
+        display: flex;
+        
+        &__list1{
+            list-style: none;
+            &--item{
+                width: 180px;
+                
+            }
+            
+        }
+        &__list2{
+            list-style: none;
+            &--item{
+                width: 180px;
+                
+            }
+    
+        }
+    }
+
     .container2 {
         width: 100%;
         margin: 5px;
@@ -261,6 +354,7 @@
             }
         }
     }
+
 }
 
 /* 
@@ -272,12 +366,105 @@
     .container {
         margin: 30px 20px 30px 20px;
     }
-    .container-date {
-        display: none;
+    
+    .header-container {
+        display: flex;
+        flex-direction: column
     }
 
+    .body-container{
+        display: flex;
+        flex-direction: column;
+    }
+    
     .container1 {
-        display: none;
+        width: 100%;
+        margin: 15px;
+    
+        &__problem {
+            border-radius: 30px;
+            box-shadow: 0px 0px 5.66077px 5.66077px rgba(177, 175, 175, 0.25);
+    
+            &--title {
+                text-align: center;
+                border-radius: 30px 30px 0px 0px;
+                padding: 20px;
+                font-weight: bold;
+                background: #d3d3d3;
+                color: black;
+                height: 20px;
+                font-size: 1.3em;
+
+            }
+            &--report {
+                background: #f9f9f9;
+                border-radius: 0px 0px 30px 30px;
+                margin: 20px;
+            }
+        }
+        &__top {
+            border-radius: 30px;
+            margin: 10px;
+            box-shadow: 0px 0px 5.66077px 5.66077px rgba(177, 175, 175, 0.25);
+    
+            &--title1 {
+                text-align: center;
+                border-radius: 30px 30px 0px 0px;
+                padding: 20px;
+                font-weight: bold;
+                background: #d3d3d3;
+                color: black;
+                height: 20px;
+                font-size: 1.3em;
+
+            }
+                    
+        }    
+        &__answer{
+            margin-top: 20px;
+            border-radius: 30px;
+            box-shadow: 0px 0px 5.66077px 5.66077px rgba(177, 175, 175, 0.25);
+    
+            &--title {
+                text-align: center;
+                border-radius: 30px 30px 0px 0px;
+                padding: 20px;
+                font-weight: bold;
+                background: #d3d3d3;
+                color: black;
+                height: 20px;
+                font-size: 1.3em;
+            }
+            &--report {
+                background: #f9f9f9;
+                border-radius: 0px 0px 30px 30px;
+                margin: 20px;
+            }
+        }
+    }
+    
+    .top-ten{
+        display: flex;
+        flex-direction: column;
+        
+        &__list1{
+            list-style: none;
+            margin-bottom: 0px;
+            &--item{
+                width: 200px;
+                
+            }
+            
+        }
+        &__list2{
+            list-style: none;
+            margin-top: 0px;
+            &--item{
+                width: 200px;
+                
+            }
+    
+        }
     }
 
     .container2 {
@@ -294,7 +481,9 @@
                 font-weight: bold;
                 background: #d3d3d3;
                 color: black;
-                height: 30px;
+                height: 20px;
+                font-size: 1.3em;
+
             }
             &--cards {
                 display: grid;

@@ -264,4 +264,15 @@ export class AndonService {
       )
       .valueChanges();
   }
+  /**
+   * workShop the passed andon
+   * @param {string} workShop - filter for workShop
+   */
+  getAndonStopped(state: string): Observable<Andon[]> {
+    return this.afs
+      .collection<Andon>(`/db/ferreyros/andon`, (ref) =>
+        ref.where('state', '==', state)
+      )
+      .valueChanges();
+  }
 }
