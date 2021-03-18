@@ -85,7 +85,23 @@
     font-size: 0.8rem;
 }
 
-@media (min-width: 568px) {
+.footer__flex {
+    margin-left: 25px;
+    margin-right: 25px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* 
+##Dispositivo = Tablets de baja resolucion y telefnos Mobiles (horizontal)
+##Resolucion = B/w 481px to 767px
+*/
+
+@media (min-width: 481px) and (max-width: 767px) {
+
     .footer__flex {
         margin-left: 25px;
         margin-right: 25px;
@@ -95,4 +111,23 @@
         align-items: center;
         justify-content: space-between;
     }
+}
+
+/* 
+    ##Dispositivo = Mayoria de telefonos moviles (vertical)
+    ##Resolucion = B/w 320px to 479px
+  */
+
+@media (min-width: 320px) and (max-width: 480px) {
+
+    .footer__flex {
+        margin-left: 25px;
+        margin-right: 25px;
+        margin-bottom: 20px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+    
 }

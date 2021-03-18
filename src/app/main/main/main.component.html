@@ -13,7 +13,7 @@
       </mat-card-content>
     </mat-card>
     <hr class="hr-line">
-    <mat-accordion>
+    <mat-accordion class="spare-parts">
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>
@@ -78,7 +78,7 @@
       </mat-expansion-panel>
     </mat-accordion>
 
-    <mat-nav-list style="width: 100%">
+    <mat-nav-list style="width: 100%" class="evaluations">
       <div>
         <a mat-list-item [routerLink]="['/main/evaluations']" routerLinkActive="active" (click)="drawer.toggle()">
           <mat-icon mat-list-icon class="mat-icon-menu">table_view</mat-icon>
@@ -89,7 +89,7 @@
       </div>
     </mat-nav-list>
 
-    <mat-accordion>
+    <mat-accordion class="budget">
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>
@@ -162,7 +162,7 @@
               (click)="drawer.toggle()">
               <mat-icon mat-list-icon class="mat-icon-menu">dashboard</mat-icon>
               <span class="mat-item-list-span">
-                DashBoard
+                Dashboard
               </span>
             </a>
             <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/andon-record']"

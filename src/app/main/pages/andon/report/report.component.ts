@@ -63,8 +63,22 @@ export class ReportComponent implements OnInit, OnDestroy {
 
 
     this.nameBahias$ = this.andonService.getAllAndonSettingsListBahias().pipe(
-      tap((res) => {
-        return res;
+      tap((res:AndonListBahias[]) => {
+        let arrayListBahia: AndonListBahias[] = res; 
+
+        arrayListBahia.sort((a, b) => {
+          if (a.name > b.name) {
+            return 1;
+          }
+          if (a.name < b.name) {
+            return -1;
+          }
+          // a must be equal to b
+          return 0;
+        });
+
+       
+        return arrayListBahia;
       })
     );
     this.loading.next(false);
