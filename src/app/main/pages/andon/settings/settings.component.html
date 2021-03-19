@@ -4,8 +4,11 @@
         <h1 style="font-size: 2.2em; margin-left: 20px; font-family: 'Poppins', sans-serif; font-weight: 700;">Configuraciones</h1>  
               
     </div>
+
+
     <div class="container-settings">
-        <mat-expansion-panel class="container-settings__color-expantion" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+        <mat-expansion-panel class="container-settings__color-expantion" 
+        (opened)="panelOpenState = true" (closed)="panelOpenState = false">
             <mat-expansion-panel-header style="height: 58px;">
                 <mat-panel-title class="container-settings__header-title">
                     Listas
@@ -14,12 +17,10 @@
             <div style="border: 10px;"></div>
             <mat-card class="mat-elevation-z0">
                 <mat-card-content>
-                    <mat-card class="mat-elevation-z0" style="margin-left: -10px;margin-top: 10px;">
+                    <mat-card class="mat-elevation-z0" style="margin-left: -10px;margin-top: 5px;">
                         <mat-card-header>
                             <mat-card-title>
-                                <span>
-                                    Tipos de Problemas
-                                </span>
+                                <span>Tipos de Problemas</span>
                                 <button type="button" aria-label="saveDataDifusion" mat-button class="container-settings__btn-save" (click)="saveDataProblemType()">
                                     GUARDAR
                                 </button>
@@ -47,7 +48,7 @@
                                 <div class="item-list">
                                     <span>{{result.problemType}}</span>
                                     <span>
-                                        <button mat-icon-button aria-label="deletelistResult" (click)="deleteListProblemType(i)">
+                                        <button mat-icon-button aria-label="deletelistResult" (click)="deleteListProblemType(i)" >
                                             <mat-icon style="color: #828282">delete</mat-icon>
                                         </button>
                                     </span>
@@ -59,6 +60,8 @@
             </mat-card>
         </mat-expansion-panel>
     </div>
+
+
     <div class="container-settings">
         <mat-expansion-panel class="container-settings__color-expantion" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
             <mat-expansion-panel-header style="height: 58px;">
@@ -67,46 +70,75 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <div style="border: 10px;"></div>
-            <mat-card class="mat-elevation-z0">
-                <mat-card-content>
-                    <form class="container-form" [formGroup]="listBahiasForm" autocomplete="off">
-                    <h3>Lista de bahias</h3>
-               
-                    <div formArrayName="bahias" class="bahias">
-                        <div *ngFor="let _ of bahias.controls; let i=index" class="container-form__form-array">
-                            <div [formGroupName]="i" class="container-form-array">
-                                <mat-form-field appearance="outline"   class="container-form__form-array--inputs">
-                                    <mat-label>Nombre de taller</mat-label>
-                                    <input matInput placeholder="Nombre de Taller" formControlName="workShop">
-                                    <mat-error *ngIf="bahias.controls[i].get('workShop').errors">
-                                        Campo <strong>requerido.</strong>
-                                    </mat-error>
-                                </mat-form-field>        
-        
-                                <mat-form-field appearance="outline" class="container-form__form-array--inputs">
-                                    <mat-label>Nombre de bahia</mat-label>
-                                    <input matInput type='text' placeholder="Nombre de bahia" formControlName="name">
-                                    <mat-error *ngIf="bahias.controls[i].get('name').errors">
-                                        Campo <strong>requerido.</strong>
-                                    </mat-error>
-                                </mat-form-field>
-         
-                                <button mat-icon-button type="button" style="margin-top: 8px;">
-                                    <mat-icon color="warn" (click)="deleteControl(i)">delete</mat-icon>
-                                </button>
+            <mat-card class="mat-elevation-z0" style="margin-left: -10px;margin-top: 10px;">
+                <mat-card-header>
+                    <mat-card-title>
+                        <span>Lista de bahias</span>
+                    </mat-card-title>
+                </mat-card-header>
+            </mat-card>
+
+            <mat-card class="mat-elevation-z0 container-settings__body">
+                <mat-card class="mat-elevation-z0 container-expansion1__content-card">
+                    <mat-card-content class="container-expansion1__content-card-content">
+                        <div role="list" *ngFor="let item of listNameBahiaArray;let i=index">
+                            <div class="item-list">
+                                <span> {{item.workShop}} /{{item.name}}</span>
+                                <span>
+                                    <button mat-icon-button aria-label="deletelistResult" (click)="deleteNameBahia(item)">
+                                        <mat-icon style="color: #828282">delete</mat-icon>
+                                    </button>
+                                </span>
                             </div>
                         </div>
-                    </div>
+                    </mat-card-content>
+                </mat-card> 
+                
+                <mat-card-content class="form-bahia">
+                    <mat-card class="mat-elevation-z0" style="margin-left: -10px;margin-top: 10px;">
+                        <mat-card-header>
+                            <mat-card-title>
+                                <span>Agregar bahias</span>
+                            </mat-card-title>
+                        </mat-card-header>
+                    </mat-card>
+                    <form class="container-form" [formGroup]="listBahiasForm" autocomplete="off">               
+                        <div formArrayName="bahias" class="bahias">
+                            <div *ngFor="let _ of bahias.controls; let i=index" class="container-form__form-array">
+                                <div [formGroupName]="i" class="container-form-array">
+                                    <mat-form-field appearance="outline"   class="container-form__form-array--inputs">
+                                        <mat-label>Nombre de taller</mat-label>
+                                        <input matInput placeholder="Nombre de Taller" formControlName="workShop">
+                                        <mat-error *ngIf="bahias.controls[i].get('workShop').errors">
+                                            Campo <strong>requerido.</strong>
+                                        </mat-error>
+                                    </mat-form-field>        
+            
+                                    <mat-form-field appearance="outline" class="container-form__form-array--inputs">
+                                        <mat-label>Nombre de bahia</mat-label>
+                                        <input matInput type='text' placeholder="Nombre de bahia" formControlName="name">
+                                        <mat-error *ngIf="bahias.controls[i].get('name').errors">
+                                            Campo <strong>requerido.</strong>
+                                        </mat-error>
+                                    </mat-form-field>
+            
+                                    <button mat-icon-button type="button" style="margin-top: 8px;" class="btn-delete">
+                                        <mat-icon color="warn" (click)="deleteControl(i)">delete</mat-icon>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     <button type="button" mat-stroked-button color="primary" class="container-form__btn-add" (click)="addControl()">
                         <mat-icon color="primary">add</mat-icon>
                         Agregar
                     </button>  
                      <br>
-                    <button type="button" mat-raised-button color="primary" class="container-form__btn-save" (click)="save()">GUARDAR</button>
-                </form>        
+                    <button type="button" mat-raised-button  class="container-form__btn-save" (click)="save()">GUARDAR</button>
+                     </form>   
 
                 </mat-card-content>
             </mat-card>
         </mat-expansion-panel>
     </div>
+
 </div>

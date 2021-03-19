@@ -2,8 +2,8 @@
   <div class="header">
     <div class="header-container">
       <div class="header-container__title">
-        <mat-icon mat-list-icon class="icon">history</mat-icon>
-        <h1 class="title">Historial</h1>
+        <mat-icon mat-list-icon class="header-container__title--icon" >history</mat-icon>
+        <h1 class="header-container__title--title" >Historial</h1>
       </div>
       <div class="header-container__date" [ngStyle]="searchStyle">
         <mat-form-field class="w3-margin-top w3-margin-bottom w3-block" appearance="outline" [ngStyle]="searchStyle">
@@ -27,7 +27,7 @@
       </div>
 
       <span class="ms-fill"></span>
-      <div style="align-self: center;">
+      <div class="btn">
         <button mat-button (click)="downloadXls()" class="btn__download" [ngStyle]="downloadStyle">
           DESCARGAR
         </button>
