@@ -11,11 +11,13 @@ import { ImageDialogComponent } from './dialog/image-dialog/image-dialog.compone
 import * as XLSX from 'xlsx';
 import { EvaluationsService } from '../../../services/evaluations.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-record',
   templateUrl: './record.component.html',
   styleUrls: ['./record.component.scss'],
+  providers: [DatePipe]
 })
 export class RecordComponent implements OnInit {
   searchForm: FormGroup;
@@ -74,7 +76,8 @@ export class RecordComponent implements OnInit {
      private fb: FormBuilder,
      private andonService: AndonService,
      public dialog: MatDialog,
-     private breakpoint: BreakpointObserver
+     private breakpoint: BreakpointObserver,
+     private miDatePipe: DatePipe
      ) {}
 
   ngOnInit(): void {
@@ -183,7 +186,7 @@ export class RecordComponent implements OnInit {
 
     this.historyDataSource.filteredData.forEach(item => {
       const temp = [
-        item.reportDate,
+        this.miDatePipe.transform(item.reportDate['seconds']*1000, 'yyyy/MM/dd h:mm:ss a'),
         item.workShop,
         item.name,
         item.otChild,
@@ -192,13 +195,13 @@ export class RecordComponent implements OnInit {
         item.atentionTime,
         item.reportUser,
         item.state,
-        item.workReturnDate,
+        item.workReturnDate != null ? this.miDatePipe.transform(item.workReturnDate['seconds']*1000, 'yyyy/MM/dd h:mm:ss a') : '---',
         item.comments,
         item.returnUser,
       ];
 
       table_xlsx.push(temp);
-    })
+    });
 
     /* generate worksheet */
     const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(table_xlsx);
