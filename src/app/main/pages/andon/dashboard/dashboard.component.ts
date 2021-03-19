@@ -315,7 +315,7 @@ export class DashboardComponent implements OnInit {
               item.hours / 24 +
               item.minutes / 60 / 24 +
               item.seconds / 60 / 60 / 24) /
-            item.quatity;
+            item.quatity ;
           return groups;
         }, {});
         reportJoinTimer = Object.values(result1);
@@ -392,7 +392,7 @@ export class DashboardComponent implements OnInit {
 
     reportJoinTimer.map((res) => {
       nameProblemType.push(res.problemType);
-      averageTime.push(res.timer);
+      averageTime.push(res.timer.toFixed(2));
     });
 
     this.lineChartData2 = [{ data: averageTime, label: 'reportes' }];
