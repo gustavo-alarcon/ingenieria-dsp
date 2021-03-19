@@ -160,6 +160,17 @@ mat-card img {
     right: 20px;   
   }
   
+  .spare-parts{
+    display: none;
+  }
+  .evaluations{
+    display: none;
+  }
+
+  .budget{
+    display: none;
+  }
+  
 }
 
 /* 
@@ -185,5 +196,16 @@ mat-card img {
     font-weight: 300; 
     position: absolute;
     right: 8px;   
+  }
+
+  .spare-parts{
+    display: none;
+  }
+  .evaluations{
+    display: none;
+  }
+
+  .budget{
+    display: none;
   }
 }

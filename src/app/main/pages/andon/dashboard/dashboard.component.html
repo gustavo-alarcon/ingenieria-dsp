@@ -1,7 +1,9 @@
 <div class="container">
     <div class="header-container">
-        <mat-icon mat-list-icon class="mat-icon-menu" style="font-size: 2.5em;">dashboard</mat-icon>
-        <h1 style="font-size: 2.2em; margin-left: 20px; font-family: 'Poppins', sans-serif; font-weight: 700;">Dashboard</h1>  
+        <div class="container-title">
+            <mat-icon mat-list-icon class="mat-icon-menu" style="font-size: 2.5em;">dashboard</mat-icon>
+            <h1 style="font-size: 2.2em; margin-left: 20px; font-family: 'Poppins', sans-serif; font-weight: 700;">Dashboard</h1>  
+        </div>
         <div class="container-date">
             <mat-form-field class="w3-margin-top w3-margin-bottom w3-block" style="max-width: 350px;" appearance="outline">
               <mat-label>FECHA/PERIODO</mat-label>
@@ -45,12 +47,15 @@
                 <div class="top-ten">
                     <ul class="top-ten__list1">
                         <li class="top-ten__list1--item" *ngFor="let item of delays.firts; let i = index">
-                        {{ i + 1 }} - {{ item.otChild }} - {{item.date}}
-                        </li>
-                    </ul> 
+                            <span style="width: 40px;"> {{ i + 1 }} </span> -
+                            <span style="width: 80px;" > {{ item.otChild }}</span> -
+                            <span style="width: 80px; font-weight: bold;" > {{item.date}} </span>
+                        </ul> 
                     <ul class="top-ten__list2">
                         <li class="top-ten__list2--item" *ngFor="let item of delays.second; let i = index">
-                        {{ i + 6}} - {{ item.otChild }} - {{item.date}}
+                            <span style="width: 40px;"> {{ i + 6 }} </span> -
+                            <span style="width: 80px;" > {{ item.otChild }}</span> -
+                            <span style="width: 80px; font-weight: bold;" > {{item.date}} </span>
                         </li>
                     </ul> 
                 </div>               

@@ -17,6 +17,8 @@ import { Color, Label } from 'ng2-charts';
 })
 export class DashboardComponent implements OnInit {
   state = 'retaken';
+  stateStop = 'stopped';
+
   // Array of different segments in chart
   lineChartData: ChartDataSets[] = [];
   //Labels shown on the x-axis
@@ -204,7 +206,7 @@ export class DashboardComponent implements OnInit {
     );
 
     this.andonGroupBy$ = combineLatest(
-      this.andonService.getAllAndon(),
+      this.andonService.getAndonStopped(this.stateStop),
       this.dateForm.get('start').valueChanges.pipe(
         startWith(beginDate),
         map((begin) => begin.setHours(0, 0, 0, 0))

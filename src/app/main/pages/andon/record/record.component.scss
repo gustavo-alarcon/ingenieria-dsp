@@ -136,8 +136,8 @@ table {
     }
 
     .header-container {
-        width: 100%;
-        margin-bottom: 10px;
+        display: inline;
+        margin-bottom: 25px;
 
         &__title {
             display: flex;
@@ -148,7 +148,7 @@ table {
             margin-left: 10px;
             border: 1px solid #d8d8d8;
             margin-bottom: 0px;
-
+            margin-bottom: 50px;
             &--input {
                 border: transparent;
                 height: 30px;
@@ -160,14 +160,30 @@ table {
                 }
             }
         }
+        &__date {
+            margin-top: 50px;
+            margin-left: 16px;
+            // align-self: baseline;
+        }
+    
     }
-
     .btn {
-        display: none;
+        margin-right: 30px;
+        margin-top: 30px;
+    
+        &__download {
+            margin-top: 20px;
+            border: 1px solid #6200ee;
+            background: white;
+            color: #6200ee;
+        }
     }
+    
+
     .body-container {
         display: none;
     }
+
     .body-mobil {
         margin-top: 0px;
         visibility: visible;
