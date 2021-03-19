@@ -155,6 +155,9 @@ mat-card img {
 */
 
 @media (min-width: 481px) and (max-width: 767px) {  
+  .name-exit{
+    display: none;
+  }
   .btn-exit-app{    
     position: absolute;
     right: 20px;   
@@ -170,6 +173,7 @@ mat-card img {
   .budget{
     display: none;
   }
+
   
 }
 
@@ -179,6 +183,9 @@ mat-card img {
 */
 
 @media (min-width: 320px) and (max-width: 480px) {    
+  .name-exit{
+    display: none;
+  }
   .main_toolbar {
     display: flex;
     background: #333333;

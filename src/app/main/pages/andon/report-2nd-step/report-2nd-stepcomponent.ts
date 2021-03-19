@@ -9,6 +9,8 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { take, tap, finalize } from 'rxjs/operators';
 import { Andon, AndonProblemType } from './../../../models/andon.model';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { AuthService } from '../../../../auth/services/auth.service';
+import { User } from '../../../models/user-model';
 
 @Component({
   selector: 'app-report-2nd-step',
@@ -28,12 +30,13 @@ export class report2ndStepComponent implements OnInit, OnDestroy, AfterViewInit 
 
   uploadPercent$: Observable<number>;
   filteredOptions: Observable<string[]>;
-
+  
+  nameBahia: string;
   workShop: string;
   otChild: number;
   typeProblem$: Observable<AndonProblemType[]>;
   andOn$: Observable<Andon>;
-
+  user: User;
 
   isHovering: boolean;
   files: File[] = [];
@@ -52,9 +55,19 @@ export class report2ndStepComponent implements OnInit, OnDestroy, AfterViewInit 
     private ng2ImgMax: Ng2ImgMaxService,
     private storage: AngularFireStorage,
     private route: ActivatedRoute,
-    private breakpoint: BreakpointObserver
+    private breakpoint: BreakpointObserver,
+    public authService: AuthService,
+
   ) {
-    this.currentId = this.route.snapshot.paramMap.get('id');
+    const info = this.route.snapshot.paramMap.get('id');
+    let parts = [];
+    parts = info.split('-');
+
+    this.workShop = parts['0'];
+    this.nameBahia = parts['1'];
+    this.otChild = parts['2'];
+
+    this.currentId = this.otChild.toString();
   }
 
   ngOnInit(): void {
@@ -70,7 +83,11 @@ export class report2ndStepComponent implements OnInit, OnDestroy, AfterViewInit 
           this.setDesktopReport();
         }
       })
-    )
+    );
+
+    this.subscription.add(this.authService.user$.subscribe(user => {
+      this.user = user;
+    }));
 
     this.reportForm = this.fb.group({
       problemType: ['', Validators.required],
@@ -91,18 +108,7 @@ export class report2ndStepComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   ngAfterViewInit(): void {
-    console.log(this.currentId)
-    this.subscription.add(
-      this.andonService.getAndonById(this.currentId).subscribe((res: Andon) => {
-        if (res) {
-          let andon: Andon;
-          andon = res['0'];
-          this.otChild = andon.otChild;
-          this.workShop = andon.workShop;
-        }
-
-      })
-    )
+   
   }
 
   ngOnDestroy(): void {
@@ -124,22 +130,28 @@ export class report2ndStepComponent implements OnInit, OnDestroy, AfterViewInit 
         this.images.forEach((value, index) => {
           imagesObj[index] = value;
         });
-        this.andonService.updateAndon(this.currentId, this.reportForm.value, imagesObj)
+        this.andonService.addAndOn(this.reportForm.value, this.workShop, this.nameBahia, this.otChild, this.user, imagesObj)
           .pipe(take(1))
           .subscribe((res) => {
             res.commit().then(() => {
-              this.snackbar.open('✅ Se actualizo correctamente', 'Aceptar', {
-                duration: 6000,
+              //this.loading.next(false)
+              this.snackbar.open('✅ se guardo correctamente!', 'Aceptar', {
+                duration: 6000
               });
               const code = this.workShop;
               this.router.navigate(['main/andon-reports', code]);
               this.loading.next(false);
+            })
+              .catch(err => {
+                this.snackbar.open('🚨 Hubo un error.', 'Aceptar', {
+                  duration: 6000
+                });
+              });
 
             });
-          });
       }
     } catch (error) {
-      this.snackbar.open('🚨 Error al actualizar' + `${error}`, 'Aceptar', {
+      this.snackbar.open('🚨 Hubo un error.' + `${error}`, 'Aceptar', {
         duration: 6000,
       });
       this.loading.next(false);
@@ -192,7 +204,6 @@ export class report2ndStepComponent implements OnInit, OnDestroy, AfterViewInit 
       this.imagesUpload.splice(index, 1);
       this.loading.next(false);
     } catch (error) {
-      console.log(error);
       this.loading.next(false);
       this.imagesUpload.splice(index, 1);
     }

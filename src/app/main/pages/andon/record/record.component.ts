@@ -186,7 +186,7 @@ export class RecordComponent implements OnInit {
 
     this.historyDataSource.filteredData.forEach(item => {
       const temp = [
-        this.miDatePipe.transform(item.reportDate['seconds']*1000, 'yyyy/MM/dd h:mm:ss a'),
+        this.miDatePipe.transform(item.reportDate['seconds']*1000, 'dd/MM/yyyy h:mm:ss a'),
         item.workShop,
         item.name,
         item.otChild,
@@ -195,7 +195,7 @@ export class RecordComponent implements OnInit {
         item.atentionTime,
         item.reportUser,
         item.state,
-        item.workReturnDate != null ? this.miDatePipe.transform(item.workReturnDate['seconds']*1000, 'yyyy/MM/dd h:mm:ss a') : '---',
+        item.workReturnDate != null ? this.miDatePipe.transform(item.workReturnDate['seconds']*1000, 'dd/MM/yyyy h:mm:ss a') : '---',
         item.comments,
         item.returnUser,
       ];

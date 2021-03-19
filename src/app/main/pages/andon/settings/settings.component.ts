@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { FormControl, Validators, FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { MyErrorStateMatcher } from '../../evaluations/evaluations-settings/evaluations-settings.component';
-import { AndonProblemType } from '../../../models/andon.model';
+import { AndonProblemType, AndonListBahias } from '../../../models/andon.model';
 import { AuthService } from '../../../../auth/services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AndonService } from 'src/app/main/services/andon.service';
@@ -26,6 +26,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   listProblemTypeFormControl = new FormControl(null, [Validators.required]);
   matcher = new MyErrorStateMatcher();
   listProblemTypeArray: AndonProblemType[] = [];
+  listNameBahiaArray: AndonListBahias[] = [];
 
   private subscription = new Subscription();
   user: User;
@@ -79,6 +80,17 @@ export class SettingsComponent implements OnInit, OnDestroy {
       })
     );
 
+    this.subscription.add(
+      this.andonService.getAllAndonSettingsListBahias()
+      .subscribe((resp) => {
+        if (resp) {
+          this.listNameBahiaArray = resp;
+        } else {
+          this.listProblemTypeArray = [];
+        }
+      })
+    );
+
     this.loading.next(false);
   }
 
@@ -90,7 +102,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
         createdAt: null,
         createdBy: null,
       };
-      const valueIsEquals = (currentValue) => currentValue.resultType !== objAux.problemType;
+      const valueIsEquals = (currentValue) => currentValue.problemType !== objAux.problemType;
       if (this.listProblemTypeArray.every(valueIsEquals)) {
         this.listProblemTypeArray.push(objAux);
       }
@@ -109,6 +121,30 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
     this.listProblemTypeArray.splice(index, 1);
     this.loading.next(false);
+
+  }
+  deleteNameBahia(item: AndonListBahias): void{
+    try {
+      this.loading.next(true);
+      if (item) {
+        this.andonService.deleteAndonListBahia(item.id)
+        .pipe(
+          take(1)
+        ).subscribe(batch => {
+          batch.commit()
+            .then(() => {
+              this.snackbar.open('✅ Registro borrado correctamente', 'Aceptar', {
+                duration: 6000
+              });
+              this.loading.next(false);
+            });
+        });
+      }
+    } catch (error) {
+      this.snackbar.open('✅ Error al borrar el registro', 'Aceptar', {
+        duration: 6000
+      });
+    }
 
   }
   saveDataProblemType(): void {

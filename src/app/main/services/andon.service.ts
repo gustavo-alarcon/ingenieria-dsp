@@ -38,6 +38,53 @@ export class AndonService {
 
     return { from: actualFromDate, to: toDate };
   }
+
+  /**
+   * update the evaluation entry
+   * @param {string} entryId - id data
+   * @param {Andon} form - Form data passed on andon edit
+   * @param {string} imges - imgs
+   * @param {User} user - imgs
+   */
+   addAndOn(
+    form,
+    workshop: string,
+    nameBahia: string,
+    otchild: number,
+    user: User,
+    imagesObj
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    // create reference for document in evaluation entries collection
+    const andonDocRef = this.afs.firestore.collection(`db/ferreyros/andon`).doc();
+
+    // Structuring the data model
+    const data: any = {
+      id: andonDocRef.id,
+      createdAt: new Date(),
+      createdBy: user,
+      editedAt: null,
+      edited: null,
+      reportDate: new Date(),
+      workShop: workshop,
+      name: nameBahia,
+      otChild: otchild,
+      problemType: form.problemType,
+      description: form.description,
+      images: imagesObj,
+      atentionTime: null,
+      reportUser: user.name,
+      state: 'stopped', // => stopped //retaken
+      workReturnDate: null,
+      comments: null,
+      returnUser: null
+    };
+    batch.set(andonDocRef, data);
+
+    return of(batch);
+  }
+
   /**
    * Get all documents from evaluations collection
    */
@@ -105,6 +152,19 @@ export class AndonService {
       )
       .valueChanges();
   }
+  /**
+   * Delete the passed List Bahia based in his ID
+   * @param {string} id - ID of the list Bahia to be removed
+   */
+   deleteAndonListBahia(id: string): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    const AndonDocRef = this.afs.firestore.doc(`/db/generalConfig/andonListBahias/${id}`);
+    //
+    batch.delete(AndonDocRef);
+    return of(batch);
+  }
+
   /**
    * Creates the andonListBahias entry into firestore's andonListBahias collection
    * @param {AndonListBahias} form - Form data passed on request creation

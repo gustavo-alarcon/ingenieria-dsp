@@ -64,7 +64,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 
     this.nameBahias$ = this.andonService.getAllAndonSettingsListBahias().pipe(
       tap((res:AndonListBahias[]) => {
-        let arrayListBahia: AndonListBahias[] = res; 
+        const arrayListBahia: AndonListBahias[] = res;
 
         arrayListBahia.sort((a, b) => {
           if (a.name > b.name) {
@@ -77,7 +77,6 @@ export class ReportComponent implements OnInit, OnDestroy {
           return 0;
         });
 
-       
         return arrayListBahia;
       })
     );
@@ -96,51 +95,13 @@ export class ReportComponent implements OnInit, OnDestroy {
       this.loading.next(false);
       return;
     } else {
-      this.auth.user$.pipe(
-        take(1)).
-        subscribe(user => {
-          // create batch
-          const batch = this.afs.firestore.batch();
-          // create reference for document in andon entries collection
-          const andonDocRef = this.afs.firestore.collection(`db/ferreyros/andon`).doc();
-          // Structuring the data model
-          const data: Andon = {
-            id: andonDocRef.id,
-            createdAt: new Date(),
-            createdBy: user,
-            editedAt: null,
-            edited: null,
-            reportDate: new Date(),
-            workShop: this.reportForm.value['name']['workShop'],
-            name: this.reportForm.value['name']['name'],
-            otChild: this.reportForm.value['otChild'],
-            problemType: null,
-            description: null,
-            images: null,
-            atentionTime: null,
-            reportUser: user.name,
-            state: 'stopped', // => stopped //retaken
-            workReturnDate: null,
-            comments: null,
-            returnUser: null,
-          };
-          batch.set(andonDocRef, data);
+      const workShop = this.reportForm.value['name']['workShop'];
+      const name = this.reportForm.value['name']['name'];
+      const otChild = this.reportForm.value['otChild'];
 
-          batch.commit().then(() => {
-            //this.loading.next(false)
-            this.snackbar.open('✅ se guardo correctamente!', 'Aceptar', {
-              duration: 6000
-            });
-            const code = andonDocRef.id;
-            this.router.navigate(['main/reporte', code]);
-          })
-            .catch(err => {
-              console.log(err);
-              this.snackbar.open('🚨 Hubo un error.', 'Aceptar', {
-                duration: 6000
-              });
-            })
-        })
+      const code = `${workShop}-${name}-${otChild}`;
+      this.router.navigate(['main/reporte', code]);
+
     }
 
   }

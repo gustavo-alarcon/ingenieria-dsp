@@ -20,16 +20,23 @@
         display: flex;
         align-items: stretch;
 
-        .icon {
+        &--icon {
             align-self: center;
             margin-right: 8px;
+            font-size: 2.5em;
+            margin-bottom: 30px;
         }
 
-        .title {
+        &--title {
             align-self: center;
-            font-family: "Poppins", sans-serif;
-            font-weight: 700;
             margin: 0px;
+            font-size: 2.3em;
+            margin-left: 20px; 
+            font-family: 'Poppins', sans-serif; 
+            font-weight: 700;
+            margin-right: 30px;
+            margin-bottom: 20px;
+
         }
     }
 
@@ -66,12 +73,16 @@
 
 .btn {
     margin-right: 30px;
-    margin-top: 10px;
+    align-self: center;
+    margin-bottom: 25px;
 
+    
     &__download {
         border: 1px solid #6200ee;
         background: white;
         color: #6200ee;
+        margin-bottom: 100px;
+        margin-top: 0px;
     }
 }
 
