@@ -66,6 +66,10 @@ const routes: Routes = [
         loadChildren: () => import('./pages/andon/settings/settings.module').then(m => m.SettingsModule)
       },
       {
+        path: 'init-eval-reports',
+        loadChildren: () => import('./pages/initial-evaluations/init-eval-reports/init-eval-reports.module').then(m => m.InitEvalReportsModule)
+      },
+      {
         path: '**',
         component: NotFoundComponent
       }

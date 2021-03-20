@@ -185,6 +185,65 @@
       </mat-expansion-panel>
     </mat-accordion>
 
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-nav-list>
+              <div>
+                <a mat-list-item>
+                  <mat-icon mat-list-icon class="mat-icon-menu">description</mat-icon>
+                  <!-- [routerLink]="['/main/andon']" -->
+                  <span class="mat-item-list-span">
+                    Evaluaciones iniciales
+                  </span>
+                </a>
+              </div>
+            </mat-nav-list>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <div>
+            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/init-eval-templates']" routerLinkActive="active"
+              (click)="drawer.toggle()">
+              <mat-icon mat-list-icon class="mat-icon-menu">note_alt</mat-icon>
+              <span class="mat-item-list-span">
+                Formatos
+              </span>
+            </a>
+            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/init-eval-technical-attention']" routerLinkActive="active"
+              (click)="drawer.toggle()">
+              <mat-icon mat-list-icon class="mat-icon-menu">folder_shared</mat-icon>
+              <span class="mat-item-list-span">
+                Atención técnica
+              </span>
+            </a>
+            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/init-eval-results']"
+              routerLinkActive="active" (click)="drawer.toggle()">
+              <mat-icon mat-list-icon class="mat-icon-menu">analytics</mat-icon>
+              <span class="mat-item-list-span">
+                Resultados
+              </span>
+            </a>
+            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/init-eval-reports']"
+              routerLinkActive="active" (click)="drawer.toggle()">
+              <mat-icon mat-list-icon class="mat-icon-menu">import_contacts</mat-icon>
+              <span class="mat-item-list-span">
+                Informes
+              </span>
+            </a>
+            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/init-eval-config']"
+              routerLinkActive="active" (click)="drawer.toggle()">
+              <mat-icon mat-list-icon class="mat-icon-menu">settings</mat-icon>
+              <span class="mat-item-list-span">
+                Configuración
+              </span>
+            </a>
+          </div>
+        </mat-nav-list>
+      </mat-expansion-panel>
+    </mat-accordion>
+
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar class="main_toolbar">

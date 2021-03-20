@@ -1,0 +1,13 @@
+<div class="ms-container">
+    <div class="ms-toolbar">
+        <mat-icon class="ms-toolbar__icon">import_contacts</mat-icon>
+        <h1 class="ms-toolbar__title">Informes</h1>
+        <button mat-button class="ms-toolbar__button" color="primary"
+            [ngClass]="isMobile ? 'ms-toolbar__button--mobile' : 'ms-toolbar__button--desktop'"
+            routerLink="generate-reception">
+            <mat-icon>add</mat-icon>
+            <span>GENERAR RECEPCIÓN</span>
+        </button>
+    </div>
+    <mat-divider></mat-divider>
+</div>
