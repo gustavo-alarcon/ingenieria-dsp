@@ -9,23 +9,27 @@
     <mat-divider></mat-divider>
 
     <div class="dropzone" appDropzone (hovered)="toggleHover($event)" (dropped)="onDrop($event)"
-        [class.hovering]="isHovering">
+        [class.hovering]="isHovering" style="height:125px">
         <p>Arrastrar imágenes</p>
         <div class="file">
             <label class="file-label">
-                <input class="file-input" type="file" (change)="onDrop($event.target.files)">
+                <input #uploadFiles class="file-input" type="file" multiple (change)="onDrop($event.target.files)">
+                <button mat-stroked-button (click)="uploadFiles.click()" class="ms-button">
+                    <mat-icon class="ms-button--icon">add_photo_alternate</mat-icon>
+                    Seleccionar imágenes
+                </button>
                 <!-- <span class="file-cta">
                     <span class="file-label">
-                        Seleccione una imagen
+                        Seleccione
                     </span>
                 </span> -->
             </label>
         </div>
     </div>
-    <h3>Uploads</h3>
 
-    <div *ngFor="let file of files" class="ms-dropzone-grid">
-        <app-upload-task [file]="file" [pathStorage]="pathStorage" (onNewImage)="addNewImage($event)">
-        </app-upload-task>
+    <div class="ms-dropzone-grid">
+        <app-zip-task *ngFor="let file of files" [file]="file" [pathStorage]="pathStorage"
+            (onNewImage)="addNewImage($event)" style="padding: 10px;">
+        </app-zip-task>
     </div>
 </div>

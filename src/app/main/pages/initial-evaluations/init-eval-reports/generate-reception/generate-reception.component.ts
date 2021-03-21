@@ -17,9 +17,10 @@ export class GenerateReceptionComponent implements OnInit, OnDestroy {
   isMobile = false;
 
   isHovering = false;
+
   files: Array<File> = [];
   pathStorage = 'init-eval-reports';
-  onNewImage: any;
+  resizedFiles: Array<File> = [];
 
   constructor(
     private breakpoint: BreakpointObserver
@@ -49,6 +50,10 @@ export class GenerateReceptionComponent implements OnInit, OnDestroy {
     for (let i = 0; i < files.length; i++) {
       this.files.push(files.item(i));
     }
+  }
+
+  addNewImage(event): void {
+    this.resizedFiles.push(event);
   }
 
 }

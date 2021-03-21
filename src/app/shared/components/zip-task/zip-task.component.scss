@@ -1,0 +1,22 @@
+.ms-zip-image {
+    width: 220px;
+    height: 220px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin: auto;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: ease-in-out 300ms;
+
+    &--selected {
+        width: 185px;
+        height: 185px;
+        transform: scale(0.9);
+        border: 15px solid #673ab7;
+    }
+
+    &:hover {
+        box-shadow: 4px 4px 16px #333;
+    }
+}
