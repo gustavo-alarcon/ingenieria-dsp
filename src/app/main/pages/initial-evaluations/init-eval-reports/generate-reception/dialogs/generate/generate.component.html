@@ -1,0 +1,34 @@
+<div>
+    <div class="ms-dialog-header">
+        <mat-icon class="ms-dialog-header__icon">info</mat-icon>
+        <h3 class="ms-dialog-header__title">Generar informe de recepción</h3>
+        <span class="ms-fill"></span>
+        <button mat-icon-button mat-dialog-close>
+            <mat-icon>cancel</mat-icon>
+        </button>
+    </div>
+    <mat-divider></mat-divider>
+
+    <mat-dialog-content>
+        <mat-progress-bar *ngIf="loading$ | async" mode="indeterminate"></mat-progress-bar>
+        <p class="ms-dialog-info">
+            El informe se generará solo con las imágenes preciamente seleccionadas, <b>el resto de imágenes serán
+                borradas de la plataforma</b>
+        </p>
+
+        <mat-form-field appearance="outline">
+            <input matInput type="text" [formControl]="otControl" placeholder="OT">
+            <mat-hint>Orden de trabajo</mat-hint>
+        </mat-form-field>
+
+        <div #print_section class="report-grid">
+            <div *ngFor="let item of enumData | slice : 0:6" class="report-cell">
+                <img [src]="item[1]['imageURL']" alt="report image" class="report-image">
+            </div>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-stroked-button color="warn" mat-dialog-close [disabled]="loading$ | async">CANCELAR</button>
+        <button mat-stroked-button color="primary" printTitle="MyTitle" (click)="exportAsPDF()" [disabled]="loading$ | async">IMPRIMIR</button>
+    </mat-dialog-actions>
+</div>

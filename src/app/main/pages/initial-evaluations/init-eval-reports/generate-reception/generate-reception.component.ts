@@ -1,6 +1,8 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject, Subscription } from 'rxjs';
+import { GenerateComponent } from './dialogs/generate/generate.component';
 
 @Component({
   selector: 'app-generate-reception',
@@ -20,9 +22,11 @@ export class GenerateReceptionComponent implements OnInit, OnDestroy {
 
   files: Array<File> = [];
   pathStorage = 'init-eval-reports';
-  resizedFiles: Array<File> = [];
+  resizedFiles: Object = {};
+  imageCounter = 0;
 
   constructor(
+    private dialog: MatDialog,
     private breakpoint: BreakpointObserver
   ) { }
 
@@ -48,12 +52,52 @@ export class GenerateReceptionComponent implements OnInit, OnDestroy {
 
   onDrop(files: FileList): void {
     for (let i = 0; i < files.length; i++) {
-      this.files.push(files.item(i));
+      if (!this.checkIfExist(files[i])) {
+        this.files.push(files.item(i));
+      }
     }
   }
 
   addNewImage(event): void {
-    this.resizedFiles.push(event);
+    if (this.imageCounter > 6) {
+      return
+    }
+    // we are using the name of file as key for the object to improve performance in search
+    const name = event['name'];
+    if (this.resizedFiles[name]) {
+      delete this.resizedFiles[name];
+    } else {
+      this.resizedFiles[name] = { file: event['file'], selected: event['selected'], imageURL: event['imageURL'] };
+    }
+    
+    this.imageCounter += event['counter'];
+  }
+
+  checkIfExist(file: File): boolean {
+    return !!this.resizedFiles[file.name]
+  }
+
+  checkIfImagesSelected(): boolean {
+    const entries = Object.entries(this.resizedFiles);
+    let selected = false;
+
+    entries.every(entry => {
+      selected = entry[1]['selected'];
+      return !selected;
+    })
+
+    return selected
+  }
+
+  generateReport(): void {
+    console.log(this.resizedFiles);
+    
+    this.dialog.open(GenerateComponent, {
+      width: '90vw',
+      maxWidth: '600px',
+      disableClose: true,
+      data: this.resizedFiles
+    })
   }
 
 }
