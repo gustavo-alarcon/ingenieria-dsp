@@ -1,4 +1,5 @@
 // Common styles
+// *** Containers
 .ms-fill {
     flex: auto 1 1;
 }
@@ -59,6 +60,23 @@
     }
 }
 
+// *** Tables
+.ms-table {
+    width: 100%;
+    margin-top: 8px;
+}
+
+.ms-table-default {
+    border: 1px dashed lightgray;
+    padding: 1rem;
+    border-radius: 10px 10px;
+    margin-top: 8px;
+    color: lightslategrey;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+// *** Buttons
 .ms-button {
     font-size: 1rem !important;
     padding: 8px 24px !important;

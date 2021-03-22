@@ -10,4 +10,84 @@
         </button>
     </div>
     <mat-divider></mat-divider>
+
+    <ng-container *ngIf="initEvals$ | async; else default">
+        <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+        <div style="overflow: auto;">
+            <table mat-table [dataSource]="initEvalsDataSource" matSort class="ms-table mat-elevation-z4">
+
+                <ng-container matColumnDef="date">
+                    <th mat-header-cell *matHeaderCellDef class="table__cell" style="width: 150px" mat-sort-header>
+                        Fecha </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell" style="width: 150px">
+                        <span *ngIf="element.createdAt?.seconds; else noAvailability">{{(element.createdAt.seconds *
+                            1000) |
+                            date:"dd/MM/yyyy"}}</span><br>
+                        <span *ngIf="element.createdAt?.seconds; else noAvailability"
+                            style="font-size: 0.8rem">{{(element.createdAt.seconds * 1000) |
+                            date:"hh:mm:ss a"}}</span>
+                        <ng-template #nodate>{{'---'}}</ng-template>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="ot" sticky>
+                    <th mat-header-cell *matHeaderCellDef class="table__cell" mat-sort-header> OT
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{element.ot ? element.ot : '---'}}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="status">
+                    <th mat-header-cell *matHeaderCellDef class="table__cell" mat-sort-header> Tipo </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        <span [ngClass]="element.status === 'reception'? 'status-reception' : 'status-dispatch'"
+                            class="mat-elevation-z4">
+                            {{element.status === 'reception' ? 'RECEPCIÓN' : 'DESPACHO'}}
+                        </span>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="actions" stickyEnd>
+                    <th mat-header-cell *matHeaderCellDef class="table__cell">
+                        Acciones
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        <ng-container>
+                            <mat-menu #rawMenu="matMenu">
+                                <button class="w3-small" mat-menu-item *ngIf="element.status === 'reception'" routerLink="generate-dispatch" (click)="generateDispatch(element)">
+                                    <mat-icon>local_shipping</mat-icon>
+                                    Generar despacho
+                                </button>
+                                <button class="w3-small" mat-menu-item (click)="openDialog('print', element)">
+                                    <mat-icon>print</mat-icon>
+                                    Imprimir
+                                </button>
+                                <button class="w3-small" mat-menu-item (click)="openDialog('delete', element)">
+                                    <mat-icon>delete</mat-icon>
+                                    Borrar
+                                </button>
+                            </mat-menu>
+
+                            <button mat-icon-button [matMenuTriggerFor]="rawMenu">
+                                <mat-icon>more_vert</mat-icon>
+                            </button>
+                        </ng-container>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="initEvalsDisplayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: initEvalsDisplayedColumns;"></tr>
+            </table>
+        </div>
+        <mat-paginator #initEvalsPaginator class="ms-paginator" [pageSizeOptions]="[20, 30, 40]" showFirstLastButtons>
+        </mat-paginator>
+    </ng-container>
+    <ng-template #default>
+        <div class="ms-table-default">
+            <span>
+                <mat-icon style="vertical-align: middle;">air</mat-icon> Sin resultados
+            </span>
+        </div>
+    </ng-template>
 </div>

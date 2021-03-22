@@ -5,12 +5,13 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { BehaviorSubject, combineLatest } from 'rxjs';
-import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage';
-import { finalize, map, take } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { finalize, take } from 'rxjs/operators';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AuthService } from 'src/app/auth/services/auth.service';
 
+import * as firebase from 'firebase';
 @Component({
   selector: 'app-generate',
   templateUrl: './generate.component.html',
@@ -74,75 +75,65 @@ export class GenerateComponent implements OnInit {
 
     this.loading.next(true);
 
-    let uploads = [];
-    const slicedData = this.enumData.slice(0, 5);
-    let buildData = {};
-
-    slicedData.forEach(data => {
-      let task: AngularFireUploadTask;
-
-      const path = `initial-evaluations/${data[1]['name']}`;
-      const ref = this.storage.ref(path);
-      task = this.storage.upload(path, data[1]['file']);
-      uploads.push(
-        task.snapshotChanges().pipe(
-          finalize(async () => {
-            const downloadURL = await ref.getDownloadURL().toPromise();
-            buildData[data[1]['file']['name']] = downloadURL;
-            // this.data[data[1]['file']['name']]['downloadURL'] = downloadURL;
-            // this.data[data[1]['file']['name']]['name'] = data[1]['file']['name'];
-
-            // delete this.data[data[1]['file']['name']]['selected'];
-            // delete this.data[data[1]['file']['name']]['file'];
-          })
-        )
+    this.auth.user$
+      .pipe(
+        take(1)
       )
-    })
+      .subscribe(user => {
+        const batch = this.afs.firestore.batch();
+        const refEval = this.afs.firestore.collection('db/ferreyros/initialEvaluationsReports').doc();
 
-    let counter = 0;
-
-    combineLatest(
-      uploads
-    ).pipe(
-      map((values) => {
-        if (values) {
-          counter++;
+        const dataBatch = {
+          id: refEval.id,
+          ot: this.otControl.value,
+          data: [],
+          status: 'reception',
+          createdAt: new Date(),
+          createdBy: user
         }
 
-        if (counter === this.enumData.length) {
-          const batch = this.afs.firestore.batch();
-          const refEval = this.afs.firestore.collection('db/ferreyros/initialEvaluationsReports').doc();
+        batch.set(refEval, dataBatch);
 
-          this.auth.user$
-            .pipe(
-              take(1)
-            )
-            .subscribe(user => {
-              const data = {
-                id: refEval.id,
-                ot: this.otControl.value,
-                data: buildData,
-                createdAt: new Date(),
-                createdBy: user
-              }
+        batch.commit()
+          .then(() => {
 
-              batch.set(refEval, data);
+            this.enumData.forEach(data => {
 
-              batch.commit()
-                .then(() => {
-                  this.snackbar.open('Reporte de recepción guardado', 'Aceptar', {
-                    duration: 6000
-                  });
-                  this.loading.next(false);
-                  this.firestoreFlag = true;
-                  this.dialogRef.close();
+              const file = data[1]['file'];
+              const filePath = `initial-evaluations/${data[1]['name']}`;
+              const fileRef = this.storage.ref(filePath);
+              const task = this.storage.upload(filePath, file);
+
+              // get notified when the download URL is available
+              task.snapshotChanges().pipe(
+                finalize(() => {
+                  fileRef.getDownloadURL().subscribe(res => {
+                    let buildData = { name: data[1]['file']['name'], imageURL: res };
+
+                    const batchImage = this.afs.firestore.batch();
+                    const evalImageRef = this.afs.doc(refEval.path).ref;
+
+                    batchImage.update(evalImageRef, { data: firebase.default.firestore.FieldValue.arrayUnion(buildData) })
+
+                    batchImage.commit()
+                      .then(() => {
+                        this.snackbar.open('Reporte de recepción guardado', 'Aceptar', {
+                          duration: 6000
+                        });
+                        this.loading.next(false);
+                        this.firestoreFlag = true;
+                        this.dialogRef.close(true);
+                      })
+
+                  })
+
                 })
+              ).subscribe()
             })
-        }
 
-        return values
+          })
       })
-    ).subscribe()
+
   }
 
 }

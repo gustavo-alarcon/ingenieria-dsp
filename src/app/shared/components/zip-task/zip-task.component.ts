@@ -15,6 +15,7 @@ export class ZipTaskComponent implements OnInit, OnDestroy {
   @Input() counter: number;
   @Input() file: File;
   @Input() pathStorage: string;
+  @Input() reception: boolean;
 
   @Output() onNewImage: EventEmitter<Object> = new EventEmitter<Object>();
 
@@ -40,23 +41,34 @@ export class ZipTaskComponent implements OnInit, OnDestroy {
     this.loading.next(true);
     let reader = new FileReader();
 
-    this.subscription.add(
-      this.ng2ImgMax.resize([this.file], 10000, 800).subscribe((result) => {
-        this.resizedFile = new File([result], result.name);
-        this.data['file'] = this.resizedFile;
-        this.data['name'] = this.resizedFile.name;
-
-        reader.readAsDataURL(this.file);
-        reader.onload = (_event) => {
-          this.zipImage = {
-            'background-image': 'url(' + reader.result + ')'
-          }
-          this.data['imageURL'] = reader.result;
-          // this.resizedImage = reader.result;
-          this.loading.next(false)
+    if (this.reception) {
+      reader.readAsDataURL(this.file);
+      reader.onload = (_event) => {
+        this.zipImage = {
+          'background-image': 'url(' + reader.result + ')'
         }
-      })
-    );
+        this.loading.next(false)
+      }
+    } else {
+      this.subscription.add(
+        this.ng2ImgMax.resize([this.file], 10000, 800).subscribe((result) => {
+          this.resizedFile = new File([result], result.name);
+          this.data['file'] = this.resizedFile;
+          this.data['name'] = this.resizedFile.name;
+  
+          reader.readAsDataURL(this.file);
+          reader.onload = (_event) => {
+            this.zipImage = {
+              'background-image': 'url(' + reader.result + ')'
+            }
+            this.data['imageURL'] = reader.result;
+            // this.resizedImage = reader.result;
+            this.loading.next(false)
+          }
+        })
+      );
+    }
+    
   }
 
   toggleSelection(): void {

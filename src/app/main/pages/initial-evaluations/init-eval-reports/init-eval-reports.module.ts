@@ -7,6 +7,8 @@ import { MaterialModule } from 'src/app/material/material.module';
 import { GenerateReceptionComponent } from './generate-reception/generate-reception.component';
 import { GenerateComponent } from './generate-reception/dialogs/generate/generate.component';
 import { NgxPrintModule } from 'ngx-print';
+import { GenerateDispatchComponent } from './generate-dispatch/generate-dispatch.component';
+import { DialogDispatchGenerateComponent } from './generate-dispatch/dialogs/generate/dialog-dispatch-generate.component';
 
 
 @NgModule({
@@ -14,6 +16,8 @@ import { NgxPrintModule } from 'ngx-print';
     InitEvalReportsComponent,
     GenerateReceptionComponent,
     GenerateComponent,
+    DialogDispatchGenerateComponent,
+    GenerateDispatchComponent,
   ],
   imports: [
     CommonModule,

@@ -1,7 +1,7 @@
 <div>
     <div class="ms-dialog-header">
         <mat-icon class="ms-dialog-header__icon">info</mat-icon>
-        <h3 class="ms-dialog-header__title">Generar informe de recepción</h3>
+        <h3 class="ms-dialog-header__title">Generar informe de despacho</h3>
         <span class="ms-fill"></span>
         <button mat-icon-button mat-dialog-close>
             <mat-icon>cancel</mat-icon>
@@ -17,7 +17,7 @@
         </p>
 
         <mat-form-field appearance="outline">
-            <input matInput type="text" [formControl]="otControl" placeholder="OT">
+            <input matInput type="text" [formControl]="otControl" placeholder="OT" readonly>
             <mat-hint>Orden de trabajo</mat-hint>
         </mat-form-field>
 
