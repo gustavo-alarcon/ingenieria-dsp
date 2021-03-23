@@ -1,13 +1,16 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, startWith, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, startWith, take, tap } from 'rxjs/operators';
 import { InitialEvaluation } from 'src/app/main/models/initialEvaluations.models';
 import { InitialEvaluationsService } from 'src/app/main/services/initial-evaluations.service';
+import { PrintReceptionDispatchComponent } from './print-reception-dispatch/print-reception-dispatch.component';
 
 @Component({
   selector: 'app-init-eval-reports',
@@ -37,6 +40,8 @@ export class InitEvalReportsComponent implements OnInit, OnDestroy {
   searchControl = new FormControl('');
 
   constructor(
+    private snackbar: MatSnackBar,
+    private dialog: MatDialog,
     private initEvalService: InitialEvaluationsService,
     private breakpoint: BreakpointObserver
   ) { }
@@ -76,6 +81,43 @@ export class InitEvalReportsComponent implements OnInit, OnDestroy {
 
   generateDispatch(data: InitialEvaluation): void {
     this.initEvalService.actualReception = data;
+  }
+
+  openDialog(type: string, data: InitialEvaluation): void {
+    this.dialog.open(PrintReceptionDispatchComponent, {
+      width: '90vw',
+      maxWidth: '600px',
+      disableClose: true,
+      data: {
+        type: type,
+        data: data
+      }
+    })
+  }
+
+  delete(data: InitialEvaluation): void {
+    this.loading.next(true);
+
+    this.initEvalService.deleteReceptionDispatch(data)
+      .pipe(
+        take(1)
+      ).subscribe(batch => {
+        if (batch) {
+          batch.commit()
+            .then(() => {
+              this.snackbar.open('🗑️ Reporte borrado correctamente', 'Aceptar', {
+                duration: 6000
+              });
+              this.loading.next(false);
+            })
+            .catch(err => {
+              console.log(err);
+              this.snackbar.open('🚨 Parece que hubo un error borrando el reporte. Intentelo de nuevo', 'Aceptar', {
+                duration: 6000
+              });
+            })
+        }
+      })
   }
 
 }

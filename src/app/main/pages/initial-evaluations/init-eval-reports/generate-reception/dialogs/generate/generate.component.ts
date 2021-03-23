@@ -1,9 +1,8 @@
-import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject } from 'rxjs';
 import { AngularFireStorage } from '@angular/fire/storage';
@@ -21,8 +20,6 @@ import { User } from 'src/app/main/models/user-model';
 export class GenerateComponent implements OnInit {
   loading = new BehaviorSubject<boolean>(false);
   loading$ = this.loading.asObservable();
-
-  @ViewChild('print_section', { static: true }) element: ElementRef;
 
   enumData: Array<any> = [];
 
@@ -59,7 +56,7 @@ export class GenerateComponent implements OnInit {
         take(1)
       )
       .subscribe(user => {
-        this.generatePDF(user);
+
 
         const batch = this.afs.firestore.batch();
         const refEval = this.afs.firestore.collection('db/ferreyros/initialEvaluationsReports').doc();
@@ -75,13 +72,16 @@ export class GenerateComponent implements OnInit {
 
         batch.set(refEval, dataBatch);
 
+
+
         batch.commit()
           .then(() => {
+            this.generatePDF(user, refEval.id);
 
             this.enumData.forEach(data => {
 
               const file = data[1]['file'];
-              const filePath = `initial-evaluations/${data[1]['name']}`;
+              const filePath = `initial-evaluations/${Date.now()}_${data[1]['file']['name']}`;
               const fileRef = this.storage.ref(filePath);
               const task = this.storage.upload(filePath, file);
 
@@ -98,12 +98,11 @@ export class GenerateComponent implements OnInit {
 
                     batchImage.commit()
                       .then(() => {
-                        this.snackbar.open('Reporte de recepción guardado', 'Aceptar', {
-                          duration: 6000
-                        });
-                        this.loading.next(false);
+                        // this.snackbar.open('Reporte de recepción guardado', 'Aceptar', {
+                        //   duration: 6000
+                        // });
+                        // this.loading.next(false);
                         this.firestoreFlag = true;
-                        this.dialogRef.close(true);
                       })
 
                   })
@@ -117,7 +116,7 @@ export class GenerateComponent implements OnInit {
 
   }
 
-  generatePDF(user: User): void {
+  generatePDF(user: User, documentId): void {
     if (this.otControl.value) {
 
       let pdf = new jsPDF('p', 'pt', 'a4');
@@ -172,6 +171,38 @@ export class GenerateComponent implements OnInit {
       pdf.text(user.name, 381, 780);
 
       pdf.save('recepción-' + this.otControl.value + '.pdf');
+
+      // Uplaoding PDF
+      const file = pdf.output("blob");
+
+      const filePath = `initial-evaluations/${Date.now()}_reception_${this.otControl.value}.pdf`;
+      const fileRef = this.storage.ref(filePath);
+      const task = this.storage.upload(filePath, file);
+
+      // get notified when the download URL is available
+      task.snapshotChanges().pipe(
+        finalize(() => {
+          fileRef.getDownloadURL().subscribe(res => {
+
+            const batchImage = this.afs.firestore.batch();
+            const refEval = this.afs.firestore.doc(`db/ferreyros/initialEvaluationsReports/${documentId}`);
+
+            batchImage.update(refEval, { pdfURL: res })
+
+            batchImage.commit()
+              .then(() => {
+                this.snackbar.open('✅ Documento de recepción guardado', 'Aceptar', {
+                  duration: 6000
+                });
+                this.loading.next(false);
+                this.firestoreFlag = true;
+                this.dialogRef.close(true);
+              })
+
+          })
+
+        })
+      ).subscribe()
 
     } else {
       this.snackbar.open('Debe asignar una OT', 'Aceptar', {

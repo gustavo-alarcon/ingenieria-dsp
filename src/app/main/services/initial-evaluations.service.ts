@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 import { InitialEvaluation } from '../models/initialEvaluations.models';
 
@@ -23,6 +23,20 @@ export class InitialEvaluationsService {
       .pipe(
         shareReplay(1)
       );
+  }
+
+  /**
+   * Method to remove desired evaluation
+   * @param {InitialEvaluation} data - Evalaution to be deleted
+   * @returns 
+   */
+  deleteReceptionDispatch(data: InitialEvaluation): Observable<firebase.default.firestore.WriteBatch> {
+    const batch = this.afs.firestore.batch();
+    const docRef = this.afs.doc(`db/ferreyros/initialEvaluationsReports/${data.id}`).ref;
+
+    batch.delete(docRef)
+
+    return of(batch)
   }
 
 }

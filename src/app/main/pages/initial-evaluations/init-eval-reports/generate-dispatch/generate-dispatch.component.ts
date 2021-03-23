@@ -78,12 +78,14 @@ export class GenerateDispatchComponent implements OnInit {
     // we are using the name of file as key for the object to improve performance in search
     const name = event['name'];
 
-    if (this.receptionFiles[name]) {
-      return
-    }
+    // if (this.receptionFiles[name]) {
+    //   return
+    // }
 
-    if (this.resizedFiles[name] && this.resizedFiles[name]['selected'] === false) {
+    // if (this.resizedFiles[name] && this.resizedFiles[name]['selected'] === false) {
+    if (this.resizedFiles[name]) {
       delete this.resizedFiles[name];
+      this.imageCounter -= event['counter'];
     } else {
       this.resizedFiles[name] = { file: event['file'], selected: event['selected'], imageURL: event['imageURL'] };
     }
@@ -108,8 +110,6 @@ export class GenerateDispatchComponent implements OnInit {
   }
 
   generateReport(): void {
-    console.log(this.resizedFiles);
-
     this.dialog.open(DialogDispatchGenerateComponent, {
       width: '90vw',
       maxWidth: '600px',
@@ -117,6 +117,10 @@ export class GenerateDispatchComponent implements OnInit {
       data: {
         files: this.resizedFiles,
         reception: this.initEvalService.actualReception
+      }
+    }).afterClosed().subscribe(res => {
+      if (res) {
+        this.router.navigateByUrl('main/init-eval-reports')
       }
     })
   }

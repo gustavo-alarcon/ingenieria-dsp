@@ -73,11 +73,13 @@
                                     <mat-icon>local_shipping</mat-icon>
                                     Generar despacho
                                 </button>
-                                <button class="w3-small" mat-menu-item (click)="openDialog('print', element)">
-                                    <mat-icon>print</mat-icon>
-                                    Imprimir
-                                </button>
-                                <button class="w3-small" mat-menu-item (click)="openDialog('delete', element)">
+                                <a [href]="element.pdfURL" target="_blank" style="text-decoration: none;">
+                                    <button class="w3-small" mat-menu-item>
+                                        <mat-icon>picture_as_pdf</mat-icon>
+                                        Ver PDF
+                                    </button>
+                                </a>
+                                <button class="w3-small" mat-menu-item (click)="delete(element)">
                                     <mat-icon>delete</mat-icon>
                                     Borrar
                                 </button>

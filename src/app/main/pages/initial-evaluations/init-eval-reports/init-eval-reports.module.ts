@@ -10,6 +10,7 @@ import { NgxPrintModule } from 'ngx-print';
 import { GenerateDispatchComponent } from './generate-dispatch/generate-dispatch.component';
 import { DialogDispatchGenerateComponent } from './generate-dispatch/dialogs/generate/dialog-dispatch-generate.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { PrintReceptionDispatchComponent } from './print-reception-dispatch/print-reception-dispatch.component';
 
 
 @NgModule({
@@ -19,6 +20,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     GenerateComponent,
     DialogDispatchGenerateComponent,
     GenerateDispatchComponent,
+    PrintReceptionDispatchComponent,
   ],
   imports: [
     CommonModule,

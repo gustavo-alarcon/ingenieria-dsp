@@ -60,7 +60,6 @@ export class DialogDispatchGenerateComponent implements OnInit {
         take(1)
       )
       .subscribe(user => {
-        this.generatePDF(user);
 
         const batch = this.afs.firestore.batch();
         const refEval = this.afs.firestore.collection('db/ferreyros/initialEvaluationsReports').doc();
@@ -78,11 +77,12 @@ export class DialogDispatchGenerateComponent implements OnInit {
 
         batch.commit()
           .then(() => {
+            this.generatePDF(user, refEval.id);
 
             this.enumData.forEach(data => {
 
               const file = data[1]['file'];
-              const filePath = `initial-evaluations/${data[1]['name']}`;
+              const filePath = `initial-evaluations/${Date.now()}_${data[1]['file']['name']}`;
               const fileRef = this.storage.ref(filePath);
               const task = this.storage.upload(filePath, file);
 
@@ -102,9 +102,7 @@ export class DialogDispatchGenerateComponent implements OnInit {
                         this.snackbar.open('Reporte de despacho guardado', 'Aceptar', {
                           duration: 6000
                         });
-                        this.loading.next(false);
                         this.firestoreFlag = true;
-                        this.dialogRef.close(true);
                       })
 
                   })
@@ -118,7 +116,7 @@ export class DialogDispatchGenerateComponent implements OnInit {
 
   }
 
-  generatePDF(user: User): void {
+  generatePDF(user: User, documentId): void {
 
     let pdf = new jsPDF('p', 'pt', 'a4');
 
@@ -173,6 +171,38 @@ export class DialogDispatchGenerateComponent implements OnInit {
     pdf.text(user.name, 381, 780);
 
     pdf.save('despacho-' + this.otControl.value + '.pdf');
+
+    // Uplaoding PDF
+    const file = pdf.output("blob");
+
+    const filePath = `initial-evaluations/${Date.now()}_reception_${this.otControl.value}.pdf`;
+    const fileRef = this.storage.ref(filePath);
+    const task = this.storage.upload(filePath, file);
+
+    // get notified when the download URL is available
+    task.snapshotChanges().pipe(
+      finalize(() => {
+        fileRef.getDownloadURL().subscribe(res => {
+
+          const batchImage = this.afs.firestore.batch();
+          const refEval = this.afs.firestore.doc(`db/ferreyros/initialEvaluationsReports/${documentId}`);
+
+          batchImage.update(refEval, { pdfURL: res })
+
+          batchImage.commit()
+            .then(() => {
+              this.snackbar.open('✅ Documento de recepción guardado', 'Aceptar', {
+                duration: 6000
+              });
+              this.loading.next(false);
+              this.firestoreFlag = true;
+              this.dialogRef.close(true);
+            })
+
+        })
+
+      })
+    ).subscribe()
 
   }
 
