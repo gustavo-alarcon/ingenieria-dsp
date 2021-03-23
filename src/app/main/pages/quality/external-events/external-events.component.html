@@ -25,7 +25,7 @@
                     <div class="container-form__work">
     
                         <mat-form-field appearance="outline" id="result" class="container-form__work--input">
-                            <mat-label>Orden de trabajo actual(oper)</mat-label>
+                            <mat-label>Orden de trabajo actual(operacion minera)</mat-label>
                             <input matInput type="number" placeholder="Orden de trabajo" formControlName="workdOrden" />
                             <mat-error *ngIf="externalForm.controls['workdOrden'].errors">
                                 Campo <strong>requerido.</strong>
@@ -33,28 +33,80 @@
                         </mat-form-field>
 
                         <mat-form-field appearance="outline" id="result" class="container-form__work--input">
-                            <mat-label>Taller</mat-label>
-                            <input matInput type="number" placeholder="taller" formControlName="workShop" />
-                            <mat-error *ngIf="externalForm.controls['workShop'].errors">
+                            <mat-label>Componente</mat-label>
+                            <input matInput type="number" placeholder="Component" formControlName="component" />
+                            <mat-error *ngIf="externalForm.controls['component'].errors">
                                 Campo <strong>requerido.</strong>
                             </mat-error>
                         </mat-form-field>
 
                         <mat-form-field appearance="outline" id="result" class="container-form__work--input">
-                            <mat-label>Nro de parte</mat-label>
-                            <input matInput type="number" placeholder="Nro de parte" formControlName="nPart" />
+                            <mat-label> Numero de paqueteo</mat-label>
+                            <input matInput type="number" placeholder="Numero de paqueteo" formControlName="componentHourMeter" />
+                            <mat-error *ngIf="externalForm.controls['componentHourMeter'].errors">
+                                Campo <strong>requerido.</strong>
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" id="result" class="container-form__work--input">
+                            <mat-label> Horometro de componente</mat-label>
+                            <input matInput type="number" placeholder="Horometro de componente" formControlName="componentHourMeter" />
+                            <mat-error *ngIf="externalForm.controls['componentHourMeter'].errors">
+                                Campo <strong>requerido.</strong>
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" id="result" class="container-form__work--input">
+                            <mat-label> Numero de parte (Causante de falla)</mat-label>
+                            <input matInput type="number" placeholder="Numero de parte" formControlName="nPart" />
                             <mat-error *ngIf="externalForm.controls['nPart'].errors">
                                 Campo <strong>requerido.</strong>
                             </mat-error>
                         </mat-form-field>
 
+                        <mat-form-field appearance="outline" id="result" class="container-form__work--input">
+                            <mat-label> Operacion minera</mat-label>
+                            <input matInput type="number" placeholder="Operacion minera" formControlName="miningOperation" />
+                            <mat-error *ngIf="externalForm.controls['miningOperation'].errors">
+                                Campo <strong>requerido.</strong>
+                            </mat-error>
+                        </mat-form-field>
+
+
                     </div>
                     <br />
                     <mat-form-field appearance="outline" id="result" class="container-form__area">
-                        <mat-label>Detalle de evento</mat-label>
-                          <input  matInput type="number" placeholder="Detalle del evento" formControlName="eventoDetail"                         
+                        <mat-label>1 ¿Cuentame que sucedió?</mat-label>
+                          <input  matInput type="number" placeholder="Bahia" formControlName="question1"                         
                           >
-                        <mat-error *ngIf="externalForm.controls['eventoDetail'].errors">
+                        <mat-error *ngIf="externalForm.controls['question1'].errors">
+                            Campo <strong>requerido.</strong>
+                        </mat-error>
+                    </mat-form-field>
+                    <br> 
+                    <mat-form-field appearance="outline" id="result" class="container-form__area">
+                        <mat-label>2. ¿Qué acciones de corrección se realizaron para solucionar el problema?</mat-label>
+                          <input  matInput type="number" placeholder="Bahia" formControlName="question2"                         
+                          >
+                        <mat-error *ngIf="externalForm.controls['question2'].errors">
+                            Campo <strong>requerido.</strong>
+                        </mat-error>
+                    </mat-form-field>
+                    <br> 
+                    <mat-form-field appearance="outline" id="result" class="container-form__area">
+                        <mat-label>3. Cuál crees que fue la causa de la falla?</mat-label>
+                          <input  matInput type="number" placeholder="Bahia" formControlName="question3"                         
+                          >
+                        <mat-error *ngIf="externalForm.controls['question3'].errors">
+                            Campo <strong>requerido.</strong>
+                        </mat-error>
+                    </mat-form-field>
+                    <br> 
+                    <mat-form-field appearance="outline" id="result" class="container-form__area">
+                        <mat-label>4. ¿Qué recomendarias para evitar que este problema vuelva a suceder?</mat-label>
+                          <input  matInput type="number" placeholder="Bahia" formControlName="question4"                         
+                          >
+                        <mat-error *ngIf="externalForm.controls['question4'].errors">
                             Campo <strong>requerido.</strong>
                         </mat-error>
                     </mat-form-field>
@@ -108,7 +160,7 @@
                     
                     <div class="container-form__uploadXlx">
                         <h3 class="">Archivo adicional</h3>
-                        <p>ZBI_OPS_ORDSER_MQH (11-52-04).xlsx </p>
+                        <p style="color:#0064EA;">ZBI_OPS_ORDSER_MQH (11-52-04).xlsx </p>
                         <input #fileInput2 style="display: none" type="file" (change)=" onFileSelected($event)" accept=".xls,.xlsx"
                             id="fileInput2">
                             <br>

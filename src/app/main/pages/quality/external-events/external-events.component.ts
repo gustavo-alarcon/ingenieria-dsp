@@ -12,9 +12,9 @@ export class ExternalEventsComponent implements OnInit {
 
   loading = new BehaviorSubject<boolean>(false);
   loading$ = this.loading.asObservable();
-  
+
   externalForm: FormGroup;
-  
+ 
   imagesUpload: string[] = [''];
   files: File[] = [];
   pathStorage: string;
@@ -36,9 +36,15 @@ export class ExternalEventsComponent implements OnInit {
     this.externalForm = this.fb.group({
       description: ['', Validators.required],
       workdOrden: ['', Validators.required],
-      workShop: ['', Validators.required],
+      component: ['', Validators.required],
+      nPackage : ['', Validators.required],
+      componentHourMeter : ['', Validators.required],
       nPart: ['', Validators.required],
-      eventoDetail: ['', Validators.required],
+      miningOperation: ['', Validators.required],
+      question1: ['', Validators.required],
+      question2: ['', Validators.required],
+      question3: ['', Validators.required],
+      question4: ['', Validators.required],
     });
 
   }
