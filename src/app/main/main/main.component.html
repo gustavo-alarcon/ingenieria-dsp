@@ -192,6 +192,65 @@
             <mat-nav-list>
               <div>
                 <a mat-list-item>
+                  <mat-icon mat-list-icon class="mat-icon-menu">analytics</mat-icon>
+                  <span class="mat-item-list-span">
+                    Calidad
+                  </span>
+                </a>
+              </div>
+            </mat-nav-list>
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <mat-nav-list>
+          <div>
+            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/quality-dashboard']" routerLinkActive="active"
+              (click)="drawer.toggle()">
+              <mat-icon mat-list-icon class="mat-icon-menu">dashboard</mat-icon>
+              <span class="mat-item-list-span">
+                Dashboard
+              </span>
+            </a>
+
+            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/quality-internal-events']" routerLinkActive="active"
+              (click)="drawer.toggle()">
+              <mat-icon mat-list-icon class="mat-icon-menu">note_alt</mat-icon>
+              <span class="mat-item-list-span">
+                Eventos internos
+              </span>
+            </a>
+            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/quality-external-events']"
+              routerLinkActive="active" (click)="drawer.toggle()">
+              <mat-icon mat-list-icon class="mat-icon-menu">note_alt</mat-icon>
+              <span class="mat-item-list-span">
+                Eventos externos
+              </span>
+            </a>
+            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/quality-analysis']"
+              routerLinkActive="active" (click)="drawer.toggle()">
+              <mat-icon mat-list-icon class="mat-icon-menu">analytics</mat-icon>
+              <span class="mat-item-list-span">
+                Analisis
+              </span>
+            </a>
+            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/quality-configurations']"
+              routerLinkActive="active" (click)="drawer.toggle()">
+              <mat-icon mat-list-icon class="mat-icon-menu">settings</mat-icon>
+              <span class="mat-item-list-span">
+                Configuraciones
+              </span>
+            </a>
+          </div>
+        </mat-nav-list>
+      </mat-expansion-panel>
+    </mat-accordion>
+
+    <mat-accordion>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <mat-nav-list>
+              <div>
+                <a mat-list-item>
                   <mat-icon mat-list-icon class="mat-icon-menu">description</mat-icon>
                   <!-- [routerLink]="['/main/andon']" -->
                   <span class="mat-item-list-span">
