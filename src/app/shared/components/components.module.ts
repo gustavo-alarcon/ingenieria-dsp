@@ -4,16 +4,19 @@ import { MaterialModule } from 'src/app/material/material.module';
 import { UploadTaskComponent } from './upload-task/upload-task.component';
 import { DropzoneDirective } from './upload-task/dropzone.directive';
 import { Ng2ImgMaxModule } from 'ng2-img-max';
+import { ZipTaskComponent } from './zip-task/zip-task.component';
 
 
 @NgModule({
   declarations: [
     DropzoneDirective,
-    UploadTaskComponent
+    UploadTaskComponent,
+    ZipTaskComponent
   ],
   exports: [
     DropzoneDirective,
-    UploadTaskComponent
+    UploadTaskComponent,
+    ZipTaskComponent
   ],
   imports: [
     CommonModule,
