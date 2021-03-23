@@ -9,6 +9,7 @@ import { GenerateComponent } from './generate-reception/dialogs/generate/generat
 import { NgxPrintModule } from 'ngx-print';
 import { GenerateDispatchComponent } from './generate-dispatch/generate-dispatch.component';
 import { DialogDispatchGenerateComponent } from './generate-dispatch/dialogs/generate/dialog-dispatch-generate.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -23,7 +24,9 @@ import { DialogDispatchGenerateComponent } from './generate-dispatch/dialogs/gen
     CommonModule,
     InitEvalReportsRoutingModule,
     MaterialModule,
-    NgxPrintModule
+    NgxPrintModule,
+    FormsModule,
+    ReactiveFormsModule
   ]
 })
 export class InitEvalReportsModule { }

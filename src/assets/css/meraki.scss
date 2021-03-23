@@ -36,6 +36,8 @@
             border: 1px #6200ee solid;
             color: #6200ee;
             padding: 5px 15px 5px 15px;
+            height: 50px;
+            align-self: center;
 
             &--back {
                 margin-right: 12px;
@@ -47,7 +49,7 @@
                     line-height: 36px;
                 }
             }
-
+            
             &--desktop {
                 margin-right: 12px;
             }

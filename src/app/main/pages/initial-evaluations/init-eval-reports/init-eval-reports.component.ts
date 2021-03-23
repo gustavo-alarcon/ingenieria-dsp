@@ -1,10 +1,11 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, startWith, tap } from 'rxjs/operators';
 import { InitialEvaluation } from 'src/app/main/models/initialEvaluations.models';
 import { InitialEvaluationsService } from 'src/app/main/services/initial-evaluations.service';
 
@@ -18,7 +19,7 @@ export class InitEvalReportsComponent implements OnInit, OnDestroy {
   loading$ = this.loading.asObservable();
 
   initEvalsDataSource = new MatTableDataSource<InitialEvaluation>();
-  initEvalsDisplayedColumns: string[] = ['date', 'ot', 'status', 'actions'];
+  initEvalsDisplayedColumns: string[] = ['date', 'ot', 'status', 'createdBy', 'actions'];
 
   @ViewChild('initEvalsPaginator', { static: false }) set content(paginator: MatPaginator) {
     this.initEvalsDataSource.paginator = paginator;
@@ -32,6 +33,8 @@ export class InitEvalReportsComponent implements OnInit, OnDestroy {
   isMobile = false;
 
   initEvals$: Observable<Array<InitialEvaluation>>;
+
+  searchControl = new FormControl('');
 
   constructor(
     private initEvalService: InitialEvaluationsService,
@@ -49,13 +52,22 @@ export class InitEvalReportsComponent implements OnInit, OnDestroy {
       })
     )
 
-    this.initEvals$ =
-      this.initEvalService.getInitialEvaluations()
-        .pipe(
-          tap(list => {
-            this.initEvalsDataSource.data = list;
-          })
-        )
+    this.initEvals$ = combineLatest(
+      this.initEvalService.getInitialEvaluations(),
+      this.searchControl.valueChanges.pipe(
+        startWith(''),
+        debounceTime(100),
+        distinctUntilChanged(),
+        map(value => value ? value.toLowerCase().trim() : '')
+      )
+    ).pipe(
+      map(([list, term]) => {
+        const filter = list.filter(item => item.ot.includes(term));
+        this.initEvalsDataSource.data = filter;
+        return filter;
+      })
+    )
+
   }
 
   ngOnDestroy(): void {

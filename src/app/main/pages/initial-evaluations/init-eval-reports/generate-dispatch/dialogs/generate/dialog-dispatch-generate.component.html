@@ -21,7 +21,7 @@
             <mat-hint>Orden de trabajo</mat-hint>
         </mat-form-field>
 
-        <div #print_section class="report-grid">
+        <div class="report-grid">
             <div *ngFor="let item of enumData | slice : 0:6" class="report-cell">
                 <img [src]="item[1]['imageURL']" alt="report image" class="report-image">
             </div>
@@ -29,6 +29,6 @@
     </mat-dialog-content>
     <mat-dialog-actions align="end">
         <button mat-stroked-button color="warn" mat-dialog-close [disabled]="loading$ | async">CANCELAR</button>
-        <button mat-stroked-button color="primary" printTitle="MyTitle" (click)="exportAsPDF()" [disabled]="loading$ | async">IMPRIMIR</button>
+        <button mat-stroked-button color="primary" (click)="save()" [disabled]="loading$ | async">IMPRIMIR</button>
     </mat-dialog-actions>
 </div>

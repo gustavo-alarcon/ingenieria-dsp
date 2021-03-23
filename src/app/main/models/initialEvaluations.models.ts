@@ -4,7 +4,7 @@ export interface InitialEvaluation {
     id: string;
     ot: string;
     status: 'reception' | 'dispatch';
-    data: {name: string, imageURL: string}[];
+    dataReception: {name: string, imageURL: string}[];
     dataDispatch?: {name: string, imageURL: string}[];
     createdAt: Date;
     createdBy: User;

@@ -1,11 +1,12 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { InitialEvaluationsService } from 'src/app/main/services/initial-evaluations.service';
 import { DialogDispatchGenerateComponent } from './dialogs/generate/dialog-dispatch-generate.component';
 
+import jsPDF from 'jspdf';
 @Component({
   selector: 'app-generate-dispatch',
   templateUrl: './generate-dispatch.component.html',
@@ -51,8 +52,6 @@ export class GenerateDispatchComponent implements OnInit {
         }
       })
     )
-
-
 
   }
 
@@ -125,12 +124,14 @@ export class GenerateDispatchComponent implements OnInit {
   checkReception(data: any): boolean {
     let match = false;
 
-    this.initEvalService.actualReception.data.every(file => {
+    this.initEvalService.actualReception.dataReception.every(file => {
       match = data['name'] === file.name
       return !match
     })
 
     return match
   }
+
+
 
 }
