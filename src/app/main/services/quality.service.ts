@@ -15,11 +15,12 @@ export class QualityService {
   ) {}
 
   /**
-   * update the evaluation entry
-   * @param {string} entryId - id data
-   * @param {Andon} form - Form data passed on andon edit
-   * @param {string} imges - imgs
-   * @param {User} user - imgs
+   * add internal events entry
+   * @param {string} form - Form data internal events
+   * @param {User} user - user
+   * @param {string} imagesObj - url image general
+   * @param {string} imagesObjDetail -url imge details
+   * @param {string} objFile - url file
    */
    addQualityInternal(
     form,
@@ -60,6 +61,60 @@ export class QualityService {
       question2: null,
       question3: null,
       question4: null,
+      file: objFile,
+    };
+    batch.set(qualityDocRef, data);
+
+    return of(batch);
+  }
+
+  /**
+   * add internal events entry
+   * @param {string} form - Form data internal events
+   * @param {User} user - user
+   * @param {string} imagesObj - url image general
+   * @param {string} imagesObjDetail -url imge details
+   * @param {string} objFile - url file
+   */
+   addQualityExternal(
+    form,
+    user: User,
+    imagesObj,
+    imagesObjDetail,
+    objFile
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    // create reference for document in evaluation entries collection
+    const qualityDocRef = this.afs.firestore.collection(`db/ferreyros/quality`).doc();
+
+    // Structuring the data model
+    const data: any = {
+      id: qualityDocRef.id,
+      createdAt: new Date(),
+      createdBy: user,
+      editedAt: null,
+      edited: null,
+      eventType: 'External', //Internal , External
+      workOrder: form.workdOrden,
+      component: form.component,
+      description: form.description,
+      specialist: form.component,
+      partNumber: form.nPart,
+      workShop: null,
+      enventDetail: null,
+      packageNumber: form.nPackage,
+      componentHourMeter: form.componentHourMeter,
+      miningOperation: form.miningOperation,
+      correctiveActions: null,
+      riskLevel: null,
+      state: null,
+      generalImages: imagesObj,
+      detailImages: imagesObjDetail,
+      question1: form.question1,
+      question2: form.question2,
+      question3: form.question3,
+      question4: form.question4,
       file: objFile,
     };
     batch.set(qualityDocRef, data);

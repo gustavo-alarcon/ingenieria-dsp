@@ -50,6 +50,9 @@ export class ExternalEventsComponent implements OnInit {
   subscription = new Subscription();
   user: User;
 
+  snapshot: Observable<any>;
+
+
   constructor(
     private fb: FormBuilder,
     private snackbar: MatSnackBar,
@@ -108,8 +111,7 @@ export class ExternalEventsComponent implements OnInit {
 
     this.uploadPercent$ = task.percentageChanges();
     this.subscription.add(
-      task
-        .snapshotChanges()
+       task.snapshotChanges()
         .pipe(
           finalize(() => {
             fileRef.getDownloadURL().subscribe((url) => {
@@ -123,6 +125,10 @@ export class ExternalEventsComponent implements OnInit {
           })
         ).subscribe()
     );
+  }
+
+  isActive(snapshot): boolean {
+    return snapshot.state === 'running' && snapshot.bytesTransferred < snapshot.totalBytes;
   }
 
   save(): void {
@@ -153,7 +159,7 @@ export class ExternalEventsComponent implements OnInit {
         });
 
         this.qualityService
-          .addQualityInternal(
+          .addQualityExternal(
             this.externalForm.value,
             this.user,
             imagesObjGeneral,
