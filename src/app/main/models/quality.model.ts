@@ -11,7 +11,7 @@ export interface Quality{
     component?: string;
     description?: string;
     specialist?: string;
-    partNumber?: string;
+    partNumber?: number;
     workShop?: string;
     enventDetail?: string;
     packageNumber?: string;
