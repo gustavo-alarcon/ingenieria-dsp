@@ -13,6 +13,14 @@ import { map } from 'rxjs/operators';
 })
 export class EvaluationsService {
 
+  public priorityList = [
+    'MONOBLOCK',
+    'CARTER',
+    'CYLINDER HEAD',
+    'HOUSING FRONT',
+    'CRANKSHAFT',
+  ]
+
   constructor(
     private afs: AngularFirestore,
     private storage: AngularFireStorage,

@@ -6,13 +6,13 @@
         <mat-icon mat-list-icon>settings</mat-icon>
       </div>
       <span class="ms-fill"></span>
-      
-      <div class="requests__title--select mat-elevation-z4" >
-        <mat-form-field style="width: 1000px" style="border: none;" appearance="null" > 
+
+      <div class="requests__title--select mat-elevation-z4">
+        <mat-form-field style="width: 1000px" style="border: none;" appearance="null">
           <mat-icon matPrefix class="requests__title--select-icon">local_convenience_store</mat-icon>
-          <mat-select [formControl]="workshopControl" class="requests__title--select-input" >
-            <mat-option value="" >Todos</mat-option>
-            <mat-option   *ngFor="let item of workshops" [value]="item.code">
+          <mat-select [formControl]="workshopControl" class="requests__title--select-input">
+            <mat-option value="">Todos</mat-option>
+            <mat-option *ngFor="let item of workshops" [value]="item.code">
               {{item.location}}
             </mat-option>
           </mat-select>
@@ -24,7 +24,8 @@
           <mat-icon>search</mat-icon>
         </button>
         <form [formGroup]="searchForm" style="margin-top:10px;">
-          <input matInput placeholder="Buscar" name="search" class="requests__title--input" formControlName="ot" style="color: #333333; " />
+          <input matInput placeholder="Buscar" name="search" class="requests__title--input" formControlName="ot"
+            style="color: #333333; " />
         </form>
       </div>
 
@@ -38,7 +39,8 @@
   <div class="cards-container" *ngIf="evaluation$|async as evaluations">
     <div class="box mat-elevation-z2" *ngFor="let item of evaluations">
       <div class="header-box">
-        <div class="priority"></div>
+        <span class="tag tag--priority" *ngIf="item.priority === 1">PRIORIDAD</span>
+        <span class="ms-fill"></span>
         <div>
           <mat-menu #requestsMenu="matMenu">
             <button mat-menu-item (click)="initDialog(item)">

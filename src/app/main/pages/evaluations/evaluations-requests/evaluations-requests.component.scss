@@ -290,3 +290,16 @@ input {
     letter-spacing: 0.15px;
     color: rgba(0, 0, 0, 0.6);
 }
+
+.tag {
+    padding: 4px 8px;
+    color: white;
+    font-weight: 700;
+    font-family: 'Poppins', sans-serif;
+    border-radius: 10px;
+    margin-left: 8px;
+
+    &--priority {
+        background-color: #2196f3;
+    }
+}
