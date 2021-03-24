@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Quality, QualityTimer } from '../models/quality.model';
 import { User } from '../models/user-model';
 
 @Injectable({
@@ -119,6 +121,34 @@ export class QualityService {
     };
     batch.set(qualityDocRef, data);
 
+    return of(batch);
+  }
+   
+  getAllQualityRecords(): Observable<Quality[]> {
+    return this.afs.collection<Quality>(`/db/ferreyros/quality`)
+      .valueChanges()
+      .pipe(
+        map(list => {
+          return list.sort((a, b) => a['createdAt']['seconds'] - b['createdAt']['seconds'])
+        })
+      )
+  }
+
+  /**
+   * update the passed Quality based in his registryTimer
+   * @param {string} timer - time object
+   */
+   addTimerInRecord(timer: QualityTimer): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+
+    // create document reference in quality collection
+    const qualityDocRef = this.afs.firestore.doc(`/db/generalConfig`);
+    const newData = {
+      registryTimer: timer,
+    };
+
+    batch.update(qualityDocRef, newData);
     return of(batch);
   }
   
