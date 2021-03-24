@@ -58,6 +58,13 @@
 @media (min-width: 481px) and (max-width: 767px) {  
     .report{
         margin-top: 50px;
+        padding: 24px 24px;
+        border: 1px solid lightgrey;
+        border-radius: 10px 10px 10px 10px;
+        width: fit-content;
+        margin: 24px auto;
+        box-shadow: 2px 2px 4px lightgrey;
+
         &__title{
             font-weight: bold;
             font-size: 2.5em;
@@ -89,6 +96,12 @@
   @media (min-width: 320px) and (max-width: 480px) {    
     .report{
         margin-top: 50px;
+        padding: 24px 24px;
+        border: 1px solid lightgrey;    
+        border-radius: 10px 10px 10px 10px;
+        width: fit-content;
+        margin: 24px auto;
+        box-shadow: 2px 2px 4px lightgrey;
         &__title{
             font-weight: bold;
             font-size: 2.5em;
@@ -96,7 +109,7 @@
         }
         &__form{
             &--input{
-                width: 250px;
+                width: 260px;
             }
             &--img{
                 width: 250px; 

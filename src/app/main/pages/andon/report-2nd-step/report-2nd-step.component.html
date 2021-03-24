@@ -13,7 +13,7 @@
                 <p style="margin-left: 0px;">OT CHILD : {{otChild ? otChild : '---'}} </p>
                 <mat-form-field appearance="outline" id="result" class="report__form--input">
                     <mat-label>Tipo de problema</mat-label>
-                    <mat-select formControlName="problemType">
+                    <mat-select formControlName="problemType" class="">
                         <mat-option *ngFor="let item of typeProblem$ | async" [value]="item.problemType">
                             {{item.problemType}}</mat-option>
                     </mat-select>
