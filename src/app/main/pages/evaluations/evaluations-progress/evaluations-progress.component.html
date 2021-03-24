@@ -41,7 +41,8 @@
         <button mat-icon-button *ngIf="item.internalStatus ==='consultation'">
           <mat-icon style="color: #6200EE;">help</mat-icon>
         </button>
-        <div class="priority"></div>
+        <span class="tag tag--priority" *ngIf="item.priority === 1">PRIORIDAD</span>
+        <span class="ms-fill"></span>
         <div>
           <mat-menu #requestsMenu="matMenu">
             <button mat-menu-item (click)="finalizeDialog(item)">

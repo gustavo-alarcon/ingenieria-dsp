@@ -130,7 +130,7 @@ export class EvaluationsProgressComponent implements OnInit {
 
           let processDistance = 0;
 
-          evaluation.processTimer = setInterval(() => {
+          evaluation.processTimer = setInterval(function EvalInterval() {
             // Get today's date and time
             let now = new Date().getTime();
 
@@ -175,8 +175,28 @@ export class EvaluationsProgressComponent implements OnInit {
               seconds: attentionSeconds
             }
 
-          }, 5000)
+            return EvalInterval;
+
+          }(), 5000)
         });
+
+        preFilterSearch.map(evaluation => {
+          let match = false;
+          this.evaltService.priorityList.every(element => {
+            match = element === evaluation.description;
+            return !match
+          });
+
+          if (match) {
+            evaluation['priority'] = 1;
+          } else {
+            evaluation['priority'] = 0;
+          }
+        });
+
+        preFilterSearch.sort( (a, b) => {
+          return b['priority'] - a['priority']
+        })
 
         return preFilterSearch;
       }),

@@ -49,6 +49,8 @@ export class EvaluationsRequestsComponent implements OnInit {
     }
   ];
 
+  
+
   constructor(
     public dialog: MatDialog,
     private fb: FormBuilder,
@@ -89,7 +91,7 @@ export class EvaluationsRequestsComponent implements OnInit {
             return String(evaluation.otMain).toLowerCase().includes(searchTerm) ||
               String(evaluation.otChild).toLowerCase().includes(searchTerm) ||
               String(evaluation.wof).toLowerCase().includes(searchTerm) ||
-              String(evaluation.partNumber).toLowerCase().includes(searchTerm)||
+              String(evaluation.partNumber).toLowerCase().includes(searchTerm) ||
               String(evaluation.description).toLowerCase().includes(searchTerm);
           });
         } else {
@@ -97,7 +99,7 @@ export class EvaluationsRequestsComponent implements OnInit {
             return String(evaluation.otMain).toLowerCase().includes(searchTerm) ||
               String(evaluation.otChild).toLowerCase().includes(searchTerm) ||
               String(evaluation.wof).toLowerCase().includes(searchTerm) ||
-              String(evaluation.partNumber).toLowerCase().includes(searchTerm)||
+              String(evaluation.partNumber).toLowerCase().includes(searchTerm) ||
               String(evaluation.description).toLowerCase().includes(searchTerm);
           })
         }
@@ -107,7 +109,7 @@ export class EvaluationsRequestsComponent implements OnInit {
             clearInterval(evaluation.registryTimer);
           }
 
-          evaluation.registryTimer = setInterval(() => {
+          evaluation.registryTimer = setInterval(function evalInterval() {
             // Get today's date and time
             const now = new Date().getTime();
             const registry = evaluation.createdAt['seconds'] * 1000;
@@ -143,9 +145,35 @@ export class EvaluationsRequestsComponent implements OnInit {
               minutes: minutes,
               seconds: seconds
             };
+            
+            return evalInterval
 
-          }, 5000);
+          }(), 5000);
         });
+
+        setInterval(function hello() {
+          console.log('world');
+          return hello;
+        }(), 5000);
+
+        preFilterSearch.map(evaluation => {
+          let match = false;
+          this.evaltService.priorityList.every(element => {
+            match = element === evaluation.description;
+            return !match
+          });
+
+          if (match) {
+            evaluation['priority'] = 1;
+          } else {
+            evaluation['priority'] = 0;
+          }
+        });
+
+        preFilterSearch.sort( (a, b) => {
+          return b['priority'] - a['priority']
+        })
+        
 
         return preFilterSearch;
       }),
