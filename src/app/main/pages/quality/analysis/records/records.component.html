@@ -44,11 +44,11 @@
          }">{{item.eventType}}</div>
           <div>
             <mat-menu #requestsMenu="matMenu">
-              <button mat-menu-item (click)="initDialog(item)">
+              <button mat-menu-item (click)="assignSpecialist(item)">
                 <mat-icon>how_to_reg</mat-icon> Asignar Esp.
               </button>
-              <button mat-menu-item (click)="obsDialog(item)">
-                <mat-icon>visibility</mat-icon> Observacion
+              <button mat-menu-item (click)="detailDialog(item)">
+                <mat-icon>visibility</mat-icon> Detalle
               </button>
               <button mat-menu-item (click)="timeline(item)">
                 <mat-icon>timeline</mat-icon> Línea de tiempo

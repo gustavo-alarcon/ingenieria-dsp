@@ -8,10 +8,12 @@ import { ConfigurationsComponent } from './dialogs/configurations/configurations
 import { DetailDialogComponent } from './dialogs/detail-dialog/detail-dialog.component';
 import { TimeLineDialogComponent } from './dialogs/time-line-dialog/time-line-dialog.component';
 import { AssignSpecialistDialogComponent } from './dialogs/assign-specialist-dialog/assign-specialist-dialog.component';
+import { DetailInternalDialogComponent } from './dialogs/detail-internal-dialog/detail-internal-dialog.component';
+import { DetailExternalDialogComponent } from './dialogs/detail-external-dialog/detail-external-dialog.component';
 
 
 @NgModule({
-  declarations: [RecordsComponent, ConfigurationsComponent, DetailDialogComponent, TimeLineDialogComponent, AssignSpecialistDialogComponent],
+  declarations: [RecordsComponent, ConfigurationsComponent, DetailDialogComponent, TimeLineDialogComponent, AssignSpecialistDialogComponent, DetailInternalDialogComponent, DetailExternalDialogComponent],
   imports: [
     CommonModule,
     RecordsRoutingModule,

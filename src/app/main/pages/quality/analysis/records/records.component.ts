@@ -8,6 +8,9 @@ import { QualityService } from 'src/app/main/services/quality.service';
 import { debounceTime, filter, map, startWith, tap } from 'rxjs/operators';
 import { ConfigurationsComponent } from './dialogs/configurations/configurations.component';
 import { Quality } from '../../../../models/quality.model';
+import { AssignSpecialistDialogComponent } from './dialogs/assign-specialist-dialog/assign-specialist-dialog.component';
+import { DetailExternalDialogComponent } from './dialogs/detail-external-dialog/detail-external-dialog.component';
+import { DetailInternalDialogComponent } from './dialogs/detail-internal-dialog/detail-internal-dialog.component';
 
 @Component({
   selector: 'app-records',
@@ -35,7 +38,7 @@ export class RecordsComponent implements OnInit {
         '201301413',
         '201301414',
         '201301415',
-        '201301411'], location: 'LIMA'
+        '201301411'], location: 'Internos'
     },
     {
       code: [
@@ -43,7 +46,7 @@ export class RecordsComponent implements OnInit {
         '201306413',
         '201306415',
         '201306409',
-        '201306411'], location: 'LA JOYA'
+        '201306411'], location: 'Externos'
     }
   ];
 
@@ -164,20 +167,42 @@ export class RecordsComponent implements OnInit {
     });
   }
 
-  initDialog(item: Evaluation): void {
-    this.dialog.open(ConfigurationsComponent, {
+  assignSpecialist(item: Evaluation): void {
+    this.dialog.open(AssignSpecialistDialogComponent, {
       maxWidth: 500,
       width: '90vw',
       data: item,
     });
   }
 
-  obsDialog(item): void {
-    this.dialog.open(ConfigurationsComponent, {
-      maxWidth: 500,
+  detailDialog(item: Quality, value: string,): void {
+    const optionsDialog = {
       width: '90vw',
-      data: item,
-    });
+      data: item
+    };
+    let dialogRef;
+
+    switch (value) {
+      case 'Internal':
+        dialogRef = this.dialog.open(DetailInternalDialogComponent,
+          optionsDialog,
+        );
+
+        dialogRef.afterClosed().subscribe(result => {
+          console.log(`Dialog result: ${result}`);
+        });
+        break;
+      case 'External':
+        dialogRef = this.dialog.open(DetailExternalDialogComponent,
+          optionsDialog,
+        );
+
+        dialogRef.afterClosed().subscribe(result => {
+          console.log(`Dialog result: ${result}`);
+        });
+        break;
+    }
+    
   }
 
   timeline(item): void {
