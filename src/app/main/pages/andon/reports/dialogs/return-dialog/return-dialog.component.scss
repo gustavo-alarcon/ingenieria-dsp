@@ -4,6 +4,16 @@
     justify-content: space-between;
 }
 
+.container-body{
+    margin-top: 50px;
+    padding: 24px 24px;
+    border: 1px solid lightgrey;    
+    border-radius: 10px 10px 10px 10px;
+    width: fit-content;
+    margin: 24px auto;
+    box-shadow: 2px 2px 4px lightgrey;
+}
+
 .form {
     &__input {
         width: 100%;
@@ -68,6 +78,16 @@
 */
 
 @media (min-width: 481px) and (max-width: 767px) {  
+    .container-body{
+        margin-top: 50px;
+        margin-right: 50px;
+        padding: 24px 24px;
+        border: 1px solid lightgrey;    
+        border-radius: 10px 10px 10px 10px;
+        width: fit-content;
+        margin: auto;
+        box-shadow: 2px 2px 4px lightgrey;
+    }
     .imge{
         width: 200px;
         height: 150px;
@@ -78,8 +98,8 @@
         }
     }
     .dropzone {
-        width: 400px;
-        height: 300px;
+        width: 300px;
+        height: 200px;
     }
 }
 
@@ -89,17 +109,26 @@
 */
 
 @media (min-width: 320px) and (max-width: 480px) {    
+
+    .container-body{
+        margin-top: 50px;
+        border: 1px solid lightgrey;    
+        border-radius: 10px 10px 10px 10px;
+        width: fit-content;
+        margin: auto;
+        box-shadow: 2px 2px 4px lightgrey;
+    }
     .imge{
         width: 150px;
         height: 100px;
     }
     .form{
         &__input{
-            width: 300px;
+            width: 250px;
         }
     }
     .dropzone {
-        width: 300px;
-        height: 200px;
+        width: 250px;
+        height: 150px;
     }
 }
