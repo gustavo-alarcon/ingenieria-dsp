@@ -1,16 +1,18 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { GenerateComponent } from './dialogs/generate/generate.component';
+import { InitialEvaluationsService } from 'src/app/main/services/initial-evaluations.service';
+import { DialogDispatchGenerateComponent } from './dialogs/generate/dialog-dispatch-generate.component';
 
+import jsPDF from 'jspdf';
 @Component({
-  selector: 'app-generate-reception',
-  templateUrl: './generate-reception.component.html',
-  styleUrls: ['./generate-reception.component.sass']
+  selector: 'app-generate-dispatch',
+  templateUrl: './generate-dispatch.component.html',
+  styleUrls: ['./generate-dispatch.component.scss']
 })
-export class GenerateReceptionComponent implements OnInit, OnDestroy {
+export class GenerateDispatchComponent implements OnInit {
   loading = new BehaviorSubject<boolean>(false);
   loading$ = this.loading.asObservable();
 
@@ -26,13 +28,21 @@ export class GenerateReceptionComponent implements OnInit, OnDestroy {
   resizedFiles: Object = {};
   imageCounter = 0;
 
+  data: any;
+  receptionFiles: Object = {};
+
   constructor(
-    private router: Router,
     private dialog: MatDialog,
-    private breakpoint: BreakpointObserver
+    private breakpoint: BreakpointObserver,
+    private initEvalService: InitialEvaluationsService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
+    if (!this.initEvalService.actualReception) {
+      this.router.navigateByUrl('main/init-eval-reports');
+    }
+
     this.subscriptions.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
       .subscribe(res => {
         if (res.matches) {
@@ -42,6 +52,7 @@ export class GenerateReceptionComponent implements OnInit, OnDestroy {
         }
       })
     )
+
   }
 
   ngOnDestroy(): void {
@@ -61,13 +72,20 @@ export class GenerateReceptionComponent implements OnInit, OnDestroy {
   }
 
   addNewImage(event): void {
-    if (this.imageCounter > 6) {
+    if (this.imageCounter > 12) {
       return
     }
     // we are using the name of file as key for the object to improve performance in search
     const name = event['name'];
+
+    // if (this.receptionFiles[name]) {
+    //   return
+    // }
+
+    // if (this.resizedFiles[name] && this.resizedFiles[name]['selected'] === false) {
     if (this.resizedFiles[name]) {
       delete this.resizedFiles[name];
+      this.imageCounter -= event['counter'];
     } else {
       this.resizedFiles[name] = { file: event['file'], selected: event['selected'], imageURL: event['imageURL'] };
     }
@@ -92,18 +110,32 @@ export class GenerateReceptionComponent implements OnInit, OnDestroy {
   }
 
   generateReport(): void {
-    console.log(this.resizedFiles);
-
-    this.dialog.open(GenerateComponent, {
+    this.dialog.open(DialogDispatchGenerateComponent, {
       width: '90vw',
       maxWidth: '600px',
       disableClose: true,
-      data: this.resizedFiles
+      data: {
+        files: this.resizedFiles,
+        reception: this.initEvalService.actualReception
+      }
     }).afterClosed().subscribe(res => {
       if (res) {
         this.router.navigateByUrl('main/init-eval-reports')
       }
     })
   }
+
+  checkReception(data: any): boolean {
+    let match = false;
+
+    this.initEvalService.actualReception.dataReception.every(file => {
+      match = data['name'] === file.name
+      return !match
+    })
+
+    return match
+  }
+
+
 
 }
