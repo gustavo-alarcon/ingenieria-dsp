@@ -27,26 +27,14 @@ export class RecordsComponent implements OnInit {
   searchForm: FormGroup;
   state = 'registered';
 
-  workshopControl = new FormControl('');
+  eventTypeControl = new FormControl('');
 
-  workshops = [
+  eventType = [
     {
-      code: [
-        '201301412',
-        '201301409',
-        '201301410',
-        '201301413',
-        '201301414',
-        '201301415',
-        '201301411'], location: 'Internos'
+      code: 'Internal', event: 'Internos'
     },
     {
-      code: [
-        '201306412',
-        '201306413',
-        '201306415',
-        '201306409',
-        '201306411'], location: 'Externos'
+      code: 'External', event: 'Externos'
     }
   ];
 
@@ -68,50 +56,40 @@ export class RecordsComponent implements OnInit {
         debounceTime(300),
         filter(input => input !== null),
         startWith<any>('')),
-      this.workshopControl.valueChanges.pipe(startWith('')),
+      this.eventTypeControl.valueChanges.pipe(startWith('')),
       this.auth.getGeneralConfig()
     ).pipe(
-      map(([quality, search, workshopCodes, generalConfig]) => {
+      map(([qualities, search, codeEventType, generalConfig]) => {
+
         const searchTerm = search.toLowerCase().trim();
-        let preFilterWorkshop: Quality[] = [];
-        let preFilterSearch: Quality[] = [...quality];
+        let preFilterEventType: Quality[] = [];
+        let preFilterSearch: Quality[] = [...qualities];
 
-        /* if (workshopCodes) {
-          preFilterWorkshop = evaluations.filter(evaluation => {
-            let match = false;
-            workshopCodes.every(code => {
-              match = String(evaluation.workshop) === code;
-              return !match;
-            });
-            return match;
-          });
+        if (codeEventType) {
+          preFilterEventType = qualities.filter(quality => quality.eventType === codeEventType);
 
-          preFilterSearch = preFilterWorkshop.filter(evaluation => {
-            return String(evaluation.otMain).toLowerCase().includes(searchTerm) ||
-              String(evaluation.otChild).toLowerCase().includes(searchTerm) ||
-              String(evaluation.wof).toLowerCase().includes(searchTerm) ||
-              String(evaluation.partNumber).toLowerCase().includes(searchTerm)||
-              String(evaluation.description).toLowerCase().includes(searchTerm);
+          preFilterSearch = preFilterEventType.filter(quality => {
+            return String(quality.workOrder).toLowerCase().includes(searchTerm) ||
+              String(quality.component).toLowerCase().includes(searchTerm) ||
+              String(quality.workShop).toLowerCase().includes(searchTerm) ;
           });
         } else {
-          preFilterSearch = evaluations.filter(evaluation => {
-            return String(evaluation.otMain).toLowerCase().includes(searchTerm) ||
-              String(evaluation.otChild).toLowerCase().includes(searchTerm) ||
-              String(evaluation.wof).toLowerCase().includes(searchTerm) ||
-              String(evaluation.partNumber).toLowerCase().includes(searchTerm)||
-              String(evaluation.description).toLowerCase().includes(searchTerm);
-          })
-        } */
+          preFilterSearch = qualities.filter(quality => {
+            return  String(quality.workOrder).toLowerCase().includes(searchTerm) ||
+            String(quality.component).toLowerCase().includes(searchTerm) ||
+            String(quality.workShop).toLowerCase().includes(searchTerm) ;
+          });
+        }
 
-        preFilterSearch.map(evaluation => {
-          if (evaluation.registryTimer) {
-            clearInterval(evaluation.registryTimer);
+        preFilterSearch.map(quality => {
+          if (quality.registryTimer) {
+            clearInterval(quality.registryTimer);
           }
 
-          evaluation.registryTimer = setInterval(() => {
+          quality.registryTimer = setInterval(() => {
             // Get today's date and time
             const now = new Date().getTime();
-            const registry = evaluation.createdAt['seconds'] * 1000;
+            const registry = quality.createdAt['seconds'] * 1000;
             // Find the distance between now and the count down date
             const distance = now - registry;
 
@@ -122,7 +100,7 @@ export class RecordsComponent implements OnInit {
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
             // Output the result in an element with id="demo"
-            evaluation.registryTimeElapsed = {
+            quality.registryTimeElapsed = {
               days: days,
               hours: hours,
               minutes: minutes,
@@ -136,9 +114,9 @@ export class RecordsComponent implements OnInit {
             const limitTotalMilliseconds = limitDay + limitHours + limitMinutes;
             const registryPercentageElapsed = distance / limitTotalMilliseconds;
 
-            evaluation.registryPercentageElapsed = 100 - (Math.ceil(registryPercentageElapsed * 100) > 100 ? 100 : Math.ceil(registryPercentageElapsed * 100));
+            quality.registryPercentageElapsed = 100 - (Math.ceil(registryPercentageElapsed * 100) > 100 ? 100 : Math.ceil(registryPercentageElapsed * 100));
 
-            evaluation.attentionTimeElapsed = {
+            quality.attentionTimeElapsed = {
               days: days,
               hours: hours,
               minutes: minutes,
@@ -175,7 +153,7 @@ export class RecordsComponent implements OnInit {
     });
   }
 
-  detailDialog(item: Quality, value: string,): void {
+  detailDialog(item: Quality, value: string): void {
     const optionsDialog = {
       maxWidth: 500,
       width: '90vw',

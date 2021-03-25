@@ -10,10 +10,10 @@
         <div class="requests__title--select mat-elevation-z4" >
           <mat-form-field style="width: 1000px" style="border: none;" appearance="null" > 
             <mat-icon matPrefix class="requests__title--select-icon">local_convenience_store</mat-icon>
-            <mat-select [formControl]="workshopControl" class="requests__title--select-input" >
+            <mat-select [formControl]="eventTypeControl" class="requests__title--select-input" >
               <mat-option value="" >Todos</mat-option>
-              <mat-option   *ngFor="let item of workshops" [value]="item.code">
-                {{item.location}}
+              <mat-option   *ngFor="let item of eventType" [value]="item.code">
+                {{item.event}}
               </mat-option>
             </mat-select>
           </mat-form-field>
