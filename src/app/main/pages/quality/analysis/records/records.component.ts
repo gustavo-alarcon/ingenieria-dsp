@@ -177,6 +177,7 @@ export class RecordsComponent implements OnInit {
 
   detailDialog(item: Quality, value: string,): void {
     const optionsDialog = {
+      maxWidth: 500,
       width: '90vw',
       data: item
     };

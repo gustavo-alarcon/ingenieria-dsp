@@ -40,14 +40,17 @@
         <div class="header-box">
           <div class="priority" [ngClass]="{
            'btn-event-internal': item.eventType === 'Internal'
-          ,'btn-event-external':  item.eventType === 'External'
-         }">{{item.eventType}}</div>
+           ,'btn-event-external':  item.eventType === 'External'
+            }">
+            <span *ngIf="item.eventType==='Internal'">Interno</span>
+            <span *ngIf="item.eventType==='External'">Externo</span>
+          </div>
           <div>
             <mat-menu #requestsMenu="matMenu">
               <button mat-menu-item (click)="assignSpecialist(item)">
                 <mat-icon>how_to_reg</mat-icon> Asignar Esp.
               </button>
-              <button mat-menu-item (click)="detailDialog(item)">
+              <button mat-menu-item (click)="detailDialog(item, item.eventType)">
                 <mat-icon>visibility</mat-icon> Detalle
               </button>
               <button mat-menu-item (click)="timeline(item)">
