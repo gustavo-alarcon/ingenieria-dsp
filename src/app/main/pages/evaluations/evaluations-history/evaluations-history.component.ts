@@ -262,9 +262,9 @@ export class EvaluationsHistoryComponent implements OnInit {
 
   async generatePDF(data: Evaluation) {
     let imageURL: string = data.images['0'];
-    let imageB64: HTMLImageElement = await this.getDataUri(imageURL);
+    let imageLoaded: HTMLImageElement = await this.getDataUri(imageURL);
     let pdf = new jsPDF('p', 'pt', 'a4');
-    pdf.addImage(imageB64, 0, 0, 250, 250);
+    pdf.addImage(imageLoaded, 0, 0, 250, 250);
     pdf.save('test.pdf');
   }
 
@@ -278,7 +278,6 @@ export class EvaluationsHistoryComponent implements OnInit {
 
       image.src = url;
     })
-
   }
 
 
