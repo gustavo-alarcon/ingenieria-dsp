@@ -17,6 +17,7 @@ import { FormControl } from '@angular/forms';
 import * as XLSX from 'xlsx';
 import { HistoryCreateDialogComponent } from './dialogs/history-create-dialog/history-create-dialog.component';
 import { HistoryTimeLineComponent } from './dialogs/history-time-line/history-time-line.component';
+import jsPDF from 'jspdf';
 
 @Component({
   selector: 'app-evaluations-history',
@@ -102,11 +103,10 @@ export class EvaluationsHistoryComponent implements OnInit {
             return String(evaluation.otMain).toLowerCase().includes(searchTerm) ||
               String(evaluation.otChild).toLowerCase().includes(searchTerm) ||
               String(evaluation.wof).toLowerCase().includes(searchTerm) ||
-              String(evaluation.partNumber).toLowerCase().includes(searchTerm)||
+              String(evaluation.partNumber).toLowerCase().includes(searchTerm) ||
               String(evaluation.description).toLowerCase().includes(searchTerm);
           })
         }
-
         return preFilterSearch;
       })
     ).pipe(
@@ -243,7 +243,7 @@ export class EvaluationsHistoryComponent implements OnInit {
         evaluation.processAt ? new Date(evaluation.processAt['seconds'] * 1000) : "---",
         evaluation.inquiryAt ? new Date(evaluation.inquiryAt['seconds'] * 1000) : "---",
       ]
-      
+
       table_xlsx.push(temp);
     })
 
@@ -259,5 +259,27 @@ export class EvaluationsHistoryComponent implements OnInit {
     const name = 'Evaluaciones_Resultados' + '.xlsx';
     XLSX.writeFile(wb, name);
   }
+
+  async generatePDF(data: Evaluation) {
+    let imageURL: string = data.images['0'];
+    let imageB64: HTMLImageElement = await this.getDataUri(imageURL);
+    let pdf = new jsPDF('p', 'pt', 'a4');
+    pdf.addImage(imageB64, 0, 0, 250, 250);
+    pdf.save('test.pdf');
+  }
+
+  async getDataUri(url): Promise<HTMLImageElement> {
+    return new Promise(resolve => {
+      var image = new Image();
+
+      image.onload = () => {
+        resolve(image);
+      };
+
+      image.src = url;
+    })
+
+  }
+
 
 }
