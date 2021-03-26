@@ -137,19 +137,19 @@ export class ConfigurationsComponent implements OnInit {
   saveListSpecialist(): void {
      try {
        const resp = this.qualityService.addQualityListSpecialist(this.listSpecialistArray, this.user);
-       this.loading.next(true);
+       //this.loading.next(true);
        this.subscription.add(resp.subscribe(
          batch => {
            if (batch) {
              batch.commit()
                .then(() => {
-                 this.loading.next(false);
+                // this.loading.next(false);
                  this.snackbar.open('✅ se guardo correctamente!', 'Aceptar', {
                    duration: 6000
                  });
                })
                .catch(err => {
-                 this.loading.next(false);
+                // this.loading.next(false);
                  this.snackbar.open('🚨 Hubo un error al crear!', 'Aceptar', {
                    duration: 6000
                  });
@@ -196,13 +196,13 @@ export class ConfigurationsComponent implements OnInit {
   saveListResponsibleArea(): void {
      try {
        const resp = this.qualityService.addQualityListResponsibleAreas(this.listResponsibleAreasArray, this.user);
-       this.loading.next(true);
+       //this.loading.next(true);
        this.subscription.add(resp.subscribe(
          batch => {
            if (batch) {
              batch.commit()
                .then(() => {
-                 this.loading.next(false);
+                 //this.loading.next(false);
                  this.snackbar.open('✅ se guardo correctamente!', 'Aceptar', {
                    duration: 6000
                  });
