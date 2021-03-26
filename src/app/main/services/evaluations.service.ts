@@ -251,7 +251,7 @@ export class EvaluationsService {
   }
 
 
-  updateImagesFinalizeData(evaluation: Evaluation, imagesObj, entry: EvaluationFinishForm, user: User): Observable<firebase.default.firestore.WriteBatch> {
+  updateImagesFinalizeData(evaluation: Evaluation, finalImages, entry: EvaluationFinishForm, user: User): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
 
@@ -263,7 +263,8 @@ export class EvaluationsService {
       result: entry.result,
       kindOfTest: entry.kindOfTest,
       comments: entry.comments,
-      images: imagesObj,
+      resultImage1: finalImages[0],
+      resultImage2: finalImages[1],
       length: entry.length,
       extends: entry.extends,
       internalStatus: 'finalized',

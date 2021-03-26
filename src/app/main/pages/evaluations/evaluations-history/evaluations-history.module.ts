@@ -13,6 +13,7 @@ import { HistoryObservationDialogComponent } from './dialogs/history-observation
 import { HistoryUploadFileDialogComponent } from './dialogs/history-upload-file-dialog/history-upload-file-dialog.component';
 import { HistoryTimeLineComponent } from './dialogs/history-time-line/history-time-line.component';
 import { ComponentsModule } from 'src/app/shared/components/components.module';
+import { HistoryReportsDialogComponent } from './dialogs/history-reports-dialog/history-reports-dialog.component';
 
 
 @NgModule({
@@ -25,6 +26,7 @@ import { ComponentsModule } from 'src/app/shared/components/components.module';
     HistoryObservationDialogComponent,
     HistoryUploadFileDialogComponent,
     HistoryTimeLineComponent,
+    HistoryReportsDialogComponent,
   ],
   exports: [
     EvaluationsHistoryComponent
