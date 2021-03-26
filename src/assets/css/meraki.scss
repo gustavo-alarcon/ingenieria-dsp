@@ -112,6 +112,23 @@
         font-family: "Poppins", sans-serif;
         margin: 0px !important;
     }
+
+    &__close {
+        height: 25px !important;
+        width: 25px !important;
+        line-height: 25px !important;
+    }
+}
+
+.ms-dialog-button {
+    border: 1px solid #6200ee !important;
+    color: #6200ee !important;
+    margin-right: 8px !important;
+
+    &--icon {
+        margin-right: 8px;
+        vertical-align: middle;
+    }
 }
 
 .ms-dialog-info {

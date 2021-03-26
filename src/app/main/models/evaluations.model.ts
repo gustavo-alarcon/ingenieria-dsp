@@ -14,7 +14,6 @@ export interface Evaluation {
     quantity: number;
     internalStatus: string; // registered //processed// finalized
     status: string; // Tipo de atención
-    // user?: string;
     wof: string; // Solicitud TR
     task: string; // Trabajo
     observations: string;
@@ -37,6 +36,8 @@ export interface Evaluation {
     result?: string; // Esta info viene de una lista standard (pendiente)
     kindOfTest?: string;
     comments?: string;
+    resultImage1?: string;
+    resultImage2?:  string;
     createdAt: Date;
     createdBy: User;
     editedAt: Date;

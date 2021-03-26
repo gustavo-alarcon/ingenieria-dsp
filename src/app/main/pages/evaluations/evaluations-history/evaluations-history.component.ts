@@ -18,6 +18,7 @@ import * as XLSX from 'xlsx';
 import { HistoryCreateDialogComponent } from './dialogs/history-create-dialog/history-create-dialog.component';
 import { HistoryTimeLineComponent } from './dialogs/history-time-line/history-time-line.component';
 import jsPDF from 'jspdf';
+import { HistoryReportsDialogComponent } from './dialogs/history-reports-dialog/history-reports-dialog.component';
 
 @Component({
   selector: 'app-evaluations-history',
@@ -185,6 +186,21 @@ export class EvaluationsHistoryComponent implements OnInit {
           console.log(`Dialog result: ${result}`);
         });
         break;
+      case 'report':
+        let data = this.historyDataSource.data.filter(element => element.result === 'fuera de servicio');
+        dialogRef = this.dialog.open(HistoryReportsDialogComponent,
+          {
+            maxWidth: 500,
+            width: '90vw',
+            disableClose: true,
+            data: data
+          }
+        );
+
+        dialogRef.afterClosed().subscribe(result => {
+          console.log(`Dialog result: ${result}`);
+        });
+        break;
     }
   }
 
@@ -259,26 +275,5 @@ export class EvaluationsHistoryComponent implements OnInit {
     const name = 'Evaluaciones_Resultados' + '.xlsx';
     XLSX.writeFile(wb, name);
   }
-
-  async generatePDF(data: Evaluation) {
-    let imageURL: string = data.images['0'];
-    let imageLoaded: HTMLImageElement = await this.getDataUri(imageURL);
-    let pdf = new jsPDF('p', 'pt', 'a4');
-    pdf.addImage(imageLoaded, 0, 0, 250, 250);
-    pdf.save('test.pdf');
-  }
-
-  async getDataUri(url): Promise<HTMLImageElement> {
-    return new Promise(resolve => {
-      var image = new Image();
-
-      image.onload = () => {
-        resolve(image);
-      };
-
-      image.src = url;
-    })
-  }
-
 
 }
