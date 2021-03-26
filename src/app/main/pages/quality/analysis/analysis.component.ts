@@ -14,8 +14,8 @@ export class AnalysisComponent implements OnInit {
   constructor(private router: Router) {
     this.navLinks = [
       {
-        label: 'REGISTRO',
-        link: './request',
+        label: 'REGISTROS',
+        link: './records',
         index: 0  
       }, {
         label: 'EN PROCESO',
@@ -23,11 +23,11 @@ export class AnalysisComponent implements OnInit {
         index: 1
       }, {
         label: 'SIGUIMIENTO',
-        link: './history',
+        link: './tracing',
         index: 2
       }, {
         label: 'RESULTADOS',
-        link: './settings',
+        link: './results',
         index: 3
       },
     ];

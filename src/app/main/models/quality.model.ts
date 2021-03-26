@@ -6,6 +6,19 @@ export interface Quality{
     createdBy: User;
     editedAt?: Date;
     edited?: User;
+
+    registryTimer?: any;
+    registryTimeElapsed?: QualityTimer;
+    registryPercentageElapsed?: number;
+    processAt?: Date;
+    processTimer?: any;
+    processTimeElapsed?: QualityTimer;
+    processPercentageElapsed?: number;
+    inquiryAt?: Date;
+    attentionTimeElapsed?: QualityTimer;
+    finalizedAt?: Date;
+    finalizedBy: User;
+
     eventType: string; //Internal , External
     workOrder?: number;
     component?: string;
@@ -27,5 +40,26 @@ export interface Quality{
     question3?: string;
     question4?: string;
     file?: string;
+ 
+}
 
+export interface QualityTimer {
+    days: number;
+    hours: number;
+    minutes: number;
+    seconds: number;
+}
+
+export interface QualityListSpecialist{
+    id: string;
+    specialist: string;
+    createdAt: Date;
+    createdBy: User;
+}
+
+export interface QualityListResponsibleArea{
+    id: string;
+    responsable: string;
+    createdAt: Date;
+    createdBy: User;
 }

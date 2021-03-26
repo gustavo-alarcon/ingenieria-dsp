@@ -1,0 +1,64 @@
+<div class="container">
+    <div mat-dialog-title class="header">
+        <mat-icon class="header__icon">how_to_reg</mat-icon>
+        <h3 class="header__title">
+            Asignar especialista
+        </h3>
+        <span class="ms-fill"></span>
+      
+        <div mat-dialog-close class="header__icon-clear">
+            <mat-icon>clear</mat-icon>
+        </div>
+    </div>    
+    <mat-divider></mat-divider>
+
+    <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+    <mat-dialog-content style="margin-top: 20px;" >
+        <div>
+            <form [formGroup]="timerFormGroup" class="timer-container">
+                <mat-form-field appearance="outline" id="result" class="timer-container__input">
+                    <mat-label>Especialista</mat-label>
+                      <input  matInput type="text" placeholder="Especialista" formControlName="specialist"                         
+                      >                   
+                    <mat-error *ngIf="timerFormGroup.controls['specialist'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" id="result" class="timer-container__input">                     
+                    <mat-label>Enviar a</mat-label>
+                    <mat-chip-list #chipList aria-label="Fruit selection">
+                      <mat-chip
+                        *ngFor="let fruit of fruits"
+                        [selectable]="selectable"
+                        [removable]="removable"
+                        (removed)="remove(fruit)">
+                        {{fruit}}
+                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                      </mat-chip>
+                      <input
+                        placeholder="New fruit..."
+                        #fruitInput
+                        [formControl]="fruitCtrl"
+                        [matAutocomplete]="auto"
+                        [matChipInputFor]="chipList"
+                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                        (matChipInputTokenEnd)="add($event)">
+                    </mat-chip-list>
+                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                      <mat-option *ngFor="let fruit of filteredFruits | async" [value]="fruit">
+                        {{fruit}}
+                      </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+                <br>
+            </form>
+        </div>
+
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close>CERRAR</button>
+        <button type="button" mat-raised-button color="primary" class="footer__btn-save"
+            (click)="save()">INICIAR</button>
+    </mat-dialog-actions>
+</div>
