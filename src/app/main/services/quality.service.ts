@@ -3,7 +3,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Quality, QualityTimer } from '../models/quality.model';
+import { Quality, QualityTimer, QualityListSpecialist, QualityListResponsibleArea } from '../models/quality.model';
 import { User } from '../models/user-model';
 
 @Injectable({
@@ -152,4 +152,105 @@ export class QualityService {
     return of(batch);
   }
   
+
+
+  // get all QualityListSpecialist
+  getAllQualityListSpecialist(): Observable<QualityListSpecialist[]> {
+    return this.afs
+      .collection<QualityListSpecialist>(
+        `/db/generalConfig/qualityListSpecialist`,
+        (ref) => ref.orderBy('createdAt', 'asc')
+      )
+      .valueChanges();
+  }
+
+  /**
+   * Creates the qualityListSpecialist entry into firestore's qualityListSpecialist collection
+   * @param {QualityListSpecialist} form - Form data passed on request creation
+   * @param {User} user - User's data in actual session
+   */
+   addQualityListSpecialist(
+    listSpecialist: QualityListSpecialist[],
+    user: User
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    const date = new Date();
+    const batch = this.afs.firestore.batch();
+    listSpecialist.forEach((el) => {
+      const qualityDocRef = this.afs.firestore
+        .collection(`/db/generalConfig/qualityListSpecialist`)
+        .doc();
+
+      if (!el.id) {
+        const objAux: any = {
+          id: qualityDocRef.id,
+          specialist  : el.specialist,
+          createdBy: user,
+          createdAt: date,
+        };
+        batch.set(qualityDocRef, objAux);
+      }
+    });
+    return of(batch);
+  }
+
+  deleteQualityListSpecialist(id: string): void {
+    this.afs.firestore
+      .collection(`/db/generalConfig/qualityListSpecialist`)
+      .doc(id)
+      .delete()
+      .then(() => {})
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  // get all QualityListResponsibleArea
+  getAllQualityListResponsibleAreas(): Observable<QualityListResponsibleArea[]> {
+    return this.afs
+      .collection<QualityListResponsibleArea>(
+        `/db/generalConfig/qualityListResponsibleArea`,
+        (ref) => ref.orderBy('createdAt', 'asc')
+      )
+      .valueChanges();
+  }
+
+  /**
+   * Creates the qualityListSpecialist entry into firestore's qualityListSpecialist collection
+   * @param {QualityListResponsibleArea} form - Form data passed on request creation
+   * @param {User} user - User's data in actual session
+   */
+   addQualityListResponsibleAreas(
+    ListResponsibleAreas: QualityListResponsibleArea[],
+    user: User
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    const date = new Date();
+    const batch = this.afs.firestore.batch();
+    ListResponsibleAreas.forEach((el) => {
+      const qualityDocRef = this.afs.firestore
+        .collection(`/db/generalConfig/qualityListResponsibleArea`)
+        .doc();
+
+      if (!el.id) {
+        const objAux: any = {
+          id: qualityDocRef.id,
+          responsable  : el.responsable,
+          createdBy: user,
+          createdAt: date,
+        };
+        batch.set(qualityDocRef, objAux);
+      }
+    });
+    return of(batch);
+  }
+
+  deleteQualityListResponsibleAreas(id: string): void {
+    this.afs.firestore
+      .collection(`/db/generalConfig/qualityListResponsibleArea`)
+      .doc(id)
+      .delete()
+      .then(() => {})
+      .catch((error) => {
+        console.log(error);
+      });
+  }
 }

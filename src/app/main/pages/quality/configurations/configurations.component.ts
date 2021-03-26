@@ -8,6 +8,7 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 import { User } from 'src/app/main/models/user-model';
 import { QualityService } from 'src/app/main/services/quality.service';
 import { MyErrorStateMatcher } from '../../evaluations/evaluations-settings/evaluations-settings.component';
+import { QualityListSpecialist, QualityListResponsibleArea } from '../../../models/quality.model';
 
 @Component({
   selector: 'app-configurations',
@@ -23,8 +24,14 @@ export class ConfigurationsComponent implements OnInit {
 
   listDiffusionForm = new FormArray([]);
 
+  listSpecialistControl = new FormControl(null, [Validators.required]);
+  listSpecialistArray = [];
+  
+  listResponsibleAreasControl  = new FormControl(null, [Validators.required]);
+  listResponsibleAreasArray = [];
 
-  listProblemTypeFormControl = new FormControl(null, [Validators.required]);
+
+
   matcher = new MyErrorStateMatcher();
   listProblemTypeArray = [];
   listNameBahiaArray = [];
@@ -57,181 +64,164 @@ export class ConfigurationsComponent implements OnInit {
       })
     )
 
-    this.listBahiasForm = this.fb.group({
-      bahias: this.fb.array([
-        this.fb.group({
-          workShop: ['', Validators.required],
-          name: ['', Validators.required],
-        })
-      ])
-    });
 
     this.loading.next(true);
     this.subscription.add(this.auth.user$.subscribe(user => {
       this.user = user;
     }));
 
-    /* this.subscription.add(
-      this.andonService.getAllAndonSettingsProblemType().subscribe((resp) => {
+    this.subscription.add(
+      this.qualityService.getAllQualityListSpecialist().subscribe((resp) => {
         if (resp) {
-          this.listProblemTypeArray = resp;
+          this.listSpecialistArray = resp;
         } else {
-          this.listProblemTypeArray = [];
+          this.listSpecialistArray = [];
         }
       })
     );
 
+    
+
     this.subscription.add(
-      this.andonService.getAllAndonSettingsListBahias()
+      this.qualityService.getAllQualityListResponsibleAreas()
       .subscribe((resp) => {
         if (resp) {
-          this.listNameBahiaArray = resp;
+          this.listResponsibleAreasArray = resp;
         } else {
-          this.listProblemTypeArray = [];
+          this.listResponsibleAreasArray = [];
         }
       })
-    ); */
+    );
 
     this.loading.next(false);
   }
+  
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
   addListDiffusion(): void {
     this.listDiffusionForm.push(new FormControl(''));
   }
-
-  addListProblemType(): void {
-  /*   if (this.listProblemTypeFormControl.valid) {
-      const objAux: AndonProblemType = {
+ 
+  addListSpecialist(): void {
+    if (this.listSpecialistControl.valid) {
+      const objAux: QualityListSpecialist = {
         id: null,
-        problemType: this.listProblemTypeFormControl.value.trim().toLowerCase(),
+        specialist: this.listSpecialistControl.value.trim().toLowerCase(),
         createdAt: null,
         createdBy: null,
       };
-      const valueIsEquals = (currentValue) => currentValue.problemType !== objAux.problemType;
-      if (this.listProblemTypeArray.every(valueIsEquals)) {
-        this.listProblemTypeArray.push(objAux);
+      const valueIsEquals = (currentValue) => currentValue.specialist !== objAux.specialist;
+      if (this.listSpecialistArray.every(valueIsEquals)) {
+        this.listSpecialistArray.push(objAux);
       }
-      this.listProblemTypeFormControl.reset();
-    } */
+      this.listSpecialistControl.reset();
+    }
   }
-  async deleteListProblemType(index: number): Promise<void> {
-   /*  if (this.listProblemTypeArray[index].id) {
+  async deleteListSpecialist(index: number): Promise<void> {
+    if (this.listSpecialistArray[index].id) {
       this.loading.next(true);
-      await this.andonService.deleteAndonSettingsProblemType(this.listProblemTypeArray[index].id);
+      await this.qualityService.deleteQualityListSpecialist(this.listSpecialistArray[index].id);
       this.snackbar.open('✅ Elemento borrado correctamente', 'Aceptar', {
         duration: 6000
       });
       this.loading.next(false);
     }
 
-    this.listProblemTypeArray.splice(index, 1);
-    this.loading.next(false); */
+    this.listSpecialistArray.splice(index, 1);
+    this.loading.next(false);
 
   }
-  deleteNameBahia(item): void{
-  /*   try {
-      this.loading.next(true);
-      if (item) {
-        this.andonService.deleteAndonListBahia(item.id)
-        .pipe(
-          take(1)
-        ).subscribe(batch => {
-          batch.commit()
-            .then(() => {
-              this.snackbar.open('✅ Registro borrado correctamente', 'Aceptar', {
-                duration: 6000
-              });
-              this.loading.next(false);
-            });
-        });
+
+  saveListSpecialist(): void {
+     try {
+       const resp = this.qualityService.addQualityListSpecialist(this.listSpecialistArray, this.user);
+       this.loading.next(true);
+       this.subscription.add(resp.subscribe(
+         batch => {
+           if (batch) {
+             batch.commit()
+               .then(() => {
+                 this.loading.next(false);
+                 this.snackbar.open('✅ se guardo correctamente!', 'Aceptar', {
+                   duration: 6000
+                 });
+               })
+               .catch(err => {
+                 this.loading.next(false);
+                 this.snackbar.open('🚨 Hubo un error al crear!', 'Aceptar', {
+                   duration: 6000
+                 });
+               });
+           }
+         }
+       ));
+     } catch (error) {
+       console.log(error);
+       this.loading.next(false);
+     }
+   }
+
+  addListResponsibleArea(): void {
+    if (this.listResponsibleAreasControl.valid) {
+      const objAux: QualityListResponsibleArea = {
+        id: null,
+        responsable: this.listResponsibleAreasControl.value.trim().toLowerCase(),
+        createdAt: null,
+        createdBy: null,
+      };
+      const valueIsEquals = (currentValue) => currentValue.responsable !== objAux.responsable;
+      if (this.listResponsibleAreasArray.every(valueIsEquals)) {
+        this.listResponsibleAreasArray.push(objAux);
       }
-    } catch (error) {
-      this.snackbar.open('✅ Error al borrar el registro', 'Aceptar', {
+      this.listResponsibleAreasControl.reset();
+    }
+  }
+  async deleteListResponsibleArea(index: number): Promise<void> {
+    if (this.listResponsibleAreasArray[index].id) {
+      this.loading.next(true);
+      await this.qualityService.deleteQualityListResponsibleAreas(this.listResponsibleAreasArray[index].id);
+      this.snackbar.open('✅ Elemento borrado correctamente', 'Aceptar', {
         duration: 6000
       });
-    } */
-
-  }
-  saveDataProblemType(): void {
-   /*  try {
-      const resp = this.andonService.addAndonSettingsProblemType(this.listProblemTypeArray, this.user);
-      this.loading.next(true);
-      this.subscription.add(resp.subscribe(
-        batch => {
-          if (batch) {
-            batch.commit()
-              .then(() => {
-                this.loading.next(false);
-                this.snackbar.open('✅ Lista tipo de resultado creada!', 'Aceptar', {
-                  duration: 6000
-                });
-              })
-              .catch(err => {
-                this.loading.next(false);
-                this.snackbar.open('🚨 Hubo un error creando tipo de resultado!', 'Aceptar', {
-                  duration: 6000
-                });
-              });
-          }
-        }
-      ));
-    } catch (error) {
-      console.log(error);
       this.loading.next(false);
-    } */
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
-
-  get bahias(): FormArray {
-    return this.listBahiasForm.get('bahias') as FormArray;
-  }
-  addControl(): void {
-    const group = this.fb.group({
-      workShop: ['', Validators.required],
-      name: ['', Validators.required],
-    });
-
-    this.bahias.push(group);
-  }
-  deleteControl(index: number): void {
-    this.bahias.removeAt(index);
-  }
-
-  save(): void {
-    /* this.loading.next(true);
-    if (this.listBahiasForm.invalid) {
-      this.listBahiasForm.markAllAsTouched();
-      this.loading.next(false);
-      return;
-    } else {
-      this.auth.user$.pipe(
-        take(1),
-        switchMap(user => {
-          return this.andonService.createListBahiasAndon(this.listBahiasForm.value, user);
-        })
-      ).subscribe(batch => {
-        if (batch) {
-          batch.commit()
-            .then(() => {
-              this.loading.next(false);
-              this.snackbar.open('✅ Mejoras registradas!', 'Aceptar', {
-                duration: 6000
-              });
-              this.listBahiasForm.reset();
-            })
-            .catch(err => {
-              this.loading.next(false);
-              this.snackbar.open('🚨 Hubo un error guardando las mejoras!', 'Aceptar', {
-                duration: 6000
-              });
-            });
-        }
-      });
     }
- */
+
+    this.listResponsibleAreasArray.splice(index, 1);
+    this.loading.next(false);
+
   }
+
+  saveListResponsibleArea(): void {
+     try {
+       const resp = this.qualityService.addQualityListResponsibleAreas(this.listResponsibleAreasArray, this.user);
+       this.loading.next(true);
+       this.subscription.add(resp.subscribe(
+         batch => {
+           if (batch) {
+             batch.commit()
+               .then(() => {
+                 this.loading.next(false);
+                 this.snackbar.open('✅ se guardo correctamente!', 'Aceptar', {
+                   duration: 6000
+                 });
+               })
+               .catch(err => {
+                 this.loading.next(false);
+                 this.snackbar.open('🚨 Hubo un error al crear!', 'Aceptar', {
+                   duration: 6000
+                 });
+               });
+           }
+         }
+       ));
+     } catch (error) {
+       console.log(error);
+       this.loading.next(false);
+     }
+   }
+
 
   setHandsetContainer(): void {
     this.containerStyle = {

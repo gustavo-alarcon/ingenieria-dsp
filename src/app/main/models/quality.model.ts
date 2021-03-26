@@ -49,3 +49,17 @@ export interface QualityTimer {
     minutes: number;
     seconds: number;
 }
+
+export interface QualityListSpecialist{
+    id: string;
+    specialist: string;
+    createdAt: Date;
+    createdBy: User;
+}
+
+export interface QualityListResponsibleArea{
+    id: string;
+    responsable: string;
+    createdAt: Date;
+    createdBy: User;
+}
