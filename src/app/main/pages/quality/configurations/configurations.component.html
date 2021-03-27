@@ -22,12 +22,9 @@
                                 <mat-card-header>
                                     <mat-card-title class="container-diffusion__title"> 
                                         <span class="container-diffusion__title--name"> Lista de {{broadcast.name}} </span>
-                                        <!-- <button type="button" aria-label="saveDataDifusion" mat-button class="container-settings__btn-save"
-                                         (click)="saveListSpecialist()">
-                                            GUARDAR
-                                        </button> -->
+                                        
                                         <button mat-icon-button aria-label="deletelistResult"
-                                         (click)="deleteListBroadcast(broadcast)" >
+                                         (click)="deleteListBroadcast(broadcast,i)" >
                                             <mat-icon style="color: #FF2D2D; ">delete</mat-icon>
                                         </button>
                                     </mat-card-title>
@@ -37,19 +34,21 @@
                             <mat-card class="mat-elevation-z0 container-expansion1__content-card">
                                 <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
                                 <mat-card-header class="container-expansion1__content-card--header">
+
                                     <mat-form-field>
                                         <mat-label>Escribir</mat-label>
-                                        <input type="text" matInput placeholder="Escribir" [formControl]="listDiffusionControl" 
-                                        (keyup.enter)="addListDiffusion(broadcast,i+1)"  [errorStateMatcher]="matcher" autocomplete="off">
-                                        <button mat-button *ngIf="listDiffusionControl.value" matSuffix mat-icon-button aria-label="clearResult" 
-                                        (click)="listDiffusionControl.reset()">
+                                        <input type="text" matInput placeholder="Escribir" [formControl]="broadcastFormArray.controls[i]" 
+                                        (keyup.enter)="addListDiffusion(broadcast,i)"  [errorStateMatcher]="matcher" autocomplete="off">
+                                        <button mat-button *ngIf="broadcastFormArray.controls[i].errors" matSuffix mat-icon-button aria-label="clearResult" 
+                                        (click)="broadcastFormArray.controls[i].reset()">
                                             <mat-icon>close</mat-icon>
                                         </button>
                                         <mat-hint>Presione ENTER para agregar</mat-hint>
-                                        <mat-error *ngIf="listDiffusionControl.hasError('required')">
+                                        <mat-error *ngIf="broadcastFormArray.controls[i].hasError('required')">
                                             El campo es <strong>Requerido</strong>
                                         </mat-error>
                                     </mat-form-field>
+
                                 </mat-card-header>
                                 <mat-card-content class="container-expansion1__content-card-content">
                                     <div role="list" *ngFor="let item of broadcast['emailList'] ;let j=index">
@@ -71,7 +70,7 @@
 
                 </div>
                 
-                <button type="button" aria-label="saveDataDifusion" mat-button class="container-settings__btn-save"
+                <button type="button" aria-label="saveDataDifusion" mat-button class="container-settings__btn-save" style="margin-top: 50px;"
                  (click)="addDiffusion()">
                     AGREGAR
                 </button>          
@@ -145,7 +144,7 @@
                         <mat-card-content>
                             <mat-card class="mat-elevation-z0" style="margin-left: -10px;margin-top: 5px;">
                                 <mat-card-header>
-                                    <mat-card-title>
+                                    <mat-card-title class="container-title">
                                         <span> Areas responsables </span>
                                         <button type="button" aria-label="saveDataDifusion" mat-button class="container-settings__btn-save"
                                          (click)="saveListResponsibleArea()">
@@ -194,3 +193,4 @@
     </div>
 
 </div>
+
