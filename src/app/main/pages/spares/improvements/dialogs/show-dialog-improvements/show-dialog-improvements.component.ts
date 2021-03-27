@@ -55,7 +55,7 @@ export class ShowDialogImprovementsComponent implements OnInit {
       currentPart: [{value: part.currentPart ? part.currentPart : null, disabled: false}],
       improvedPart: [{value: part.improvedPart ? part.improvedPart : null, disabled: false}],
       kit: [{value: part.kit ? part.kit : null, disabled: false}],
-      stock: [{value: part.stock ? part.stock : null, disabled: false}],
+      stock: [{value: part.stock ? part.stock : 0, disabled: false}],
       availability: [{value: part.availability ? part.availability : null, disabled: false}],
     });
 

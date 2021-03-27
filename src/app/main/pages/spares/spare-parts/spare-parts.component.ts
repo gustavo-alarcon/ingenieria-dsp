@@ -33,9 +33,8 @@ export class SparePartsComponent implements OnInit {
 
   onFileSelected(event): void {
     if (event.target.files && event.target.files[0]) {
-      let name = event.target.files[0].name
-
       var reader = new FileReader();
+
       reader.onload = (e: any) => {
         /* read workbook */
         const bstr: string = e.target.result;
@@ -45,16 +44,21 @@ export class SparePartsComponent implements OnInit {
         const ws: XLSX.WorkSheet = wb.Sheets[wsname];
         /* save data */
         this.selected = XLSX.utils.sheet_to_json(ws, { header: 1 });
-        this.upLoadXls(this.selected)
+
+        const csvRead = this.selected.slice(4, this.selected.length);
+        let dataReconstructed = [];
+
+        csvRead.forEach(element => {
+          dataReconstructed.push(element[0].replaceAll('-', '').replaceAll('"', '').split(','));
+        })
+
+        this.upLoadXls(dataReconstructed)
       };
       reader.readAsBinaryString(event.target.files[0]);
     }
   }
 
   changeValue(value, i) {
-    console.log(value)
-    console.log(i)
-
     this.checked = !value;
     this.selectCkeck = i;
   }
@@ -75,14 +79,14 @@ export class SparePartsComponent implements OnInit {
         obsArray
       ).pipe(map((list) => {
         console.log(list);
-        
+
         this.dataSparePart = list;
         this.fileButton.nativeElement.value = null;
         return list
       }))
 
     } else {
-      this.snackBar.open("el archivo esta vacio ", "Aceptar", {
+      this.snackBar.open("El archivo esta vacío", "Aceptar", {
         duration: 3000,
       });
     }
@@ -114,7 +118,7 @@ export class SparePartsComponent implements OnInit {
         table_xlsx.push(temp);
       }
     });
-    
+
     /* generate worksheet */
     const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(table_xlsx);
 

@@ -10,8 +10,9 @@ import { DeleteDialogImprovenmentsComponent } from './dialogs/delete-dialog-impr
 import { ValidateDialogImprovenmentsComponent } from './dialogs/validate-dialog-improvenments/validate-dialog-improvenments.component';
 import { tap } from 'rxjs/operators';
 import { ImprovementsService } from '../../../services/improvements.service';
-import { ImprovementEntry } from '../../../models/improvenents.model';
+import { Improvement, ImprovementEntry } from '../../../models/improvenents.model';
 import { ShowDialogImprovementsComponent } from './dialogs/show-dialog-improvements/show-dialog-improvements.component';
+import { MatSort, Sort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-improvements',
@@ -26,11 +27,18 @@ export class ImprovementsComponent implements OnInit {
 
   // Improvement
   improvementDataSource = new MatTableDataSource<ImprovementEntry>();
-  improvementDisplayedColumns: string[] = ['date', 'name', 'component', 'model', 'review', 'user', 'state', 'actions'];
+  improvementDisplayedColumns: string[] = ['date', 'name', 'component', 'model', 'criticalPart', 'createdBy', 'state', 'actions'];
 
   @ViewChild('improvementPaginator', { static: false }) set content(paginator: MatPaginator) {
     this.improvementDataSource.paginator = paginator;
   }
+
+  @ViewChild(MatSort, { static: false }) set sortContent(sort: MatSort) {
+    this.improvementDataSource.sort = sort;
+  }
+
+  sortedData: ImprovementEntry[];
+  improvementEntries: ImprovementEntry[];
 
   constructor(
     private impvServices: ImprovementsService,
@@ -42,6 +50,7 @@ export class ImprovementsComponent implements OnInit {
     this.improvement$ = this.impvServices.getAllImprovementEntries().pipe(
       tap(res => {
         if (res) {
+          this.improvementEntries = res;
           this.improvementDataSource.data = res;
         }
       })
@@ -105,6 +114,26 @@ export class ImprovementsComponent implements OnInit {
     })
   }
 
+  sortData(sort: Sort) {
+    const data = this.improvementEntries.slice();
+    if (!sort.active || sort.direction === '') {
+      this.improvementDataSource.data = data;
+      return;
+    }
 
+    this.improvementDataSource.data = data.sort((a, b) => {
+      const isAsc = sort.direction === 'asc';
+      switch (sort.active) {
+        case 'createdBy': return compare(a.createdBy.name, b.createdBy.name, isAsc);
+        default: return 0;
+      }
+    });
+  }
+
+
+}
+
+function compare(a: number | string, b: number | string, isAsc: boolean) {
+  return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }
 

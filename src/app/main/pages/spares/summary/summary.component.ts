@@ -1,11 +1,10 @@
-import { BaseOverlayDispatcher } from '@angular/cdk/overlay/dispatchers/base-overlay-dispatcher';
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map, take } from 'rxjs/operators';
+import { take, tap } from 'rxjs/operators';
 import { Improvement } from '../../../models/improvenents.model';
 import { ImprovementsService } from '../../../services/improvements.service';
 import * as XLSX from 'xlsx';
@@ -15,18 +14,23 @@ import * as XLSX from 'xlsx';
   templateUrl: './summary.component.html',
   styleUrls: ['./summary.component.scss']
 })
-export class SummaryComponent implements OnInit, AfterViewInit {
+export class SummaryComponent implements OnInit {
   loading = new BehaviorSubject<boolean>(false);
   loading$ = this.loading.asObservable();
 
   summaryDataSource = new MatTableDataSource<Improvement>();
-  summaryDisplayedColumns: string[] = ['date', 'component', 'model', 'media', 'description', 'criticalPart', 'name', 'quantity', 'improvedPart', 'currentPart', 'stock', 'availability', 'actions'];
+  summaryDisplayedColumns: string[] = ['createdAt', 'component', 'model', 'media', 'description', 'criticalPart', 'name', 'quantity', 'improvedPart', 'currentPart', 'stock', 'availability', 'createdBy', 'actions'];
 
   @ViewChild('summaryPaginator', { static: false }) set content(paginator: MatPaginator) {
     this.summaryDataSource.paginator = paginator;
   }
 
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatSort, { static: false }) set sortContent(sort: MatSort) {
+    this.summaryDataSource.sort = sort;
+  }
+
+  sortedData: Improvement[];
+  improvements: Improvement[];
 
   summary$: Observable<Improvement[]>;
 
@@ -39,18 +43,16 @@ export class SummaryComponent implements OnInit, AfterViewInit {
     this.summary$ =
       this.impService.getAllImprovements()
         .pipe(
-          map(list => {
+          tap(list => {
             if (list) {
-              return this.summaryDataSource.data = list;
+              this.improvements = list;
+              this.summaryDataSource.data = list;
             } else {
-              return this.summaryDataSource.data = [];
+              this.improvements = [];
+              this.summaryDataSource.data = [];
             }
           })
         );
-  }
-
-  ngAfterViewInit(): void {
-    this.summaryDataSource.sort = this.sort;
   }
 
   remove(id: string): void {
@@ -138,4 +140,24 @@ export class SummaryComponent implements OnInit, AfterViewInit {
     XLSX.writeFile(wb, name);
   }
 
+  sortData(sort: Sort) {
+    const data = this.improvements.slice();
+    if (!sort.active || sort.direction === '') {
+      this.summaryDataSource.data = data;
+      return;
+    }
+
+    this.summaryDataSource.data = data.sort((a, b) => {
+      const isAsc = sort.direction === 'asc';
+      switch (sort.active) {
+        case 'createdBy': return compare(a.createdBy.name, b.createdBy.name, isAsc);
+        default: return 0;
+      }
+    });
+  }
+
+}
+
+function compare(a: number | string, b: number | string, isAsc: boolean) {
+  return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }
