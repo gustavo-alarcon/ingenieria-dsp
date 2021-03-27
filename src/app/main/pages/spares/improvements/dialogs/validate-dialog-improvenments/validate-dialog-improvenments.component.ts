@@ -65,6 +65,8 @@ export class ValidateDialogImprovenmentsComponent implements OnInit {
       stock: [part.stock ? part.stock : 0, Validators.required],
       availability: [part.availability ? part.availability : '', Validators.required],
     });
+    console.log(part);
+    
 
     this.parts.push(group);
   }
