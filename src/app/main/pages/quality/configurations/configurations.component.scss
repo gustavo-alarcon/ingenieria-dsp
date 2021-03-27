@@ -6,9 +6,33 @@
     display: inline-flex;
 }
 
+.container-title{
+    display: flex;
+    flex-direction: row;
+    align-content: space-between;
+}
+
 .container-diffusion{
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
+
+    &__title{
+        display: flex;
+        flex-direction: row;
+        &--name{
+            font-size: 18px; 
+            margin-top: 10px; 
+            margin-left: 0;
+            padding-left: 0;
+            margin-right: 100px;
+
+        }
+        .mat-icon{
+            width: 30px;
+            height: 30px;
+            font-size: 30px;
+        }
+    }
     
 }
 .container-settings {
@@ -68,7 +92,7 @@
     overflow-y: hidden;
     &__content-card {
         margin-right: 20px;
-        width: 400px;
+        width: 350px;
         height: 246px;
         background: #ffffff;
         border: 1px solid #f1eeee;

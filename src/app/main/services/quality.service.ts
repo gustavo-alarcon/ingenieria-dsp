@@ -3,8 +3,9 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Quality, QualityTimer, QualityListSpecialist, QualityListResponsibleArea } from '../models/quality.model';
+import { Quality, QualityTimer, QualityListSpecialist, QualityListResponsibleArea, QualityBroadcastList } from '../models/quality.model';
 import { User } from '../models/user-model';
+import * as firebase from 'firebase/app';
 
 @Injectable({
   providedIn: 'root'
@@ -253,4 +254,94 @@ export class QualityService {
         console.log(error);
       });
   }
-}
+
+  // get all QualityListSpecialist
+  getAllBroadcastList(): Observable<QualityBroadcastList[]> {
+    return this.afs
+    .collection<QualityBroadcastList>(
+        `/db/generalConfig/qualityBroadcastList`,
+        (ref) => ref.orderBy('createdAt', 'asc')
+      )
+      .valueChanges();
+  }
+
+  addNewBrodcastList(
+    listBroadcast: string,
+    nameBrodcast: string,
+    user: User
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    // create reference for document in evaluation entries collection
+    const qualityDocRef = this.afs.firestore.collection(`/db/generalConfig/qualityBroadcastList`).doc();
+
+    // Structuring the data model
+    const data: any = {
+      id: qualityDocRef.id,
+      name: nameBrodcast,
+      emailList: firebase.default.firestore.FieldValue.arrayUnion(listBroadcast),
+      createdAt: new Date(),
+      createdBy: user
+    };
+    batch.set(qualityDocRef, data);
+
+    return of(batch);
+  }
+  async deleteImage(imagesObj: string): Promise<any> {
+    return await this.storage.storage.refFromURL(imagesObj).delete();
+  }
+
+  updateBrodcastList(
+    entryId: string,
+    broadcast: string,
+    user: User
+    ): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    // create reference for document in evaluation entries collection
+    const qualityDocRef = this.afs.firestore.doc(
+      `/db/generalConfig/qualityBroadcastList/${entryId}`
+      );
+      // Structuring the data model
+      const data: any = {
+        emailList: firebase.default.firestore.FieldValue.arrayUnion(broadcast),
+        editedAt: new Date(),
+        edited: user,
+      };
+      batch.update(qualityDocRef, data);
+
+      return of(batch);
+    }
+
+  updateBrodcastEmailList(
+    entryId: string,
+    broadcast: string,
+    ): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    // create reference for document in evaluation entries collection
+    const qualityDocRef = this.afs.firestore.doc(
+      `/db/generalConfig/qualityBroadcastList/${entryId}`
+      );
+      // Structuring the data model
+      const data: any = {
+        emailList: firebase.default.firestore.FieldValue.arrayRemove(broadcast),
+       /*  editedAt: new Date(),
+        edited: user, */
+      };
+      batch.update(qualityDocRef, data);
+
+      return of(batch);
+    }
+
+    deleteListBroadcast(id: string): void {
+      this.afs.firestore
+        .collection(`/db/generalConfig/qualityBroadcastList`)
+        .doc(id)
+        .delete()
+        .then(() => {})
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  }
