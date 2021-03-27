@@ -9,6 +9,22 @@
 .container-diffusion{
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
+
+    &__title{
+        display: flex;
+        flex-direction: row;
+        &--name{
+            font-size: 18px; 
+            margin-top: 10px; 
+            margin-left: 0;
+            padding-left: 0;
+        }
+        .mat-icon{
+            width: 30px;
+            height: 30px;
+            font-size: 30px;
+        }
+    }
     
 }
 .container-settings {

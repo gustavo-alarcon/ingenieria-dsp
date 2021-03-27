@@ -2,13 +2,13 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators, FormArray } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { BehaviorSubject, Subscription } from 'rxjs';
-import { switchMap, take } from 'rxjs/operators';
+import { BehaviorSubject, Subscription, Observable } from 'rxjs';
+import { switchMap, take, tap } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { User } from 'src/app/main/models/user-model';
 import { QualityService } from 'src/app/main/services/quality.service';
 import { MyErrorStateMatcher } from '../../evaluations/evaluations-settings/evaluations-settings.component';
-import { QualityListSpecialist, QualityListResponsibleArea } from '../../../models/quality.model';
+import { QualityListSpecialist, QualityListResponsibleArea, QualityBroadcastList } from '../../../models/quality.model';
 
 @Component({
   selector: 'app-configurations',
@@ -22,11 +22,14 @@ export class ConfigurationsComponent implements OnInit {
   panelOpenState = false;
   listBahiasForm: FormGroup;
 
-  listDiffusionForm = new FormArray([]);
+  diffusionForm = new FormArray([]);
+  listDiffusionControl = new FormControl(null, [Validators.required]);
+  listDiffusionArray = [];
+  broadcastListArray: QualityBroadcastList[] = [];
 
   listSpecialistControl = new FormControl(null, [Validators.required]);
   listSpecialistArray = [];
-  
+
   listResponsibleAreasControl  = new FormControl(null, [Validators.required]);
   listResponsibleAreasArray = [];
 
@@ -35,6 +38,9 @@ export class ConfigurationsComponent implements OnInit {
   matcher = new MyErrorStateMatcher();
   listProblemTypeArray = [];
   listNameBahiaArray = [];
+
+  broadcast$: Observable<QualityBroadcastList[] >;
+
 
   private subscription = new Subscription();
   user: User;
@@ -62,6 +68,14 @@ export class ConfigurationsComponent implements OnInit {
           this.setDesktopContainer();
         }
       })
+    );
+
+    this.broadcast$ = this.qualityService.getAllBroadcastList().pipe(
+      tap((res: QualityBroadcastList[]) => {
+        if (res) {
+          this.broadcastListArray = res;
+        }
+      })
     )
 
 
@@ -79,8 +93,6 @@ export class ConfigurationsComponent implements OnInit {
         }
       })
     );
-
-    
 
     this.subscription.add(
       this.qualityService.getAllQualityListResponsibleAreas()
@@ -100,8 +112,124 @@ export class ConfigurationsComponent implements OnInit {
     this.subscription.unsubscribe();
   }
 
-  addListDiffusion(): void {
-    this.listDiffusionForm.push(new FormControl(''));
+  addDiffusion(): void{
+    const lenghtArray = this.broadcastListArray.length;
+    const nameBroadcast = `difusion ${lenghtArray + 1}`;
+
+    const arrayList: QualityBroadcastList =
+      {
+        id: null,
+        name: nameBroadcast,
+        emailList: null,
+        createdAt: null,
+        createdBy: null
+      };
+
+    this.broadcastListArray.push(arrayList);
+
+  }
+
+  addListDiffusion(broadcast: QualityBroadcastList, index: number): void {
+    try {
+      const name = broadcast.name;
+      const newBroadcast = this.listDiffusionControl.value.trim().toLowerCase();
+      if (broadcast.id === null) {
+        const resp = this.qualityService.addNewBrodcastList(newBroadcast, name, this.user);
+        //this.loading.next(true);
+        this.subscription.add(resp.subscribe(
+          batch => {
+            if (batch) {
+              batch.commit()
+                .then(() => {
+                // this.loading.next(false);
+                  this.snackbar.open('✅ se guardo correctamente!', 'Aceptar', {
+                    duration: 6000
+                  });
+                  this.listDiffusionControl.reset();
+
+                })
+                .catch(err => {
+                // this.loading.next(false);
+                  this.snackbar.open('🚨 Hubo un error al crear!', 'Aceptar', {
+                    duration: 6000
+                  });
+                });
+            }
+          }
+        ));
+
+      }else{
+        let entryId = broadcast.id;
+
+        const resp = this.qualityService.updateBrodcastList(entryId, newBroadcast, this.user);
+        //this.loading.next(true);
+        this.subscription.add(resp.subscribe(
+          batch => {
+            if (batch) {
+              batch.commit()
+                .then(() => {
+                // this.loading.next(false);
+                  this.snackbar.open('✅ se guardo correctamente!', 'Aceptar', {
+                    duration: 6000
+                  });
+                  this.listDiffusionControl.reset();
+
+                })
+                .catch(err => {
+                // this.loading.next(false);
+                  this.snackbar.open('🚨 Hubo un error al crear!', 'Aceptar', {
+                    duration: 6000
+                  });
+                });
+            }
+          }
+        ));
+      }
+
+    } catch (error) {
+      console.log(error);
+      this.loading.next(false);
+    }
+
+  }
+
+  async deleteListBroadcast(broadcast: QualityBroadcastList): Promise<void> {
+      this.loading.next(true);
+      await this.qualityService.deleteListBroadcast(broadcast.id);
+      this.snackbar.open('✅ Elemento borrado correctamente', 'Aceptar', {
+        duration: 6000
+      });
+      this.loading.next(false);
+  }
+
+
+  updateBrocastListEmail(broadcast: QualityBroadcastList, broadcastList: string): void {
+    try {
+      const resp = this.qualityService.updateBrodcastEmailList(broadcast.id, broadcastList );
+      //this.loading.next(true);
+      this.subscription.add(resp.subscribe(
+        batch => {
+          if (batch) {
+            batch.commit()
+              .then(() => {
+               // this.loading.next(false);
+                this.snackbar.open('✅ se elimino correctamente!', 'Aceptar', {
+                  duration: 6000
+                });
+              })
+              .catch(err => {
+               // this.loading.next(false);
+                this.snackbar.open('🚨 Hubo un error al crear!', 'Aceptar', {
+                  duration: 6000
+                });
+              });
+          }
+        }
+      ));
+    } catch (error) {
+      console.log(error);
+      this.loading.next(false);
+    }
   }
  
   addListSpecialist(): void {

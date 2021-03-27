@@ -63,3 +63,12 @@ export interface QualityListResponsibleArea{
     createdAt: Date;
     createdBy: User;
 }
+export interface QualityBroadcastList{
+    id?: string;
+    name: string;
+    emailList: Array<string>;
+    createdAt: Date;
+    createdBy: User;
+    /* editedAt?: Date;
+    edited?: User; */
+}
