@@ -19,6 +19,7 @@ import { HistoryCreateDialogComponent } from './dialogs/history-create-dialog/hi
 import { HistoryTimeLineComponent } from './dialogs/history-time-line/history-time-line.component';
 import jsPDF from 'jspdf';
 import { HistoryReportsDialogComponent } from './dialogs/history-reports-dialog/history-reports-dialog.component';
+import { MatSort, Sort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-evaluations-history',
@@ -30,6 +31,8 @@ export class EvaluationsHistoryComponent implements OnInit {
   evaluation$: Observable<Evaluation[]>;
 
   historyDataSource = new MatTableDataSource<Evaluation>();
+  historyEntries: Evaluation[]= [];
+  
   improvementDisplayedColumns: string[] = [
     'otMain',
     'otChild',
@@ -55,6 +58,10 @@ export class EvaluationsHistoryComponent implements OnInit {
     paginator: MatPaginator
   ) {
     this.historyDataSource.paginator = paginator;
+  }
+
+  @ViewChild(MatSort, { static: false }) set sortContent(sort: MatSort) {
+    this.historyDataSource.sort = sort;
   }
 
   statusControl = new FormControl('');
@@ -113,6 +120,7 @@ export class EvaluationsHistoryComponent implements OnInit {
     ).pipe(
       tap(res => {
         if (res) {
+          this.historyEntries = res;
           this.historyDataSource.data = res;
         }
       })
@@ -276,4 +284,24 @@ export class EvaluationsHistoryComponent implements OnInit {
     XLSX.writeFile(wb, name);
   }
 
+  sortData(sort: Sort) {
+    const data = this.historyEntries.slice();
+    if (!sort.active || sort.direction === '') {
+      this.historyDataSource.data = data;
+      return;
+    }
+
+    this.historyDataSource.data = data.sort((a, b) => {
+      const isAsc = sort.direction === 'asc';
+      switch (sort.active) {
+        case 'createdBy': return compare(a.createdBy.name, b.createdBy.name, isAsc);
+        default: return 0;
+      }
+    });
+  }
+
+}
+
+function compare(a: number | string, b: number | string, isAsc: boolean) {
+  return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }
