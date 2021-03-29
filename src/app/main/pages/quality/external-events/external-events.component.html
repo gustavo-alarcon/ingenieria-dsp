@@ -11,21 +11,11 @@
             <h3 class="title-form">Registros de eventos de calidad - Externos</h3>
             <div >
                 <form [formGroup]="externalForm" autocomplete="off" class="container-form">
-                   
-                    <mat-form-field appearance="outline" id="result" class="container-form__area">
-                        <mat-label>Descripcion</mat-label>
-                          <input  matInput type="text" placeholder="Descripcion" formControlName="description"                         
-                          >
-                        <mat-error *ngIf="externalForm.controls['description'].errors">
-                            Campo <strong>requerido.</strong>
-                        </mat-error>
-                    </mat-form-field>
-                    <br>
-
+                    
                     <div class="container-form__work">
     
                         <mat-form-field appearance="outline" id="result" class="container-form__work--input">
-                            <mat-label>Orden de trabajo actual(operacion minera)</mat-label>
+                            <mat-label>Orden de trabajo actual</mat-label>
                             <input matInput type="number" placeholder="Orden de trabajo" formControlName="workdOrden" />
                             <mat-error *ngIf="externalForm.controls['workdOrden'].errors">
                                 Campo <strong>requerido.</strong>
@@ -77,7 +67,7 @@
                     <br />
                     <mat-form-field appearance="outline" id="result" class="container-form__area">
                         <mat-label>1 ¿Cuéntame que sucedió?</mat-label>
-                          <input  matInput type="text" placeholder="Bahia" formControlName="question1"                         
+                          <input  matInput type="text" placeholder=" Escribir..." formControlName="question1"                         
                           >
                         <mat-error *ngIf="externalForm.controls['question1'].errors">
                             Campo <strong>requerido.</strong>
@@ -86,7 +76,7 @@
                     <br> 
                     <mat-form-field appearance="outline" id="result" class="container-form__area">
                         <mat-label>2. ¿Qué acciones de corrección se realizaron para solucionar el problema?</mat-label>
-                          <input  matInput type="text" placeholder="Bahia" formControlName="question2"                         
+                          <input  matInput type="text" placeholder=" Escribir..." formControlName="question2"                         
                           >
                         <mat-error *ngIf="externalForm.controls['question2'].errors">
                             Campo <strong>requerido.</strong>
@@ -94,8 +84,8 @@
                     </mat-form-field>
                     <br> 
                     <mat-form-field appearance="outline" id="result" class="container-form__area">
-                        <mat-label>3. Cuál crees que fue la causa de la falla?</mat-label>
-                          <input  matInput type="text" placeholder="Bahia" formControlName="question3"                         
+                        <mat-label>3. ¿Cuál crees que fue la causa de la falla?</mat-label>
+                          <input  matInput type="text" placeholder=" Escribir..." formControlName="question3"                         
                           >
                         <mat-error *ngIf="externalForm.controls['question3'].errors">
                             Campo <strong>requerido.</strong>
@@ -104,7 +94,7 @@
                     <br> 
                     <mat-form-field appearance="outline" id="result" class="container-form__area">
                         <mat-label>4. ¿Qué recomendarias para evitar que este problema vuelva a suceder?</mat-label>
-                          <input  matInput type="text" placeholder="Bahia" formControlName="question4"                         
+                          <input  matInput type="text" placeholder=" Escribir...    " formControlName="question4"                         
                           >
                         <mat-error *ngIf="externalForm.controls['question4'].errors">
                             Campo <strong>requerido.</strong>
@@ -187,9 +177,7 @@
                     (click)="save()"
                     >
                         GUARDAR
-                    </button>
-
-                    
+                    </button>                   
     
                 </form>
             </div>

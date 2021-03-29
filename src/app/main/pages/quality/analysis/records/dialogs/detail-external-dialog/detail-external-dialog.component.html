@@ -2,7 +2,7 @@
     <div mat-dialog-title class="header">
         <mat-icon class="header__icon">visibility</mat-icon>
         <h3 class="header__title">
-            Detalles externos
+            Detalle evento externo
         </h3>
         <span class="ms-fill"></span>
       
@@ -16,7 +16,6 @@
     <mat-dialog-content style="margin-top: 20px;" >
         <div>
             <form [formGroup]="detailFormGroup" class="timer-container">
-                <p><span style="font-weight: bold;"> Descripcion :</span> {{data.description ? data.description : ''}}</p>
                 <p><span style="font-weight: bold;"> OT actual :</span> {{data.workOrder ? data.workOrder : ''}}</p>
                 <p><span style="font-weight: bold;"> Componente :</span> {{data.component ? data.component : ''}}</p>
                 <p><span style="font-weight: bold;"> Número de paqueteo :</span> {{data.packageNumber ? data.packageNumber : ''}}</p>

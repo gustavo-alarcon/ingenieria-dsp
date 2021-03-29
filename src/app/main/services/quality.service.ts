@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Component } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { Observable, of } from 'rxjs';
@@ -44,10 +44,9 @@ export class QualityService {
       createdBy: user,
       editedAt: null,
       edited: null,
-      eventType: 'Internal', //Internal , External
+      eventType: 'Interno', //Interno , Externo
       workOrder: form.workdOrden,
-      component: null,
-      description: form.description,
+      component: form.component,
       specialist: null,
       partNumber: form.nPart,
       workShop: form.workShop,
@@ -98,10 +97,9 @@ export class QualityService {
       createdBy: user,
       editedAt: null,
       edited: null,
-      eventType: 'External', //Internal , External
+      eventType: 'Externo', //Interno , Externo
       workOrder: form.workdOrden,
       component: form.component,
-      description: form.description,
       specialist: form.component,
       partNumber: form.nPart,
       workShop: null,

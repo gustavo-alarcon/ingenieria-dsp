@@ -80,7 +80,6 @@ export class ExternalEventsComponent implements OnInit {
 
   initFormInternal(): void{
     this.externalForm = this.fb.group({
-      description: ['', Validators.required],
       workdOrden: ['', Validators.required],
       component: ['', Validators.required],
       nPackage : ['', Validators.required],
