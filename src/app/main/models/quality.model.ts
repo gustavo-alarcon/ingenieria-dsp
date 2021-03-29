@@ -22,7 +22,6 @@ export interface Quality{
     eventType: string; //Internal , External
     workOrder?: number;
     component?: string;
-    description?: string;
     specialist?: string;
     partNumber?: number;
     workShop?: string;

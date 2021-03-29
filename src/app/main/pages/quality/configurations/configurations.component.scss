@@ -19,13 +19,13 @@
     &__title{
         display: flex;
         flex-direction: row;
+        justify-content: space-between;
         &--name{
             font-size: 18px; 
             margin-top: 10px; 
             margin-left: 0;
             padding-left: 0;
-            margin-right: 100px;
-
+            margin-right: 30px;
         }
         .mat-icon{
             width: 30px;

@@ -14,18 +14,17 @@
             <div >
                 <form [formGroup]="internalForm" autocomplete="off" class="container-form">
                    
-                    <mat-form-field appearance="outline" id="result" class="container-form__area">
-                        <mat-label>Descripcion</mat-label>
-                          <input  matInput type="text" placeholder="Descripcion" formControlName="description"                         
-                          >
-                        <mat-error *ngIf="internalForm.controls['description'].errors">
-                            Campo <strong>requerido.</strong>
-                        </mat-error>
-                    </mat-form-field>
-                    <br>
-
                     <div class="container-form__work">
     
+                        
+                        <mat-form-field appearance="outline" id="result" class="container-form__work--input">
+                            <mat-label>Taller</mat-label>
+                            <input matInput type="text" placeholder="taller" formControlName="workShop" />
+                            <mat-error *ngIf="internalForm.controls['workShop'].errors">
+                                Campo <strong>requerido.</strong>
+                            </mat-error>
+                        </mat-form-field>
+                        
                         <mat-form-field appearance="outline" id="result" class="container-form__work--input">
                             <mat-label>Orden de trabajo</mat-label>
                             <input matInput type="number" placeholder="Orden de trabajo" formControlName="workdOrden" />
@@ -35,13 +34,12 @@
                         </mat-form-field>
 
                         <mat-form-field appearance="outline" id="result" class="container-form__work--input">
-                            <mat-label>Taller</mat-label>
-                            <input matInput type="text" placeholder="taller" formControlName="workShop" />
-                            <mat-error *ngIf="internalForm.controls['workShop'].errors">
+                            <mat-label>Componente</mat-label>
+                            <input matInput type="text" placeholder="Nro de parte" formControlName="component" />
+                            <mat-error *ngIf="internalForm.controls['component'].errors">
                                 Campo <strong>requerido.</strong>
                             </mat-error>
                         </mat-form-field>
-
                         <mat-form-field appearance="outline" id="result" class="container-form__work--input">
                             <mat-label>Nro de parte</mat-label>
                             <input matInput type="text" placeholder="Nro de parte" formControlName="nPart" />
@@ -120,11 +118,11 @@
                         <div >
                             <input #fileInput2 style="display: none" type="file" 
                                    id="fileInput2"
-                                   (change)="uploadFiles($event)" accept=".xls,.xlsx"
+                                   (change)="uploadFiles($event)" accept="*"
                                    >
                                    <br>
                             <button type="file" aria-label="add" mat-button class="container-form__uploadXlx--btn-add"
-                                    accept="." 
+                                    accept="*" 
                                 (click)="fileInput2.click()">
                                 <mat-icon aria-label="agregar" class="icon-add">add</mat-icon>
                                 ADJUNTAR 
@@ -137,16 +135,13 @@
                     (click)="save()"
                     >
                         GUARDAR
-                    </button>
-
-                    
+                    </button>                  
     
                 </form>
             </div>
             <br>
             <br>
-        </mat-card>
-        
+        </mat-card>      
 
     </div>
 

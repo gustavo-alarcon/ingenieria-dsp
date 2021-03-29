@@ -31,10 +31,10 @@ export class RecordsComponent implements OnInit {
 
   eventType = [
     {
-      code: 'Internal', event: 'Internos'
+      code: 'Interno', event: 'Internos'
     },
     {
-      code: 'External', event: 'Externos'
+      code: 'Externo', event: 'Externos'
     }
   ];
 
@@ -162,7 +162,7 @@ export class RecordsComponent implements OnInit {
     let dialogRef;
 
     switch (value) {
-      case 'Internal':
+      case 'Interno':
         dialogRef = this.dialog.open(DetailInternalDialogComponent,
           optionsDialog,
         );
@@ -171,7 +171,7 @@ export class RecordsComponent implements OnInit {
           console.log(`Dialog result: ${result}`);
         });
         break;
-      case 'External':
+      case 'Externo':
         dialogRef = this.dialog.open(DetailExternalDialogComponent,
           optionsDialog,
         );

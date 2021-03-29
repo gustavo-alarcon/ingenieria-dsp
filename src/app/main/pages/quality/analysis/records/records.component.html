@@ -39,11 +39,10 @@
       <div class="box mat-elevation-z2" *ngFor="let item of evaluations">
         <div class="header-box">
           <div class="priority" [ngClass]="{
-           'btn-event-internal': item.eventType === 'Internal'
-           ,'btn-event-external':  item.eventType === 'External'
+           'btn-event-internal': item.eventType === 'Interno'
+           ,'btn-event-external':  item.eventType === 'Externo'
             }">
-            <span *ngIf="item.eventType==='Internal'">Interno</span>
-            <span *ngIf="item.eventType==='External'">Externo</span>
+             {{item.eventType}}
           </div>
           <div>
             <mat-menu #requestsMenu="matMenu">
@@ -64,7 +63,6 @@
         </div>
         <div class="info-box">
           <div class="lj" matTooltip="WOF" matTooltipPosition="above"><span>OT {{item.workOrder}}</span> </div>
-          <!-- <div class="info-row">OT: <span>{{item.workOrder}} </span> </div> -->
           <div class="info-row"> Componente: <span> {{item.component}}</span> </div>
           <div class="info-row"> Taller: <span> {{item.partNumber}}</span></div>        
           <div class="info-row"> Fecha: <span> {{(item.createdAt['seconds'] * 1000) | date : 'dd/MM/yy hh:mm:ss'}}</span></div>        

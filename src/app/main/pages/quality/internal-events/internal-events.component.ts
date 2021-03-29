@@ -82,7 +82,7 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
 
   initFormInternal(): void {
     this.internalForm = this.fb.group({
-      description: ['', Validators.required],
+      component: ['', Validators.required],
       workdOrden: ['', Validators.required],
       workShop: ['', Validators.required],
       nPart: ['', Validators.required],
