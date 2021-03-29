@@ -21,13 +21,14 @@
                         <mat-card-content>
                             <mat-card class="mat-elevation-z0" style="margin-left: -10px;margin-top: 5px;">
                                 <mat-card-header>
-                                    <mat-card-title class="container-diffusion__title"> 
-                                        <span class="container-diffusion__title--name"> Lista de {{broadcast.name}} </span>
-                                        
-                                        <button mat-icon-button aria-label="deletelistResult"
-                                         (click)="deleteListBroadcast(broadcast,i)" >
-                                            <mat-icon style="color: #FF2D2D; ">delete</mat-icon>
-                                        </button>
+                                    <mat-card-title > 
+                                        <div class="container-diffusion__title" >
+                                             <p class="container-diffusion__title--name"> Lista de {{broadcast.name}} </p>                                            
+                                            <button mat-icon-button aria-label="deletelistResult" class="container-diffusion__btn"
+                                            (click)="deleteListBroadcast(broadcast,i)" >
+                                                <mat-icon style="color: #FF2D2D; ">delete</mat-icon>
+                                            </button>
+                                        </div>                                        
                                     </mat-card-title>
                                 </mat-card-header>
                             </mat-card>

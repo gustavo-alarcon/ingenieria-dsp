@@ -170,11 +170,11 @@
                         <div >
                             <input #fileInput2 style="display: none" type="file" 
                                    id="fileInput2"
-                                   (change)="uploadFiles($event)" accept="."
+                                   (change)="uploadFiles($event)" accept="*"
                                    >
                                    <br>
                             <button type="file" aria-label="add" mat-button class="container-form__uploadXlx--btn-add"
-                                    accept=".csv,.xlsx" 
+                                    accept="*" 
                                 (click)="fileInput2.click()">
                                 <mat-icon aria-label="agregar" class="icon-add">add</mat-icon>
                                 ADJUNTAR 
