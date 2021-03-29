@@ -172,7 +172,7 @@ export class ExternalEventsComponent implements OnInit {
               .commit()
               .then(() => {
                 //this.loading.next(false)
-                this.snackbar.open('✅ se guardo correctamente!', 'Aceptar', {
+                this.snackbar.open('✅ Se guardo correctamente!', 'Aceptar', {
                   duration: 6000,
                 });
                 this.loading.next(false);

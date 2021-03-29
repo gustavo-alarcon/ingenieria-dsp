@@ -17,8 +17,8 @@ export class DetailExternalDialogComponent implements OnInit {
   loading = new BehaviorSubject<boolean>(false);
   loading$ = this.loading.asObservable();
 
-  imagesGeneral = [];
-  imagesDetail = [];
+  imagesGeneral: any  = [];
+  imagesDetail: any = [];
   nameFile: string;
   constructor(
     private fb: FormBuilder,
@@ -27,8 +27,9 @@ export class DetailExternalDialogComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.imagesGeneral = Object.values(this.data.generalImages);
-    this.imagesDetail = Object.values(this.data.detailImages);
+    this.imagesGeneral = Object.values(this.data.generalImages['0']);
+    this.imagesDetail = Object.values(this.data.detailImages['0']);
+
     this.nameFile =  this.data.file;
     this.initForm();
   }

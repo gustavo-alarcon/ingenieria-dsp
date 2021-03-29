@@ -44,7 +44,7 @@
 
                         <mat-form-field appearance="outline" id="result" class="container-form__work--input">
                             <mat-label>Nro de parte</mat-label>
-                            <input matInput type="number" placeholder="Nro de parte" formControlName="nPart" />
+                            <input matInput type="text" placeholder="Nro de parte" formControlName="nPart" />
                             <mat-error *ngIf="internalForm.controls['nPart'].errors">
                                 Campo <strong>requerido.</strong>
                             </mat-error>
@@ -124,7 +124,7 @@
                                    >
                                    <br>
                             <button type="file" aria-label="add" mat-button class="container-form__uploadXlx--btn-add"
-                                    accept=".csv,.xlsx" 
+                                    accept="." 
                                 (click)="fileInput2.click()">
                                 <mat-icon aria-label="agregar" class="icon-add">add</mat-icon>
                                 ADJUNTAR 

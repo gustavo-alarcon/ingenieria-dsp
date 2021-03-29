@@ -6,11 +6,12 @@
 
     <div class="container-settings">
         <mat-expansion-panel class="container-settings__color-expantion" 
-        (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+        [expanded]="step === 1" (opened)="setStep(1)" hideToggle>
             <mat-expansion-panel-header style="height: 58px;">
                 <mat-panel-title class="container-settings__header-title">
-                    Listas
+                    Envío de correos
                 </mat-panel-title>
+               
             </mat-expansion-panel-header>
             <div style="border: 10px;"></div>
 
@@ -64,14 +65,12 @@
                                     </div>
                                 </mat-card-content>
                             </mat-card>                
-                        </mat-card-content>                           
-                        
+                        </mat-card-content>                       
                     </div>
-
                 </div>
                 
-                <button type="button" aria-label="saveDataDifusion" mat-button class="container-settings__btn-save" style="margin-top: 50px;"
-                 (click)="addDiffusion()">
+                <button type="button" aria-label="saveDataDifusion" mat-button class="container-settings__btn-add" style="margin-top: 50px;"
+                 (click)="addBroadcast()">
                     AGREGAR
                 </button>          
 
@@ -82,7 +81,7 @@
 
 
     <div class="container-settings">
-        <mat-expansion-panel class="container-settings__color-expantion" (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+        <mat-expansion-panel class="container-settings__color-expantion" [expanded]="step === 2" (opened)="setStep(2)" hideToggle>
             <mat-expansion-panel-header style="height: 58px;">
                 <mat-panel-title class="container-settings__header-title">
                     Listas  

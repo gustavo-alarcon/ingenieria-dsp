@@ -58,13 +58,13 @@ export class QualityService {
       correctiveActions: null,
       riskLevel: null,
       state: null,
-      generalImages: imagesObj,
-      detailImages: imagesObjDetail,
+      generalImages: firebase.default.firestore.FieldValue.arrayUnion(imagesObj),
+      detailImages: firebase.default.firestore.FieldValue.arrayUnion(imagesObjDetail),
       question1: null,
       question2: null,
       question3: null,
       question4: null,
-      file: objFile,
+      file: firebase.default.firestore.FieldValue.arrayUnion(objFile),
     };
     batch.set(qualityDocRef, data);
 
@@ -112,13 +112,14 @@ export class QualityService {
       correctiveActions: null,
       riskLevel: null,
       state: null,
-      generalImages: imagesObj,
-      detailImages: imagesObjDetail,
+      generalImages: firebase.default.firestore.FieldValue.arrayUnion(imagesObj),
+      detailImages: firebase.default.firestore.FieldValue.arrayUnion(imagesObjDetail),
       question1: form.question1,
       question2: form.question2,
       question3: form.question3,
       question4: form.question4,
-      file: objFile,
+      file: firebase.default.firestore.FieldValue.arrayUnion(objFile),
+      
     };
     batch.set(qualityDocRef, data);
 
@@ -266,8 +267,7 @@ export class QualityService {
   }
 
   addNewBrodcastList(
-    listBroadcast: string,
-    nameBrodcast: string,
+    nameBroadcast: string,
     user: User
   ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
@@ -278,8 +278,8 @@ export class QualityService {
     // Structuring the data model
     const data: any = {
       id: qualityDocRef.id,
-      name: nameBrodcast,
-      emailList: firebase.default.firestore.FieldValue.arrayUnion(listBroadcast),
+      name: nameBroadcast,
+      emailList: null,
       createdAt: new Date(),
       createdBy: user
     };
@@ -334,7 +334,7 @@ export class QualityService {
       return of(batch);
     }
 
-    deleteListBroadcast(id: string): void {
+    /* deleteListBroadcast(id: string): void {
       this.afs.firestore
         .collection(`/db/generalConfig/qualityBroadcastList`)
         .doc(id)
@@ -343,5 +343,17 @@ export class QualityService {
         .catch((error) => {
           console.log(error);
         });
-    }
+    } */
+    /**
+   * Delete the passed broadcastList based in his ID
+   * @param {string} id - ID of the Andon to be removed
+   */
+     deleteListBroadcast(id: string): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    const broadcastDocRef = this.afs.firestore.doc(`/db/generalConfig/qualityBroadcastList/${id}`);
+    //
+    batch.delete(broadcastDocRef);
+    return of(batch);
+  }
   }
