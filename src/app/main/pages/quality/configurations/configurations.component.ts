@@ -1,3 +1,4 @@
+import { MyErrorStateMatcher } from './../../evaluations/evaluations-settings/evaluations-settings.component';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Component, OnInit } from '@angular/core';
 import {
@@ -13,12 +14,16 @@ import { switchMap, take, tap } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { User } from 'src/app/main/models/user-model';
 import { QualityService } from 'src/app/main/services/quality.service';
-import { MyErrorStateMatcher } from '../../evaluations/evaluations-settings/evaluations-settings.component';
 import {
   QualityListSpecialist,
   QualityListResponsibleArea,
   QualityBroadcastList,
 } from '../../../models/quality.model';
+import { MatDialog } from '@angular/material/dialog';
+import { DeleteBroadcastDialogComponent } from './dialogs/delete-broadcast-dialog/delete-broadcast-dialog.component';
+import { FormGroupDirective, NgForm } from '@angular/forms';
+import { ErrorStateMatcher } from '@angular/material/core';
+import { AddBroadcastDialogComponent } from './dialogs/add-broadcast-dialog/add-broadcast-dialog.component';
 
 @Component({
   selector: 'app-configurations',
@@ -50,13 +55,16 @@ export class ConfigurationsComponent implements OnInit {
 
   isMobile = false;
   containerStyle: any;
+  step = 0;
 
   constructor(
     private fb: FormBuilder,
     public auth: AuthService,
     private snackbar: MatSnackBar,
     private qualityService: QualityService,
-    private breakpoint: BreakpointObserver
+    private breakpoint: BreakpointObserver,
+    public dialog: MatDialog,
+
   ) {}
 
   ngOnInit(): void {
@@ -124,54 +132,26 @@ export class ConfigurationsComponent implements OnInit {
     this.subscription.unsubscribe();
   }
 
-  addDiffusion(): void {
-    const lenghtArray = this.broadcastListArray.length;
-    const nameBroadcast = `difusion ${lenghtArray + 1}`;
+  setStep(index: number): void {
+    this.step = index;
+  }
 
-    const arrayList: QualityBroadcastList = {
-      id: null,
-      name: nameBroadcast,
-      emailList: null,
-      createdAt: null,
-      createdBy: null,
-    };
+  addBroadcast(): void{
+    this.dialog.open(AddBroadcastDialogComponent, {
+      maxWidth: 500,
+      width: '90vw',
+    });
+
     this.broadcastFormArray.push(new FormControl(null, Validators.required));
-
-    this.broadcastListArray.push(arrayList);
   }
 
   addListDiffusion(broadcast: QualityBroadcastList, index: number): void {
-  
     try {
-      let name = broadcast.name;
-      let newBroadcast = this.broadcastFormArray.controls[index].value.trim().toLowerCase();
+      const name = broadcast.name;
+      const newBroadcast = this.broadcastFormArray.controls[index].value.trim().toLowerCase();
 
-      if (broadcast.id === null) {
-        const resp = this.qualityService.addNewBrodcastList(newBroadcast, name, this.user);
-        //this.loading.next(true);
-        this.subscription.add(resp.subscribe(
-          batch => {
-            if (batch) {
-              batch.commit()
-                .then(() => {
-                // this.loading.next(false);
-                  this.snackbar.open('✅ se guardo correctamente!', 'Aceptar', {
-                    duration: 6000
-                  });
-                  this.broadcastFormArray.removeAt(index);
-                })
-                .catch(err => {
-                // this.loading.next(false);
-                  this.snackbar.open('🚨 Hubo un error al crear!', 'Aceptar', {
-                    duration: 6000
-                  });
-                });
-            }
-          }
-        ));
-
-      }else{
-        let entryId = broadcast.id;
+      if ( broadcast.id){
+        const entryId = broadcast.id;
 
         const resp = this.qualityService.updateBrodcastList(entryId, newBroadcast, this.user);
         //this.loading.next(true);
@@ -180,15 +160,15 @@ export class ConfigurationsComponent implements OnInit {
             if (batch) {
               batch.commit()
                 .then(() => {
-                // this.loading.next(false);
-                  this.snackbar.open('✅ se guardo correctamente!', 'Aceptar', {
+                  //this.loading.next(false);
+                  this.snackbar.open('✅ Se guardo correctamente!', 'Aceptar', {
                     duration: 6000
                   });
                   this.broadcastFormArray.removeAt(index);
 
                 })
                 .catch(err => {
-                // this.loading.next(false);
+                  //this.loading.next(false);
                   this.snackbar.open('🚨 Hubo un error al actualizar  !', 'Aceptar', {
                     duration: 6000
                   });
@@ -204,18 +184,16 @@ export class ConfigurationsComponent implements OnInit {
     }
 
   }
-
   async deleteListBroadcast(
     broadcast: QualityBroadcastList,
     index: number
   ): Promise<void> {
-    console.log('broadcast:', broadcast);
-    console.log('index:', index);
     if (broadcast.id != null) {
       this.loading.next(true);
-      await this.qualityService.deleteListBroadcast(broadcast.id);
-      this.snackbar.open('✅ Elemento borrado correctamente', 'Aceptar', {
-        duration: 6000,
+      this.dialog.open(DeleteBroadcastDialogComponent, {
+        maxWidth: 500,
+        width: '90vw',
+        data: broadcast,
       });
       this.loading.next(false);
     } else {
@@ -240,7 +218,7 @@ export class ConfigurationsComponent implements OnInit {
               .commit()
               .then(() => {
                 // this.loading.next(false);
-                this.snackbar.open('✅ se elimino correctamente!', 'Aceptar', {
+                this.snackbar.open('✅ Se elimino correctamente!', 'Aceptar', {
                   duration: 6000,
                 });
               })
@@ -263,7 +241,7 @@ export class ConfigurationsComponent implements OnInit {
     if (this.listSpecialistControl.valid) {
       const objAux: QualityListSpecialist = {
         id: null,
-        specialist: this.listSpecialistControl.value.trim().toLowerCase(),
+        specialist: this.listSpecialistControl.value.trim(),
         createdAt: null,
         createdBy: null,
       };
@@ -305,7 +283,7 @@ export class ConfigurationsComponent implements OnInit {
               .commit()
               .then(() => {
                 // this.loading.next(false);
-                this.snackbar.open('✅ se guardo correctamente!', 'Aceptar', {
+                this.snackbar.open('✅ Se guardo correctamente!', 'Aceptar', {
                   duration: 6000,
                 });
               })
@@ -328,9 +306,7 @@ export class ConfigurationsComponent implements OnInit {
     if (this.listResponsibleAreasControl.valid) {
       const objAux: QualityListResponsibleArea = {
         id: null,
-        responsable: this.listResponsibleAreasControl.value
-          .trim()
-          .toLowerCase(),
+        responsable: this.listResponsibleAreasControl.value.trim(),
         createdAt: null,
         createdBy: null,
       };
@@ -372,7 +348,7 @@ export class ConfigurationsComponent implements OnInit {
               .commit()
               .then(() => {
                 //this.loading.next(false);
-                this.snackbar.open('✅ se guardo correctamente!', 'Aceptar', {
+                this.snackbar.open('✅ Se guardo correctamente!', 'Aceptar', {
                   duration: 6000,
                 });
               })

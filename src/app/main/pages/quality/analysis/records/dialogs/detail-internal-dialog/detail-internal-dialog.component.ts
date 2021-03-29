@@ -26,8 +26,8 @@ export class DetailInternalDialogComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.imagesGeneral = Object.values(this.data.generalImages);
-    this.imagesDetail = Object.values(this.data.detailImages);
+    this.imagesGeneral = Object.values(this.data.generalImages['0']);
+    this.imagesDetail = Object.values(this.data.detailImages['0']);
     this.nameFile =  this.data.file;
 
     this.initForm();

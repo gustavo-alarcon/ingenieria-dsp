@@ -58,7 +58,7 @@
 
                         <mat-form-field appearance="outline" id="result" class="container-form__work--input">
                             <mat-label> Numero de parte (Causante de falla)</mat-label>
-                            <input matInput type="number" placeholder="Numero de parte" formControlName="nPart" />
+                            <input matInput type="text" placeholder="Numero de parte" formControlName="nPart" />
                             <mat-error *ngIf="externalForm.controls['nPart'].errors">
                                 Campo <strong>requerido.</strong>
                             </mat-error>
@@ -76,7 +76,7 @@
                     </div>
                     <br />
                     <mat-form-field appearance="outline" id="result" class="container-form__area">
-                        <mat-label>1 ¿Cuentame que sucedió?</mat-label>
+                        <mat-label>1 ¿Cuéntame que sucedió?</mat-label>
                           <input  matInput type="text" placeholder="Bahia" formControlName="question1"                         
                           >
                         <mat-error *ngIf="externalForm.controls['question1'].errors">
@@ -170,7 +170,7 @@
                         <div >
                             <input #fileInput2 style="display: none" type="file" 
                                    id="fileInput2"
-                                   (change)="uploadFiles($event)" accept=".xls,.xlsx"
+                                   (change)="uploadFiles($event)" accept="."
                                    >
                                    <br>
                             <button type="file" aria-label="add" mat-button class="container-form__uploadXlx--btn-add"
