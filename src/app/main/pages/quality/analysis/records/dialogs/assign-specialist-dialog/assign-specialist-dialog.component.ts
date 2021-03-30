@@ -1,24 +1,43 @@
-import { Component, Inject, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import {
+  Component,
+  Inject,
+  OnInit,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormControl,
+} from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
 import { QualityService } from 'src/app/main/services/quality.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Quality } from 'src/app/main/models/quality.model';
-import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { map, startWith } from 'rxjs/operators';
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {
+  MatAutocomplete,
+  MatAutocompleteSelectedEvent,
+} from '@angular/material/autocomplete';
+import {
+  map,
+  startWith,
+  debounceTime,
+  distinctUntilChanged,
+} from 'rxjs/operators';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 
 import { MatChipInputEvent } from '@angular/material/chips';
+import { QualityListSpecialist } from '../../../../../../models/quality.model';
 
 @Component({
   selector: 'app-assign-specialist-dialog',
   templateUrl: './assign-specialist-dialog.component.html',
-  styleUrls: ['./assign-specialist-dialog.component.scss']
+  styleUrls: ['./assign-specialist-dialog.component.scss'],
 })
 export class AssignSpecialistDialogComponent implements OnInit {
-
-  timerFormGroup: FormGroup;
+  specialistForm: FormGroup;
 
   loading = new BehaviorSubject<boolean>(false);
   loading$ = this.loading.asObservable();
@@ -36,27 +55,60 @@ export class AssignSpecialistDialogComponent implements OnInit {
   @ViewChild('fruitInput') fruitInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
+  // Autocomplete  
+  selectedSpecialist = new BehaviorSubject<any>(null);
+  selectedSpecialist$ = this.selectedSpecialist.asObservable();
+  actualSpecialist: any = null;
+
+
+  specialist$: Observable<any[]>;
+  nameSpecialist = 'Técnico Especialista';
+
+
   constructor(
     private fb: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: Quality,
     public dialogRef: MatDialogRef<AssignSpecialistDialogComponent>,
     private qualityService: QualityService,
-    private snackbar: MatSnackBar,
-
-  ) { 
+    private snackbar: MatSnackBar
+  ) {
     this.filteredFruits = this.fruitCtrl.valueChanges.pipe(
       startWith(null),
-      map((fruit: string | null) => fruit ? this._filter(fruit) : this.allFruits.slice()));
+      map((fruit: string | null) =>
+        fruit ? this._filter(fruit) : this.allFruits.slice()
+      )
+    );
   }
 
   ngOnInit(): void {
     this.initForm();
 
+    this.specialist$ = combineLatest(
+      this.specialistForm.get('specialist').valueChanges.pipe(
+        startWith(''),
+        debounceTime(300),
+        distinctUntilChanged(),
+        map(name => name ? name : '')),
+      this.qualityService.getAllQualityListSpecialist(this.nameSpecialist)
+    ).pipe(map( ([formValue, specialists]) => {
+      console.log('formValue : ', formValue)
+      console.log('specialists : ', specialists)
+      const filter = specialists.filter((specialist) => {
+        return specialist.name.toLowerCase().includes(formValue.toLowerCase());
+      });
+      if (!(filter.length == 1 && filter[0] === formValue) && formValue.length) {
+        this.specialistForm.get('specialist').setErrors({ invalid: true });
+      }
+      return filter;
+      }
+     ));
+   
   }
   initForm(): void {
-    this.timerFormGroup = this.fb.group({
-      specialist: ['', Validators.required],
+    this.specialistForm = this.fb.group({
+      specialist: [null, Validators.required],
     });
+
   }
   add(event: MatChipInputEvent): void {
     const input = event.input;
@@ -92,11 +144,22 @@ export class AssignSpecialistDialogComponent implements OnInit {
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
 
-    return this.allFruits.filter(fruit => fruit.toLowerCase().indexOf(filterValue) === 0);
+    return this.allFruits.filter(
+      (fruit) => fruit.toLowerCase().indexOf(filterValue) === 0
+    );
   }
 
-  save(): void{
+  save(): void {}
 
+  showEntrySpecialist(specialist: any): string | null {
+    console.log('product : ', specialist)
+    return specialist.name ? specialist.name : null;
   }
 
+  selectedEntrySpecialist(event: any): void {
+    console.log('event : ', event.option.value)
+    this.selectedSpecialist.next(event.option.value);
+    this.actualSpecialist = event.option.value;
+    console.log(' this.actualSpecialist : ',  this.actualSpecialist)
+  }
 }

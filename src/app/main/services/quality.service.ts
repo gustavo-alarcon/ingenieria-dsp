@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
 import { Quality, QualityTimer, QualityListSpecialist, QualityListResponsibleArea, QualityBroadcastList } from '../models/quality.model';
 import { User } from '../models/user-model';
 import * as firebase from 'firebase/app';
+import { EvaluationsUser } from '../models/evaluations.model';
 
 @Injectable({
   providedIn: 'root'
@@ -152,14 +153,20 @@ export class QualityService {
     return of(batch);
   }
   
-
-
+  
   // get all QualityListSpecialist
-  getAllQualityListSpecialist(): Observable<QualityListSpecialist[]> {
+  getAllUser(): Observable<User[]> {
     return this.afs
-      .collection<QualityListSpecialist>(
-        `/db/generalConfig/qualityListSpecialist`,
-        (ref) => ref.orderBy('createdAt', 'asc')
+      .collection<User>(
+        `/users` )
+      .valueChanges();
+  }
+  // get all QualityListSpecialist
+  getAllQualityListSpecialist( name: string): Observable<EvaluationsUser[]> {
+    return this.afs
+      .collection<EvaluationsUser>(
+        `/evaluations-settings`,
+        (ref) => ref.where('description', '==', name)
       )
       .valueChanges();
   }
@@ -183,7 +190,10 @@ export class QualityService {
       if (!el.id) {
         const objAux: any = {
           id: qualityDocRef.id,
-          specialist  : el.specialist,
+          name  : el.name,
+          email : el.email,
+          role  : el.role,
+          picture: el.picture,
           createdBy: user,
           createdAt: date,
         };
@@ -220,26 +230,21 @@ export class QualityService {
    * @param {User} user - User's data in actual session
    */
    addQualityListResponsibleAreas(
-    ListResponsibleAreas: QualityListResponsibleArea[],
+    area: QualityListResponsibleArea,
     user: User
   ): Observable<firebase.default.firestore.WriteBatch> {
     const date = new Date();
     const batch = this.afs.firestore.batch();
-    ListResponsibleAreas.forEach((el) => {
-      const qualityDocRef = this.afs.firestore
-        .collection(`/db/generalConfig/qualityListResponsibleArea`)
-        .doc();
+    const qualityDocRef = this.afs.firestore.collection(`/db/generalConfig/qualityListResponsibleArea`).doc();
 
-      if (!el.id) {
-        const objAux: any = {
+    const data: any = {
           id: qualityDocRef.id,
-          responsable  : el.responsable,
+          name  : area.name,
+          email : area.email,
           createdBy: user,
           createdAt: date,
         };
-        batch.set(qualityDocRef, objAux);
-      }
-    });
+    batch.set(qualityDocRef, data);
     return of(batch);
   }
 

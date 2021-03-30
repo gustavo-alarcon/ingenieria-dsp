@@ -51,14 +51,18 @@ export interface QualityTimer {
 
 export interface QualityListSpecialist{
     id: string;
-    specialist: string;
+    name: string;
+    role: string;
+    email: string;
+    picture: string;
     createdAt: Date;
     createdBy: User;
 }
 
 export interface QualityListResponsibleArea{
     id: string;
-    responsable: string;
+    name: string;
+    email: string;
     createdAt: Date;
     createdBy: User;
 }

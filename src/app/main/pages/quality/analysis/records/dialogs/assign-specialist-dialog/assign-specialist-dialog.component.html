@@ -15,15 +15,21 @@
     <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
     <mat-dialog-content style="margin-top: 20px;" >
         <div>
-            <form [formGroup]="timerFormGroup" class="timer-container">
-                <mat-form-field appearance="outline" id="result" class="timer-container__input">
+            <form [formGroup]="specialistForm" class="timer-container">                
+               
+                <mat-form-field *ngIf="specialist$ | async as specialists" style="margin-bottom: 8px; display: block"
+                    appearance="outline">
                     <mat-label>Especialista</mat-label>
-                      <input  matInput type="text" placeholder="Especialista" formControlName="specialist"                         
-                      >                   
-                    <mat-error *ngIf="timerFormGroup.controls['specialist'].errors">
-                        Campo <strong>requerido.</strong>
-                    </mat-error>
-                </mat-form-field>
+                    <input autocomplete="off" formControlName="specialist" [matAutocomplete]="specialistAutocomplete" type="text"
+                    matInput name="specialist" />
+                    <mat-autocomplete autoActiveFirstOption #specialistAutocomplete="matAutocomplete"
+                   (optionSelected)="selectedEntrySpecialist($event)" >
+                        <mat-option *ngFor="let specialist of specialists" [value]="specialist">           
+                            {{ specialist['name']}}           
+                        </mat-option>        
+                    </mat-autocomplete>
+                    <mat-error>* Campo requerido</mat-error>
+              </mat-form-field>
 
                 <mat-form-field appearance="outline" id="result" class="timer-container__input">                     
                     <mat-label>Enviar a</mat-label>
