@@ -16,12 +16,15 @@ import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { environment } from '../environments/environment';
 import { NotFoundComponent } from './shared/not-found/not-found.component';
 import { LandingComponent } from './shared/landing/landing.component';
+import { UpdateReadyComponent } from './shared/update-ready/update-ready.component';
+import { MaterialModule } from './material/material.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     NotFoundComponent,
-    LandingComponent
+    LandingComponent,
+    UpdateReadyComponent
   ],
   imports: [
     BrowserModule,
@@ -34,6 +37,10 @@ import { LandingComponent } from './shared/landing/landing.component';
     HttpClientModule,
     NgxMaskModule.forRoot(),
     LazyLoadImageModule,
+    MaterialModule
+  ],
+  entryComponents: [
+    UpdateReadyComponent
   ],
   providers: [
     { provide: BUCKET, useValue: environment.firebase.storageBucket },
