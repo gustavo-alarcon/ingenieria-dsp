@@ -220,24 +220,19 @@ export class ImprovementsService {
    * @param {string} part - Part number to be evaluated
    */
   checkPart(part: any): Observable<SparePart> {
-    console.log(part);
-    
+
     return this.afs.collection<Improvement>(`/db/ferreyros/improvements`, ref => ref.where('improvedPart', '==', ('' + part[0])))
       .valueChanges()
       .pipe(
         take(1),
         map(res => {
           let data;
-          console.log(res);
-          
+
           if (res.length) {
             res.forEach(doc => {
               let evaluatedPart;
-              if (doc.stock > 0 && !!doc.availability) {
-                evaluatedPart = doc.improvedPart;
-              } else {
-                evaluatedPart = doc.currentPart;
-              }
+
+              evaluatedPart = this.evaluatePartNumber(doc);
 
               data = {
                 description: doc.description,
@@ -247,7 +242,7 @@ export class ImprovementsService {
                 kit: doc.kit,
                 match: true
               };
-
+              console.log('There is a match in improvements collection');
             });
           } else {
             data = {
@@ -258,28 +253,73 @@ export class ImprovementsService {
               kit: null,
               match: false
             };
+            console.log('There were no coincidences in improvements collection');
           }
 
           return data;
         }),
         switchMap(firstEvaluation => {
           console.log(firstEvaluation);
-          
-          return this.afs.collection<Replacement>(`/db/ferreyros/replacements`, ref => ref.where('replacedPart', '==', firstEvaluation.evaluatedPart))
-            .valueChanges()
-            .pipe(
-              map(res => {
-                if (res.length) {
-                  res.forEach(doc => {
-                    console.log(doc);
-                    
-                    firstEvaluation.evaluatedPart = doc.currentPart;
-                  });
-                }
-                return firstEvaluation
-              })
-            )
+
+          if (firstEvaluation.evaluatedPart === null) {
+            return this.afs.collection<Replacement>(`/db/ferreyros/replacements`, ref => ref.where('replacedPart', '==', firstEvaluation.evaluatedPart))
+              .valueChanges()
+              .pipe(
+                map(res => {
+                  if (res.length) {
+                    res.forEach(doc => {
+                      console.log('Replacement found');
+
+                      firstEvaluation.evaluatedPart = doc.currentPart;
+                    });
+                  } else {
+                    console.log('There were no coincidences in replacement collection');
+                  }
+                  return firstEvaluation;
+                })
+              )
+          } else {
+            return of(firstEvaluation)
+          }
         })
       );
+  }
+
+  evaluatePartNumber(data: Improvement): string | null {
+    const availability = data.availability['seconds'] * 1000; //in milliseconds
+    const now = Date.now(); //in milliseconds
+    let isAvailableNow = (availability - now) > 0;
+
+    const stock = data.stock;
+    let hasStock = data.stock > 0;
+
+    let result;
+
+    if (hasStock && !isAvailableNow) {
+      result = data.currentPart
+      console.log('Met codition 1');
+    }
+
+    if (!hasStock && isAvailableNow) {
+      result = data.improvedPart;
+      console.log('Met codition 3');
+    }
+
+    if (hasStock && isAvailableNow) {
+      if (data.criticalPart) {
+        result = data.improvedPart;
+        console.log('Met codition 4 - Critical');
+      } else {
+        result = data.currentPart;
+        console.log('Met codition 4 - Non-critical');
+      }
+    }
+
+    if (!hasStock && !isAvailableNow) {
+      result = null;
+      console.log("Met codition 2 - Let's check for replacement");
+    }
+
+    return result;
   }
 }

@@ -155,10 +155,25 @@ mat-card img {
 */
 
 @media (min-width: 481px) and (max-width: 767px) {  
+  .name-exit{
+    display: none;
+  }
   .btn-exit-app{    
     position: absolute;
     right: 20px;   
   }
+  
+  .spare-parts{
+    display: none;
+  }
+  .evaluations{
+    display: none;
+  }
+
+  .budget{
+    display: none;
+  }
+
   
 }
 
@@ -168,6 +183,9 @@ mat-card img {
 */
 
 @media (min-width: 320px) and (max-width: 480px) {    
+  .name-exit{
+    display: none;
+  }
   .main_toolbar {
     display: flex;
     background: #333333;
@@ -185,5 +203,16 @@ mat-card img {
     font-weight: 300; 
     position: absolute;
     right: 8px;   
+  }
+
+  .spare-parts{
+    display: none;
+  }
+  .evaluations{
+    display: none;
+  }
+
+  .budget{
+    display: none;
   }
 }

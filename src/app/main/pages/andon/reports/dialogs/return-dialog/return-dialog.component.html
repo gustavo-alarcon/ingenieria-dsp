@@ -10,8 +10,10 @@
             <mat-icon style="color: gray;">close</mat-icon>
         </button>
     </div>
-    <mat-divider></mat-divider>
 </h2>
+<mat-divider></mat-divider>
+<div class="container-body">
+
 <mat-dialog-content class="mat-typography" style="color: gray;">
     <form [formGroup]="returnForm" autocomplete="off" class="form" style="margin-left: 15px;" >
         <div class="form-container__form-inputs">
@@ -57,3 +59,4 @@
     <button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close>CERRAR</button>
     <button type="button" mat-raised-button color="primary" class="footer__btn-save" cdkFocusInitial (click)="save()" > RETOMAR</button>
 </mat-dialog-actions>
+</div>

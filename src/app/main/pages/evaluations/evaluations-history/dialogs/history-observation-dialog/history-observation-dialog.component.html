@@ -113,6 +113,17 @@
                             <img [src]="item" alt="" style="width: 100%">
                         </a>
                     </mat-card>
+                    <mat-card class="mat-elevation-z0">
+                        <a [href]="data.resultImage1" target="_blank" style="cursor: zoom-in">
+                            <img [src]="data.resultImage1" *ngIf="data.resultImage1" style="width: 100%">
+                        </a>
+                    </mat-card>
+                    <mat-card class="mat-elevation-z0">
+                        <a [href]="data.resultImage2" target="_blank" style="cursor: zoom-in">
+                            <img [src]="data.resultImage2" *ngIf="data.resultImage2" style="width: 100%">
+                        </a>
+                    </mat-card>
+
                 </div>
             </mat-expansion-panel>
         </mat-accordion>

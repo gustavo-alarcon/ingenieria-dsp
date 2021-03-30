@@ -1,0 +1,17 @@
+.report-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    margin-top: 8px;
+
+    .report-cell {
+        padding: 15px;
+        border: 1px solid #2b2b2b;
+        display: flex;
+
+        .report-image {
+            max-width: 240px;
+            max-height: 240px;
+            margin: auto;
+        }
+    }
+}

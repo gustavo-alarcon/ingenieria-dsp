@@ -1,11 +1,8 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage';
-import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable, Subscription } from 'rxjs';
-import { finalize, tap } from 'rxjs/operators';
+import { finalize } from 'rxjs/operators';
 import { Ng2ImgMaxService } from 'ng2-img-max';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { EvaluationsService } from 'src/app/main/services/evaluations.service';
 
 @Component({
   selector: 'app-upload-task',
@@ -16,8 +13,7 @@ export class UploadTaskComponent implements OnInit, OnDestroy {
 
   @Input() file: File;
   @Input() pathStorage: string;
-
-  // tslint:disable-next-line: no-output-on-prefix
+  
   @Output() onNewImage: EventEmitter<string> = new EventEmitter<string>();
 
   task: AngularFireUploadTask;

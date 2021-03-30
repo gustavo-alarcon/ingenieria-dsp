@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
+import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -23,11 +24,18 @@ export class ReplacementsComponent implements OnInit {
 
   // replacement
   replacementDataSource = new MatTableDataSource<Replacement>();
-  replacementDisplayedColumns: string[] = ['date', 'replacedPart', 'currentPart', 'description', 'kit', 'support', 'actions'];
+  replacementDisplayedColumns: string[] = ['createdAt', 'replacedPart', 'currentPart', 'description', 'kit', 'support', 'createdBy', 'actions'];
 
   @ViewChild('replacementPaginator', { static: false }) set content(paginator: MatPaginator) {
     this.replacementDataSource.paginator = paginator;
   }
+
+  @ViewChild(MatSort, { static: false }) set sortContent(sort: MatSort) {
+    this.replacementDataSource.sort = sort;
+  }
+
+  sortedData: Replacement[];
+  replacements: Replacement[];
 
   constructor(
     private repServices: ReplacementsService,
@@ -38,6 +46,7 @@ export class ReplacementsComponent implements OnInit {
     this.replacement$ = this.repServices.getAllReplacements().pipe(
       tap(res => {
         if (res) {
+          this.replacements = res;
           this.replacementDataSource.data = res;
         }
       })
@@ -95,4 +104,24 @@ export class ReplacementsComponent implements OnInit {
     }
   }
 
+  sortData(sort: Sort) {
+    const data = this.replacements.slice();
+    if (!sort.active || sort.direction === '') {
+      this.replacementDataSource.data = data;
+      return;
+    }
+
+    this.replacementDataSource.data = data.sort((a, b) => {
+      const isAsc = sort.direction === 'asc';
+      switch (sort.active) {
+        case 'createdBy': return compare(a.createdBy.name, b.createdBy.name, isAsc);
+        default: return 0;
+      }
+    });
+  }
+
+}
+
+function compare(a: number | string, b: number | string, isAsc: boolean) {
+  return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }

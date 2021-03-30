@@ -66,6 +66,30 @@ const routes: Routes = [
         loadChildren: () => import('./pages/andon/settings/settings.module').then(m => m.SettingsModule)
       },
       {
+        path: 'init-eval-reports',
+        loadChildren: () => import('./pages/initial-evaluations/init-eval-reports/init-eval-reports.module').then(m => m.InitEvalReportsModule)
+      },
+      {
+        path: 'quality-dashboard',
+        loadChildren: () => import('./pages/quality/dashboard/dashboard.module').then(m => m.DashboardModule)
+      },
+      {
+        path: 'quality-internal-events',
+        loadChildren: () => import('./pages/quality/internal-events/internal-events.module').then(m => m.InternalEventsModule)
+      },
+      {
+        path: 'quality-external-events',
+        loadChildren: () => import('./pages/quality/external-events/external-events.module').then(m => m.ExternalEventsModule)
+      },
+      {
+        path: 'quality-analysis',
+        loadChildren: () => import('./pages/quality/analysis/analysis.module').then(m => m.AnalysisModule)
+      },
+      {
+        path: 'quality-configurations',
+        loadChildren: () => import('./pages/quality/configurations/configurations.module').then(m => m.ConfigurationsModule)
+      },
+      {
         path: '**',
         component: NotFoundComponent
       }

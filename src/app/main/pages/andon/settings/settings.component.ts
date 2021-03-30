@@ -2,13 +2,14 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { FormControl, Validators, FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { MyErrorStateMatcher } from '../../evaluations/evaluations-settings/evaluations-settings.component';
-import { AndonProblemType } from '../../../models/andon.model';
+import { AndonProblemType, AndonListBahias } from '../../../models/andon.model';
 import { AuthService } from '../../../../auth/services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AndonService } from 'src/app/main/services/andon.service';
 import { User } from '../../../models/user-model';
 import { take, switchMap } from 'rxjs/operators';
 import { MatDialogRef } from '@angular/material/dialog';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-settings',
@@ -25,19 +26,36 @@ export class SettingsComponent implements OnInit, OnDestroy {
   listProblemTypeFormControl = new FormControl(null, [Validators.required]);
   matcher = new MyErrorStateMatcher();
   listProblemTypeArray: AndonProblemType[] = [];
-  
+  listNameBahiaArray: AndonListBahias[] = [];
+
   private subscription = new Subscription();
   user: User;
 
+  isMobile = false;
+  containerStyle: any;
+
   constructor(
-          private fb: FormBuilder,
-          public auth: AuthService,
-          private snackbar: MatSnackBar,
-          private andonService: AndonService,
+    private fb: FormBuilder,
+    public auth: AuthService,
+    private snackbar: MatSnackBar,
+    private andonService: AndonService,
+    private breakpoint: BreakpointObserver
 
   ) { }
 
   ngOnInit(): void {
+    this.subscription.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
+      .subscribe(res => {
+        if (res.matches) {
+          this.isMobile = true;
+          this.setHandsetContainer();
+        } else {
+          this.isMobile = false;
+          this.setDesktopContainer();
+        }
+      })
+    )
+
     this.listBahiasForm = this.fb.group({
       bahias: this.fb.array([
         this.fb.group({
@@ -62,10 +80,21 @@ export class SettingsComponent implements OnInit, OnDestroy {
       })
     );
 
+    this.subscription.add(
+      this.andonService.getAllAndonSettingsListBahias()
+      .subscribe((resp) => {
+        if (resp) {
+          this.listNameBahiaArray = resp;
+        } else {
+          this.listProblemTypeArray = [];
+        }
+      })
+    );
+
     this.loading.next(false);
   }
 
-  addListProblemType(): void{
+  addListProblemType(): void {
     if (this.listProblemTypeFormControl.valid) {
       const objAux: AndonProblemType = {
         id: null,
@@ -73,15 +102,15 @@ export class SettingsComponent implements OnInit, OnDestroy {
         createdAt: null,
         createdBy: null,
       };
-      const valueIsEquals = (currentValue) => currentValue.resultType !== objAux.problemType;
+      const valueIsEquals = (currentValue) => currentValue.problemType !== objAux.problemType;
       if (this.listProblemTypeArray.every(valueIsEquals)) {
         this.listProblemTypeArray.push(objAux);
       }
       this.listProblemTypeFormControl.reset();
     }
   }
- async deleteListProblemType(index: number): Promise<void>{
-     if (this.listProblemTypeArray[index].id) {
+  async deleteListProblemType(index: number): Promise<void> {
+    if (this.listProblemTypeArray[index].id) {
       this.loading.next(true);
       await this.andonService.deleteAndonSettingsProblemType(this.listProblemTypeArray[index].id);
       this.snackbar.open('✅ Elemento borrado correctamente', 'Aceptar', {
@@ -90,11 +119,35 @@ export class SettingsComponent implements OnInit, OnDestroy {
       this.loading.next(false);
     }
 
-     this.listProblemTypeArray.splice(index, 1);
-     this.loading.next(false);
+    this.listProblemTypeArray.splice(index, 1);
+    this.loading.next(false);
 
   }
-  saveDataProblemType(): void{
+  deleteNameBahia(item: AndonListBahias): void{
+    try {
+      this.loading.next(true);
+      if (item) {
+        this.andonService.deleteAndonListBahia(item.id)
+        .pipe(
+          take(1)
+        ).subscribe(batch => {
+          batch.commit()
+            .then(() => {
+              this.snackbar.open('✅ Registro borrado correctamente', 'Aceptar', {
+                duration: 6000
+              });
+              this.loading.next(false);
+            });
+        });
+      }
+    } catch (error) {
+      this.snackbar.open('✅ Error al borrar el registro', 'Aceptar', {
+        duration: 6000
+      });
+    }
+
+  }
+  saveDataProblemType(): void {
     try {
       const resp = this.andonService.addAndonSettingsProblemType(this.listProblemTypeArray, this.user);
       this.loading.next(true);
@@ -138,11 +191,11 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
     this.bahias.push(group);
   }
-  deleteControl(index: number): void{
+  deleteControl(index: number): void {
     this.bahias.removeAt(index);
   }
 
-  save(): void{
+  save(): void {
     this.loading.next(true);
     if (this.listBahiasForm.invalid) {
       this.listBahiasForm.markAllAsTouched();
@@ -152,7 +205,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
       this.auth.user$.pipe(
         take(1),
         switchMap(user => {
-          return this.andonService.createListBahiasAndon( this.listBahiasForm.value, user);
+          return this.andonService.createListBahiasAndon(this.listBahiasForm.value, user);
         })
       ).subscribe(batch => {
         if (batch) {
@@ -174,6 +227,18 @@ export class SettingsComponent implements OnInit, OnDestroy {
       });
     }
 
+  }
+
+  setHandsetContainer(): void {
+    this.containerStyle = {
+      'margin': '30px 24px 30px 24px'
+    }
+  }
+
+  setDesktopContainer(): void {
+    this.containerStyle = {
+      'margin': '30px 80px 30px 80px',
+    }
   }
 
 }

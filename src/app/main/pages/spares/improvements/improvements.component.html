@@ -9,37 +9,37 @@
   </div>
   <div class="body-container">
     <div *ngIf="improvement$ |async">
-      <table mat-table [dataSource]="improvementDataSource" class="mat-elevation-z8">
+      <table mat-table [dataSource]="improvementDataSource" matSort (matSortChange)="sortData($event)" class="mat-elevation-z8">
 
         <ng-container matColumnDef="date">
-          <th mat-header-cell *matHeaderCellDef> Fecha </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </th>
           <td mat-cell *matCellDef="let element"> {{(element.date.seconds * 1000) | date : 'dd/MM/yy'}} </td>
         </ng-container>
 
         <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef> Nombre de Mejora </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre de Mejora </th>
           <td mat-cell *matCellDef="let element"> {{element.name}} </td>
         </ng-container>
         <ng-container matColumnDef="component">
-          <th mat-header-cell *matHeaderCellDef> Componente </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Componente </th>
           <td mat-cell *matCellDef="let element"> {{element.component}} </td>
         </ng-container>
         <ng-container matColumnDef="model">
-          <th mat-header-cell *matHeaderCellDef> Modelo </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Modelo </th>
           <td mat-cell *matCellDef="let element"> {{element.model}} </td>
         </ng-container>
-        <ng-container matColumnDef="review">
-          <th mat-header-cell *matHeaderCellDef> Mejora critica </th>
+        <ng-container matColumnDef="criticalPart">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Mejora critica </th>
           <td mat-cell *matCellDef="let element"> {{element.criticalPart ? 'Si':'No'}} </td>
         </ng-container>
 
-        <ng-container matColumnDef="user">
-          <th mat-header-cell *matHeaderCellDef> Usuario </th>
+        <ng-container matColumnDef="createdBy">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Usuario </th>
           <td mat-cell *matCellDef="let element"> {{element.createdBy.name}} </td>
         </ng-container>
 
         <ng-container matColumnDef="state">
-          <th mat-header-cell *matHeaderCellDef> Estado </th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
           <td mat-cell *matCellDef="let element">
             <button mat-button (click)="showImprovementEntry(element)"
               [ngClass]="{'btn-state-register': element.state==='registered','btn-state-validate': element.state==='validated'}">
@@ -63,7 +63,8 @@
                   <mat-icon>edit</mat-icon>
                   Editar
                 </button>
-                <button *ngIf="element.state==='registered'" class="w3-small" mat-menu-item (click)="openDialog('delete',element,i)">
+                <button *ngIf="element.state==='registered'" class="w3-small" mat-menu-item
+                  (click)="openDialog('delete',element,i)">
                   <mat-icon>delete</mat-icon>
                   Borrar
                 </button>
@@ -80,7 +81,7 @@
         <tr mat-row *matRowDef="let row; columns: improvementDisplayedColumns;"></tr>
       </table>
     </div>
-    <mat-paginator #improvementPaginator class="ms-paginator" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+    <mat-paginator #improvementPaginator class="ms-paginator" [pageSizeOptions]="[20, 30, 40]" showFirstLastButtons>
     </mat-paginator>
   </div>
 </div>

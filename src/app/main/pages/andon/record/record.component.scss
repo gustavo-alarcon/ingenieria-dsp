@@ -1,108 +1,139 @@
 .container {
     margin: 30px 70px 30px 70px;
 }
-.title-containe{
+.title-containe {
     display: flex;
     flex-direction: row;
 }
 
-.header{
+.header {
     display: flex;
     flex-direction: row;
-    justify-content:space-between ;
+    justify-content: space-between;
 }
 
 .header-container {
     display: flex;
-    margin-bottom: 0px;
-    
-    &__title{
+    width: 100%;
+
+    &__title {
         display: flex;
+        align-items: stretch;
+
+        &--icon {
+            align-self: center;
+            margin-right: 8px;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+        }
+
+        &--title {
+            align-self: center;
+            margin: 0px;
+            font-size: 2.3em;
+            margin-left: 20px; 
+            font-family: 'Poppins', sans-serif; 
+            font-weight: 700;
+            margin-right: 30px;
+            margin-bottom: 20px;
+
+        }
     }
-    &__date{
-        margin-left: 20px;   
+
+    &__date {
+        margin-left: 16px;
+        // align-self: baseline;
     }
-    
-    &__search{
+
+    &__search {
         display: flex;
-        margin-left: 50px;
-        border : 1px solid #D8D8D8; 
-        height: 50px; 
-        margin-top: 4px;
-        &--input{
+        margin-top: 3px;
+        margin-left: 16px;
+        border: 1px solid #d8d8d8;
+        height: 53px;
+        border-radius: 5px;
+
+        &--input {
+            
             border: transparent;
             height: 30px;
             width: 20vw;
+            background: transparent;
+            
             &::placeholder {
                 color: #aeaeae;
             }
+
             &:focus {
                 outline: none;
             }
-        }  
-    }    
-}
-
-.btn{   
-    margin-right: 30px;
-    margin-top: 10px;
-
-    &__download{
-        border: 1px solid #6200EE;
-        background: white;
-        color: #6200EE;
+        }
     }
 }
 
-.footer-container{
+.btn {
+    margin-right: 30px;
+    align-self: center;
+    margin-bottom: 25px;
+
+    
+    &__download {
+        border: 1px solid #6200ee;
+        background: white;
+        color: #6200ee;
+        margin-bottom: 100px;
+        margin-top: 0px;
+    }
+}
+
+.footer-container {
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
     margin-right: 50px;
     margin-top: 30px;
-    
-    &__download{
-        background: #6200EE;
+
+    &__download {
+        background: #6200ee;
         color: white;
     }
-
 }
 .container-table {
     margin-top: 30px;
     max-width: 100%;
     overflow: auto;
-  }
+}
 
 table {
     .table__cell {
-      min-width: 90px;
-      padding: 0px 8px;
+        min-width: 90px;
+        padding: 0px 8px;
     }
-  }
+}
 
-.theader{
-    background: #F0EEFC;
-    color:#2B2B2B;
+.theader {
+    background: #f0eefc;
+    color: #2b2b2b;
     font-family: Roboto;
     font-style: normal;
     font-weight: bold;
     font-size: 14px;
 }
 
-.btn-state-parado{
-    background: #FF2D2D;
-    color: white;
-    width: 100px;
-}
-    
-.btn-state-retomado{
-    background: #27AE60;
+.btn-state-parado {
+    background: #ff2d2d;
     color: white;
     width: 100px;
 }
 
-.body-mobil{
-    visibility: hidden
+.btn-state-retomado {
+    background: #27ae60;
+    color: white;
+    width: 100px;
+}
+
+.body-mobil {
+    visibility: hidden;
 }
 
 /* 
@@ -110,143 +141,143 @@ table {
 ##Resolucion = B/w 481px to 767px
 */
 
-@media (min-width: 481px) and (max-width: 767px) {  
-
+@media (min-width: 481px) and (max-width: 767px) {
     .container {
         margin: 20px 20px 20px 20px;
     }
-       
-    .header-container {
-        display: inline;
-        margin-bottom: 10px;
 
-        &__title{
-            display: flex;
-        }
-        &__date{
-            width: 70vw;
-
-        }
-        
-        &__search{
-            display: flex;
-            margin-left: 10px;
-            border : 1px solid #D8D8D8;  
-            margin-bottom: 0px;
-
-            &--input{
-                border: transparent;
-                height: 30px;
-                width: 70vw;
-                &::placeholder {
-                    color: #aeaeae;
-                }
-                &:focus {
-                    outline: none;
-                }
-            }  
-        }    
-    }
-    
-    .btn{   
-       display: none;
-    }
-    .body-container{
-        display: none;
-    }
-    .body-mobil{
-        margin-top: 0px;
-        visibility: visible;
-    } 
-    
-    .btn-state-parado{
-        background: #FF2D2D;
-        width: 30px;
-        height: 30px;
-        border-radius: 20px;
-        border:transparent;
-    }
-        
-    .btn-state-retomado{
-        background: #27AE60;
-        width: 30px;
-        height: 30px;
-        border-radius: 20px;
-        border:transparent;
-    }
-  }
-  
-  /* 
-    ##Dispositivo = Mayoria de telefonos moviles (vertical)
-    ##Resolucion = B/w 320px to 479px
-  */
-  
-  @media (min-width: 320px) and (max-width: 480px) { 
-    .container {
-        margin: 20px 20px 20px 20px;
-    }   
-    
     .header-container {
         display: inline;
         margin-bottom: 25px;
 
-        &__title{
+        &__title {
             display: flex;
         }
 
-        &__date{
-            width: 70vw;
-
-        }
-
-        
-        &__search{
+        &__search {
             display: flex;
             margin-left: 10px;
-            border : 1px solid #D8D8D8;  
+            border: 1px solid #d8d8d8;
             margin-bottom: 0px;
-            &--input{
+            margin-bottom: 50px;
+            &--input {
                 border: transparent;
                 height: 30px;
-                width: 70vw;
                 &::placeholder {
                     color: #aeaeae;
                 }
                 &:focus {
                     outline: none;
                 }
-            }  
-        }    
+            }
+        }
+        &__date {
+            margin-top: 50px;
+            margin-left: 16px;
+            // align-self: baseline;
+        }
+    
     }
-    .btn{   
+    .btn {
+        margin-right: 30px;
+        margin-top: 30px;
+    
+        &__download {
+            margin-top: 20px;
+            border: 1px solid #6200ee;
+            background: white;
+            color: #6200ee;
+        }
+    }
+    
+
+    .body-container {
         display: none;
-     }
+    }
 
-    .body-container{
-          display: none;
-      }
-
-    .body-mobil{
+    .body-mobil {
         margin-top: 0px;
         visibility: visible;
     }
-    
-    .btn-state-parado{
-        background: #FF2D2D;
-        width: 30px;
-        height: 30px;
-        border-radius: 20px;
-        border:transparent;
-    }
-        
-    .btn-state-retomado{
-        background: #27AE60;
-        width: 30px;
-        height: 30px;
-        border-radius: 20px;
-        border:transparent;
-    }
-    
-    
-  }
 
+    .btn-state-parado {
+        background: #ff2d2d;
+        width: 30px;
+        height: 30px;
+        border-radius: 20px;
+        border: transparent;
+    }
+
+    .btn-state-retomado {
+        background: #27ae60;
+        width: 30px;
+        height: 30px;
+        border-radius: 20px;
+        border: transparent;
+    }
+}
+
+/* 
+    ##Dispositivo = Mayoria de telefonos moviles (vertical)
+    ##Resolucion = B/w 320px to 479px
+  */
+
+@media (min-width: 320px) and (max-width: 480px) {
+    .container {
+        margin: 20px 20px 20px 20px;
+    }
+
+    .header-container {
+        display: inline;
+        margin-bottom: 25px;
+
+        &__title {
+            display: flex;
+        }
+
+        &__search {
+            display: flex;
+            margin-left: 10px;
+            border: 1px solid #d8d8d8;
+            margin-bottom: 0px;
+            &--input {
+                border: transparent;
+                height: 30px;
+                &::placeholder {
+                    color: #aeaeae;
+                }
+                &:focus {
+                    outline: none;
+                }
+            }
+        }
+    }
+    .btn {
+        display: none;
+    }
+
+    .body-container {
+        display: none;
+    }
+
+    .body-mobil {
+        margin-top: 0px;
+        visibility: visible;
+    }
+
+    .btn-state-parado {
+        background: #ff2d2d;
+        width: 30px;
+        height: 30px;
+        border-radius: 20px;
+        border: transparent;
+    }
+
+    .btn-state-retomado {
+        background: #27ae60;
+        width: 30px;
+        height: 30px;
+        border-radius: 20px;
+        border: transparent;
+    }
+}

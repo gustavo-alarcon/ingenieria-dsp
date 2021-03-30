@@ -1,8 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Config } from 'protractor';
+import { Observable, Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
+import { GeneralConfig } from './auth/models/generalConfig.model';
 import { AuthService } from './auth/services/auth.service';
+import { UpdateReadyComponent } from './shared/update-ready/update-ready.component';
 
 @Component({
   selector: 'app-root',
@@ -11,8 +15,8 @@ import { AuthService } from './auth/services/auth.service';
 })
 export class AppComponent {
 
-  title = 'ingenieria-dsp';
+  constructor() {
 
-  constructor( ) { }
+  }
 
 }

@@ -20,7 +20,7 @@ export class AuthService {
 
   user$: Observable<User>;
   version$: Observable<GeneralConfig>;
-  version: string = '';
+  version: string = 'V3.1.5r';
 
   constructor(
     private afAuth: AngularFireAuth,
@@ -39,17 +39,6 @@ export class AuthService {
         }),
         shareReplay(1)
       )
-
-
-    this.getGeneralConfig()
-      .pipe(
-        take(1)
-      )
-      .subscribe(doc => {
-        if (doc) {
-          this.version = doc.version;
-        }
-      })
   }
 
   getGeneralConfig(): Observable<GeneralConfig> {
@@ -76,6 +65,10 @@ export class AuthService {
 
   getUserClaims(): Observable<firebase.auth.IdTokenResult> {
     return this.afAuth.idTokenResult;
+  }
+
+  getGeneralConfigDoc(): Observable<GeneralConfig> {
+    return this.afs.doc<GeneralConfig>('/db/generalConfig').valueChanges().pipe(shareReplay(1));
   }
 
 }

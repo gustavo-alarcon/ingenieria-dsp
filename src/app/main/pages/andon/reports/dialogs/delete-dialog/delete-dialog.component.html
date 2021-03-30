@@ -1,11 +1,11 @@
 <h2 mat-dialog-title>
     <div class="container-header">
-        <button mat-icon-button>
-            <mat-icon>delete</mat-icon>
-            <span>
+        <div class="container-title">
+            <mat-icon class="icon">delete</mat-icon>
+            <h3 class="title">
                 Borrar
-            </span>
-        </button>
+            </h3>
+        </div>
         <button mat-icon-button mat-dialog-close>
             <mat-icon style="color: gray;">close</mat-icon>
         </button>
@@ -14,7 +14,7 @@
 </h2>
 <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
 
-<mat-dialog-content class="mat-typography" style="color: gray;">
+<mat-dialog-content class="mat-typography" style="color: gray; margin: 24px 0px 16px 0px">
     <p>¿Esta seguro de borrar el reporte de ({{data.name}})?</p>
 </mat-dialog-content>
 <mat-dialog-actions align="end">

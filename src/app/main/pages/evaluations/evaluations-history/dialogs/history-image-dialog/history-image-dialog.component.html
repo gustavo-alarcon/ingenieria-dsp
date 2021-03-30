@@ -20,6 +20,12 @@
                 <img [src]="img" *ngIf="img">
             </a>
         </div>
+        <a [href]="data.resultImage1" target="_blank" style="cursor: zoom-in">
+            <img [src]="data.resultImage1" *ngIf="data.resultImage1">
+        </a>
+        <a [href]="data.resultImage2" target="_blank" style="cursor: zoom-in">
+            <img [src]="data.resultImage2" *ngIf="data.resultImage2">
+        </a>
         <div class="dropzone" appDropzone (hovered)="toggleHover($event)" (dropped)="onDrop($event)"
             [class.hovering]="isHovering">
             <p>Arrastra aqui imagenes</p>

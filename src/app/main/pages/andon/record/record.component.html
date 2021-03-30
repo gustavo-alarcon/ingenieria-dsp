@@ -1,243 +1,261 @@
-<div class="container">
-  <div class="header">  
+<div class="container" [ngStyle]="containerStyle">
+  <div class="header">
     <div class="header-container">
-        <div class="header-container__title">
-          <mat-icon mat-list-icon class="mat-icon-menu" style="font-size: 2.5em;">history</mat-icon>
-          <h1 style="font-size: 2.2em; margin-left: 20px; font-family: 'Poppins', sans-serif; font-weight: 700;">Historial</h1> 
-        </div>
-        <div class="header-container__date">
-          <mat-form-field class="w3-margin-top w3-margin-bottom w3-block" style="max-width: 350px;" appearance="outline">
-            <mat-label>FECHA/PERIODO</mat-label>
-            <mat-date-range-input [formGroup]="dateForm" [rangePicker]="picker">
-              <input readonly matStartDate formControlName="start" placeholder="Fecha Inicio">
-              <input readonly matEndDate formControlName="end" placeholder="Fecha Final">
-            </mat-date-range-input>
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-date-range-picker #picker></mat-date-range-picker>
-          </mat-form-field>    
-       </div>    
-       
-        <div class="header-container__search" >
-            <button mat-button class="header-container__search--button">
-              <mat-icon>search</mat-icon>
-            </button>
-            <form [formGroup]="searchForm" autocomplete="off" style="text-align: center;margin-top:10px ;">
-              <input  placeholder="Buscar" name="search" class="header-container__search--input" formControlName="search" />
-            </form>
-        </div> 
+      <div class="header-container__title">
+        <mat-icon mat-list-icon class="header-container__title--icon" >history</mat-icon>
+        <h1 class="header-container__title--title" >Historial</h1>
+      </div>
+      <div class="header-container__date" [ngStyle]="searchStyle">
+        <mat-form-field class="w3-margin-top w3-margin-bottom w3-block" appearance="outline" [ngStyle]="searchStyle">
+          <mat-label>FECHA/PERIODO</mat-label>
+          <mat-date-range-input [formGroup]="dateForm" [rangePicker]="picker">
+            <input readonly matStartDate formControlName="start" placeholder="Fecha Inicio">
+            <input readonly matEndDate formControlName="end" placeholder="Fecha Final">
+          </mat-date-range-input>
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
+      </div>
+
+      <div class="header-container__search" [ngStyle]="searchStyle" style="margin-top: 3px">
+        <button mat-button class="header-container__search--button">
+          <mat-icon>search</mat-icon>
+        </button>
+        <form [formGroup]="searchForm" autocomplete="off" style="text-align: center;margin-top:10px">
+          <input placeholder="Buscar" name="search" class="header-container__search--input" formControlName="search" />
+        </form>
+      </div>
+
+      <span class="ms-fill"></span>
+      <div class="btn">
+        <button mat-button (click)="downloadXls()" class="btn__download" [ngStyle]="downloadStyle">
+          DESCARGAR
+        </button>
+      </div>
     </div>
-    <div class="btn">
-      <button mat-button (click)="downloadXls()" 
-      class="btn__download">
-        DESCARGAR
-      </button>
-    </div> 
-  </div>     
-    <div class="body-container">
-        <div class="container-table" *ngIf="records$ | async">
-            <table mat-table [dataSource]="historyDataSource" class="mat-elevation-z8">
-        
-              <ng-container matColumnDef="reportDate">
-                <th mat-header-cell *matHeaderCellDef class="table__cell theader">Fecha Reporte</th>
-                <td mat-cell *matCellDef="let element" class="table__cell"> {{(element.reportDate.seconds * 1000) | date :
-                  'dd/MM/yy hh:mm:ss'}} </td>
-              </ng-container>
-        
-              <ng-container matColumnDef="workShop">
-                <th mat-header-cell *matHeaderCellDef class="table__cell theader">Taller</th>
-                <td mat-cell *matCellDef="let element" class="table__cell"> {{element.workShop ? element.workShop : '---'}} </td>
-              </ng-container>
-        
-              <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef class="table__cell theader">Nombre de Bahia</th>
-                <td mat-cell *matCellDef="let element" class="table__cell"> {{element.name ? element.name : '---'}}
-                </td>
-              </ng-container>
-        
-              <ng-container matColumnDef="otChild">
-                <th mat-header-cell *matHeaderCellDef class="table__cell theader">OT CHILD</th>
-                <td mat-cell *matCellDef="let element" class="table__cell"> {{element.otChild ? element.otChild : '---'}}
-                </td>
-              </ng-container>
-        
-              <ng-container matColumnDef="problemType">
-                <th mat-header-cell *matHeaderCellDef class="table__cell theader">Tipo Problema</th>
-                <td mat-cell *matCellDef="let element" class="table__cell"> {{element.problemType ? element.problemType :
-                  '---'}} </td>
-              </ng-container>
-        
-              <ng-container matColumnDef="description">
-                <th mat-header-cell *matHeaderCellDef class="table__cell theader">Descripcion</th>
-                <td mat-cell *matCellDef="let element" class="table__cell"> {{element.description ? element.description : '---'}}
-                </td>
-              </ng-container>
-        
-              <ng-container matColumnDef="atentionTime">
-                <th mat-header-cell *matHeaderCellDef class="table__cell theader">Tiempo Atencion</th>
-                <td mat-cell *matCellDef="let element" class="table__cell">      
-                  {{element.atentionTime ?
-                    ( element.atentionTime.days +'/'+
-                      element.atentionTime.hours +':'+
-                      element.atentionTime.minutes +':'+
-                      element.atentionTime.seconds 
-                      ) : '---'}}
-                </td>
-              </ng-container>
-        
-              <ng-container matColumnDef="reportUser">
-                <th mat-header-cell *matHeaderCellDef class="table__cell theader">Usuario reporte</th>
-                <td mat-cell *matCellDef="let element" class="table__cell"> {{element.reportUser ? element.reportUser : '---'}}
-                </td>
-              </ng-container>
-        
-              <ng-container matColumnDef="state">
-                <th mat-header-cell *matHeaderCellDef class="table__cell theader">Estado</th>
-                <td mat-cell *matCellDef="let element" class="table__cell">
-                  <button mat-button [ngClass]="{'btn-state-parado': element.state==='stopped'
+
+
+  </div>
+  <mat-divider></mat-divider>
+
+  <div class="body-container">
+    <div class="container-table" *ngIf="records$ | async">
+      <table mat-table [dataSource]="historyDataSource" class="mat-elevation-z8">
+
+        <ng-container matColumnDef="reportDate">
+          <th mat-header-cell *matHeaderCellDef class="table__cell theader">Fecha Reporte</th>
+          <td mat-cell *matCellDef="let element" class="table__cell"> 
+            {{(element.reportDate.seconds * 1000) | date : 'dd/MM/yy'}} 
+           <span style="color: #979797; font-size: 12px;"> {{(element.reportDate.seconds * 1000) | date : 'hh:mm:ss'}}  </span> 
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="workShop">
+          <th mat-header-cell *matHeaderCellDef class="table__cell theader">Taller</th>
+          <td mat-cell *matCellDef="let element" class="table__cell"> {{element.workShop ? element.workShop : '---'}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef class="table__cell theader">Nombre de Bahia</th>
+          <td mat-cell *matCellDef="let element" class="table__cell"> {{element.name ? element.name : '---'}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="otChild">
+          <th mat-header-cell *matHeaderCellDef class="table__cell theader">OT CHILD</th>
+          <td mat-cell *matCellDef="let element" class="table__cell"> {{element.otChild ? element.otChild : '---'}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="problemType">
+          <th mat-header-cell *matHeaderCellDef class="table__cell theader">Tipo Problema</th>
+          <td mat-cell *matCellDef="let element" class="table__cell"> {{element.problemType ? element.problemType :
+            '---'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef class="table__cell theader">Descripcion</th>
+          <td mat-cell *matCellDef="let element" class="table__cell"> {{element.description ? element.description :
+            '---'}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="atentionTime">
+          <th mat-header-cell *matHeaderCellDef class="table__cell theader">Tiempo Atencion</th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{element.atentionTime ?
+            ( element.atentionTime.days +'/'+
+            element.atentionTime.hours +':'+
+            element.atentionTime.minutes +':'+
+            element.atentionTime.seconds
+            ) : '---'}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="reportUser">
+          <th mat-header-cell *matHeaderCellDef class="table__cell theader">Usuario reporte</th>
+          <td mat-cell *matCellDef="let element" class="table__cell"> {{element.reportUser ? element.reportUser :
+            '---'}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="state">
+          <th mat-header-cell *matHeaderCellDef class="table__cell theader">Estado</th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            <button mat-button [ngClass]="{'btn-state-parado': element.state==='stopped'
                                    ,'btn-state-retomado': element.state==='retaken' }">
-                    <span *ngIf="element.state==='stopped'">Parado</span> 
-                    <span *ngIf="element.state==='retaken'">Retomado</span>
-                  </button>
-                </td>
-              </ng-container>
-        
-              <ng-container matColumnDef="workReturnDate">
-                <th mat-header-cell *matHeaderCellDef class="table__cell theader"> Fecha retorno Trabajo </th>
-                <td mat-cell *matCellDef="let element" class="table__cell"> {{element.workReturnDate ? ((element.workReturnDate.seconds * 1000) | date :
-                  'dd/MM/yy hh:mm:ss'): '---'}} </td>
-              </ng-container>
-        
-              <ng-container matColumnDef="comments">
-                <th mat-header-cell *matHeaderCellDef class="table__cell theader"> Comentarios </th>
-                <td mat-cell *matCellDef="let element" class="table__cell"> {{element.comments ? element.comments : '---' }} </td>
-              </ng-container>
+              <span *ngIf="element.state==='stopped'">Parado</span>
+              <span *ngIf="element.state==='retaken'">Retomado</span>
+            </button>
+          </td>
+        </ng-container>
 
-              <ng-container matColumnDef="returnUser">
-                <th mat-header-cell *matHeaderCellDef class="table__cell theader"> Usuario retorno </th>
-                <td mat-cell *matCellDef="let element" class="table__cell"> {{element.returnUser ? element.returnUser : '---'}} </td>
-              </ng-container>
-        
-              <ng-container matColumnDef="actions" stickyEnd>
-                <th mat-header-cell *matHeaderCellDef class="table__cell theader">
-                  Acciones
-                </th>
-                <td mat-cell *matCellDef="let element; let i = index" class="table__cell" >
-                  <ng-container>
-                    <mat-menu #rawMenu="matMenu">
-                      <button class="w3-small" mat-menu-item (click)="imageDialog(element)"
-                       >
-                        <mat-icon>image</mat-icon>
-                        Imagenes
-                      </button>                     
-                    </mat-menu>        
-                    <button mat-icon-button [matMenuTriggerFor]="rawMenu">
-                      <mat-icon>more_vert</mat-icon>
-                    </button>
-                  </ng-container>
-                </td>
-              </ng-container>
+        <ng-container matColumnDef="workReturnDate">
+          <th mat-header-cell *matHeaderCellDef class="table__cell theader"> Fecha retorno Trabajo </th>
+          <td mat-cell *matCellDef="let element" class="table__cell"> 
+            {{element.workReturnDate ?((element.workReturnDate.seconds * 1000) | date : 'dd/MM/yy'): '---'}} 
+            <span style="color: #979797; font-size: 12px;">   {{element.workReturnDate ?((element.workReturnDate.seconds * 1000) | date : 'hh:mm:ss'): '---'}}  </span>
+          </td>
+        </ng-container>
 
-              
-            <tr mat-header-row *matHeaderRowDef="historyDisplayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: historyDisplayedColumns;"></tr>
-            </table>
-        </div>
-        <mat-paginator #historyPaginator class="ms-paginator" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
-        </mat-paginator>        
+        <ng-container matColumnDef="comments">
+          <th mat-header-cell *matHeaderCellDef class="table__cell theader"> Comentarios </th>
+          <td mat-cell *matCellDef="let element" class="table__cell"> {{element.comments ? element.comments : '---' }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="returnUser">
+          <th mat-header-cell *matHeaderCellDef class="table__cell theader"> Usuario retorno </th>
+          <td mat-cell *matCellDef="let element" class="table__cell"> {{element.returnUser ? element.returnUser :
+            '---'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions" stickyEnd>
+          <th mat-header-cell *matHeaderCellDef class="table__cell theader">
+            Acciones
+          </th>
+          <td mat-cell *matCellDef="let element; let i = index" class="table__cell">
+            <ng-container>
+              <mat-menu #rawMenu="matMenu">
+                <button class="w3-small" mat-menu-item (click)="imageDialog(element)">
+                  <mat-icon>image</mat-icon>
+                  Imagenes
+                </button>
+              </mat-menu>
+              <button mat-icon-button [matMenuTriggerFor]="rawMenu">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+            </ng-container>
+          </td>
+        </ng-container>
+
+
+        <tr mat-header-row *matHeaderRowDef="historyDisplayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: historyDisplayedColumns;"></tr>
+      </table>
     </div>
+    <mat-paginator #historyPaginator class="ms-paginator" [pageSizeOptions]="[20, 30, 40]" showFirstLastButtons>
+    </mat-paginator>
 
-    <div class="body-mobil">
-      <div class="container-table" *ngIf="records$ | async">
-          <table mat-table [dataSource]="historyMobilDataSource" class="mat-elevation-z8">
-      
-            <ng-container matColumnDef="state">
-              <th mat-header-cell *matHeaderCellDef class="table__cell theader">Estado</th>
-              <td mat-cell *matCellDef="let element" class="table__cell">
-                <button  [ngClass]="{
+  </div>
+
+  <div class="body-mobil">
+    <div class="container-table" *ngIf="records$ | async">
+      <table mat-table [dataSource]="historyMobilDataSource" class="mat-elevation-z8">
+
+        <ng-container matColumnDef="state">
+          <th mat-header-cell *matHeaderCellDef class="table__cell theader">Estado</th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            <button [ngClass]="{
                   'btn-state-parado': element.state==='stopped'
                   ,'btn-state-retomado': element.state==='retaken' 
-                }">                
+                }">
+            </button>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="reportDate">
+          <th mat-header-cell *matHeaderCellDef class="table__cell theader">Fecha Reporte</th>
+          <td mat-cell *matCellDef="let element" class="table__cell"> 
+            {{(element.reportDate.seconds * 1000) | date : 'dd/MM/yy'}} 
+           <span style="color: #979797; font-size: 12px;"> {{(element.reportDate.seconds * 1000) | date : 'hh:mm:ss'}}  </span> 
+          </td> 
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef class="table__cell theader">Nombre de Bahia</th>
+          <td mat-cell *matCellDef="let element" class="table__cell"> {{element.name ? element.name : '---'}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="workShop">
+          <th mat-header-cell *matHeaderCellDef class="table__cell theader">Taller</th>
+          <td mat-cell *matCellDef="let element" class="table__cell"> {{element.workShop ? element.workShop : '---'}}
+          </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="otChild">
+          <th mat-header-cell *matHeaderCellDef class="table__cell theader">OT CHILD</th>
+          <td mat-cell *matCellDef="let element" class="table__cell"> {{element.otChild ? element.otChild : '---'}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="problemType">
+          <th mat-header-cell *matHeaderCellDef class="table__cell theader">Tipo Problema</th>
+          <td mat-cell *matCellDef="let element" class="table__cell"> {{element.problemType ? element.problemType :
+            '---'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef class="table__cell theader">Descripcion</th>
+          <td mat-cell *matCellDef="let element" class="table__cell"> {{element.description ? element.description :
+            '---'}}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="atentionTime">
+          <th mat-header-cell *matHeaderCellDef class="table__cell theader">Tiempo Atencion</th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{element.atentionTime ?
+            ( element.atentionTime.days +'/'+
+            element.atentionTime.hours +':'+
+            element.atentionTime.minutes +':'+
+            element.atentionTime.seconds
+            ) : '---'}}
+          </td>
+        </ng-container>
+
+
+        <ng-container matColumnDef="actions" stickyEnd>
+          <th mat-header-cell *matHeaderCellDef class="table__cell theader">
+            Acciones
+          </th>
+          <td mat-cell *matCellDef="let element; let i = index" class="table__cell">
+            <ng-container>
+              <mat-menu #rawMenu="matMenu">
+                <button class="w3-small" mat-menu-item (click)="imageDialog(element)">
+                  <mat-icon>image</mat-icon>
+                  Imagenes
                 </button>
-              </td>
+              </mat-menu>
+              <button mat-icon-button [matMenuTriggerFor]="rawMenu">
+                <mat-icon>more_vert</mat-icon>
+              </button>
             </ng-container>
+          </td>
+        </ng-container>
 
-            <ng-container matColumnDef="reportDate">
-              <th mat-header-cell *matHeaderCellDef class="table__cell theader">Fecha Reporte</th>
-              <td mat-cell *matCellDef="let element" class="table__cell"> {{(element.reportDate.seconds * 1000) | date :
-                'dd/MM/yy hh:mm:ss'}} </td>
-            </ng-container>
-            
-            <ng-container matColumnDef="name">
-              <th mat-header-cell *matHeaderCellDef class="table__cell theader">Nombre de Bahia</th>
-              <td mat-cell *matCellDef="let element" class="table__cell"> {{element.name ? element.name : '---'}}
-              </td>
-            </ng-container>
-      
-            <ng-container matColumnDef="workShop">
-              <th mat-header-cell *matHeaderCellDef class="table__cell theader">Taller</th>
-              <td mat-cell *matCellDef="let element" class="table__cell"> {{element.workShop ? element.workShop : '---'}} </td>
-            </ng-container>
-      
-      
-            <ng-container matColumnDef="otChild">
-              <th mat-header-cell *matHeaderCellDef class="table__cell theader">OT CHILD</th>
-              <td mat-cell *matCellDef="let element" class="table__cell"> {{element.otChild ? element.otChild : '---'}}
-              </td>
-            </ng-container>
-      
-            <ng-container matColumnDef="problemType">
-              <th mat-header-cell *matHeaderCellDef class="table__cell theader">Tipo Problema</th>
-              <td mat-cell *matCellDef="let element" class="table__cell"> {{element.problemType ? element.problemType :
-                '---'}} </td>
-            </ng-container>
-      
-            <ng-container matColumnDef="description">
-              <th mat-header-cell *matHeaderCellDef class="table__cell theader">Descripcion</th>
-              <td mat-cell *matCellDef="let element" class="table__cell"> {{element.description ? element.description : '---'}}
-              </td>
-            </ng-container>
-      
-            <ng-container matColumnDef="atentionTime">
-              <th mat-header-cell *matHeaderCellDef class="table__cell theader">Tiempo Atencion</th>
-              <td mat-cell *matCellDef="let element" class="table__cell">      
-                {{element.atentionTime ?
-                  ( element.atentionTime.days +'/'+
-                    element.atentionTime.hours +':'+
-                    element.atentionTime.minutes +':'+
-                    element.atentionTime.seconds 
-                    ) : '---'}}
-              </td>
-            </ng-container>
-      
-                 
-            <ng-container matColumnDef="actions" stickyEnd>
-              <th mat-header-cell *matHeaderCellDef class="table__cell theader">
-                Acciones
-              </th>
-              <td mat-cell *matCellDef="let element; let i = index" class="table__cell" >
-                <ng-container>
-                  <mat-menu #rawMenu="matMenu">
-                    <button class="w3-small" mat-menu-item (click)="imageDialog(element)"
-                     >
-                      <mat-icon>image</mat-icon>
-                      Imagenes
-                    </button>                     
-                  </mat-menu>        
-                  <button mat-icon-button [matMenuTriggerFor]="rawMenu">
-                    <mat-icon>more_vert</mat-icon>
-                  </button>
-                </ng-container>
-              </td>
-            </ng-container>
 
-            
-          <tr mat-header-row *matHeaderRowDef="historyMobilDisplayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: historyMobilDisplayedColumns;"></tr>
-          </table>
-      </div>
-      <mat-paginator #historyMobilPaginator class="ms-paginator" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
-      </mat-paginator>        
+        <tr mat-header-row *matHeaderRowDef="historyMobilDisplayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: historyMobilDisplayedColumns;"></tr>
+      </table>
+     
+    </div>
+    <mat-paginator #historyMobilPaginator class="ms-paginator" [pageSizeOptions]="[20, 30, 40]" showFirstLastButtons>
+    </mat-paginator>
   </div>
-    
-    
+
+
 </div>

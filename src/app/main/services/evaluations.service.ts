@@ -13,6 +13,14 @@ import { map } from 'rxjs/operators';
 })
 export class EvaluationsService {
 
+  public priorityList = [
+    'MONOBLOCK',
+    'CARTER',
+    'CYLINDER HEAD',
+    'HOUSING FRONT',
+    'CRANKSHAFT',
+  ]
+
   constructor(
     private afs: AngularFirestore,
     private storage: AngularFireStorage,
@@ -20,24 +28,6 @@ export class EvaluationsService {
 
   ) { }
 
-  getCurrentMonthOfViewDate(): { from: Date, to: Date } {
-    const date = new Date();
-    const fromMonth = date.getMonth();
-    const fromYear = date.getFullYear();
-
-    const actualFromDate = new Date(fromYear, fromMonth, 1);
-
-    const toMonth = (fromMonth + 1) % 12;
-    let toYear = fromYear;
-
-    if (fromMonth + 1 >= 12) {
-      toYear++;
-    }
-
-    const toDate = new Date(toYear, toMonth, 1);
-
-    return { from: actualFromDate, to: toDate };
-  }
 
   /**
    * Get all documents from evaluations collection
@@ -261,7 +251,7 @@ export class EvaluationsService {
   }
 
 
-  updateImagesFinalizeData(evaluation: Evaluation, imagesObj, entry: EvaluationFinishForm, user: User): Observable<firebase.default.firestore.WriteBatch> {
+  updateImagesFinalizeData(evaluation: Evaluation, finalImages, entry: EvaluationFinishForm, user: User): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
 
@@ -270,12 +260,13 @@ export class EvaluationsService {
 
     const data =
     {
-      result: entry.result,
-      kindOfTest: entry.kindOfTest,
-      comments: entry.comments,
-      images: imagesObj,
-      length: entry.length,
-      extends: entry.extends,
+      result: entry.result ? entry.result : '',
+      kindOfTest: entry.kindOfTest ? entry.kindOfTest : '',
+      comments: entry.comments ? entry.comments : '',
+      resultImage1: finalImages[0] ? finalImages[0] : '',
+      resultImage2: finalImages[1] ? finalImages[1] : '',
+      length: entry.length ? entry.length : '',
+      extends: entry.extends ? entry.extends : [],
       internalStatus: 'finalized',
       finalizedAt: new Date(),
       finalizedBy: user,

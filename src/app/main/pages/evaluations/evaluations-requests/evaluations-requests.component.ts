@@ -49,6 +49,8 @@ export class EvaluationsRequestsComponent implements OnInit {
     }
   ];
 
+  
+
   constructor(
     public dialog: MatDialog,
     private fb: FormBuilder,
@@ -89,7 +91,7 @@ export class EvaluationsRequestsComponent implements OnInit {
             return String(evaluation.otMain).toLowerCase().includes(searchTerm) ||
               String(evaluation.otChild).toLowerCase().includes(searchTerm) ||
               String(evaluation.wof).toLowerCase().includes(searchTerm) ||
-              String(evaluation.partNumber).toLowerCase().includes(searchTerm)||
+              String(evaluation.partNumber).toLowerCase().includes(searchTerm) ||
               String(evaluation.description).toLowerCase().includes(searchTerm);
           });
         } else {
@@ -97,7 +99,7 @@ export class EvaluationsRequestsComponent implements OnInit {
             return String(evaluation.otMain).toLowerCase().includes(searchTerm) ||
               String(evaluation.otChild).toLowerCase().includes(searchTerm) ||
               String(evaluation.wof).toLowerCase().includes(searchTerm) ||
-              String(evaluation.partNumber).toLowerCase().includes(searchTerm)||
+              String(evaluation.partNumber).toLowerCase().includes(searchTerm) ||
               String(evaluation.description).toLowerCase().includes(searchTerm);
           })
         }
@@ -107,18 +109,18 @@ export class EvaluationsRequestsComponent implements OnInit {
             clearInterval(evaluation.registryTimer);
           }
 
-          evaluation.registryTimer = setInterval(() => {
+          evaluation.registryTimer = setInterval(function evalInterval() {
             // Get today's date and time
-            let now = new Date().getTime();
-            let registry = evaluation.createdAt['seconds'] * 1000;
+            const now = new Date().getTime();
+            const registry = evaluation.createdAt['seconds'] * 1000;
             // Find the distance between now and the count down date
-            let distance = now - registry;
+            const distance = now - registry;
 
             // Time calculations for days, hours, minutes and seconds
-            let days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            let hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            let minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            let seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
             // Output the result in an element with id="demo"
             evaluation.registryTimeElapsed = {
@@ -126,15 +128,15 @@ export class EvaluationsRequestsComponent implements OnInit {
               hours: hours,
               minutes: minutes,
               seconds: seconds
-            }
+            };
 
             // Time calcultaions for limit
-            let limitDay = generalConfig.registryTimer.days * (1000 * 60 * 60 * 24);
-            let limitHours = generalConfig.registryTimer.hours * (1000 * 60 * 60);
-            let limitMinutes = generalConfig.registryTimer.minutes * (1000 * 60);
-            let limitTotalMilliseconds = limitDay + limitHours + limitMinutes;
+            const limitDay = generalConfig.registryTimer.days * (1000 * 60 * 60 * 24);
+            const limitHours = generalConfig.registryTimer.hours * (1000 * 60 * 60);
+            const limitMinutes = generalConfig.registryTimer.minutes * (1000 * 60);
+            const limitTotalMilliseconds = limitDay + limitHours + limitMinutes;
+            const registryPercentageElapsed = distance / limitTotalMilliseconds;
 
-            let registryPercentageElapsed = distance / limitTotalMilliseconds;
             evaluation.registryPercentageElapsed = 100 - (Math.ceil(registryPercentageElapsed * 100) > 100 ? 100 : Math.ceil(registryPercentageElapsed * 100));
 
             evaluation.attentionTimeElapsed = {
@@ -142,10 +144,36 @@ export class EvaluationsRequestsComponent implements OnInit {
               hours: hours,
               minutes: minutes,
               seconds: seconds
-            }
+            };
             
-          }, 5000)
+            return evalInterval
+
+          }(), 5000);
         });
+
+        setInterval(function hello() {
+          console.log('world');
+          return hello;
+        }(), 5000);
+
+        preFilterSearch.map(evaluation => {
+          let match = false;
+          this.evaltService.priorityList.every(element => {
+            match = element === evaluation.description;
+            return !match
+          });
+
+          if (match) {
+            evaluation['priority'] = 1;
+          } else {
+            evaluation['priority'] = 0;
+          }
+        });
+
+        preFilterSearch.sort( (a, b) => {
+          return b['priority'] - a['priority']
+        })
+        
 
         return preFilterSearch;
       }),

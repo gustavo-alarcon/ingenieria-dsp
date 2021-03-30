@@ -141,18 +141,18 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
       this.finalizeForm.markAsPending();
       this.finalizeForm.disable();
       this.loading.next(true);
-      const imagesObj = {};
-      this.images = [...this.images, ...this.imagesUpload];
-      this.images.pop();
-      this.images.forEach((value, index) => {
-        imagesObj[index] = value;
-      });
+      // const imagesObj = {};
+      // this.images = [...this.images, ...this.imagesUpload];
+      // this.images.pop();
+      // this.images.forEach((value, index) => {
+      //   imagesObj[index] = value;
+      // });
 
       this.auth.user$
         .pipe(
           take(1)
         ).subscribe(user => {
-          this.evaluationServices.updateImagesFinalizeData(this.data, imagesObj, this.finalizeForm.value, user)
+          this.evaluationServices.updateImagesFinalizeData(this.data, this.imagesUpload, this.finalizeForm.value, user)
             .pipe(
               take(1)
             ).subscribe(batch => {
@@ -197,7 +197,7 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
     }
     this.loading.next(true);
     const file = event.target.files[0];
-    this.subscription.add(this.ng2ImgMax.resize([file], 800, 1000).subscribe((result) => {
+    this.subscription.add(this.ng2ImgMax.resize([file], 800, 10000).subscribe((result) => {
       const name = `evaluations/${this.data.id}/pictures/${this.data.id}-${this.date}-${result.name}.png`;
       const fileRef = this.storage.ref(name);
       const task = this.storage.upload(name, file);

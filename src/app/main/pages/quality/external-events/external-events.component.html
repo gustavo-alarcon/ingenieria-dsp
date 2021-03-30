@@ -1,0 +1,191 @@
+<div class="container">   
+    <div class="container-title">
+        <mat-icon mat-list-icon class="mat-icon-menu" style="font-size: 2.5em;">note_alt</mat-icon>
+        <h1 class="container-title__name">
+            Eventos Externos
+        </h1>  
+    </div>
+
+    <div class="container-body">
+        <mat-card class="card">
+            <h3 class="title-form">Registros de eventos de calidad - Externos</h3>
+            <div >
+                <form [formGroup]="externalForm" autocomplete="off" class="container-form">
+                    
+                    <div class="container-form__work">
+    
+                        <mat-form-field appearance="outline" id="result" class="container-form__work--input">
+                            <mat-label>Orden de trabajo actual</mat-label>
+                            <input matInput type="number" placeholder="Orden de trabajo" formControlName="workdOrden" />
+                            <mat-error *ngIf="externalForm.controls['workdOrden'].errors">
+                                Campo <strong>requerido.</strong>
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" id="result" class="container-form__work--input">
+                            <mat-label>Componente</mat-label>
+                            <input matInput type="text" placeholder="Component" formControlName="component" />
+                            <mat-error *ngIf="externalForm.controls['component'].errors">
+                                Campo <strong>requerido.</strong>
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" id="result" class="container-form__work--input">
+                            <mat-label> Numero de paqueteo</mat-label>
+                            <input matInput type="number" placeholder="Numero de paqueteo" formControlName="nPackage" />
+                            <mat-error *ngIf="externalForm.controls['nPackage'].errors">
+                                Campo <strong>requerido.</strong>
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" id="result" class="container-form__work--input">
+                            <mat-label> Horometro de componente</mat-label>
+                            <input matInput type="text" placeholder="Horometro de componente" formControlName="componentHourMeter" />
+                            <mat-error *ngIf="externalForm.controls['componentHourMeter'].errors">
+                                Campo <strong>requerido.</strong>
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" id="result" class="container-form__work--input">
+                            <mat-label> Numero de parte (Causante de falla)</mat-label>
+                            <input matInput type="text" placeholder="Numero de parte" formControlName="nPart" />
+                            <mat-error *ngIf="externalForm.controls['nPart'].errors">
+                                Campo <strong>requerido.</strong>
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" id="result" class="container-form__work--input">
+                            <mat-label> Operacion minera</mat-label>
+                            <input matInput type="text" placeholder="Operacion minera" formControlName="miningOperation" />
+                            <mat-error *ngIf="externalForm.controls['miningOperation'].errors">
+                                Campo <strong>requerido.</strong>
+                            </mat-error>
+                        </mat-form-field>
+
+
+                    </div>
+                    <br />
+                    <mat-form-field appearance="outline" id="result" class="container-form__area">
+                        <mat-label>1 ¿Cuéntame que sucedió?</mat-label>
+                          <input  matInput type="text" placeholder=" Escribir..." formControlName="question1"                         
+                          >
+                        <mat-error *ngIf="externalForm.controls['question1'].errors">
+                            Campo <strong>requerido.</strong>
+                        </mat-error>
+                    </mat-form-field>
+                    <br> 
+                    <mat-form-field appearance="outline" id="result" class="container-form__area">
+                        <mat-label>2. ¿Qué acciones de corrección se realizaron para solucionar el problema?</mat-label>
+                          <input  matInput type="text" placeholder=" Escribir..." formControlName="question2"                         
+                          >
+                        <mat-error *ngIf="externalForm.controls['question2'].errors">
+                            Campo <strong>requerido.</strong>
+                        </mat-error>
+                    </mat-form-field>
+                    <br> 
+                    <mat-form-field appearance="outline" id="result" class="container-form__area">
+                        <mat-label>3. ¿Cuál crees que fue la causa de la falla?</mat-label>
+                          <input  matInput type="text" placeholder=" Escribir..." formControlName="question3"                         
+                          >
+                        <mat-error *ngIf="externalForm.controls['question3'].errors">
+                            Campo <strong>requerido.</strong>
+                        </mat-error>
+                    </mat-form-field>
+                    <br> 
+                    <mat-form-field appearance="outline" id="result" class="container-form__area">
+                        <mat-label>4. ¿Qué recomendarias para evitar que este problema vuelva a suceder?</mat-label>
+                          <input  matInput type="text" placeholder=" Escribir...    " formControlName="question4"                         
+                          >
+                        <mat-error *ngIf="externalForm.controls['question4'].errors">
+                            Campo <strong>requerido.</strong>
+                        </mat-error>
+                    </mat-form-field>
+                    <br>
+
+                    <h3 class="container-form__title-image">Imagen general</h3>
+
+                    <div class="dropzone" appDropzone 
+                        (hovered)="toggleHoverGeneral($event)" (dropped)="onDropGeneral($event)"
+                        [class.hovering]="isHoveringGeneral">
+                        <p>Arrastrar imágenes</p>
+                        <div class="file">
+                            <label class="file-label">
+                                <input class="file-input" type="file" 
+                                       (change)="onDropGeneral($event.target.files)">
+                                <span class="file-cta">
+                                    <span class="file-label">
+                                        Seleccione una imagen
+                                    </span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                    <h3>Uploads</h3>
+                    <div *ngFor="let file of filesGeneral">
+                        <app-upload-task 
+                          [file]="file" [pathStorage]="pathStorageGeneral"
+                         (onNewImage)="addNewImageGeneral($event)">
+                        </app-upload-task>
+                    </div>
+
+                    <h3 class="container-form__title-image">Imagen de detalle</h3>
+
+                    <div class="dropzone" appDropzone (hovered)="toggleHoverDetail($event)" 
+                        (dropped)="onDropDetail($event)"
+                        [class.hovering]="isHoveringDetail">
+                        <p>Arrastrar imágenes</p>
+                        <div class="file">
+                            <label class="file-label">
+                                <input class="file-input" type="file" 
+                                       (change)="onDropDetail($event.target.files)">
+                                <span class="file-cta">
+                                    <span class="file-label">
+                                        Seleccione una imagen
+                                    </span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                    <h3>Uploads</h3>
+
+                    <div *ngFor="let file of filesDetail">
+                        <app-upload-task [file]="file" [pathStorage]="pathStorageDetail" 
+                        (onNewImage)="addNewImageDetail($event)">
+                        </app-upload-task>
+                    </div>
+                    
+                    <div class="container-form__uploadXlx">
+                        <h3 class="">Archivo adicional</h3>
+                        <p *ngIf="fileSelect" style="color:#0064EA;">{{nameFileSelect}} </p>
+                        <div >
+                            <input #fileInput2 style="display: none" type="file" 
+                                   id="fileInput2"
+                                   (change)="uploadFiles($event)" accept="*"
+                                   >
+                                   <br>
+                            <button type="file" aria-label="add" mat-button class="container-form__uploadXlx--btn-add"
+                                    accept="*" 
+                                (click)="fileInput2.click()">
+                                <mat-icon aria-label="agregar" class="icon-add">add</mat-icon>
+                                ADJUNTAR 
+                            </button>                            
+                        </div>                                              
+                    </div>                     
+                                       
+                    <button aria-label="add" mat-button class="container-form__btn-save" 
+                    [disabled]='externalForm.invalid'
+                    (click)="save()"
+                    >
+                        GUARDAR
+                    </button>                   
+    
+                </form>
+            </div>
+
+        </mat-card>
+        
+
+    </div>
+
+</div>
+

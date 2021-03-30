@@ -1,0 +1,208 @@
+// Common styles
+// *** Containers
+.ms-fill {
+    flex: auto 1 1;
+}
+
+.ms-container {
+    padding: 5vh 5vw;
+    margin: auto;
+
+    .ms-toolbar {
+        display: flex;
+        align-items: stretch;
+        flex-wrap: wrap;
+        margin-bottom: 12px;
+
+        &__icon {
+            color: #2b2b2b;
+            align-self: center;
+            font-size: 36px;
+            width: 36px;
+            height: 36px;
+            margin-right: 12px;
+        }
+
+        &__title {
+            color: #2b2b2b;
+            align-self: center;
+            font-family: "Poppins", sans-serif;
+            font-size: 2rem;
+            font-weight: 900;
+            margin: 0px 24px 0px 0px;
+        }
+
+        &__button {
+            border: 1px #6200ee solid;
+            color: #6200ee;
+            padding: 5px 15px 5px 15px;
+            height: 50px;
+            align-self: center;
+
+            &--back {
+                margin-right: 12px;
+
+                .mat-icon {
+                    height: 36px;
+                    width: 36px;
+                    font-size: 36px;
+                    line-height: 36px;
+                }
+            }
+
+            &--desktop {
+                margin-right: 12px;
+            }
+
+            &--mobile {
+                width: 100%;
+                margin: 12px 0px 0px 0px;
+            }
+        }
+
+        &__search .mat-form-field-wrapper {
+            padding-bottom: 0px !important;
+        }
+    }
+}
+
+// *** Tables
+.ms-table {
+    width: 100%;
+    margin-top: 8px;
+}
+
+.ms-table-default {
+    border: 1px dashed lightgray;
+    padding: 1rem;
+    border-radius: 10px 10px;
+    margin-top: 8px;
+    color: lightslategrey;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+// *** Buttons
+.ms-button {
+    font-size: 1rem !important;
+    padding: 8px 24px !important;
+    border: 1px solid #6200ee !important;
+    color: #6200ee !important;
+
+    &--icon {
+        margin-right: 8px;
+        vertical-align: middle;
+    }
+}
+
+// Dialog style
+.ms-dialog-header {
+    display: flex;
+    align-items: stretch;
+
+    &__icon {
+        color: #2b2b2b;
+        align-self: center;
+        margin-right: 12px;
+    }
+
+    &__title {
+        color: #2b2b2b;
+        align-self: center;
+        font-family: "Poppins", sans-serif;
+        margin: 0px !important;
+    }
+
+    &__close {
+        height: 25px !important;
+        width: 25px !important;
+        line-height: 25px !important;
+    }
+}
+
+.ms-dialog-button {
+    border: 1px solid #6200ee !important;
+    color: #6200ee !important;
+    margin-right: 8px !important;
+
+    &--icon {
+        margin-right: 8px;
+        vertical-align: middle;
+    }
+}
+
+.ms-dialog-info {
+    margin-top: 12px !important;
+    color: dimgrey;
+}
+
+// Dropzone style
+.dropzone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+    font-weight: 200;
+    height: 300px;
+    border: 2px dashed #6200ee;
+    border-radius: 5px;
+    background: white;
+    margin: 1rem auto;
+}
+
+.dropzone.hovering {
+    border: 2px solid #6200ee;
+    color: #dadada !important;
+}
+
+.dropzone .file-label {
+    font-size: 1.2em;
+}
+progress::-webkit-progress-value {
+    transition: width 0.1s ease;
+}
+
+.file-input {
+    display: none;
+}
+
+.file-cta,
+.file-name {
+    border-color: #dbdbdb;
+    border-radius: 4px;
+    font-size: 1em;
+    white-space: nowrap;
+}
+.file-cta {
+    background-color: #f5f5f5;
+    color: #4a4a4a;
+}
+
+.file-cta,
+.file-name,
+.input {
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    align-items: center;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    box-shadow: none;
+    display: inline-flex;
+    font-size: 1rem;
+    height: 2.25em;
+    justify-content: flex-start;
+    line-height: 1.5;
+    padding-bottom: calc(0.375em - 1px);
+    padding-left: calc(0.625em - 1px);
+    padding-right: calc(0.625em - 1px);
+    padding-top: calc(0.375em - 1px);
+    position: relative;
+    vertical-align: top;
+}
+
+.ms-dropzone-grid {
+    display: grid;
+    grid-gap: 8px;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}

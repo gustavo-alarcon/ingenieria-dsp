@@ -41,73 +41,13 @@
 .btn{
     margin-top: 30px;
     border: 1px solid #6200EE;
-    color: #6200EE;
+    color: white;
+    background: #6200EE;
     padding: 4px 40px 4px 40px;
 }
 .drop{
     width: 300px; 
     height: 200px;
-}
-
-.dropzone {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    width: 500px;
-    font-weight: 200;
-    height: 300px;
-    border: 2px dashed #f16624;
-    border-radius: 5px;
-    background: white;
-    margin: 10px 0;
-
-   
-}
-.dropzone.hovering {
-    border: 2px solid #f16624;
-    color: #dadada !important;
-}
-.dropzone .file-label {
-    font-size: 1.2em;
-}
-progress::-webkit-progress-value {
-    transition: width 0.1s ease;
-}
-
-.file-input{
-    display: none;
-}
-
-.file-cta, .file-name {
-    border-color: #dbdbdb;
-    border-radius: 4px;
-    font-size: 1em;
-    white-space: nowrap;
-}
-.file-cta {
-    background-color: #f5f5f5;
-    color: #4a4a4a;
-}
-
- .file-cta, .file-name, .input {
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    align-items: center;
-    border: 1px solid transparent;
-    border-radius: 4px;
-    box-shadow: none;
-    display: inline-flex;
-    font-size: 1rem;
-    height: 2.25em;
-    justify-content: flex-start;
-    line-height: 1.5;
-    padding-bottom: calc(.375em - 1px);
-    padding-left: calc(.625em - 1px);
-    padding-right: calc(.625em - 1px);
-    padding-top: calc(.375em - 1px);
-    position: relative;
-    vertical-align: top;
 }
 
  /* 
@@ -118,6 +58,13 @@ progress::-webkit-progress-value {
 @media (min-width: 481px) and (max-width: 767px) {  
     .report{
         margin-top: 50px;
+        padding: 24px 24px;
+        border: 1px solid lightgrey;
+        border-radius: 10px 10px 10px 10px;
+        width: fit-content;
+        margin: 24px auto;
+        box-shadow: 2px 2px 4px lightgrey;
+
         &__title{
             font-weight: bold;
             font-size: 2.5em;
@@ -133,6 +80,11 @@ progress::-webkit-progress-value {
             }
         }
     }
+
+    .dropzone {
+        width: 400px;
+        height: 300px;
+    }
     
   }
   
@@ -144,6 +96,12 @@ progress::-webkit-progress-value {
   @media (min-width: 320px) and (max-width: 480px) {    
     .report{
         margin-top: 50px;
+        padding: 24px 24px;
+        border: 1px solid lightgrey;    
+        border-radius: 10px 10px 10px 10px;
+        width: fit-content;
+        margin: 24px auto;
+        box-shadow: 2px 2px 4px lightgrey;
         &__title{
             font-weight: bold;
             font-size: 2.5em;
@@ -151,7 +109,7 @@ progress::-webkit-progress-value {
         }
         &__form{
             &--input{
-                width: 250px;
+                width: 260px;
             }
             &--img{
                 width: 250px; 
@@ -168,6 +126,12 @@ progress::-webkit-progress-value {
             border: none;
         }
     }
+
+    .dropzone {
+        width: 300px;
+        height: 200px;
+    }
+    
     
   }
 
