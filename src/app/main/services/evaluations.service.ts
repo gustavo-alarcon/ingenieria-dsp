@@ -270,12 +270,13 @@ export class EvaluationsService {
 
     const data =
     {
-      result: entry.result,
-      kindOfTest: entry.kindOfTest,
-      comments: entry.comments,
-      images: imagesObj,
-      length: entry.length,
-      extends: entry.extends,
+      result: entry.result ? entry.result : '',
+      kindOfTest: entry.kindOfTest ? entry.kindOfTest : '',
+      comments: entry.comments ? entry.comments : '',
+      resultImage1: finalImages[0] ? finalImages[0] : '',
+      resultImage2: finalImages[1] ? finalImages[1] : '',
+      length: entry.length ? entry.length : '',
+      extends: entry.extends ? entry.extends : [],
       internalStatus: 'finalized',
       finalizedAt: new Date(),
       finalizedBy: user,
