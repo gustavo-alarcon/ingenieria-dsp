@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Evaluation } from 'src/app/main/models/evaluations.model';
+import { Quality } from '../../../../../../models/quality.model';
 
 @Component({
   selector: 'app-time-line-dialog',
@@ -15,7 +16,7 @@ export class TimeLineDialogComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<TimeLineDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: Evaluation
+    @Inject(MAT_DIALOG_DATA) public data: Quality
 
   ) { }
   ngOnInit(): void {

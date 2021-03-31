@@ -154,9 +154,7 @@
                                 </mat-card>
 
                             
-                                <form [formGroup]="areaForm" class="container-expansion2__form"
-                                    (click)="saveResponsibleArea()"
-                                    >             
+                                <form [formGroup]="areaForm" class="container-expansion2__form"  >             
                
                                     <mat-form-field  class="container-expansion2__form--input"
                                         appearance="outline">
@@ -179,7 +177,7 @@
                                     </mat-form-field>
 
                                     <button type="submit" aria-label="saveDataDifusion" mat-button class="container-expansion2__form--btn"
-                                        >
+                                            (click)="saveResponsibleArea()" >
                                             GUARDAR
                                     </button>
                     

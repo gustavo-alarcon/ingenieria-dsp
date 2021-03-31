@@ -1,54 +1,50 @@
-<div class="container">
-    <div mat-dialog-title class="header">
-        <mat-icon class="header__icon">timeline</mat-icon>
-        <h3 class="header__title">
-            Línea de tiempo <span style="font-size: 0.8rem; color: grey; margin-left: 1rem">OT -S</span>
-        </h3>
+
+
+<div>
+    <div class="ms-dialog-header">
+        <mat-icon class="ms-dialog-header__icon">timeline</mat-icon>
+        <h3 class="ms-dialog-header__title">Línea de tiempo <span style="font-size: 0.8rem; color: grey; margin-left: 1rem">OT -{{data.workOrder}} </span> </h3>           
         <span class="ms-fill"></span>
         <button mat-icon-button mat-dialog-close>
-            <mat-icon class="header__icon">close</mat-icon>
+            <mat-icon>cancel</mat-icon>
         </button>
     </div>
+    <mat-divider></mat-divider>
+
     <mat-divider></mat-divider>
     <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
     <mat-dialog-content style="display: flex; align-items: center;; justify-content: space-between;">
         <div class="details">
-            <!-- <p><span style="font-weight: bold;"> OT MAIN :</span> {{data.otMain ? data.otMain : ''}}</p>
-          S  <p><span style="font-weight: bold;"> OT CHILD :</span> {{data.otChild ? data.otChild : ''}}</p>
-            <p><span style="font-weight: bold;"> Correlativo :</span> {{data.position ? data.position : ''}}</p>
-            <p><span style="font-weight: bold;"> N° de parte :</span> {{data.partNumber ? data.partNumber : ''}}</p>
-            <p><span style="font-weight: bold;"> Cantidad :</span> {{data.quantity ? data.quantity : ''}}</p>
-            <p><span style="font-weight: bold;"> Descripcion :</span> {{data.description ? data.description : ''}}</p>
-            <p><span style="font-weight: bold;"> Tipo de Atencion :</span> {{data.status ? data.status : ''}}</p>
-            <p><span style="font-weight: bold;"> Usuario :</span> {{data.createdBy.name ? data.createdBy.name : (data.createdBy ? data.createdBy : '')}} </p>
-            <p><span style="font-weight: bold;"> WOF :</span> {{data.wof ? data.wof : ''}}</p>
-            <p><span style="font-weight: bold;"> Trabajo :</span> {{data.task ? data.task : ''}}</p>
-            <p><span style="font-weight: bold;"> Observaciones :</span> {{data.observations ? data.observations : ''}}
-            </p> -->
+            <p><span style="font-weight: bold;"> OT Actual :</span> {{data.workOrder ? data.workOrder : ''}}</p>
+            <p><span style="font-weight: bold;"> Componente :</span> {{data.component ? data.component : ''}}</p>
+            <p><span style="font-weight: bold;"> Número de paqueteo :</span> {{data.packageNumber ? data.packageNumber : ''}}</p>
+            <p><span style="font-weight: bold;"> Horómetro de componente :</span> {{data.componentHourMeter ? data.componentHourMeter : ''}}</p>
+            <p><span style="font-weight: bold;"> Número de parte :</span> {{data.partNumber ? data.partNumber : ''}}</p>
+            <p><span style="font-weight: bold;"> Tipo de evento :</span> {{data.eventType ? data.eventType : ''}} </p>
         </div>
 
         <div class="time-line">
             <div class="time-line__registry">
                 <div>
-                   <!--  {{data.registryTimeElapsed?.days | number : '2.'}} /
+                    {{data.registryTimeElapsed?.days | number : '2.'}} /
                     {{data.registryTimeElapsed?.hours | number : '2.'}} :
                     {{data.registryTimeElapsed?.minutes | number : '2.'}} :
-                    {{data.registryTimeElapsed?.seconds | number : '2.'}} -->
+                    {{data.registryTimeElapsed?.seconds | number : '2.'}}
                 </div>
             </div>
 
             <div class="time-line__attention">
                 <div>
-                   <!--  {{data.attentionTimeElapsed?.days | number : '2.'}} /
+                    {{data.attentionTimeElapsed?.days | number : '2.'}} /
                     {{data.attentionTimeElapsed?.hours | number : '2.'}} :
                     {{data.attentionTimeElapsed?.minutes | number : '2.'}} :
-                    {{data.attentionTimeElapsed?.seconds | number : '2.'}} -->
+                    {{data.attentionTimeElapsed?.seconds | number : '2.'}}
                 </div>
             </div>
-            <img src="../../../../../../../assets/img/timeline-s1.png" alt="" style="width: 100%">
+            <img src="../../../../../../../assets/img/timeline-s1.png" alt="" style="width: 100%; margin-top: 20px;">
         </div>
 
 
     </mat-dialog-content>
-
+   
 </div>

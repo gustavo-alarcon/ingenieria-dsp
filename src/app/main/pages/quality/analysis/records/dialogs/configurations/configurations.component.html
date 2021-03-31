@@ -1,18 +1,18 @@
-<div class="container">
 
-    <h2 mat-dialog-title style="display: flex; padding-bottom: 0px;margin-bottom: 0px;">
-        <div style="margin-top: 5px; margin-right: 15px;" mat-dialog-close>
-            <mat-icon mat-list-icon>settings</mat-icon>
-        </div>
-        Configuraciones
 
-        <div mat-dialog-close style="margin-top: 5px; margin-left: 220px;cursor: pointer;">
-            <mat-icon>clear</mat-icon>
-        </div>
-    </h2>
+<div>
+    <div class="ms-dialog-header">
+        <mat-icon class="ms-dialog-header__icon">settings</mat-icon>
+        <h3 class="ms-dialog-header__title"> Configuraciones </h3>
+        <span class="ms-fill"></span>
+        <button mat-icon-button mat-dialog-close>
+            <mat-icon>cancel</mat-icon>
+        </button>
+    </div>
     <mat-divider></mat-divider>
-    <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+
     <mat-dialog-content style="margin-top: 20px;" *ngIf="generalConfig$ | async">
+        <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
         <p style="text-align: center;">Tiempo máximo en solicitud (días:hh:mm)</p>
         <div>
             <form [formGroup]="timerFormGroup" class="timer-container">
@@ -31,9 +31,9 @@
         </div>
 
     </mat-dialog-content>
+
     <mat-dialog-actions align="end">
-        <button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close>CERRAR</button>
-        <button type="button" mat-raised-button color="primary" class="footer__btn-save"
-            (click)="save()">GUARDAR</button>
+        <button mat-stroked-button color="warn" mat-dialog-close [disabled]="loading$ | async">CANCELAR</button>
+        <button mat-stroked-button color="primary" (click)="save()" [disabled]="loading$ | async">GUARDAR</button>
     </mat-dialog-actions>
 </div>
