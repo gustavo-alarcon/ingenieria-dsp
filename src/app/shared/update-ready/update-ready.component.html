@@ -1,0 +1,29 @@
+<div>
+    <div class="ms-dialog-header">
+        <mat-icon class="ms-dialog-header__icon">fiber_new</mat-icon>
+        <h3 class="ms-dialog-header__title">Nueva versión</h3>
+        <span class="ms-fill"></span>
+        <button mat-icon-button class="ms-dialog-header__close" mat-dialog-close>
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+    <mat-divider></mat-divider>
+
+    <mat-dialog-content>
+        <p class="ms-dialog-info">Hay una nueva versión disponible de la plataforma 🧑‍🚀</p>
+
+        <div class="update-button">
+            <ng-container *ngIf="platform.ANDROID || platform.IOS else desktop">
+                <span class="ms-dialog-info">Desliza hacia abajo tu pantalla</span>
+                <img src="../../../assets/img/update_mobile.png" width="58px" height="58px" alt="">
+            </ng-container>
+            <ng-template #desktop>
+                <span class="ms-dialog-info">Presiona la tecla</span>
+                <img src="../../../assets/img/update_desktop.png" width="58px" height="58px" alt="">
+            </ng-template>
+        </div>
+
+        <p class="ms-dialog-info">Verifica en el menú principal que estes en la versión <b>{{data}}</b></p>
+    </mat-dialog-content>
+    <mat-divider style="border-bottom: solid 8px #6200ee;"></mat-divider>
+</div>

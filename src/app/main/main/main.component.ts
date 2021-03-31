@@ -1,11 +1,14 @@
 import { Component } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
+import { map, shareReplay, tap } from 'rxjs/operators';
 import { AuthService } from '../../auth/services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { User } from '../models/user-model';
+import { GeneralConfig } from 'src/app/auth/models/generalConfig.model';
+import { MatDialog } from '@angular/material/dialog';
+import { UpdateReadyComponent } from 'src/app/shared/update-ready/update-ready.component';
 
 
 @Component({
@@ -15,7 +18,7 @@ import { User } from '../models/user-model';
 })
 export class MainComponent {
 
-  version: string;
+  version$: Observable<string>;
   openedMenu = false;
   title: string;
 
@@ -34,7 +37,8 @@ export class MainComponent {
     private breakpointObserver: BreakpointObserver,
     public authService: AuthService,
     private router: Router,
-    private afs: AngularFirestore
+    private afs: AngularFirestore,
+    private dialog: MatDialog
   ) {
 
     this.authService.currentUser().subscribe(
@@ -43,6 +47,24 @@ export class MainComponent {
         this.items = this.itemsCollection.valueChanges();
       }
     );
+
+    this.version$ = this.authService.getGeneralConfigDoc().pipe(
+      map(conf => {
+        console.log(conf.version);
+        console.log(this.authService.version);
+        
+        if (conf.version !== this.authService.version) {
+          console.log(conf.version);
+          
+          this.dialog.open(UpdateReadyComponent, {
+            maxWidth: '350px',
+            data: conf.version,
+            disableClose: true
+          })
+        }
+        return conf.version
+      })
+    )
   }
 
   async exitApp(): Promise<void> {
@@ -53,5 +75,7 @@ export class MainComponent {
       console.log('error');
     }
   }
+
+  
 
 }
