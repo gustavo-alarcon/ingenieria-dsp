@@ -19,7 +19,8 @@ export interface Quality{
     finalizedAt?: Date;
     finalizedBy: User;
 
-    eventType: string; //Internal , External
+    eventType: string; //Interno- Externo
+    emailList: Array<string>;
     workOrder?: number;
     component?: string;
     specialist?: string;

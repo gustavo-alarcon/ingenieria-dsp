@@ -182,13 +182,13 @@ export class ConfigurationsComponent implements OnInit {
         const entryId = broadcast.id;
 
         const resp = this.qualityService.updateBrodcastList(entryId, newBroadcast, this.user);
-        this.loading.next(true);
+        //this.loading.next(true);
         this.subscription.add(resp.subscribe(
           batch => {
             if (batch) {
               batch.commit()
                 .then(() => {
-                  this.loading.next(false);
+                  //this.loading.next(false);
                   this.snackbar.open('✅ Se guardo correctamente!', 'Aceptar', {
                     duration: 6000
                   });
@@ -196,7 +196,7 @@ export class ConfigurationsComponent implements OnInit {
 
                 })
                 .catch(err => {
-                  this.loading.next(false);
+                  //this.loading.next(false);
                   this.snackbar.open('🚨 Hubo un error al actualizar  !', 'Aceptar', {
                     duration: 6000
                   });

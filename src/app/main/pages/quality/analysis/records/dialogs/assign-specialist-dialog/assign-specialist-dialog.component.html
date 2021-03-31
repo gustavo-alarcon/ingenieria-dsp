@@ -23,7 +23,9 @@
                     <input autocomplete="off" formControlName="specialist" [matAutocomplete]="specialistAutocomplete" type="text"
                     matInput name="specialist" />
                     <mat-autocomplete autoActiveFirstOption #specialistAutocomplete="matAutocomplete"
-                   (optionSelected)="selectedEntrySpecialist($event)" >
+                   (optionSelected)="selectedEntrySpecialist($event)" 
+                   [displayWith]="showEntrySpecialist"
+                        >
                         <mat-option *ngFor="let specialist of specialists" [value]="specialist">           
                             {{ specialist['name']}}           
                         </mat-option>        
@@ -31,32 +33,33 @@
                     <mat-error>* Campo requerido</mat-error>
               </mat-form-field>
 
-                <mat-form-field appearance="outline" id="result" class="timer-container__input">                     
+                <mat-form-field *ngIf="filteredBroadcast$ | async as broadcasts" appearance="outline" id="result" class="timer-container__input">                     
                     <mat-label>Enviar a</mat-label>
                     <mat-chip-list #chipList aria-label="Fruit selection">
                       <mat-chip
-                        *ngFor="let fruit of fruits"
+                        *ngFor="let email of emailArray"
                         [selectable]="selectable"
                         [removable]="removable"
-                        (removed)="remove(fruit)">
-                        {{fruit}}
+                        (removed)="removeEmail(email)">
+                        {{email}}
                         <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
                       </mat-chip>
                       <input
-                        placeholder="New fruit..."
+                        placeholder="agregar nueva lista de difusion..."
                         #fruitInput
-                        [formControl]="fruitCtrl"
+                        [formControl]="broadcastControl"
                         [matAutocomplete]="auto"
                         [matChipInputFor]="chipList"
                         [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                        (matChipInputTokenEnd)="add($event)">
+                        (matChipInputTokenEnd)="addBroadcast($event)">
                     </mat-chip-list>
-                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-                      <mat-option *ngFor="let fruit of filteredFruits | async" [value]="fruit">
-                        {{fruit}}
+                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedBroadcast($event)">
+                      <mat-option *ngFor="let broadcast of broadcasts" [value]="broadcast">
+                        {{broadcast.name}}
                       </mat-option>
                     </mat-autocomplete>
                 </mat-form-field>
+                
                 <br>
             </form>
         </div>
