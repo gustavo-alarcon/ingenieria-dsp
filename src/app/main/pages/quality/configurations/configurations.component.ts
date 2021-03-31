@@ -1,6 +1,6 @@
 import { MyErrorStateMatcher } from './../../evaluations/evaluations-settings/evaluations-settings.component';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormControl,
@@ -24,6 +24,8 @@ import { DeleteBroadcastDialogComponent } from './dialogs/delete-broadcast-dialo
 import { FormGroupDirective, NgForm } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { AddBroadcastDialogComponent } from './dialogs/add-broadcast-dialog/add-broadcast-dialog.component';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-configurations',
@@ -67,6 +69,22 @@ export class ConfigurationsComponent implements OnInit {
   entrySpecialist$: Observable<User[]>;
 
   scanValidation$: Observable<any>;
+
+  historyMobilDataSource = new MatTableDataSource<any[]>();
+  historyMobilDisplayedColumns: string[] = [
+    'name',
+    'email',
+    'actions'
+  ];
+
+  @ViewChild('historyMobilPaginator', { static: false }) set content1(
+    paginator: MatPaginator
+  ) {
+    this.historyMobilDataSource.paginator = paginator;
+  }
+
+  areaResponsable$: Observable<any[]>;
+
 
 
   constructor(
@@ -116,17 +134,28 @@ export class ConfigurationsComponent implements OnInit {
       })
     );
 
-    this.subscription.add(
-      this.qualityService
-        .getAllQualityListResponsibleAreas()
+    /* this.subscription.add(
+      this.qualityService.getAllQualityListResponsibleAreas()
         .subscribe((resp) => {
           if (resp) {
-            this.listResponsibleAreasArray = resp;
+            this.historyMobilDataSource.data = resp;
           } else {
-            this.listResponsibleAreasArray = [];
+            this.historyMobilDataSource.data = [];
           }
         })
-    );
+    ); */
+
+    this.areaResponsable$ = this.qualityService.getAllQualityListResponsibleAreas().pipe(
+      tap((resp) => {
+          if (resp) {
+            this.historyMobilDataSource.data = resp;
+          } else {
+            this.historyMobilDataSource.data = [];
+          }
+        }
+      )
+      );
+
 
     this.entrySpecialist$ = combineLatest(
       this.qualityService.getAllUser(),
@@ -156,7 +185,10 @@ export class ConfigurationsComponent implements OnInit {
   initForm(){
     this.areaForm = this.fb.group({
       name: ['', Validators.required],
-      email: ['', Validators.required],
+      email: ['', [
+        Validators.required,
+        Validators.pattern(/^[\w]{1,}[\w.+-]{0,}@[\w-]{1,}([.][a-zA-Z]{2,}|[.][\w-]{2,}[.][a-zA-Z]{2,})$/)
+        ]],
     });
   }
 
@@ -330,20 +362,35 @@ export class ConfigurationsComponent implements OnInit {
     }
   }
 
-  async deleteListResponsibleArea(index: number): Promise<void> {
-    if (this.listResponsibleAreasArray[index].id) {
-      this.loading.next(true);
-      await this.qualityService.deleteQualityListResponsibleAreas(
-        this.listResponsibleAreasArray[index].id
-      );
-      this.snackbar.open('✅ Elemento borrado correctamente', 'Aceptar', {
-        duration: 6000,
-      });
+  deleteListResponsibleArea(item: any){
+    const index = item.id;
+    try {
+        const resp = this.qualityService.deleteQualityListResponsibleAreas(
+        index
+        );
+        this.subscription.add(
+          resp.subscribe((batch) => {
+            if (batch) {
+              batch
+                .commit()
+                .then(() => {
+                  this.snackbar.open('✅ Se borrado correctamente!', 'Aceptar', {
+                    duration: 6000,
+                  });
+                })
+                .catch((err) => {
+                  this.snackbar.open('🚨 Hubo un error al crear!', 'Aceptar', {
+                    duration: 6000,
+                  });
+                });
+            }
+          })
+        );
+
+    } catch (error) {
+      console.log(error);
       this.loading.next(false);
     }
-
-    this.listResponsibleAreasArray.splice(index, 1);
-    this.loading.next(false);
   }
 
   saveResponsibleArea(){

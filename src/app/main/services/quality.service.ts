@@ -267,17 +267,20 @@ export class QualityService {
     batch.set(qualityDocRef, data);
     return of(batch);
   }
-
-  deleteQualityListResponsibleAreas(id: string): void {
-    this.afs.firestore
-      .collection(`/db/generalConfig/qualityListResponsibleArea`)
-      .doc(id)
-      .delete()
-      .then(() => {})
-      .catch((error) => {
-        console.log(error);
-      });
+ 
+  deleteQualityListResponsibleAreas(
+    id: string
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    const broadcastDocRef = this.afs.firestore.doc(
+      `/db/generalConfig/qualityListResponsibleArea/${id}`
+    );
+    //
+    batch.delete(broadcastDocRef);
+    return of(batch);
   }
+
 
   // get all QualityListSpecialist
   getAllBroadcastList(): Observable<QualityBroadcastList[]> {
