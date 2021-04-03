@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Quality } from 'src/app/main/models/quality.model';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-analysis-dialog',
@@ -16,6 +16,7 @@ export class AnalysisDialogComponent implements OnInit {
   loading$ = this.loading.asObservable();
 
   constructor(
+    private fb: FormBuilder,
     public dialogRef: MatDialogRef<AnalysisDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Quality
 
@@ -25,7 +26,17 @@ export class AnalysisDialogComponent implements OnInit {
   }
 
   initForm(): void{
+    this.analysisForm = this.fb.group({
+      causeFailure: ['', Validators.required],
+      process: ['', Validators.required],
+      quality : ['', Validators.required],
+      cost : ['', Validators.required],
+      frequency: ['', Validators.required]
+    });
 
+  }
+  save(): void{
+    
   }
 
 

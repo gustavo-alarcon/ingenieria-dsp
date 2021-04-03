@@ -1,0 +1,91 @@
+
+
+<div>
+    <div class="ms-dialog-header">
+        <mat-icon class="ms-dialog-header__icon">analytics</mat-icon>
+        <h3 class="ms-dialog-header__title">Analisis <span style="font-size: 0.8rem; color: grey; margin-left: 1rem"> </span> </h3>           
+        <span class="ms-fill"></span>
+        <button mat-icon-button mat-dialog-close>
+            <mat-icon>cancel</mat-icon>
+        </button>
+    </div>
+    <mat-divider></mat-divider>
+
+    <mat-divider></mat-divider>
+    <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+    <mat-dialog-content style=" margin-top: 20px;">
+        <div class="details">
+            <p><span style="font-weight: bold;"> OT Actual :</span> {{data.workOrder ? data.workOrder : ''}}</p>
+            <p><span style="font-weight: bold;"> Componente :</span> {{data.component ? data.component : ''}}</p>
+            <p><span style="font-weight: bold;"> Número de paqueteo :</span> {{data.packageNumber ? data.packageNumber : ''}}</p>
+            <p><span style="font-weight: bold;"> Horómetro de componente :</span> {{data.componentHourMeter ? data.componentHourMeter : ''}}</p>
+            <p><span style="font-weight: bold;"> Número de parte :</span> {{data.partNumber ? data.partNumber : ''}}</p>
+            <p><span style="font-weight: bold;"> Tipo de evento :</span> {{data.eventType ? data.eventType : ''}} </p>
+        </div>
+
+        <mat-divider style="margin-top:20px; margin-bottom: 20px;"> </mat-divider>
+
+        <div class="container">
+            <h3 class="container__title">Analisis</h3>
+            <form [formGroup]="analysisForm" autocomplete="off" class="container__form">
+                  
+                <mat-form-field appearance="outline" id="result" class="container__form--input">
+                    <mat-label>Causante de falla</mat-label>
+                      <input  matInput type="text" placeholder=" Escribir..." formControlName="causeFailure"                         
+                      >
+                    <mat-error *ngIf="analysisForm.controls['causeFailure'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
+                <br> 
+                <mat-form-field appearance="outline" id="result" class="container__form--input">
+                    <mat-label>Proceso</mat-label>
+                      <input  matInput type="text" placeholder=" Escribir..." formControlName="process"                         
+                      >
+                    <mat-error *ngIf="analysisForm.controls['process'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
+                <br> 
+                <mat-form-field appearance="outline" id="result" class="container__form--input">
+                    <mat-label> Calidad</mat-label>
+                      <input  matInput type="text" placeholder=" Escribir..." formControlName="quality"                         
+                      >
+                    <mat-error *ngIf="analysisForm.controls['quality'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
+                <br> 
+                <mat-form-field appearance="outline" id="result" class="container__form--input">
+                    <mat-label>Costo</mat-label>
+                      <input  matInput type="text" placeholder=" Escribir...    " formControlName="cost"                         
+                      >
+                    <mat-error *ngIf="analysisForm.controls['cost'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
+                <br>
+                <mat-form-field appearance="outline" id="result" class="container__form--input">
+                    <mat-label>Frecuencia</mat-label>
+                      <input  matInput type="text" placeholder=" Escribir...    " formControlName="frequency"                         
+                      >
+                    <mat-error *ngIf="analysisForm.controls['frequency'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
+                <br> 
+
+                <div class="container__result">
+                    <span class="container__result--result">[ 1 - 4 ]</span>
+                </div>
+
+            </form>
+        </div>
+         
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-stroked-button color="warn" mat-dialog-close [disabled]="loading$ | async">CANCELAR</button>
+        <button mat-stroked-button color="primary" (click)="save()" [disabled]="loading$ | async">GUARDAR</button>
+    </mat-dialog-actions>
+   
+</div>

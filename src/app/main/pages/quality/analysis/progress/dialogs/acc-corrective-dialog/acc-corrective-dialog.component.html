@@ -73,6 +73,35 @@
                     </button>                            
                 </div>                                              
             </div>     
+
+            <h3>Lista de difusion</h3>
+            <mat-form-field  *ngIf="filteredBroadcast$ | async as broadcasts"    appearance="outline" id="result" class="container-form__input">                     
+                <mat-label>Enviar a</mat-label>
+                <mat-chip-list #chipList aria-label="Fruit selection">
+                  <mat-chip
+                    *ngFor="let email of emailArray"
+                    [selectable]="selectable"
+                    [removable]="removable"
+                    (removed)="removeEmail(email)">
+                    {{email}}
+                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                  </mat-chip>
+                  <input
+                    placeholder="agregar nueva lista de difusion..."
+                    #fruitInput
+                    [formControl]="broadcastControl"
+                    [matAutocomplete]="auto"
+                    [matChipInputFor]="chipList"
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    (matChipInputTokenEnd)="addBroadcast($event)">
+                </mat-chip-list>
+                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedBroadcast($event)">
+                  <mat-option *ngFor="let broadcast of broadcasts" [value]="broadcast">
+                    {{broadcast.name}}
+                  </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+
           
         </form>  
         
