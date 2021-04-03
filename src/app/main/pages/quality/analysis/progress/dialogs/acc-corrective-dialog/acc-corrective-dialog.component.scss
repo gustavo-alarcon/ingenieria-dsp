@@ -1,0 +1,58 @@
+
+.container-form{
+    margin-top: 20px;
+    &__form-array{
+        &--input1{
+            width: 300px;
+            margin-left: 0px;
+            margin-right: 10px;
+        }
+        &--input2{
+            width: 200px;
+            margin-left: 10px;
+            margin-right: 25px;
+        }
+    }
+    &__btn-add{
+        margin: 20px;
+        border: 1px #6200ee solid;
+        background: white;
+        color: #6200ee;
+        padding: 0px 30px 0px 30px;
+    }
+    &__btn-save{
+        margin-left: 400px;
+        margin-top: 10px;
+        border: 1px #6200ee solid;
+        background: #6200ee;
+        color: white;
+        padding: 0px 30px 0px 30px;
+    }
+    &__uploadXlx{
+        
+        &--btn-add{
+            border: 1px #6200ee solid;
+            color: #6200ee;
+            padding: 0px 30px 0px 30px;
+        }
+    }
+
+}
+
+.container-file{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 5px;
+    .mat-icon{
+        font-size: 50px;
+        height: 50px;
+        width: 50px;
+    }
+  
+    &__name{
+        color: #0064EA;
+        text-decoration: none;
+        font-size: medium;
+    }
+}   
