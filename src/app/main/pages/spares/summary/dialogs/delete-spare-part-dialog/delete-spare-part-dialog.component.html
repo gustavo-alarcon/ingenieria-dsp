@@ -1,0 +1,18 @@
+<div class="ms-dialog-header">
+    <mat-icon class="ms-dialog-header__icon">remove_circle</mat-icon>
+    <h3 class="ms-dialog-header__title">Borrar mejora</h3>
+    <span class="ms-fill"></span>
+    <button mat-icon-button class="ms-dialog-header__close" mat-dialog-close>
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<mat-divider></mat-divider>
+<mat-dialog-content>
+    <p class="ms-dialog-info">
+        ¿Está seguro de borrar la mejora?
+    </p>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-stroked-button style="margin-right: 12px;" mat-dialog-close>CERRAR</button>
+    <button mat-stroked-button color="warn" mat-dialog-close (click)="delete()">SÍ, BORRAR</button>
+</mat-dialog-actions>

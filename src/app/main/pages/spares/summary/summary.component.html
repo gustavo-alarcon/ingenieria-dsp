@@ -1,15 +1,25 @@
-<div class="container">
-    <div class="header-container">
-        <mat-icon mat-list-icon class="mat-icon-menu" style="font-size: 2.5em;">description</mat-icon>
-        <h1 style="font-size: 2.2em; margin-left: 20px; font-family: 'Poppins', sans-serif; font-weight: 700;">
-            Resumen
-        </h1>
-        <button aria-label="add" mat-button class="btn-add" (click)="downloadXlsx(summaryDataSource.data)"
+<div class="ms-container">
+    <div class="ms-toolbar">
+        <mat-icon class="ms-toolbar__icon">description</mat-icon>
+        <h1 class="ms-toolbar__title">Resumen</h1>
+        <button mat-stroked-button class="ms-toolbar__button" (click)="downloadXlsx(summaryDataSource.data)"
             [disabled]="summaryDataSource.data.length < 1">
-            <mat-icon aria-label="agregar" class="icon-add">download</mat-icon>
+            <mat-icon>download</mat-icon>
             DESCARGAR
         </button>
+        <mat-form-field appearance="outline" class="ms-toolbar__search">
+            <mat-label>Buscar</mat-label>
+            <mat-icon matPrefix>search</mat-icon>
+            <input matInput type="text" [formControl]="searchControl" placeholder="Escribir..." autocomplete="off">
+        </mat-form-field>
+        <span class="ms-fill"></span>
+        <button mat-stroked-button class="ms-toolbar__button" [routerLink]="['/main/improvements']">
+            <mat-icon>launch</mat-icon>
+            Ir a mejoras
+        </button>
     </div>
+    <mat-divider></mat-divider>
+
     <div class="body-container">
         <ng-container *ngIf="summary$ | async; else default">
             <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
@@ -50,7 +60,7 @@
                     <ng-container matColumnDef="description">
                         <th mat-header-cell *matHeaderCellDef class="table__cell" mat-sort-header> Descripción </th>
                         <td mat-cell *matCellDef="let element" class="table__cell">
-                            {{element.quantity ? element.quantity : '---'}}
+                            {{element.description ? element.description : '---'}}
                         </td>
                     </ng-container>
 
@@ -132,9 +142,7 @@
         </ng-container>
         <ng-template #default>
             <div class="default">
-                <span>
-                    <mat-icon style="vertical-align: middle;">cached</mat-icon> Cargando
-                </span>
+                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
             </div>
         </ng-template>
     </div>

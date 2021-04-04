@@ -1,18 +1,19 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { Observable } from 'rxjs';
-import { FormBuilder } from '@angular/forms';
+import { combineLatest, Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateDialogImprovenmentsComponent } from './dialogs/create-dialog-improvenments/create-dialog-improvenments.component';
 import { EditDialogImprovenmentsComponent } from './dialogs/edit-dialog-improvenments/edit-dialog-improvenments.component';
 import { DeleteDialogImprovenmentsComponent } from './dialogs/delete-dialog-improvenments/delete-dialog-improvenments.component';
 import { ValidateDialogImprovenmentsComponent } from './dialogs/validate-dialog-improvenments/validate-dialog-improvenments.component';
-import { tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, startWith, tap } from 'rxjs/operators';
 import { ImprovementsService } from '../../../services/improvements.service';
-import { Improvement, ImprovementEntry } from '../../../models/improvenents.model';
+import { ImprovementEntry } from '../../../models/improvenents.model';
 import { ShowDialogImprovementsComponent } from './dialogs/show-dialog-improvements/show-dialog-improvements.component';
 import { MatSort, Sort } from '@angular/material/sort';
+import { ReplacementDialogImprovementsComponent } from './dialogs/replacement-dialog-improvements/replacement-dialog-improvements.component';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-improvements',
@@ -40,22 +41,33 @@ export class ImprovementsComponent implements OnInit {
   sortedData: ImprovementEntry[];
   improvementEntries: ImprovementEntry[];
 
+  searchControl = new FormControl('');
+
   constructor(
     private impvServices: ImprovementsService,
     public dialog: MatDialog,
-    private fb: FormBuilder,
   ) { }
 
   ngOnInit(): void {
-    this.improvement$ = this.impvServices.getAllImprovementEntries().pipe(
+    this.improvement$ = combineLatest(
+      this.impvServices.getAllImprovementEntries(),
+      this.searchControl.valueChanges.pipe(startWith(''), debounceTime(300), distinctUntilChanged())
+    ).pipe(
+      map(([list, search]) => {
+        const term = search.toLowerCase().trim();
+        let filteredList = list.filter(element => element.component.toLowerCase().includes(term) ||
+          element.name.toLowerCase().includes(term) ||
+          element.model.toLowerCase().includes(term));
+
+        return filteredList
+      }),
       tap(res => {
         if (res) {
           this.improvementEntries = res;
           this.improvementDataSource.data = res;
         }
       })
-    );
-
+    )
   }
 
   openDialog(value: string, entry?: ImprovementEntry, index?: number): void {
@@ -77,6 +89,15 @@ export class ImprovementsComponent implements OnInit {
         break;
       case 'validate':
         dialogRef = this.dialog.open(ValidateDialogImprovenmentsComponent,
+          optionsDialog,
+        );
+
+        dialogRef.afterClosed().subscribe(result => {
+          console.log(`Dialog result: ${result}`);
+        });
+        break;
+      case 'replacement':
+        dialogRef = this.dialog.open(ReplacementDialogImprovementsComponent,
           optionsDialog,
         );
 

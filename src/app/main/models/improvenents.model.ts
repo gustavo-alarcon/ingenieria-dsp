@@ -47,7 +47,7 @@ export interface ImprovementEntry {
   model: string;
   description: string;
   parts: Array<ImprovementPart>;
-  state: string;
+  state: 'registered' | 'replacement' | 'validated';
   createdAt: Date;
   createdBy: User;
   editedAt: Date;
@@ -62,6 +62,7 @@ export interface ImprovementPart {
   sparePart: string;
   stock?: number;
   availability?: string;
+  generateReplacement?: boolean;
 }
 
 export interface SparePart {

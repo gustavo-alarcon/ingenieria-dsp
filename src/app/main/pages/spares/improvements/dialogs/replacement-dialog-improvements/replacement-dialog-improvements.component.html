@@ -1,9 +1,14 @@
 <div class="container">
-    <h2 mat-dialog-title>
-        Validación de logística
-        <mat-divider></mat-divider>
-    </h2>
-    <form class="container-form" [formGroup]="validationLogisticForm" (ngSubmit)="save()" autocomplete="off">
+    <div class="ms-dialog-header">
+        <mat-icon class="ms-dialog-header__icon">published_with_changes</mat-icon>
+        <h3 class="ms-dialog-header__title">Validación de reemplazos</h3>
+        <span class="ms-fill"></span>
+        <button mat-icon-button class="ms-dialog-header__close">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+    <mat-divider></mat-divider>
+    <form class="container-form" [formGroup]="validationLogisticForm" (ngSubmit)="save()" autocomplete="off" style="margin-top: 12px;">
         <mat-dialog-content class="mat-typography">
             <h3>Detalles de mejora</h3>
             <!-- description -->
@@ -117,10 +122,11 @@
                                 Campo <strong>requerido.</strong>
                             </mat-error>
                         </mat-form-field>
-                        <div *ngIf="parts.controls[i].get('generateReplacement').value">
+                        <div>
                             <div class="container-form-array__checked">
                                 <span>Reemplazo</span>
-                                <mat-checkbox class="checked-margin" color="warn" formControlName="generateReplacement"></mat-checkbox>
+                                <mat-checkbox class="checked-margin" color="warn" formControlName="generateReplacement">
+                                </mat-checkbox>
                             </div>
                         </div>
 

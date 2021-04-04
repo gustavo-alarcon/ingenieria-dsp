@@ -11,6 +11,7 @@ import { DeleteDialogImprovenmentsComponent } from './dialogs/delete-dialog-impr
 import { ValidateDialogImprovenmentsComponent } from './dialogs/validate-dialog-improvenments/validate-dialog-improvenments.component';
 import { ShowDialogImprovementsComponent } from './dialogs/show-dialog-improvements/show-dialog-improvements.component';
 import { NgxMaskModule } from 'ngx-mask';
+import { ReplacementDialogImprovementsComponent } from './dialogs/replacement-dialog-improvements/replacement-dialog-improvements.component';
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import { NgxMaskModule } from 'ngx-mask';
     DeleteDialogImprovenmentsComponent,
     ValidateDialogImprovenmentsComponent,
     ShowDialogImprovementsComponent,
+    ReplacementDialogImprovementsComponent,
   ],
   exports: [
     ImprovementsComponent,

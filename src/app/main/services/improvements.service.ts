@@ -152,6 +152,31 @@ export class ImprovementsService {
     return of(batch);
   }
 
+/**
+ * Updates improvement entry to be taged for replacement generation
+ *
+ * @param {string} entryId - Id of the entry to be updated
+ * @param {improvementsForm} form - Actual content of the form validated
+ * @param {User} user - The user who updates the entry
+ * @return {*}  {Observable<firebase.default.firestore.WriteBatch>}
+ * @memberof ImprovementsService
+ */
+updateImprovements(entryId: string, form: improvementsForm, user: User): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    // create reference to entry document
+    const improvementEntryDocRef = this.afs.firestore.doc(`db/ferreyros/improvementEntries/${entryId}`);
+
+    batch.update(improvementEntryDocRef, {
+      parts: form.parts,
+      state: 'replacement',
+      editedAt: new Date(),
+      editedBy: user
+    });
+
+    return of(batch);
+  }
+
   /**
    * Delete the passed improvement based in his ID
    * @param {string} id - ID of the improvement to be removed
