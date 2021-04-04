@@ -3,11 +3,14 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { take, tap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, startWith, take, tap } from 'rxjs/operators';
 import { Improvement } from '../../../models/improvenents.model';
 import { ImprovementsService } from '../../../services/improvements.service';
 import * as XLSX from 'xlsx';
+import { FormControl } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { DeleteSparePartDialogComponent } from './dialogs/delete-spare-part-dialog/delete-spare-part-dialog.component';
 
 @Component({
   selector: 'app-summary',
@@ -34,51 +37,44 @@ export class SummaryComponent implements OnInit {
 
   summary$: Observable<Improvement[]>;
 
+  searchControl = new FormControl('');
+
   constructor(
     private impService: ImprovementsService,
-    private snackbar: MatSnackBar
+    private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
-    this.summary$ =
-      this.impService.getAllImprovements()
-        .pipe(
-          tap(list => {
-            if (list) {
-              this.improvements = list;
-              this.summaryDataSource.data = list;
-            } else {
-              this.improvements = [];
-              this.summaryDataSource.data = [];
-            }
-          })
-        );
+    this.summary$ = combineLatest(
+      this.impService.getAllImprovements(),
+      this.searchControl.valueChanges.pipe(startWith(''), debounceTime(300), distinctUntilChanged())
+    ).pipe(
+      map(([list, search]) => {
+        const term = search.toLowerCase().trim();
+        let filteredList = list.filter(element => element.component.toLowerCase().includes(term) ||
+          element.model.toLowerCase().includes(term) ||
+          element.description.toLowerCase().includes(term));
+
+        return filteredList
+      }),
+      tap(res => {
+        if (res) {
+          this.improvements = res;
+          this.summaryDataSource.data = res;
+        }
+      })
+    )
   }
 
   remove(id: string): void {
-    this.loading.next(true);
 
-    this.impService.removeImprovement(id)
-      .pipe(
-        take(1)
-      ).subscribe(batch => {
-        if (batch) {
-          batch.commit()
-            .then(() => {
-              this.loading.next(false);
-              this.snackbar.open('🗑️ Elemento removido!', 'Aceptar', {
-                duration: 6000
-              });
-            })
-            .catch(err => {
-              console.log(err);
-              this.loading.next(false);
-              this.snackbar.open('🚨 Hubo un error guardando las mejoras!', 'Aceptar', {
-                duration: 6000
-              });
-            });
-        }
-      });
+    this.dialog.open(DeleteSparePartDialogComponent, {
+      width: '500px',
+      maxWidth: '80vw',
+      data: id
+    })
+
+    
 
   }
 

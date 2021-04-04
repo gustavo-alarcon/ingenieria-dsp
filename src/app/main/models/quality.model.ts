@@ -19,7 +19,8 @@ export interface Quality{
     finalizedAt?: Date;
     finalizedBy: User;
 
-    eventType: string; //Internal , External
+    eventType: string; //Interno- Externo
+    emailList: Array<string>;
     workOrder?: number;
     component?: string;
     specialist?: string;
@@ -51,14 +52,18 @@ export interface QualityTimer {
 
 export interface QualityListSpecialist{
     id: string;
-    specialist: string;
+    name: string;
+    role: string;
+    email: string;
+    picture: string;
     createdAt: Date;
     createdBy: User;
 }
 
 export interface QualityListResponsibleArea{
     id: string;
-    responsable: string;
+    name: string;
+    email: string;
     createdAt: Date;
     createdBy: User;
 }

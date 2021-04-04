@@ -1,15 +1,13 @@
-<div class="container">
-    <div mat-dialog-title class="header">
-        <mat-icon class="header__icon">visibility</mat-icon>
-        <h3 class="header__title">
-            Detalle evento externo
-        </h3>
+
+<div>
+    <div class="ms-dialog-header">
+        <mat-icon class="ms-dialog-header__icon">visibility</mat-icon>
+        <h3 class="ms-dialog-header__title"> Detalle evento externo</h3>
         <span class="ms-fill"></span>
-      
-        <div mat-dialog-close class="header__icon-clear">
-            <mat-icon>clear</mat-icon>
-        </div>
-    </div>    
+        <button mat-icon-button mat-dialog-close>
+            <mat-icon>cancel</mat-icon>
+        </button>
+    </div>
     <mat-divider></mat-divider>
 
     <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
@@ -93,7 +91,8 @@
         </div>
 
     </mat-dialog-content>
+
     <mat-dialog-actions align="end">
-        <button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close>CERRAR</button>
+        <button mat-stroked-button color="warn" mat-dialog-close [disabled]="loading$ | async">CANCELAR</button>
     </mat-dialog-actions>
 </div>

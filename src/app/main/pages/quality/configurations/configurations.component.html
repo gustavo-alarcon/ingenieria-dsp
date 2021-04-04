@@ -92,7 +92,7 @@
             <mat-card class="mat-elevation-z0">
                 <div class="container-diffusion">
 
-                    <div >
+                   <!--  <div >
                         <mat-card-content>
                             <mat-card class="mat-elevation-z0" style="margin-left: -10px;margin-top: 5px;">
                                 <mat-card-header>
@@ -108,25 +108,27 @@
                             
                             <mat-card class="mat-elevation-z0 container-expansion1__content-card">
                                 <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+                                
                                 <mat-card-header class="container-expansion1__content-card--header">
-                                    <mat-form-field>
-                                        <mat-label>Escribir</mat-label>
-                                        <input type="text" matInput placeholder="Escribir" [formControl]="listSpecialistControl" 
-                                        (keyup.enter)="addListSpecialist()"  [errorStateMatcher]="matcher" autocomplete="off">
-                                        <button mat-button *ngIf="listSpecialistControl.value" matSuffix mat-icon-button 
-                                        aria-label="clearResult" (click)="listSpecialistControl.reset()">
-                                            <mat-icon>close</mat-icon>
-                                        </button>
-                                        <mat-hint>Presione ENTER para agregar</mat-hint>
-                                        <mat-error *ngIf="listSpecialistControl.hasError('required')">
-                                            El campo es <strong>Requerido</strong>
-                                        </mat-error>
+                                    <mat-form-field color="primary" class="w3-small w3-margin-bottom w3-block" >
+                                        <mat-label>Escribir...</mat-label>
+                                        <input [formControl]="entrySpecialistControl" matInput type="text" [matAutocomplete]="autoSpecialist"
+                                          placeholder="Escriba..." autocomplete="off">
+                                        <mat-autocomplete #autoSpecialist="matAutocomplete" 
+                                          (optionSelected)="selectedEntrySpecialist($event)"
+                                          >
+                                          <mat-option *ngFor="let product of entrySpecialist$ | async" style="font-size: 12px;" [value]="product">
+                                            {{product.name}}</mat-option>
+                                        </mat-autocomplete>
+                                        <mat-hint>Escriba y seleccione un producto</mat-hint>
+                                        <mat-error>* Campo requerido</mat-error>
                                     </mat-form-field>
+
                                 </mat-card-header>
                                 <mat-card-content class="container-expansion1__content-card-content">
                                     <div role="list" *ngFor="let result of listSpecialistArray;let i=index">
                                         <div class="item-list">
-                                            <span>{{result.specialist}}</span>  
+                                            <span>{{result.name}}</span>  
                                             <span>
                                                 <button mat-icon-button aria-label="deletelistResult" 
                                                         (click)="deleteListSpecialist(i)" >
@@ -138,52 +140,87 @@
                                 </mat-card-content>
                             </mat-card>                
                         </mat-card-content>    
-                    </div>
+                    </div> -->
 
                     <div >
-                        <mat-card-content>
-                            <mat-card class="mat-elevation-z0" style="margin-left: -10px;margin-top: 5px;">
-                                <mat-card-header>
-                                    <mat-card-title class="container-title">
-                                        <span> Areas responsables </span>
-                                        <button type="button" aria-label="saveDataDifusion" mat-button class="container-settings__btn-save"
-                                         (click)="saveListResponsibleArea()">
-                                            GUARDAR
-                                        </button>
-                                    </mat-card-title>
-                                </mat-card-header>
-                            </mat-card>
+                        <mat-card-content class="container-expansion2">
+                            <div class="container-expansion2__container-form" >
+                                <mat-card class="mat-elevation-z0" style="margin-left: -10px;margin-top: 5px;">
+                                    <mat-card-header>
+                                        <mat-card-title class="container-title">
+                                            <span> Areas responsables </span>                                        
+                                        </mat-card-title>
+                                    </mat-card-header>
+                                </mat-card>
+
                             
-                            <mat-card class="mat-elevation-z0 container-expansion1__content-card">
-                                <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
-                                <mat-card-header class="container-expansion1__content-card--header">
-                                    <mat-form-field>
-                                        <mat-label>Escribir</mat-label>
-                                        <input type="text" matInput placeholder="Escribir" [formControl]="listResponsibleAreasControl" 
-                                        (keyup.enter)="addListResponsibleArea()"  [errorStateMatcher]="matcher" autocomplete="off">
-                                        <button mat-button *ngIf="listResponsibleAreasControl.value" matSuffix mat-icon-button aria-label="clearResult" 
-                                        (click)="listResponsibleAreasControl.reset()">
-                                            <mat-icon>close</mat-icon>
-                                        </button>
-                                        <mat-hint>Presione ENTER para agregar</mat-hint>
-                                        <mat-error *ngIf="listResponsibleAreasControl.hasError('required')">
-                                            El campo es <strong>Requerido</strong>
+                                <form [formGroup]="areaForm" class="container-expansion2__form"  >             
+               
+                                    <mat-form-field  class="container-expansion2__form--input"
+                                        appearance="outline">
+                                        <mat-label>Area responsable</mat-label>
+                                        <input type="text" autocomplete="off" formControlName="name"  placeholder="Escribe..."
+                                        matInput  />
+                                        <mat-error *ngIf="areaForm.controls['name'].errors">
+                                            Campo <strong>requerido.</strong>
                                         </mat-error>
                                     </mat-form-field>
-                                </mat-card-header>
-                                <mat-card-content class="container-expansion1__content-card-content">
-                                    <div role="list" *ngFor="let result of listResponsibleAreasArray;let i=index">
-                                        <div class="item-list">
-                                            <span>{{result.responsable}}</span>
-                                            <span>
-                                                <button mat-icon-button aria-label="deletelistResult" (click)="deleteListResponsibleArea(i)" >
+
+                                    <mat-form-field class="container-expansion2__form--input"
+                                        appearance="outline">
+                                        <mat-label>Correo</mat-label>
+                                        <input type="text" autocomplete="off" formControlName="email" placeholder="Escribe..."
+                                        matInput />
+                                        <mat-error *ngIf="areaForm.controls['email'].errors">
+                                            Campo <strong>requerido.</strong>
+                                        </mat-error>
+                                    </mat-form-field>
+
+                                    <button type="submit" aria-label="saveDataDifusion" mat-button class="container-expansion2__form--btn"
+                                            (click)="saveResponsibleArea()" >
+                                            GUARDAR
+                                    </button>
+                    
+                                </form>
+                            </div>
+                            
+                            <div>                            
+                                
+                                    <div class="container-table" *ngIf="areaResponsable$ | async " >
+                                      <table mat-table [dataSource]="historyMobilDataSource" class="mat-elevation-z8">
+                                
+                                        <ng-container matColumnDef="name">
+                                          <th mat-header-cell *matHeaderCellDef class="table__cell theader">Area responsable</th>
+                                          <td mat-cell *matCellDef="let element" class="table__cell"> {{element.name ? element.name : '---'}}
+                                          </td>
+                                        </ng-container>
+                                
+                                        <ng-container matColumnDef="email">
+                                          <th mat-header-cell *matHeaderCellDef class="table__cell theader">Email</th>
+                                          <td mat-cell *matCellDef="let element" class="table__cell"> {{element.email ? element.email : '---'}}
+                                          </td>
+                                        </ng-container>
+
+                                        <ng-container matColumnDef="actions" stickyEnd>
+                                            <th mat-header-cell *matHeaderCellDef class="table__cell theader">
+                                              Accion
+                                            </th>
+                                            <td mat-cell *matCellDef="let element" class="table__cell">
+                                                <button mat-icon-button aria-label="deletelistResult" (click)="deleteListResponsibleArea(element)" >
                                                     <mat-icon style="color: #828282">delete</mat-icon>
                                                 </button>
-                                            </span>
-                                        </div>
+                                            </td>
+                                          </ng-container>
+                                
+                                        <tr mat-header-row *matHeaderRowDef="historyMobilDisplayedColumns"></tr>
+                                        <tr mat-row *matRowDef="let row; columns: historyMobilDisplayedColumns;"></tr>
+                                      </table>
+                                     
                                     </div>
-                                </mat-card-content>
-                            </mat-card>                
+                                    <mat-paginator #historyMobilPaginator class="ms-paginator" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+                                    </mat-paginator>
+                            </div>
+                                           
                         </mat-card-content>    
                     </div>
                 </div>         

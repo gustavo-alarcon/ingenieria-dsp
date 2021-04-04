@@ -11,6 +11,7 @@ import { Quality } from '../../../../models/quality.model';
 import { AssignSpecialistDialogComponent } from './dialogs/assign-specialist-dialog/assign-specialist-dialog.component';
 import { DetailExternalDialogComponent } from './dialogs/detail-external-dialog/detail-external-dialog.component';
 import { DetailInternalDialogComponent } from './dialogs/detail-internal-dialog/detail-internal-dialog.component';
+import { TimeLineDialogComponent } from './dialogs/time-line-dialog/time-line-dialog.component';
 
 @Component({
   selector: 'app-records',
@@ -185,7 +186,7 @@ export class RecordsComponent implements OnInit {
   }
 
   timeline(item): void {
-    this.dialog.open(ConfigurationsComponent, {
+    this.dialog.open(TimeLineDialogComponent, {
       width: '90vw',
       data: item
     });
