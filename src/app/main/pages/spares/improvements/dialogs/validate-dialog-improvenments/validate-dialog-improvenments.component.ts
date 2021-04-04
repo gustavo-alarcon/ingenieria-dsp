@@ -64,9 +64,8 @@ export class ValidateDialogImprovenmentsComponent implements OnInit {
       kit: [part.kit ? part.kit : null],
       stock: [part.stock ? part.stock : 0, Validators.required],
       availability: [part.availability ? part.availability : '', Validators.required],
+      generateReplacement: [part.generateReplacement ? part.generateReplacement : false]
     });
-    console.log(part);
-    
 
     this.parts.push(group);
   }
@@ -79,29 +78,81 @@ export class ValidateDialogImprovenmentsComponent implements OnInit {
       this.loading.next(false);
       return;
     } else {
-      this.auth.user$.pipe(
-        take(1),
-        switchMap(user => {
-          return this.impService.createImprovements(this.data.id, this.validationLogisticForm.value, user);
-        })
-      ).subscribe(batch => {
-        if (batch) {
-          batch.commit()
-            .then(() => {
-              this.loading.next(false);
-              this.snackbar.open('✅ Edición guardada!', 'Aceptar', {
-                duration: 6000
+      // first check if we have some item for remplacement validation.
+      if (this.checkPartsForReplacements(this.validationLogisticForm.value)) {
+        // update improvement entry for replacement generation
+        this.auth.user$.pipe(
+          take(1),
+          switchMap(user => {
+            return this.impService.updateImprovements(this.data.id, this.validationLogisticForm.value, user);
+          })
+        ).subscribe(batch => {
+          if (batch) {
+            batch.commit()
+              .then(() => {
+                this.loading.next(false);
+                this.snackbar.open('✅ Edición guardada!', 'Aceptar', {
+                  duration: 6000
+                });
+                this.dialogRef.close('result');
+              })
+              .catch(err => {
+                this.loading.next(false);
+                this.snackbar.open('🚨 Hubo un error guardando la edición!', 'Aceptar', {
+                  duration: 6000
+                });
               });
-              this.dialogRef.close('result');
-            })
-            .catch(err => {
-              this.loading.next(false);
-              this.snackbar.open('🚨 Hubo un error guardando la edición!', 'Aceptar', {
-                duration: 6000
+          }
+        });
+
+      } else {
+        // create de improvement parts
+        this.auth.user$.pipe(
+          take(1),
+          switchMap(user => {
+            return this.impService.createImprovements(this.data.id, this.validationLogisticForm.value, user);
+          })
+        ).subscribe(batch => {
+          if (batch) {
+            batch.commit()
+              .then(() => {
+                this.loading.next(false);
+                this.snackbar.open('✅ Edición guardada!', 'Aceptar', {
+                  duration: 6000
+                });
+                this.dialogRef.close('result');
+              })
+              .catch(err => {
+                this.loading.next(false);
+                this.snackbar.open('🚨 Hubo un error guardando la edición!', 'Aceptar', {
+                  duration: 6000
+                });
               });
-            });
-        }
-      });
+          }
+        });
+      }
+
     }
+  }
+
+  checkPartsForReplacements(form: ImprovementEntry): boolean {
+    const partsArray = form.parts;
+    const partsForm = this.validationLogisticForm.get('parts') as FormArray;
+    let found = false;
+
+    partsArray.forEach((element, index) => {
+      const date = new Date(parseInt(element.availability.slice(4, 8)), parseInt(element.availability.slice(2, 4)), parseInt(element.availability.slice(0, 2)))
+
+      const now = Date.now();
+      if (element.stock === 0 && (now < date.getTime())) {
+        found = true;
+        partsForm.at(index).get('generateReplacement').setValue(true);
+      } else {
+        element.generateReplacement = false;
+        partsForm.at(index).get('generateReplacement').setValue(false);
+      }
+    })
+
+    return found;
   }
 }

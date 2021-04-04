@@ -1,10 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { combineLatest, Observable } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, startWith, tap } from 'rxjs/operators';
 import { Replacement } from '../../../models/replacements.models';
 import { ReplacementsService } from '../../../services/replacements.service';
 import { CreateDialogReplacementsComponent } from './dialogs/create-dialog-replacements/create-dialog-replacements.component';
@@ -37,20 +38,33 @@ export class ReplacementsComponent implements OnInit {
   sortedData: Replacement[];
   replacements: Replacement[];
 
+  searchControl = new FormControl('');
+
   constructor(
     private repServices: ReplacementsService,
     private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
-    this.replacement$ = this.repServices.getAllReplacements().pipe(
+    this.replacement$ = combineLatest(
+      this.repServices.getAllReplacements(),
+      this.searchControl.valueChanges.pipe(startWith(''), debounceTime(300), distinctUntilChanged())
+    ).pipe(
+      map(([list, search]) => {
+        const term = search.toLowerCase().trim();
+        let filteredList = list.filter(element => element.replacedPart?.toLowerCase().includes(term) ||
+          element.currentPart?.toLowerCase().includes(term) ||
+          element.description?.toLowerCase().includes(term));
+
+        return filteredList
+      }),
       tap(res => {
         if (res) {
           this.replacements = res;
           this.replacementDataSource.data = res;
         }
       })
-    );
+    )
   }
 
 

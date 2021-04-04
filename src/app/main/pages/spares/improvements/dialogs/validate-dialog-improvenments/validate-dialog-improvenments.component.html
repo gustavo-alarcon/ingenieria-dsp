@@ -117,6 +117,12 @@
                                 Campo <strong>requerido.</strong>
                             </mat-error>
                         </mat-form-field>
+                        <div *ngIf="parts.controls[i].get('generateReplacement').value">
+                            <div class="container-form-array__checked">
+                                <span>Reemplazo</span>
+                                <mat-checkbox class="checked-margin" color="warn" formControlName="generateReplacement"></mat-checkbox>
+                            </div>
+                        </div>
 
                     </div>
                 </div>
@@ -126,7 +132,7 @@
             <button type="button" mat-stroked-button color="warn" class="footer__btn-close"
                 mat-dialog-close>CERRAR</button>
             <button type="button" mat-raised-button color="primary" class="footer__btn-save"
-                (click)="save()">ENVIAR</button>
+                (click)="save()">GUARDAR</button>
         </mat-dialog-actions>
     </form>
 </div>
