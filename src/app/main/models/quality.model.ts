@@ -32,7 +32,7 @@ export interface Quality{
     miningOperation?: string;
     correctiveActions?: string;
     riskLevel?: string;
-    state?: string;
+    state?: string; // => registered / process / tracing / finalized
     generalImages?: Array<string>;
     detailImages?: Array<string>;
     question1?: string;
