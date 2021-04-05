@@ -79,11 +79,13 @@
                            ,'btn-state-progress': element.internalStatus==='processed'
                            ,'btn-state-consultation': element.internalStatus==='consultation'
                            ,'btn-state-finalizado': element.internalStatus==='finalized'
+                           ,'btn-state-pending': element.internalStatus==='pending'
                           }">
             <span *ngIf="element.internalStatus==='registered'">Registrado</span>
             <span *ngIf="element.internalStatus==='processed'">Proceso</span>
             <span *ngIf="element.internalStatus==='consultation'">Consulta</span>
             <span *ngIf="element.internalStatus==='finalized'">Finalizado</span>
+            <span *ngIf="element.internalStatus==='pending'">Pendiente</span>
           </button>
         </td>
       </ng-container>

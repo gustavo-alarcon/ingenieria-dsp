@@ -50,12 +50,8 @@ export class MainComponent {
 
     this.version$ = this.authService.getGeneralConfigDoc().pipe(
       map(conf => {
-        console.log(conf.version);
-        console.log(this.authService.version);
         
         if (conf.version !== this.authService.version) {
-          console.log(conf.version);
-          
           this.dialog.open(UpdateReadyComponent, {
             maxWidth: '350px',
             data: conf.version,

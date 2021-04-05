@@ -17,7 +17,7 @@ export interface Evaluation {
     wof: string; // Solicitud TR
     task: string; // Trabajo
     observations: string;
-    workshop: string; // Taller
+    workshop: number | string; // Taller
     images?: Array<string>;
     imagesCounter: number;
     inquiries?: Array<EvaluationInquiry>;

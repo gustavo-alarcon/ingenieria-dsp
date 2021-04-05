@@ -37,7 +37,8 @@ export class EvaluationsRequestsComponent implements OnInit {
         '201301413',
         '201301414',
         '201301415',
-        '201301411'], location: 'LIMA'
+        '201301411',
+        '5'], location: 'MSH'
     },
     {
       code: [
@@ -45,7 +46,27 @@ export class EvaluationsRequestsComponent implements OnInit {
         '201306413',
         '201306415',
         '201306409',
-        '201306411'], location: 'LA JOYA'
+        '201306411'], location: 'TMM'
+    },
+    {
+      code: [
+        '1'], location: 'CRC LIMA'
+    },
+    {
+      code: [
+        '2',], location: 'CRC LA JOYA'
+    },
+    {
+      code: [
+        '3'], location: 'TMAQ LIMA'
+    },
+    {
+      code: [
+        '4',], location: 'TH'
+    },
+    {
+      code: [
+        '6',], location: 'TMAQ LA JOYA'
     }
   ];
 

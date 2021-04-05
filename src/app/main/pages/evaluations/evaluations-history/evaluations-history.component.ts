@@ -36,6 +36,8 @@ export class EvaluationsHistoryComponent implements OnInit {
   improvementDisplayedColumns: string[] = [
     'otMain',
     'otChild',
+    'wof',
+    'task',
     'position',
     'partNumber',
     'description',
@@ -49,8 +51,6 @@ export class EvaluationsHistoryComponent implements OnInit {
     'processAt',
     'finalizedAt',
     'createdBy',
-    'wof',
-    'task',
     'actions',
   ];
 

@@ -12,6 +12,7 @@ import { EvaluationsFinalizeDialogComponent } from './dialogs/evaluations-finali
 import { EvaluationsImagesDialogComponent } from './dialogs/evaluations-images-dialog/evaluations-images-dialog.component';
 // tslint:disable-next-line: max-line-length
 import { EvaluationsObservationsDialogComponent } from './dialogs/evaluations-observations-dialog/evaluations-observations-dialog.component';
+import { EvaluationsPendingDialogComponent } from './dialogs/evaluations-pending-dialog/evaluations-pending-dialog.component';
 import { EvaluationsResponseDialogComponent } from './dialogs/evaluations-response-dialog/evaluations-response-dialog.component';
 import { EvaluationsSettingsDialogComponent } from './dialogs/evaluations-settings-dialog/evaluations-settings-dialog.component';
 import { EvaluationsTimeLineDialogComponent } from './dialogs/evaluations-time-line-dialog/evaluations-time-line-dialog.component';
@@ -278,6 +279,14 @@ export class EvaluationsProgressComponent implements OnInit {
 
   timeline(item): void {
     this.dialog.open(EvaluationsTimeLineDialogComponent, {
+      width: '90vw',
+      data: item
+    });
+  }
+
+  activatePendingDialog(item: Evaluation): void {
+    this.dialog.open(EvaluationsPendingDialogComponent, {
+      maxWidth: 500,
       width: '90vw',
       data: item
     });
