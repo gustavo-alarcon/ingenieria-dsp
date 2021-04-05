@@ -83,7 +83,7 @@
         <a mat-list-item [routerLink]="['/main/evaluations']" routerLinkActive="active" (click)="drawer.toggle()">
           <mat-icon mat-list-icon class="mat-icon-menu">table_view</mat-icon>
           <span class="mat-item-list-span">
-            Evaluaciones
+            Pre-evaluaciones
           </span>
         </a>
       </div>
@@ -203,16 +203,16 @@
         </mat-expansion-panel-header>
         <mat-nav-list>
           <div>
-            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/quality-dashboard']" routerLinkActive="active"
-              (click)="drawer.toggle()">
+            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/quality-dashboard']"
+              routerLinkActive="active" (click)="drawer.toggle()">
               <mat-icon mat-list-icon class="mat-icon-menu">dashboard</mat-icon>
               <span class="mat-item-list-span">
                 Dashboard
               </span>
             </a>
 
-            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/quality-internal-events']" routerLinkActive="active"
-              (click)="drawer.toggle()">
+            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/quality-internal-events']"
+              routerLinkActive="active" (click)="drawer.toggle()">
               <mat-icon mat-list-icon class="mat-icon-menu">note_alt</mat-icon>
               <span class="mat-item-list-span">
                 Eventos internos
@@ -254,7 +254,7 @@
                   <mat-icon mat-list-icon class="mat-icon-menu">description</mat-icon>
                   <!-- [routerLink]="['/main/andon']" -->
                   <span class="mat-item-list-span">
-                    Evaluaciones iniciales
+                    Evaluaciones
                   </span>
                 </a>
               </div>
@@ -263,15 +263,15 @@
         </mat-expansion-panel-header>
         <mat-nav-list>
           <div>
-            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/init-eval-templates']" routerLinkActive="active"
-              (click)="drawer.toggle()">
+            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/init-eval-templates']"
+              routerLinkActive="active" (click)="drawer.toggle()">
               <mat-icon mat-list-icon class="mat-icon-menu">note_alt</mat-icon>
               <span class="mat-item-list-span">
                 Formatos
               </span>
             </a>
-            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/init-eval-technical-attention']" routerLinkActive="active"
-              (click)="drawer.toggle()">
+            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/init-eval-technical-attention']"
+              routerLinkActive="active" (click)="drawer.toggle()">
               <mat-icon mat-list-icon class="mat-icon-menu">folder_shared</mat-icon>
               <span class="mat-item-list-span">
                 Atención técnica

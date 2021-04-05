@@ -38,8 +38,11 @@
   <div class="cards-container" *ngIf="evaluation$|async as evaluations">
     <div class="box mat-elevation-z2" *ngFor="let item of evaluations">
       <div class="header-box">
-        <button mat-icon-button *ngIf="item.internalStatus ==='consultation'">
+        <button mat-icon-button *ngIf="item.internalStatus ==='consultation'" matTooltip="Consulta abierta">
           <mat-icon style="color: #6200EE;">help</mat-icon>
+        </button>
+        <button mat-icon-button *ngIf="item.internalStatus ==='pending'" matTooltip="Estado pendiente">
+          <mat-icon style="color: #6200EE;">pause</mat-icon>
         </button>
         <span class="tag tag--priority" *ngIf="item.priority === 1">PRIORIDAD</span>
         <span class="ms-fill"></span>
@@ -48,6 +51,14 @@
             <button mat-menu-item (click)="finalizeDialog(item)">
               <mat-icon>stop</mat-icon>
               Finalizar
+            </button>
+            <button mat-menu-item *ngIf="item.internalStatus !== 'pending'" (click)="activatePendingDialog(item)">
+              <mat-icon>pause</mat-icon>
+              Activar estado pendiente
+            </button>
+            <button mat-menu-item *ngIf="item.internalStatus === 'pending'" (click)="activatePendingDialog(item)">
+              <mat-icon>pause</mat-icon>
+              Desactivar estado pendiente
             </button>
             <button mat-menu-item (click)="imagesDialog(item)">
               <mat-icon>add_photo_alternate</mat-icon>

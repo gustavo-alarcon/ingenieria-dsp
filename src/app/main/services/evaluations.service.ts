@@ -191,7 +191,7 @@ export class EvaluationsService {
    */
   getAllEvaluationsInProcess(): Observable<Evaluation[]> {
     return this.afs.collection<Evaluation>(`/db/ferreyros/evaluations`,
-      ref => ref.where('internalStatus', 'in', ['processed', 'consultation']))
+      ref => ref.where('internalStatus', 'in', ['processed', 'consultation', 'pending']))
       .valueChanges()
       .pipe(
         map(list => {
@@ -395,6 +395,24 @@ export class EvaluationsService {
     return of(batch);
   }
 
+  /**
+   *Method to change the status of evaluation to pending
+   *
+   * @param {string} id - Id of the current evaluation
+   * @return {*}  {Observable<firebase.default.firestore.WriteBatch>}
+   * @memberof EvaluationsService
+   */
+  activatePending(id: string, status: string): Observable<firebase.default.firestore.WriteBatch> {
+    if (id) {
+      const batch = this.afs.firestore.batch();
+      const evalRef = this.afs.firestore.doc(`db/ferreyros/evaluations/${id}`);
+
+      batch.update(evalRef, { internalStatus: status })
+
+      return of(batch);
+    }
+  }
+
 
   //#region Services Evaluation settings ***********************
 
@@ -528,20 +546,3 @@ export class EvaluationsService {
   //#endregion
 
 }
-
-
-/*
-// Example on callable functions
-import { AngularFireFunctions } from '@angular/fire/functions';
-
-data$: Observable<any>;
-constructor(private fns: AngularFireFunctions) {
-
-    const callable = fns.httpsCallable('sendMail');
-    this.data$ = callable({ name: 'Miguel' });
-    this.data$.subscribe(val => {
-      console.log(val);
-    });
-
-  }
-*/
