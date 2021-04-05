@@ -26,7 +26,7 @@ export class ProgressComponent implements OnInit {
   dataQuality: Quality[] = [];
   counter: number;
   searchForm: FormGroup;
-  state = 'registered';
+  state = 'process';
 
   eventTypeControl = new FormControl('');
 
@@ -52,7 +52,7 @@ export class ProgressComponent implements OnInit {
     });
 
     this.quality$ = combineLatest(
-      this.qualityService.getAllQualityRecords(),
+      this.qualityService.getAllQualityByState(this.state),
       this.searchForm.get('ot').valueChanges.pipe(
         debounceTime(300),
         filter(input => input !== null),

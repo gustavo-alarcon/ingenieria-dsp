@@ -52,7 +52,7 @@ export class RecordsComponent implements OnInit {
     });
 
     this.quality$ = combineLatest(
-      this.qualityService.getAllQualityRecords(),
+      this.qualityService.getAllQualityByState(this.state),
       this.searchForm.get('ot').valueChanges.pipe(
         debounceTime(300),
         filter(input => input !== null),

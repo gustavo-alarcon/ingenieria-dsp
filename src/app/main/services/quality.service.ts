@@ -13,6 +13,7 @@ import {
 import { User } from '../models/user-model';
 import * as firebase from 'firebase/app';
 import { EvaluationsUser } from '../models/evaluations.model';
+import { stat } from 'node:fs';
 
 @Injectable({
   providedIn: 'root',
@@ -64,7 +65,7 @@ export class QualityService {
       miningOperation: null,
       correctiveActions: null,
       riskLevel: null,
-      state: null,
+      state: 'registered',
       generalImages: firebase.default.firestore.FieldValue.arrayUnion(
         imagesObj
       ),
@@ -123,7 +124,7 @@ export class QualityService {
       miningOperation: form.miningOperation,
       correctiveActions: null,
       riskLevel: null,
-      state: null,
+      state: 'registered',
       generalImages: firebase.default.firestore.FieldValue.arrayUnion(
         imagesObj
       ),
@@ -141,9 +142,10 @@ export class QualityService {
     return of(batch);
   }
 
-  getAllQualityRecords(): Observable<Quality[]> {
+  getAllQualityByState(status: string): Observable<Quality[]> {
     return this.afs
-      .collection<Quality>(`/db/ferreyros/quality`)
+      .collection<Quality>(`/db/ferreyros/quality`, (ref) =>
+      ref.where('state', '==', status))
       .valueChanges()
       .pipe(
         map((list) => {
@@ -177,6 +179,10 @@ export class QualityService {
   // get all QualityListSpecialist
   getAllUser(): Observable<User[]> {
     return this.afs.collection<User>(`/users`).valueChanges();
+  }
+  // get all QualityListSpecialist
+  getAllQuality(): Observable<Quality[]> {
+    return this.afs.collection<Quality>(`/db/ferreyros/quality`).valueChanges();
   }
   // get all QualityListSpecialist
   getAllQualityListSpecialist(name: string): Observable<EvaluationsUser[]> {
@@ -393,7 +399,8 @@ export class QualityService {
     entryId: string,
     nameSpecialist: string,
     emailList: string[],
-    user: User
+    user: User,
+    status: string
   ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
@@ -407,6 +414,7 @@ export class QualityService {
       specialist: nameSpecialist,
       editedAt: new Date(),
       edited: user,
+      state: status
     };
     batch.update(qualityDocRef, data);
 
