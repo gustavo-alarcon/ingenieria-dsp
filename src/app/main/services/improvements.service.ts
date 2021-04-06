@@ -244,9 +244,9 @@ updateImprovements(entryId: string, form: improvementsForm, user: User): Observa
    * Cehck if part number had a replacement
    * @param {string} part - Part number to be evaluated
    */
-  checkPart(part: any): Observable<SparePart> {
+  checkPart(part: any, readType: number): Observable<SparePart> {
 
-    return this.afs.collection<Improvement>(`/db/ferreyros/improvements`, ref => ref.where('improvedPart', '==', ('' + part[0])))
+    return this.afs.collection<Improvement>(`/db/ferreyros/improvements`, ref => ref.where('improvedPart', '==', (part[0])))
       .valueChanges()
       .pipe(
         take(1),
@@ -271,7 +271,7 @@ updateImprovements(entryId: string, form: improvementsForm, user: User): Observa
             });
           } else {
             data = {
-              description: part[3],
+              description: readType === 1 ? part[3].replaceAll('"', '') : part[4].replaceAll('"', ''),
               quantity: part[1],
               improvedPart: part[0],
               evaluatedPart: part[0],

@@ -45,14 +45,27 @@ export class SparePartsComponent implements OnInit {
         /* save data */
         this.selected = XLSX.utils.sheet_to_json(ws, { header: 1 });
 
-        const csvRead = this.selected.slice(4, this.selected.length);
+        const csvRead = this.selected.slice(3, this.selected.length);
         let dataReconstructed = [];
+        let readType;
 
         csvRead.forEach(element => {
-          dataReconstructed.push(element[0].replaceAll('-', '').replaceAll('"', '').split(','));
+          if(element[5]) {
+            readType = 1;
+            element[0] = element[0].replaceAll('-', '');
+            dataReconstructed.push(element);
+          } else {
+            // const fixedData = element[0].replaceAll('-', '').replaceAll('"', '').split(',')
+            readType = 2;
+            let tempArray = element[0].split(',');
+            tempArray[0] = tempArray[0].replaceAll('-', '');
+            
+            dataReconstructed.push(tempArray);
+          }
+          
         })
 
-        this.upLoadXls(dataReconstructed)
+        this.upLoadXls(dataReconstructed, readType)
       };
       reader.readAsBinaryString(event.target.files[0]);
     }
@@ -63,7 +76,7 @@ export class SparePartsComponent implements OnInit {
     this.selectCkeck = i;
   }
 
-  upLoadXls(xlsx): void {
+  upLoadXls(xlsx, readType): void {
     xlsx.shift();
 
     let obsArray: Array<Observable<SparePart>> = [];
@@ -71,7 +84,7 @@ export class SparePartsComponent implements OnInit {
     if (xlsx.length > 0) {
       xlsx.forEach(el => {
         let temp = Object.values(el);
-        let obs = this.impServices.checkPart(temp);
+        let obs = this.impServices.checkPart(temp, readType);
         obsArray.push(obs);
       });
 

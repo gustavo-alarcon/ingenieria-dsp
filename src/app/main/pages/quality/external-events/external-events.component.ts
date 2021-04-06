@@ -8,6 +8,7 @@ import { QualityService } from '../../../services/quality.service';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { User } from '../../../models/user-model';
 import { finalize, take } from 'rxjs/operators';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-external-events',
@@ -15,7 +16,7 @@ import { finalize, take } from 'rxjs/operators';
   styleUrls: ['./external-events.component.scss']
 })
 export class ExternalEventsComponent implements OnInit {
-  
+
   loading = new BehaviorSubject<boolean>(false);
   loading$ = this.loading.asObservable();
 
@@ -51,18 +52,30 @@ export class ExternalEventsComponent implements OnInit {
   user: User;
 
   snapshot: Observable<any>;
-
+  subscriptions = new Subscription();
+  isMobile = false;
 
   constructor(
+    private breakpoint: BreakpointObserver,
     private fb: FormBuilder,
     private snackbar: MatSnackBar,
     private authService: AuthService,
     private qualityService: QualityService,
     private storage: AngularFireStorage
-  ) {}
+  ) { }
 
 
   ngOnInit(): void {
+    this.subscriptions.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
+      .subscribe(res => {
+        if (res.matches) {
+          this.isMobile = true;
+        } else {
+          this.isMobile = false;
+        }
+      })
+    )
+
     this.subscription.add(
       this.authService.user$.subscribe((user) => {
         this.user = user;
@@ -78,12 +91,12 @@ export class ExternalEventsComponent implements OnInit {
     this.subscription.unsubscribe();
   }
 
-  initFormInternal(): void{
+  initFormInternal(): void {
     this.externalForm = this.fb.group({
       workdOrden: ['', Validators.required],
       component: ['', Validators.required],
-      nPackage : ['', Validators.required],
-      componentHourMeter : ['', Validators.required],
+      nPackage: ['', Validators.required],
+      componentHourMeter: ['', Validators.required],
       nPart: ['', Validators.required],
       miningOperation: ['', Validators.required],
       question1: ['', Validators.required],
@@ -110,14 +123,14 @@ export class ExternalEventsComponent implements OnInit {
 
     this.uploadPercent$ = task.percentageChanges();
     this.subscription.add(
-       task.snapshotChanges()
+      task.snapshotChanges()
         .pipe(
           finalize(() => {
             fileRef.getDownloadURL().subscribe((url) => {
               if (url) {
-               this.uploadFile = url;
-               this.nameFileSelect = filename ;
-               this.fileSelect = true;
+                this.uploadFile = url;
+                this.nameFileSelect = filename;
+                this.fileSelect = true;
               }
             });
             this.loading.next(false);
