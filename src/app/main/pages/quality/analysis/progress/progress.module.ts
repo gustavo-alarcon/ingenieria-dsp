@@ -10,6 +10,8 @@ import { ConfigurationsDialogComponent } from './dialogs/configurations-dialog/c
 import { DetailInternalDialogComponent } from './dialogs/detail-internal-dialog/detail-internal-dialog.component';
 import { DetailExternalDialogComponent } from './dialogs/detail-external-dialog/detail-external-dialog.component';
 import { AnalysisDialogComponent } from './dialogs/analysis-dialog/analysis-dialog.component';
+import { CauseFailureDialogComponent } from './dialogs/cause-failure-dialog/cause-failure-dialog.component';
+import { ProcessDialogComponent } from './dialogs/process-dialog/process-dialog.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +22,8 @@ import { AnalysisDialogComponent } from './dialogs/analysis-dialog/analysis-dial
     DetailInternalDialogComponent,
     DetailExternalDialogComponent,
     AnalysisDialogComponent,
+    CauseFailureDialogComponent,
+    ProcessDialogComponent,
   ],
   imports: [CommonModule, ProgressRoutingModule, MaterialModule],
 })

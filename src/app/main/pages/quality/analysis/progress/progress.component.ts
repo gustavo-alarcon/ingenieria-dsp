@@ -193,7 +193,7 @@ export class ProgressComponent implements OnInit {
   }
   analysis(item): void {
     this.dialog.open(AnalysisDialogComponent, {
-      maxWidth: 500,
+      maxWidth: 620,
       width: '90vw',
       data: item
     });

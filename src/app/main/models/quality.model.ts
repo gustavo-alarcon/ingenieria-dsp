@@ -19,6 +19,7 @@ export interface Quality{
     finalizedAt?: Date;
     finalizedBy: User;
 
+    causeFailureList: Array<string>;
     eventType: string; //Interno- Externo
     emailList: Array<string>;
     workOrder?: number;

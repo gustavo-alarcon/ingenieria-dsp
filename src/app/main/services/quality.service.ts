@@ -2,7 +2,7 @@ import { Injectable, Component } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, shareReplay } from 'rxjs/operators';
 import {
   Quality,
   QualityTimer,
@@ -297,6 +297,52 @@ export class QualityService {
       )
       .valueChanges();
   }
+  // get all QualityListSpecialist
+  getAllCauseFailure(): Observable<any> {
+    return this.afs
+      .collection(`/db/ferreyros/quality`).valueChanges()
+      .pipe(
+          map(res => res['causeFailureList']),
+         /*  map(res => {
+            return res.sort((a, b) => {
+              const nameA = a.name;
+              const nameB = b.name;
+
+              let comparison = 0;
+              if (nameA > nameB) {
+                comparison = 1;
+              } else if (nameA < nameB) {
+                comparison = -1;
+              }
+              return comparison;
+            });
+          }), */
+          shareReplay(1)
+      );
+  }
+  /*
+   getExpenses(): Observable<any> {
+    return this.afs.collection(`/db/minimarketBoom/config`).doc('generalConfig').valueChanges()
+      .pipe(
+        map(res => res['expenses']),
+        map(res => {
+          return res.sort((a, b) => {
+            const nameA = a.name;
+            const nameB = b.name;
+
+            let comparison = 0;
+            if (nameA > nameB) {
+              comparison = 1;
+            } else if (nameA < nameB) {
+              comparison = -1;
+            }
+            return comparison;
+          });
+        }),
+        shareReplay(1)
+      )
+  }  
+  */
 
   addNewBrodcastList(
     nameBroadcast: string,
@@ -368,16 +414,6 @@ export class QualityService {
     return of(batch);
   }
 
-  /* deleteListBroadcast(id: string): void {
-      this.afs.firestore
-        .collection(`/db/generalConfig/qualityBroadcastList`)
-        .doc(id)
-        .delete()
-        .then(() => {})
-        .catch((error) => {
-          console.log(error);
-        });
-    } */
   /**
    * Delete the passed broadcastList based in his ID
    * @param {string} id - ID of the Andon to be removed
