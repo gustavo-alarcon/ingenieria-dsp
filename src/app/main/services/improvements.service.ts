@@ -152,16 +152,16 @@ export class ImprovementsService {
     return of(batch);
   }
 
-/**
- * Updates improvement entry to be taged for replacement generation
- *
- * @param {string} entryId - Id of the entry to be updated
- * @param {improvementsForm} form - Actual content of the form validated
- * @param {User} user - The user who updates the entry
- * @return {*}  {Observable<firebase.default.firestore.WriteBatch>}
- * @memberof ImprovementsService
- */
-updateImprovements(entryId: string, form: improvementsForm, user: User): Observable<firebase.default.firestore.WriteBatch> {
+  /**
+   * Updates improvement entry to be taged for replacement generation
+   *
+   * @param {string} entryId - Id of the entry to be updated
+   * @param {improvementsForm} form - Actual content of the form validated
+   * @param {User} user - The user who updates the entry
+   * @return {*}  {Observable<firebase.default.firestore.WriteBatch>}
+   * @memberof ImprovementsService
+   */
+  updateImprovements(entryId: string, form: improvementsForm, user: User): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
     // create reference to entry document
@@ -265,7 +265,7 @@ updateImprovements(entryId: string, form: improvementsForm, user: User): Observa
                 improvedPart: doc.improvedPart,
                 evaluatedPart: evaluatedPart,
                 kit: doc.kit,
-                match: true
+                match: evaluatedPart ? true : false
               };
               console.log('There is a match in improvements collection');
             });
@@ -299,6 +299,7 @@ updateImprovements(entryId: string, form: improvementsForm, user: User): Observa
                     });
                   } else {
                     console.log('There were no coincidences in replacement collection');
+                    firstEvaluation.evaluatedPart = firstEvaluation.improvedPart;
                   }
                   return firstEvaluation;
                 })
@@ -313,7 +314,7 @@ updateImprovements(entryId: string, form: improvementsForm, user: User): Observa
   evaluatePartNumber(data: Improvement): string | null {
     const availability = data.availability['seconds'] * 1000; //in milliseconds
     const now = Date.now(); //in milliseconds
-    let isAvailableNow = (availability - now) > 0;
+    let isAvailableNow = (availability - now) <= 0;
 
     const stock = data.stock;
     let hasStock = data.stock > 0;

@@ -1,17 +1,19 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import * as XLSX from 'xlsx';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ImprovementsService } from '../../../services/improvements.service';
-import { map } from 'rxjs/operators';
-import { combineLatest, Observable } from 'rxjs';
+import { map, take } from 'rxjs/operators';
+import { combineLatest, Observable, Subscription } from 'rxjs';
 import { SparePart } from '../../../models/improvenents.model';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-spare-parts',
   templateUrl: './spare-parts.component.html',
   styleUrls: ['./spare-parts.component.scss']
 })
-export class SparePartsComponent implements OnInit {
+export class SparePartsComponent implements OnInit, OnDestroy {
 
   @ViewChild("fileInput2", { read: ElementRef }) fileButton: ElementRef;
 
@@ -23,12 +25,33 @@ export class SparePartsComponent implements OnInit {
 
   checkedParts$: Observable<SparePart[]>;
 
+  subscriptions = new Subscription();
+  isMobile: boolean;
+
+  improvementControl = new FormControl();
+
+  singleCheckedPart: SparePart;
+
   constructor(
+    private breakpoint: BreakpointObserver,
     private snackBar: MatSnackBar,
     private impServices: ImprovementsService,
   ) { }
 
   ngOnInit(): void {
+    this.subscriptions.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
+      .subscribe(res => {
+        if (res.matches) {
+          this.isMobile = true;
+        } else {
+          this.isMobile = false;
+        }
+      })
+    )
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
   onFileSelected(event): void {
@@ -50,7 +73,7 @@ export class SparePartsComponent implements OnInit {
         let readType;
 
         csvRead.forEach(element => {
-          if(element[5]) {
+          if (element[5]) {
             readType = 1;
             element[0] = element[0].replaceAll('-', '');
             dataReconstructed.push(element);
@@ -59,10 +82,10 @@ export class SparePartsComponent implements OnInit {
             readType = 2;
             let tempArray = element[0].split(',');
             tempArray[0] = tempArray[0].replaceAll('-', '');
-            
+
             dataReconstructed.push(tempArray);
           }
-          
+
         })
 
         this.upLoadXls(dataReconstructed, readType)
@@ -91,8 +114,6 @@ export class SparePartsComponent implements OnInit {
       this.checkedParts$ = combineLatest(
         obsArray
       ).pipe(map((list) => {
-        console.log(list);
-
         this.dataSparePart = list;
         this.fileButton.nativeElement.value = null;
         return list
@@ -143,6 +164,38 @@ export class SparePartsComponent implements OnInit {
     const name = 'SAP' + '.xlsx';
     XLSX.writeFile(wb, name);
 
+  }
+
+  singleImprovementCheck(): void {
+    this.singleCheckedPart = null;
+    
+    if (this.improvementControl.value) {
+      const part = [
+        this.improvementControl.value,
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+      ];
+
+      this.impServices.checkPart(part, 1)
+        .pipe(
+          take(1)
+        )
+        .subscribe(spare => {
+          if (spare) {
+            this.singleCheckedPart = spare;
+          }
+        })
+    }
+
+  }
+
+  deleteResult(index: number): void {
+    this.dataSparePart.splice(index, 1);
   }
 
 }

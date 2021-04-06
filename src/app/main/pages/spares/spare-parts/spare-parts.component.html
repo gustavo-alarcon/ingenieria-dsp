@@ -1,23 +1,41 @@
-<div class="container">
-    <div class="header-container">
-        <mat-icon mat-list-icon class="mat-icon-menu" style="font-size: 2.5em;">verified</mat-icon>
-        <h1 style="font-size: 2.2em; margin-left: 20px; font-family: 'Poppins', sans-serif; font-weight: 700;">Revisión
-            de repuestos</h1>
-
+<div class="ms-container">
+    <div class="ms-toolbar">
+        <mat-icon class="ms-toolbar__icon">verified</mat-icon>
+        <h1 class="ms-toolbar__title" [ngClass]="isMobile ? 'ms-toolbar__title--mobile' : 'ms-toolbar__title--desktop'">
+            Revisión de repuestos</h1>
         <input #fileInput2 style="display: none" type="file" (change)=" onFileSelected($event)" accept=".csv"
             id="fileInput2">
-        <button type="file" aria-label="add" mat-button class="btn-add" accept=".csv" (click)="fileInput2.click()">
+        <button type="file" mat-stroked-button class="ms-toolbar__button" accept=".csv" (click)="fileInput2.click()">
             <mat-icon aria-label="agregar" class="icon-add">add</mat-icon>
             ADJUNTAR SIS
         </button>
+        <mat-form-field appearance="outline" class="ms-toolbar__search">
+            <mat-label>Buscar mejora</mat-label>
+            <mat-icon matPrefix>search</mat-icon>
+            <input matInput type="text" [formControl]="improvementControl" placeholder="Escribir..."
+                (keyup.enter)="singleImprovementCheck()" autocomplete="off">
+        </mat-form-field>
     </div>
+    <mat-divider></mat-divider>
+
     <div class="body-container">
-        <h4 style="font-weight: bold;">Lista de partes</h4>
+        <div *ngIf="singleCheckedPart">
+            <h4 style="font-weight: bold;">Resultado de búsqueda</h4>
+            <div class="single-query">
+                <div class="checked-part">
+                    {{singleCheckedPart.improvedPart}}
+                </div>
+                <div class="result-part" [ngClass]="singleCheckedPart.match ? 'match' : ''">
+                    {{singleCheckedPart.evaluatedPart}}
+                </div>
+            </div>
+        </div>
         <ng-container *ngIf="checkedParts$ | async; else default">
+            <h4 style="font-weight: bold;">Resultado de archivo</h4>
             <form *ngFor="let item of dataSparePart; let i=index">
                 <div class="container-form-array">
                     <!-- [formGroupName]="i" -->
-                    <mat-form-field appearance="outline" style="width: 280px;" class="container-form-array__inputs">
+                    <mat-form-field appearance="outline" style="width: 250px;" class="container-form-array__inputs">
                         <mat-label>Nombre</mat-label>
                         <input matInput placeholder="Label" [ngModel]="item.description" name="description" readonly>
                         <!--  <mat-icon matSuffix>settings</mat-icon> -->
@@ -26,12 +44,12 @@
                         <mat-label>Cantidad</mat-label>
                         <input matInput placeholder="Cantidad" [ngModel]="item.quantity" name='quantity' readonly>
                     </mat-form-field>
-                    <mat-form-field appearance="outline" style="width: 280px;" class="container-form-array__inputs">
+                    <mat-form-field appearance="outline" style="width: 180px;" class="container-form-array__inputs">
                         <mat-label>Nº de parte</mat-label>
                         <input matInput placeholder="Nº de parte actual" [ngModel]="item.improvedPart"
                             name="improvedPart" readonly>
                     </mat-form-field>
-                    <mat-form-field appearance="outline" style="width: 280px;" class="container-form-array__inputs">
+                    <mat-form-field appearance="outline" style="width: 180px;" class="container-form-array__inputs">
                         <mat-label>Nº de parte disponible</mat-label>
                         <input matInput placeholder="Nº de parte mejorada" [ngModel]="item.evaluatedPart"
                             name="evaluatedPart" [ngClass]="item.match ? 'match' : ''" readonly>
@@ -44,14 +62,19 @@
                         </mat-checkbox>
                         <p *ngIf="item.kit" style="color: red; font-weight: bold;">Eliminado</p>
                     </div>
+
+                    <button mat-icon-button color="warn" *ngIf="!item.kit" style="margin-top: 8px;"
+                        (click)="deleteResult(i)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
                 </div>
                 <!-- Aqui va los stoks -->
             </form>
         </ng-container>
         <ng-template #default>
-            <div class="default">
+            <div class="ms-table-default">
                 <span>
-                    <mat-icon style="vertical-align: middle;">upload</mat-icon> Adjunte archivo
+                    <mat-icon style="vertical-align: middle;">air</mat-icon> Sin resultados
                 </span>
             </div>
         </ng-template>
