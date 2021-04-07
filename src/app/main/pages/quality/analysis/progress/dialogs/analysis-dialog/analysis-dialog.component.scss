@@ -18,17 +18,8 @@
     }
 
     .container__result{
-        display: flex;
-        justify-content : flex-end;
-        &--result{
-            border-radius: 5px;
-            border: none;
-            background: #92D050;
-            color: black;
-            padding: 10px 80px 10px 80px;
-            font-size: 1.5em;
-            font-weight: bold;
-        }
+        display: flex;       
+       
     }
 }
 
@@ -57,4 +48,60 @@
 
 .chip-form-input{
     width: 550px;
+}
+
+.step-text{
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.btn-result-1{
+    background: red;
+    color: white;
+    margin-left: 190px;
+    border-radius: 5px;
+    border: none;
+    padding: 10px 80px 10px 80px;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+.btn-result-2{
+    background:blue;
+    color: white;
+    margin-left: 190px;
+    border-radius: 5px;
+    border: none;
+    padding: 10px 80px 10px 80px;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+.btn-result-3{
+    background: purple ;
+    color: white;
+    margin-left: 190px;
+    border-radius: 5px;
+    border: none;
+    padding: 10px 80px 10px 80px;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+.btn-result-4{
+    background: yellow;
+    color: white;
+    margin-left: 190px;
+    border-radius: 5px;
+    border: none;
+    padding: 10px 80px 10px 80px;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+.btn-result-5{
+    background:green ;
+    color: white;
+    margin-left: 190px;
+    border-radius: 5px;
+    border: none;
+    padding: 10px 80px 10px 80px;
+    font-size: 1.5em;
+    font-weight: bold;
 }

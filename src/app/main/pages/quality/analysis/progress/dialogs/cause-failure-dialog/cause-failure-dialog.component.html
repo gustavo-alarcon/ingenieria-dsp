@@ -16,7 +16,7 @@
             <form [formGroup]="form" class="timer-container">
                 <mat-form-field appearance="outline" style="width: 400px; margin-left: 25px;" >
                     <mat-label>Causante de falla</mat-label>
-                      <input  matInput type="text" placeholder=" Escribir..." formControlName="causeFailure"                                               
+                      <input autocomplete="off" matInput type="text" placeholder=" Escribir..." formControlName="causeFailure"                                               
                       >
                     <mat-error *ngIf="form.controls['causeFailure'].errors">
                         Campo <strong>requerido.</strong>
