@@ -16,6 +16,7 @@ import { EvaluationsResponseDialogComponent } from './dialogs/evaluations-respon
 import { Ng2ImgMaxModule } from 'ng2-img-max';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { ComponentsModule } from 'src/app/shared/components/components.module';
+import { EvaluationsPendingDialogComponent } from './dialogs/evaluations-pending-dialog/evaluations-pending-dialog.component';
 
 
 @NgModule({
@@ -28,6 +29,7 @@ import { ComponentsModule } from 'src/app/shared/components/components.module';
     EvaluationsObservationsDialogComponent,
     EvaluationsConsultsDialogComponent,
     EvaluationsResponseDialogComponent,
+    EvaluationsPendingDialogComponent,
   ],
   exports: [
     EvaluationsProgressComponent

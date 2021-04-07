@@ -23,8 +23,7 @@
         <p><span style="font-weight: bold;"> Cantidad :</span> {{data.quantity ? data.quantity : ''}}</p>
         <p><span style="font-weight: bold;"> Descripcion :</span> {{data.description ? data.description : ''}}</p>
         <p><span style="font-weight: bold;"> Tipo de Atencion :</span> {{data.status ? data.status : ''}}</p>
-        <p><span style="font-weight: bold;"> Usuario :</span> {{data.createdBy.name ? data.createdBy.name :
-            data.createdBy}}
+        <p><span style="font-weight: bold;"> Usuario :</span> {{data.createdBy ? (data.createdBy.name ? data.createdBy.name : data.createdBy) : 'Sin asignar'}}
         </p>
         <p><span style="font-weight: bold;"> WOF (Orden de Fabricacion) :</span> {{data.wof ? data.wof : ''}}</p>
         <p><span style="font-weight: bold;"> Trabajo :</span> {{data.task ? data.task : ''}}</p>

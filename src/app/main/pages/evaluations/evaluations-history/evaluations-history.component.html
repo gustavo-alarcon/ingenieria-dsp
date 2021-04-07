@@ -79,11 +79,13 @@
                            ,'btn-state-progress': element.internalStatus==='processed'
                            ,'btn-state-consultation': element.internalStatus==='consultation'
                            ,'btn-state-finalizado': element.internalStatus==='finalized'
+                           ,'btn-state-pending': element.internalStatus==='pending'
                           }">
             <span *ngIf="element.internalStatus==='registered'">Registrado</span>
             <span *ngIf="element.internalStatus==='processed'">Proceso</span>
             <span *ngIf="element.internalStatus==='consultation'">Consulta</span>
             <span *ngIf="element.internalStatus==='finalized'">Finalizado</span>
+            <span *ngIf="element.internalStatus==='pending'">Pendiente</span>
           </button>
         </td>
       </ng-container>
@@ -154,7 +156,7 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">Inspector</th>
         <td mat-cell *matCellDef="let element" class="table__cell"> {{element.createdBy ? (element.createdBy.name ?
           element.createdBy.name : element.createdBy) :
-          '---'}} </td>
+          'Sin asignar'}} </td>
       </ng-container>
 
       <ng-container matColumnDef="processDate">

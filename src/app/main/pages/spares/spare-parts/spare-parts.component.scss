@@ -49,3 +49,31 @@
     padding: 1rem;
     border-radius: 10px 10px;
 }
+
+.match {
+    background: greenyellow;
+    padding: 4px;
+    font-weight: 700;
+    border-radius: 2px;
+}
+
+.single-query {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+
+    .checked-part {
+        padding: 12px;
+        border: solid 1px lightgray;
+        border-radius: 5px;
+        color: #2b2b2b;
+        margin-right: 12px;
+    }
+
+    .result-part {
+        padding: 12px;
+        border: solid 1px lightgray;
+        border-radius: 5px;
+        color: #2b2b2b;
+    }
+}
