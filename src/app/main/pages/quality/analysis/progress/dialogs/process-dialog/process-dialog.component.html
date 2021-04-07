@@ -2,7 +2,7 @@
 <div>
     <div class="ms-dialog-header">
         <mat-icon class="ms-dialog-header__icon">add_circle_outline</mat-icon>
-        <h3 class="ms-dialog-header__title">Agregar causante de falla</h3>
+        <h3 class="ms-dialog-header__title">Agregar proceso</h3>
         <span class="ms-fill"></span>
         <button mat-icon-button mat-dialog-close>
             <mat-icon>cancel</mat-icon>
@@ -15,10 +15,10 @@
         <div>
             <form [formGroup]="form" class="timer-container">
                 <mat-form-field appearance="outline" style="width: 400px; margin-left: 25px;" >
-                    <mat-label>Causante de falla</mat-label>
-                      <input  matInput type="text" placeholder=" Escribir..." formControlName="causeFailure"                                               
+                    <mat-label>Proceso</mat-label>
+                      <input autocomplete="off"  matInput type="text" placeholder=" Escribir..." formControlName="process"                                               
                       >
-                    <mat-error *ngIf="form.controls['causeFailure'].errors">
+                    <mat-error *ngIf="form.controls['process'].errors">
                         Campo <strong>requerido.</strong>
                     </mat-error>
                 </mat-form-field>

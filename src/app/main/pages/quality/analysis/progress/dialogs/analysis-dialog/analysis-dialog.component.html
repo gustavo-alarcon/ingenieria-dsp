@@ -2,7 +2,7 @@
 
 <div>
     <div class="ms-dialog-header">
-        <mat-icon class="ms-dialog-header__icon">analytics</mat-icon>
+        <mat-icon class="ms-dialog-header__icon">add_task</mat-icon>
         <h3 class="ms-dialog-header__title">Analisis <span style="font-size: 0.8rem; color: grey; margin-left: 1rem"> </span> </h3>           
         <span class="ms-fill"></span>
         <button mat-icon-button mat-dialog-close>
@@ -29,18 +29,23 @@
             <mat-vertical-stepper [linear]="isLinear" #stepper>
                 <mat-step [stepControl]="firstFormGroup">
                     <form [formGroup]="analysisForm" autocomplete="off" class="container__form">
-                    <ng-template matStepLabel style="font-weight: bolds;">Analisis</ng-template>
+                    <ng-template matStepLabel >
+                        <div class="container__result" >
+                            <span  class="step-text" style="margin-top: 10px;" > Analisis </span>
+                            <span *ngIf="resultEvaluation$  | async as result" 
+                            [ngClass]="{
+                                         'btn-result-1':   result === 1
+                                        ,'btn-result-2':   result === 2
+                                        ,'btn-result-3':   result === 3
+                                        ,'btn-result-4':   result === 4
+                                        ,'btn-result-5':   result === 5
+                                        }"
+                            > [ {{result}} ]
+                           </span>
+                        </div>
+                    </ng-template>                   
 
-                   <!--  <mat-form-field appearance="outline" id="result" class="container__form--input">
-                        <mat-label>Causante de falla</mat-label>
-                          <input  matInput type="text" placeholder=" Escribir..." formControlName="causeFailure"                         
-                          >
-                        <mat-error *ngIf="analysisForm.controls['causeFailure'].errors">
-                            Campo <strong>requerido.</strong>
-                        </mat-error>
-                    </mat-form-field> -->
-
-                    <mat-form-field *ngIf="category$ | async as causeFailuries"  class="container__form--input"
+                    <mat-form-field *ngIf="causeFailure$ | async as causeFailuries"  class="container__form--input"
                         appearance="outline">
                         <mat-label>Causante de falla</mat-label>
                         <input autocomplete="off" formControlName="causeFailure" [matAutocomplete]="causeFailureAutocomplete" type="text"
@@ -49,10 +54,14 @@
                             <mat-option (click)="onAddCauseFailure()" [value]="">
                             <mat-icon>add_circle_outline</mat-icon>Añadir
                             </mat-option>
-                            <mat-option *ngFor="let causeFailure of causeFailuries" [value]="causeFailure">
-                            {{ causeFailure }}
+                            <mat-option *ngFor="let causeFailure of causeFailuries" [value]="causeFailure.name">
+                            {{ causeFailure.name }}
                             </mat-option>
                         </mat-autocomplete>
+                        <mat-hint *ngIf="!(causeFailure$ | async)">
+                            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                            <p>Cargando lista ...</p>
+                        </mat-hint>
                         <mat-error>
                             <span *ngIf="analysisForm.get('causeFailure').errors?.required">Por favor, complete el campo.</span>
                             <span *ngIf="analysisForm.get('causeFailure').errors?.invalid">Dato inválido. Complete con alguna opción
@@ -60,16 +69,7 @@
                         </mat-error>
                     </mat-form-field>
                     <br> 
-                    <!-- <mat-form-field appearance="outline" id="result" class="container__form--input">
-                        <mat-label>Proceso</mat-label>
-                          <input  matInput type="text" placeholder=" Escribir..." formControlName="process"                         
-                          >
-                        <mat-error *ngIf="analysisForm.controls['process'].errors">
-                            Campo <strong>requerido.</strong>
-                        </mat-error>
-                       </mat-form-field> -->
-
-                    <mat-form-field *ngIf="category$ | async as process"  class="container__form--input"
+                    <mat-form-field *ngIf="process$ | async as process"  class="container__form--input"
                         appearance="outline">
                         <mat-label>Proceso</mat-label>
                         <input autocomplete="off" formControlName="process" [matAutocomplete]="processAutocomplete" type="text"
@@ -78,103 +78,114 @@
                             <mat-option (click)="onAddProcess()" [value]="">
                             <mat-icon>add_circle_outline</mat-icon>Añadir
                             </mat-option>
-                            <mat-option *ngFor="let item of process" [value]="item">
-                            {{ item }}
+                            <mat-option *ngFor="let item of process" [value]="item.name">
+                            {{ item.name }}
                             </mat-option>
                         </mat-autocomplete>
+                        <mat-hint *ngIf="!(process$ | async)">
+                            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                            <p>Cargando lista ...</p>
+                        </mat-hint>
                         <mat-error>
                             <span *ngIf="analysisForm.get('process').errors?.required">Por favor, complete el campo.</span>
                             <span *ngIf="analysisForm.get('process').errors?.invalid">Dato inválido. Complete con alguna opción
                             válida.</span>
                         </mat-error>
                     </mat-form-field>
+
                     <br> 
-                    <mat-form-field appearance="outline" id="result" class="container__form--input">
-                        <mat-label> Calidad</mat-label>
-                          <input  matInput type="text" placeholder=" Escribir..." formControlName="quality"                         
-                          >
+
+                    <mat-form-field appearance="outline" id="result"  class="container__form--input">
+                        <mat-label>Calidad</mat-label>
+                        <mat-select formControlName="quality">
+                            <mat-option *ngFor="let item of qualityList" [value]="item"><span
+                                style="color: #8f8a8a;">({{item.code}})</span> {{item.name}} 
+                                </mat-option>
+                        </mat-select>
+                        <mat-hint *ngIf="!(qualityList)">
+                            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                            <p>Cargando lista ...</p>
+                        </mat-hint>
+    
                         <mat-error *ngIf="analysisForm.controls['quality'].errors">
                             Campo <strong>requerido.</strong>
                         </mat-error>
-                    </mat-form-field>
+                    </mat-form-field> 
+
                     <br> 
-                    <mat-form-field appearance="outline" id="result" class="container__form--input">
+
+                    <mat-form-field appearance="outline" id="result"  class="container__form--input">
                         <mat-label>Costo</mat-label>
-                          <input  matInput type="text" placeholder=" Escribir...    " formControlName="cost"                         
-                          >
+                        <mat-select formControlName="cost">
+                            <mat-option *ngFor="let item of costList" [value]="item"><span
+                                style="color: #8f8a8a;">({{item.code}})</span> {{item.name}} 
+                                </mat-option>
+                        </mat-select>
+                        <mat-hint *ngIf="!(costList)">
+                            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                            <p>Cargando lista ...</p>
+                        </mat-hint>
+    
                         <mat-error *ngIf="analysisForm.controls['cost'].errors">
                             Campo <strong>requerido.</strong>
                         </mat-error>
-                    </mat-form-field>
-                    <br>
-                    <mat-form-field appearance="outline" id="result" class="container__form--input">
+                    </mat-form-field> 
+
+                    <br> 
+
+                    <mat-form-field appearance="outline" id="result"  class="container__form--input">
                         <mat-label>Frecuencia</mat-label>
-                          <input  matInput type="text" placeholder=" Escribir...    " formControlName="frequency"                         
-                          >
+                        <mat-select formControlName="frequency">
+                            <mat-option *ngFor="let item of frequencyList" [value]="item"><span
+                                style="color: #8f8a8a;">({{item.code}})</span> {{item.name}} 
+                                </mat-option>
+                        </mat-select>
+                        <mat-hint *ngIf="!(frequencyList)">
+                            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                            <p>Cargando lista ...</p>
+                        </mat-hint>
+    
                         <mat-error *ngIf="analysisForm.controls['frequency'].errors">
                             Campo <strong>requerido.</strong>
                         </mat-error>
-                    </mat-form-field>
-                    
-                    <br> 
-                    <!--  -->
-                    <mat-form-field *ngIf="category$ | async as categories"  style="margin-bottom: 8px; display: block"
-                        appearance="outline">
-                        <mat-label>Categoria</mat-label>
-                        <input autocomplete="off" formControlName="category" [matAutocomplete]="categoryAutocomplete" type="text"
-                            matInput />
-                        <mat-autocomplete autoActiveFirstOption #categoryAutocomplete="matAutocomplete">
-                            <mat-option (click)="onAddCategory()" [value]="">
-                            <mat-icon>add_circle_outline</mat-icon>Añadir
-                            </mat-option>
-                            <mat-option *ngFor="let category of categories" [value]="category">
-                            {{ category }}
-                            </mat-option>
-                        </mat-autocomplete>
-                        <mat-error>
-                            <span *ngIf="analysisForm.get('category').errors?.required">Por favor, complete el campo.</span>
-                            <span *ngIf="analysisForm.get('category').errors?.invalid">Dato inválido. Complete con alguna opción
-                            válida.</span>
-                        </mat-error>
-                    </mat-form-field>
-    
-                    <div class="container__result">
-                        <span class="container__result--result">[ 1 - 4 ]</span>
-                    </div>
+                    </mat-form-field>                    
+                    <br>                    
     
                 </form>
     
                 </mat-step>
                 <mat-step [stepControl]="secondFormGroup">
-                  <!-- <form [formGroup]="secondFormGroup">
-                    <ng-template matStepLabel>Acciones correctivas</ng-template>
-                    <mat-form-field>
-                      <mat-label>Address</mat-label>
-                      <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY"
-                             required>
-                    </mat-form-field>
-                    <div>
-                      <button mat-button matStepperPrevious>Back</button>
-                      <button mat-button matStepperNext>Next</button>
-                    </div>
-                  </form> -->
-                  <form class="form-corrective" [formGroup]="listBahiasForm" autocomplete="off">               
-                    <ng-template matStepLabel>Acciones correctivas</ng-template>
-                    <div formArrayName="bahias" class="bahias">
-                        <div *ngFor="let _ of bahias.controls; let i=index" class="form-corrective__form-array">
+                
+                  <form class="form-corrective" [formGroup]="listAreaForm" autocomplete="off">               
+                    <ng-template matStepLabel>
+                        <span  class="step-text" >Acciones correctivas </span> 
+                    </ng-template>
+                    <div formArrayName="areas" class="areas">
+                        <div *ngFor="let _ of areas.controls; let i=index" class="form-corrective__form-array">
                             <div [formGroupName]="i" class="form-corrective__container">
+                               
                                 <mat-form-field appearance="outline"   class="form-corrective__input1">
                                     <mat-label>Accion correctiva {{i+1}}</mat-label>
-                                    <input matInput placeholder="Escribe..." formControlName="workShop">
-                                    <mat-error *ngIf="bahias.controls[i].get('workShop').errors">
+                                    <input matInput placeholder="Escribe..." formControlName="corrective">
+                                    <mat-error *ngIf="areas.controls[i].get('corrective').errors">
                                         Campo <strong>requerido.</strong>
                                     </mat-error>
                                 </mat-form-field>        
-        
-                                <mat-form-field appearance="outline" class="form-corrective__input2">
+
+                                <mat-form-field *ngIf=" areaResponsable$ | async as areaResponsable" appearance="outline" id="result" class="form-corrective__input2">
                                     <mat-label>Area responsable</mat-label>
-                                    <input matInput type='text' placeholder="Escribe..." formControlName="name">
-                                    <mat-error *ngIf="bahias.controls[i].get('name').errors">
+                                    <mat-select  formControlName="name"                                     
+                                        >
+                                        <mat-option  *ngFor="let item of areaResponsable" 
+                                            [value]="item" (click)="onclickArea(item)" >
+                                            {{item.name}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-hint *ngIf="!(areaResponsable$ | async)">
+                                        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                                        <p>Cargando lista ...</p>
+                                    </mat-hint>                
+                                    <mat-error *ngIf="areas.controls[i].get('name').errors">
                                         Campo <strong>requerido.</strong>
                                     </mat-error>
                                 </mat-form-field>
@@ -193,7 +204,9 @@
 
                 </mat-step>
                 <mat-step>
-                  <ng-template matStepLabel>Reporte</ng-template>
+                    <ng-template matStepLabel>
+                        <span  class="step-text" >Reporte </span>  
+                    </ng-template>
 
                   <span class="link-text">ZBI_OPS_ORDSER_MQH (11-52-04).xlsx</span>
                   <br>

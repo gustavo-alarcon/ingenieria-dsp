@@ -1,7 +1,7 @@
 import { Injectable, Component } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { Observable, of } from 'rxjs';
+import { from, Observable, of } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import {
   Quality,
@@ -9,11 +9,11 @@ import {
   QualityListSpecialist,
   QualityListResponsibleArea,
   QualityBroadcastList,
+  CauseFailureList,
 } from '../models/quality.model';
 import { User } from '../models/user-model';
 import * as firebase from 'firebase/app';
 import { EvaluationsUser } from '../models/evaluations.model';
-import { stat } from 'node:fs';
 
 @Injectable({
   providedIn: 'root',
@@ -297,52 +297,6 @@ export class QualityService {
       )
       .valueChanges();
   }
-  // get all QualityListSpecialist
-  getAllCauseFailure(): Observable<any> {
-    return this.afs
-      .collection(`/db/ferreyros/quality`).valueChanges()
-      .pipe(
-          map(res => res['causeFailureList']),
-         /*  map(res => {
-            return res.sort((a, b) => {
-              const nameA = a.name;
-              const nameB = b.name;
-
-              let comparison = 0;
-              if (nameA > nameB) {
-                comparison = 1;
-              } else if (nameA < nameB) {
-                comparison = -1;
-              }
-              return comparison;
-            });
-          }), */
-          shareReplay(1)
-      );
-  }
-  /*
-   getExpenses(): Observable<any> {
-    return this.afs.collection(`/db/minimarketBoom/config`).doc('generalConfig').valueChanges()
-      .pipe(
-        map(res => res['expenses']),
-        map(res => {
-          return res.sort((a, b) => {
-            const nameA = a.name;
-            const nameB = b.name;
-
-            let comparison = 0;
-            if (nameA > nameB) {
-              comparison = 1;
-            } else if (nameA < nameB) {
-              comparison = -1;
-            }
-            return comparison;
-          });
-        }),
-        shareReplay(1)
-      )
-  }  
-  */
 
   addNewBrodcastList(
     nameBroadcast: string,
@@ -456,4 +410,106 @@ export class QualityService {
 
     return of(batch);
   }
+  /**
+   * add the name addCauseFailureList 
+   * @param {string} form - name CauseFailureList
+   * @param {User} user - User's data in actual session
+   */
+  addCauseFailureList(
+    form ,
+    user: User
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    // create reference for document in evaluation entries collection
+    const qualityDocRef = this.afs.firestore
+      .collection(`/db/generalConfig/qualityCauseFailureList`)
+      .doc();
+
+    // Structuring the data model
+    const data: any = {
+      id: qualityDocRef.id,
+      name: form.causeFailure,
+      createdAt: new Date(),
+      createdBy: user,
+    };
+    batch.set(qualityDocRef, data);
+
+    return of(batch);
+    }
+     // get all CauseFailureList
+  getAllCauseFailureList(): Observable<CauseFailureList[]> {
+    return this.afs
+      .collection<CauseFailureList>(
+        `/db/generalConfig/qualityCauseFailureList`,
+        (ref) => ref.orderBy('createdAt', 'asc')
+      )
+      .valueChanges();
+  }
+  /**
+   * add the name ProcessList
+   * @param {string} form - name ProcessList
+   * @param {User} user - User's data in actual session
+   */
+   addProcessList(
+    form ,
+    user: User
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    // create reference for document in evaluation entries collection
+    const qualityDocRef = this.afs.firestore
+      .collection(`/db/generalConfig/qualityProcessList`)
+      .doc();
+
+    // Structuring the data model
+    const data: any = {
+      id: qualityDocRef.id,
+      name: form.process,
+      createdAt: new Date(),
+      createdBy: user,
+    };
+    batch.set(qualityDocRef, data);
+
+    return of(batch);
+    }
+     // get all CauseFailureList
+  getAllProcessList(): Observable<CauseFailureList[]> {
+    return this.afs
+      .collection<CauseFailureList>(
+        `/db/generalConfig/qualityProcessList`,
+        (ref) => ref.orderBy('createdAt', 'asc')
+      )
+      .valueChanges();
+  }
+
+  /**
+   * add the name ProcessList
+   * @param {string} form - name ProcessList
+   * @param {User} user - User's data in actual session
+   */
+   saveCorrectiveActions(
+    entryId,
+    formAnalysis,
+    formCorrective,
+    emailList,
+    status
+    ): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    // create reference for document in evaluation entries collection
+    const qualityDocRef = this.afs.firestore.doc(
+      `db/ferreyros/quality/${entryId}`
+    );
+    // Structuring the data model
+    const data: any = {
+      emailList: firebase.default.firestore.FieldValue.arrayUnion(emailList),
+      analysis: formAnalysis ,
+      correctiveActions: firebase.default.firestore.FieldValue.arrayUnion(formCorrective),
+      state: status
+    };
+    batch.update(qualityDocRef, data);
+
+    return of(batch);
+    }
 }

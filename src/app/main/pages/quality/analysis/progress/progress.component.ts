@@ -7,7 +7,6 @@ import { QualityService } from '../../../../services/quality.service';
 import { AuthService } from '../../../../../auth/services/auth.service';
 import { debounceTime, filter, startWith, map, tap } from 'rxjs/operators';
 import { ConfigurationsDialogComponent } from './dialogs/configurations-dialog/configurations-dialog.component';
-import { AccCorrectiveDialogComponent } from './dialogs/acc-corrective-dialog/acc-corrective-dialog.component';
 import { DetailInternalDialogComponent } from './dialogs/detail-internal-dialog/detail-internal-dialog.component';
 import { DetailExternalDialogComponent } from './dialogs/detail-external-dialog/detail-external-dialog.component';
 import { TimeLineDialogComponent } from './dialogs/time-line-dialog/time-line-dialog.component';
@@ -143,14 +142,6 @@ export class ProgressComponent implements OnInit {
     this.dialog.open(ConfigurationsDialogComponent, {
       maxWidth: 500,
       width: '90vw',
-    });
-  }
-
-  accCorrective(item: any): void {
-    this.dialog.open(AccCorrectiveDialogComponent, {
-      maxWidth: 650,
-      width: '90vw',
-      data: item,
     });
   }
 
