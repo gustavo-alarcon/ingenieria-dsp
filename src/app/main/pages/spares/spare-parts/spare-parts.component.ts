@@ -127,7 +127,10 @@ export class SparePartsComponent implements OnInit, OnDestroy {
   }
 
   downloadXls(): void {
-
+    if (this.dataSparePart.length < 1) {
+      return
+    }
+    
     const table_xlsx: any[] = [];
 
     const headersXlsx = [
@@ -168,7 +171,7 @@ export class SparePartsComponent implements OnInit, OnDestroy {
 
   singleImprovementCheck(): void {
     this.singleCheckedPart = null;
-    
+
     if (this.improvementControl.value) {
       const part = [
         this.improvementControl.value,

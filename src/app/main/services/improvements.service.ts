@@ -256,20 +256,30 @@ export class ImprovementsService {
           if (res.length) {
             res.forEach(doc => {
               let evaluatedPart;
-
               evaluatedPart = this.evaluatePartNumber(doc);
 
-              data = {
-                description: doc.description,
-                quantity: doc.quantity,
-                improvedPart: doc.improvedPart,
-                evaluatedPart: evaluatedPart,
-                kit: doc.kit,
-                match: evaluatedPart ? true : false
-              };
-              console.log('There is a match in improvements collection');
+              if (doc.criticalPart) {
+                data = {
+                  description: doc.description,
+                  quantity: doc.quantity,
+                  improvedPart: doc.improvedPart,
+                  evaluatedPart: doc.improvedPart,
+                  kit: doc.kit,
+                  match: false
+                };
+              } else {
+                data = {
+                  description: doc.description,
+                  quantity: doc.quantity,
+                  improvedPart: doc.improvedPart,
+                  evaluatedPart: evaluatedPart,
+                  kit: doc.kit,
+                  match: evaluatedPart ? true : false
+                };
+              }
             });
           } else {
+
             data = {
               description: readType === 1 ? part[3].replaceAll('"', '') : part[4].replaceAll('"', ''),
               quantity: part[1],
@@ -278,13 +288,12 @@ export class ImprovementsService {
               kit: null,
               match: false
             };
-            console.log('There were no coincidences in improvements collection');
+
           }
 
           return data;
         }),
         switchMap(firstEvaluation => {
-          console.log(firstEvaluation);
 
           if (firstEvaluation.evaluatedPart === null) {
             return this.afs.collection<Replacement>(`/db/ferreyros/replacements`, ref => ref.where('replacedPart', '==', firstEvaluation.evaluatedPart))
@@ -293,12 +302,9 @@ export class ImprovementsService {
                 map(res => {
                   if (res.length) {
                     res.forEach(doc => {
-                      console.log('Replacement found');
-
                       firstEvaluation.evaluatedPart = doc.currentPart;
                     });
                   } else {
-                    console.log('There were no coincidences in replacement collection');
                     firstEvaluation.evaluatedPart = firstEvaluation.improvedPart;
                   }
                   return firstEvaluation;

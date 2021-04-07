@@ -19,8 +19,9 @@
     <mat-divider></mat-divider>
 
     <div class="body-container">
-        <div *ngIf="singleCheckedPart">
-            <h4 style="font-weight: bold;">Resultado de búsqueda</h4>
+        <h4 style="font-weight: bold;">Resultado de búsqueda</h4>
+        <div *ngIf="singleCheckedPart; else default">
+
             <div class="single-query">
                 <div class="checked-part">
                     {{singleCheckedPart.improvedPart}}
@@ -30,8 +31,9 @@
                 </div>
             </div>
         </div>
+        <br>
+        <h4 style="font-weight: bold;">Resultado de SIS</h4>
         <ng-container *ngIf="checkedParts$ | async; else default">
-            <h4 style="font-weight: bold;">Resultado de archivo</h4>
             <form *ngFor="let item of dataSparePart; let i=index">
                 <div class="container-form-array">
                     <!-- [formGroupName]="i" -->
@@ -80,8 +82,7 @@
         </ng-template>
     </div>
     <div class="footer">
-        <button aria-label="add" mat-button class="footer__btn-save" (click)="downloadXls()"
-            [disabled]="dataSparePart.length < 1">
+        <button mat-stroked-button class="ms-button" (click)="downloadXls()" [disabled]="dataSparePart.length < 1">
             DESCARGAR
         </button>
     </div>
