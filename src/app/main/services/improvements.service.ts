@@ -152,16 +152,16 @@ export class ImprovementsService {
     return of(batch);
   }
 
-/**
- * Updates improvement entry to be taged for replacement generation
- *
- * @param {string} entryId - Id of the entry to be updated
- * @param {improvementsForm} form - Actual content of the form validated
- * @param {User} user - The user who updates the entry
- * @return {*}  {Observable<firebase.default.firestore.WriteBatch>}
- * @memberof ImprovementsService
- */
-updateImprovements(entryId: string, form: improvementsForm, user: User): Observable<firebase.default.firestore.WriteBatch> {
+  /**
+   * Updates improvement entry to be taged for replacement generation
+   *
+   * @param {string} entryId - Id of the entry to be updated
+   * @param {improvementsForm} form - Actual content of the form validated
+   * @param {User} user - The user who updates the entry
+   * @return {*}  {Observable<firebase.default.firestore.WriteBatch>}
+   * @memberof ImprovementsService
+   */
+  updateImprovements(entryId: string, form: improvementsForm, user: User): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
     // create reference to entry document
@@ -256,20 +256,30 @@ updateImprovements(entryId: string, form: improvementsForm, user: User): Observa
           if (res.length) {
             res.forEach(doc => {
               let evaluatedPart;
-
               evaluatedPart = this.evaluatePartNumber(doc);
 
-              data = {
-                description: doc.description,
-                quantity: doc.quantity,
-                improvedPart: doc.improvedPart,
-                evaluatedPart: evaluatedPart,
-                kit: doc.kit,
-                match: true
-              };
-              console.log('There is a match in improvements collection');
+              if (doc.criticalPart) {
+                data = {
+                  description: doc.description,
+                  quantity: doc.quantity,
+                  improvedPart: doc.improvedPart,
+                  evaluatedPart: doc.improvedPart,
+                  kit: doc.kit,
+                  match: false
+                };
+              } else {
+                data = {
+                  description: doc.description,
+                  quantity: doc.quantity,
+                  improvedPart: doc.improvedPart,
+                  evaluatedPart: evaluatedPart,
+                  kit: doc.kit,
+                  match: evaluatedPart ? true : false
+                };
+              }
             });
           } else {
+
             data = {
               description: readType === 1 ? part[3].replaceAll('"', '') : part[4].replaceAll('"', ''),
               quantity: part[1],
@@ -278,13 +288,12 @@ updateImprovements(entryId: string, form: improvementsForm, user: User): Observa
               kit: null,
               match: false
             };
-            console.log('There were no coincidences in improvements collection');
+
           }
 
           return data;
         }),
         switchMap(firstEvaluation => {
-          console.log(firstEvaluation);
 
           if (firstEvaluation.evaluatedPart === null) {
             return this.afs.collection<Replacement>(`/db/ferreyros/replacements`, ref => ref.where('replacedPart', '==', firstEvaluation.evaluatedPart))
@@ -293,12 +302,10 @@ updateImprovements(entryId: string, form: improvementsForm, user: User): Observa
                 map(res => {
                   if (res.length) {
                     res.forEach(doc => {
-                      console.log('Replacement found');
-
                       firstEvaluation.evaluatedPart = doc.currentPart;
                     });
                   } else {
-                    console.log('There were no coincidences in replacement collection');
+                    firstEvaluation.evaluatedPart = firstEvaluation.improvedPart;
                   }
                   return firstEvaluation;
                 })
@@ -313,7 +320,7 @@ updateImprovements(entryId: string, form: improvementsForm, user: User): Observa
   evaluatePartNumber(data: Improvement): string | null {
     const availability = data.availability['seconds'] * 1000; //in milliseconds
     const now = Date.now(); //in milliseconds
-    let isAvailableNow = (availability - now) > 0;
+    let isAvailableNow = (availability - now) <= 0;
 
     const stock = data.stock;
     let hasStock = data.stock > 0;
