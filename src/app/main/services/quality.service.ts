@@ -1,14 +1,15 @@
 import { Injectable, Component } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { from, Observable, of } from 'rxjs';
+import { map, shareReplay } from 'rxjs/operators';
 import {
   Quality,
   QualityTimer,
   QualityListSpecialist,
   QualityListResponsibleArea,
   QualityBroadcastList,
+  CauseFailureList,
 } from '../models/quality.model';
 import { User } from '../models/user-model';
 import * as firebase from 'firebase/app';
@@ -64,7 +65,7 @@ export class QualityService {
       miningOperation: null,
       correctiveActions: null,
       riskLevel: null,
-      state: null,
+      state: 'registered',
       generalImages: firebase.default.firestore.FieldValue.arrayUnion(
         imagesObj
       ),
@@ -123,7 +124,7 @@ export class QualityService {
       miningOperation: form.miningOperation,
       correctiveActions: null,
       riskLevel: null,
-      state: null,
+      state: 'registered',
       generalImages: firebase.default.firestore.FieldValue.arrayUnion(
         imagesObj
       ),
@@ -141,9 +142,10 @@ export class QualityService {
     return of(batch);
   }
 
-  getAllQualityRecords(): Observable<Quality[]> {
+  getAllQualityByState(status: string): Observable<Quality[]> {
     return this.afs
-      .collection<Quality>(`/db/ferreyros/quality`)
+      .collection<Quality>(`/db/ferreyros/quality`, (ref) =>
+      ref.where('state', '==', status))
       .valueChanges()
       .pipe(
         map((list) => {
@@ -177,6 +179,10 @@ export class QualityService {
   // get all QualityListSpecialist
   getAllUser(): Observable<User[]> {
     return this.afs.collection<User>(`/users`).valueChanges();
+  }
+  // get all QualityListSpecialist
+  getAllQuality(): Observable<Quality[]> {
+    return this.afs.collection<Quality>(`/db/ferreyros/quality`).valueChanges();
   }
   // get all QualityListSpecialist
   getAllQualityListSpecialist(name: string): Observable<EvaluationsUser[]> {
@@ -362,16 +368,6 @@ export class QualityService {
     return of(batch);
   }
 
-  /* deleteListBroadcast(id: string): void {
-      this.afs.firestore
-        .collection(`/db/generalConfig/qualityBroadcastList`)
-        .doc(id)
-        .delete()
-        .then(() => {})
-        .catch((error) => {
-          console.log(error);
-        });
-    } */
   /**
    * Delete the passed broadcastList based in his ID
    * @param {string} id - ID of the Andon to be removed
@@ -393,7 +389,8 @@ export class QualityService {
     entryId: string,
     nameSpecialist: string,
     emailList: string[],
-    user: User
+    user: User,
+    status: string
   ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
@@ -407,9 +404,112 @@ export class QualityService {
       specialist: nameSpecialist,
       editedAt: new Date(),
       edited: user,
+      state: status
     };
     batch.update(qualityDocRef, data);
 
     return of(batch);
   }
+  /**
+   * add the name addCauseFailureList 
+   * @param {string} form - name CauseFailureList
+   * @param {User} user - User's data in actual session
+   */
+  addCauseFailureList(
+    form ,
+    user: User
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    // create reference for document in evaluation entries collection
+    const qualityDocRef = this.afs.firestore
+      .collection(`/db/generalConfig/qualityCauseFailureList`)
+      .doc();
+
+    // Structuring the data model
+    const data: any = {
+      id: qualityDocRef.id,
+      name: form.causeFailure,
+      createdAt: new Date(),
+      createdBy: user,
+    };
+    batch.set(qualityDocRef, data);
+
+    return of(batch);
+    }
+     // get all CauseFailureList
+  getAllCauseFailureList(): Observable<CauseFailureList[]> {
+    return this.afs
+      .collection<CauseFailureList>(
+        `/db/generalConfig/qualityCauseFailureList`,
+        (ref) => ref.orderBy('createdAt', 'asc')
+      )
+      .valueChanges();
+  }
+  /**
+   * add the name ProcessList
+   * @param {string} form - name ProcessList
+   * @param {User} user - User's data in actual session
+   */
+   addProcessList(
+    form ,
+    user: User
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    // create reference for document in evaluation entries collection
+    const qualityDocRef = this.afs.firestore
+      .collection(`/db/generalConfig/qualityProcessList`)
+      .doc();
+
+    // Structuring the data model
+    const data: any = {
+      id: qualityDocRef.id,
+      name: form.process,
+      createdAt: new Date(),
+      createdBy: user,
+    };
+    batch.set(qualityDocRef, data);
+
+    return of(batch);
+    }
+     // get all CauseFailureList
+  getAllProcessList(): Observable<CauseFailureList[]> {
+    return this.afs
+      .collection<CauseFailureList>(
+        `/db/generalConfig/qualityProcessList`,
+        (ref) => ref.orderBy('createdAt', 'asc')
+      )
+      .valueChanges();
+  }
+
+  /**
+   * add the name ProcessList
+   * @param {string} form - name ProcessList
+   * @param {User} user - User's data in actual session
+   */
+   saveCorrectiveActions(
+    entryId,
+    formAnalysis,
+    formCorrective,
+    emailList,
+    status
+    ): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    // create reference for document in evaluation entries collection
+    const qualityDocRef = this.afs.firestore.doc(
+      `db/ferreyros/quality/${entryId}`
+    );
+    // Structuring the data model
+    const data: any = {
+      emailList: firebase.default.firestore.FieldValue.arrayUnion(emailList),
+      analysis: formAnalysis ,
+      correctiveActions: firebase.default.firestore.FieldValue.arrayUnion(formCorrective),
+      state: status
+    };
+    batch.update(qualityDocRef, data);
+
+    return of(batch);
+    }
 }

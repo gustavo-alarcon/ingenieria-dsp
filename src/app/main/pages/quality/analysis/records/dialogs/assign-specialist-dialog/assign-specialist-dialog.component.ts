@@ -53,6 +53,7 @@ export class AssignSpecialistDialogComponent implements OnInit, OnDestroy {
   broadcastControl = new FormControl();
   listBroadcast: string[] = [];
 
+  state = 'process';
 
   // chips
   visible = true;
@@ -174,7 +175,8 @@ export class AssignSpecialistDialogComponent implements OnInit, OnDestroy {
           this.data.id,
           this.specialistForm.get('specialist').value,
           Object.assign({}, this.emailArray),
-          this.user
+          this.user,
+          this.state
        );
         this.loading.next(true);
         this.subscription.add(

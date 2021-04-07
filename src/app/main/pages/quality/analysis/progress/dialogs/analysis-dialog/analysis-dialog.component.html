@@ -1,0 +1,257 @@
+
+
+<div>
+    <div class="ms-dialog-header">
+        <mat-icon class="ms-dialog-header__icon">add_task</mat-icon>
+        <h3 class="ms-dialog-header__title">Analisis <span style="font-size: 0.8rem; color: grey; margin-left: 1rem"> </span> </h3>           
+        <span class="ms-fill"></span>
+        <button mat-icon-button mat-dialog-close>
+            <mat-icon>cancel</mat-icon>
+        </button>
+    </div>
+    <mat-divider></mat-divider>
+
+    <mat-divider></mat-divider>
+    <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+    <mat-dialog-content style=" margin-top: 20px;">
+        <div class="details">
+            <p><span style="font-weight: bold;"> OT Actual :</span> {{data.workOrder ? data.workOrder : ''}}</p>
+            <p><span style="font-weight: bold;"> Componente :</span> {{data.component ? data.component : ''}}</p>
+            <p><span style="font-weight: bold;"> Número de paqueteo :</span> {{data.packageNumber ? data.packageNumber : ''}}</p>
+            <p><span style="font-weight: bold;"> Horómetro de componente :</span> {{data.componentHourMeter ? data.componentHourMeter : ''}}</p>
+            <p><span style="font-weight: bold;"> Número de parte :</span> {{data.partNumber ? data.partNumber : ''}}</p>
+            <p><span style="font-weight: bold;"> Tipo de evento :</span> {{data.eventType ? data.eventType : ''}} </p>
+        </div>
+
+        <mat-divider style="margin-top:20px; margin-bottom: 20px;"> </mat-divider>
+
+        <div class="container">
+            <mat-vertical-stepper [linear]="isLinear" #stepper>
+                <mat-step [stepControl]="firstFormGroup">
+                    <form [formGroup]="analysisForm" autocomplete="off" class="container__form">
+                    <ng-template matStepLabel >
+                        <div class="container__result" >
+                            <span  class="step-text" style="margin-top: 10px;" > Analisis </span>
+                            <span *ngIf="resultEvaluation$  | async as result" 
+                            [ngClass]="{
+                                         'btn-result-1':   result === 1
+                                        ,'btn-result-2':   result === 2
+                                        ,'btn-result-3':   result === 3
+                                        ,'btn-result-4':   result === 4
+                                        ,'btn-result-5':   result === 5
+                                        }"
+                            > [ {{result}} ]
+                           </span>
+                        </div>
+                    </ng-template>                   
+
+                    <mat-form-field *ngIf="causeFailure$ | async as causeFailuries"  class="container__form--input"
+                        appearance="outline">
+                        <mat-label>Causante de falla</mat-label>
+                        <input autocomplete="off" formControlName="causeFailure" [matAutocomplete]="causeFailureAutocomplete" type="text"
+                            matInput />
+                        <mat-autocomplete autoActiveFirstOption #causeFailureAutocomplete="matAutocomplete">
+                            <mat-option (click)="onAddCauseFailure()" [value]="">
+                            <mat-icon>add_circle_outline</mat-icon>Añadir
+                            </mat-option>
+                            <mat-option *ngFor="let causeFailure of causeFailuries" [value]="causeFailure.name">
+                            {{ causeFailure.name }}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <mat-hint *ngIf="!(causeFailure$ | async)">
+                            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                            <p>Cargando lista ...</p>
+                        </mat-hint>
+                        <mat-error>
+                            <span *ngIf="analysisForm.get('causeFailure').errors?.required">Por favor, complete el campo.</span>
+                            <span *ngIf="analysisForm.get('causeFailure').errors?.invalid">Dato inválido. Complete con alguna opción
+                            válida.</span>
+                        </mat-error>
+                    </mat-form-field>
+                    <br> 
+                    <mat-form-field *ngIf="process$ | async as process"  class="container__form--input"
+                        appearance="outline">
+                        <mat-label>Proceso</mat-label>
+                        <input autocomplete="off" formControlName="process" [matAutocomplete]="processAutocomplete" type="text"
+                            matInput />
+                        <mat-autocomplete autoActiveFirstOption #processAutocomplete="matAutocomplete">
+                            <mat-option (click)="onAddProcess()" [value]="">
+                            <mat-icon>add_circle_outline</mat-icon>Añadir
+                            </mat-option>
+                            <mat-option *ngFor="let item of process" [value]="item.name">
+                            {{ item.name }}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <mat-hint *ngIf="!(process$ | async)">
+                            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                            <p>Cargando lista ...</p>
+                        </mat-hint>
+                        <mat-error>
+                            <span *ngIf="analysisForm.get('process').errors?.required">Por favor, complete el campo.</span>
+                            <span *ngIf="analysisForm.get('process').errors?.invalid">Dato inválido. Complete con alguna opción
+                            válida.</span>
+                        </mat-error>
+                    </mat-form-field>
+
+                    <br> 
+
+                    <mat-form-field appearance="outline" id="result"  class="container__form--input">
+                        <mat-label>Calidad</mat-label>
+                        <mat-select formControlName="quality">
+                            <mat-option *ngFor="let item of qualityList" [value]="item"><span
+                                style="color: #8f8a8a;">({{item.code}})</span> {{item.name}} 
+                                </mat-option>
+                        </mat-select>
+                        <mat-hint *ngIf="!(qualityList)">
+                            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                            <p>Cargando lista ...</p>
+                        </mat-hint>
+    
+                        <mat-error *ngIf="analysisForm.controls['quality'].errors">
+                            Campo <strong>requerido.</strong>
+                        </mat-error>
+                    </mat-form-field> 
+
+                    <br> 
+
+                    <mat-form-field appearance="outline" id="result"  class="container__form--input">
+                        <mat-label>Costo</mat-label>
+                        <mat-select formControlName="cost">
+                            <mat-option *ngFor="let item of costList" [value]="item"><span
+                                style="color: #8f8a8a;">({{item.code}})</span> {{item.name}} 
+                                </mat-option>
+                        </mat-select>
+                        <mat-hint *ngIf="!(costList)">
+                            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                            <p>Cargando lista ...</p>
+                        </mat-hint>
+    
+                        <mat-error *ngIf="analysisForm.controls['cost'].errors">
+                            Campo <strong>requerido.</strong>
+                        </mat-error>
+                    </mat-form-field> 
+
+                    <br> 
+
+                    <mat-form-field appearance="outline" id="result"  class="container__form--input">
+                        <mat-label>Frecuencia</mat-label>
+                        <mat-select formControlName="frequency">
+                            <mat-option *ngFor="let item of frequencyList" [value]="item"><span
+                                style="color: #8f8a8a;">({{item.code}})</span> {{item.name}} 
+                                </mat-option>
+                        </mat-select>
+                        <mat-hint *ngIf="!(frequencyList)">
+                            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                            <p>Cargando lista ...</p>
+                        </mat-hint>
+    
+                        <mat-error *ngIf="analysisForm.controls['frequency'].errors">
+                            Campo <strong>requerido.</strong>
+                        </mat-error>
+                    </mat-form-field>                    
+                    <br>                    
+    
+                </form>
+    
+                </mat-step>
+                <mat-step [stepControl]="secondFormGroup">
+                
+                  <form class="form-corrective" [formGroup]="listAreaForm" autocomplete="off">               
+                    <ng-template matStepLabel>
+                        <span  class="step-text" >Acciones correctivas </span> 
+                    </ng-template>
+                    <div formArrayName="areas" class="areas">
+                        <div *ngFor="let _ of areas.controls; let i=index" class="form-corrective__form-array">
+                            <div [formGroupName]="i" class="form-corrective__container">
+                               
+                                <mat-form-field appearance="outline"   class="form-corrective__input1">
+                                    <mat-label>Accion correctiva {{i+1}}</mat-label>
+                                    <input matInput placeholder="Escribe..." formControlName="corrective">
+                                    <mat-error *ngIf="areas.controls[i].get('corrective').errors">
+                                        Campo <strong>requerido.</strong>
+                                    </mat-error>
+                                </mat-form-field>        
+
+                                <mat-form-field *ngIf=" areaResponsable$ | async as areaResponsable" appearance="outline" id="result" class="form-corrective__input2">
+                                    <mat-label>Area responsable</mat-label>
+                                    <mat-select  formControlName="name"                                     
+                                        >
+                                        <mat-option  *ngFor="let item of areaResponsable" 
+                                            [value]="item" (click)="onclickArea(item)" >
+                                            {{item.name}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-hint *ngIf="!(areaResponsable$ | async)">
+                                        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                                        <p>Cargando lista ...</p>
+                                    </mat-hint>                
+                                    <mat-error *ngIf="areas.controls[i].get('name').errors">
+                                        Campo <strong>requerido.</strong>
+                                    </mat-error>
+                                </mat-form-field>
+        
+                                <button mat-icon-button type="button" style="margin-top: 8px;" class="form-corrective__btn-delete">
+                                    <mat-icon color="warn" (click)="deleteControl(i)">delete</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" mat-stroked-button color="primary" class="form-corrective__btn-add" (click)="addControl()">
+                        <mat-icon color="primary">add</mat-icon>
+                        AGREGAR
+                    </button>
+                </form>
+
+                </mat-step>
+                <mat-step>
+                    <ng-template matStepLabel>
+                        <span  class="step-text" >Reporte </span>  
+                    </ng-template>
+
+                  <span class="link-text">ZBI_OPS_ORDSER_MQH (11-52-04).xlsx</span>
+                  <br>
+                  <button type="button" mat-stroked-button color="primary" class="form-corrective__btn-add" (click)="addControl()">
+                    <mat-icon color="primary">add</mat-icon>
+                    GENERAR REPORTE
+                </button>
+                </mat-step>
+            </mat-vertical-stepper>
+
+            <h3>Lista de difusion</h3>
+            <mat-form-field  *ngIf="filteredBroadcast$ | async as broadcasts"    appearance="outline" id="result" class="chip-form-input">                     
+                <mat-label>Enviar a</mat-label>
+                <mat-chip-list #chipList aria-label="Fruit selection">
+                  <mat-chip
+                    *ngFor="let email of emailArray"
+                    [selectable]="selectable"
+                    [removable]="removable"
+                    (removed)="removeEmail(email)">
+                    {{email}}
+                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                  </mat-chip>
+                  <input
+                    placeholder="agregar nueva lista de difusion..."
+                    #fruitInput
+                    [formControl]="broadcastControl"
+                    [matAutocomplete]="auto"
+                    [matChipInputFor]="chipList"
+                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                    (matChipInputTokenEnd)="addBroadcast($event)">
+                </mat-chip-list>
+                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedBroadcast($event)">
+                  <mat-option *ngFor="let broadcast of broadcasts" [value]="broadcast">
+                    {{broadcast.name}}
+                  </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>        
+            
+        </div>        
+         
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-stroked-button color="warn" mat-dialog-close [disabled]="loading$ | async">CANCELAR</button>
+        <button mat-stroked-button color="primary" (click)="save()" [disabled]="loading$ | async">GUARDAR</button>
+        <button mat-stroked-button color="primary" (click)="save()" [disabled]="loading$ | async">ENVIAR</button>
+    </mat-dialog-actions>
+   
+</div>
