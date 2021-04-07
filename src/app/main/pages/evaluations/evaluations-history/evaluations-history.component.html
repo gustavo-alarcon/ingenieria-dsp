@@ -31,7 +31,7 @@
 
   <mat-form-field appearance="outline" style="margin-left: 16px; font-size: 12px;">
     <mat-icon matPrefix style="margin-right: 12px">search</mat-icon>
-    <input matInput type="text" [formControl]="searchControl" placeholder="Escribir">
+    <input matInput type="text" [formControl]="searchControl" placeholder="Escribir" autocomplete="off">
     <mat-hint>La tabla se filtrará mientras escribe</mat-hint>
   </mat-form-field>
 
