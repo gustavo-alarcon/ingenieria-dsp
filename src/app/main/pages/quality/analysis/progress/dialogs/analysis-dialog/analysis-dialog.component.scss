@@ -1,4 +1,9 @@
 
+.step-title{
+    font-size: 1.3em;
+    font-weight: bold;
+}
+
 .container{
     &__form{
         &--input{
@@ -13,18 +18,90 @@
     }
 
     .container__result{
-        display: flex;
-        justify-content : flex-end;
-        &--result{
-            border-radius: 5px;
-            border: none;
-            background: #92D050;
-            color: black;
-            padding: 10px 80px 10px 80px;
-            font-size: 1.5em;
-            font-weight: bold;
+        display: flex;       
+       
+    }
+}
 
-        }
+.form-corrective{
+
+    &__input1{
+        width: 260px;
+        margin-right: 15px; 
+    }
+    &__input2{
+        width: 160px;
+        margin-right: 15px;
+    }
+    &__btn-add{
+        margin-top: 15px;
     }
 
+    &__btn-delete{
+
+    }
+}
+
+.link-text{
+    color: #0064EA;
+}
+
+.chip-form-input{
+    width: 550px;
+}
+
+.step-text{
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.btn-result-1{
+    background: red;
+    color: white;
+    margin-left: 190px;
+    border-radius: 5px;
+    border: none;
+    padding: 10px 80px 10px 80px;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+.btn-result-2{
+    background:blue;
+    color: white;
+    margin-left: 190px;
+    border-radius: 5px;
+    border: none;
+    padding: 10px 80px 10px 80px;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+.btn-result-3{
+    background: purple ;
+    color: white;
+    margin-left: 190px;
+    border-radius: 5px;
+    border: none;
+    padding: 10px 80px 10px 80px;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+.btn-result-4{
+    background: yellow;
+    color: white;
+    margin-left: 190px;
+    border-radius: 5px;
+    border: none;
+    padding: 10px 80px 10px 80px;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+.btn-result-5{
+    background:green ;
+    color: white;
+    margin-left: 190px;
+    border-radius: 5px;
+    border: none;
+    padding: 10px 80px 10px 80px;
+    font-size: 1.5em;
+    font-weight: bold;
 }

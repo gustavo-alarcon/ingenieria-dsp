@@ -19,6 +19,8 @@ export interface Quality{
     finalizedAt?: Date;
     finalizedBy: User;
 
+    causeFailureList: Array<string>;
+    analysis: Array<string>;
     eventType: string; //Interno- Externo
     emailList: Array<string>;
     workOrder?: number;
@@ -75,4 +77,29 @@ export interface QualityBroadcastList{
     createdBy: User;
     /* editedAt?: Date;
     edited?: User; */
+}
+
+export interface CauseFailureList{
+    id?: string;
+    name: string;
+    createdAt: Date;
+    createdBy: User;
+}
+export interface ProcessList{
+    id?: string;
+    name: string;
+    createdAt: Date;
+    createdBy: User;
+}
+export interface QualityList{
+    code: number;
+    name: string;
+}
+export interface CostList{
+    code: number;
+    name: string;
+}
+export interface FrequencyList{
+    code: number;
+    name: string;
 }
