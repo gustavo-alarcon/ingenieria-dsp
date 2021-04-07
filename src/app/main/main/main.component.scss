@@ -1,17 +1,29 @@
 $base-font: "Poppins", sans-serif;
 
+.main-background {
+  background: linear-gradient(to top, rgba(0, 17, 44, 0.3), transparent), url("../../../assets/svg/background.svg");
+  height: auto;
+  background-position: center;
+  background-size: cover;
+}
+
+.main-background::after {
+  content: '';
+  position: relative;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.483), transparent);
+}
+
 .main_toolbar {
   display: flex;
   background: #333333;
   color: white;
-  padding: 0px 28px
+  padding: 0px 28px;
 }
-.name-toolbar{
+.name-toolbar {
   font-size: 1em;
   margin-left: 20px;
-  font-family: 'Poppins',
-  sans-serif; font-weight: 500;
-  
+  font-family: "Poppins", sans-serif;
+  font-weight: 500;
 }
 .btn-exit-app {
   position: absolute;
@@ -114,12 +126,12 @@ mat-card img {
 }
 
 .active {
-  background: rgba($color: #6200EE, $alpha: 0.08);
-  color: #6200EE !important;
+  background: rgba($color: #6200ee, $alpha: 0.08);
+  color: #6200ee !important;
 }
 
 ::ng-deep .active .mat-item-list-span {
-  color: #6200EE !important;
+  color: #6200ee !important;
 }
 
 ::ng-deep .mat-expansion-panel-body {
@@ -148,33 +160,30 @@ mat-card img {
   box-shadow: 0px 0px 0px 0px white !important;
 }
 
-
- /* 
+/* 
   ##Dispositivo = Tablets de baja resolucion y telefnos Mobiles (horizontal)
   ##Resolucion = B/w 481px to 767px
 */
 
-@media (min-width: 481px) and (max-width: 767px) {  
-  .name-exit{
+@media (min-width: 481px) and (max-width: 767px) {
+  .name-exit {
     display: none;
   }
-  .btn-exit-app{    
+  .btn-exit-app {
     position: absolute;
-    right: 20px;   
+    right: 20px;
   }
-  
-  .spare-parts{
+
+  .spare-parts {
     display: none;
   }
-  .evaluations{
+  .evaluations {
     display: none;
   }
 
-  .budget{
+  .budget {
     display: none;
   }
-
-  
 }
 
 /* 
@@ -182,37 +191,37 @@ mat-card img {
   ##Resolucion = B/w 320px to 479px
 */
 
-@media (min-width: 320px) and (max-width: 480px) {    
-  .name-exit{
+@media (min-width: 320px) and (max-width: 480px) {
+  .name-exit {
     display: none;
   }
   .main_toolbar {
     display: flex;
     background: #333333;
     color: white;
-    padding: 0px 10px
+    padding: 0px 10px;
   }
-  .name-toolbar{
-    font-size:0.9em;
+  .name-toolbar {
+    font-size: 0.9em;
     margin-left: 10px;
-    font-family: 'Poppins',sans-serif; 
-    font-weight: 400;    
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
   }
-  .btn-exit-app{
+  .btn-exit-app {
     font-size: 0.7em;
-    font-weight: 300; 
+    font-weight: 300;
     position: absolute;
-    right: 8px;   
+    right: 8px;
   }
 
-  .spare-parts{
+  .spare-parts {
     display: none;
   }
-  .evaluations{
+  .evaluations {
     display: none;
   }
 
-  .budget{
+  .budget {
     display: none;
   }
 }

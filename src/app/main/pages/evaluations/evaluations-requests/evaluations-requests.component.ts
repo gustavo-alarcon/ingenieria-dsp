@@ -5,11 +5,13 @@ import { RequestsSettingDialogComponent } from './dialogs/requests-setting-dialo
 import { RequestsStartDialogComponent } from './dialogs/requests-start-dialog/requests-start-dialog.component';
 import { RequestsTimeLineDialogComponent } from './dialogs/requests-time-line-dialog/requests-time-line-dialog.component';
 import { Evaluation } from '../../../models/evaluations.model';
-import { Observable, combineLatest, BehaviorSubject, config } from 'rxjs';
+import { Observable, combineLatest, BehaviorSubject, config, Subscription } from 'rxjs';
 import { tap, map, startWith, filter, debounceTime } from 'rxjs/operators';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { EvaluationsService } from '../../../services/evaluations.service';
 import { AuthService } from 'src/app/auth/services/auth.service';
+import { RequestsCreateDialogComponent } from './dialogs/requests-create-dialog/requests-create-dialog.component';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-evaluations-requests',
@@ -23,7 +25,7 @@ export class EvaluationsRequestsComponent implements OnInit {
   evaluation$: Observable<Evaluation[]>;
   dataEvaluations: Evaluation[] = [];
   counter: number;
-  searchForm: FormGroup;
+  searchControl = new FormControl('');
   state = 'registered';
 
   workshopControl = new FormControl('');
@@ -70,9 +72,12 @@ export class EvaluationsRequestsComponent implements OnInit {
     }
   ];
 
-  
+  subscriptions = new Subscription();
+  isMobile = false;
+
 
   constructor(
+    private breakpoint: BreakpointObserver,
     public dialog: MatDialog,
     private fb: FormBuilder,
     private evaltService: EvaluationsService,
@@ -80,13 +85,19 @@ export class EvaluationsRequestsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.searchForm = this.fb.group({
-      ot: null,
-    });
+    this.subscriptions.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
+      .subscribe(res => {
+        if (res.matches) {
+          this.isMobile = true;
+        } else {
+          this.isMobile = false;
+        }
+      })
+    )
 
     this.evaluation$ = combineLatest(
       this.evaltService.getAllEvaluationsByInternalStatus(this.state),
-      this.searchForm.get('ot').valueChanges.pipe(
+      this.searchControl.valueChanges.pipe(
         debounceTime(300),
         filter(input => input !== null),
         startWith<any>('')),
@@ -166,14 +177,13 @@ export class EvaluationsRequestsComponent implements OnInit {
               minutes: minutes,
               seconds: seconds
             };
-            
+
             return evalInterval
 
           }(), 5000);
         });
 
         setInterval(function hello() {
-          console.log('world');
           return hello;
         }(), 5000);
 
@@ -191,10 +201,10 @@ export class EvaluationsRequestsComponent implements OnInit {
           }
         });
 
-        preFilterSearch.sort( (a, b) => {
+        preFilterSearch.sort((a, b) => {
           return b['priority'] - a['priority']
         })
-        
+
 
         return preFilterSearch;
       }),
@@ -237,4 +247,13 @@ export class EvaluationsRequestsComponent implements OnInit {
       data: item
     });
   }
+
+  create(): void {
+    this.dialog.open(RequestsCreateDialogComponent, {
+      width: '500px',
+      maxWidth: '90vw'
+    });
+  }
+
+
 }

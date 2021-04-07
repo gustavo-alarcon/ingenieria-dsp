@@ -177,7 +177,7 @@ export class EvaluationsService {
    */
   getAllEvaluationsByInternalStatus(state: string): Observable<Evaluation[]> {
     return this.afs.collection<Evaluation>(`/db/ferreyros/evaluations`,
-      ref => ref.where('internalStatus', '==', state))
+      ref => ref.where('internalStatus', '==', state).limit(8))
       .valueChanges()
       .pipe(
         map(list => {
