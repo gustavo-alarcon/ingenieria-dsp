@@ -26,7 +26,7 @@ export class TracingComponent implements OnInit {
   dataQuality: Quality[] = [];
   counter: number;
   searchForm: FormGroup;
-  state = 'process';
+  state = 'tracing';
 
   eventTypeControl = new FormControl('');
 
@@ -185,6 +185,7 @@ export class TracingComponent implements OnInit {
   }
   accCorrective(item): void{
     this.dialog.open(AccCorrectiveDialogComponent, {
+      maxWidth: 900,
       width: '90vw',
       data: item
     });

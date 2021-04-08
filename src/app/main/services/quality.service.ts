@@ -14,6 +14,7 @@ import {
 import { User } from '../models/user-model';
 import * as firebase from 'firebase/app';
 import { EvaluationsUser } from '../models/evaluations.model';
+import { logging } from 'protractor';
 
 @Injectable({
   providedIn: 'root',
@@ -65,6 +66,7 @@ export class QualityService {
       miningOperation: null,
       correctiveActions: null,
       riskLevel: null,
+      emailList: null,
       state: 'registered',
       generalImages: firebase.default.firestore.FieldValue.arrayUnion(
         imagesObj
@@ -125,6 +127,7 @@ export class QualityService {
       correctiveActions: null,
       riskLevel: null,
       state: 'registered',
+      emailList: null,
       generalImages: firebase.default.firestore.FieldValue.arrayUnion(
         imagesObj
       ),
@@ -145,7 +148,8 @@ export class QualityService {
   getAllQualityByState(status: string): Observable<Quality[]> {
     return this.afs
       .collection<Quality>(`/db/ferreyros/quality`, (ref) =>
-      ref.where('state', '==', status))
+        ref.where('state', '==', status)
+      )
       .valueChanges()
       .pipe(
         map((list) => {
@@ -273,7 +277,7 @@ export class QualityService {
     batch.set(qualityDocRef, data);
     return of(batch);
   }
- 
+
   deleteQualityListResponsibleAreas(
     id: string
   ): Observable<firebase.default.firestore.WriteBatch> {
@@ -286,7 +290,6 @@ export class QualityService {
     batch.delete(broadcastDocRef);
     return of(batch);
   }
-
 
   // get all QualityListSpecialist
   getAllBroadcastList(): Observable<QualityBroadcastList[]> {
@@ -392,6 +395,7 @@ export class QualityService {
     user: User,
     status: string
   ): Observable<firebase.default.firestore.WriteBatch> {
+    console.log('emailList : ', emailList)
     // create batch
     const batch = this.afs.firestore.batch();
     // create reference for document in evaluation entries collection
@@ -404,19 +408,19 @@ export class QualityService {
       specialist: nameSpecialist,
       editedAt: new Date(),
       edited: user,
-      state: status
+      state: status,
     };
     batch.update(qualityDocRef, data);
 
     return of(batch);
   }
   /**
-   * add the name addCauseFailureList 
+   * add the name addCauseFailureList
    * @param {string} form - name CauseFailureList
    * @param {User} user - User's data in actual session
    */
   addCauseFailureList(
-    form ,
+    form,
     user: User
   ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
@@ -436,8 +440,8 @@ export class QualityService {
     batch.set(qualityDocRef, data);
 
     return of(batch);
-    }
-     // get all CauseFailureList
+  }
+  // get all CauseFailureList
   getAllCauseFailureList(): Observable<CauseFailureList[]> {
     return this.afs
       .collection<CauseFailureList>(
@@ -451,8 +455,8 @@ export class QualityService {
    * @param {string} form - name ProcessList
    * @param {User} user - User's data in actual session
    */
-   addProcessList(
-    form ,
+  addProcessList(
+    form,
     user: User
   ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
@@ -472,8 +476,8 @@ export class QualityService {
     batch.set(qualityDocRef, data);
 
     return of(batch);
-    }
-     // get all CauseFailureList
+  }
+  // get all CauseFailureList
   getAllProcessList(): Observable<CauseFailureList[]> {
     return this.afs
       .collection<CauseFailureList>(
@@ -488,28 +492,30 @@ export class QualityService {
    * @param {string} form - name ProcessList
    * @param {User} user - User's data in actual session
    */
-   saveCorrectiveActions(
+  saveCorrectiveActions(
     entryId,
     formAnalysis,
     formCorrective,
     emailList,
     status
-    ): Observable<firebase.default.firestore.WriteBatch> {
+  ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
     // create reference for document in evaluation entries collection
     const qualityDocRef = this.afs.firestore.doc(
       `db/ferreyros/quality/${entryId}`
     );
+   
+
     // Structuring the data model
     const data: any = {
       emailList: firebase.default.firestore.FieldValue.arrayUnion(emailList),
-      analysis: formAnalysis ,
-      correctiveActions: firebase.default.firestore.FieldValue.arrayUnion(formCorrective),
-      state: status
+      analysis: formAnalysis,
+      correctiveActions: formCorrective.areas,
+      state: status,
     };
     batch.update(qualityDocRef, data);
 
     return of(batch);
-    }
+  }
 }

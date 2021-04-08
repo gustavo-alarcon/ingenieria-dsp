@@ -239,6 +239,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
         this.fb.group({
           corrective: ['', Validators.required],
           name: ['', Validators.required],
+          kit: [false, Validators.required],
         }),
       ]),
     });
@@ -256,6 +257,8 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
     const group = this.fb.group({
       corrective: ['', Validators.required],
       name: ['', Validators.required],
+      kit: [false, Validators.required],
+
     });
     this.areas.push(group);
   }
@@ -281,6 +284,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
   }
 
   save(): void {
+
     try {
       if (this.analysisForm.valid && this.listAreaForm.valid) {
         const resp = this.qualityService.saveCorrectiveActions(
@@ -300,6 +304,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
                   this.snackbar.open('✅ Se guardo correctamente!', 'Aceptar', {
                     duration: 6000,
                   });
+                  this.dialogRef.close(false);
                 })
                 .catch((err) => {
                   this.snackbar.open(
