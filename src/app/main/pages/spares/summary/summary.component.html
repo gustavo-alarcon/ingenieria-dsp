@@ -1,150 +1,152 @@
 <div class="ms-container">
     <div class="ms-toolbar">
         <mat-icon class="ms-toolbar__icon">description</mat-icon>
-        <h1 class="ms-toolbar__title">Resumen</h1>
+        <h1 class="ms-toolbar__title" [ngClass]="isMobile ? 'ms-toolbar__title--mobile' : 'ms-toolbar__title--desktop'">
+            Resumen</h1>
         <button mat-stroked-button class="ms-toolbar__button" (click)="downloadXlsx(summaryDataSource.data)"
-            [disabled]="summaryDataSource.data.length < 1">
+            [disabled]="summaryDataSource.data.length < 1"
+            [ngClass]="isMobile ? 'ms-toolbar__button--mobile' : 'ms-toolbar__button--desktop'">
             <mat-icon>download</mat-icon>
             DESCARGAR
         </button>
-        <mat-form-field appearance="outline" class="ms-toolbar__search">
+        <mat-form-field appearance="outline" class="ms-toolbar__input"
+            [ngClass]="isMobile ? 'ms-toolbar__input--mobile' : 'ms-toolbar__input--desktop'">
             <mat-label>Buscar</mat-label>
             <mat-icon matPrefix>search</mat-icon>
             <input matInput type="text" [formControl]="searchControl" placeholder="Escribir..." autocomplete="off">
         </mat-form-field>
         <span class="ms-fill"></span>
-        <button mat-stroked-button class="ms-toolbar__button" [routerLink]="['/main/improvements']">
+        <button mat-stroked-button class="ms-toolbar__button" [routerLink]="['/main/improvements']"
+            [ngClass]="isMobile ? 'ms-toolbar__button--mobile' : 'ms-toolbar__button--desktop'">
             <mat-icon>launch</mat-icon>
             Ir a mejoras
         </button>
     </div>
     <mat-divider></mat-divider>
 
-    <div class="body-container">
-        <ng-container *ngIf="summary$ | async; else default">
-            <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
-            <div style="overflow: auto;" class="mat-elevation-z4">
-                <table mat-table [dataSource]="summaryDataSource" matSort (matSortChange)="sortData($event)"
-                    class="mat-elevation-z8">
+    <div *ngIf="summary$ | async; else default" class="body-container mat-elevation-z4">
+        <table mat-table [dataSource]="summaryDataSource" matSort (matSortChange)="sortData($event)">
 
-                    <ng-container matColumnDef="createdAt">
-                        <th mat-header-cell *matHeaderCellDef class="table__cell" mat-sort-header> Fecha </th>
-                        <td mat-cell *matCellDef="let element" class="table__cell">
-                            <span *ngIf="element.createdAt?.seconds; else noAvailability">{{(element.createdAt.seconds *
-                                1000) |
-                                date:"dd/MM/yyyy"}}</span>
-                            <ng-template #nodate>{{'---'}}</ng-template>
-                        </td>
-                    </ng-container>
+            <ng-container matColumnDef="createdAt">
+                <th mat-header-cell *matHeaderCellDef class="ms-table__header" mat-sort-header> Fecha </th>
+                <td mat-cell *matCellDef="let element" class="ms-table__header">
+                    <span *ngIf="element.createdAt?.seconds; else noAvailability">{{(element.createdAt.seconds *
+                        1000) |
+                        date:"dd/MM/yyyy"}}</span>
+                    <ng-template #nodate>{{'---'}}</ng-template>
+                </td>
+            </ng-container>
 
-                    <ng-container matColumnDef="component" sticky>
-                        <th mat-header-cell *matHeaderCellDef class="table__cell" mat-sort-header> Componente
-                        </th>
-                        <td mat-cell *matCellDef="let element" class="table__cell">
-                            {{element.component ? element.component : '---'}}
-                        </td>
-                    </ng-container>
-                    <ng-container matColumnDef="model">
-                        <th mat-header-cell *matHeaderCellDef class="table__cell" mat-sort-header> Modelo </th>
-                        <td mat-cell *matCellDef="let element" class="table__cell">
-                            {{element.model ? element.model : '---'}}
-                        </td>
-                    </ng-container>
-                    <ng-container matColumnDef="media">
-                        <th mat-header-cell *matHeaderCellDef class="table__cell" mat-sort-header> Media </th>
-                        <td mat-cell *matCellDef="let element" class="table__cell">
-                            {{element.media ? element.media : '---'}}
-                        </td>
-                    </ng-container>
+            <ng-container matColumnDef="component" sticky>
+                <th mat-header-cell *matHeaderCellDef class="ms-table__header" mat-sort-header> Componente
+                </th>
+                <td mat-cell *matCellDef="let element" class="ms-table__header">
+                    {{element.component ? element.component : '---'}}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="model">
+                <th mat-header-cell *matHeaderCellDef class="ms-table__header" mat-sort-header> Modelo </th>
+                <td mat-cell *matCellDef="let element" class="ms-table__header">
+                    {{element.model ? element.model : '---'}}
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="media">
+                <th mat-header-cell *matHeaderCellDef class="ms-table__header" mat-sort-header> Media </th>
+                <td mat-cell *matCellDef="let element" class="ms-table__header">
+                    {{element.media ? element.media : '---'}}
+                </td>
+            </ng-container>
 
-                    <ng-container matColumnDef="description">
-                        <th mat-header-cell *matHeaderCellDef class="table__cell" mat-sort-header> Descripción </th>
-                        <td mat-cell *matCellDef="let element" class="table__cell">
-                            {{element.description ? element.description : '---'}}
-                        </td>
-                    </ng-container>
+            <ng-container matColumnDef="description">
+                <th mat-header-cell *matHeaderCellDef class="ms-table__header" mat-sort-header> Descripción
+                </th>
+                <td mat-cell *matCellDef="let element" class="ms-table__header">
+                    {{element.description ? element.description : '---'}}
+                </td>
+            </ng-container>
 
-                    <ng-container matColumnDef="criticalPart">
-                        <th mat-header-cell *matHeaderCellDef class="table__cell" mat-sort-header> Mejora Crítica </th>
-                        <td mat-cell *matCellDef="let element" class="table__cell">
-                            {{element.criticalPart ? (element.criticalPart ? 'Si' : 'No') : '---'}}
-                        </td>
-                    </ng-container>
+            <ng-container matColumnDef="criticalPart">
+                <th mat-header-cell *matHeaderCellDef class="ms-table__header" mat-sort-header> Mejora Crítica
+                </th>
+                <td mat-cell *matCellDef="let element" class="ms-table__header">
+                    {{element.criticalPart ? (element.criticalPart ? 'Si' : 'No') : '---'}}
+                </td>
+            </ng-container>
 
-                    <ng-container matColumnDef="name">
-                        <th mat-header-cell *matHeaderCellDef class="table__cell" mat-sort-header> Nombre </th>
-                        <td mat-cell *matCellDef="let element" class="table__cell">
-                            {{element.name ? element.name : '---'}}
-                        </td>
-                    </ng-container>
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef class="ms-table__header" mat-sort-header> Nombre </th>
+                <td mat-cell *matCellDef="let element" class="ms-table__header">
+                    {{element.name ? element.name : '---'}}
+                </td>
+            </ng-container>
 
-                    <ng-container matColumnDef="quantity">
-                        <th mat-header-cell *matHeaderCellDef class="table__cell" mat-sort-header> Cantidad </th>
-                        <td mat-cell *matCellDef="let element" class="table__cell">
-                            {{element.quantity ? element.quantity: '---'}}
-                        </td>
-                    </ng-container>
+            <ng-container matColumnDef="quantity">
+                <th mat-header-cell *matHeaderCellDef class="ms-table__header" mat-sort-header> Cantidad </th>
+                <td mat-cell *matCellDef="let element" class="ms-table__header">
+                    {{element.quantity ? element.quantity: '---'}}
+                </td>
+            </ng-container>
 
-                    <ng-container matColumnDef="improvedPart">
-                        <th mat-header-cell *matHeaderCellDef class="table__cell" mat-sort-header> N/P Nuevo </th>
-                        <td mat-cell *matCellDef="let element" class="table__cell">
-                            {{element.improvedPart ? element.improvedPart : '---'}}
-                        </td>
-                    </ng-container>
+            <ng-container matColumnDef="improvedPart">
+                <th mat-header-cell *matHeaderCellDef class="ms-table__header" mat-sort-header> N/P Nuevo </th>
+                <td mat-cell *matCellDef="let element" class="ms-table__header">
+                    {{element.improvedPart ? element.improvedPart : '---'}}
+                </td>
+            </ng-container>
 
-                    <ng-container matColumnDef="currentPart">
-                        <th mat-header-cell *matHeaderCellDef class="table__cell" mat-sort-header> N/P Antiguo </th>
-                        <td mat-cell *matCellDef="let element" class="table__cell">
-                            {{element.currentPart ? element.currentPart : '---'}}
-                        </td>
-                    </ng-container>
+            <ng-container matColumnDef="currentPart">
+                <th mat-header-cell *matHeaderCellDef class="ms-table__header" mat-sort-header> N/P Antiguo
+                </th>
+                <td mat-cell *matCellDef="let element" class="ms-table__header">
+                    {{element.currentPart ? element.currentPart : '---'}}
+                </td>
+            </ng-container>
 
-                    <ng-container matColumnDef="stock">
-                        <th mat-header-cell *matHeaderCellDef class="table__cell" mat-sort-header> Inventario </th>
-                        <td mat-cell *matCellDef="let element" class="table__cell">
-                            {{element.stock ? element.stock : '---'}}
-                        </td>
-                    </ng-container>
+            <ng-container matColumnDef="stock">
+                <th mat-header-cell *matHeaderCellDef class="ms-table__header" mat-sort-header> Inventario </th>
+                <td mat-cell *matCellDef="let element" class="ms-table__header">
+                    {{element.stock ? element.stock : '---'}}
+                </td>
+            </ng-container>
 
-                    <ng-container matColumnDef="availability">
-                        <th mat-header-cell *matHeaderCellDef class="table__cell" mat-sort-header> Disponibilidad </th>
-                        <td mat-cell *matCellDef="let element" class="table__cell">
-                            <span
-                                *ngIf="element.availability?.seconds; else noAvailability">{{(element.availability.seconds
-                                * 1000) |
-                                date:"dd/MM/yyyy"}}</span>
-                            <ng-template #noAvailability>{{'---'}}</ng-template>
-                        </td>
-                    </ng-container>
+            <ng-container matColumnDef="availability">
+                <th mat-header-cell *matHeaderCellDef class="ms-table__header" mat-sort-header> Disponibilidad
+                </th>
+                <td mat-cell *matCellDef="let element" class="ms-table__header">
+                    <span *ngIf="element.availability?.seconds; else noAvailability">{{(element.availability.seconds
+                        * 1000) |
+                        date:"dd/MM/yyyy"}}</span>
+                    <ng-template #noAvailability>{{'---'}}</ng-template>
+                </td>
+            </ng-container>
 
-                    <ng-container matColumnDef="createdBy">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell"> Usuario </th>
-                        <td mat-cell *matCellDef="let element" class="table__cell"> {{element.createdBy.name}} </td>
-                    </ng-container>
+            <ng-container matColumnDef="createdBy">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="ms-table__header"> Usuario </th>
+                <td mat-cell *matCellDef="let element" class="ms-table__header"> {{element.createdBy.name}}
+                </td>
+            </ng-container>
 
-                    <ng-container matColumnDef="actions" stickyEnd>
-                        <th mat-header-cell *matHeaderCellDef class="table__cell">
-                            Acciones
-                        </th>
-                        <td mat-cell *matCellDef="let raw" class="table__cell">
-                            <button mat-icon-button class="w3-small" (click)="remove(raw.id)">
-                                <mat-icon>remove_circle</mat-icon>
-                            </button>
-                        </td>
-                    </ng-container>
+            <ng-container matColumnDef="actions" stickyEnd>
+                <th mat-header-cell *matHeaderCellDef class="ms-table__header">
+                    Acciones
+                </th>
+                <td mat-cell *matCellDef="let raw" class="ms-table__header">
+                    <button mat-icon-button class="w3-small" (click)="remove(raw.id)">
+                        <mat-icon>remove_circle</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
 
-                    <tr mat-header-row *matHeaderRowDef="summaryDisplayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: summaryDisplayedColumns;"></tr>
-                </table>
-            </div>
-            <mat-paginator #summaryPaginator class="ms-paginator" [pageSizeOptions]="[20, 30, 40]" showFirstLastButtons>
-            </mat-paginator>
-        </ng-container>
-        <ng-template #default>
-            <div class="ms-default">
-                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-            </div>
-        </ng-template>
+            <tr mat-header-row *matHeaderRowDef="summaryDisplayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: summaryDisplayedColumns;"></tr>
+        </table>
+        <mat-paginator #summaryPaginator class="ms-paginator" [pageSizeOptions]="[20, 30, 40]" showFirstLastButtons>
+        </mat-paginator>
     </div>
+    <ng-template #default>
+        <div class="ms-default">
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+        </div>
+    </ng-template>
 
 </div>

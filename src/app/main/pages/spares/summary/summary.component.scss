@@ -13,9 +13,13 @@
 .icon-add {
     color: #6200ee;
 }
+
 .body-container {
     margin-top: 24px;
+    width: 100%;
+    overflow: auto;
 }
+
 table {
     width: 100%;
 }
@@ -34,11 +38,4 @@ table {
     background: #6200ee;
     color: white;
     padding: 0px 30px 0px 30px;
-}
-
-table {
-    .table__cell {
-        min-width: 90px;
-        padding: 0px 8px;
-    }
 }

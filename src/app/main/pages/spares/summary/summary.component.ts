@@ -1,9 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, startWith, take, tap } from 'rxjs/operators';
 import { Improvement } from '../../../models/improvenents.model';
 import { ImprovementsService } from '../../../services/improvements.service';
@@ -11,13 +11,14 @@ import * as XLSX from 'xlsx';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteSparePartDialogComponent } from './dialogs/delete-spare-part-dialog/delete-spare-part-dialog.component';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-summary',
   templateUrl: './summary.component.html',
   styleUrls: ['./summary.component.scss']
 })
-export class SummaryComponent implements OnInit {
+export class SummaryComponent implements OnInit, OnDestroy {
   loading = new BehaviorSubject<boolean>(false);
   loading$ = this.loading.asObservable();
 
@@ -38,13 +39,26 @@ export class SummaryComponent implements OnInit {
   summary$: Observable<Improvement[]>;
 
   searchControl = new FormControl('');
+  subscriptions = new Subscription();
+  isMobile = false;
 
   constructor(
+    private breakpoint: BreakpointObserver,
     private impService: ImprovementsService,
     private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
+    this.subscriptions.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
+      .subscribe(res => {
+        if (res.matches) {
+          this.isMobile = true;
+        } else {
+          this.isMobile = false;
+        }
+      })
+    )
+
     this.summary$ = combineLatest(
       this.impService.getAllImprovements(),
       this.searchControl.valueChanges.pipe(startWith(''), debounceTime(300), distinctUntilChanged())
@@ -66,6 +80,10 @@ export class SummaryComponent implements OnInit {
     )
   }
 
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
+  }
+
   remove(id: string): void {
 
     this.dialog.open(DeleteSparePartDialogComponent, {
@@ -74,7 +92,7 @@ export class SummaryComponent implements OnInit {
       data: id
     })
 
-    
+
 
   }
 
