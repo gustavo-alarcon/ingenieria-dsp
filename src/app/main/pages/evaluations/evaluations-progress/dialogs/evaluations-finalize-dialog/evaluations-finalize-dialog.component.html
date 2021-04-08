@@ -34,25 +34,22 @@
             <div class="form-container__form-inputs">
                 <mat-form-field appearance="outline" id="result">
                     <mat-label>Resultado</mat-label>
-                    <input matInput placeholder="Resultado" formControlName="result" [matAutocomplete]="auto">
-                    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                        <mat-option *ngFor="let option of filteredOptions | async" [value]="option.resultType">
+                    <mat-select formControlName="result">
+                        <mat-option *ngFor="let option of result$ | async" [value]="option.resultType">
                             {{option.resultType}}
                         </mat-option>
-                    </mat-autocomplete>
+                    </mat-select>
                     <mat-error *ngIf="finalizeForm.controls['result'].errors">
                         Campo <strong>requerido.</strong>
                     </mat-error>
                 </mat-form-field>
                 <mat-form-field appearance="outline" id="kindOfTest">
                     <mat-label>Tipo de ensayo</mat-label>
-                    <input matInput placeholder="Resultado" formControlName="kindOfTest"
-                        [matAutocomplete]="autoKindOfTest">
-                    <mat-autocomplete autoActiveFirstOption #autoKindOfTest="matAutocomplete">
+                    <mat-select formControlName="kindOfTest">
                         <mat-option *ngFor="let option of kindOfTests$ | async" [value]="option.kindOfTest">
                             {{option.kindOfTest}}
                         </mat-option>
-                    </mat-autocomplete>
+                    </mat-select>
                     <mat-error *ngIf="finalizeForm.controls['kindOfTest'].errors">
                         Campo <strong>requerido.</strong>
                     </mat-error>
@@ -86,6 +83,13 @@
                 <a [href]="img" target="_blank" style="cursor: zoom-in">
                     <img [src]="img" *ngIf="img">
                 </a>
+            </div>
+            <div class="ms-table-default">
+                <p class="ms-dialog-info">
+                    <mat-icon style="vertical-align: middle;">info</mat-icon> Información
+                </p>
+                <p class="ms-dialog-info">Recuerde que las fotos finales 1 y 2, serán las que salgan en el reporte de
+                    evaluaciones.</p>
             </div>
             <div *ngFor="let imgUpload of imagesUpload;let i=index">
                 <div *ngIf="i<2" style="margin-bottom: 40px;">

@@ -1,6 +1,6 @@
 <div class="ms-dialog-header">
     <mat-icon class="ms-dialog-header__icon">pause</mat-icon>
-    <h3 class="ms-dialog-header__title">{{statusToUpdate === 'process' ? 'Desactivar' : 'Activar'}} estado pendiente</h3>
+    <h3 class="ms-dialog-header__title">{{statusToUpdate === 'processed' ? 'Desactivar' : 'Activar'}} estado pendiente</h3>
     <span class="ms-fill"></span>
     <button mat-icon-button class="ms-dialog-header__close" mat-dialog-close>
         <mat-icon>close</mat-icon>
@@ -10,10 +10,10 @@
 <mat-progress-bar *ngIf="loading$ | async" mode="indeterminate"></mat-progress-bar>
 
 <mat-dialog-content>
-    <p class="ms-dialog-info">¿Esta seguro de {{statusToUpdate === 'process' ? 'desactivar' : 'activar'}} el estado <b>PENDIENTE</b>?</p>
+    <p class="ms-dialog-info">¿Esta seguro de {{statusToUpdate === 'processed' ? 'desactivar' : 'activar'}} el estado <b>PENDIENTE</b>?</p>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
     <button mat-stroked-button color="warn" style="margin-right: 8px;" mat-dialog-close>CERRAR</button>
-    <button mat-stroked-button class="ms-dialog-button" (click)="activatePending()">SÍ, {{statusToUpdate === 'process' ? 'DESACTIVAR' : 'ACTIVAR'}}</button>
+    <button mat-stroked-button class="ms-dialog-button" (click)="activatePending()">SÍ, {{statusToUpdate === 'processed' ? 'DESACTIVAR' : 'ACTIVAR'}}</button>
 </mat-dialog-actions>

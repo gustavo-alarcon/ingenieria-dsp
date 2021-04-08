@@ -1,7 +1,7 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, Observable, Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateDialogImprovenmentsComponent } from './dialogs/create-dialog-improvenments/create-dialog-improvenments.component';
 import { EditDialogImprovenmentsComponent } from './dialogs/edit-dialog-improvenments/edit-dialog-improvenments.component';
@@ -14,13 +14,14 @@ import { ShowDialogImprovementsComponent } from './dialogs/show-dialog-improveme
 import { MatSort, Sort } from '@angular/material/sort';
 import { ReplacementDialogImprovementsComponent } from './dialogs/replacement-dialog-improvements/replacement-dialog-improvements.component';
 import { FormControl } from '@angular/forms';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-improvements',
   templateUrl: './improvements.component.html',
   styleUrls: ['./improvements.component.scss']
 })
-export class ImprovementsComponent implements OnInit {
+export class ImprovementsComponent implements OnInit, OnDestroy {
 
   selected: any;
 
@@ -43,12 +44,26 @@ export class ImprovementsComponent implements OnInit {
 
   searchControl = new FormControl('');
 
+  subscriptions = new Subscription();
+  isMobile = false;
+
   constructor(
+    private breakpoint: BreakpointObserver,
     private impvServices: ImprovementsService,
     public dialog: MatDialog,
   ) { }
 
   ngOnInit(): void {
+    this.subscriptions.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
+      .subscribe(res => {
+        if (res.matches) {
+          this.isMobile = true;
+        } else {
+          this.isMobile = false;
+        }
+      })
+    )
+
     this.improvement$ = combineLatest(
       this.impvServices.getAllImprovementEntries(),
       this.searchControl.valueChanges.pipe(startWith(''), debounceTime(300), distinctUntilChanged())
@@ -68,6 +83,10 @@ export class ImprovementsComponent implements OnInit {
         }
       })
     )
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
   openDialog(value: string, entry?: ImprovementEntry, index?: number): void {

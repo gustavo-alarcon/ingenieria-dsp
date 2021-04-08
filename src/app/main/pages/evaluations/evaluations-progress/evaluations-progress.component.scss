@@ -132,23 +132,24 @@
 }
 
 .cards-container {
-    //display: flex;
-    //justify-content: space-evenly;
-    padding: 20px;
-    background: #f0eded;
+    display: flex;
+    justify-content: space-evenly;
+    padding: 20px 12px;
     display: grid;
-    grid-column-gap: 5px;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-column-gap: 8px;
+    grid-row-gap: 24px;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
 }
 
 .box {
-    margin: 10px 15px;
+    // margin: 10px 15px;
     color: rgba(0, 0, 0, 0.87);
     box-sizing: border-box;
     background: #ffffff;
-    border-radius: 10px 10px 0px 0px;
+    padding: 12px;
     position: relative;
-    width: 200px;
+    width: 230px;
+    height: 100%;
     display: flex;
     flex-direction: column;
 }
@@ -160,7 +161,7 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    padding: 5px;
+    padding: 2px 0px;
 }
 
 .priority {
@@ -267,16 +268,6 @@
 input {
     border: none;
     border-radius: 0px 25px 25px 0px;
-}
-
-::placeholder {
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 16px;
-    line-height: 24px;
-    letter-spacing: 0.15px;
-    color: rgba(0, 0, 0, 0.6);
 }
 
 .tag {

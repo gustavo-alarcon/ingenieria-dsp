@@ -35,6 +35,7 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
 
   obsAutoComplete$: Observable<EvaluationsResultTypeUser[]>;
   kindOfTests$: Observable<EvaluationsKindOfTest[]>;
+  result$: Observable<EvaluationsResultTypeUser[]>;
 
   arrayAux: string[];
 
@@ -60,45 +61,13 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
       this.arrayAux = [null];
     }
 
-    this.obsAutoComplete$ = this.evaluationServices.getAllEvaluationsSettingsResultType();
-
   }
 
   ngOnInit(): void {
     this.createFormFinalize();
-    this.filteredOptions = this.finalizeForm.controls.result.valueChanges
-      .pipe(
-        tap(() => {
-          this.loading.next(true);
-        }),
-        startWith(''),
-        debounceTime(200),
-        distinctUntilChanged(),
-        switchMap(val => {
-          this.loading.next(false);
-          return this.filter(val || '');
-        }),
-        tap(() => {
-          this.loading.next(false);
-        }),
-      );
 
-
-    this.kindOfTests$ = combineLatest(
-      this.evaluationServices.getAllEvaluationsSettingsKindOfTest(),
-      this.finalizeForm.controls.kindOfTest.valueChanges
-        .pipe(
-          startWith(''),
-          debounceTime(200),
-          distinctUntilChanged(),
-          map(val => val.kindOfTest ? val.kindOfTest : val)
-        )
-    ).pipe(
-      map(([list, term]) => {
-        let search = term.trim().toLowerCase();
-        return list.filter(element => element.kindOfTest.includes(search));
-      })
-    )
+    this.result$ = this.evaluationServices.getAllEvaluationsSettingsResultType();
+    this.kindOfTests$ = this.evaluationServices.getAllEvaluationsSettingsKindOfTest();
 
 
   }
@@ -235,14 +204,5 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
     } else if (this.finalizeForm.get('kindOfTest').errors) {
       document.getElementById('kindOfTest').scrollIntoView();
     }
-  }
-
-  filter(val: string): Observable<any> {
-    return this.obsAutoComplete$
-      .pipe(
-        map(response => response.filter(option => {
-          return option.resultType.toLowerCase().indexOf(val.toLowerCase()) === 0;
-        }))
-      );
   }
 }

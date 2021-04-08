@@ -1,40 +1,29 @@
-<div class="container" [ngStyle]="containerStyle">
-  <div class="header">
-    <div class="header-container">
-      <div class="header-container__title">
-        <mat-icon mat-list-icon class="header-container__title--icon" >history</mat-icon>
-        <h1 class="header-container__title--title" >Historial</h1>
-      </div>
-      <div class="header-container__date" [ngStyle]="searchStyle">
-        <mat-form-field class="w3-margin-top w3-margin-bottom w3-block" appearance="outline" [ngStyle]="searchStyle">
-          <mat-label>FECHA/PERIODO</mat-label>
-          <mat-date-range-input [formGroup]="dateForm" [rangePicker]="picker">
-            <input readonly matStartDate formControlName="start" placeholder="Fecha Inicio">
-            <input readonly matEndDate formControlName="end" placeholder="Fecha Final">
-          </mat-date-range-input>
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-date-range-picker #picker></mat-date-range-picker>
-        </mat-form-field>
-      </div>
-
-      <div class="header-container__search" [ngStyle]="searchStyle" style="margin-top: 3px">
-        <button mat-button class="header-container__search--button">
-          <mat-icon>search</mat-icon>
-        </button>
-        <form [formGroup]="searchForm" autocomplete="off" style="text-align: center;margin-top:10px">
-          <input placeholder="Buscar" name="search" class="header-container__search--input" formControlName="search" />
-        </form>
-      </div>
-
-      <span class="ms-fill"></span>
-      <div class="btn">
-        <button mat-button (click)="downloadXls()" class="btn__download" [ngStyle]="downloadStyle">
-          DESCARGAR
-        </button>
-      </div>
-    </div>
-
-
+<div class="ms-container">
+  <div class="ms-toolbar">
+    <mat-icon class="ms-toolbar__icon">history</mat-icon>
+    <h1 class="ms-toolbar__title" [ngClass]="isMobile ? 'ms-toolbar__title--mobile' : 'ms-toolbar__title--desktop'">
+      Historial</h1>
+    <mat-form-field appearance="outline" class="ms-toolbar__input"
+      [ngClass]="isMobile ? 'ms-toolbar__input--mobile' : 'ms-toolbar__input--desktop'">
+      <mat-label>FECHA/PERIODO</mat-label>
+      <mat-date-range-input [formGroup]="dateForm" [rangePicker]="picker">
+        <input readonly matStartDate formControlName="start" placeholder="Fecha Inicio">
+        <input readonly matEndDate formControlName="end" placeholder="Fecha Final">
+      </mat-date-range-input>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="ms-toolbar__input"
+      [ngClass]="isMobile ? 'ms-toolbar__input--mobile' : 'ms-toolbar__input--desktop'">
+      <mat-label>Buscar</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput type="text" [formControl]="searchControl" placeholder="Escribir..." autocomplete="off">
+    </mat-form-field>
+    <span class="ms-fill"></span>
+    <button mat-stroked-button (click)="downloadXls()" class="ms-toolbar__button"
+      [ngClass]="isMobile ? 'ms-toolbar__button--mobile' : 'ms-toolbar__button--desktop'">
+      DESCARGAR
+    </button>
   </div>
   <mat-divider></mat-divider>
 
@@ -44,9 +33,10 @@
 
         <ng-container matColumnDef="reportDate">
           <th mat-header-cell *matHeaderCellDef class="table__cell theader">Fecha Reporte</th>
-          <td mat-cell *matCellDef="let element" class="table__cell"> 
-            {{(element.reportDate.seconds * 1000) | date : 'dd/MM/yy'}} 
-           <span style="color: #979797; font-size: 12px;"> {{(element.reportDate.seconds * 1000) | date : 'hh:mm:ss'}}  </span> 
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{(element.reportDate.seconds * 1000) | date : 'dd/MM/yy'}}
+            <span style="color: #979797; font-size: 12px;"> {{(element.reportDate.seconds * 1000) | date : 'hh:mm:ss'}}
+            </span>
           </td>
         </ng-container>
 
@@ -113,9 +103,10 @@
 
         <ng-container matColumnDef="workReturnDate">
           <th mat-header-cell *matHeaderCellDef class="table__cell theader"> Fecha retorno Trabajo </th>
-          <td mat-cell *matCellDef="let element" class="table__cell"> 
-            {{element.workReturnDate ?((element.workReturnDate.seconds * 1000) | date : 'dd/MM/yy'): '---'}} 
-            <span style="color: #979797; font-size: 12px;">   {{element.workReturnDate ?((element.workReturnDate.seconds * 1000) | date : 'hh:mm:ss'): '---'}}  </span>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{element.workReturnDate ?((element.workReturnDate.seconds * 1000) | date : 'dd/MM/yy'): '---'}}
+            <span style="color: #979797; font-size: 12px;"> {{element.workReturnDate ?((element.workReturnDate.seconds *
+              1000) | date : 'hh:mm:ss'): '---'}} </span>
           </td>
         </ng-container>
 
@@ -177,10 +168,11 @@
 
         <ng-container matColumnDef="reportDate">
           <th mat-header-cell *matHeaderCellDef class="table__cell theader">Fecha Reporte</th>
-          <td mat-cell *matCellDef="let element" class="table__cell"> 
-            {{(element.reportDate.seconds * 1000) | date : 'dd/MM/yy'}} 
-           <span style="color: #979797; font-size: 12px;"> {{(element.reportDate.seconds * 1000) | date : 'hh:mm:ss'}}  </span> 
-          </td> 
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{(element.reportDate.seconds * 1000) | date : 'dd/MM/yy'}}
+            <span style="color: #979797; font-size: 12px;"> {{(element.reportDate.seconds * 1000) | date : 'hh:mm:ss'}}
+            </span>
+          </td>
         </ng-container>
 
         <ng-container matColumnDef="name">
@@ -251,11 +243,10 @@
         <tr mat-header-row *matHeaderRowDef="historyMobilDisplayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: historyMobilDisplayedColumns;"></tr>
       </table>
-     
+
     </div>
     <mat-paginator #historyMobilPaginator class="ms-paginator" [pageSizeOptions]="[20, 30, 40]" showFirstLastButtons>
     </mat-paginator>
   </div>
-
 
 </div>

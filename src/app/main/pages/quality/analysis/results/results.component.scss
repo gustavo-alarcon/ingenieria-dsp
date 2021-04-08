@@ -1,0 +1,47 @@
+.container-table {
+    margin-top: 30px;
+    max-width: 100%;
+    overflow: auto;
+}
+
+table {
+    .table__cell {
+        min-width: 90px;
+        padding: 0px 8px;
+    }
+}
+
+.theader {
+    background: #f0eefc;
+    color: #2b2b2b;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.btn-state-registered {
+    background: #F2C94C;
+    color: black;
+    width: 100px;
+  }
+  
+  .btn-state-assigned {
+    background:  #FF2D2D;
+    color: black;
+    width: 100px;
+  }
+
+  .btn-state-corrective {
+    background: #f2994a;
+    color: white;
+    width: 100px;
+  }
+
+  .btn-state-finalizado {
+    background: #27ae60;
+    color: white;
+    width: 100px;
+  }
+  
+  

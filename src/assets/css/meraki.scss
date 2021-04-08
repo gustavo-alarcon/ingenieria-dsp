@@ -7,6 +7,7 @@
 .ms-container {
     padding: 5vh 5vw;
     margin: auto;
+    min-height: 100vh;
 
     .ms-toolbar {
         display: flex;
@@ -33,16 +34,19 @@
 
             &--desktop {
                 font-size: 2rem;
+                width: auto;
             }
 
             &--mobile {
                 font-size: 1.6rem;
+                width: 75%;
             }
         }
 
         &__button {
             border: 1px #6200ee solid;
             color: #6200ee;
+            background: white !important;
             padding: 5px 15px 5px 15px;
             height: 50px;
             align-self: center;
@@ -60,28 +64,132 @@
             }
 
             &--desktop {
-                margin-right: 12px;
+                margin: 0px 8px !important;
             }
 
             &--mobile {
-                width: 100%;
-                margin: 12px 0px 0px 0px;
+                width: 100% !important;
+                margin: 8px 0px !important;
             }
         }
 
-        &__search .mat-form-field-wrapper {
+        &__input {
             padding-bottom: 0px !important;
+            font-size: 12px !important;
+
+            .mat-form-field-wrapper {
+                padding: 0px !important;
+            }
 
             .mat-icon {
                 margin-right: 12px !important;
             }
 
-            &--mobile {
-                .mat-form-field {
-                    width: 100% !important;
-                    margin: 12px 0px 0px 0px !important;
-                }
+            &--desktop {
+                margin: 0px 8px !important;
             }
+
+            &--mobile {
+                width: 100% !important;
+                margin: 4px 0px !important;
+            }
+        }
+    }
+}
+
+.ms-default {
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px dashed lightgray;
+    padding: 1rem;
+    border-radius: 10px 10px;
+    margin-top: 24px;
+}
+
+// *** Kanban
+.ms-kanban-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    background: #fff;
+    padding: 16px;
+
+    &__button {
+        border: 1px #6200ee solid;
+        color: #6200ee;
+        align-self: center;
+
+        &--icon {
+            margin-right: 12px !important;
+            align-self: center;
+            color: rgba(0, 0, 0, 0.38) !important;
+        }
+
+        &--desktop {
+            margin: 0px 8px !important;
+        }
+
+        &--mobile {
+            width: 100% !important;
+            margin: 8px 0px !important;
+        }
+    }
+
+    &__icon {
+        color: #2b2b2b;
+        align-self: center;
+        font-size: 36px;
+        width: 36px;
+        height: 36px;
+        margin-right: 12px;
+    }
+
+    &__title {
+        color: #2b2b2b;
+        align-self: center;
+        font-family: "Poppins", sans-serif;
+
+        font-weight: 900;
+        margin: 0px 24px 0px 0px;
+
+        &--desktop {
+            font-size: 2rem;
+        }
+
+        &--mobile {
+            font-size: 1.6rem;
+        }
+    }
+
+    &__counter {
+        font-family: "Poppins", sans-serif;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 36px;
+        line-height: 54px;
+        margin: 0px 12px;
+        color: #2b2b2b;
+    }
+
+    &__input {
+        padding-bottom: 0px !important;
+        font-size: 12px !important;
+
+        .mat-form-field-wrapper {
+            padding: 0px !important;
+        }
+
+        .mat-icon {
+            margin-right: 12px !important;
+        }
+
+        &--desktop {
+            margin: 0px 8px !important;
+        }
+
+        &--mobile {
+            width: 100% !important;
+            margin: 4px 0px !important;
         }
     }
 }
@@ -90,6 +198,10 @@
 .ms-table {
     width: 100%;
     margin-top: 8px;
+
+    &__header {
+        padding: 8px 24px !important;
+    }
 }
 
 .ms-table-default {
@@ -107,6 +219,7 @@
     font-size: 1rem !important;
     padding: 8px 24px !important;
     border: 1px solid #6200ee !important;
+    background: white !important;
     color: #6200ee !important;
 
     &--icon {
@@ -182,6 +295,7 @@
 .dropzone .file-label {
     font-size: 1.2em;
 }
+
 progress::-webkit-progress-value {
     transition: width 0.1s ease;
 }
@@ -197,6 +311,7 @@ progress::-webkit-progress-value {
     font-size: 1em;
     white-space: nowrap;
 }
+
 .file-cta {
     background-color: #f5f5f5;
     color: #4a4a4a;

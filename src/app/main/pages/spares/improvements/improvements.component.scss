@@ -1,37 +1,40 @@
-
-.container{
+.container {
     margin: 40px 70px 40px 70px;
 }
-.header-container{
+.header-container {
     display: inline-flex;
 }
-.btn-add{
-  border: 1px #6200EE solid;
-  color: #6200EE;
-  margin-left:40px ;
-  padding: 5px 30px 5px 30px;
+.btn-add {
+    border: 1px #6200ee solid;
+    color: #6200ee;
+    margin-left: 40px;
+    padding: 5px 30px 5px 30px;
 }
-.icon-add{
-    color: #6200EE;
+.icon-add {
+    color: #6200ee;
 }
-.body-container{
+
+.body-container {
     margin-top: 24px;
+    width: 100%;
+    overflow: auto;
 }
+
 table {
     width: 100%;
-  }
-
-.btn-state-validate{
-    background: #27AE60; 
-    color: white;   
 }
 
-.btn-state-register{
-    background: #F2C94C;  
-    color: black;   
+.btn-state-validate {
+    background: #27ae60;
+    color: white;
 }
 
-.btn-state-replacement{
-    background: #ee4325;  
-    color: white;   
+.btn-state-register {
+    background: #f2c94c;
+    color: black;
+}
+
+.btn-state-replacement {
+    background: #ee4325;
+    color: white;
 }
