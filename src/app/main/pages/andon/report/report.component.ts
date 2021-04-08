@@ -23,33 +23,29 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   nameBahias$: Observable<AndonListBahias[]>;
 
-  isMobile = false;
   containerStyle: any;
   reportStyle: any;
 
-  subscription = new Subscription();
-  
+  subscriptions = new Subscription();
+  isMobile = false;
+
   constructor(
+    private breakpoint: BreakpointObserver,
     private afs: AngularFirestore,
     private fb: FormBuilder,
     public router: Router,
     private andonService: AndonService,
     private auth: AuthService,
-    private snackbar: MatSnackBar,
-    private breakpoint: BreakpointObserver
+    private snackbar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
-    this.subscription.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
+    this.subscriptions.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
       .subscribe(res => {
         if (res.matches) {
-          this.isMobile= true;
-          this.setHandsetContainer();
-          this.setHandsetReport();
+          this.isMobile = true;
         } else {
-          this.isMobile= false;
-          this.setDesktopContainer();
-          this.setDesktopReport();
+          this.isMobile = false;
         }
       })
     )
@@ -63,7 +59,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 
 
     this.nameBahias$ = this.andonService.getAllAndonSettingsListBahias().pipe(
-      tap((res:AndonListBahias[]) => {
+      tap((res: AndonListBahias[]) => {
         const arrayListBahia: AndonListBahias[] = res;
 
         arrayListBahia.sort((a, b) => {
@@ -84,8 +80,8 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   }
 
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
   report(): void {
@@ -104,36 +100,6 @@ export class ReportComponent implements OnInit, OnDestroy {
 
     }
 
-  }
-
-  setHandsetContainer(): void {
-    this.containerStyle = {
-      'margin': '30px 24px 30px 24px'
-    }
-  }
-
-  setDesktopContainer(): void {
-    this.containerStyle = {
-      'margin': '30px 80px 30px 80px',
-    }
-  }
-
-  setHandsetReport(): void {
-    this.reportStyle = {
-      'width': 'fit-content',
-      'margin': '24px auto',
-    }
-  }
-
-  setDesktopReport(): void {
-    this.reportStyle = {
-      'padding': '24px 24px',
-      'border': '1px solid lightgrey',
-      'border-radius': '10px 10px 10px 10px',
-      'width': 'fit-content',
-      'margin': '24px auto',
-      'box-shadow': '2px 2px 4px lightgrey'
-    }
   }
 
 }

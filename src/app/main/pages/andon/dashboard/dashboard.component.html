@@ -1,113 +1,103 @@
-<div class="container">
-    <div class="header-container">
-        <div class="container-title">
-            <mat-icon mat-list-icon class="mat-icon-menu" style="font-size: 2.5em;">dashboard</mat-icon>
-            <h1 style="font-size: 2.2em; margin-left: 20px; font-family: 'Poppins', sans-serif; font-weight: 700;">Dashboard</h1>  
-        </div>
-        <div class="container-date">
-            <mat-form-field class="w3-margin-top w3-margin-bottom w3-block" style="max-width: 350px;" appearance="outline">
-              <mat-label>FECHA/PERIODO</mat-label>
-              <mat-date-range-input [formGroup]="dateForm" [rangePicker]="picker">
+<div class="ms-container">
+    <div class="ms-toolbar">
+        <mat-icon class="ms-toolbar__icon">dashboard</mat-icon>
+        <h1 class="ms-toolbar__title" [ngClass]="isMobile ? 'ms-toolbar__title--mobile' : 'ms-toolbar__title--desktop'">
+            Dashboard
+        </h1>
+        <mat-form-field appearance="outline" class="ms-toolbar__input"
+            [ngClass]="isMobile ? 'ms-toolbar__input--mobile' : 'ms-toolbar__input--desktop'">
+            <mat-label>FECHA/PERIODO</mat-label>
+            <mat-date-range-input [formGroup]="dateForm" [rangePicker]="picker">
                 <input readonly matStartDate formControlName="start" placeholder="Fecha Inicio">
                 <input readonly matEndDate formControlName="end" placeholder="Fecha Final">
-              </mat-date-range-input>
-              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-              <mat-date-range-picker #picker></mat-date-range-picker>
-            </mat-form-field>    
-        </div>      
+            </mat-date-range-input>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
     </div>
-    <div class="body-container" >
-        <div class="container1">
-            <div class="container1__problem">
-                <h1 class="container1__problem--title" >
+    <mat-divider></mat-divider>
+
+    <div class="body-container" [ngClass]="isMobile ? 'body-container--mobile' : ''">
+        <div class="container1" [ngClass]="isMobile ? 'container1--mobile' : 'container1--desktop'">
+            <div class="container1__problem mat-elevation-z4">
+                <h1 class="container1__problem--title">
                     Reportes de tipo problema
                 </h1>
-                
+
                 <div class="charts" *ngIf="andon$ | async">
                     <div class="chartjs-container">
-                        <canvas baseChart 
-                            [datasets]="lineChartData" 
-                            [labels]="lineChartLabels" 
-                            [options]="lineChartOptions"
-                            [colors]="lineChartColors" 
-                            [legend]="lineChartLegend" 
-                            [chartType]="lineChartType" 
-                            [plugins]="lineChartPlugins"
-                            (chartHover)="chartHovered($event)" 
+                        <canvas baseChart [datasets]="lineChartData" [labels]="lineChartLabels"
+                            [options]="lineChartOptions" [colors]="lineChartColors" [legend]="lineChartLegend"
+                            [chartType]="lineChartType" [plugins]="lineChartPlugins" (chartHover)="chartHovered($event)"
                             (chartClick)="chartClicked($event)">
                         </canvas>
                     </div>
                 </div>
 
             </div>
-            <div class="container1__top" *ngIf="topDelay$ | async as delays">
+
+            <div class="container1__top mat-elevation-z4" *ngIf="topDelay$ | async as delays">
                 <h1 class="container1__top--title1">
                     Top 10 mas demorados
-                </h1> 
+                </h1>
                 <div class="top-ten">
                     <ul class="top-ten__list1">
                         <li class="top-ten__list1--item" *ngFor="let item of delays.firts; let i = index">
                             <span style="width: 40px;"> {{ i + 1 }} </span> -
-                            <span style="width: 80px;" > {{ item.otChild }}</span> -
-                            <span style="width: 80px; font-weight: bold;" > {{item.date}} </span>
-                        </ul> 
+                            <span style="width: 80px;"> {{ item.otChild }}</span> -
+                            <span style="width: 80px; font-weight: bold;"> {{item.date}} </span>
+                    </ul>
                     <ul class="top-ten__list2">
                         <li class="top-ten__list2--item" *ngFor="let item of delays.second; let i = index">
                             <span style="width: 40px;"> {{ i + 6 }} </span> -
-                            <span style="width: 80px;" > {{ item.otChild }}</span> -
-                            <span style="width: 80px; font-weight: bold;" > {{item.date}} </span>
+                            <span style="width: 80px;"> {{ item.otChild }}</span> -
+                            <span style="width: 80px; font-weight: bold;"> {{item.date}} </span>
                         </li>
-                    </ul> 
-                </div>               
-                              
+                    </ul>
+                </div>
+
             </div>
 
-            <div class="container1__answer">
-                <h1 class="container1__answer--title" >
+            <div class="container1__answer mat-elevation-z4">
+                <h1 class="container1__answer--title">
                     Promedio tiempo de respuesta
                 </h1>
-                
+
                 <div class="charts" *ngIf="andonAverageQuestions$ | async">
                     <div class="chartjs-container">
-                        <canvas baseChart 
-                            [datasets]="lineChartData2" 
-                            [labels]="lineChartLabels2" 
-                            [options]="lineChartOptions2"
-                            [chartType]="lineChartType2" 
-                            [colors]="lineChartColors" 
-                            [legend]="lineChartLegend" 
-                            [plugins]="lineChartPlugins"
-                            (chartHover)="chartHovered($event)" 
+                        <canvas baseChart [datasets]="lineChartData2" [labels]="lineChartLabels2"
+                            [options]="lineChartOptions2" [chartType]="lineChartType2" [colors]="lineChartColors"
+                            [legend]="lineChartLegend" [plugins]="lineChartPlugins" (chartHover)="chartHovered($event)"
                             (chartClick)="chartClicked($event)">
                         </canvas>
                     </div>
-                    
+
                 </div>
 
             </div>
         </div>
 
-        <div class="container2">
-            <div class="container2__taller">
+        <div class="container2" [ngClass]="isMobile ? 'container2--mobile' : 'container2--desktop'">
+            <div class="container2__taller mat-elevation-z4">
                 <h1 class="container2__taller--title">
                     Reporte por taller
                 </h1>
-                <div class="container2__taller--cards" *ngIf="andonGroupBy$ | async as groupByWorkShop" > 
+                <div class="container2__taller--cards" *ngIf="andonGroupBy$ | async as groupByWorkShop">
                     <div class="container2__card" (click)="reports(item)" *ngFor="let item of groupByWorkShop">
                         <div style="display: flex; text-align: center; margin: 20px 15px 10px 15px;">
-                            <mat-icon mat-list-icon class="mat-icon-menu" style="font-size: 1.5em;margin-top: 1px;">domain</mat-icon>
+                            <mat-icon mat-list-icon class="mat-icon-menu" style="font-size: 1.5em;margin-top: 1px;">
+                                domain</mat-icon>
                             <p class="container2__card--name">
-                             {{item.workShop | slice : 0:15}}
-                            </p>  
+                                {{item.workShop | slice : 0:15}}
+                            </p>
                         </div>
                         <h1 class="container2__card--quatity">
                             {{item.quantity | number : '2.'}}
                         </h1>
-                    </div>                    
-                    
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
 </div>
-

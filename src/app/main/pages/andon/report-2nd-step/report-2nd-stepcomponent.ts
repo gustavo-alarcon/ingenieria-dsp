@@ -30,7 +30,7 @@ export class report2ndStepComponent implements OnInit, OnDestroy, AfterViewInit 
 
   uploadPercent$: Observable<number>;
   filteredOptions: Observable<string[]>;
-  
+
   nameBahia: string;
   workShop: string;
   otChild: number;
@@ -41,11 +41,9 @@ export class report2ndStepComponent implements OnInit, OnDestroy, AfterViewInit 
   isHovering: boolean;
   files: File[] = [];
   pathStorage: string;
-  subscription = new Subscription();
 
+  subscriptions = new Subscription();
   isMobile = false;
-  containerStyle: any;
-  reportStyle: any;
 
   constructor(
     private fb: FormBuilder,
@@ -71,21 +69,17 @@ export class report2ndStepComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   ngOnInit(): void {
-    this.subscription.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
+    this.subscriptions.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
       .subscribe(res => {
         if (res.matches) {
           this.isMobile = true;
-          this.setHandsetContainer();
-          this.setHandsetReport();
         } else {
           this.isMobile = false;
-          this.setDesktopContainer();
-          this.setDesktopReport();
         }
       })
-    );
+    )
 
-    this.subscription.add(this.authService.user$.subscribe(user => {
+    this.subscriptions.add(this.authService.user$.subscribe(user => {
       this.user = user;
     }));
 
@@ -108,11 +102,11 @@ export class report2ndStepComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   ngAfterViewInit(): void {
-   
+
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.subscriptions.unsubscribe();
   }
 
   save(): void {
@@ -148,7 +142,7 @@ export class report2ndStepComponent implements OnInit, OnDestroy, AfterViewInit 
                 });
               });
 
-            });
+          });
       }
     } catch (error) {
       this.snackbar.open('🚨 Hubo un error.' + `${error}`, 'Aceptar', {
@@ -165,13 +159,13 @@ export class report2ndStepComponent implements OnInit, OnDestroy, AfterViewInit 
     }
     this.loading.next(true);
     const file = event.target.files[0];
-    this.subscription.add(
+    this.subscriptions.add(
       this.ng2ImgMax.resize([file], 800, 10000).subscribe((result) => {
         const name = `andon/${this.currentId}/pictures/${this.currentId}-${this.date}-${result.name}.png`;
         const fileRef = this.storage.ref(name);
         const task = this.storage.upload(name, file);
         this.uploadPercent$ = task.percentageChanges();
-        this.subscription.add(
+        this.subscriptions.add(
           task
             .snapshotChanges()
             .pipe(
@@ -223,35 +217,5 @@ export class report2ndStepComponent implements OnInit, OnDestroy, AfterViewInit 
     this.imagesUpload.pop();
     this.imagesUpload.push(image);
     this.imagesUpload.push('');
-  }
-
-  setHandsetContainer(): void {
-    this.containerStyle = {
-      'margin': '30px 24px 30px 24px'
-    }
-  }
-
-  setDesktopContainer(): void {
-    this.containerStyle = {
-      'margin': '30px 80px 30px 80px',
-    }
-  }
-
-  setHandsetReport(): void {
-    this.reportStyle = {
-      'width': 'fit-content',
-      'margin': '24px auto',
-    }
-  }
-
-  setDesktopReport(): void {
-    this.reportStyle = {
-      'padding': '24px 24px',
-      'border': '1px solid lightgrey',
-      'border-radius': '10px 10px 10px 10px',
-      'width': 'fit-content',
-      'margin': '24px auto',
-      'box-shadow': '2px 2px 4px lightgrey'
-    }
   }
 }

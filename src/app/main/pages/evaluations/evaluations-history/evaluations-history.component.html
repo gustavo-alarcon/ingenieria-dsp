@@ -220,9 +220,9 @@
       <tr mat-header-row *matHeaderRowDef="improvementDisplayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: improvementDisplayedColumns;"></tr>
     </table>
-    <mat-paginator #improvementPaginator [pageSizeOptions]="[20, 30, 40]" showFirstLastButtons>
-    </mat-paginator>
   </div>
+  <mat-paginator #improvementPaginator [pageSizeOptions]="[20, 30, 40]" showFirstLastButtons>
+  </mat-paginator>
   <ng-template #default>
     <div class="ms-default">
       <mat-progress-bar mode="indeterminate"></mat-progress-bar>

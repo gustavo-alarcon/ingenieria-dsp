@@ -1,14 +1,14 @@
 $base-font: "Poppins", sans-serif;
 
 .main-background {
-  background: linear-gradient(to top, rgba(0, 17, 44, 0.3), transparent), url("../../../assets/svg/background.svg");
+  background: linear-gradient(to top, rgba(0, 17, 44, 0.2), transparent), url("../../../assets/svg/background5.svg");
   height: auto;
   background-position: center;
   background-size: cover;
 }
 
 .main-background::after {
-  content: '';
+  content: "";
   position: relative;
   background: linear-gradient(to top, rgba(0, 0, 0, 0.483), transparent);
 }

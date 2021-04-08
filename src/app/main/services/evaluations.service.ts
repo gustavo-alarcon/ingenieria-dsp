@@ -37,6 +37,7 @@ export class EvaluationsService {
       .valueChanges()
       .pipe(
         map(list => {
+          
           return list.sort((a, b) => a['createdAt']['seconds'] - b['createdAt']['seconds'])
         })
       )
