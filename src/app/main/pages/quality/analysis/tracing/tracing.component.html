@@ -1,7 +1,7 @@
 <div class="container">
     <div class="requests">
       <div class="requests__title">
-        <h1 class="requests__title--name">En progreso</h1>
+        <h1 class="requests__title--name">Seguimiento</h1>
         <div class="requests__title--icon" (click)="settingDialog()">
           <mat-icon mat-list-icon>settings</mat-icon>
         </div>
@@ -47,7 +47,7 @@
           <div>
             <mat-menu #requestsMenu="matMenu">
               <button mat-menu-item (click)="accCorrective(item)">
-                <mat-icon>fact_check</mat-icon> Analisis
+                <mat-icon>fact_check</mat-icon> Acc Correctivas
               </button>
               <button mat-menu-item (click)="detailDialog(item, item.eventType)">
                 <mat-icon>visibility</mat-icon> Detalle
@@ -65,6 +65,7 @@
           <div class="lj" matTooltip="WOF" matTooltipPosition="above"><span>OT {{item.workOrder}}</span> </div>
           <div class="info-row"> Componente: <span> {{item.component}}</span> </div>
           <div class="info-row"> Taller: <span> {{item.partNumber}}</span></div>        
+          <div class="info-row"> Especialista: <span> {{item.specialist['name']}}</span></div>        
           <div class="info-row"> Fecha: <span> {{(item.createdAt['seconds'] * 1000) | date : 'dd/MM/yy hh:mm:ss'}}</span></div>        
         </div>
         <div class="ms-fill"></div>

@@ -518,4 +518,44 @@ export class QualityService {
 
     return of(batch);
   }
+
+  updateQualityEvaluationAnalisis(
+    entryId: string,
+    analisis: number
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    // create reference for document in evaluation entries collection
+    const qualityDocRef = this.afs.firestore.doc(
+      `db/ferreyros/quality/${entryId}`
+    );
+    // Structuring the data model
+    const data: any = {
+      evaluationAnalisis: analisis,
+    };
+    batch.update(qualityDocRef, data);
+
+    return of(batch);
+  }
+
+  saveNewCorrectiveActions(
+    entryId,
+    newCorrective
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    // create reference for document in evaluation entries collection
+    const qualityDocRef = this.afs.firestore.doc(
+      `db/ferreyros/quality/${entryId}`
+    );
+   
+
+    // Structuring the data model
+    const data: any = {
+      correctiveActions: newCorrective,
+    };
+    batch.update(qualityDocRef, data);
+
+    return of(batch);
+  }
 }

@@ -207,8 +207,35 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
 
         let result: number;
         let roundResult: number;
-        result = (codeQuality + codeCost) / (codeFrecuency * 2);
+        result = ((codeQuality + codeCost) / 2) * codeFrecuency;
         roundResult = Math.round(result);
+        
+        const resp = this.qualityService.updateQualityEvaluationAnalisis(
+          this.data.id,
+          roundResult
+        );
+        this.subscription.add(
+          resp.subscribe((batch) => {
+            if (batch) {
+              batch
+                .commit()
+                .then(() => {
+                  this.snackbar.open('✅ Se realizo analisis correctamente!', 'Aceptar', {
+                    duration: 6000,
+                  });
+                })
+                .catch((err) => {
+                  this.snackbar.open(
+                    '🚨 Hubo un error al actualizar  !',
+                    'Aceptar',
+                    {
+                      duration: 6000,
+                    }
+                  );
+                });
+            }
+          })
+        );
 
         return roundResult;
       })
@@ -240,6 +267,8 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
           corrective: ['', Validators.required],
           name: ['', Validators.required],
           kit: [false, Validators.required],
+          url: [null],
+          nameFile: [null],
         }),
       ]),
     });
@@ -258,6 +287,8 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
       corrective: ['', Validators.required],
       name: ['', Validators.required],
       kit: [false, Validators.required],
+      url: [null],
+      nameFile: [null],
 
     });
     this.areas.push(group);
@@ -279,8 +310,10 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
     if (event.email) {
       this.emailArray.push(email);
     }
+  }
 
-
+  changeArea(item): void{
+    console.log('change area : ', item)
   }
 
   save(): void {

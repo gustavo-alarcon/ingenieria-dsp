@@ -1,65 +1,68 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { Quality } from '../../../../../../models/quality.model';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { finalize } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { QualityService } from 'src/app/main/services/quality.service';
 
 @Component({
   selector: 'app-acc-corrective-dialog',
   templateUrl: './acc-corrective-dialog.component.html',
   styleUrls: ['./acc-corrective-dialog.component.scss']
 })
-export class AccCorrectiveDialogComponent implements OnInit {
+export class AccCorrectiveDialogComponent implements OnInit, OnDestroy {
 
   loading = new BehaviorSubject<boolean>(false);
   loading$ = this.loading.asObservable();
 
-  listAreaForm: FormGroup;
+  dataArea = [];
   
   fileSelect = false;
   nameFileSelect: string;
+  uploadFileUrl: string;
+  pathStorageFile: string;
+  
+  uploadPercent$: Observable<number>;
+
+  subscription = new Subscription();
+  
+  newAccCorrective;
+
   constructor(
     public dialogRef: MatDialogRef<AccCorrectiveDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Quality,
-    private fb: FormBuilder,
-
+    private storage: AngularFireStorage,
+    private snackbar: MatSnackBar,
+    private qualityService: QualityService,
 
   ) { }
   ngOnInit(): void {
     this.initForm();
 
-    console.log('obdataject ', this.data);
-    console.log('data correctiveActions ', this.data.correctiveActions);
+    this.dataArea = [...this.data.correctiveActions];
+
+    this.pathStorageFile = `quality/corrective-actions`;
 
   }
 
   initForm(): void{
-    this.listAreaForm = this.fb.group({
-      corrective: [this.data.correctiveActions['corrective'] , Validators.required],
-      name: [this.data.correctiveActions['name'] , Validators.required],
-      kit: ['', Validators.required]
-    });
 
   }
-  addFile(): void{
 
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
-  save(): void{
 
-  }
   uploadFiles(event, item ): void {
-    console.log('item', item)
+
     if (!event.target.files[0]) {
       return;
     }
 
-    const filename = event.target.files[0].name;
-    this.fileSelect = true;
-    this.nameFileSelect = filename ;
-
-
-
-    /* const date = new Date();
+    const date = new Date();
     this.loading.next(true);
     const file = event.target.files[0];
     const filename = event.target.files[0].name;
@@ -74,17 +77,65 @@ export class AccCorrectiveDialogComponent implements OnInit {
         .snapshotChanges()
         .pipe(
           finalize(() => {
-            fileRef.getDownloadURL().subscribe((url) => {
-              if (url) {
-               this.uploadFile = url;
-               this.nameFileSelect = filename ;
-               this.fileSelect = true;
+            fileRef.getDownloadURL().subscribe((link) => {
+              if (link) {
+               const code = item.corrective;
+               const kits = true;
+
+               this.newAccCorrective = this.dataArea.map(el => {
+                 if (el.corrective === code) {
+                   return {...el, nameFile: filename, kit: kits, url: link };
+                 }else{
+                   return el;
+                 }
+               });
+
+               this.dataArea = this.newAccCorrective ;
               }
             });
             this.loading.next(false);
           })
         ).subscribe()
-    ); */
+    );
+  }
+
+  
+  save(): void{
+    try {
+      if (this.newAccCorrective) {
+        const resp = this.qualityService.saveNewCorrectiveActions(
+          this.data.id,
+          this.newAccCorrective
+        );
+        this.subscription.add(
+          resp.subscribe((batch) => {
+            if (batch) {
+              batch
+                .commit()
+                .then(() => {
+                  this.snackbar.open('✅ Se guardo correctamente!', 'Aceptar', {
+                    duration: 6000,
+                  });
+                  this.dialogRef.close(false);
+                })
+                .catch((err) => {
+                  this.snackbar.open(
+                    '🚨 Hubo un error al actualizar  !',
+                    'Aceptar',
+                    {
+                      duration: 6000,
+                    }
+                  );
+                });
+            }
+          })
+        );
+      }
+    } catch (error) {
+      console.log(error);
+      this.loading.next(false);
+    }
+    
   }
 
 }

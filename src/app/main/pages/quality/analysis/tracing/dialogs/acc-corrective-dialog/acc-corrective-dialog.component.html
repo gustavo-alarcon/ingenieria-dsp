@@ -28,7 +28,7 @@
             <mat-divider style="width: 100%;"> </mat-divider>
             <div class="container__informations">
                 <h3 style="margin-top: 15px; font-weight: bold;">Acciones correctivas</h3>
-                <form   *ngFor="let item of data.correctiveActions; let i = index"
+                <form   *ngFor="let item of dataArea; let i = index"
                      class="container__form"
                     >
                     <div class="container__form--kit">
@@ -52,20 +52,21 @@
                         </mat-error> -->
                     </mat-form-field>   
                     
-                    <h3 *ngIf="fileSelect"  class="container__form--text" >{{nameFileSelect}} </h3>
-                        <div >
-                            <input #fileInput2 style="display: none" type="file" 
-                                   id="fileInput2"
-                                   (change)="uploadFiles($event,item)" accept="*"
-                                   >
-                                   <br>
-                            <button type="file" mat-stroked-button color="primary" aria-label="add"  mat-button class="container__form--btnadd"
-                                    accept="*" 
-                                (click)="fileInput2.click()">
-                                <mat-icon aria-label="agregar" color="primary">add</mat-icon>
-                                ADJUNTAR 
-                            </button>                            
-                        </div>         
+                    <h3 *ngIf="item.nameFile"  class="container__form--text" name=""   >{{item.nameFile}} </h3>
+                    <div >
+                        <input #fileInput2 style="display: none" type="file" 
+                               id="fileInput2"
+                               (change)="uploadFiles($event,item)" accept="*"
+                            
+                               >
+                               <br>
+                        <button type="file" mat-stroked-button color="primary" aria-label="add"  mat-button class="container__form--btnadd"
+                                accept="*" 
+                            (click)="fileInput2.click()">
+                            <mat-icon aria-label="agregar" color="primary">add</mat-icon>
+                            ADJUNTAR 
+                        </button>                            
+                    </div>         
                     
                 </form>
 
