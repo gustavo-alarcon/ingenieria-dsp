@@ -57,10 +57,8 @@
       <mat-icon>settings</mat-icon>
     </button>
   </div>
-  <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
-  <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
 
-  <div class="cards-container" *ngIf="evaluation$|async as evaluations">
+  <div class="cards-container" *ngIf="evaluation$|async as evaluations; else default">
     <div *ngFor="let item of evaluations" class="mat-elevation-z4"
       style="display: flex; flex-direction: column; width: 230px">
       <div class="box mat-elevation-z2">
@@ -137,4 +135,9 @@
       </div>
     </div>
   </div>
+  <ng-template #default>
+    <div class="ms-default">
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    </div>
+  </ng-template>
 </div>

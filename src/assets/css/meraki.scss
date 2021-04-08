@@ -87,6 +87,14 @@
     }
 }
 
+.ms-default {
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px dashed lightgray;
+    padding: 1rem;
+    border-radius: 10px 10px;
+    margin-top: 24px;
+}
+
 // *** Kanban
 .ms-kanban-toolbar {
     display: flex;
