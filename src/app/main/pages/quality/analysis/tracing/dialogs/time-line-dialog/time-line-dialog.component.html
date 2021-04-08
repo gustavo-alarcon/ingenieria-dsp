@@ -13,8 +13,7 @@
 
     <mat-divider></mat-divider>
     <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
-    <mat-dialog-content class="timer" >
-        
+    <mat-dialog-content class="timer" >       
         
         <div class="timer__details">
             <p><span style="font-weight: bold;"> OT Actual :</span> {{data.workOrder ? data.workOrder : ''}}</p>
@@ -43,10 +42,11 @@
                     {{data.attentionTimeElapsed?.seconds | number : '2.'}}
                 </div>
             </div>
-            <img src="../../../../../../../assets/img-quality/timeline-s1.png" alt="" style="width: 100%; margin-top: 20px;">
+            <img src="../../../../../../../assets/img-quality/timeline-s3.png" alt="" style="width: 100%; margin-top: 20px;">
         </div>
 
 
     </mat-dialog-content>
+
    
 </div>

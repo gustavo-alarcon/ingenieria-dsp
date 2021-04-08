@@ -21,8 +21,9 @@ export interface Quality{
 
     causeFailureList: Array<string>;
     analysis: Array<string>;
+    evaluationAnalisis: number;
     eventType: string; //Interno- Externo
-    emailList: Array<string>;
+    emailList?: Array<string>;
     workOrder?: number;
     component?: string;
     specialist?: string;

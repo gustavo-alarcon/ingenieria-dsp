@@ -32,16 +32,24 @@
                     <ng-template matStepLabel >
                         <div class="container__result" >
                             <span  class="step-text" style="margin-top: 10px;" > Analisis </span>
-                            <span *ngIf="resultEvaluation$  | async as result" 
+                            <span *ngIf="resultEvaluation$  | async as result " 
                             [ngClass]="{
-                                         'btn-result-1':   result === 1
-                                        ,'btn-result-2':   result === 2
-                                        ,'btn-result-3':   result === 3
-                                        ,'btn-result-4':   result === 4
-                                        ,'btn-result-5':   result === 5
+                                         'btn-result-1':   result > 0 &&  result < 5
+                                        ,'btn-result-2':   result > 4 &&  result < 10
+                                        ,'btn-result-3':   result > 9 &&  result < 20
+                                        ,'btn-result-4':   result > 19 && result < 26
                                         }"
                             > [ {{result}} ]
                            </span>
+                          <!--  <span *ngIf="data.evaluationAnalisis" 
+                           [ngClass]="{
+                                        'btn-result-1':   data.evaluationAnalisis > 0 && data.evaluationAnalisis < 5
+                                       ,'btn-result-2':   data.evaluationAnalisis > 4 && data.evaluationAnalisis < 10
+                                       ,'btn-result-3':   data.evaluationAnalisis > 9 && data.evaluationAnalisis < 20
+                                       ,'btn-result-4':   data.evaluationAnalisis > 19 && data.evaluationAnalisis < 26
+                                       }"
+                           > [ {{data.evaluationAnalisis}} ]
+                          </span> -->
                         </div>
                     </ng-template>                   
 
@@ -177,7 +185,9 @@
                                     <mat-select  formControlName="name"                                     
                                         >
                                         <mat-option  *ngFor="let item of areaResponsable" 
-                                            [value]="item" (click)="onclickArea(item)" >
+                                            [value]="item" (click)="onclickArea(item)"
+                                            onchange="changeArea(item)"
+                                            >
                                             {{item.name}}
                                         </mat-option>
                                     </mat-select>
