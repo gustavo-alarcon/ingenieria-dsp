@@ -23,7 +23,7 @@
     </div>
     <mat-divider></mat-divider>
     <div class="body-container">
-        <div *ngIf="replacement$ |async">
+        <div *ngIf="replacement$ |async; else default">
             <table mat-table [dataSource]="replacementDataSource" matSort (matSortChange)="sortData($event)"
                 class="mat-elevation-z8">
 
@@ -91,8 +91,14 @@
                 <tr mat-header-row *matHeaderRowDef="replacementDisplayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: replacementDisplayedColumns;"></tr>
             </table>
+            <mat-paginator #replacementPaginator class="ms-paginator" [pageSizeOptions]="[20, 30, 40]"
+                showFirstLastButtons>
+            </mat-paginator>
         </div>
-        <mat-paginator #replacementPaginator class="ms-paginator" [pageSizeOptions]="[20, 30, 40]" showFirstLastButtons>
-        </mat-paginator>
+        <ng-template #default>
+            <div class="ms-default">
+                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            </div>
+        </ng-template>
     </div>
 </div>

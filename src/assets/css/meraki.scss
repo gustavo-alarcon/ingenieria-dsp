@@ -34,10 +34,12 @@
 
             &--desktop {
                 font-size: 2rem;
+                width: auto;
             }
 
             &--mobile {
                 font-size: 1.6rem;
+                width: 79%;
             }
         }
 
@@ -61,27 +63,34 @@
             }
 
             &--desktop {
-                margin-right: 12px;
+                margin: 0px 8px !important;
             }
 
             &--mobile {
-                width: 100%;
-                margin: 12px 0px 0px 0px;
+                width: 100% !important;
+                margin: 8px 0px !important;
             }
         }
 
-        &__search .mat-form-field-wrapper {
+        &__input {
             padding-bottom: 0px !important;
+            font-size: 12px !important;
+
+            .mat-form-field-wrapper {
+                padding: 0px !important;
+            }
 
             .mat-icon {
                 margin-right: 12px !important;
             }
 
+            &--desktop {
+                margin: 0px 8px !important;
+            }
+
             &--mobile {
-                .mat-form-field {
-                    width: 100% !important;
-                    margin: 12px 0px 0px 0px !important;
-                }
+                width: 100% !important;
+                margin: 4px 0px !important;
             }
         }
     }
@@ -116,7 +125,6 @@
         }
 
         &--desktop {
-            margin-right: 12px;
             margin: 0px 8px !important;
         }
 
@@ -189,6 +197,10 @@
 .ms-table {
     width: 100%;
     margin-top: 8px;
+
+    &__header {
+        padding: 8px 24px !important;
+    }
 }
 
 .ms-table-default {
