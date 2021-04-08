@@ -8,6 +8,7 @@ import { RequestsObservationDialogComponent } from './dialogs/requests-observati
 import { RequestsSettingDialogComponent } from './dialogs/requests-setting-dialog/requests-setting-dialog.component';
 import { RequestsStartDialogComponent } from './dialogs/requests-start-dialog/requests-start-dialog.component';
 import { RequestsTimeLineDialogComponent } from './dialogs/requests-time-line-dialog/requests-time-line-dialog.component';
+import { RequestsCreateDialogComponent } from './dialogs/requests-create-dialog/requests-create-dialog.component';
 
 
 @NgModule({
@@ -16,7 +17,8 @@ import { RequestsTimeLineDialogComponent } from './dialogs/requests-time-line-di
     RequestsObservationDialogComponent,
     RequestsSettingDialogComponent,
     RequestsStartDialogComponent,
-    RequestsTimeLineDialogComponent
+    RequestsTimeLineDialogComponent,
+    RequestsCreateDialogComponent
   ],
   exports: [
     EvaluationsRequestsComponent

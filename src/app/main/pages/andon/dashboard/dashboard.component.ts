@@ -1,21 +1,22 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { EvaluationsService } from '../../../services/evaluations.service';
 import { Router } from '@angular/router';
-import { Observable, combineLatest } from 'rxjs';
+import { Observable, combineLatest, Subscription } from 'rxjs';
 import { Andon } from '../../../models/andon.model';
 import { tap, startWith, map } from 'rxjs/operators';
 import { AndonService } from 'src/app/main/services/andon.service';
 import { Chart } from 'node_modules/chart.js';
 import { ChartDataSets, ChartOptions } from 'chart.js';
 import { Color, Label } from 'ng2-charts';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   state = 'retaken';
   stateStop = 'stopped';
 
@@ -75,13 +76,27 @@ export class DashboardComponent implements OnInit {
   topDelay$: Observable<any>;
   chart: any = [];
 
+  subscriptions = new Subscription();
+  isMobile = false;
+
   constructor(
+    private breakpoint: BreakpointObserver,
     private dbs: EvaluationsService,
     public router: Router,
     private andonService: AndonService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
+    this.subscriptions.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
+      .subscribe(res => {
+        if (res.matches) {
+          this.isMobile = true;
+        } else {
+          this.isMobile = false;
+        }
+      })
+    )
+
     const view = this.andonService.getCurrentMonthOfViewDate();
 
     const beginDate = view.from;
@@ -176,15 +191,14 @@ export class DashboardComponent implements OnInit {
               item.minutes / 60 / 24 +
               item.seconds / 60 / 60 / 24) /
             item.quatity;
-          groups[val].date = `${
-            item.days +
+          groups[val].date = `${item.days +
             '/' +
             item.hours +
             ':' +
             item.minutes +
             ':' +
             item.seconds
-          }`;
+            }`;
 
           return groups;
         }, {});
@@ -315,7 +329,7 @@ export class DashboardComponent implements OnInit {
               item.hours / 24 +
               item.minutes / 60 / 24 +
               item.seconds / 60 / 60 / 24) /
-            item.quatity ;
+            item.quatity;
           return groups;
         }, {});
         reportJoinTimer = Object.values(result1);
@@ -325,6 +339,10 @@ export class DashboardComponent implements OnInit {
         this.averageQuestions(res);
       })
     );
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
   getFilterTime(el, time): any {

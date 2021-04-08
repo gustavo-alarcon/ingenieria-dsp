@@ -7,102 +7,97 @@
     margin-bottom: 10px;
 }
 
-.body-container{
+.body-container {
     text-align: center;
 }
 
-.report{
+.report {
     margin-top: 50px;
-    &__title{
+    background: white;
+    padding: 24px 24px;
+    border: 1px solid lightgrey;
+    border-radius: 10px 10px 10px 10px;
+    width: fit-content;
+    margin: 24px auto;
+
+    &__title {
         font-weight: bold;
         font-size: 2.5em;
         margin-bottom: 30px;
     }
-    &__form{
-        &--input{
+    &__form {
+        &--input {
             width: 350px;
         }
-        
     }
 }
 
-.btn{
-    background:transparent;
+.btn {
+    background: transparent;
     border: 1px solid white;
-
 }
-.btn:active{
-    background:transparent;
+.btn:active {
+    background: transparent;
     border: none;
 }
 
-#toggle { display: none; }
+#toggle {
+    display: none;
+}
 #boton {
-	display: block;
-	margin: auto;
-	width: 200px;
-	height: 200px;
-	background-image: url('../../../../../assets/img/boton/btn1.png') ;
-	text-align: center;
-	font-size: 70px;
-	color: #777;	
-	cursor: pointer;
+    display: block;
+    margin: auto;
+    width: 200px;
+    height: 200px;
+    background-image: url("../../../../../assets/img/boton/btn1.png");
+    text-align: center;
+    font-size: 70px;
+    color: #777;
+    cursor: pointer;
 }
 
 #toggle:checked + #boton {
-	background-image: url('../../../../../assets/img/boton/btn2.png');
-	
- }
+    background-image: url("../../../../../assets/img/boton/btn2.png");
+}
 
-
- /* 
+/* 
   ##Dispositivo = Tablets de baja resolucion y telefnos Mobiles (horizontal)
   ##Resolucion = B/w 481px to 767px
 */
 
-@media (min-width: 481px) and (max-width: 767px) {  
-    .report{
+@media (min-width: 481px) and (max-width: 767px) {
+    .report {
         margin-top: 50px;
-        &__title{
+        &__title {
             font-weight: bold;
             font-size: 2.5em;
             margin-bottom: 30px;
         }
-        &__form{
-            &--input{
+        &__form {
+            &--input {
                 width: 350px;
             }
-            
         }
     }
-    
-  }
-  
-  /* 
+}
+
+/* 
     ##Dispositivo = Mayoria de telefonos moviles (vertical)
     ##Resolucion = B/w 320px to 479px
   */
-  
-  @media (min-width: 320px) and (max-width: 480px) {    
-    .report{
+
+@media (min-width: 320px) and (max-width: 480px) {
+    .report {
         margin-top: 50px;
-        &__title{
+        &__title {
             font-weight: bold;
             font-size: 2.5em;
             margin-bottom: 30px;
         }
-        &__form{
-            &--input{
+        &__form {
+            &--input {
                 width: 250px;
             }
-            
         }
     }
-    
-  }
-
-
-    
-    
-
- 
+}

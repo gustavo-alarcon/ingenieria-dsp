@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -19,11 +19,11 @@ import { DatePipe } from '@angular/common';
   styleUrls: ['./record.component.scss'],
   providers: [DatePipe]
 })
-export class RecordComponent implements OnInit {
+export class RecordComponent implements OnInit, OnDestroy {
   searchForm: FormGroup;
   records$: Observable<Andon[]>;
   dateForm: FormGroup;
-  
+
   historyDataSource = new MatTableDataSource<Andon>();
   historyDisplayedColumns: string[] = [
     'reportDate',
@@ -65,41 +65,34 @@ export class RecordComponent implements OnInit {
     this.historyMobilDataSource.paginator = paginator;
   }
 
-  isMobile = false;
   containerStyle: any;
   searchStyle: any;
   downloadStyle: any;
+  searchControl = new FormControl('');
 
-  subscription = new Subscription();
+  subscriptions = new Subscription();
+  isMobile = false;
+
   constructor(
-     private dbs: EvaluationsService,
-     private fb: FormBuilder,
-     private andonService: AndonService,
-     public dialog: MatDialog,
-     private breakpoint: BreakpointObserver,
-     private miDatePipe: DatePipe
-     ) {}
+    private breakpoint: BreakpointObserver,
+    private dbs: EvaluationsService,
+    private fb: FormBuilder,
+    private andonService: AndonService,
+    public dialog: MatDialog,
+    private miDatePipe: DatePipe
+  ) { }
 
   ngOnInit(): void {
-    this.subscription.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
+    this.subscriptions.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
       .subscribe(res => {
         if (res.matches) {
-          this.isMobile= true;
-          this.setHandsetContainer();
-          this.setHandsetSearch();
-          this.setHandsetDownload();
+          this.isMobile = true;
         } else {
-          this.isMobile= false;
-          this.setDesktopSearch();
-          this.setDesktopContainer();
-          this.setDesktopDownload();
+          this.isMobile = false;
         }
       })
     )
 
-    this.searchForm = this.fb.group({
-      search: ['', Validators.required],
-    });
     const view = this.andonService.getCurrentMonthOfViewDate();
 
     const beginDate = view.from;
@@ -113,7 +106,7 @@ export class RecordComponent implements OnInit {
 
     this.records$ = combineLatest(
       this.andonService.getAllAndon(),
-      this.searchForm.get('search').valueChanges.pipe(
+      this.searchControl.valueChanges.pipe(
         debounceTime(300),
         filter((input) => input !== null),
         startWith<any>('')
@@ -124,12 +117,12 @@ export class RecordComponent implements OnInit {
       ),
       this.dateForm.get('end').valueChanges.pipe(
         startWith(endDate),
-        map(end =>  end ? end.setHours(23, 59, 59) : null)
+        map(end => end ? end.setHours(23, 59, 59) : null)
       )
     ).pipe(
       map(([andons, search, startdate, enddate]) => {
 
-        const date = {begin: startdate, end: enddate};
+        const date = { begin: startdate, end: enddate };
 
         const searchTerm = search.toLowerCase().trim();
         let preFilterSearch: Andon[] = [...andons];
@@ -142,11 +135,11 @@ export class RecordComponent implements OnInit {
 
           preFilterSearch = filterDate.filter((andon) => {
             return (
-              String(andon.name ).toLowerCase().includes(searchTerm) ||
+              String(andon.name).toLowerCase().includes(searchTerm) ||
               String(andon.otChild).toLowerCase().includes(searchTerm)
             );
           });
-        } else{
+        } else {
           preFilterSearch = andons.filter((andon) => {
             return this.getFilterTime(andon.reportDate, date);
           });
@@ -159,6 +152,10 @@ export class RecordComponent implements OnInit {
         this.historyMobilDataSource.data = res;
       })
     );
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
   getFilterTime(el, time): any {
@@ -180,13 +177,13 @@ export class RecordComponent implements OnInit {
     let table_xlsx: any[] = [];
     const headersXlsx = [
       'Fecha de reporte', 'Taller', 'Nombre de bahia', 'OT CHILD', 'Tipo de problema', 'Descripcion', 'Tiempo de atencion', 'Usuario de reporte',
-       'Estado', 'Fecha de retorno trabajo', 'Comentarios', 'Usuario de retorno' ]
+      'Estado', 'Fecha de retorno trabajo', 'Comentarios', 'Usuario de retorno']
 
     table_xlsx.push(headersXlsx);
 
     this.historyDataSource.filteredData.forEach(item => {
       const temp = [
-        this.miDatePipe.transform(item.reportDate['seconds']*1000, 'dd/MM/yyyy h:mm:ss a'),
+        this.miDatePipe.transform(item.reportDate['seconds'] * 1000, 'dd/MM/yyyy h:mm:ss a'),
         item.workShop,
         item.name,
         item.otChild,
@@ -195,7 +192,7 @@ export class RecordComponent implements OnInit {
         item.atentionTime,
         item.reportUser,
         item.state,
-        item.workReturnDate != null ? this.miDatePipe.transform(item.workReturnDate['seconds']*1000, 'dd/MM/yyyy h:mm:ss a') : '---',
+        item.workReturnDate != null ? this.miDatePipe.transform(item.workReturnDate['seconds'] * 1000, 'dd/MM/yyyy h:mm:ss a') : '---',
         item.comments,
         item.returnUser,
       ];
@@ -213,43 +210,5 @@ export class RecordComponent implements OnInit {
     /* save to file */
     const name = 'report_list' + '.xlsx';
     XLSX.writeFile(wb, name);
-  }
-
-  setHandsetContainer(): void {
-    this.containerStyle = {
-      'margin': '30px 24px 30px 24px'
-    }
-  }
-
-  setDesktopContainer(): void {
-    this.containerStyle = {
-      'margin': '30px 80px 30px 80px',
-    }
-  }
-
-  setHandsetSearch(): void {
-    this.searchStyle = {
-      'margin': '8px 0px 0px 0px',
-      'width': '100%'
-    }
-  }
-
-  setDesktopSearch(): void {
-    this.searchStyle = {
-      'margin': '0px 6px',
-    }
-  }
-
-  setHandsetDownload(): void {
-    this.downloadStyle = {
-      'margin': '16px 0px 0px 0px',
-      'width': '100%'
-    }
-  }
-
-  setDesktopDownload(): void {
-    this.downloadStyle = {
-      'margin': '0px 6px',
-    }
   }
 }

@@ -1,10 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ImprovementEntry } from '../../../models/improvenents.model';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
 import { Evaluation } from '../../../models/evaluations.model';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, Observable, Subscription } from 'rxjs';
 import { EvaluationsService } from '../../../services/evaluations.service';
 import { debounceTime, distinctUntilChanged, map, startWith, tap } from 'rxjs/operators';
 import { HistoryEditDialogComponent } from './dialogs/history-edit-dialog/history-edit-dialog.component';
@@ -20,19 +20,20 @@ import { HistoryTimeLineComponent } from './dialogs/history-time-line/history-ti
 import jsPDF from 'jspdf';
 import { HistoryReportsDialogComponent } from './dialogs/history-reports-dialog/history-reports-dialog.component';
 import { MatSort, Sort } from '@angular/material/sort';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-evaluations-history',
   templateUrl: './evaluations-history.component.html',
   styleUrls: ['./evaluations-history.component.scss']
 })
-export class EvaluationsHistoryComponent implements OnInit {
+export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
 
   evaluation$: Observable<Evaluation[]>;
 
   historyDataSource = new MatTableDataSource<Evaluation>();
-  historyEntries: Evaluation[]= [];
-  
+  historyEntries: Evaluation[] = [];
+
   improvementDisplayedColumns: string[] = [
     'otMain',
     'otChild',
@@ -74,13 +75,27 @@ export class EvaluationsHistoryComponent implements OnInit {
     { status: 'consultation', name: 'Consulta' },
   ]
 
+  subscriptions = new Subscription();
+  isMobile = false;
+
   constructor(
+    private breakpoint: BreakpointObserver,
     public dialog: MatDialog,
     private evaltService: EvaluationsService,
     public auth: AuthService
   ) { }
 
   ngOnInit(): void {
+    this.subscriptions.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
+      .subscribe(res => {
+        if (res.matches) {
+          this.isMobile = true;
+        } else {
+          this.isMobile = false;
+        }
+      })
+    )
+
     this.evaluation$ = combineLatest(
       this.evaltService.getAllEvaluations(),
       this.statusControl.valueChanges.pipe(startWith('')),
@@ -126,6 +141,10 @@ export class EvaluationsHistoryComponent implements OnInit {
       })
     )
 
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
   openDialog(value: string, entry?: ImprovementEntry, index?: number): void {

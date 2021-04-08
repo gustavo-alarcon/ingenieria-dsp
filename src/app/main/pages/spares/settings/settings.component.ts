@@ -1,6 +1,6 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
 import { switchMap, take } from 'rxjs/operators';
 import * as XLSX from 'xlsx';
@@ -9,13 +9,14 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 import { ImprovementsService } from '../../../services/improvements.service';
 import { Improvement } from '../../../models/improvenents.model';
 import { MatSort } from '@angular/material/sort';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-settings',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss']
 })
-export class SettingsComponent implements OnInit {
+export class SettingsComponent implements OnInit, OnDestroy {
   loading = new BehaviorSubject<boolean>(false);
   loading$ = this.loading.asObservable();
 
@@ -29,20 +30,37 @@ export class SettingsComponent implements OnInit {
     this.settingDataSource.paginator = paginator;
   }
 
-  @ViewChild("fileInput2", {read: ElementRef}) fileButton: ElementRef;
+  @ViewChild("fileInput2", { read: ElementRef }) fileButton: ElementRef;
 
   currentData: Array<Improvement> = [];
-  
+
   @ViewChild(MatSort) sort: MatSort;
 
-  
+
+  subscriptions = new Subscription();
+  isMobile = false;
+
   constructor(
+    private breakpoint: BreakpointObserver,
     private auth: AuthService,
     private impServices: ImprovementsService,
     private snackbar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
+    this.subscriptions.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
+      .subscribe(res => {
+        if (res.matches) {
+          this.isMobile = true;
+        } else {
+          this.isMobile = false;
+        }
+      })
+    )
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
   ngAfterViewInit() {

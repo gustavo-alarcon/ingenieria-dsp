@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { combineLatest, Observable } from 'rxjs';
+import { combineLatest, Observable, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, startWith, tap } from 'rxjs/operators';
 import { Replacement } from '../../../models/replacements.models';
 import { ReplacementsService } from '../../../services/replacements.service';
@@ -19,7 +20,7 @@ import { UploadFileDialogReplacementsComponent } from './dialogs/upload-file-dia
   templateUrl: './replacements.component.html',
   styleUrls: ['./replacements.component.scss']
 })
-export class ReplacementsComponent implements OnInit {
+export class ReplacementsComponent implements OnInit, OnDestroy {
 
   replacement$: Observable<Replacement[]>;
 
@@ -40,12 +41,26 @@ export class ReplacementsComponent implements OnInit {
 
   searchControl = new FormControl('');
 
+  subscriptions = new Subscription();
+  isMobile = false;
+
   constructor(
+    private breakpoint: BreakpointObserver,
     private repServices: ReplacementsService,
     private dialog: MatDialog
   ) { }
 
   ngOnInit(): void {
+    this.subscriptions.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
+      .subscribe(res => {
+        if (res.matches) {
+          this.isMobile = true;
+        } else {
+          this.isMobile = false;
+        }
+      })
+    )
+
     this.replacement$ = combineLatest(
       this.repServices.getAllReplacements(),
       this.searchControl.valueChanges.pipe(startWith(''), debounceTime(300), distinctUntilChanged())
@@ -67,7 +82,9 @@ export class ReplacementsComponent implements OnInit {
     )
   }
 
-
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
+  }
 
   openDialog(value: string, entry?: Replacement, index?: number): void {
     const optionsDialog = {

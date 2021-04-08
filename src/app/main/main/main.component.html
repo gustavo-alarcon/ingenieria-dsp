@@ -315,11 +315,95 @@
       <span class="ms-fill"></span>
 
       <button type="button" aria-label="Toggle sidenav" class="btn-exit-app" mat-button (click)="exitApp()">
-        <span class="name-exit"> CERRAR SESION </span>
+        <span class="name-exit"> CERRAR SESIÓN </span>
         <mat-icon aria-label="Side nav toggle icon">exit_to_app</mat-icon>
       </button>
     </mat-toolbar>
-    <div>
+    <div class="main-background">
+      <!-- <svg xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink"
+        xmlns:svgjs="http://svgjs.com/svgjs" width="2000" height="4000" preserveAspectRatio="xMidYMid slice"
+        viewBox="0 0 2000 4000" class="main-background">
+        <g mask="url(&quot;#SvgjsMask1998&quot;)" fill="none">
+          <rect width="2000" height="4000" x="0" y="0" fill="rgba(255, 255, 255, 1)"></rect>
+          <path
+            d="M1600.825,3806.585C1752.984,3814.65,1909.976,3761.695,1989.951,3631.997C2073.475,3496.543,2068.006,3321.221,1983.109,3186.624C1903.246,3060.008,1750.52,3016.13,1600.825,3015.069C1448.802,3013.992,1283.211,3048.432,1209.041,3181.139C1136.07,3311.701,1197.741,3467.46,1277.141,3594.215C1350.564,3711.427,1462.709,3799.264,1600.825,3806.585"
+            fill="rgba(98, 0, 238, 0.5)" class="triangle-float1"></path>
+          <path
+            d="M1211.1739529071108 3213.707870006245L1530.8387391267418 3445.957931900549 1763.0888010210456 3126.2931456809174 1443.4240148014146 2894.043083786614z"
+            fill="rgba(98, 0, 238, 0.5)" class="triangle-float1"></path>
+          <path
+            d="M50.465,2319.683C170.085,2315.903,255.708,2217.117,313.594,2112.367C369.148,2011.838,402.1,1890.01,341.997,1792.133C283.858,1697.454,161.559,1685.421,50.465,1683.863C-64.541,1682.25,-192.352,1687.676,-255.584,1783.752C-323.627,1887.138,-304.509,2022.481,-243.133,2129.959C-181.202,2238.408,-74.36,2323.627,50.465,2319.683"
+            fill="rgba(98, 0, 238, 0.5)" class="triangle-float2"></path>
+          <path
+            d="M1103.3435281956417 335.6239317219804L677.5503847933431 14.765784005178375 356.6922370765411 440.558927407477 782.4853804788397 761.417075124279z"
+            fill="rgba(98, 0, 238, 0.5)" class="triangle-float1"></path>
+          <path d="M409.98 352.23 a420.32 420.32 0 1 0 840.64 0 a420.32 420.32 0 1 0 -840.64 0z"
+            fill="rgba(98, 0, 238, 0.5)" class="triangle-float3"></path>
+          <path
+            d="M1049.3024380666864 799.7164775725703L1251.1700317539699 1325.599538403363 1777.0530925847625 1123.7319447160796 1575.1854988974792 597.8488838852869z"
+            fill="rgba(98, 0, 238, 0.5)" class="triangle-float2"></path>
+        </g>
+        <defs>
+          <mask id="SvgjsMask1998">
+            <rect width="2000" height="4000" fill="#ffffff"></rect>
+          </mask>
+          <style>
+            @keyframes float1 {
+              0% {
+                transform: translate(0, 0)
+              }
+
+              50% {
+                transform: translate(-10px, 0)
+              }
+
+              100% {
+                transform: translate(0, 0)
+              }
+            }
+
+            .triangle-float1 {
+              animation: float1 5s infinite;
+            }
+
+            @keyframes float2 {
+              0% {
+                transform: translate(0, 0)
+              }
+
+              50% {
+                transform: translate(-5px, -5px)
+              }
+
+              100% {
+                transform: translate(0, 0)
+              }
+            }
+
+            .triangle-float2 {
+              animation: float2 4s infinite;
+            }
+
+            @keyframes float3 {
+              0% {
+                transform: translate(0, 0)
+              }
+
+              50% {
+                transform: translate(0, -10px)
+              }
+
+              100% {
+                transform: translate(0, 0)
+              }
+            }
+
+            .triangle-float3 {
+              animation: float3 6s infinite;
+            }
+          </style>
+        </defs>
+      </svg> -->
       <router-outlet></router-outlet>
     </div>
   </mat-sidenav-content>

@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
 import { debounceTime, filter, map, startWith, tap } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { Evaluation } from 'src/app/main/models/evaluations.model';
@@ -22,7 +23,7 @@ import { EvaluationsTimeLineDialogComponent } from './dialogs/evaluations-time-l
   templateUrl: './evaluations-progress.component.html',
   styleUrls: ['./evaluations-progress.component.scss']
 })
-export class EvaluationsProgressComponent implements OnInit {
+export class EvaluationsProgressComponent implements OnInit, OnDestroy {
   loading = new BehaviorSubject<boolean>(true);
   loading$ = this.loading.asObservable();
 
@@ -33,6 +34,7 @@ export class EvaluationsProgressComponent implements OnInit {
   state = 'processed';
 
   workshopControl = new FormControl('');
+  searchControl = new FormControl('');
 
   workshops = [
     {
@@ -43,7 +45,8 @@ export class EvaluationsProgressComponent implements OnInit {
         '201301413',
         '201301414',
         '201301415',
-        '201301411'], location: 'LIMA'
+        '201301411',
+        '5'], location: 'MSH'
     },
     {
       code: [
@@ -51,25 +54,55 @@ export class EvaluationsProgressComponent implements OnInit {
         '201306413',
         '201306415',
         '201306409',
-        '201306411'], location: 'LA JOYA'
+        '201306411'], location: 'TMM'
+    },
+    {
+      code: [
+        '1'], location: 'CRC LIMA'
+    },
+    {
+      code: [
+        '2',], location: 'CRC LA JOYA'
+    },
+    {
+      code: [
+        '3'], location: 'TMAQ LIMA'
+    },
+    {
+      code: [
+        '4',], location: 'TH'
+    },
+    {
+      code: [
+        '6',], location: 'TMAQ LA JOYA'
     }
   ];
+
+  subscriptions = new Subscription();
+  isMobile = false;
+
   constructor(
+    private breakpoint: BreakpointObserver,
     public dialog: MatDialog,
-    private fb: FormBuilder,
     private evaltService: EvaluationsService,
     private auth: AuthService
   ) { }
 
 
   ngOnInit(): void {
-    this.searchForm = this.fb.group({
-      ot: null,
-    });
+    this.subscriptions.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
+      .subscribe(res => {
+        if (res.matches) {
+          this.isMobile = true;
+        } else {
+          this.isMobile = false;
+        }
+      })
+    )
 
     this.evaluation$ = combineLatest(
       this.evaltService.getAllEvaluationsInProcess(),
-      this.searchForm.get('ot').valueChanges.pipe(
+      this.searchControl.valueChanges.pipe(
         debounceTime(300),
         filter(input => input !== null),
         startWith<any>('')),
@@ -195,7 +228,7 @@ export class EvaluationsProgressComponent implements OnInit {
           }
         });
 
-        preFilterSearch.sort( (a, b) => {
+        preFilterSearch.sort((a, b) => {
           return b['priority'] - a['priority']
         })
 
@@ -208,6 +241,10 @@ export class EvaluationsProgressComponent implements OnInit {
         return this.dataEvaluations;
       })
     );
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
   settingDialog(): void {
