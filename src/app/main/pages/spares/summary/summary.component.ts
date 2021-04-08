@@ -67,7 +67,9 @@ export class SummaryComponent implements OnInit, OnDestroy {
         const term = search.toLowerCase().trim();
         let filteredList = list.filter(element => element.component.toLowerCase().includes(term) ||
           element.model.toLowerCase().includes(term) ||
-          element.description.toLowerCase().includes(term));
+          element.improvedPart.toLowerCase().includes(term) ||
+          element.currentPart.toLowerCase().includes(term) ||
+          element.name.toLowerCase().includes(term));
 
         return filteredList
       }),
