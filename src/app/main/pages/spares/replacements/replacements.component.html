@@ -1,22 +1,27 @@
 <div class="ms-container">
     <div class="ms-toolbar">
         <mat-icon class="ms-toolbar__icon">published_with_changes</mat-icon>
-        <h1 class="ms-toolbar__title">Reemplazos</h1>
-        <button mat-stroked-button class="ms-toolbar__button" (click)="openDialog('create')">
+        <h1 class="ms-toolbar__title" [ngClass]="isMobile ? 'ms-toolbar__title--mobile' : 'ms-toolbar__title--desktop'">
+            Reemplazos</h1>
+        <button mat-stroked-button class="ms-toolbar__button" (click)="openDialog('create')"
+            [ngClass]="isMobile ? 'ms-toolbar__button--mobile' : 'ms-toolbar__button--desktop'">
             <mat-icon>add</mat-icon>
             CREAR
         </button>
-        <button mat-stroked-button class="ms-toolbar__button" (click)="openDialog('create-bulk')">
+        <button mat-stroked-button class="ms-toolbar__button" (click)="openDialog('create-bulk')"
+            [ngClass]="isMobile ? 'ms-toolbar__button--mobile' : 'ms-toolbar__button--desktop'">
             <mat-icon>add</mat-icon>
             LOTE
         </button>
-        <mat-form-field appearance="outline" class="ms-toolbar__search">
+        <mat-form-field appearance="outline" class="ms-toolbar__input"
+            [ngClass]="isMobile ? 'ms-toolbar__input--mobile' : 'ms-toolbar__input--desktop'">
             <mat-label>Buscar</mat-label>
             <mat-icon matPrefix>search</mat-icon>
             <input matInput type="text" [formControl]="searchControl" placeholder="Escribir..." autocomplete="off">
         </mat-form-field>
         <span class="ms-fill"></span>
-        <button mat-stroked-button class="ms-toolbar__button" [routerLink]="['/main/improvements']">
+        <button mat-stroked-button class="ms-toolbar__button" [routerLink]="['/main/improvements']"
+            [ngClass]="isMobile ? 'ms-toolbar__button--mobile' : 'ms-toolbar__button--desktop'">
             <mat-icon>launch</mat-icon>
             Ir a mejoras
         </button>
@@ -28,35 +33,35 @@
                 class="mat-elevation-z8">
 
                 <ng-container matColumnDef="createdAt">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell"> Fecha </th>
-                    <td mat-cell *matCellDef="let element" class="table__cell"> {{(element.createdAt.seconds * 1000) |
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="ms-table__header"> Fecha </th>
+                    <td mat-cell *matCellDef="let element" class="ms-table__header"> {{(element.createdAt.seconds * 1000) |
                         date : 'dd/MM/yy'}}
                     </td>
                 </ng-container>
 
                 <ng-container matColumnDef="replacedPart">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell"> N/P Reemplazado </th>
-                    <td mat-cell *matCellDef="let element" class="table__cell"> {{element.replacedPart}} </td>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="ms-table__header"> N/P Reemplazado </th>
+                    <td mat-cell *matCellDef="let element" class="ms-table__header"> {{element.replacedPart}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="currentPart">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell"> N/P Actual </th>
-                    <td mat-cell *matCellDef="let element" class="table__cell"> {{element.currentPart}} </td>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="ms-table__header"> N/P Actual </th>
+                    <td mat-cell *matCellDef="let element" class="ms-table__header"> {{element.currentPart}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="description">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell"> Descripción </th>
-                    <td mat-cell *matCellDef="let element" class="table__cell"> {{element.description}} </td>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="ms-table__header"> Descripción </th>
+                    <td mat-cell *matCellDef="let element" class="ms-table__header"> {{element.description}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="kit">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell"> Kit </th>
-                    <td mat-cell *matCellDef="let element" class="table__cell"> {{element.kit ? 'Si':'No'}} </td>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="ms-table__header"> Kit </th>
+                    <td mat-cell *matCellDef="let element" class="ms-table__header"> {{element.kit ? 'Si':'No'}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="support">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell"> Support </th>
-                    <td mat-cell *matCellDef="let element" class="table__cell"> {{element.support ? 'Si':'No'}} </td>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="ms-table__header"> Support </th>
+                    <td mat-cell *matCellDef="let element" class="ms-table__header"> {{element.support ? 'Si':'No'}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="createdBy">
@@ -65,7 +70,7 @@
                 </ng-container>
 
                 <ng-container matColumnDef="actions" stickyEnd>
-                    <th mat-header-cell *matHeaderCellDef class="table__cell">
+                    <th mat-header-cell *matHeaderCellDef class="ms-table__header">
                         Acciones
                     </th>
                     <td mat-cell *matCellDef="let element; let i = index">
