@@ -27,14 +27,15 @@ export class HistoryCreateDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<HistoryCreateDialogComponent>,
     private snackbar: MatSnackBar,
     private auth: AuthService,
-    private  evaltService: EvaluationsService,
+    private evaltService: EvaluationsService,
   ) {
   }
 
   ngOnInit(): void {
     this.createForm();
   }
-  createForm(): void{
+
+  createForm(): void {
     this.createEvaluateForm = this.fb.group({
       otMain: ['', Validators.required],
       otChild: ['', Validators.required],
@@ -48,7 +49,8 @@ export class HistoryCreateDialogComponent implements OnInit {
       workshop: ['', Validators.required],
     });
   }
-  save(): void{
+
+  save(): void {
     this.loading.next(true);
     if (this.createEvaluateForm.invalid) {
       this.createEvaluateForm.markAllAsTouched();
@@ -60,25 +62,25 @@ export class HistoryCreateDialogComponent implements OnInit {
         switchMap(user => {
           return this.evaltService.saveRequest(this.createEvaluateForm.value, user);
         })
-    ).subscribe(batch => {
-      if (batch) {
-        batch.commit()
-          .then(() => {
-            this.loading.next(false);
-            this.snackbar.open('✅ se guardo correctamente!', 'Aceptar', {
-              duration: 6000
+      ).subscribe(batch => {
+        if (batch) {
+          batch.commit()
+            .then(() => {
+              this.loading.next(false);
+              this.snackbar.open('✅ se guardo correctamente!', 'Aceptar', {
+                duration: 6000
+              });
+              this.dialogRef.close();
+            })
+            .catch(err => {
+              this.loading.next(false);
+              this.snackbar.open('🚨 Hubo un error.', 'Aceptar', {
+                duration: 6000
+              });
             });
-            this.dialogRef.close();
-          })
-          .catch(err => {
-            this.loading.next(false);
-            this.snackbar.open('🚨 Hubo un error.', 'Aceptar', {
-              duration: 6000
-            });
-          });
-      }
-    });
+        }
+      });
+    }
   }
-}
 
 }
