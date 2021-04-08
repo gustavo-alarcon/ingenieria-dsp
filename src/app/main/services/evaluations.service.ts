@@ -37,7 +37,7 @@ export class EvaluationsService {
       .valueChanges()
       .pipe(
         map(list => {
-          
+
           return list.sort((a, b) => a['createdAt']['seconds'] - b['createdAt']['seconds'])
         })
       )
@@ -56,18 +56,18 @@ export class EvaluationsService {
     // Structuring the data model
     const data: Evaluation = {
       id: evaluationDocRef.id,
-      otMain: form.otMain,
-      otChild: form.otChild,
-      position: form.position,
-      partNumber: form.partNumber,
-      description: form.description,
-      quantity: form.quantity,
+      otMain: '',
+      otChild: form.otChild ? form.otChild : '',
+      position: 0,
+      partNumber: form.partNumber ? form.partNumber : '',
+      description: form.description ? form.description : '',
+      quantity: 1,
       internalStatus: 'registered', // =>  [registered / progress /consultation / finalized]
-      status: form.status,
-      wof: form.wof,
-      task: form.task,
-      observations: null,
-      workshop: form.workshop,
+      status: 'PPM',
+      wof: form.wof ? form.wof : '',
+      task: '',
+      observations: form.observations ? form.observations : '',
+      workshop: form.workshop ? form.workshop : '',
       images: null,
       imagesCounter: null,
       inquiries: null,

@@ -56,6 +56,7 @@ export interface EvaluationRegistryForm {
     status: string; // Tipo de atención
     wof: string; // Orden de fabricación
     task: string; // Trabajo
+    observations: string;
     workshop: string;
     result: string;
     kindOfTest: string;
