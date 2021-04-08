@@ -25,10 +25,15 @@
         <div *ngIf="singleCheckedPart; else default">
 
             <div class="single-query">
+                <div class="checked-part" *ngIf="singleCheckedPart.description">
+                    {{singleCheckedPart.description}}
+                </div>
                 <div class="checked-part">
                     {{singleCheckedPart.improvedPart}}
                 </div>
-                <div class="result-part" [ngClass]="singleCheckedPart.match ? 'match' : ''">
+                <span class="indicator">→ El número se reemplaza por →</span>
+                <div class="result-part"
+                    [ngClass]="singleCheckedPart.improvedPart !== singleCheckedPart.evaluatedPart ? 'match' : ''">
                     {{singleCheckedPart.evaluatedPart}}
                 </div>
             </div>
