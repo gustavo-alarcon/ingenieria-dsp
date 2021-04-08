@@ -42,7 +42,8 @@
 
   <div class="ms-kanban-toolbar mat-elevation-z4">
     <button mat-stroked-button class="ms-kanban-toolbar__button"
-      [ngClass]="isMobile ? 'ms-kanban-toolbar__button--mobile' : 'ms-kanban-toolbar__button--desktop'">
+      [ngClass]="isMobile ? 'ms-kanban-toolbar__button--mobile' : 'ms-kanban-toolbar__button--desktop'"
+      (click)="create()">
       <mat-icon>add</mat-icon>
       CREAR
     </button>
