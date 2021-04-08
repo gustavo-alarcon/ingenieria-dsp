@@ -1,22 +1,26 @@
-<div class="body-container" *ngIf="auth.user$ | async as user">
+<div class="ms-kanban-toolbar" *ngIf="auth.user$ | async as user">
   <ng-container *ngIf="user.role == 'Administrador'">
-    <button type="file" aria-label="add" mat-button class="ms-dialog-button" (click)="openDialog('create')">
+    <button type="file" mat-stroked-button class="ms-kanban-toolbar__button" (click)="openDialog('create')"
+      [ngClass]="isMobile ? 'ms-kanban-toolbar__button--mobile' : 'ms-kanban-toolbar__button--desktop'">
       <mat-icon aria-label="agregar" class="icon-add">add</mat-icon>
       CREAR
     </button>
-    <button type="file" aria-label="add" mat-button class="ms-dialog-button" (click)="uploadFileDialog()">
+    <button type="file" mat-stroked-button class="ms-kanban-toolbar__button" (click)="uploadFileDialog()"
+      [ngClass]="isMobile ? 'ms-kanban-toolbar__button--mobile' : 'ms-kanban-toolbar__button--desktop'">
       <mat-icon aria-label="agregar" class="icon-add">add</mat-icon>
       LOTE
     </button>
 
-    <button aria-label="add" mat-button class="ms-dialog-button" (click)="downloadXlsx(historyDataSource.data)"
-      [disabled]="historyDataSource.data.length < 1">
+    <button mat-stroked-button class="ms-kanban-toolbar__button" (click)="downloadXlsx(historyDataSource.data)"
+      [disabled]="historyDataSource.data.length < 1"
+      [ngClass]="isMobile ? 'ms-kanban-toolbar__button--mobile' : 'ms-kanban-toolbar__button--desktop'">
       <mat-icon aria-label="agregar" class="icon-add">download</mat-icon>
       DESCARGAR
     </button>
 
-    <button aria-label="add" mat-button class="ms-dialog-button" (click)="openDialog('report')"
-      [disabled]="historyDataSource.data.length < 1">
+    <button mat-stroked-button class="ms-kanban-toolbar__button" (click)="openDialog('report')"
+      [disabled]="historyDataSource.data.length < 1"
+      [ngClass]="isMobile ? 'ms-kanban-toolbar__button--mobile' : 'ms-kanban-toolbar__button--desktop'">
       <mat-icon aria-label="agregar" class="icon-add">description</mat-icon>
       REPORTE
     </button>
@@ -36,7 +40,8 @@
   </mat-form-field>
 
   <div class="container-table" *ngIf="evaluation$ |async">
-    <table mat-table [dataSource]="historyDataSource" matSort (matSortChange)="sortData($event)" class="mat-elevation-z8">
+    <table mat-table [dataSource]="historyDataSource" matSort (matSortChange)="sortData($event)"
+      class="mat-elevation-z8">
 
       <ng-container matColumnDef="otMain">
         <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">MAIN</th>
@@ -213,6 +218,6 @@
       <tr mat-row *matRowDef="let row; columns: improvementDisplayedColumns;"></tr>
     </table>
   </div>
-  <mat-paginator #improvementPaginator class="ms-paginator" [pageSizeOptions]="[20, 30, 40]" showFirstLastButtons>
+  <mat-paginator #improvementPaginator [pageSizeOptions]="[20, 30, 40]" showFirstLastButtons>
   </mat-paginator>
 </div>

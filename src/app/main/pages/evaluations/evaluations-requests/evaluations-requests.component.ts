@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { RequestsObservationDialogComponent } from './dialogs/requests-observation-dialog/requests-observation-dialog.component';
 import { RequestsSettingDialogComponent } from './dialogs/requests-setting-dialog/requests-setting-dialog.component';
@@ -18,7 +18,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
   templateUrl: './evaluations-requests.component.html',
   styleUrls: ['./evaluations-requests.component.scss'],
 })
-export class EvaluationsRequestsComponent implements OnInit {
+export class EvaluationsRequestsComponent implements OnInit, OnDestroy {
   loading = new BehaviorSubject<boolean>(true);
   loading$ = this.loading.asObservable();
 
@@ -79,7 +79,6 @@ export class EvaluationsRequestsComponent implements OnInit {
   constructor(
     private breakpoint: BreakpointObserver,
     public dialog: MatDialog,
-    private fb: FormBuilder,
     private evaltService: EvaluationsService,
     private auth: AuthService
   ) { }
@@ -216,6 +215,10 @@ export class EvaluationsRequestsComponent implements OnInit {
       })
     );
 
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
   }
 
   settingDialog(): void {

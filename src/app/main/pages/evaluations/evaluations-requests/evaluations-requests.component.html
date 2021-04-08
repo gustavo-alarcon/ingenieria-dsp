@@ -74,7 +74,7 @@
   <div class="cards-container" *ngIf="evaluation$|async as evaluations">
     <div *ngFor="let item of evaluations" class="mat-elevation-z4"
       style="display: flex; flex-direction: column; width: 230px">
-      <div class="box mat-elevation-z2">
+      <div class="box">
         <div class="header-box">
           <span class="tag tag--priority" *ngIf="item.priority === 1">PRIORIDAD</span>
           <span class="ms-fill"></span>
@@ -104,7 +104,6 @@
           <div class="info-row"> Tarea: <span> {{item.task}}</span></div>
         </div>
         <div class="ms-fill"></div>
-
       </div>
       <div class="timer-container">
         <div class="timer-color">
