@@ -123,7 +123,7 @@ export class ImprovementsService {
         name: form.name,
         component: form.component,
         model: form.model,
-        description: form.description,
+        description: part.sparePart,
         media: null,
         criticalPart: form.criticalPart,
         rate: form.rate,
