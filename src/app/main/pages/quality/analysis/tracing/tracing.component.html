@@ -37,7 +37,7 @@
     
     <div class="container-task">
       <span class="container-task__pending-task" >
-        Total de tareas pendientes     5
+        Total de tareas pendientes     {{this.totalTask}}
       </span>
     </div>
     <div class="cards-container" *ngIf="quality$|async as evaluations">
@@ -50,7 +50,10 @@
             }">
              {{item.eventType}}
           </div>
-          <span class="task"> 
+          <span [ngClass]="{
+             'task-pending': item.taskDone < item.correctiveActions.length
+            ,'task-completed': item.taskDone === item.correctiveActions.length
+             }">
                  {{item.taskDone}}/{{item.correctiveActions.length }}
           </span>
           <div>

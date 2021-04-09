@@ -319,8 +319,14 @@ input {
 
 }
 
-.task{
+.task-pending{
     background: #FF2D2D;
+    color: white;
+    padding: 0px 10px;
+    border-radius: 5px;
+}
+.task-completed{
+    background: #D8D8D8;
     color: white;
     padding: 0px 10px;
     border-radius: 5px;

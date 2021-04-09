@@ -67,13 +67,13 @@
                     <td mat-cell *matCellDef="let element" class="table__cell">
                       <button mat-button [ngClass]="{
                                         'btn-state-registered': element.state==='registered'
-                                       ,'btn-state-progress': element.state==='assigned'
-                                       ,'btn-state-consultation': element.state==='corrective'
+                                       ,'btn-state-process': element.state==='process'
+                                       ,'btn-state-tracing': element.state==='tracing'
                                        ,'btn-state-finalizado': element.state==='finalized'
                                       }">
                         <span *ngIf="element.state==='registered'">Registrado</span>
-                        <span *ngIf="element.state==='assigned'">Proceso</span>
-                        <span *ngIf="element.state==='corrective'">Consulta</span>
+                        <span *ngIf="element.state==='process'">Proceso</span>
+                        <span *ngIf="element.state==='tracing'">Consulta</span>
                         <span *ngIf="element.state==='finalized'">Finalizado</span>
                       </button>
                     </td>
