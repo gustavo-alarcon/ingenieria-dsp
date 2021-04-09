@@ -11,6 +11,7 @@ import { DetailExternalDialogComponent } from './dialogs/detail-external-dialog/
 
 import { MaterialModule } from '../../../../../material/material.module';
 import { AccCorrectiveDialogComponent } from './dialogs/acc-corrective-dialog/acc-corrective-dialog.component';
+import { ReportsDialogComponent } from './dialogs/reports-dialog/reports-dialog.component';
 
 
 @NgModule({
@@ -21,6 +22,7 @@ import { AccCorrectiveDialogComponent } from './dialogs/acc-corrective-dialog/ac
     DetailInternalDialogComponent,
     DetailExternalDialogComponent,
     AccCorrectiveDialogComponent,
+    ReportsDialogComponent,
   ],
   imports: [
     CommonModule,

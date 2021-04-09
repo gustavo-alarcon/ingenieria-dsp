@@ -1,0 +1,21 @@
+
+<div>
+    <div class="ms-dialog-header">
+        <mat-icon class="ms-dialog-header__icon">description</mat-icon>
+        <h3 class="ms-dialog-header__title">Reportes </h3>           
+        <span class="ms-fill"></span>
+        <button mat-icon-button mat-dialog-close>
+            <mat-icon>cancel</mat-icon>
+        </button>
+    </div>
+    <mat-divider></mat-divider>
+
+    <mat-divider></mat-divider>
+    <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+    <mat-dialog-content class="timer" >        
+
+
+    </mat-dialog-content>
+
+   
+</div>

@@ -10,6 +10,7 @@ import { AccCorrectiveDialogComponent } from './dialogs/acc-corrective-dialog/ac
 import { ConfigurationsDialogComponent } from './dialogs/configurations-dialog/configurations-dialog.component';
 import { DetailExternalDialogComponent } from './dialogs/detail-external-dialog/detail-external-dialog.component';
 import { DetailInternalDialogComponent } from './dialogs/detail-internal-dialog/detail-internal-dialog.component';
+import { ReportsDialogComponent } from './dialogs/reports-dialog/reports-dialog.component';
 import { TimeLineDialogComponent } from './dialogs/time-line-dialog/time-line-dialog.component';
 
 @Component({
@@ -189,7 +190,13 @@ export class TracingComponent implements OnInit {
       width: '90vw',
       data: item
     });
-
+  }
+  reports(item): void{
+    this.dialog.open(ReportsDialogComponent, {
+      maxWidth: 900,
+      width: '90vw',
+      data: item
+    });
   }
 
 }

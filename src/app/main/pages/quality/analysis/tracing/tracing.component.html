@@ -34,8 +34,14 @@
       </div>
     </div>
     <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
-  
+    
+    <div class="container-task">
+      <span class="container-task__pending-task" >
+        Total de tareas pendientes     5
+      </span>
+    </div>
     <div class="cards-container" *ngIf="quality$|async as evaluations">
+     
       <div class="box mat-elevation-z2" *ngFor="let item of evaluations">
         <div class="header-box">
           <div class="priority" [ngClass]="{
@@ -44,6 +50,9 @@
             }">
              {{item.eventType}}
           </div>
+          <span class="task"> 
+                 {{item.taskDone}}/{{item.correctiveActions.length }}
+          </span>
           <div>
             <mat-menu #requestsMenu="matMenu">
               <button mat-menu-item (click)="accCorrective(item)">
@@ -54,6 +63,9 @@
               </button>
               <button mat-menu-item (click)="timeline(item)">
                 <mat-icon>timeline</mat-icon> Línea de tiempo
+              </button>              
+              <button mat-menu-item (click)="reports(item)">
+                <mat-icon>description</mat-icon>Ver reportes
               </button>              
             </mat-menu>
             <button mat-icon-button [matMenuTriggerFor]="requestsMenu">
