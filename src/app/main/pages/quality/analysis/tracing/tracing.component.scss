@@ -299,3 +299,32 @@ input {
     background: #27AE60;
     color: white;
 }
+
+.container-task{
+    background: #f0eded;
+    height: 60px;
+    position: relative;
+
+    &__pending-task{
+        background: #C4C4C4; 
+        color: black;
+        border-radius: 10px;
+        font-size: 1em;
+        padding: 20px 30px 20px 30px;
+        font-weight: bold;
+        position: absolute;
+        top: 20%;
+        left: 3%;
+    }
+
+}
+
+.task{
+    background: #FF2D2D;
+    color: white;
+    padding: 0px 10px;
+    border-radius: 5px;
+}
+
+
+//

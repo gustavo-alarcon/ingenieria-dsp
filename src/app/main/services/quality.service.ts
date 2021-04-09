@@ -67,6 +67,7 @@ export class QualityService {
       correctiveActions: null,
       riskLevel: null,
       emailList: null,
+      taskDone: 0,
       state: 'registered',
       generalImages: firebase.default.firestore.FieldValue.arrayUnion(
         imagesObj
@@ -128,6 +129,7 @@ export class QualityService {
       riskLevel: null,
       state: 'registered',
       emailList: null,
+      taskDone: 0,
       generalImages: firebase.default.firestore.FieldValue.arrayUnion(
         imagesObj
       ),
@@ -548,11 +550,12 @@ export class QualityService {
     const qualityDocRef = this.afs.firestore.doc(
       `db/ferreyros/quality/${entryId}`
     );
-   
 
     // Structuring the data model
     const data: any = {
       correctiveActions: newCorrective,
+      taskDone: firebase.default.firestore.FieldValue.increment(1)
+
     };
     batch.update(qualityDocRef, data);
 

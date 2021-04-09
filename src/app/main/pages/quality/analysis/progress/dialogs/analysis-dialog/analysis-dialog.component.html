@@ -179,14 +179,17 @@
                                         Campo <strong>requerido.</strong>
                                     </mat-error>
                                 </mat-form-field>        
+                                
+                               <!--  (change)="changeAreaSelect($event,i)" 
+                                    (selectionChange)="onBookChange($event,i)" -->
 
                                 <mat-form-field *ngIf=" areaResponsable$ | async as areaResponsable" appearance="outline" id="result" class="form-corrective__input2">
                                     <mat-label>Area responsable</mat-label>
-                                    <mat-select  formControlName="name"                                     
+                                    <mat-select  formControlName="name"                            
                                         >
                                         <mat-option  *ngFor="let item of areaResponsable" 
-                                            [value]="item" (click)="onclickArea(item)"
-                                            onchange="changeArea(item)"
+                                            [value]="item" (click)="onclickArea(item, i)"                                            
+                                            (change)="changeArea($event,i)"
                                             >
                                             {{item.name}}
                                         </mat-option>

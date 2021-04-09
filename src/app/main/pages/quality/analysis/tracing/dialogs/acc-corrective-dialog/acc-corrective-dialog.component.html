@@ -11,7 +11,7 @@
     </div>
     <mat-divider></mat-divider>
     <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
-    <mat-dialog-content style="display: flex; align-items: center;; justify-content: space-between;">
+    <mat-dialog-content >
         <div class="container">
             <div class="container__details">
                 <p><span style="font-weight: bold;"> OT Actual :</span> {{data.workOrder ? data.workOrder : ''}}</p>

@@ -305,17 +305,35 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
     this.areas.removeAt(index);
   }
 
-  onclickArea(event): void{
+  onclickArea(event, index): void{
+    const emailSelect = this.areas.controls[index].get('name').value;
+    console.log('emailSelect: ', emailSelect)
+    const emailDelete = emailSelect.email;
     const email = event.email;
     if (event.email) {
       this.emailArray.push(email);
     }
   }
 
-  changeArea(item): void{
-    console.log('change area : ', item)
-  }
+  changeArea($event, i): void{
+    const emailSelect = this.areas.controls[i].get('name').value;
+    console.log('change area : ', emailSelect)
 
+    console.log('change area : ', $event)
+    console.log('change area : ', i)
+  }
+  changeAreaSelect($event,i): void {
+    const emailSelect = this.areas.controls[i].get('name').value;
+    console.log('changeAreaSelect area : ', emailSelect)
+
+    console.log('change area : ', $event)
+    console.log('change area : ', i)
+  }
+  onBookChange(item,i): void {
+    const emailSelect = this.areas.controls[i].get('name').value;
+    console.log('onBookChange area : ', emailSelect)
+    console.log('onBookChange: ', item)
+  }
   save(): void {
 
     try {
