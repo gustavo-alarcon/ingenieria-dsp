@@ -1,81 +1,89 @@
-
-
 .container {
     margin: 30px 70px 30px 70px;
-    
 }
 
-.container-title{
+.container-title {
     display: flex;
-    flex-direction: row;    
+    flex-direction: row;
     margin-top: 10px;
 
-    &__name{
+    &__name {
         font-size: 2.2em;
         margin-left: 20px;
-        font-family: 'Poppins', sans-serif;
+        font-family: "Poppins", sans-serif;
         font-weight: 700;
     }
 }
 
-.card{
-    width: 850px;
+.card {
+    max-width: 650px;
+    padding: 24px;
 }
 
-.title-form{
+.title-form {
     font-size: 1.3em;
-    font-weight: bold;
-    margin-left: 60px;
+    font-weight: 500;
+    color: slategray;
 }
 
-.container-form{
+.container-form {
     display: flex;
-    align-items: center;
     flex-direction: column;
-    
-    margin-left: 35px;
 
-    &__area{
-        width: 760px;
-    }
+    &__work {
+        display: flex;
+        flex-wrap: wrap;
 
-    &__work{
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        margin-left: 20px;
+        &__input {
+            width: 100%;
+            max-width: 290px;
 
-            &--input{
-            width: 350px;
-            margin-right: 40px;
+            &--desktop {
+                margin-right: 24px;
+            }
+
+            &--mobile {
+                margin: 0px;
+            }
         }
     }
 
-    &__title-image{        
-        position: relative;
-        left: -40%;
+    &__area {
+        width: 100%;
+        max-width: 605px;
+
+        &--desktop {
+            margin-right: 24px;
+        }
+
+        &--mobile {
+            margin: 0px;
+        }
     }
-    &__uploadXlx{
-        position: relative;
-        left: -32%;
-        &--btn-add{
+
+    &__title {
+        font-weight: 500;
+        color: slategray;
+    }
+
+    &__uploadXlx {
+        &--btn-add {
             border: 1px #6200ee solid;
             color: #6200ee;
             padding: 5px 30px 5px 30px;
         }
     }
-    &__btn-save{
-        position: relative;
-        left: 40%;
+
+    &__btn-save {
         background: #6200ee;
         margin-right: 100px;
-        color: white;;
+        color: white;
         padding: 5px 30px 5px 30px;
         letter-spacing: 0.5px;
+        width: 100%;
+        margin-top: 16px;
     }
-
-    
 }
-
 
 .dropzone {
     display: flex;
@@ -83,15 +91,13 @@
     justify-content: center;
     flex-direction: column;
     width: 100%;
-    max-width: 500px;
+    max-width: 605px;
     font-weight: 200;
-    height: 300px;
+    height: 150px;
     border: 2px dashed #6200ee;
     border-radius: 5px;
     background: white;
     margin: 10px 0;
-
-   
 }
 .dropzone.hovering {
     border: 2px solid #6200ee;
@@ -104,11 +110,12 @@ progress::-webkit-progress-value {
     transition: width 0.1s ease;
 }
 
-.file-input{
+.file-input {
     display: none;
 }
 
-.file-cta, .file-name {
+.file-cta,
+.file-name {
     border-color: #dbdbdb;
     border-radius: 4px;
     font-size: 1em;
@@ -119,7 +126,9 @@ progress::-webkit-progress-value {
     color: #4a4a4a;
 }
 
- .file-cta, .file-name, .input {
+.file-cta,
+.file-name,
+.input {
     -moz-appearance: none;
     -webkit-appearance: none;
     align-items: center;
@@ -131,12 +140,10 @@ progress::-webkit-progress-value {
     height: 2.25em;
     justify-content: flex-start;
     line-height: 1.5;
-    padding-bottom: calc(.375em - 1px);
-    padding-left: calc(.625em - 1px);
-    padding-right: calc(.625em - 1px);
-    padding-top: calc(.375em - 1px);
+    padding-bottom: calc(0.375em - 1px);
+    padding-left: calc(0.625em - 1px);
+    padding-right: calc(0.625em - 1px);
+    padding-top: calc(0.375em - 1px);
     position: relative;
     vertical-align: top;
 }
-
- 

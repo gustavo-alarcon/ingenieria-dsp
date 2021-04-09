@@ -1,19 +1,17 @@
 import {
   FormGroup,
   Validators,
-  FormBuilder,
-  FormControl,
+  FormBuilder
 } from '@angular/forms';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Subscription, Observable } from 'rxjs';
-import * as XLSX from 'xlsx';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from 'src/app/auth/services/auth.service';
-import { Quality } from '../../../models/quality.model';
 import { QualityService } from 'src/app/main/services/quality.service';
 import { User } from '../../../models/user-model';
 import { finalize, take } from 'rxjs/operators';
 import { AngularFireStorage } from '@angular/fire/storage';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-internal-events',
@@ -54,8 +52,11 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
 
   subscription = new Subscription();
   user: User;
+    
+  isMobile = false;
 
   constructor(
+    private breakpoint: BreakpointObserver,
     private fb: FormBuilder,
     private snackbar: MatSnackBar,
     private authService: AuthService,
@@ -65,6 +66,16 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
+    this.subscription.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
+      .subscribe(res => {
+        if (res.matches) {
+          this.isMobile = true;
+        } else {
+          this.isMobile = false;
+        }
+      })
+    )
+
     this.subscription.add(
       this.authService.user$.subscribe((user) => {
         this.user = user;
