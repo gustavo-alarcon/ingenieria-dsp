@@ -29,6 +29,8 @@ export class TracingComponent implements OnInit {
   searchForm: FormGroup;
   state = 'tracing';
 
+  totalTask = 0;
+
   eventTypeControl = new FormControl('');
 
   eventType = [
@@ -62,6 +64,14 @@ export class TracingComponent implements OnInit {
       this.auth.getGeneralConfig()
     ).pipe(
       map(([qualities, search, codeEventType, generalConfig]) => {
+        // total task pending
+        this.totalTask = 0;
+        qualities.map(el => {
+          if (el.taskDone < el.correctiveActions.length ) {
+            const result = el.correctiveActions.length - el.taskDone;
+            this.totalTask += result;
+          }
+        });
 
         const searchTerm = search.toLowerCase().trim();
         let preFilterEventType: Quality[] = [];
