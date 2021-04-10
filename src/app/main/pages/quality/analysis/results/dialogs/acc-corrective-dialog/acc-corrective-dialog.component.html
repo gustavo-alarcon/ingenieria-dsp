@@ -1,0 +1,82 @@
+<div>
+    <div class="ms-dialog-header">
+        <mat-icon class="ms-dialog-header__icon">fact_check</mat-icon>
+        <h3 class="ms-dialog-header__title">Acciones correctivas </h3>           
+        <span class="ms-fill"></span>
+        <button mat-icon-button mat-dialog-close>
+            <mat-icon>cancel</mat-icon>
+        </button>
+    </div>
+    <mat-divider></mat-divider>
+    <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+    <mat-dialog-content >
+        <div class="container">
+            <div class="container-table" >
+                <table mat-table [dataSource]="settingsDataSource" >
+
+                    <ng-container matColumnDef="order">
+                        <th mat-header-cell *matHeaderCellDef  class="table__cell theader"> Nro </th>
+                            <td mat-cell *matCellDef="let element; let i = index"  class="table__cell">
+                            {{
+                              1 +
+                                i +
+                                settingsPaginator.pageIndex * settingsPaginator.pageSize
+                            }}
+                          </td>
+                    </ng-container>
+    
+                    <ng-container matColumnDef="dateStart">
+                        <th mat-header-cell *matHeaderCellDef  class="table__cell theader"> Fecha </th>
+                        <td mat-cell *matCellDef="let element" class="table__cell"> 
+                            {{(element.createdAt.seconds * 1000) | date : 'dd/MM/yy'}} 
+                        </td>
+                    </ng-container>    
+    
+                    <ng-container matColumnDef="accCorrective">
+                        <th mat-header-cell *matHeaderCellDef  class="table__cell theader"> Accion correctiva </th>
+                        <td mat-cell *matCellDef="let element" class="table__cell"> {{element.corrective}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="areaResponsable">
+                        <th mat-header-cell *matHeaderCellDef  class="table__cell theader"> Area responsable </th>
+                        <td mat-cell *matCellDef="let element" class="table__cell"> {{element.name.name }} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="state">
+                        <th mat-header-cell *matHeaderCellDef  class="table__cell theader">Estado</th>
+                        <td mat-cell *matCellDef="let element" class="table__cell">
+                            <span *ngIf="element.kit">Finalizado</span>
+                            <span *ngIf="!element.kit"> Pendiente</span>
+                    </ng-container>
+
+                    <ng-container matColumnDef="dateEnd" >
+                        <th mat-header-cell *matHeaderCellDef  class="table__cell theader"> Fecha de finalizacion de accion correctiva </th>
+                        <td mat-cell *matCellDef="let element" class="table__cell">                            
+                            {{ element.closedAt? ((element.closedAt.seconds * 1000) | date : 'dd/MM/yy'): '-'}} 
+                        </td>
+                    </ng-container>
+    
+                    <ng-container matColumnDef="user">
+                        <th mat-header-cell *matHeaderCellDef  class="table__cell theader"> Responsable de implemento </th>
+                        <td mat-cell *matCellDef="let element" align="center" class="table__cell"> {{element.user ? element.user.name :'-'}}
+                        </td>
+                    </ng-container>
+                        
+    
+                    <tr mat-header-row *matHeaderRowDef="settingsDisplayedColumns"></tr>
+                    <tr mat-row *matRowDef="let element; columns: settingsDisplayedColumns;"></tr>
+    
+                    <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell" colspan="4">No hay ningun dato cargado</td>
+                    </tr>
+                </table>
+            </div>
+            <mat-paginator #settingsPaginator [pageSizeOptions]="[5,10,20]"></mat-paginator>
+        </div>
+        
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-stroked-button color="warn" mat-dialog-close [disabled]="loading$ | async">CANCELAR</button>
+    </mat-dialog-actions>
+   
+</div>

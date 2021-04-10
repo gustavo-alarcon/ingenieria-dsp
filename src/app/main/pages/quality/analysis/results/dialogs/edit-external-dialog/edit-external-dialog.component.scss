@@ -1,0 +1,36 @@
+
+.container-form {
+    display: flex;
+    flex-direction: column;
+
+    &__work {
+        display: flex;
+        flex-wrap: wrap;
+
+        &__input {
+            width: 100%;
+            max-width: 290px;
+
+            &--desktop {
+                margin-right: 24px;
+            }
+
+            &--mobile {
+                margin: 0px;
+            }
+        }
+    }
+
+    &__area {
+        width: 100%;
+        max-width: 605px;
+
+        &--desktop {
+            margin-right: 24px;
+        }
+
+        &--mobile {
+            margin: 0px;
+        }
+    }
+}

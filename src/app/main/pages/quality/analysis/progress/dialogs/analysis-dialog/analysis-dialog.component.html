@@ -181,17 +181,19 @@
                                 </mat-form-field>        
                                 
                                <!--  (change)="changeAreaSelect($event,i)" 
-                                    (selectionChange)="onBookChange($event,i)" -->
+                                    (selectionChange)="onBookChange($event,i)"
+                                    (change)="changeArea($event,i)"
+                                -->
 
                                 <mat-form-field *ngIf=" areaResponsable$ | async as areaResponsable" appearance="outline" id="result" class="form-corrective__input2">
                                     <mat-label>Area responsable</mat-label>
                                     <mat-select  formControlName="name"                            
                                         >
-                                        <mat-option  *ngFor="let item of areaResponsable" 
-                                            [value]="item" (click)="onclickArea(item, i)"                                            
-                                            (change)="changeArea($event,i)"
+                                        <mat-option  *ngFor="let name of areaResponsable" 
+                                            [value]="name" (click)="onclickArea(name, i)"                                            
+                                            
                                             >
-                                            {{item.name}}
+                                            {{name.name}}
                                         </mat-option>
                                     </mat-select>
                                     <mat-hint *ngIf="!(areaResponsable$ | async)">

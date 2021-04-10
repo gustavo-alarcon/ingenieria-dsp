@@ -84,18 +84,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private dbs: EvaluationsService,
     public router: Router,
     private andonService: AndonService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    this.subscriptions.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
-      .subscribe(res => {
-        if (res.matches) {
-          this.isMobile = true;
-        } else {
-          this.isMobile = false;
-        }
-      })
-    )
+    this.subscriptions.add(
+      this.breakpoint
+        .observe([Breakpoints.HandsetPortrait])
+        .subscribe((res) => {
+          if (res.matches) {
+            this.isMobile = true;
+          } else {
+            this.isMobile = false;
+          }
+        })
+    );
 
     const view = this.andonService.getCurrentMonthOfViewDate();
 
@@ -191,14 +193,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
               item.minutes / 60 / 24 +
               item.seconds / 60 / 60 / 24) /
             item.quatity;
-          groups[val].date = `${item.days +
+          groups[val].date = `${
+            item.days +
             '/' +
             item.hours +
             ':' +
             item.minutes +
             ':' +
             item.seconds
-            }`;
+          }`;
 
           return groups;
         }, {});
@@ -413,7 +416,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
       averageTime.push(res.timer.toFixed(2));
     });
 
-    this.lineChartData2 = [{ data: averageTime, label: 'Promedio tiempo de respuesta por dia' }];
+    this.lineChartData2 = [
+      { data: averageTime, label: 'Promedio tiempo de respuesta por dia' },
+    ];
 
     this.lineChartLabels2 = nameProblemType;
 

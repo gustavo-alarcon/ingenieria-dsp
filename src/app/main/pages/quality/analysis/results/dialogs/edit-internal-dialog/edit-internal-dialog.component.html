@@ -1,0 +1,70 @@
+
+<div>
+    <div class="ms-dialog-header">
+        <mat-icon class="ms-dialog-header__icon">note_alt</mat-icon>
+        <h3 class="ms-dialog-header__title"> Editar eventos internos</h3>
+        <span class="ms-fill"></span>
+        <button mat-icon-button mat-dialog-close>
+            <mat-icon>cancel</mat-icon>
+        </button>
+    </div>
+    <mat-divider></mat-divider>
+
+    <mat-dialog-content style="margin-top: 20px;" >
+        <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+        <form [formGroup]="internalForm" autocomplete="off" class="container-form">
+            <div class="container-form__work">
+                <mat-form-field appearance="outline" class="container-form__work__input"
+                    [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
+                    <mat-label>Taller</mat-label>
+                    <input matInput type="text" placeholder="taller" formControlName="workShop" />
+                    <mat-error *ngIf="internalForm.controls['workShop'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="container-form__work__input"
+                    [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
+                    <mat-label>Orden de trabajo</mat-label>
+                    <input matInput type="number" placeholder="Orden de trabajo" formControlName="workdOrden" />
+                    <mat-error *ngIf="internalForm.controls['workdOrden'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="container-form__work__input"
+                    [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
+                    <mat-label>Componente</mat-label>
+                    <input matInput type="text" placeholder="Componente" formControlName="component" />
+                    <mat-error *ngIf="internalForm.controls['component'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="outline" class="container-form__work__input"
+                    [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
+                    <mat-label>Nro de parte</mat-label>
+                    <input matInput type="text" placeholder="Nro de parte" formControlName="nPart" />
+                    <mat-error *ngIf="internalForm.controls['nPart'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <mat-form-field appearance="outline" class="container-form__area"
+                [ngClass]="isMobile ? 'container-form__area--mobile' : 'container-form__area--desktop'">
+                <mat-label>Detalle de evento</mat-label>
+                <input matInput type="text" placeholder="Detalle del evento" formControlName="eventDetail">
+                <mat-error *ngIf="internalForm.controls['eventDetail'].errors">
+                    Campo <strong>requerido.</strong>
+                </mat-error>
+            </mat-form-field>
+
+
+        </form>
+    </mat-dialog-content>
+    
+    <mat-dialog-actions align="end">
+        <button mat-stroked-button color="warn" mat-dialog-close [disabled]="loading$ | async">CANCELAR</button>
+        <button mat-stroked-button color="primary" (click)="save()" [disabled]="loading$ | async">GUARDAR</button>
+    </mat-dialog-actions>
+</div>
