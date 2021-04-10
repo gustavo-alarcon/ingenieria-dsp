@@ -2,92 +2,49 @@
     margin: 30px 70px 30px 70px;
 }
 
-.header-container {
-    display: flex;
-    align-items: stretch;
-    flex-wrap: wrap;
-    margin-bottom: 16px;
-
-    &__title{
-        display: flex;
-        align-self: center;
-        margin-bottom: 20px;
-
-        h1 {
-            margin: 0px 16px 0px 0px;
-        }
-    }
-    
-    &__search{
-        display: flex;
-        width: 100%;
-        margin-top: 100px;
-        max-width: 350px;
-        border : 1px solid #D8D8D8;
-        border-radius: 5px;
-
-        &--input{
-            border: transparent;
-            height: 30px;
-            margin-bottom: 10px;
-            background: transparent;
-
-            &::placeholder {
-                color: #aeaeae;
-            }
-            &:focus {
-                outline: none;
-            }
-        }  
-    }
-}
-
-.body-container{
+.body-container {
     display: grid;
-    row-gap: 1em;
-    column-gap: 1em;
-    // grid-template-columns: 1fr 1fr 1fr 1fr 1fr ; 
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)) ; 
-
+    grid-column-gap: 24px;
+    grid-row-gap: 24px;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    padding: 24px 0px;
 }
 
-.cards{
-    width: 130px;
-    margin: 20px 0px;
-    padding: 10px;
+.cards {
+    width: 140px;
+    padding: 16px;
     border-radius: 10px;
     border: 0.5px solid lightgray;
-    box-shadow: 0px 0px 5.66077px 5.66077px rgba(177, 175, 175, 0.25); 
-    
-    &__header{
+    background: white;
+
+    &__header {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
 
-        &--title{
-            font-weight: bolder; 
+        &--title {
+            font-weight: bolder;
             padding-top: 5px;
             margin-left: 5px;
         }
-
     }
 
-    &__body{
+    &__body {
         text-align: center;
         padding-bottom: 20px;
-        &--round{
-            background: #FF2D2D ;
+        &--round {
+            background: #ff2d2d;
             border-radius: 30px;
             height: 60px;
             width: 60px;
             border: 1px solid black;
             margin: auto;
         }
-        &--timer{
+        &--timer {
             font-weight: bold;
             margin-bottom: 10px;
         }
-        &--supplies{
+        &--supplies {
             background: rgba(98, 0, 238, 0.24);
             font-weight: bold;
             color: black;
@@ -96,13 +53,12 @@
             border: transparent;
             margin-bottom: 12px;
         }
-        &--return{
-            background: #27AE60;
+        &--return {
+            background: #27ae60;
             color: white;
             border-radius: 5px;
             padding: 0px 30px 0px 30px;
             border: transparent;
         }
-    }  
+    }
 }
-

@@ -1,10 +1,11 @@
 $base-font: "Poppins", sans-serif;
 
 .main-background {
-  background: linear-gradient(to top, rgba(0, 17, 44, 0.2), transparent), url("../../../assets/svg/background5.svg");
+  background: linear-gradient(to top, rgba(0, 17, 44, 0.2), transparent), url("../../../assets/svg/test2.svg");
+  // background: linear-gradient(to top, rgba(0, 17, 44, 0.2), transparent), url("../../../assets/svg/background5.svg");
   height: auto;
   background-position: center;
-  background-size: cover;
+  // background-size: contain;
 }
 
 .main-background::after {
