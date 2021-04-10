@@ -33,7 +33,7 @@ export interface Quality{
     packageNumber?: string;
     componentHourMeter?: string;
     miningOperation?: string;
-    correctiveActions?: string;
+    correctiveActions?: Array<object>;
     riskLevel?: string;
     state?: string; // => registered / process / tracing / finalized
     generalImages?: Array<string>;

@@ -7,6 +7,8 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { finalize } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { QualityService } from 'src/app/main/services/quality.service';
+import { AuthService } from 'src/app/auth/services/auth.service';
+import { User } from 'src/app/main/models/user-model';
 
 @Component({
   selector: 'app-acc-corrective-dialog',
@@ -31,16 +33,26 @@ export class AccCorrectiveDialogComponent implements OnInit, OnDestroy {
   
   newAccCorrective;
 
+  date = new Date();
+  userCurrent: User;
+
   constructor(
     public dialogRef: MatDialogRef<AccCorrectiveDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Quality,
     private storage: AngularFireStorage,
     private snackbar: MatSnackBar,
+    private authService: AuthService,
     private qualityService: QualityService,
 
   ) { }
   ngOnInit(): void {
     this.initForm();
+
+    this.subscription.add(
+      this.authService.user$.subscribe((user) => {
+        this.userCurrent = user;
+      })
+    );
 
     this.dataArea = [...this.data.correctiveActions];
 
@@ -84,7 +96,7 @@ export class AccCorrectiveDialogComponent implements OnInit, OnDestroy {
 
                this.newAccCorrective = this.dataArea.map(el => {
                  if (el.corrective === code) {
-                   return {...el, nameFile: filename, kit: kits, url: link };
+                   return {...el, nameFile: filename, kit: kits, url: link, closedAt: this.date, user: this.userCurrent};
                  }else{
                    return el;
                  }

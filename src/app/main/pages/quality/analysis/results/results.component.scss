@@ -1,3 +1,26 @@
+
+.container-header{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 0px;
+
+  &__search{
+
+  }
+  &__downlad{
+    border: 1px solid #6200EE;
+    color: #6200EE;
+    background: white;
+    padding: 0px 20px ;
+    margin: 10px 20px 30px;
+  }
+}
+
+.container-body{
+  margin-top: 0px;
+}
+
 .container-table {
     margin-top: 30px;
     max-width: 100%;
@@ -23,25 +46,25 @@ table {
 .btn-state-registered {
     background: #F2C94C;
     color: black;
-    width: 100px;
+    width: 130px;
   }
   
   .btn-state-process {
     background:  #FF2D2D;
-    color: black;
-    width: 100px;
+    color: white;
+    width: 130px;
   }
 
   .btn-state-tracing {
     background: #f2994a;
     color: white;
-    width: 100px;
+    width: 130px;
   }
 
   .btn-state-finalizado {
     background: #27ae60;
     color: white;
-    width: 100px;
+    width: 130px;
   }
   
   

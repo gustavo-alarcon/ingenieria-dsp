@@ -64,7 +64,7 @@ export class QualityService {
       packageNumber: null,
       componentHourMeter: null,
       miningOperation: null,
-      correctiveActions: null,
+      correctiveActions: [],
       riskLevel: null,
       emailList: null,
       taskDone: 0,
@@ -125,7 +125,7 @@ export class QualityService {
       packageNumber: form.nPackage,
       componentHourMeter: form.componentHourMeter,
       miningOperation: form.miningOperation,
-      correctiveActions: null,
+      correctiveActions: [],
       riskLevel: null,
       state: 'registered',
       emailList: null,
@@ -558,6 +558,21 @@ export class QualityService {
 
     };
     batch.update(qualityDocRef, data);
+
+    return of(batch);
+  }
+
+  deleteQuality(
+    entryId,
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    // create reference for document in evaluation entries collection
+    const qualityDocRef = this.afs.firestore.doc(
+      `db/ferreyros/quality/${entryId}`
+    );
+
+    batch.delete(qualityDocRef);
 
     return of(batch);
   }
