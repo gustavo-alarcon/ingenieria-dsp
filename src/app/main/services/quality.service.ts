@@ -576,4 +576,63 @@ export class QualityService {
 
     return of(batch);
   }
+
+  updateQualityExternal(
+    entryId,
+    form,
+    user: User
+    ): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    // create reference for document in evaluation entries collection
+    const qualityDocRef = this.afs.firestore.doc(
+      `db/ferreyros/quality/${entryId}`
+    );
+
+    // Structuring the data model
+    const data: any = {
+      editedAt: new Date(),
+      edited: user,
+      workOrder: form.workdOrden,
+      component: form.component,
+      partNumber: form.nPart,
+      packageNumber: form.nPackage,
+      componentHourMeter: form.componentHourMeter,
+      miningOperation: form.miningOperation,
+      question1: form.question1,
+      question2: form.question2,
+      question3: form.question3,
+      question4: form.question4,
+    };
+    batch.update(qualityDocRef, data);
+
+    return of(batch);
+  }
+
+  updateQualityInternal(
+    entryId,
+    form,
+    user: User
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    // create reference for document in evaluation entries collection
+    const qualityDocRef = this.afs.firestore.doc(
+      `db/ferreyros/quality/${entryId}`
+    );
+
+    // Structuring the data model
+    const data: any = {
+      editedAt: new Date(),
+      edited: user,
+      workOrder: form.workdOrden,
+      component: form.component,
+      partNumber: form.nPart,
+      workShop: form.workShop,
+      enventDetail: form.eventDetail,
+    };
+    batch.update(qualityDocRef, data);
+
+    return of(batch);
+  }
 }

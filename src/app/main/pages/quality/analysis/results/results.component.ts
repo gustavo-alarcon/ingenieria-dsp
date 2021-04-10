@@ -13,6 +13,10 @@ import { TimeLineDialogComponent } from './dialogs/time-line-dialog/time-line-di
 import { DeleteDialogComponent } from './dialogs/delete-dialog/delete-dialog.component';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { AndonService } from 'src/app/main/services/andon.service';
+import { DetailExternalDialogComponent } from './dialogs/detail-external-dialog/detail-external-dialog.component';
+import { DetailInternalDialogComponent } from './dialogs/detail-internal-dialog/detail-internal-dialog.component';
+import { EditExternalDialogComponent } from './dialogs/edit-external-dialog/edit-external-dialog.component';
+import { EditInternalDialogComponent } from './dialogs/edit-internal-dialog/edit-internal-dialog.component';
 
 @Component({
   selector: 'app-results',
@@ -199,12 +203,59 @@ export class ResultsComponent implements OnInit {
     });
   }
 
-  detailDialog(element, eventType): void{
+  detailDialog(item: Quality, value: string): void {
+    const optionsDialog = {
+      maxWidth: 500,
+      width: '90vw',
+      data: item
+    };
+    let dialogRef;
 
+    switch (value) {
+      case 'Interno':
+        dialogRef = this.dialog.open(DetailInternalDialogComponent,
+          optionsDialog,
+        );
+
+        dialogRef.afterClosed().subscribe(result => {
+        });
+        break;
+      case 'Externo':
+        dialogRef = this.dialog.open(DetailExternalDialogComponent,
+          optionsDialog,
+        );
+
+        dialogRef.afterClosed().subscribe(result => {
+        });
+        break;
+    }
   }
+  edit(item: Quality, value: string): void {
+    const optionsDialog = {
+      maxWidth: 700,
+      width: '90vw',
+      data: item
+    };
+    let dialogRef;
 
-  edit(element): void{
+    switch (value) {
+      case 'Interno':
+        dialogRef = this.dialog.open(EditInternalDialogComponent,
+          optionsDialog,
+        );
 
+        dialogRef.afterClosed().subscribe(result => {
+        });
+        break;
+      case 'Externo':
+        dialogRef = this.dialog.open(EditExternalDialogComponent,
+          optionsDialog,
+        );
+
+        dialogRef.afterClosed().subscribe(result => {
+        });
+        break;
+    }
   }
 
 }
