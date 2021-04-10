@@ -1,149 +1,124 @@
-<div class="container">   
-    <div class="container-title">
-        <mat-icon mat-list-icon class="mat-icon-menu" style="font-size: 2.5em;">note_alt</mat-icon>
-        <h1 class="container-title__name">
-            Eventos Internos
-        </h1>  
+<div class="ms-container">
+    <div class="ms-toolbar">
+        <mat-icon class="ms-toolbar__icon">note_alt</mat-icon>
+        <h1 class="ms-toolbar__title" [ngClass]="isMobile ? 'ms-toolbar__title--mobile' : 'ms-toolbar__title--desktop'">
+            Eventos Internos</h1>
     </div>
 
     <div class="container-body">
         <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
 
-        <mat-card class="card">
-            <h3 class="title-form">Registros de eventos de calidad - Internos</h3>
-            <div >
-                <form [formGroup]="internalForm" autocomplete="off" class="container-form">
-                   
-                    <div class="container-form__work">
-    
-                        
-                        <mat-form-field appearance="outline" id="result" class="container-form__work--input">
-                            <mat-label>Taller</mat-label>
-                            <input matInput type="text" placeholder="taller" formControlName="workShop" />
-                            <mat-error *ngIf="internalForm.controls['workShop'].errors">
-                                Campo <strong>requerido.</strong>
-                            </mat-error>
-                        </mat-form-field>
-                        
-                        <mat-form-field appearance="outline" id="result" class="container-form__work--input">
-                            <mat-label>Orden de trabajo</mat-label>
-                            <input matInput type="number" placeholder="Orden de trabajo" formControlName="workdOrden" />
-                            <mat-error *ngIf="internalForm.controls['workdOrden'].errors">
-                                Campo <strong>requerido.</strong>
-                            </mat-error>
-                        </mat-form-field>
-
-                        <mat-form-field appearance="outline" id="result" class="container-form__work--input">
-                            <mat-label>Componente</mat-label>
-                            <input matInput type="text" placeholder="Componente" formControlName="component" />
-                            <mat-error *ngIf="internalForm.controls['component'].errors">
-                                Campo <strong>requerido.</strong>
-                            </mat-error>
-                        </mat-form-field>
-                        <mat-form-field appearance="outline" id="result" class="container-form__work--input">
-                            <mat-label>Nro de parte</mat-label>
-                            <input matInput type="text" placeholder="Nro de parte" formControlName="nPart" />
-                            <mat-error *ngIf="internalForm.controls['nPart'].errors">
-                                Campo <strong>requerido.</strong>
-                            </mat-error>
-                        </mat-form-field>
-                    </div>
-
-                    <br />
-                    <mat-form-field appearance="outline" id="result" class="container-form__area">
-                        <mat-label>Detalle de evento</mat-label>
-                          <input  matInput type="text" placeholder="Detalle del evento" formControlName="eventDetail"                         
-                          >
-                        <mat-error *ngIf="internalForm.controls['eventDetail'].errors">
+        <mat-card class="card mat-elevation-z4">
+            <h3 class="title-form">Información del evento</h3>
+            <form [formGroup]="internalForm" autocomplete="off" class="container-form">
+                <div class="container-form__work">
+                    <mat-form-field appearance="outline" class="container-form__work__input"
+                        [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
+                        <mat-label>Taller</mat-label>
+                        <input matInput type="text" placeholder="taller" formControlName="workShop" />
+                        <mat-error *ngIf="internalForm.controls['workShop'].errors">
                             Campo <strong>requerido.</strong>
                         </mat-error>
                     </mat-form-field>
-                    <br> 
 
-                    <h3 class="container-form__title-image">Imagen general</h3>
+                    <mat-form-field appearance="outline" class="container-form__work__input"
+                        [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
+                        <mat-label>Orden de trabajo</mat-label>
+                        <input matInput type="number" placeholder="Orden de trabajo" formControlName="workdOrden" />
+                        <mat-error *ngIf="internalForm.controls['workdOrden'].errors">
+                            Campo <strong>requerido.</strong>
+                        </mat-error>
+                    </mat-form-field>
 
-                    <div class="dropzone" appDropzone 
-                        (hovered)="toggleHoverGeneral($event)" (dropped)="onDropGeneral($event)"
-                        [class.hovering]="isHoveringGeneral">
-                        <p>Arrastrar imágenes</p>
-                        <div class="file">
-                            <label class="file-label">
-                                <input class="file-input" type="file" 
-                                       (change)="onDropGeneral($event.target.files)">
-                                <span class="file-cta">
-                                    <span class="file-label">
-                                        Seleccione una imagen
-                                    </span>
+                    <mat-form-field appearance="outline" class="container-form__work__input"
+                        [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
+                        <mat-label>Componente</mat-label>
+                        <input matInput type="text" placeholder="Componente" formControlName="component" />
+                        <mat-error *ngIf="internalForm.controls['component'].errors">
+                            Campo <strong>requerido.</strong>
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="container-form__work__input"
+                        [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
+                        <mat-label>Nro de parte</mat-label>
+                        <input matInput type="text" placeholder="Nro de parte" formControlName="nPart" />
+                        <mat-error *ngIf="internalForm.controls['nPart'].errors">
+                            Campo <strong>requerido.</strong>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <mat-form-field appearance="outline" class="container-form__area"
+                    [ngClass]="isMobile ? 'container-form__area--mobile' : 'container-form__area--desktop'">
+                    <mat-label>Detalle de evento</mat-label>
+                    <input matInput type="text" placeholder="Detalle del evento" formControlName="eventDetail">
+                    <mat-error *ngIf="internalForm.controls['eventDetail'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
+
+                <h3 class="container-form__title">Imagen general</h3>
+
+                <div class="dropzone" appDropzone (hovered)="toggleHoverGeneral($event)"
+                    (dropped)="onDropGeneral($event)" [class.hovering]="isHoveringGeneral">
+                    <p>Arrastrar imágenes</p>
+                    <div class="file">
+                        <label class="file-label">
+                            <input class="file-input" type="file" (change)="onDropGeneral($event.target.files)">
+                            <span class="file-cta">
+                                <span class="file-label">
+                                    Seleccione una imagen
                                 </span>
-                            </label>
-                        </div>
+                            </span>
+                        </label>
                     </div>
-                    <h3>Uploads</h3>
-                    <div *ngFor="let file of filesGeneral">
-                        <app-upload-task 
-                          [file]="file" [pathStorage]="pathStorageGeneral"
-                         (onNewImage)="addNewImageGeneral($event)">
-                        </app-upload-task>
-                    </div>
+                </div>
+                <div *ngFor="let file of filesGeneral">
+                    <app-upload-task [file]="file" [pathStorage]="pathStorageGeneral"
+                        (onNewImage)="addNewImageGeneral($event)">
+                    </app-upload-task>
+                </div>
 
-                    <h3 class="container-form__title-image">Imagen de detalle</h3>
+                <h3 class="container-form__title">Imagen de detalle</h3>
 
-                    <div class="dropzone" appDropzone (hovered)="toggleHoverDetail($event)" 
-                        (dropped)="onDropDetail($event)"
-                        [class.hovering]="isHoveringDetail">
-                        <p>Arrastrar imágenes</p>
-                        <div class="file">
-                            <label class="file-label">
-                                <input class="file-input" type="file" 
-                                       (change)="onDropDetail($event.target.files)">
-                                <span class="file-cta">
-                                    <span class="file-label">
-                                        Seleccione una imagen
-                                    </span>
+                <div class="dropzone" appDropzone (hovered)="toggleHoverDetail($event)" (dropped)="onDropDetail($event)"
+                    [class.hovering]="isHoveringDetail">
+                    <p>Arrastrar imágenes</p>
+                    <div class="file">
+                        <label class="file-label">
+                            <input class="file-input" type="file" (change)="onDropDetail($event.target.files)">
+                            <span class="file-cta">
+                                <span class="file-label">
+                                    Seleccione una imagen
                                 </span>
-                            </label>
-                        </div>
+                            </span>
+                        </label>
                     </div>
-                    <h3>Uploads</h3>
+                </div>
 
-                    <div *ngFor="let file of filesDetail">
-                        <app-upload-task [file]="file" [pathStorage]="pathStorageDetail" 
+                <div *ngFor="let file of filesDetail">
+                    <app-upload-task [file]="file" [pathStorage]="pathStorageDetail"
                         (onNewImage)="addNewImageDetail($event)">
-                        </app-upload-task>
-                    </div>
-                    
-                    <div class="container-form__uploadXlx">
-                        <h3 class="">Archivo adicional</h3>
-                        <p *ngIf="fileSelect" style="color:#0064EA;">{{nameFileSelect}} </p>
-                        <div >
-                            <input #fileInput2 style="display: none" type="file" 
-                                   id="fileInput2"
-                                   (change)="uploadFiles($event)" accept="*"
-                                   >
-                                   <br>
-                            <button type="file" aria-label="add" mat-button class="container-form__uploadXlx--btn-add"
-                                    accept="*" 
-                                (click)="fileInput2.click()">
-                                <mat-icon aria-label="agregar" class="icon-add">add</mat-icon>
-                                ADJUNTAR 
-                            </button>                            
-                        </div>                                              
-                    </div>                     
-                                       
-                    <button aria-label="add" mat-button class="container-form__btn-save" 
-                    [disabled]='internalForm.invalid'
-                    (click)="save()"
-                    >
-                        GUARDAR
-                    </button>                  
-    
-                </form>
-            </div>
-            <br>
-            <br>
-        </mat-card>      
+                    </app-upload-task>
+                </div>
 
+                <div class="container-form__uploadXlx">
+                    <h3 class="container-form__title">Archivo adicional</h3>
+                    <p *ngIf="fileSelect" style="color:#0064EA;">{{nameFileSelect}} </p>
+                    <input #fileInput2 style="display: none" type="file" id="fileInput2" (change)="uploadFiles($event)"
+                        accept="*">
+                    <button type="file" mat-stroked-button class="ms-button" accept="*" (click)="fileInput2.click()">
+                        <mat-icon>add</mat-icon>
+                        ADJUNTAR
+                    </button>
+                </div>
+
+                <button aria-label="add" mat-button class="container-form__btn-save" [disabled]='internalForm.invalid'
+                    (click)="save()">
+                    GUARDAR
+                </button>
+
+            </form>
+        </mat-card>
     </div>
-
 </div>
-

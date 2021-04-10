@@ -207,8 +207,35 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
 
         let result: number;
         let roundResult: number;
-        result = (codeQuality + codeCost) / (codeFrecuency * 2);
+        result = ((codeQuality + codeCost) / 2) * codeFrecuency;
         roundResult = Math.round(result);
+        
+        const resp = this.qualityService.updateQualityEvaluationAnalisis(
+          this.data.id,
+          roundResult
+        );
+        this.subscription.add(
+          resp.subscribe((batch) => {
+            if (batch) {
+              batch
+                .commit()
+                .then(() => {
+                  this.snackbar.open('✅ Se realizo analisis correctamente!', 'Aceptar', {
+                    duration: 6000,
+                  });
+                })
+                .catch((err) => {
+                  this.snackbar.open(
+                    '🚨 Hubo un error al actualizar  !',
+                    'Aceptar',
+                    {
+                      duration: 6000,
+                    }
+                  );
+                });
+            }
+          })
+        );
 
         return roundResult;
       })
@@ -239,6 +266,9 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
         this.fb.group({
           corrective: ['', Validators.required],
           name: ['', Validators.required],
+          kit: [false, Validators.required],
+          url: [null],
+          nameFile: [null],
         }),
       ]),
     });
@@ -256,6 +286,10 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
     const group = this.fb.group({
       corrective: ['', Validators.required],
       name: ['', Validators.required],
+      kit: [false, Validators.required],
+      url: [null],
+      nameFile: [null],
+
     });
     this.areas.push(group);
   }
@@ -271,16 +305,37 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
     this.areas.removeAt(index);
   }
 
-  onclickArea(event): void{
+  onclickArea(event, index): void{
+    const emailSelect = this.areas.controls[index].get('name').value;
+    console.log('emailSelect: ', emailSelect)
+    const emailDelete = emailSelect.email;
     const email = event.email;
     if (event.email) {
       this.emailArray.push(email);
     }
-
-
   }
 
+  changeArea($event, i): void{
+    const emailSelect = this.areas.controls[i].get('name').value;
+    console.log('change area : ', emailSelect)
+
+    console.log('change area : ', $event)
+    console.log('change area : ', i)
+  }
+  changeAreaSelect($event,i): void {
+    const emailSelect = this.areas.controls[i].get('name').value;
+    console.log('changeAreaSelect area : ', emailSelect)
+
+    console.log('change area : ', $event)
+    console.log('change area : ', i)
+  }
+  onBookChange(item,i): void {
+    const emailSelect = this.areas.controls[i].get('name').value;
+    console.log('onBookChange area : ', emailSelect)
+    console.log('onBookChange: ', item)
+  }
   save(): void {
+
     try {
       if (this.analysisForm.valid && this.listAreaForm.valid) {
         const resp = this.qualityService.saveCorrectiveActions(
@@ -300,6 +355,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
                   this.snackbar.open('✅ Se guardo correctamente!', 'Aceptar', {
                     duration: 6000,
                   });
+                  this.dialogRef.close(false);
                 })
                 .catch((err) => {
                   this.snackbar.open(

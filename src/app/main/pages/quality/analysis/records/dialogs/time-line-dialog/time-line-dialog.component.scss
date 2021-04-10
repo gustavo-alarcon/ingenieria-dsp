@@ -181,22 +181,37 @@ ul {
     bottom: -25px;
 }
 
-.time-line {
-    position: relative;
+.timer{
+    display: flex; 
+    align-items: center;
+    justify-content: space-between;
 
-    &__registry {
-        font-weight: 700;
-        color: #2b2b2bb8;
-        position: absolute;
-        left: 19%;
-        top: 53%;
+    &__details{
+        width: 30%;
+
+    }
+    &__time-line {
+        width: 70%;
+
+        position: relative;
+    
+        &--registry {
+            font-weight: 700;
+            color: #2b2b2bb8;
+            position: absolute;
+            left: 10%;
+            top: 65%;
+        }
+    
+        &--attention {
+            font-weight: 700;
+            color: #2b2b2bb8;
+            position: absolute;
+            left: 43%;
+            top: 88%;
+        }
     }
 
-    &__attention {
-        font-weight: 700;
-        color: #2b2b2bb8;
-        position: absolute;
-        left: 43%;
-        top: 88%;
-    }
 }
+
+

@@ -293,9 +293,67 @@ input {
 
 .btn-event-internal{
     background: #6200EE;
-    color: white;    
+    color: white; 
+    border: none;
+    border-radius: 5px;
+    font-family: Roboto;
+    text-align: center;
+    padding: 0px 15px;   
 }
 .btn-event-external{
     background: #27AE60;
     color: white;
+    border: none;
+    border-radius: 5px;
+    font-family: Roboto;
+    text-align: center;
+    padding: 0px 15px;
+}
+
+
+
+.btn-result-1{
+    background: #FFFFFF;
+    color: #2B2B2B;
+    border: black 1px solid;
+    border-radius: 5px;
+    font-family: Roboto;
+    text-align: center;
+    padding: 0px 10px;
+}
+.btn-result-2{
+    background:#FDCF41;
+    color: #2B2B2B;
+    border: none;
+    border-radius: 5px;
+    font-family: Roboto;
+    text-align: center;
+    padding: 0px 10px;
+}
+.btn-result-3{
+    background: #F28421;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-family: Roboto;
+    text-align: center;
+    padding: 0px 10px;
+}
+.btn-result-4{
+    background: #FF2D2D;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-family: Roboto;
+    text-align: center;
+    padding: 0px 10px;
+}
+.btn-result-5{
+    background:green ;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-family: Roboto;
+    text-align: center;
+    padding: 0px 10px;
 }

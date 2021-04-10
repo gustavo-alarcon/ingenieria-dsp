@@ -38,11 +38,19 @@
     <div class="cards-container" *ngIf="quality$|async as evaluations">
       <div class="box mat-elevation-z2" *ngFor="let item of evaluations">
         <div class="header-box">
-          <div class="priority" [ngClass]="{
+          <div  [ngClass]="{
            'btn-event-internal': item.eventType === 'Interno'
            ,'btn-event-external':  item.eventType === 'Externo'
             }">
              {{item.eventType}}
+          </div>
+          <div  [ngClass]="{
+            'btn-result-1':   item.evaluationAnalisis > 0  && item.evaluationAnalisis < 5
+           ,'btn-result-2':   item.evaluationAnalisis > 4  && item.evaluationAnalisis < 10
+           ,'btn-result-3':   item.evaluationAnalisis > 9  && item.evaluationAnalisis < 20
+           ,'btn-result-4':   item.evaluationAnalisis > 19 && item.evaluationAnalisis < 26
+           }">
+            {{item.evaluationAnalisis}}
           </div>
           <div>
             <mat-menu #requestsMenu="matMenu">
@@ -65,6 +73,7 @@
           <div class="lj" matTooltip="WOF" matTooltipPosition="above"><span>OT {{item.workOrder}}</span> </div>
           <div class="info-row"> Componente: <span> {{item.component}}</span> </div>
           <div class="info-row"> Taller: <span> {{item.partNumber}}</span></div>        
+          <div class="info-row"> Especialista: <span> {{item.specialist['name']}}</span></div>        
           <div class="info-row"> Fecha: <span> {{(item.createdAt['seconds'] * 1000) | date : 'dd/MM/yy hh:mm:ss'}}</span></div>        
         </div>
         <div class="ms-fill"></div>

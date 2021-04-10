@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteDialogComponent } from './dialogs/delete-dialog/delete-dialog.component';
 import { DetailsDialogComponent } from './dialogs/details-dialog/details-dialog.component';
@@ -17,15 +17,12 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
   styleUrls: ['./reports.component.scss'],
 })
 export class ReportsComponent implements OnInit {
-  searchForm: FormGroup;
+  searchControl = new FormControl('');
   currentWorkShop: string;
   workShop$: Observable<Andon[]>;
   state = 'stopped';
 
   isMobile = false;
-  containerStyle: any;
-  searchStyle: any;
-
   subscription = new Subscription();
 
   constructor(
@@ -43,24 +40,16 @@ export class ReportsComponent implements OnInit {
     this.subscription.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
       .subscribe(res => {
         if (res.matches) {
-          this.isMobile= true;
-          this.setHandsetContainer();
-          this.setHandsetSearch();
+          this.isMobile = true;
         } else {
-          this.isMobile= false;
-          this.setDesktopContainer();
-          this.setDesktopSearch();
+          this.isMobile = false;
         }
       })
     )
 
-    this.searchForm = this.fb.group({
-      search: ['', Validators.required],
-    });
-
     this.workShop$ = combineLatest(
       this.andonService.getAndonByWorkShop(this.currentWorkShop, this.state),
-      this.searchForm.get('search').valueChanges.pipe(
+      this.searchControl.valueChanges.pipe(
         debounceTime(300),
         filter((input) => input !== null),
         startWith<any>('')
@@ -82,7 +71,7 @@ export class ReportsComponent implements OnInit {
             clearInterval(andon.registryTimer);
           }
 
-          andon.registryTimer = setInterval (() => {
+          andon.registryTimer = setInterval(() => {
             // Get today's date and time
             const now = new Date().getTime();
             const registry = andon.createdAt['seconds'] * 1000;
@@ -113,7 +102,7 @@ export class ReportsComponent implements OnInit {
       })
     );
   }
-  editDialog(): void {}
+  editDialog(): void { }
   returnDialog(item): void {
     this.dialog.open(ReturnDialogComponent, {
       maxWidth: 450,
@@ -153,29 +142,5 @@ export class ReportsComponent implements OnInit {
     const hrs = (milis - mins) / 60;
 
     return addZ(hrs) + ':' + addZ(mins) + ':' + addZ(secs);
-  }
-
-  setHandsetContainer(): void {
-    this.containerStyle = {
-      'margin': '30px 24px 30px 24px'
-    }
-  }
-
-  setDesktopContainer(): void {
-    this.containerStyle = {
-      'margin': '30px 80px 30px 80px',
-    }
-  }
-
-  setHandsetSearch(): void {
-    this.searchStyle = {
-      'margin': '12px 0px'
-    }
-  }
-
-  setDesktopSearch(): void {
-    this.searchStyle = {
-      'margin': '0px',
-    }
   }
 }
