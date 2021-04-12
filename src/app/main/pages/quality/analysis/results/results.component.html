@@ -1,12 +1,6 @@
 <div>
     <div class="container-header">
-
-        <mat-form-field appearance="outline" class="container-header__search" [ngClass]="isMobile ? 'ms-toolbar__search--mobile' : 'ms-toolbar__search--desktop'">
-            <mat-label>Taller</mat-label>
-            <mat-icon matPrefix>business</mat-icon>
-            <input matInput type="text" [formControl]="workShopControl" placeholder="Taller" autocomplete="off">
-        </mat-form-field>        
-
+        
         <mat-form-field appearance="outline" class="ms-toolbar__input"
             [ngClass]="isMobile ? 'ms-toolbar__input--mobile' : 'ms-toolbar__input--desktop'">
             <mat-label>FECHA/PERIODO</mat-label>
@@ -16,7 +10,7 @@
             </mat-date-range-input>
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-date-range-picker #picker></mat-date-range-picker>
-        </mat-form-field>
+        </mat-form-field>        
 
         <mat-form-field appearance="outline"   >
             <mat-icon matPrefix>local_convenience_store</mat-icon>
@@ -27,6 +21,12 @@
                 </mat-option>
             </mat-select>
         </mat-form-field>
+        
+        <mat-form-field appearance="outline" class="container-header__search" [ngClass]="isMobile ? 'ms-toolbar__search--mobile' : 'ms-toolbar__search--desktop'">
+            <mat-label>Taller</mat-label>
+            <mat-icon matPrefix>business</mat-icon>
+            <input matInput type="text" [formControl]="workShopControl" placeholder="Taller" autocomplete="off">
+        </mat-form-field>
 
         <mat-form-field appearance="outline" class="container-header__search" [ngClass]="isMobile ? 'ms-toolbar__search--mobile' : 'ms-toolbar__search--desktop'">
             <mat-label>Buscar</mat-label>
@@ -34,7 +34,7 @@
             <input matInput type="text" [formControl]="searchControl" placeholder="Buscar" autocomplete="off">
         </mat-form-field>
 
-        <button mat-button class="container-header__downlad" >
+        <button mat-button class="container-header__downlad" (click)="download()" >
             <mat-icon matPrefix>download</mat-icon>
             DESCARGAR
         </button>
@@ -72,8 +72,8 @@
                     <td mat-cell *matCellDef="let element" class="table__cell"> {{element.partNumber}} </td>
                 </ng-container>
                 <ng-container matColumnDef="workShop" >
-                    <th mat-header-cell *matHeaderCellDef  class="table__cell theader"> Taller / Op Minera </th>
-                    <td mat-cell *matCellDef="let element" class="table__cell"> {{element.miningOperation? element.miningOperation: '-'}} </td>
+                    <th mat-header-cell *matHeaderCellDef  class="table__cell theader"> Taller </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell"> {{element.workShop? element.workShop: '-'}} </td>
                 </ng-container>
 
                 <ng-container matColumnDef="specialist">
