@@ -17,11 +17,14 @@ import { DetailExternalDialogComponent } from './dialogs/detail-external-dialog/
 import { DetailInternalDialogComponent } from './dialogs/detail-internal-dialog/detail-internal-dialog.component';
 import { EditExternalDialogComponent } from './dialogs/edit-external-dialog/edit-external-dialog.component';
 import { EditInternalDialogComponent } from './dialogs/edit-internal-dialog/edit-internal-dialog.component';
+import * as XLSX from 'xlsx';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-results',
   templateUrl: './results.component.html',
   styleUrls: ['./results.component.scss'],
+  providers: [DatePipe]
 })
 export class ResultsComponent implements OnInit {
   loading = new BehaviorSubject<boolean>(true);
@@ -74,8 +77,8 @@ export class ResultsComponent implements OnInit {
     private qualityService: QualityService,
     private auth: AuthService,
     private breakpoint: BreakpointObserver,
-    private andonService: AndonService
-
+    private andonService: AndonService,
+    private miDatePipe: DatePipe
   ) {}
 
   ngOnInit(): void {
@@ -109,6 +112,11 @@ export class ResultsComponent implements OnInit {
 
     this.quality$ = combineLatest(
       this.qualityService.getAllQuality(),
+      this.workShopControl.valueChanges.pipe(
+        debounceTime(300),
+        filter((input) => input !== null),
+        startWith<any>('')
+      ),
       this.eventTypeControl.valueChanges.pipe(
         debounceTime(300),
         filter((input) => input !== null),
@@ -128,36 +136,49 @@ export class ResultsComponent implements OnInit {
         map(end => end ? end.setHours(23, 59, 59) : null)
       )
     ).pipe(
-      map(([qualities, codeEventType, search, startdate, enddate]) => {
-
-        console.log('workShop : ', codeEventType);
+      map(([qualities, workShop, codeEventType, search, startdate, enddate]) => {
 
         const date = { begin: startdate, end: enddate };
 
         const searchTerm = search.toLowerCase().trim();
         let preFilterSearch: Quality[] = [...qualities];
+        let preFilterEventType: Quality[] = [];
+        let preFilterWorkShop: Quality[] = [];
 
-        if (codeEventType) {
-          return  preFilterSearch.filter(quality => quality.eventType === codeEventType)
-        }
 
-        if (search) {
-          let filterDate = [];
-          filterDate = preFilterSearch.filter((quality) => {
+        if (codeEventType || workShop ) {
+          preFilterEventType = qualities.filter(quality => quality.eventType === codeEventType);
+
+          preFilterSearch = preFilterEventType.filter(quality => {
+            return String(quality.workOrder).toLowerCase().includes(searchTerm) ||
+            String(quality.component).toLowerCase().includes(searchTerm) ||
+            String(quality.workShop).toLowerCase().includes(searchTerm) ;
+          }).filter((quality) => {
             return this.getFilterTime(quality.createdAt, date);
           });
 
-          preFilterSearch = filterDate.filter((quality) => {
-            return (
-              String(quality.workOrder).toLowerCase().includes(searchTerm) ||
-              String(quality.numberPart).toLowerCase().includes(searchTerm)
-            );
-          });
+          if (workShop) {
+            preFilterWorkShop = preFilterEventType.filter(quality => quality.workShop === workShop);
+
+            preFilterSearch = preFilterWorkShop.filter(quality => {
+              return String(quality.workOrder).toLowerCase().includes(searchTerm) ||
+                String(quality.component).toLowerCase().includes(searchTerm) ||
+                String(quality.workShop).toLowerCase().includes(searchTerm) ;
+            }).filter((quality) => {
+              return this.getFilterTime(quality.createdAt, date);
+            });
+          }
+
         } else {
-          preFilterSearch = qualities.filter((quality) => {
+          preFilterSearch = qualities.filter(quality => {
+            return  String(quality.workOrder).toLowerCase().includes(searchTerm) ||
+            String(quality.component).toLowerCase().includes(searchTerm) ||
+            String(quality.workShop).toLowerCase().includes(searchTerm) ;
+          }).filter((quality) => {
             return this.getFilterTime(quality.createdAt, date);
           });
         }
+
         return preFilterSearch;
 
       }),
@@ -165,7 +186,7 @@ export class ResultsComponent implements OnInit {
         this.settingsDataSource.data = res;
       })
     );
-  
+
   }
 
   getFilterTime(el, time): any {
@@ -175,7 +196,72 @@ export class ResultsComponent implements OnInit {
     return date >= begin && date <= end;
   }
 
-  download(): void{
+  download(): void {
+    let table_xlsx: any[] = [];
+
+    const headersXlsx = [
+      'Fecha',
+      'Tipo de evento',
+      'Orden de trabajo',
+      'Componente',
+      'Nro de parte',
+      'Taller / Op Minera',
+      'Especialista',
+      'Nivel de riesgo',
+      'Usuario',
+      'Estado',
+      'Fecha de inicio de accion correctiva',
+      'Accion correctiva',
+      'Area responsable',
+      'Estado',
+      'Fecha de finalizacion de accion correctiva',
+      'Responsable de implemento',
+    ];
+
+    table_xlsx.push(headersXlsx);
+
+    this.settingsDataSource.data.forEach(element => {
+      let  temp1 = [];
+      let  temp2 = [];
+
+      temp1 = [
+        this.miDatePipe.transform(element['createdAt']['seconds'] * 1000, 'dd/MM/yyyy h:mm:ss a'),
+        element.eventType ? element.eventType : '-',
+        element.workOrder ? element.workOrder : '-',
+        element.component ? element.component : '-',
+        element.partNumber ? element.partNumber : '-',
+        element.miningOperation ? element.miningOperation : '-',
+        element.specialist ? element.specialist['workingArea'] : '-',
+        element.evaluationAnalisis ? element.evaluationAnalisis : '-',
+        element.createdBy ? element.createdBy.name : '',
+        element.state ? element.state : ''
+      ];
+
+      element.correctiveActions.forEach( item2 => {
+        temp2 = [
+             ...temp1,
+            item2['createdAt'] ? this.miDatePipe.transform(item2['createdAt']['seconds'] * 1000, 'dd/MM/yyyy h:mm:ss a') : '-' ,
+            item2['corrective'] ? item2['corrective'] : '-',
+            item2['name'] ? item2['name']['name'] : '-',
+            item2['kit'] ? 'Finalizado' : 'Pendiente',
+            item2['closedAt'] ? this.miDatePipe.transform(item2['closedAt']['seconds'] * 1000, 'dd/MM/yyyy h:mm:ss a') : '-',
+            item2['user'] ? item2['user']['name'] : '-',
+          ];
+
+        table_xlsx.push(temp2);
+        });
+    });
+
+    /* generate worksheet */
+    const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(table_xlsx);
+
+    /* generate workbook and add the worksheet */
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'data_for_user');
+
+    /* save to file */
+    const name = 'result_list' + '.xlsx';
+    XLSX.writeFile(wb, name);
 
   }
 
