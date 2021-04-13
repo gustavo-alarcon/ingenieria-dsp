@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
+import { BehaviorSubject, Observable, combineLatest, Subscription } from 'rxjs';
 import { Quality } from '../../../../models/quality.model';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -11,6 +11,7 @@ import { DetailInternalDialogComponent } from './dialogs/detail-internal-dialog/
 import { DetailExternalDialogComponent } from './dialogs/detail-external-dialog/detail-external-dialog.component';
 import { TimeLineDialogComponent } from './dialogs/time-line-dialog/time-line-dialog.component';
 import { AnalysisDialogComponent } from './dialogs/analysis-dialog/analysis-dialog.component';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-progress',
@@ -24,7 +25,7 @@ export class ProgressComponent implements OnInit {
   quality$: Observable<Quality[]>;
   dataQuality: Quality[] = [];
   counter: number;
-  searchForm: FormGroup;
+  searchControl = new FormControl('');
   state = 'process';
 
   eventTypeControl = new FormControl('');
@@ -38,7 +39,11 @@ export class ProgressComponent implements OnInit {
     }
   ];
 
+  subscriptions = new Subscription();
+  isMobile = false;
+
   constructor(
+    private breakpoint: BreakpointObserver,
     public dialog: MatDialog,
     private fb: FormBuilder,
     private qualityService: QualityService,
@@ -46,13 +51,19 @@ export class ProgressComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.searchForm = this.fb.group({
-      ot: null,
-    });
+    this.subscriptions.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
+      .subscribe(res => {
+        if (res.matches) {
+          this.isMobile = true;
+        } else {
+          this.isMobile = false;
+        }
+      })
+    );
 
     this.quality$ = combineLatest(
       this.qualityService.getAllQualityByState(this.state),
-      this.searchForm.get('ot').valueChanges.pipe(
+      this.searchControl.valueChanges.pipe(
         debounceTime(300),
         filter(input => input !== null),
         startWith<any>('')),
@@ -71,13 +82,13 @@ export class ProgressComponent implements OnInit {
           preFilterSearch = preFilterEventType.filter(quality => {
             return String(quality.workOrder).toLowerCase().includes(searchTerm) ||
               String(quality.component).toLowerCase().includes(searchTerm) ||
-              String(quality.workShop).toLowerCase().includes(searchTerm) ;
+              String(quality.workShop).toLowerCase().includes(searchTerm);
           });
         } else {
           preFilterSearch = qualities.filter(quality => {
-            return  String(quality.workOrder).toLowerCase().includes(searchTerm) ||
-            String(quality.component).toLowerCase().includes(searchTerm) ||
-            String(quality.workShop).toLowerCase().includes(searchTerm) ;
+            return String(quality.workOrder).toLowerCase().includes(searchTerm) ||
+              String(quality.component).toLowerCase().includes(searchTerm) ||
+              String(quality.workShop).toLowerCase().includes(searchTerm);
           });
         }
 
@@ -200,7 +211,7 @@ export class ProgressComponent implements OnInit {
         });
         break;
     }
-    
+
   }
 
   timeline(item): void {

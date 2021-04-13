@@ -1,60 +1,48 @@
 <div class="container">
-    <div class="requests">
-      <div class="requests__title">
-        <h1 class="requests__title--name">Seguimiento</h1>
-        <div class="requests__title--icon" (click)="settingDialog()">
-          <mat-icon mat-list-icon>settings</mat-icon>
-        </div>
-        <span class="ms-fill"></span>
-        
-        <div class="requests__title--select mat-elevation-z4" >
-          <mat-form-field style="width: 1000px" style="border: none;" appearance="null" > 
-            <mat-icon matPrefix class="requests__title--select-icon">local_convenience_store</mat-icon>
-            <mat-select [formControl]="eventTypeControl" class="requests__title--select-input" >
-              <mat-option value="" >Todos</mat-option>
-              <mat-option   *ngFor="let item of eventType" [value]="item.code">
-                {{item.event}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div>
-  
-        <div class="requests__title--search mat-elevation-z4">
-          <button mat-button class="requests__title--button">
-            <mat-icon>search</mat-icon>
-          </button>
-          <form [formGroup]="searchForm" style="margin-top:10px;">
-            <input matInput placeholder="Buscar" name="search" class="requests__title--input" formControlName="ot" style="color: #333333; " />
-          </form>
-        </div>
-  
-      </div>
-      <div class="requests__quantity">
-        <span>{{counter}}</span>
-      </div>
+  <div class="ms-kanban-toolbar mat-elevation-z4">
+    <mat-form-field appearance="outline" class="ms-kanban-toolbar__input"
+      [ngClass]="isMobile ? 'ms-kanban-toolbar__input--mobile' : 'ms-kanban-toolbar__input--desktop'">
+      <mat-icon matPrefix>location_on</mat-icon>
+      <mat-select [formControl]="eventTypeControl">
+        <mat-option value="">Todos</mat-option>
+        <mat-option *ngFor="let item of eventType" [value]="item.code">
+          {{item.event}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline" class="ms-kanban-toolbar__input"
+      [ngClass]="isMobile ? 'ms-kanban-toolbar__input--mobile' : 'ms-kanban-toolbar__input--desktop'">
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput type="text" [formControl]="searchControl" placeholder="Escribir" autocomplete="off">
+    </mat-form-field>
+    <div class="ms-kanban-toolbar__tasks"
+      [ngClass]="isMobile ? 'ms-kanban-toolbar__tasks--mobile' : 'ms-kanban-toolbar__tasks--desktop'">
+      Total de tareas pendientes <span class="ms-kanban-toolbar__tasks--tag"> {{this.totalTask | number : '2.'}}</span>
     </div>
-    <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
-    
-    <div class="container-task">
-      <span class="container-task__pending-task" >
-        Total de tareas pendientes     {{this.totalTask}}
-      </span>
+    <span class="ms-fill"></span>
+    <div class="ms-kanban-toolbar__counter">
+      {{counter | number : '2.'}}
     </div>
-    <div class="cards-container" *ngIf="quality$|async as evaluations">
-     
-      <div class="box mat-elevation-z2" *ngFor="let item of evaluations">
+    <button mat-icon-button class="ms-kanban-toolbar__button--icon" (click)="settingDialog()">
+      <mat-icon>settings</mat-icon>
+    </button>
+  </div>
+  <div class="cards-container" *ngIf="quality$|async as evaluations; else default">
+    <div *ngFor="let item of evaluations" class="mat-elevation-z4"
+      style="display: flex; flex-direction: column; width: 230px">
+      <div class="box">
         <div class="header-box">
           <div class="priority" [ngClass]="{
            'btn-event-internal': item.eventType === 'Interno'
            ,'btn-event-external':  item.eventType === 'Externo'
             }">
-             {{item.eventType}}
+            {{item.eventType}}
           </div>
           <span [ngClass]="{
              'task-pending': item.taskDone < item.correctiveActions.length
             ,'task-completed': item.taskDone === item.correctiveActions.length
              }">
-                 {{item.taskDone}}/{{item.correctiveActions.length }}
+            {{item.taskDone}}/{{item.correctiveActions.length }}
           </span>
           <div>
             <mat-menu #requestsMenu="matMenu">
@@ -66,10 +54,10 @@
               </button>
               <button mat-menu-item (click)="timeline(item)">
                 <mat-icon>timeline</mat-icon> Línea de tiempo
-              </button>              
+              </button>
               <button mat-menu-item (click)="reports(item)">
                 <mat-icon>description</mat-icon>Ver reportes
-              </button>              
+              </button>
             </mat-menu>
             <button mat-icon-button [matMenuTriggerFor]="requestsMenu">
               <mat-icon>more_vert</mat-icon>
@@ -79,27 +67,30 @@
         <div class="info-box">
           <div class="lj" matTooltip="WOF" matTooltipPosition="above"><span>OT {{item.workOrder}}</span> </div>
           <div class="info-row"> Componente: <span> {{item.component}}</span> </div>
-          <div class="info-row"> Taller: <span> {{item.partNumber}}</span></div>        
-          <div class="info-row"> Especialista: <span> {{item.specialist['name']}}</span></div>        
-          <div class="info-row"> Fecha: <span> {{(item.createdAt['seconds'] * 1000) | date : 'dd/MM/yy hh:mm:ss'}}</span></div>        
+          <div class="info-row"> Taller: <span> {{item.partNumber}}</span></div>
+          <div class="info-row"> Especialista: <span> {{item.specialist['name']}}</span></div>
+          <div class="info-row"> Fecha: <span> {{(item.createdAt['seconds'] * 1000) | date : 'dd/MM/yy
+              hh:mm:ss'}}</span></div>
         </div>
         <div class="ms-fill"></div>
-        <div class="timer-container">
-          <div class="timer-color">
-          </div>
-          <div class="timer-black" [ngStyle]="{'width.%': item.registryPercentageElapsed }">
-          </div>
-          <div class="progress-view">
-            {{item.tracingTimeElapsed?.hours | number : '2.'}} :
-            {{item.tracingTimeElapsed?.minutes | number : '2.'}} :
-            {{item.tracingTimeElapsed?.seconds | number : '2.'}}
-          </div>
+      </div>
+      <div class="timer-container">
+        <div class="timer-color">
+        </div>
+        <div class="timer-black" [ngStyle]="{'width.%': item.registryPercentageElapsed }">
+        </div>
+        <div class="progress-view">
+          {{item.registryTimeElapsed?.days | number : '2.'}} /
+          {{item.registryTimeElapsed?.hours | number : '2.'}} :
+          {{item.registryTimeElapsed?.minutes | number : '2.'}} :
+          {{item.registryTimeElapsed?.seconds | number : '2.'}}
         </div>
       </div>
-  
     </div>
-  
-  
-  
-  
   </div>
+  <ng-template #default>
+    <div class="ms-default">
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    </div>
+  </ng-template>
+</div>
