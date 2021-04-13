@@ -22,7 +22,7 @@ export class AnalysisComponent implements OnInit {
         link: './progress',
         index: 1
       }, {
-        label: 'SIGUIMIENTO',
+        label: 'SEGUIMIENTO',
         link: './tracing',
         index: 2
       }, {

@@ -52,22 +52,22 @@
             align-self: center;
             border-radius: 20px 20px;
             margin-right: 15px;
-            
-            &-icon{
+
+            &-icon {
                 margin-right: 10px;
                 margin-left: 12px;
                 color: #cbcbcb;
                 width: 30px;
                 height: 35px;
             }
-            
-            &-input{
-               position: relative;
-               top: -5px;
-               font-family: "Montserrat", sans-serif;
-               color: #333333;
-               font-weight: 400;
-               width: 265px;
+
+            &-input {
+                position: relative;
+                top: -5px;
+                font-family: "Montserrat", sans-serif;
+                color: #333333;
+                font-weight: 400;
+                width: 265px;
             }
         }
 
@@ -98,7 +98,6 @@
                 color: #333333;
                 font-family: "Montserrat", sans-serif;
                 font-weight: 400;
-
             }
             &:focus {
                 outline: none;
@@ -125,17 +124,17 @@
     }
 }
 
-span.mat-option-text{
+span.mat-option-text {
     color: #333333;
 }
-.select-input{
-    color: #333333; 
+.select-input {
+    color: #333333;
     font-family: "Montserrat", sans-serif;
     font-weight: 400;
     margin-top: 0px;
 }
 
-.form-select{
+.form-select {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -144,22 +143,22 @@ span.mat-option-text{
 .cards-container {
     display: flex;
     justify-content: space-evenly;
-    padding: 20px;
-    background: #f0eded;
+    padding: 20px 12px;
     display: grid;
-    grid-column-gap: 5px;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-column-gap: 8px;
+    grid-row-gap: 24px;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
 }
 
 .box {
-    margin: 10px 15px;
+    // margin: 10px 15px;
     color: rgba(0, 0, 0, 0.87);
     box-sizing: border-box;
     background: #ffffff;
-    border-radius: 10px 10px 0px 0px;
+    padding: 12px;
     position: relative;
-    width: 200px;
+    width: 230px;
+    height: 100%;
     display: flex;
     flex-direction: column;
 }
@@ -171,7 +170,7 @@ span.mat-option-text{
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    padding: 5px;
+    padding: 8px 0px;
 }
 
 .priority {
@@ -275,33 +274,13 @@ span.mat-option-text{
     }
 }
 
-
 input {
     border: none;
     border-radius: 0px 25px 25px 0px;
 }
 
-::placeholder {
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 16px;
-    line-height: 24px;
-    letter-spacing: 0.15px;
-    color: rgba(0, 0, 0, 0.6);
-}
-
-.btn-event-internal{
-    background: #6200EE;
-    color: white; 
-    border: none;
-    border-radius: 5px;
-    font-family: Roboto;
-    text-align: center;
-    padding: 0px 15px;   
-}
-.btn-event-external{
-    background: #27AE60;
+.btn-event-internal {
+    background: #6200ee;
     color: white;
     border: none;
     border-radius: 5px;
@@ -310,28 +289,36 @@ input {
     padding: 0px 15px;
 }
 
+.btn-event-external {
+    background: #27ae60;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-family: Roboto;
+    text-align: center;
+    padding: 0px 15px;
+}
 
-
-.btn-result-1{
-    background: #FFFFFF;
-    color: #2B2B2B;
+.btn-result-1 {
+    background: #ffffff;
+    color: #2b2b2b;
     border: black 1px solid;
     border-radius: 5px;
     font-family: Roboto;
     text-align: center;
     padding: 0px 10px;
 }
-.btn-result-2{
-    background:#FDCF41;
-    color: #2B2B2B;
+.btn-result-2 {
+    background: #fdcf41;
+    color: #2b2b2b;
     border: none;
     border-radius: 5px;
     font-family: Roboto;
     text-align: center;
     padding: 0px 10px;
 }
-.btn-result-3{
-    background: #F28421;
+.btn-result-3 {
+    background: #f28421;
     color: white;
     border: none;
     border-radius: 5px;
@@ -339,8 +326,8 @@ input {
     text-align: center;
     padding: 0px 10px;
 }
-.btn-result-4{
-    background: #FF2D2D;
+.btn-result-4 {
+    background: #ff2d2d;
     color: white;
     border: none;
     border-radius: 5px;
@@ -348,8 +335,8 @@ input {
     text-align: center;
     padding: 0px 10px;
 }
-.btn-result-5{
-    background:green ;
+.btn-result-5 {
+    background: green;
     color: white;
     border: none;
     border-radius: 5px;
