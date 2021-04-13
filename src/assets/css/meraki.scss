@@ -171,6 +171,35 @@
         color: #2b2b2b;
     }
 
+    &__tasks {
+        font-family: "Poppins", sans-serif;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 18px;
+        padding: 16px;
+        color: #2b2b2b;
+        border: dashed 1px indigo;
+        border-radius: 5px;
+
+        &--tag {
+            border-radius: 50%;
+            background-color: indianred;
+            color: white;
+            align-self: center;
+            justify-self: center;
+            padding: 4px 6px;
+        }
+
+        &--desktop {
+            margin: 0px 8px !important;
+        }
+
+        &--mobile {
+            width: 100% !important;
+            margin: 4px 0px !important;
+        }
+    }
+
     &__input {
         padding-bottom: 0px !important;
         font-size: 12px !important;
