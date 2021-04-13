@@ -364,7 +364,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
     try {
       if (this.analysisForm.valid && this.listAreaForm.valid) {
         const resp = this.qualityService.saveCorrectiveActions(
-          this.data.id,
+          this.data,
           this.analysisForm.value,
           this.listAreaForm.value,
           //this.emailArray,

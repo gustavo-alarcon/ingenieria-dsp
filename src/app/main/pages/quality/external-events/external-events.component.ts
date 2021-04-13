@@ -176,7 +176,8 @@ export class ExternalEventsComponent implements OnInit {
             this.user,
             imagesObjGeneral,
             imagesObjDetail,
-            this.uploadFile
+            this.uploadFile,
+            this.nameFileSelect
           )
           .pipe(take(1))
           .subscribe((res) => {

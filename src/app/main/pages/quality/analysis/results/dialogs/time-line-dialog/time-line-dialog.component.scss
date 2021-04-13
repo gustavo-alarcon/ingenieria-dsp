@@ -44,7 +44,21 @@
             color: #2b2b2bb8;
             position: absolute;
             left: 43%;
-            top: 88%;
+            top: 91%;
+        }
+        &--processed{
+            font-weight: 700;
+            color: #2b2b2bb8;
+            position: absolute;
+            left: 33%;
+            top: 65%;
+        }
+        &--tracing{
+            font-weight: 700;
+            color: #2b2b2bb8;
+            position: absolute;
+            left: 65%;
+            top: 65%;
         }
     }
 

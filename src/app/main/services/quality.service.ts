@@ -4,7 +4,6 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { from, Observable, of } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import {
-  Quality,
   QualityTimer,
   QualityListSpecialist,
   QualityListResponsibleArea,
@@ -15,6 +14,7 @@ import { User } from '../models/user-model';
 import * as firebase from 'firebase/app';
 import { EvaluationsUser } from '../models/evaluations.model';
 import { logging } from 'protractor';
+import { Quality } from '../models/quality.model';
 
 @Injectable({
   providedIn: 'root',
@@ -38,7 +38,8 @@ export class QualityService {
     user: User,
     imagesObj,
     imagesObjDetail,
-    objFile
+    objFile,
+    nameFile: string
   ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
@@ -50,10 +51,15 @@ export class QualityService {
     // Structuring the data model
     const data: any = {
       id: qualityDocRef.id,
-      createdAt: new Date(),
       createdBy: user,
       editedAt: null,
       edited: null,
+      createdAt: new Date(),
+      processTimer: null,
+      tracingTimer: null,
+      finalizedTimer: null,
+      tracingTimeElapsed: null,
+      fileName: nameFile,
       eventType: 'Interno', //Interno , Externo
       workOrder: form.workdOrden,
       component: form.component,
@@ -99,7 +105,8 @@ export class QualityService {
     user: User,
     imagesObj,
     imagesObjDetail,
-    objFile
+    objFile,
+    nameFile
   ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
@@ -115,6 +122,11 @@ export class QualityService {
       createdBy: user,
       editedAt: null,
       edited: null,
+      processTimer: null,
+      tracingTimer: null,
+      finalizedTimer: null,
+      tracingTimeElapsed: null,
+      fileName: nameFile,
       eventType: 'Externo', //Interno , Externo
       workOrder: form.workdOrden,
       component: form.component,
@@ -173,9 +185,43 @@ export class QualityService {
     const batch = this.afs.firestore.batch();
 
     // create document reference in quality collection
-    const qualityDocRef = this.afs.firestore.doc(`/db/generalConfig`);
+    const qualityDocRef = this.afs.firestore.doc(`/db/generalConfigQuality`);
     const newData = {
       registryTimer: timer,
+    };
+
+    batch.update(qualityDocRef, newData);
+    return of(batch);
+  }
+  /**
+   * update the passed Quality based in his registryTimer
+   * @param {string} timer - time object
+   */
+  addTimerInProcess(
+    timer: QualityTimer
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+
+    // create document reference in quality collection
+    const qualityDocRef = this.afs.firestore.doc(`/db/generalConfigQuality`);
+    const newData = {
+      processTimer: timer,
+    };
+
+    batch.update(qualityDocRef, newData);
+    return of(batch);
+  }
+  addTimerInTracing(
+    timer: QualityTimer
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+
+    // create document reference in quality collection
+    const qualityDocRef = this.afs.firestore.doc(`/db/generalConfigQuality`);
+    const newData = {
+      tracingTimer: timer,
     };
 
     batch.update(qualityDocRef, newData);
@@ -391,7 +437,7 @@ export class QualityService {
   }
 
   updateQualitySpecialist(
-    entryId: string,
+    quality: Quality,
     nameSpecialist: string,
     emailList: string[],
     user: User,
@@ -402,14 +448,15 @@ export class QualityService {
     const batch = this.afs.firestore.batch();
     // create reference for document in evaluation entries collection
     const qualityDocRef = this.afs.firestore.doc(
-      `db/ferreyros/quality/${entryId}`
+      `db/ferreyros/quality/${quality.id}`
     );
     // Structuring the data model
     const data: any = {
+      registryTimeElapsed: quality.registryTimeElapsed,
+      registryPercentageElapsed: quality.registryPercentageElapsed,
+      processAt: new Date(),
       emailList: firebase.default.firestore.FieldValue.arrayUnion(emailList),
       specialist: nameSpecialist,
-      editedAt: new Date(),
-      edited: user,
       state: status,
     };
     batch.update(qualityDocRef, data);
@@ -495,7 +542,7 @@ export class QualityService {
    * @param {User} user - User's data in actual session
    */
   saveCorrectiveActions(
-    entryId,
+    quality: Quality,
     formAnalysis,
     formCorrective,
     emailList,
@@ -505,12 +552,15 @@ export class QualityService {
     const batch = this.afs.firestore.batch();
     // create reference for document in evaluation entries collection
     const qualityDocRef = this.afs.firestore.doc(
-      `db/ferreyros/quality/${entryId}`
+      `db/ferreyros/quality/${quality.id}`
     );
    
 
     // Structuring the data model
     const data: any = {
+      processTimeElapsed: quality.processTimeElapsed,
+      processPercentageElapsed: quality.processPercentageElapsed,
+      tracingAt: new Date(),
       emailList: firebase.default.firestore.FieldValue.arrayUnion(emailList),
       analysis: formAnalysis,
       correctiveActions: formCorrective.areas,
@@ -541,21 +591,44 @@ export class QualityService {
   }
 
   saveNewCorrectiveActions(
-    entryId,
-    newCorrective
+    quality: Quality,
+    newCorrective,
+    count
   ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
     // create reference for document in evaluation entries collection
     const qualityDocRef = this.afs.firestore.doc(
-      `db/ferreyros/quality/${entryId}`
+      `db/ferreyros/quality/${quality.id}`
     );
 
     // Structuring the data model
     const data: any = {
       correctiveActions: newCorrective,
-      taskDone: firebase.default.firestore.FieldValue.increment(1)
+      taskDone: firebase.default.firestore.FieldValue.increment(count),
+    };
+    batch.update(qualityDocRef, data);
 
+    return of(batch);
+  }
+  finalizedCorrectiveActions(
+    quality: Quality,
+    status: string
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    // create reference for document in evaluation entries collection
+    const qualityDocRef = this.afs.firestore.doc(
+      `db/ferreyros/quality/${quality.id}`
+    );
+
+    // Structuring the data model
+    const data: any = {
+      attentionTimeElapsed: quality.attentionTimeElapsed,
+      tracingTimeElapsed: quality.tracingTimeElapsed,
+      tracingPercentageElapsed: quality.tracingPercentageElapsed,
+      finalizedAt: new Date(),
+      state: status
     };
     batch.update(qualityDocRef, data);
 

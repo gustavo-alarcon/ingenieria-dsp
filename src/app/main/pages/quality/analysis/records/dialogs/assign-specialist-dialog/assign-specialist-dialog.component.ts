@@ -172,7 +172,7 @@ export class AssignSpecialistDialogComponent implements OnInit, OnDestroy {
     try {
       if (this.specialistForm.valid  ) {
         const resp = this.qualityService.updateQualitySpecialist(
-          this.data.id,
+          this.data,
           this.specialistForm.get('specialist').value,
          Object.assign({}, this.emailArray),
          // this.emailArray,

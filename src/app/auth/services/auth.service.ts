@@ -45,6 +45,10 @@ export class AuthService {
     return this.afs.doc<GeneralConfig>(`/db/generalConfig`)
       .valueChanges();
   }
+  getGeneralConfigQuality(): Observable<GeneralConfig> {
+    return this.afs.doc<GeneralConfig>(`/db/generalConfigQuality`)
+      .valueChanges();
+  }
 
   async loginGoogle(): Promise<firebase.auth.UserCredential> {
     try {

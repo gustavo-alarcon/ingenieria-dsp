@@ -10,14 +10,27 @@ export interface Quality{
     registryTimer?: any;
     registryTimeElapsed?: QualityTimer;
     registryPercentageElapsed?: number;
+
     processAt?: Date;
     processTimer?: any;
     processTimeElapsed?: QualityTimer;
     processPercentageElapsed?: number;
+
+    tracingAt?: Date;
+    tracingTimer?: any;
+    tracingTimeElapsed?: QualityTimer;
+    tracingPercentageElapsed?: number;
+
+    finalizedAt?: Date;
+    finalizedTimer?: any;
+    finalizedTimeElapsed?: QualityTimer;
+    finalizedPercentageElapsed?: number;
+
+    fileName: string;
     inquiryAt?: Date;
     attentionTimeElapsed?: QualityTimer;
-    finalizedAt?: Date;
-    finalizedBy: User;
+   //finalizedAt?: Date;
+   //finalizedBy: User;
     taskDone?: number;
     causeFailureList: Array<string>;
     analysis: Array<string>;
