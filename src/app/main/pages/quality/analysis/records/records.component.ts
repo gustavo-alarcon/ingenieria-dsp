@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject, Observable, combineLatest } from 'rxjs';
+import { BehaviorSubject, Observable, combineLatest, Subscription } from 'rxjs';
 import { Evaluation } from '../../../../models/evaluations.model';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -12,6 +12,7 @@ import { AssignSpecialistDialogComponent } from './dialogs/assign-specialist-dia
 import { DetailExternalDialogComponent } from './dialogs/detail-external-dialog/detail-external-dialog.component';
 import { DetailInternalDialogComponent } from './dialogs/detail-internal-dialog/detail-internal-dialog.component';
 import { TimeLineDialogComponent } from './dialogs/time-line-dialog/time-line-dialog.component';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-records',
@@ -25,7 +26,7 @@ export class RecordsComponent implements OnInit {
   quality$: Observable<Quality[]>;
   dataQuality: Quality[] = [];
   counter: number;
-  searchForm: FormGroup;
+  searchControl = new FormControl('');
   state = 'registered';
 
   eventTypeControl = new FormControl('');
@@ -39,21 +40,30 @@ export class RecordsComponent implements OnInit {
     }
   ];
 
+  subscriptions = new Subscription();
+  isMobile = false;
+
   constructor(
+    private breakpoint: BreakpointObserver,
     public dialog: MatDialog,
-    private fb: FormBuilder,
     private qualityService: QualityService,
     private auth: AuthService
   ) { }
 
   ngOnInit(): void {
-    this.searchForm = this.fb.group({
-      ot: null,
-    });
+    this.subscriptions.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
+      .subscribe(res => {
+        if (res.matches) {
+          this.isMobile = true;
+        } else {
+          this.isMobile = false;
+        }
+      })
+    );
 
     this.quality$ = combineLatest(
       this.qualityService.getAllQualityByState(this.state),
-      this.searchForm.get('ot').valueChanges.pipe(
+      this.searchControl.valueChanges.pipe(
         debounceTime(300),
         filter(input => input !== null),
         startWith<any>('')),
@@ -72,13 +82,13 @@ export class RecordsComponent implements OnInit {
           preFilterSearch = preFilterEventType.filter(quality => {
             return String(quality.workOrder).toLowerCase().includes(searchTerm) ||
               String(quality.component).toLowerCase().includes(searchTerm) ||
-              String(quality.workShop).toLowerCase().includes(searchTerm) ;
+              String(quality.workShop).toLowerCase().includes(searchTerm);
           });
         } else {
           preFilterSearch = qualities.filter(quality => {
-            return  String(quality.workOrder).toLowerCase().includes(searchTerm) ||
-            String(quality.component).toLowerCase().includes(searchTerm) ||
-            String(quality.workShop).toLowerCase().includes(searchTerm) ;
+            return String(quality.workOrder).toLowerCase().includes(searchTerm) ||
+              String(quality.component).toLowerCase().includes(searchTerm) ||
+              String(quality.workShop).toLowerCase().includes(searchTerm);
           });
         }
 
@@ -182,7 +192,7 @@ export class RecordsComponent implements OnInit {
         });
         break;
     }
-    
+
   }
 
   timeline(item): void {

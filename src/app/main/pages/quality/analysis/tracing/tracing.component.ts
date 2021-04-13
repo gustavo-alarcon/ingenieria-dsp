@@ -1,7 +1,8 @@
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
 import { debounceTime, filter, map, startWith, tap } from 'rxjs/operators';
 import { Quality } from 'src/app/main/models/quality.model';
 import { QualityService } from 'src/app/main/services/quality.service';
@@ -26,7 +27,7 @@ export class TracingComponent implements OnInit {
   quality$: Observable<Quality[]>;
   dataQuality: Quality[] = [];
   counter: number;
-  searchForm: FormGroup;
+  searchControl = new FormControl('');
   state = 'tracing';
 
   totalTask = 0;
@@ -42,21 +43,30 @@ export class TracingComponent implements OnInit {
     }
   ];
 
+  subscriptions = new Subscription();
+  isMobile = false;
+
   constructor(
+    private breakpoint: BreakpointObserver,
     public dialog: MatDialog,
-    private fb: FormBuilder,
     private qualityService: QualityService,
     private auth: AuthService
   ) { }
 
   ngOnInit(): void {
-    this.searchForm = this.fb.group({
-      ot: null,
-    });
+    this.subscriptions.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
+      .subscribe(res => {
+        if (res.matches) {
+          this.isMobile = true;
+        } else {
+          this.isMobile = false;
+        }
+      })
+    );
 
     this.quality$ = combineLatest(
       this.qualityService.getAllQualityByState(this.state),
-      this.searchForm.get('ot').valueChanges.pipe(
+      this.searchControl.valueChanges.pipe(
         debounceTime(300),
         filter(input => input !== null),
         startWith<any>('')),
@@ -67,7 +77,7 @@ export class TracingComponent implements OnInit {
         // total task pending
         this.totalTask = 0;
         qualities.map(el => {
-          if (el.taskDone < el.correctiveActions.length ) {
+          if (el.taskDone < el.correctiveActions.length) {
             const result = el.correctiveActions.length - el.taskDone;
             this.totalTask += result;
           }
@@ -83,13 +93,13 @@ export class TracingComponent implements OnInit {
           preFilterSearch = preFilterEventType.filter(quality => {
             return String(quality.workOrder).toLowerCase().includes(searchTerm) ||
               String(quality.component).toLowerCase().includes(searchTerm) ||
-              String(quality.workShop).toLowerCase().includes(searchTerm) ;
+              String(quality.workShop).toLowerCase().includes(searchTerm);
           });
         } else {
           preFilterSearch = qualities.filter(quality => {
-            return  String(quality.workOrder).toLowerCase().includes(searchTerm) ||
-            String(quality.component).toLowerCase().includes(searchTerm) ||
-            String(quality.workShop).toLowerCase().includes(searchTerm) ;
+            return String(quality.workOrder).toLowerCase().includes(searchTerm) ||
+              String(quality.component).toLowerCase().includes(searchTerm) ||
+              String(quality.workShop).toLowerCase().includes(searchTerm);
           });
         }
 
@@ -185,7 +195,7 @@ export class TracingComponent implements OnInit {
         });
         break;
     }
-    
+
   }
 
   timeline(item): void {
@@ -194,14 +204,14 @@ export class TracingComponent implements OnInit {
       data: item
     });
   }
-  accCorrective(item): void{
+  accCorrective(item): void {
     this.dialog.open(AccCorrectiveDialogComponent, {
       maxWidth: 900,
       width: '90vw',
       data: item
     });
   }
-  reports(item): void{
+  reports(item): void {
     this.dialog.open(ReportsDialogComponent, {
       maxWidth: 900,
       width: '90vw',
