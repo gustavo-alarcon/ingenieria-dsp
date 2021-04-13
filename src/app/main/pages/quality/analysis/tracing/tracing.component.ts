@@ -1,5 +1,5 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
@@ -204,7 +204,7 @@ export class TracingComponent implements OnInit, OnDestroy {
 
   }
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.subscriptions.unsubscribe();
   }
 
   settingDialog(): void {
