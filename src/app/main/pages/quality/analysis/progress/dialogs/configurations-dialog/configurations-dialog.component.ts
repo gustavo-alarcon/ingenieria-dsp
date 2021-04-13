@@ -48,7 +48,7 @@ export class ConfigurationsDialogComponent implements OnInit {
   save(): void {
     try {
       this.qualityService
-        .addTimerInRecord(this.timerFormGroup.value)
+        .addTimerInProcess(this.timerFormGroup.value)
         .pipe(take(1))
         .subscribe((res) => {
           res.commit().then(() => {

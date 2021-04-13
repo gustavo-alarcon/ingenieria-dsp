@@ -167,7 +167,8 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
             this.user,
             imagesObjGeneral,
             imagesObjDetail,
-            this.uploadFile
+            this.uploadFile,
+            this.nameFileSelect
           )
           .pipe(take(1))
           .subscribe((res) => {

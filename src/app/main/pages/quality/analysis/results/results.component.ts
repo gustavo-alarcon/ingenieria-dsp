@@ -101,14 +101,7 @@ export class ResultsComponent implements OnInit {
           this.isMobile = false;
         }
       })
-    )
-
-    /* this.quality$ = this.qualityService.getAllQuality().pipe(
-      tap((res: Quality[]) => {
-        console.log('Quality', res);
-        this.settingsDataSource.data = res;
-      })
-    ); */
+    );
 
     this.quality$ = combineLatest(
       this.qualityService.getAllQuality(),

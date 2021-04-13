@@ -35,6 +35,10 @@ export class AccCorrectiveDialogComponent implements OnInit, OnDestroy {
 
   date = new Date();
   userCurrent: User;
+  status = 'finalized';
+
+  countCheck = 0;
+
 
   constructor(
     public dialogRef: MatDialogRef<AccCorrectiveDialogComponent>,
@@ -103,6 +107,7 @@ export class AccCorrectiveDialogComponent implements OnInit, OnDestroy {
                });
 
                this.dataArea = this.newAccCorrective ;
+               this.checkCounter();
               }
             });
             this.loading.next(false);
@@ -110,13 +115,21 @@ export class AccCorrectiveDialogComponent implements OnInit, OnDestroy {
         ).subscribe()
     );
   }
-  
+
+  checkCounter(): void{
+    this.countCheck += 1;
+  }
+
   save(): void{
+    console.log('this.data.taskDone : ', this.data)
+    const task = this.data.taskDone + this.countCheck;
+
     try {
       if (this.newAccCorrective) {
         const resp = this.qualityService.saveNewCorrectiveActions(
-          this.data.id,
-          this.newAccCorrective
+          this.data,
+          this.newAccCorrective,
+          task
         );
         this.subscription.add(
           resp.subscribe((batch) => {
@@ -128,6 +141,39 @@ export class AccCorrectiveDialogComponent implements OnInit, OnDestroy {
                     duration: 6000,
                   });
                   this.dialogRef.close(false);
+                })
+                .catch((err) => {
+                  this.snackbar.open(
+                    '🚨 Hubo un error al actualizar  !',
+                    'Aceptar',
+                    {
+                      duration: 6000,
+                    }
+                  );
+                });
+            }
+          })
+        );
+      }
+
+      if ( task >= this.data.correctiveActions.length ) {
+        const resp = this.qualityService.finalizedCorrectiveActions(
+          this.data,
+          this.status
+        );
+        this.subscription.add(
+          resp.subscribe((batch) => {
+            if (batch) {
+              batch
+                .commit()
+                .then(() => {
+                  this.snackbar.open(
+                    '✅ Acciones correctivas finalizado !',
+                    'Aceptar',
+                    {
+                      duration: 6000,
+                    }
+                  );
                 })
                 .catch((err) => {
                   this.snackbar.open(
