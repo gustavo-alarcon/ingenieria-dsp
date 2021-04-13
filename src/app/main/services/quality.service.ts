@@ -58,6 +58,7 @@ export class QualityService {
       processTimer: null,
       tracingTimer: null,
       finalizedTimer: null,
+      tracingTimeElapsed: null,
       fileName: nameFile,
       eventType: 'Interno', //Interno , Externo
       workOrder: form.workdOrden,
@@ -124,6 +125,7 @@ export class QualityService {
       processTimer: null,
       tracingTimer: null,
       finalizedTimer: null,
+      tracingTimeElapsed: null,
       fileName: nameFile,
       eventType: 'Externo', //Interno , Externo
       workOrder: form.workdOrden,

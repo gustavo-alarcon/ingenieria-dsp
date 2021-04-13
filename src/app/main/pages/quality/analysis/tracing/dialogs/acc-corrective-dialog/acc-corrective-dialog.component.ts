@@ -124,12 +124,16 @@ export class AccCorrectiveDialogComponent implements OnInit, OnDestroy {
     console.log('this.data.taskDone : ', this.data)
     const task = this.data.taskDone + this.countCheck;
 
+    console.log('task : ', task)
+    console.log('this.data.taskDone : ', this.data.taskDone)
+    console.log('this.countCheck : ', this.countCheck)
+
     try {
       if (this.newAccCorrective) {
         const resp = this.qualityService.saveNewCorrectiveActions(
           this.data,
           this.newAccCorrective,
-          task
+          this.countCheck
         );
         this.subscription.add(
           resp.subscribe((batch) => {
@@ -174,6 +178,7 @@ export class AccCorrectiveDialogComponent implements OnInit, OnDestroy {
                       duration: 6000,
                     }
                   );
+                  this.dialogRef.close(false);
                 })
                 .catch((err) => {
                   this.snackbar.open(
