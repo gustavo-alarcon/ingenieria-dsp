@@ -65,10 +65,11 @@ export class SparePartsComponent implements OnInit, OnDestroy {
         /* grab first sheet */
         const wsname: string = wb.SheetNames[0];
         const ws: XLSX.WorkSheet = wb.Sheets[wsname];
+        
         /* save data */
-        this.selected = XLSX.utils.sheet_to_json(ws, { header: 1 });
+        this.selected = XLSX.utils.sheet_to_json(ws, { header: 1, raw: false });
 
-        const csvRead = this.selected.slice(3, this.selected.length);
+        const csvRead = this.selected.slice(4, this.selected.length);
         let dataReconstructed = [];
         let readType;
 
