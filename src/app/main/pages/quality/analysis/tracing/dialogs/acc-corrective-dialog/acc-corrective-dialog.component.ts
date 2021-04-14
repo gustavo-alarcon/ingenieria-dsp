@@ -121,12 +121,7 @@ export class AccCorrectiveDialogComponent implements OnInit, OnDestroy {
   }
 
   save(): void{
-    console.log('this.data.taskDone : ', this.data)
     const task = this.data.taskDone + this.countCheck;
-
-    console.log('task : ', task)
-    console.log('this.data.taskDone : ', this.data.taskDone)
-    console.log('this.countCheck : ', this.countCheck)
 
     try {
       if (this.newAccCorrective) {

@@ -58,7 +58,12 @@ export class QualityService {
       processTimer: null,
       tracingTimer: null,
       finalizedTimer: null,
+      registryTimeElapsed: null,
+      registryPercentageElapsed: null,
+      processTimeElapsed: null,
+      processPercentageElapsed: null,
       tracingTimeElapsed: null,
+      tracingPercentageElapsed: null,
       fileName: nameFile,
       eventType: 'Interno', //Interno , Externo
       workOrder: form.workdOrden,
@@ -72,7 +77,7 @@ export class QualityService {
       miningOperation: null,
       correctiveActions: [],
       riskLevel: null,
-      emailList: null,
+      emailList: [],
       taskDone: 0,
       state: 'registered',
       generalImages: firebase.default.firestore.FieldValue.arrayUnion(
@@ -125,7 +130,12 @@ export class QualityService {
       processTimer: null,
       tracingTimer: null,
       finalizedTimer: null,
+      registryTimeElapsed: null,
+      registryPercentageElapsed: null,
+      processTimeElapsed: null,
+      processPercentageElapsed: null,
       tracingTimeElapsed: null,
+      tracingPercentageElapsed: null,
       fileName: nameFile,
       eventType: 'Externo', //Interno , Externo
       workOrder: form.workdOrden,
@@ -439,14 +449,13 @@ export class QualityService {
   updateQualitySpecialist(
     quality: Quality,
     nameSpecialist: string,
-    emailList: string[],
-    user: User,
+    emailList ,
     status: string
   ): Observable<firebase.default.firestore.WriteBatch> {
-    console.log('emailList : ', emailList)
     // create batch
     const batch = this.afs.firestore.batch();
     // create reference for document in evaluation entries collection
+
     const qualityDocRef = this.afs.firestore.doc(
       `db/ferreyros/quality/${quality.id}`
     );
@@ -455,14 +464,23 @@ export class QualityService {
       registryTimeElapsed: quality.registryTimeElapsed,
       registryPercentageElapsed: quality.registryPercentageElapsed,
       processAt: new Date(),
-      emailList: firebase.default.firestore.FieldValue.arrayUnion(emailList),
       specialist: nameSpecialist,
       state: status,
-    };
+    }
+
     batch.update(qualityDocRef, data);
+
+    emailList.forEach(el => {
+      const qualityEmailDocRef = this.afs.firestore.doc(`db/ferreyros/quality/${quality.id}`);
+      const data1: any = {
+        emailList: firebase.default.firestore.FieldValue.arrayUnion(el)
+      };
+      batch.update(qualityEmailDocRef, data1);
+    });
 
     return of(batch);
   }
+ 
   /**
    * add the name addCauseFailureList
    * @param {string} form - name CauseFailureList
@@ -554,19 +572,32 @@ export class QualityService {
     const qualityDocRef = this.afs.firestore.doc(
       `db/ferreyros/quality/${quality.id}`
     );
-   
 
     // Structuring the data model
     const data: any = {
       processTimeElapsed: quality.processTimeElapsed,
       processPercentageElapsed: quality.processPercentageElapsed,
       tracingAt: new Date(),
-      emailList: firebase.default.firestore.FieldValue.arrayUnion(emailList),
       analysis: formAnalysis,
-      correctiveActions: formCorrective.areas,
       state: status,
     };
     batch.update(qualityDocRef, data);
+
+    emailList.forEach(el => {
+      const qualityEmailDocRef = this.afs.firestore.doc(`db/ferreyros/quality/${quality.id}`);
+      const data1: any = {
+        emailList: firebase.default.firestore.FieldValue.arrayUnion(el)
+      };
+      batch.update(qualityEmailDocRef, data1);
+    });
+
+    formCorrective.areas.forEach(el => {
+      const qualityEmailDocRef = this.afs.firestore.doc(`db/ferreyros/quality/${quality.id}`);
+      const data2: any = {
+        correctiveActions: firebase.default.firestore.FieldValue.arrayUnion(el)
+      };
+      batch.update(qualityEmailDocRef, data2);
+    });
 
     return of(batch);
   }

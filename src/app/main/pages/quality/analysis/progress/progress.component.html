@@ -65,9 +65,7 @@
           <div class="info-row"> Componente: <span> {{item.component}}</span> </div>
           <div class="info-row"> Taller: <span> {{item.partNumber}}</span></div>
           <div class="info-row"> Especialista: <span> {{item.specialist['name']}}</span></div>
-          <div class="info-row"> Fecha: <span> {{(item.createdAt['seconds'] * 1000) | date : 'dd/MM/yy
-              hh:mm:ss'}}</span>
-          </div>
+          <div class="info-row"> Fecha: <span> {{(item.createdAt['seconds'] * 1000) | date : 'dd/MM/yy hh:mm:ss'}}</span></div>
         </div>
         <div class="ms-fill"></div>
       </div>
@@ -77,10 +75,10 @@
         <div class="timer-black" [ngStyle]="{'width.%': item.registryPercentageElapsed }">
         </div>
         <div class="progress-view">
-          {{item.registryTimeElapsed?.days | number : '2.'}} /
-          {{item.registryTimeElapsed?.hours | number : '2.'}} :
-          {{item.registryTimeElapsed?.minutes | number : '2.'}} :
-          {{item.registryTimeElapsed?.seconds | number : '2.'}}
+          {{item.processTimeElapsed?.days | number : '2.'}} /
+          {{item.processTimeElapsed?.hours | number : '2.'}} :
+          {{item.processTimeElapsed?.minutes | number : '2.'}} :
+          {{item.processTimeElapsed?.seconds | number : '2.'}}
         </div>
       </div>
     </div>

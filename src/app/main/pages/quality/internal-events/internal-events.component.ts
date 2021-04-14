@@ -185,6 +185,9 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
                 this.filesGeneral = [];
                 this.uploadFile = [];
                 this.nameFileSelect = '';
+                this.internalForm.markAsPristine();
+                this.internalForm.markAsUntouched();
+                this.internalForm.clearValidators();
               })
               .catch((err) => {
                 this.snackbar.open('🚨 Hubo un error.', 'Aceptar', {

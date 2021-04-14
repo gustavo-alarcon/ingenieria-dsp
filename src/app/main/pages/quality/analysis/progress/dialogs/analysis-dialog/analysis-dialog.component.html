@@ -41,7 +41,7 @@
                                         }"
                             > [ {{result}} ]
                            </span>
-                          <!--  <span *ngIf="data.evaluationAnalisis" 
+                           <span *ngIf="data.evaluationAnalisis" 
                            [ngClass]="{
                                         'btn-result-1':   data.evaluationAnalisis > 0 && data.evaluationAnalisis < 5
                                        ,'btn-result-2':   data.evaluationAnalisis > 4 && data.evaluationAnalisis < 10
@@ -49,7 +49,7 @@
                                        ,'btn-result-4':   data.evaluationAnalisis > 19 && data.evaluationAnalisis < 26
                                        }"
                            > [ {{data.evaluationAnalisis}} ]
-                          </span> -->
+                          </span>
                         </div>
                     </ng-template>                   
 
@@ -190,8 +190,7 @@
                                     <mat-select  formControlName="name"                            
                                         >
                                         <mat-option  *ngFor="let name of areaResponsable" 
-                                            [value]="name" (click)="onclickArea(name, i)"                                            
-                                            
+                                            [value]="name" (click)="onclickArea(name, i)"                                                                                        
                                             >
                                             {{name.name}}
                                         </mat-option>
