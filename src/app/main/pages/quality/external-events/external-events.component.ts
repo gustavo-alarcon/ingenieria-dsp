@@ -194,6 +194,8 @@ export class ExternalEventsComponent implements OnInit {
                 this.filesGeneral = [];
                 this.uploadFile = [];
                 this.nameFileSelect = '';
+                this.externalForm.markAsPristine();
+                this.externalForm.markAsUntouched();
               })
               .catch((err) => {
                 this.snackbar.open('🚨 Hubo un error.', 'Aceptar', {

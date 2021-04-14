@@ -148,9 +148,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initForm();
 
-    console.log(' analisys _ ', this.data.analysis);
-
-    this.emailArray = Object.values(this.data.emailList['0']);
+    this.emailArray = this.data.emailList;
 
     this.filteredBroadcast$ = this.qualityService.getAllBroadcastList().pipe(
       tap((res: QualityBroadcastList[]) => {
@@ -261,26 +259,25 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
   }
 
   initForm(): void {
-    /* if (this.data.analysis) {
+    if (this.data.analysis) {
        this.analysisForm = this.fb.group({
-        causeFailure: [this.data.analysis['causeFailure'], Validators.required],
-        process: [this.data.analysis['process'], Validators.required],     
-        quality: ['', Validators.required],
-        cost: [this.data.analysis['cost']['name'], Validators.required],
-        frequency: [this.data.analysis['frequency']['name'], Validators.required],
+        causeFailure: this.data.analysis['causeFailure'],
+        process: this.data.analysis['process'],
+        quality: this.data.analysis['quality'],
+        cost: this.data.analysis['cost'],
+        frequency: this.data.analysis['frequency'],
       });
-       
-       this.analysisForm.controls['quality'].setValue(this.data.analysis['quality']['name']);
-
-    } else{ */
-    this.analysisForm = this.fb.group({
-      causeFailure: ['', Validators.required],
-      process: ['', Validators.required],
-      quality: [],
-      cost: ['', Validators.required],
-      frequency: ['', Validators.required],
-    });
-    /* } */
+       //this.analysisForm.get('quality').setValue(this.data.analysis['quality']['name']);
+       //this.analysisForm.controls['quality'].setValue(this.data.analysis['quality']);
+    } else{
+      this.analysisForm = this.fb.group({
+        causeFailure: ['', Validators.required],
+        process: ['', Validators.required],
+        quality: ['', Validators.required],
+        cost: ['', Validators.required],
+        frequency: ['', Validators.required],
+      });
+    }
 
     this.listAreaForm = this.fb.group({
       areas: this.fb.array([
@@ -367,8 +364,8 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
           this.data,
           this.analysisForm.value,
           this.listAreaForm.value,
-          //this.emailArray,
-          Object.assign({}, this.emailArray),
+          this.emailArray,
+          //Object.assign({}, this.emailArray),
           this.state
         );
         this.subscription.add(

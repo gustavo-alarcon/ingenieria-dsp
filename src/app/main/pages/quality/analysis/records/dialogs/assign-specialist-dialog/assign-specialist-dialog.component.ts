@@ -174,11 +174,9 @@ export class AssignSpecialistDialogComponent implements OnInit, OnDestroy {
         const resp = this.qualityService.updateQualitySpecialist(
           this.data,
           this.specialistForm.get('specialist').value,
-         Object.assign({}, this.emailArray),
-         // this.emailArray,
-          this.user,
+          this.emailArray,
           this.state
-       );
+        );
         this.loading.next(true);
         this.subscription.add(
           resp.subscribe((batch) => {
