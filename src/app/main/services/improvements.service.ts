@@ -260,7 +260,7 @@ export class ImprovementsService {
 
               if (doc.criticalPart) {
                 data = {
-                  description: doc.description,
+                  description: readType === 1 ? part[3].replaceAll('"', '') : part[4].replaceAll('"', ''),
                   quantity: doc.quantity,
                   improvedPart: doc.improvedPart,
                   evaluatedPart: doc.improvedPart,
@@ -269,7 +269,7 @@ export class ImprovementsService {
                 };
               } else {
                 data = {
-                  description: doc.description,
+                  description: readType === 1 ? part[3].replaceAll('"', '') : part[4].replaceAll('"', ''),
                   quantity: doc.quantity,
                   improvedPart: doc.improvedPart,
                   evaluatedPart: evaluatedPart,
