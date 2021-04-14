@@ -61,7 +61,8 @@
                     <mat-form-field appearance="outline" style="width: 180px;" class="container-form-array__inputs">
                         <mat-label>Nº de parte disponible</mat-label>
                         <input matInput placeholder="Nº de parte mejorada" [ngModel]="item.evaluatedPart"
-                            name="evaluatedPart" [ngClass]="item.match ? 'match' : ''" readonly>
+                            name="evaluatedPart" [ngClass]="item.improvedPart !== item.evaluatedPart ? 'match' : ''"
+                            readonly>
                     </mat-form-field>
 
                     <div class="container-form-array__checked">
