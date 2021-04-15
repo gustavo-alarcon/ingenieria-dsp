@@ -36,8 +36,8 @@ export class QualityService {
   addQualityInternal(
     form,
     user: User,
-    imagesObj,
-    imagesObjDetail,
+    imagesGeneral,
+    imagesDetail,
     objFile,
     nameFile: string
   ): Observable<firebase.default.firestore.WriteBatch> {
@@ -80,12 +80,8 @@ export class QualityService {
       emailList: [],
       taskDone: 0,
       state: 'registered',
-      generalImages: firebase.default.firestore.FieldValue.arrayUnion(
-        imagesObj
-      ),
-      detailImages: firebase.default.firestore.FieldValue.arrayUnion(
-        imagesObjDetail
-      ),
+      generalImages: imagesGeneral,
+      detailImages: imagesDetail,
       question1: null,
       question2: null,
       question3: null,
@@ -93,7 +89,15 @@ export class QualityService {
       file: firebase.default.firestore.FieldValue.arrayUnion(objFile),
     };
     batch.set(qualityDocRef, data);
-
+/* 
+    emailList.forEach(el => {
+      const qualityEmailDocRef = this.afs.firestore.doc(`db/ferreyros/quality/${quality.id}`);
+      const data1: any = {
+        emailList: firebase.default.firestore.FieldValue.arrayUnion(el)
+      };
+      batch.update(qualityEmailDocRef, data1);
+    });
+ */
     return of(batch);
   }
 
@@ -108,8 +112,8 @@ export class QualityService {
   addQualityExternal(
     form,
     user: User,
-    imagesObj,
-    imagesObjDetail,
+    imagesGeneral,
+    imagesDetail,
     objFile,
     nameFile
   ): Observable<firebase.default.firestore.WriteBatch> {
@@ -152,12 +156,8 @@ export class QualityService {
       state: 'registered',
       emailList: null,
       taskDone: 0,
-      generalImages: firebase.default.firestore.FieldValue.arrayUnion(
-        imagesObj
-      ),
-      detailImages: firebase.default.firestore.FieldValue.arrayUnion(
-        imagesObjDetail
-      ),
+      generalImages: imagesGeneral,
+      detailImages: imagesDetail,
       question1: form.question1,
       question2: form.question2,
       question3: form.question3,
@@ -578,7 +578,7 @@ export class QualityService {
       processTimeElapsed: quality.processTimeElapsed,
       processPercentageElapsed: quality.processPercentageElapsed,
       tracingAt: new Date(),
-      analysis: formAnalysis,
+      //analysis: formAnalysis,
       state: status,
     };
     batch.update(qualityDocRef, data);
@@ -604,8 +604,11 @@ export class QualityService {
 
   updateQualityEvaluationAnalisis(
     entryId: string,
-    analisis: number
+    analisis: number,
+    formAnalysis
   ): Observable<firebase.default.firestore.WriteBatch> {
+    console.log('formAnalysis : ', formAnalysis)
+    console.log('analisis : ', analisis)
     // create batch
     const batch = this.afs.firestore.batch();
     // create reference for document in evaluation entries collection
@@ -615,6 +618,8 @@ export class QualityService {
     // Structuring the data model
     const data: any = {
       evaluationAnalisis: analisis,
+      analysis: formAnalysis,
+
     };
     batch.update(qualityDocRef, data);
 

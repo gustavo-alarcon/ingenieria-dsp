@@ -135,6 +135,8 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
   resultEvaluation$: Observable<any>;
   areaResponsable$: Observable<any[]>;
 
+  resultAnalysis = 0;
+
   private subscription = new Subscription();
 
   constructor(
@@ -211,37 +213,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
         let roundResult: number;
         result = ((codeQuality + codeCost) / 2) * codeFrecuency;
         roundResult = Math.round(result);
-
-        const resp = this.qualityService.updateQualityEvaluationAnalisis(
-          this.data.id,
-          roundResult
-        );
-        this.subscription.add(
-          resp.subscribe((batch) => {
-            if (batch) {
-              batch
-                .commit()
-                .then(() => {
-                  this.snackbar.open(
-                    '✅ Se realizo analisis correctamente!',
-                    'Aceptar',
-                    {
-                      duration: 6000,
-                    }
-                  );
-                })
-                .catch((err) => {
-                  this.snackbar.open(
-                    '🚨 Hubo un error al actualizar  !',
-                    'Aceptar',
-                    {
-                      duration: 6000,
-                    }
-                  );
-                });
-            }
-          })
-        );
+        this.resultAnalysis = roundResult;
 
         return roundResult;
       })
@@ -359,7 +331,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
   } */
   save(): void {
     try {
-      if (this.analysisForm.valid && this.listAreaForm.valid) {
+      if (this.data.analysis && this.listAreaForm.valid) {
         const resp = this.qualityService.saveCorrectiveActions(
           this.data,
           this.analysisForm.value,
@@ -392,6 +364,44 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
           })
         );
       }
+
+
+      if (this.analysisForm.valid) {
+        const resp = this.qualityService.updateQualityEvaluationAnalisis(
+          this.data.id,
+          this.resultAnalysis,
+          this.analysisForm.value
+        );
+        this.subscription.add(
+          resp.subscribe((batch) => {
+            if (batch) {
+              batch
+                .commit()
+                .then(() => {
+                  this.snackbar.open(
+                    '✅ Se realizo analisis correctamente!',
+                    'Aceptar',
+                    {
+                      duration: 6000,
+                    }
+                  );
+                  this.dialog.closeAll();
+                })
+                .catch((err) => {
+                  this.snackbar.open(
+                    '🚨 Hubo un error al actualizar  !',
+                    'Aceptar',
+                    {
+                      duration: 6000,
+                    }
+                  );
+                });
+            }
+          })
+        );
+      }
+
+
     } catch (error) {
       console.log(error);
       this.loading.next(false);

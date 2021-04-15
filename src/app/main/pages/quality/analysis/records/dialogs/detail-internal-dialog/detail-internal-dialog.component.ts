@@ -17,18 +17,19 @@ export class DetailInternalDialogComponent implements OnInit {
 
   imagesGeneral = [];
   imagesDetail = [];
-  nameFile: string;
+  urlFile: string;
 
   constructor(
     private fb: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: Quality,
-    public dialogRef: MatDialogRef<DetailInternalDialogComponent>,  
+    public dialogRef: MatDialogRef<DetailInternalDialogComponent>,
   ) { }
 
   ngOnInit(): void {
-    this.imagesGeneral = Object.values(this.data.generalImages['0']);
-    this.imagesDetail = Object.values(this.data.detailImages['0']);
-    this.nameFile =  this.data.file;
+    this.imagesGeneral = this.data.generalImages;
+    this.imagesDetail = this.data.detailImages;
+
+    this.urlFile =  this.data.file;
 
     this.initForm();
   }

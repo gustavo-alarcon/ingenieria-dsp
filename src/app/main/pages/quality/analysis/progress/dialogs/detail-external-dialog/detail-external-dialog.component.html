@@ -77,13 +77,13 @@
                 <h3>Archivo adicional</h3>
                 <div class="container-file">
                     <mat-icon>insert_drive_file</mat-icon>
-                    <div *ngIf="nameFile">
-                        <a [href]="nameFile" class="container-file__name" >
+                    <div *ngIf="urlFile">
+                        <a [href]="urlFile" class="container-file__name" >
                             Descargar archivo
                         </a>
                     </div>
-                    <div *ngIf="!nameFile">
-                         No tiene archivo
+                    <div *ngIf="!urlFile">
+                        {{data.fileName}}
                     </div>
                     
                 </div>
