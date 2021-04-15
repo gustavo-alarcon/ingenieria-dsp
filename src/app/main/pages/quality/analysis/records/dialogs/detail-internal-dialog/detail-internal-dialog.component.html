@@ -3,7 +3,7 @@
 <div>
     <div class="ms-dialog-header">
         <mat-icon class="ms-dialog-header__icon">visibility</mat-icon>
-        <h3 class="ms-dialog-header__title"> Detalle evento externo </h3>
+        <h3 class="ms-dialog-header__title"> Detalle evento interno </h3>
         <span class="ms-fill"></span>
         <button mat-icon-button mat-dialog-close>
             <mat-icon>cancel</mat-icon>
@@ -50,15 +50,14 @@
                 <h3>Archivo adicional</h3>
                 <div class="container-file">
                     <mat-icon>insert_drive_file</mat-icon>
-                    <div *ngIf="nameFile">
-                        <a [href]="nameFile" class="container-file__name" >
-                            Descargar archivo
+                    <div *ngIf="urlFile">
+                        <a [href]="urlFile" class="container-file__name" >
+                            {{data.fileName}}
                         </a>
                     </div>
-                    <div *ngIf="!nameFile">
+                    <div *ngIf="!urlFile">
                          No tiene archivo
-                    </div>
-                    
+                    </div>                    
                 </div>
                 
             </form>

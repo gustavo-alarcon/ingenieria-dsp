@@ -151,7 +151,7 @@ export class ExternalEventsComponent implements OnInit {
         this.loading.next(false);
         return;
       } else {
-        this.imagesGeneral = [];
+       /*  this.imagesGeneral = [];
         const imagesObjGeneral = {};
         this.imagesGeneral = [
           ...this.imagesGeneral,
@@ -160,22 +160,20 @@ export class ExternalEventsComponent implements OnInit {
         this.imagesGeneral.pop();
         this.imagesGeneral.forEach((value, index) => {
           imagesObjGeneral[index] = value;
-        });
+        }); */
+
+        this.imagesGeneral = [];
+        this.imagesGeneral = [...this.imagesUploadGeneral];
 
         this.imagesDetail = [];
-        const imagesObjDetail = {};
-        this.imagesDetail = [...this.imagesDetail, ...this.imagesUploadDetail];
-        this.imagesDetail.pop();
-        this.imagesDetail.forEach((value, index) => {
-          imagesObjDetail[index] = value;
-        });
+        this.imagesDetail = [...this.imagesUploadDetail];
 
         this.qualityService
           .addQualityExternal(
             this.externalForm.value,
             this.user,
-            imagesObjGeneral,
-            imagesObjDetail,
+            this.imagesGeneral,
+            this.imagesDetail,
             this.uploadFile,
             this.nameFileSelect
           )
@@ -194,6 +192,8 @@ export class ExternalEventsComponent implements OnInit {
                 this.filesGeneral = [];
                 this.uploadFile = [];
                 this.nameFileSelect = '';
+                this.imagesDetail = [];
+                this.imagesGeneral = [];
                 this.externalForm.markAsPristine();
                 this.externalForm.markAsUntouched();
               })
