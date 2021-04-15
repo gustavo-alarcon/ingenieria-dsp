@@ -17,7 +17,7 @@
             <form [formGroup]="detailFormGroup" class="timer-container">
                 <p><span style="font-weight: bold;"> OT actual :</span> {{data.workOrder ? data.workOrder : ''}}</p>
                 <p><span style="font-weight: bold;"> Número de parte :</span> {{data.partNumber ? data.partNumber : ''}}</p>
-                <p><span style="font-weight: bold;"> Taller:</span> {{data.workShop ? data.workShop : ''}}</p>
+                <p><span style="font-weight: bold;"> Taller:</span> {{data.workShop ? data.workShop : '-'}}</p>
                 <p><span style="font-weight: bold;"> Tipo de evento :</span> {{data.eventType? data.eventType : ''}}</p>
                 <p><span style="font-weight: bold;"> Fecha :</span>
                     {{data.createdAt ? ((data.createdAt['seconds'] * 1000) | date : 'dd/MM/yy - hh:mm:ss'): ''}}

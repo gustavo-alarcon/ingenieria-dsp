@@ -45,11 +45,11 @@
           </div>
           <div>
             <mat-menu #requestsMenu="matMenu">
-              <button mat-menu-item (click)="analysis(item)">
-                <mat-icon>add_task</mat-icon> Analisis
-              </button>
               <button mat-menu-item (click)="detailDialog(item, item.eventType)">
                 <mat-icon>visibility</mat-icon> Detalle
+              </button>
+              <button mat-menu-item (click)="analysis(item)">
+                <mat-icon>add_task</mat-icon> Analisis
               </button>
               <button mat-menu-item (click)="timeline(item)">
                 <mat-icon>timeline</mat-icon> Línea de tiempo
@@ -63,7 +63,7 @@
         <div class="info-box">
           <div class="lj"><span>OT {{item.workOrder}}</span> </div>
           <div class="info-row"> Componente: <span> {{item.component}}</span> </div>
-          <div class="info-row"> Taller: <span> {{item.partNumber}}</span></div>
+          <div class="info-row"> Taller: <span> {{item.workShop? item.workShop:'-'}}</span></div>
           <div class="info-row"> Especialista: <span> {{item.specialist['name']}}</span></div>
           <div class="info-row"> Fecha: <span> {{(item.createdAt['seconds'] * 1000) | date : 'dd/MM/yy hh:mm:ss'}}</span></div>
         </div>
