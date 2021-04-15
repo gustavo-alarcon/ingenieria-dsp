@@ -10,9 +10,9 @@ import { ConfigurationsComponent } from './dialogs/configurations/configurations
 import { Quality } from '../../../../models/quality.model';
 import { AssignSpecialistDialogComponent } from './dialogs/assign-specialist-dialog/assign-specialist-dialog.component';
 import { DetailExternalDialogComponent } from './dialogs/detail-external-dialog/detail-external-dialog.component';
-import { DetailInternalDialogComponent } from './dialogs/detail-internal-dialog/detail-internal-dialog.component';
 import { TimeLineDialogComponent } from './dialogs/time-line-dialog/time-line-dialog.component';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { DetailInternalDialogComponent } from './dialogs/detail-internal-dialog/detail-internal-dialog.component';
 
 @Component({
   selector: 'app-records',
@@ -165,6 +165,7 @@ export class RecordsComponent implements OnInit {
   }
 
   detailDialog(item: Quality, value: string): void {
+    console.log('value : ', value)
     const optionsDialog = {
       maxWidth: 500,
       width: '90vw',

@@ -3,7 +3,7 @@ import {
   Validators,
   FormBuilder
 } from '@angular/forms';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
 import { BehaviorSubject, Subscription, Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from 'src/app/auth/services/auth.service';
@@ -38,7 +38,7 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
   filesDetail: File[] = [];
   pathStorageDetail: string;
   isHoveringDetail: boolean;
-
+  
   // upload images detail
   uploadFile: string[] = [''];
   nameFiles: string[];
@@ -48,12 +48,14 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
   nameFileSelect: string;
   isHoveringFile: boolean;
   uploadPercent$: Observable<number>;
-
-
+  
+  
   subscription = new Subscription();
   user: User;
-    
+  
   isMobile = false;
+  
+  @ViewChild("fileInput2", { read: ElementRef }) fileButton: ElementRef;
 
   constructor(
     private breakpoint: BreakpointObserver,
@@ -136,37 +138,29 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
 
   save(): void {
     try {
+
+      this.internalForm.markAsPristine();
+      this.internalForm.markAsUntouched();
+
       this.loading.next(true);
       if (this.internalForm.invalid) {
         this.internalForm.markAllAsTouched();
         this.loading.next(false);
         return;
       } else {
+
         this.imagesGeneral = [];
-        const imagesObjGeneral = {};
-        this.imagesGeneral = [
-          ...this.imagesGeneral,
-          ...this.imagesUploadGeneral,
-        ];
-        this.imagesGeneral.pop();
-        this.imagesGeneral.forEach((value, index) => {
-          imagesObjGeneral[index] = value;
-        });
+        this.imagesGeneral = [...this.imagesUploadGeneral];
 
         this.imagesDetail = [];
-        const imagesObjDetail = {};
-        this.imagesDetail = [...this.imagesDetail, ...this.imagesUploadDetail];
-        this.imagesDetail.pop();
-        this.imagesDetail.forEach((value, index) => {
-          imagesObjDetail[index] = value;
-        });
+        this.imagesDetail = [...this.imagesUploadDetail];
 
         this.qualityService
           .addQualityInternal(
             this.internalForm.value,
             this.user,
-            imagesObjGeneral,
-            imagesObjDetail,
+            this.imagesGeneral,
+            this.imagesDetail,
             this.uploadFile,
             this.nameFileSelect
           )
@@ -185,8 +179,8 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
                 this.filesGeneral = [];
                 this.uploadFile = [];
                 this.nameFileSelect = '';
-                this.internalForm.markAsPristine();
-                this.internalForm.markAsUntouched();
+                this.imagesGeneral = [];
+                this.imagesDetail = [];
                 this.internalForm.clearValidators();
               })
               .catch((err) => {
