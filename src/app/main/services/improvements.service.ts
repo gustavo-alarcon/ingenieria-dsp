@@ -321,37 +321,40 @@ export class ImprovementsService {
     const availability = data.availability['seconds'] * 1000; //in milliseconds
     const now = Date.now(); //in milliseconds
     let isAvailableNow = (availability - now) <= 0;
-
-    const stock = data.stock;
     let hasStock = data.stock > 0;
 
     let result;
 
     if (hasStock && !isAvailableNow) {
       result = data.currentPart
-      console.log('Met codition 1');
+      console.log(data.improvedPart, ' - Met codition 1');
+      return result;
     }
 
     if (!hasStock && isAvailableNow) {
       result = data.improvedPart;
-      console.log('Met codition 3');
+      console.log(data.improvedPart, ' - Met codition 3');
+      return result;
     }
 
     if (hasStock && isAvailableNow) {
       if (data.criticalPart) {
         result = data.improvedPart;
-        console.log('Met codition 4 - Critical');
+        console.log(data.improvedPart, ' - Met codition 4 - Critical');
+        return result;
       } else {
         result = data.currentPart;
-        console.log('Met codition 4 - Non-critical');
+        console.log(data.improvedPart, ' - Met codition 4 - Non-critical');
+        return result;
       }
     }
 
     if (!hasStock && !isAvailableNow) {
       result = null;
-      console.log("Met codition 2 - Let's check for replacement");
+      console.log(data.improvedPart, " - Met codition 2 - Let's check for replacement");
+      return result;
     }
 
-    return result;
+
   }
 }
