@@ -215,6 +215,7 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
   }
 
   addNewImageGeneral(image: string): void {
+    console.log('image general :', image)
     this.imagesUploadGeneral.pop();
     this.imagesUploadGeneral.push(image);
     this.imagesUploadGeneral.push('');

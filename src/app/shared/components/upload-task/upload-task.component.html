@@ -11,6 +11,9 @@
     <a [href]="url" target="_blank" style="cursor: zoom-in">
       <img [src]="url" class="imageUpload" />
     </a>
+    <button mat-icon-button aria-label="deletelistResult" class="btn-delete" (click)="deleteImage(url)" >
+      <mat-icon style="color: red">delete</mat-icon>
+  </button>
   </mat-card>
   <hr />
   
