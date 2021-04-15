@@ -508,11 +508,48 @@ export class QualityService {
 
     return of(batch);
   }
-  // get all CauseFailureList
-  getAllCauseFailureList(): Observable<CauseFailureList[]> {
+   // get all CauseFailureList
+   getAllCauseFailureList(): Observable<CauseFailureList[]> {
     return this.afs
       .collection<CauseFailureList>(
         `/db/generalConfig/qualityCauseFailureList`,
+        (ref) => ref.orderBy('createdAt', 'asc')
+      )
+      .valueChanges();
+  }
+  /**
+   * add the name addCauseFailureList
+   * @param {string} form - name CauseFailureList
+   * @param {User} user - User's data in actual session
+   */
+   addMiningOperationList(
+    form,
+    user: User
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    // create reference for document in evaluation entries collection
+    const qualityDocRef = this.afs.firestore
+      .collection(`/db/generalConfig/miningOperationList`)
+      .doc();
+
+    // Structuring the data model
+    const data: any = {
+      id: qualityDocRef.id,
+      name: form.miningOperation,
+      createdAt: new Date(),
+      createdBy: user,
+    };
+    batch.set(qualityDocRef, data);
+
+    return of(batch);
+  }
+ 
+  // get all CauseFailureList
+  getAllMiningOperationList(): Observable<CauseFailureList[]> {
+    return this.afs
+      .collection<CauseFailureList>(
+        `/db/generalConfig/miningOperationList`,
         (ref) => ref.orderBy('createdAt', 'asc')
       )
       .valueChanges();

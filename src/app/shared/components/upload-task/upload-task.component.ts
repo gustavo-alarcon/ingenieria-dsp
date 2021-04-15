@@ -57,4 +57,8 @@ export class UploadTaskComponent implements OnInit, OnDestroy {
     this.subcription.unsubscribe();
   }
 
+  deleteImage(url): void {
+    console.log('delete : ', url)
+  }
+
 }

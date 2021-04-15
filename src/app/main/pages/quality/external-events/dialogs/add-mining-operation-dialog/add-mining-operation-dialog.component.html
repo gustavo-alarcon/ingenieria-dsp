@@ -1,0 +1,35 @@
+
+<div>
+    <div class="ms-dialog-header">
+        <mat-icon class="ms-dialog-header__icon">add_circle_outline</mat-icon>
+        <h3 class="ms-dialog-header__title">Agregar operacion minera</h3>
+        <span class="ms-fill"></span>
+        <button mat-icon-button mat-dialog-close>
+            <mat-icon>cancel</mat-icon>
+        </button>
+    </div>
+    <mat-divider></mat-divider>
+
+    <mat-dialog-content style="margin-top: 20px;" >
+        <mat-progress-bar *ngIf="loading$ | async" mode="indeterminate"></mat-progress-bar>
+        <div>
+            <form [formGroup]="form" class="timer-container">
+                <mat-form-field appearance="outline" style="width: 400px; margin-left: 25px;" >
+                    <mat-label>Operacion minera</mat-label>
+                      <input autocomplete="off" matInput type="text" placeholder=" Escribir..." formControlName="miningOperation"                                               
+                      >
+                    <mat-error *ngIf="form.controls['miningOperation'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
+                <br>
+               
+            </form>
+        </div>
+    </mat-dialog-content>
+    
+    <mat-dialog-actions align="end">
+        <button mat-stroked-button color="warn" mat-dialog-close [disabled]="loading$ | async">CANCELAR</button>
+        <button mat-stroked-button color="primary" (click)="save()" [disabled]="loading$ | async">GUARDAR</button>
+    </mat-dialog-actions>
+</div>

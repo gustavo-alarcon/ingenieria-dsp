@@ -33,7 +33,7 @@
                         <span *ngIf="specialistForm.get('specialist').errors?.invalid">Dato inválido. Complete con alguna opción
                           válida.</span>
                       </mat-error>
-              </mat-form-field>
+                </mat-form-field>
 
                 <mat-form-field *ngIf="filteredBroadcast$ | async as broadcasts" appearance="outline" id="result" class="timer-container__input">                     
                     <mat-label>Enviar a</mat-label>
