@@ -19,7 +19,7 @@ export class SparePartsComponent implements OnInit, OnDestroy {
 
   checked: boolean = false;
   selectCkeck: number;
-  selected: any;
+  selected: any[];
 
   dataSparePart: SparePart[] = [];
 
@@ -65,11 +65,11 @@ export class SparePartsComponent implements OnInit, OnDestroy {
         /* grab first sheet */
         const wsname: string = wb.SheetNames[0];
         const ws: XLSX.WorkSheet = wb.Sheets[wsname];
-        
+
         /* save data */
         this.selected = XLSX.utils.sheet_to_json(ws, { header: 1, raw: false });
 
-        const csvRead = this.selected.slice(4, this.selected.length);
+        const csvRead = this.selected.slice(3, this.selected.length);
         let dataReconstructed = [];
         let readType;
 
@@ -131,7 +131,7 @@ export class SparePartsComponent implements OnInit, OnDestroy {
     if (this.dataSparePart.length < 1) {
       return
     }
-    
+
     const table_xlsx: any[] = [];
 
     const headersXlsx = [
