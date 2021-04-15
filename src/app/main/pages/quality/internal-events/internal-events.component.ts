@@ -12,6 +12,7 @@ import { User } from '../../../models/user-model';
 import { finalize, take } from 'rxjs/operators';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { ComponentList, WorkShopList } from '../../../models/quality.model';
 
 @Component({
   selector: 'app-internal-events',
@@ -54,6 +55,21 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
   user: User;
   
   isMobile = false;
+
+  componentList: ComponentList[] = [
+    { code: 1, name: 'Componente 1' },
+    { code: 2, name: 'Componente 2'},
+    { code: 3, name: 'Componente 3'},
+    { code: 4, name: 'Componente 4'},
+    { code: 5, name: 'Componente 5'},
+  ];
+  workShopList: WorkShopList[] = [
+    { code: 1, name: 'Taller 1' },
+    { code: 2, name: 'Taller 2'},
+    { code: 3, name: 'Taller 3'},
+    { code: 4, name: 'Taller 4'},
+    { code: 5, name: 'Taller 5'},
+  ];
   
   @ViewChild("fileInput2", { read: ElementRef }) fileButton: ElementRef;
 

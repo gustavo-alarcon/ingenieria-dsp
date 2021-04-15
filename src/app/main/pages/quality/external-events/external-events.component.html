@@ -22,10 +22,19 @@
                         </mat-error>
                     </mat-form-field>
 
-                    <mat-form-field appearance="outline" class="container-form__work__input"
-                        [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
+                    <mat-form-field appearance="outline" id="result"  class="container-form__work__input"
+                    [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
                         <mat-label>Componente</mat-label>
-                        <input matInput type="text" placeholder="Componente" formControlName="component" />
+                        <mat-select formControlName="component">
+                            <mat-option *ngFor="let item of componentList" [value]="item">
+                                {{item.name}} 
+                            </mat-option>
+                        </mat-select>
+                        <mat-hint *ngIf="!(componentList)">
+                            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                            <p>Cargando lista ...</p>
+                        </mat-hint>
+    
                         <mat-error *ngIf="externalForm.controls['component'].errors">
                             Campo <strong>requerido.</strong>
                         </mat-error>
@@ -33,8 +42,8 @@
 
                     <mat-form-field appearance="outline" class="container-form__work__input"
                         [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
-                        <mat-label> Numero de paqueteo</mat-label>
-                        <input matInput type="number" placeholder="Numero de paqueteo" formControlName="nPackage" />
+                        <mat-label> Número de paqueteo</mat-label>
+                        <input matInput type="text" placeholder="Número de paqueteo" formControlName="nPackage" />
                         <mat-error *ngIf="externalForm.controls['nPackage'].errors">
                             Campo <strong>requerido.</strong>
                         </mat-error>
@@ -42,8 +51,8 @@
 
                     <mat-form-field appearance="outline" class="container-form__work__input"
                         [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
-                        <mat-label> Horometro de componente</mat-label>
-                        <input matInput type="text" placeholder="Horometro de componente"
+                        <mat-label> Horómetro de componente</mat-label>
+                        <input matInput type="number" placeholder="Horómetro de componente"
                             formControlName="componentHourMeter" />
                         <mat-error *ngIf="externalForm.controls['componentHourMeter'].errors">
                             Campo <strong>requerido.</strong>
@@ -52,22 +61,37 @@
 
                     <mat-form-field appearance="outline" class="container-form__work__input"
                         [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
-                        <mat-label> Numero de parte (Causante de falla)</mat-label>
-                        <input matInput type="text" placeholder="Numero de parte" formControlName="nPart" />
+                        <mat-label> Número de parte (Causante de falla)</mat-label>
+                        <input matInput type="text" placeholder="Número de parte" formControlName="nPart" />
                         <mat-error *ngIf="externalForm.controls['nPart'].errors">
                             Campo <strong>requerido.</strong>
                         </mat-error>
                     </mat-form-field>
 
-                    <mat-form-field appearance="outline" class="container-form__work__input"
-                        [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
-                        <mat-label> Operacion minera</mat-label>
-                        <input matInput type="text" placeholder="Operacion minera" formControlName="miningOperation" />
-                        <mat-error *ngIf="externalForm.controls['miningOperation'].errors">
-                            Campo <strong>requerido.</strong>
+                    <mat-form-field *ngIf="miningOperation$ | async as miningOperations"  class="container-form__work__input"
+                        [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'"
+                        appearance="outline">
+                        <mat-label>Operacion minera</mat-label>
+                        <input autocomplete="off" formControlName="miningOperation" [matAutocomplete]="miningOperationAutocomplete" type="text"
+                            matInput />
+                        <mat-autocomplete autoActiveFirstOption #miningOperationAutocomplete="matAutocomplete">
+                            <mat-option (click)="onAddminingOperation()" [value]="">
+                            <mat-icon>add_circle_outline</mat-icon>Añadir
+                            </mat-option>
+                            <mat-option *ngFor="let item of miningOperations" [value]="item.name">
+                            {{ item.name }}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <mat-hint *ngIf="!(miningOperation$ | async)">
+                            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                            <p>Cargando lista ...</p>
+                        </mat-hint>
+                        <mat-error>
+                            <span *ngIf="externalForm.get('miningOperation').errors?.required">Por favor, complete el campo.</span>
+                            <span *ngIf="externalForm.get('miningOperation').errors?.invalid">Dato inválido. Complete con alguna opción
+                            válida.</span>
                         </mat-error>
                     </mat-form-field>
-
 
                 </div>
                 <br />

@@ -117,3 +117,18 @@ export interface FrequencyList{
     code: number;
     name: string;
 }
+export interface ComponentList{
+    code: number;
+    name: string;
+}
+export interface WorkShopList{
+    code: number;
+    name: string;
+}
+
+export interface MiningOperation{
+    id?: string;
+    name: string;
+    createdAt: Date;
+    createdBy: User;
+}

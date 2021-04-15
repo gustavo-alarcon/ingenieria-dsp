@@ -173,7 +173,6 @@ export class ProgressComponent implements OnInit {
         return this.dataQuality;
       })
     );
-
   }
 
   settingDialog(): void {
