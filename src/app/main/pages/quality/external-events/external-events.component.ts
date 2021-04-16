@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject, Subscription, Observable } from 'rxjs';
+import { BehaviorSubject, Subscription, Observable, combineLatest } from 'rxjs';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import * as XLSX from 'xlsx';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -7,8 +7,11 @@ import { AuthService } from '../../../../auth/services/auth.service';
 import { QualityService } from '../../../services/quality.service';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { User } from '../../../models/user-model';
-import { finalize, take } from 'rxjs/operators';
+import { finalize, take, startWith, map } from 'rxjs/operators';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { ComponentList, MiningOperation } from '../../../models/quality.model';
+import { MatDialog } from '@angular/material/dialog';
+import { AddMiningOperationDialogComponent } from './dialogs/add-mining-operation-dialog/add-mining-operation-dialog.component';
 
 @Component({
   selector: 'app-external-events',
@@ -55,7 +58,19 @@ export class ExternalEventsComponent implements OnInit {
   subscriptions = new Subscription();
   isMobile = false;
 
+  componentList: ComponentList[] = [
+    { code: 1, name: 'Componente 1' },
+    { code: 2, name: 'Componente 2'},
+    { code: 3, name: 'Componente 3'},
+    { code: 4, name: 'Componente 4'},
+    { code: 5, name: 'Componente 5'},
+  ];
+
+  miningOperation$: Observable<MiningOperation[]>;
+
+
   constructor(
+    public dialog: MatDialog,
     private breakpoint: BreakpointObserver,
     private fb: FormBuilder,
     private snackbar: MatSnackBar,
@@ -66,6 +81,29 @@ export class ExternalEventsComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.initFormInternal();
+
+    this.miningOperation$ = combineLatest(
+      this.externalForm.get('miningOperation').valueChanges.pipe(
+        startWith(''),
+        map((name) => (name ? name : ''))
+      ),
+      this.qualityService.getAllMiningOperationList()
+    ).pipe(
+      map(([formValue, miningOperation]) => {
+        const filter = miningOperation.filter((el) =>
+          formValue
+            ? el.name.toLowerCase().includes(formValue.toLowerCase())
+            : true
+        );
+        if (!(filter.length === 1) && formValue.length) {
+          this.externalForm.get('miningOperation').setErrors({ invalid: true });
+        }
+
+        return filter;
+      })
+    );
+
     this.subscriptions.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
       .subscribe(res => {
         if (res.matches) {
@@ -85,7 +123,6 @@ export class ExternalEventsComponent implements OnInit {
     this.pathStorageDetail = `quality/detail/pictures`;
     this.pathStorageFile = `quality/files`;
 
-    this.initFormInternal();
   }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
@@ -96,7 +133,9 @@ export class ExternalEventsComponent implements OnInit {
       workdOrden: ['', Validators.required],
       component: ['', Validators.required],
       nPackage: ['', Validators.required],
-      componentHourMeter: ['', Validators.required],
+      componentHourMeter: ['', [
+        Validators.required,
+        Validators.pattern(/^(0|\-?[1-9][0-9]*)$/)  ]],
       nPart: ['', Validators.required],
       miningOperation: ['', Validators.required],
       question1: ['', Validators.required],
@@ -241,6 +280,12 @@ export class ExternalEventsComponent implements OnInit {
     for (let i = 0; i < files.length; i++) {
       this.filesDetail.push(files.item(i));
     }
+  }
+  onAddminingOperation(): void {
+    this.dialog.open(AddMiningOperationDialogComponent, {
+      maxWidth: 500,
+      width: '90vw',
+    });
   }
 
 

@@ -5,7 +5,7 @@ import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { QualityService } from 'src/app/main/services/quality.service';
-import { debounceTime, filter, map, startWith, tap } from 'rxjs/operators';
+import { debounceTime, filter, map, startWith, tap, distinctUntilChanged } from 'rxjs/operators';
 import { ConfigurationsComponent } from './dialogs/configurations/configurations.component';
 import { Quality } from '../../../../models/quality.model';
 import { AssignSpecialistDialogComponent } from './dialogs/assign-specialist-dialog/assign-specialist-dialog.component';
@@ -82,13 +82,24 @@ export class RecordsComponent implements OnInit {
           preFilterSearch = preFilterEventType.filter(quality => {
             return String(quality.workOrder).toLowerCase().includes(searchTerm) ||
               String(quality.component).toLowerCase().includes(searchTerm) ||
-              String(quality.workShop).toLowerCase().includes(searchTerm);
+              String(quality.workShop).toLowerCase().includes(searchTerm)  ||
+              String(quality.partNumber).toLowerCase().includes(searchTerm) ||
+              String(quality.enventDetail).toLowerCase().includes(searchTerm)  ||
+              String(quality.packageNumber).toLowerCase().includes(searchTerm) ||
+              String(quality.miningOperation).toLowerCase().includes(searchTerm) ||
+              String(quality.componentHourMeter).toLowerCase().includes(searchTerm);
+
           });
         } else {
           preFilterSearch = qualities.filter(quality => {
             return String(quality.workOrder).toLowerCase().includes(searchTerm) ||
               String(quality.component).toLowerCase().includes(searchTerm) ||
-              String(quality.workShop).toLowerCase().includes(searchTerm);
+              String(quality.workShop).toLowerCase().includes(searchTerm) ||
+              String(quality.partNumber).toLowerCase().includes(searchTerm) ||
+              String(quality.enventDetail).toLowerCase().includes(searchTerm)  ||
+              String(quality.packageNumber).toLowerCase().includes(searchTerm) ||
+              String(quality.miningOperation).toLowerCase().includes(searchTerm) ||
+              String(quality.componentHourMeter).toLowerCase().includes(searchTerm);
           });
         }
 

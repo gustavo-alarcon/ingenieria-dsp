@@ -145,7 +145,12 @@ export class ResultsComponent implements OnInit {
           preFilterSearch = preFilterEventType.filter(quality => {
             return String(quality.workOrder).toLowerCase().includes(searchTerm) ||
             String(quality.component).toLowerCase().includes(searchTerm) ||
-            String(quality.workShop).toLowerCase().includes(searchTerm) ;
+            String(quality.workShop).toLowerCase().includes(searchTerm)  ||
+            String(quality.partNumber).toLowerCase().includes(searchTerm) ||
+            String(quality.enventDetail).toLowerCase().includes(searchTerm)  ||
+            String(quality.packageNumber).toLowerCase().includes(searchTerm) ||
+            String(quality.miningOperation).toLowerCase().includes(searchTerm) ||
+            String(quality.componentHourMeter).toLowerCase().includes(searchTerm);
           }).filter((quality) => {
             return this.getFilterTime(quality.createdAt, date);
           });
@@ -155,8 +160,13 @@ export class ResultsComponent implements OnInit {
 
             preFilterSearch = preFilterWorkShop.filter(quality => {
               return String(quality.workOrder).toLowerCase().includes(searchTerm) ||
-                String(quality.component).toLowerCase().includes(searchTerm) ||
-                String(quality.workShop).toLowerCase().includes(searchTerm) ;
+              String(quality.component).toLowerCase().includes(searchTerm) ||
+              String(quality.workShop).toLowerCase().includes(searchTerm)  ||
+              String(quality.partNumber).toLowerCase().includes(searchTerm) ||
+              String(quality.enventDetail).toLowerCase().includes(searchTerm)  ||
+              String(quality.packageNumber).toLowerCase().includes(searchTerm) ||
+              String(quality.miningOperation).toLowerCase().includes(searchTerm) ||
+              String(quality.componentHourMeter).toLowerCase().includes(searchTerm);
             }).filter((quality) => {
               return this.getFilterTime(quality.createdAt, date);
             });
@@ -166,7 +176,12 @@ export class ResultsComponent implements OnInit {
           preFilterSearch = qualities.filter(quality => {
             return  String(quality.workOrder).toLowerCase().includes(searchTerm) ||
             String(quality.component).toLowerCase().includes(searchTerm) ||
-            String(quality.workShop).toLowerCase().includes(searchTerm) ;
+            String(quality.workShop).toLowerCase().includes(searchTerm)  ||
+            String(quality.partNumber).toLowerCase().includes(searchTerm) ||
+            String(quality.enventDetail).toLowerCase().includes(searchTerm)  ||
+            String(quality.packageNumber).toLowerCase().includes(searchTerm) ||
+            String(quality.miningOperation).toLowerCase().includes(searchTerm) ||
+            String(quality.componentHourMeter).toLowerCase().includes(searchTerm);
           }).filter((quality) => {
             return this.getFilterTime(quality.createdAt, date);
           });
