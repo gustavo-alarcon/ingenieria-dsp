@@ -254,30 +254,29 @@ export class ImprovementsService {
           let data;
 
           if (res.length) {
-            res.forEach(doc => {
-              let evaluatedPart;
-              evaluatedPart = this.evaluatePartNumber(doc);
+            const doc = res[0];
+            let evaluatedPart;
+            evaluatedPart = this.evaluatePartNumber(doc);
 
-              if (doc.criticalPart) {
-                data = {
-                  description: readType === 1 ? part[3].replaceAll('"', '') : part[4].replaceAll('"', ''),
-                  quantity: doc.quantity,
-                  improvedPart: doc.improvedPart,
-                  evaluatedPart: doc.improvedPart,
-                  kit: doc.kit,
-                  match: false
-                };
-              } else {
-                data = {
-                  description: readType === 1 ? part[3].replaceAll('"', '') : part[4].replaceAll('"', ''),
-                  quantity: doc.quantity,
-                  improvedPart: doc.improvedPart,
-                  evaluatedPart: evaluatedPart,
-                  kit: doc.kit,
-                  match: evaluatedPart ? true : false
-                };
-              }
-            });
+            if (doc.criticalPart) {
+              data = {
+                description: readType === 1 ? part[3].replaceAll('"', '') : part[4].replaceAll('"', ''),
+                quantity: doc.quantity,
+                improvedPart: doc.improvedPart,
+                evaluatedPart: doc.improvedPart,
+                kit: doc.kit,
+                match: false
+              };
+            } else {
+              data = {
+                description: readType === 1 ? part[3].replaceAll('"', '') : part[4].replaceAll('"', ''),
+                quantity: doc.quantity,
+                improvedPart: doc.improvedPart,
+                evaluatedPart: evaluatedPart,
+                kit: doc.kit,
+                match: evaluatedPart ? true : false
+              };
+            }
           } else {
 
             data = {
@@ -331,6 +330,12 @@ export class ImprovementsService {
       return result;
     }
 
+    if (!hasStock && !isAvailableNow) {
+      result = null;
+      console.log(data.improvedPart, " - Met codition 2 - Let's check for replacement");
+      return result;
+    }
+
     if (!hasStock && isAvailableNow) {
       result = data.improvedPart;
       console.log(data.improvedPart, ' - Met codition 3');
@@ -349,11 +354,7 @@ export class ImprovementsService {
       }
     }
 
-    if (!hasStock && !isAvailableNow) {
-      result = null;
-      console.log(data.improvedPart, " - Met codition 2 - Let's check for replacement");
-      return result;
-    }
+
 
 
   }

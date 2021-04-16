@@ -70,11 +70,10 @@
                         <mat-checkbox class="checked-margin" color="primary" [ngModel]="item.kit" value="checked"
                             name="kit" disabled>
                         </mat-checkbox>
-                        <p *ngIf="item.kit" style="color: red; font-weight: bold;">Eliminado</p>
+                        <!-- <p *ngIf="item.kit" style="color: red; font-weight: bold;">Eliminado</p> -->
                     </div>
 
-                    <button mat-icon-button color="warn" *ngIf="!item.kit" style="margin-top: 8px;"
-                        (click)="deleteResult(i)">
+                    <button mat-icon-button color="warn" style="margin-top: 8px;" (click)="deleteResult(i)">
                         <mat-icon>delete</mat-icon>
                     </button>
                 </div>
