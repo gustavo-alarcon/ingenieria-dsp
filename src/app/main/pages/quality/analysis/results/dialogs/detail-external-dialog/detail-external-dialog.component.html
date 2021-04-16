@@ -76,17 +76,20 @@
 
                 <h3>Archivo adicional</h3>
                 <div class="container-file">
-                    <mat-icon>insert_drive_file</mat-icon>
-                    <div *ngIf="urlFile">
-                        <a [href]="urlFile" class="container-file__name" >
-                            Descargar archivo
-                        </a>
+                    <div *ngIf="this.data.fileAdditional; else nofile" >
+                        <div *ngFor="let item of this.data.fileAdditional" >
+                            <mat-icon>insert_drive_file</mat-icon>
+                            <a [href]="item.url" class="container-file__name" >
+                                {{item.name}}
+                            </a>
+                        </div>
                     </div>
-                    <div *ngIf="!urlFile">
-                         {{data.fileName}}
-                    </div>
-                    
+                    <ng-template  #nofile>
+                        <mat-icon>insert_drive_file</mat-icon>
+                        No tiene archivos
+                    </ng-template>                    
                 </div>
+                
             </form>
         </div>
 

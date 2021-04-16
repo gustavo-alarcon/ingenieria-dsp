@@ -12,7 +12,7 @@ import { User } from '../../../models/user-model';
 import { finalize, take } from 'rxjs/operators';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { ComponentList, WorkShopList } from '../../../models/quality.model';
+import { ComponentList, WorkShopList, FileAdditional } from '../../../models/quality.model';
 
 @Component({
   selector: 'app-internal-events',
@@ -46,7 +46,7 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
   files: File[] = [];
   pathStorageFile: string;
   fileSelect = false;
-  nameFileSelect: string;
+  nameFileSelect = '';
   isHoveringFile: boolean;
   uploadPercent$: Observable<number>;
   
@@ -70,8 +70,10 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
     { code: 4, name: 'Taller 4'},
     { code: 5, name: 'Taller 5'},
   ];
-  
+
   @ViewChild("fileInput2", { read: ElementRef }) fileButton: ElementRef;
+
+  dataFiles: FileAdditional[] = [];
 
   constructor(
     private breakpoint: BreakpointObserver,
@@ -120,36 +122,46 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
   }
 
 
-  uploadFiles(event, i?: number): void {
-    if (!event.target.files[0]) {
+  uploadFiles(event): void {
+    const files = event.target.files;
+    if (!files) {
       return;
     }
+
     const date = new Date();
-    this.loading.next(true);
-    const file = event.target.files[0];
-    const filename = event.target.files[0].name;
+    for (let event of files){
+      this.loading.next(true);
+      const file = event;
+      const filename = event.name;
 
-    const name = `${this.pathStorageFile}/${date}-${filename}`;
-    const fileRef = this.storage.ref(name);
-    const task = this.storage.upload(name, file);
+      const name = `${this.pathStorageFile}/${date}-${filename}`;
+      const fileRef = this.storage.ref(name);
+      const task = this.storage.upload(name, file);
 
-    this.uploadPercent$ = task.percentageChanges();
-    this.subscription.add(
-      task
-        .snapshotChanges()
-        .pipe(
-          finalize(() => {
-            fileRef.getDownloadURL().subscribe((url) => {
-              if (url) {
-               this.uploadFile = url;
-               this.nameFileSelect = filename ;
-               this.fileSelect = true;
-              }
-            });
-            this.loading.next(false);
-          })
-        ).subscribe()
-    );
+      this.uploadPercent$ = task.percentageChanges();
+      this.subscription.add(
+        task
+          .snapshotChanges()
+          .pipe(
+            finalize(() => {
+              fileRef.getDownloadURL().subscribe((link) => {
+                if (link) {
+                  const dataImage: FileAdditional = {
+                    name: filename,
+                    url: link,
+                  };
+
+                  this.dataFiles.push(dataImage);
+
+                  this.fileSelect = true;
+                }
+              });
+              this.loading.next(false);
+            })
+          ).subscribe()
+      );
+    }
+
   }
 
   save(): void {
@@ -177,8 +189,7 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
             this.user,
             this.imagesGeneral,
             this.imagesDetail,
-            this.uploadFile,
-            this.nameFileSelect
+            this.dataFiles
           )
           .pipe(take(1))
           .subscribe((res) => {
@@ -197,6 +208,7 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
                 this.nameFileSelect = '';
                 this.imagesGeneral = [];
                 this.imagesDetail = [];
+                this.dataFiles = [];
                 this.internalForm.clearValidators();
               })
               .catch((err) => {
@@ -207,7 +219,7 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
           });
       }
     } catch (error) {
-      this.snackbar.open('🚨 Hubo un error.' + `${error}`, 'Aceptar', {
+      this.snackbar.open('🚨 Hubo un error, debe de ingresar todo los datos requeridos', 'Aceptar', {
         duration: 6000,
       });
       this.loading.next(false);
@@ -215,7 +227,6 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
   }
 
   addNewImageGeneral(image: string): void {
-    console.log('image general :', image)
     this.imagesUploadGeneral.pop();
     this.imagesUploadGeneral.push(image);
     this.imagesUploadGeneral.push('');
@@ -244,6 +255,40 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
     for (let i = 0; i < files.length; i++) {
       this.filesDetail.push(files.item(i));
     }
+  }
+ async deleteImageGeneral(event): Promise<void>{
+    try {
+      this.loading.next(true);
+      this.qualityService.deleteImage(event);
+
+      const i = this.imagesUploadGeneral.indexOf( event );
+      if ( i !== -1 ) {
+        this.imagesUploadGeneral.splice( i, 1 );
+      }
+      this.loading.next(false);
+
+    } catch (error) {
+      console.log(error);
+      this.loading.next(false);
+    }
+
+  }
+ async deleteImageDetail(event): Promise<void>{
+    try {
+      this.loading.next(true);
+      this.qualityService.deleteImage(event);
+
+      const i = this.imagesUploadGeneral.indexOf( event );
+      if ( i !== -1 ) {
+        this.imagesUploadGeneral.splice( i, 1 );
+      }
+      this.loading.next(false);
+
+    } catch (error) {
+      console.log(error);
+      this.loading.next(false);
+    }
+
   }
 
 }

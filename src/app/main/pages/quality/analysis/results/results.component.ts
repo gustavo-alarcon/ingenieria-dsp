@@ -38,6 +38,7 @@ export class ResultsComponent implements OnInit {
     'component',
     'numberPart',
     'workShop',
+    'miningOperation',
     'specialist',
     'accCorrective',
     'riskLevel',

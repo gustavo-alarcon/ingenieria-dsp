@@ -38,8 +38,7 @@ export class QualityService {
     user: User,
     imagesGeneral,
     imagesDetail,
-    objFile,
-    nameFile: string
+    dataFile
   ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
@@ -64,13 +63,13 @@ export class QualityService {
       processPercentageElapsed: null,
       tracingTimeElapsed: null,
       tracingPercentageElapsed: null,
-      fileName: nameFile,
       eventType: 'Interno', //Interno , Externo
+      fileAdditional: dataFile,
       workOrder: form.workdOrden,
-      component: form.component,
+      component: form.component.name,
       specialist: null,
       partNumber: form.nPart,
-      workShop: form.workShop,
+      workShop: form.workShop.name,
       enventDetail: form.eventDetail,
       packageNumber: null,
       componentHourMeter: null,
@@ -86,7 +85,6 @@ export class QualityService {
       question2: null,
       question3: null,
       question4: null,
-      file: firebase.default.firestore.FieldValue.arrayUnion(objFile),
     };
     batch.set(qualityDocRef, data);
 /* 
@@ -114,8 +112,7 @@ export class QualityService {
     user: User,
     imagesGeneral,
     imagesDetail,
-    objFile,
-    nameFile
+    dataFiles
   ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
@@ -140,10 +137,10 @@ export class QualityService {
       processPercentageElapsed: null,
       tracingTimeElapsed: null,
       tracingPercentageElapsed: null,
-      fileName: nameFile,
+      fileAdditional: dataFiles,
       eventType: 'Externo', //Interno , Externo
       workOrder: form.workdOrden,
-      component: form.component,
+      component: form.component.name,
       specialist: null,
       partNumber: form.nPart,
       workShop: null,
@@ -162,7 +159,6 @@ export class QualityService {
       question2: form.question2,
       question3: form.question3,
       question4: form.question4,
-      file: firebase.default.firestore.FieldValue.arrayUnion(objFile),
     };
     batch.set(qualityDocRef, data);
 
@@ -381,10 +377,10 @@ export class QualityService {
     batch.set(qualityDocRef, data);
 
     return of(batch);
-  }
+  }/* 
   async deleteImage(imagesObj: string): Promise<any> {
     return await this.storage.storage.refFromURL(imagesObj).delete();
-  }
+  } */
 
   updateBrodcastList(
     entryId: string,
@@ -781,4 +777,9 @@ export class QualityService {
 
     return of(batch);
   }
+
+  async deleteImage(imagesObj: string): Promise<any> {
+    return await this.storage.storage.refFromURL(imagesObj).delete();
+  }
+
 }

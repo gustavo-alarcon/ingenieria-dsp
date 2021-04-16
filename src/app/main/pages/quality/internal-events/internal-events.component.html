@@ -95,7 +95,9 @@
                 </div>
                 <div *ngFor="let file of filesGeneral">
                     <app-upload-task [file]="file" [pathStorage]="pathStorageGeneral"
-                        (onNewImage)="addNewImageGeneral($event)">
+                        (onNewImage)="addNewImageGeneral($event)"
+                        (onDeleteImage)="deleteImageGeneral($event)"
+                        >
                     </app-upload-task>
                 </div>
 
@@ -115,17 +117,23 @@
                         </label>
                     </div>
                 </div>
-
+                
                 <div *ngFor="let file of filesDetail">
                     <app-upload-task [file]="file" [pathStorage]="pathStorageDetail"
-                        (onNewImage)="addNewImageDetail($event)">
+                        (onNewImage)="addNewImageDetail($event)"
+                        (onDeleteImage)="deleteImageDetail($event)"
+                        >
                     </app-upload-task>
                 </div>
+              
 
                 <div class="container-form__uploadXlx">
                     <h3 class="container-form__title">Archivo adicional</h3>
-                    <p *ngIf="fileSelect" style="color:#0064EA;">{{nameFileSelect}} </p>
-                    <input #fileInput2 style="display: none" type="file" id="fileInput2" (change)="uploadFiles($event)"
+                    <p *ngIf="fileSelect" style="color:#0064EA;">
+                        <span *ngFor="let item of dataFiles;">{{item.name}} <br> </span>
+                    </p>
+                    <input #fileInput2 style="display: none"  id="fileInput2" (change)="uploadFiles($event)"
+                          type="file" multiple
                         accept="*">
                     <button type="file" mat-stroked-button class="ms-button" accept="*" (click)="fileInput2.click()">
                         <mat-icon>add</mat-icon>

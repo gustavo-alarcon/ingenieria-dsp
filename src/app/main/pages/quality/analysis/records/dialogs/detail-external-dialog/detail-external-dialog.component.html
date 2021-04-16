@@ -20,7 +20,7 @@
                 <p><span style="font-weight: bold;"> Horómetro de componente :</span> {{data.componentHourMeter ? data.componentHourMeter : '-'}}</p>
                 <p><span style="font-weight: bold;"> Número de parte :</span> {{data.partNumber ? data.partNumber : '-'}}</p>
                 <p><span style="font-weight: bold;"> Tipo de evento :</span> {{data.eventType? data.eventType : '-'}}</p>
-                <p><span style="font-weight: bold;"> Operacion minera :</span> {{data.miningOperation ? data.miningOperation : '-'}} </p>
+                <p><span style="font-weight: bold;"> Operación minera :</span> {{data.miningOperation ? data.miningOperation : '-'}} </p>
                 <p><span style="font-weight: bold;"> Fecha :</span>
                 {{data.createdAt ? ((data.createdAt['seconds'] * 1000) | date : 'dd/MM/yy - hh:mm:ss'): ''}}
                 </p>
@@ -76,17 +76,20 @@
 
                 <h3>Archivo adicional</h3>
                 <div class="container-file">
-                    <mat-icon>insert_drive_file</mat-icon>
-                    <div *ngIf="urlFile">
-                        <a [href]="urlFile" class="container-file__name" >
-                            {{data.fileName}}
-                        </a>
+                    <div *ngIf="this.data.fileAdditional; else nofile" >
+                        <mat-icon>insert_drive_file</mat-icon>
+                        <div *ngFor="let item of this.data.fileAdditional" >
+                            <a [href]="item.url" class="container-file__name" >
+                                {{item.name}}
+                            </a>
+                        </div>
                     </div>
-                    <div *ngIf="!urlFile">
-                         No tiene archivo
-                    </div>
-                    
+                    <ng-template  #nofile>
+                        <mat-icon>insert_drive_file</mat-icon>
+                        No tiene archivos
+                    </ng-template>                    
                 </div>
+                
             </form>
         </div>
 
