@@ -71,7 +71,7 @@
                     <mat-form-field *ngIf="miningOperation$ | async as miningOperations"  class="container-form__work__input"
                         [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'"
                         appearance="outline">
-                        <mat-label>Operacion minera</mat-label>
+                        <mat-label>Operación minera</mat-label>
                         <input autocomplete="off" formControlName="miningOperation" [matAutocomplete]="miningOperationAutocomplete" type="text"
                             matInput />
                         <mat-autocomplete autoActiveFirstOption #miningOperationAutocomplete="matAutocomplete">
@@ -151,7 +151,9 @@
 
                 <div *ngFor="let file of filesGeneral">
                     <app-upload-task [file]="file" [pathStorage]="pathStorageGeneral"
-                        (onNewImage)="addNewImageGeneral($event)">
+                        (onNewImage)="addNewImageGeneral($event)"
+                        (onDeleteImage)="deleteImageGeneral($event)"
+                        >
                     </app-upload-task>
                 </div>
 
@@ -174,17 +176,22 @@
 
                 <div *ngFor="let file of filesDetail">
                     <app-upload-task [file]="file" [pathStorage]="pathStorageDetail"
-                        (onNewImage)="addNewImageDetail($event)">
+                        (onNewImage)="addNewImageDetail($event)"
+                        (onDeleteImage)="deleteImageDetail($event)"
+                        >
                     </app-upload-task>
                 </div>
 
                 <div class="container-form__uploadXlx">
                     <h3 class="container-form__title">Archivo adicional</h3>
-                    <p *ngIf="fileSelect" style="color:#0064EA;">{{nameFileSelect}} </p>
-                    <input #fileInput2 style="display: none" type="file" id="fileInput2" (change)="uploadFiles($event)"
+                    <p *ngIf="fileSelect" style="color:#0064EA;">
+                        <span *ngFor="let item of dataFiles;">{{item.name}} <br> </span>
+                    </p>
+                    <input #fileInput2 style="display: none"  id="fileInput2" (change)="uploadFiles($event)"
+                          type="file" multiple
                         accept="*">
                     <button type="file" mat-stroked-button class="ms-button" accept="*" (click)="fileInput2.click()">
-                        <mat-icon aria-label="agregar" class="icon-add">add</mat-icon>
+                        <mat-icon>add</mat-icon>
                         ADJUNTAR
                     </button>
                 </div>

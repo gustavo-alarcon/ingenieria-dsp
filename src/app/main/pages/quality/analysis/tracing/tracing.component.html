@@ -67,7 +67,8 @@
         <div class="info-box">
           <div class="lj" matTooltip="WOF" matTooltipPosition="above"><span>OT {{item.workOrder}}</span> </div>
           <div class="info-row"> Componente: <span> {{item.component}}</span> </div>
-          <div class="info-row"> Taller: <span> {{item.workShop}}</span></div>
+          <div *ngIf="item.workShop" class="info-row"> Taller: <span> {{item.workShop? item.workShop : '-'}}</span></div>
+          <div *ngIf="item.miningOperation" class="info-row"> Operación minera: <span> {{item.miningOperation? item.miningOperation : '-'}}</span></div>
           <div class="info-row"> Especialista: <span> {{item.specialist['name']}}</span></div>
           <div class="info-row"> Fecha: <span> {{(item.createdAt['seconds'] * 1000) | date : 'dd/MM/yy - hh:mm:ss'}} </span></div>
         </div>

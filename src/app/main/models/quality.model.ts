@@ -31,6 +31,7 @@ export interface Quality{
     attentionTimeElapsed?: QualityTimer;
    //finalizedAt?: Date;
    //finalizedBy: User;
+    fileAdditional?: FileAdditional;
     taskDone?: number;
     causeFailureList: Array<string>;
     analysis: Array<string>;
@@ -132,3 +133,8 @@ export interface MiningOperation{
     createdAt: Date;
     createdBy: User;
 }
+export interface FileAdditional{
+    name: string;
+    url: string;
+}
+
