@@ -176,7 +176,7 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
         break;
       case 'delete':
         dialogRef = this.dialog.open(HistoryDeleteDialogComponent, {
-          data: this.historyDataSource.data[index]
+          data: entry
         }
         );
         dialogRef.afterClosed().subscribe(result => {
