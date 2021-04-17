@@ -290,5 +290,19 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
     }
 
   }
+ async deleteDataFiles(url, index): Promise<void>{
+    try {
+      this.loading.next(true);
+      this.qualityService.deleteImage(url);
+
+      this.dataFiles.splice(index, 1);
+      this.loading.next(false);
+
+    } catch (error) {
+      console.log(error);
+      this.loading.next(false);
+    }
+
+  }
 
 }

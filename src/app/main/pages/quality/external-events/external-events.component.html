@@ -92,7 +92,6 @@
                             válida.</span>
                         </mat-error>
                     </mat-form-field>
-
                 </div>
                 <br />
                 <mat-form-field appearance="outline" class="container-form__area"
@@ -185,7 +184,18 @@
                 <div class="container-form__uploadXlx">
                     <h3 class="container-form__title">Archivo adicional</h3>
                     <p *ngIf="fileSelect" style="color:#0064EA;">
-                        <span *ngFor="let item of dataFiles;">{{item.name}} <br> </span>
+                        <span *ngFor="let item of dataFiles; let i= index">
+                            {{item.name}} 
+                            <button
+                                mat-icon-button
+                                aria-label="deletelistResult"
+                                class="btn-delete"
+                                (click)="deleteDataFiles(item.url,i)"
+                                >
+                                <mat-icon style="color: red">delete</mat-icon>
+                            </button>
+                            <br> 
+                        </span>
                     </p>
                     <input #fileInput2 style="display: none"  id="fileInput2" (change)="uploadFiles($event)"
                           type="file" multiple
