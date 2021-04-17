@@ -150,6 +150,10 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initForm();
 
+    if (this.data.evaluationAnalisis) {
+      this.resultAnalysis = this.data.evaluationAnalisis;
+    }
+
     this.emailArray = this.data.emailList;
 
     this.filteredBroadcast$ = this.qualityService.getAllBroadcastList().pipe(
@@ -302,7 +306,6 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
 
   onclickArea(event, index): void {
     const emailSelect = this.areas.controls[index].get('name').value;
-    console.log('emailSelect: ', emailSelect);
     const emailDelete = emailSelect.email;
     const email = event.email;
     if (event.email) {
@@ -331,13 +334,13 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
   } */
   save(): void {
     try {
-      if (this.data.analysis && this.listAreaForm.valid) {
+      if (this.analysisForm.valid && this.listAreaForm.valid) {
         const resp = this.qualityService.saveCorrectiveActions(
           this.data,
           this.analysisForm.value,
           this.listAreaForm.value,
           this.emailArray,
-          //Object.assign({}, this.emailArray),
+          this.resultAnalysis,
           this.state
         );
         this.subscription.add(
@@ -366,7 +369,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
       }
 
 
-      if (this.analysisForm.valid) {
+      if (this.analysisForm.valid && this.listAreaForm.invalid) {
         const resp = this.qualityService.updateQualityEvaluationAnalisis(
           this.data.id,
           this.resultAnalysis,
@@ -447,7 +450,6 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
     if (input) {
       input.value = '';
     }
-    console.log('this.emailArray : ', this.emailArray);
 
     this.broadcastControl.setValue(null);
   }
