@@ -76,14 +76,6 @@ export class TracingComponent implements OnInit, OnDestroy {
       this.auth.getGeneralConfigQuality()
     ).pipe(
       map(([qualities, search, codeEventType, generalConfig]) => {
-        // total task pending
-        this.totalTask = 0;
-        qualities.map(el => {
-          if (el.taskDone < el.correctiveActions.length) {
-            const result = el.correctiveActions.length - el.taskDone;
-            this.totalTask += result;
-          }
-        });
 
         const searchTerm = search.toLowerCase().trim();
         let preFilterEventType: Quality[] = [];
@@ -114,6 +106,14 @@ export class TracingComponent implements OnInit, OnDestroy {
             String(quality.componentHourMeter).toLowerCase().includes(searchTerm);
           });
         }
+        // total task pending
+        this.totalTask = 0;
+        preFilterSearch.map((el) => {
+          if (el.taskDone < el.correctiveActions.length) {
+            const result = el.correctiveActions.length - el.taskDone;
+            this.totalTask += result;
+          }
+        });
 
         preFilterSearch.map(evaluation => {
           if (evaluation.tracingTimer) {
