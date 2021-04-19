@@ -209,9 +209,9 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
       this.analysisForm.get('frequency').valueChanges.pipe()
     ).pipe(
       map(([formQuality, formCost, formFrequency]) => {
-        const codeQuality = formQuality.code;
-        const codeCost = formCost.code;
-        const codeFrecuency = formFrequency.code;
+        const codeQuality = formQuality;
+        const codeCost = formCost;
+        const codeFrecuency = formFrequency;
 
         let result: number;
         let roundResult: number;
@@ -247,10 +247,10 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
       //this.analysisForm.controls['quality'].setValue(this.data.analysis['quality']);
 
       // setValue es para agregarle un valor
-       this.analysisForm.controls['quality'].setValue(
+      /*  this.analysisForm.controls['quality'].setValue(
         this.data.analysis['quality'],
         { onlySelf: true }
-       );
+       ); */
 
       //this.analysisForm.get('quality').setValue(this.data.analysis['quality']);
 
@@ -343,39 +343,6 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
   } */
   save(): void {
     try {
-      if (this.analysisForm.valid && this.listAreaForm.valid) {
-        const resp = this.qualityService.saveCorrectiveActions(
-          this.data,
-          this.analysisForm.value,
-          this.listAreaForm.value,
-          this.emailArray,
-          this.resultAnalysis,
-          this.state
-        );
-        this.subscription.add(
-          resp.subscribe((batch) => {
-            if (batch) {
-              batch
-                .commit()
-                .then(() => {
-                  this.snackbar.open('✅ Se guardo correctamente!', 'Aceptar', {
-                    duration: 6000,
-                  });
-                  this.dialogRef.close(false);
-                })
-                .catch((err) => {
-                  this.snackbar.open(
-                    '🚨 Hubo un error al actualizar  !',
-                    'Aceptar',
-                    {
-                      duration: 6000,
-                    }
-                  );
-                });
-            }
-          })
-        );
-      }
 
       if (this.analysisForm.valid && this.listAreaForm.invalid) {
         const resp = this.qualityService.updateQualityEvaluationAnalisis(
@@ -415,6 +382,49 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
       console.log(error);
       this.loading.next(false);
     }
+  }
+
+  saveAndSendEmail(): void{
+    try {
+      if (this.analysisForm.valid && this.listAreaForm.valid) {
+        const resp = this.qualityService.saveCorrectiveActions(
+          this.data,
+          this.analysisForm.value,
+          this.listAreaForm.value,
+          this.emailArray,
+          this.resultAnalysis,
+          this.state
+        );
+        this.subscription.add(
+          resp.subscribe((batch) => {
+            if (batch) {
+              batch
+                .commit()
+                .then(() => {
+                  this.snackbar.open('✅ Se guardo correctamente!', 'Aceptar', {
+                    duration: 6000,
+                  });
+                  this.dialogRef.close(false);
+                })
+                .catch((err) => {
+                  this.snackbar.open(
+                    '🚨 Hubo un error al actualizar  !',
+                    'Aceptar',
+                    {
+                      duration: 6000,
+                    }
+                  );
+                });
+            }
+          })
+        );
+      }
+
+    } catch (error) {
+      console.log(error);
+      this.loading.next(false);
+    }
+
   }
 
   onAddCategory(): void {
