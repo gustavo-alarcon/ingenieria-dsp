@@ -642,8 +642,6 @@ export class QualityService {
     analisis: number,
     formAnalysis
   ): Observable<firebase.default.firestore.WriteBatch> {
-    console.log('formAnalysis : ', formAnalysis)
-    console.log('analisis : ', analisis)
     // create batch
     const batch = this.afs.firestore.batch();
     // create reference for document in evaluation entries collection

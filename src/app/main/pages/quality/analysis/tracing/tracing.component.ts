@@ -87,6 +87,7 @@ export class TracingComponent implements OnInit, OnDestroy {
           preFilterSearch = preFilterEventType.filter(quality => {
             return String(quality.workOrder).toLowerCase().includes(searchTerm) ||
             String(quality.component).toLowerCase().includes(searchTerm) ||
+            String(quality.specialist['name']).toLowerCase().includes(searchTerm) ||
             String(quality.workShop).toLowerCase().includes(searchTerm)  ||
             String(quality.partNumber).toLowerCase().includes(searchTerm) ||
             String(quality.enventDetail).toLowerCase().includes(searchTerm)  ||
@@ -98,6 +99,7 @@ export class TracingComponent implements OnInit, OnDestroy {
           preFilterSearch = qualities.filter(quality => {
             return String(quality.workOrder).toLowerCase().includes(searchTerm) ||
             String(quality.component).toLowerCase().includes(searchTerm) ||
+            String(quality.specialist['name']).toLowerCase().includes(searchTerm) ||
             String(quality.workShop).toLowerCase().includes(searchTerm)  ||
             String(quality.partNumber).toLowerCase().includes(searchTerm) ||
             String(quality.enventDetail).toLowerCase().includes(searchTerm)  ||
