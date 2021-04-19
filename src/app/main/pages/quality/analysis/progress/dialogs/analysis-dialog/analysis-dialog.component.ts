@@ -243,9 +243,18 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
         cost: this.data.analysis['cost'],
         frequency: this.data.analysis['frequency'],
       });
-       //this.analysisForm.get('quality').setValue(this.data.analysis['quality']['name']);
-       //this.analysisForm.controls['quality'].setValue(this.data.analysis['quality']);
-    } else{
+      //this.analysisForm.get('quality').setValue(this.data.analysis['quality']['name']);
+      //this.analysisForm.controls['quality'].setValue(this.data.analysis['quality']);
+
+      // setValue es para agregarle un valor
+       this.analysisForm.controls['quality'].setValue(
+        this.data.analysis['quality'],
+        { onlySelf: true }
+       );
+
+      //this.analysisForm.get('quality').setValue(this.data.analysis['quality']);
+
+    } else {
       this.analysisForm = this.fb.group({
         causeFailure: ['', Validators.required],
         process: ['', Validators.required],
@@ -368,7 +377,6 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
         );
       }
 
-
       if (this.analysisForm.valid && this.listAreaForm.invalid) {
         const resp = this.qualityService.updateQualityEvaluationAnalisis(
           this.data.id,
@@ -403,8 +411,6 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
           })
         );
       }
-
-
     } catch (error) {
       console.log(error);
       this.loading.next(false);
