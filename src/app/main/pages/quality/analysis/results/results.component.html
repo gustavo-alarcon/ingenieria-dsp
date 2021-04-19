@@ -98,10 +98,7 @@
                 <ng-container matColumnDef="riskLevel">
                     <th mat-header-cell *matHeaderCellDef  class="table__cell theader"> Nivel de riesgo </th>
                     <td mat-cell *matCellDef="let element" class="table__cell"> 
-                        <span *ngIf="element.evaluationAnalisis > 0  && element.evaluationAnalisis < 5" >Menor</span>
-                        <span *ngIf="element.evaluationAnalisis > 4  && element.evaluationAnalisis < 10" >Moderado</span>
-                        <span *ngIf="element.evaluationAnalisis > 9  && element.evaluationAnalisis < 20" >Significativo</span>
-                        <span *ngIf="element.evaluationAnalisis > 19  && element.evaluationAnalisis < 26" >Alto</span>
+                        {{element.evaluationAnalisisName? element.evaluationAnalisisName: '-'}}
                     </td>
                 </ng-container>
 

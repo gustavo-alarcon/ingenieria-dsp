@@ -31,6 +31,7 @@ export interface Quality {
   attentionTimeElapsed?: QualityTimer;
   //finalizedAt?: Date;
   //finalizedBy: User;
+  evaluationAnalisisName?: string;
   fileAdditional?: FileAdditional;
   taskDone?: number;
   causeFailureList: Array<string>;
