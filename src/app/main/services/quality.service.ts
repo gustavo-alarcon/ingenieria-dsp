@@ -598,6 +598,7 @@ export class QualityService {
     formCorrective,
     emailList,
     analisis: number,
+    evaluationName: string,
     status
   ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
@@ -615,6 +616,7 @@ export class QualityService {
       analysis: formAnalysis,
       state: status,
       evaluationAnalisis: analisis,
+      evaluationAnalisisName: evaluationName,
     };
     batch.update(qualityDocRef, data);
 
@@ -640,6 +642,7 @@ export class QualityService {
   updateQualityEvaluationAnalisis(
     entryId: string,
     analisis: number,
+    evaluationName: string,
     formAnalysis
   ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
@@ -651,6 +654,7 @@ export class QualityService {
     // Structuring the data model
     const data: any = {
       evaluationAnalisis: analisis,
+      evaluationAnalisisName: evaluationName,
       analysis: formAnalysis,
 
     };

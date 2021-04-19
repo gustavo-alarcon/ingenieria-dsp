@@ -147,8 +147,10 @@ export class ResultsComponent implements OnInit {
             return String(quality.workOrder).toLowerCase().includes(searchTerm) ||
             String(quality.component).toLowerCase().includes(searchTerm) ||
             String(quality.workShop).toLowerCase().includes(searchTerm)  ||
-            String(quality.partNumber).toLowerCase().includes(searchTerm) ||
             String(quality.enventDetail).toLowerCase().includes(searchTerm)  ||
+            String(quality.evaluationAnalisisName).toLowerCase().includes(searchTerm)  ||
+            //String(quality.specialist['workingArea']).toLowerCase().includes(searchTerm) ||
+            String(quality.partNumber).toLowerCase().includes(searchTerm) ||
             String(quality.packageNumber).toLowerCase().includes(searchTerm) ||
             String(quality.miningOperation).toLowerCase().includes(searchTerm) ||
             String(quality.componentHourMeter).toLowerCase().includes(searchTerm);
@@ -164,6 +166,8 @@ export class ResultsComponent implements OnInit {
               String(quality.component).toLowerCase().includes(searchTerm) ||
               String(quality.workShop).toLowerCase().includes(searchTerm)  ||
               String(quality.partNumber).toLowerCase().includes(searchTerm) ||
+              String(quality.evaluationAnalisisName).toLowerCase().includes(searchTerm)  ||
+             //String(quality.specialist['workingArea']).toLowerCase().includes(searchTerm) ||
               String(quality.enventDetail).toLowerCase().includes(searchTerm)  ||
               String(quality.packageNumber).toLowerCase().includes(searchTerm) ||
               String(quality.miningOperation).toLowerCase().includes(searchTerm) ||
@@ -178,6 +182,8 @@ export class ResultsComponent implements OnInit {
             return  String(quality.workOrder).toLowerCase().includes(searchTerm) ||
             String(quality.component).toLowerCase().includes(searchTerm) ||
             String(quality.workShop).toLowerCase().includes(searchTerm)  ||
+            String(quality.evaluationAnalisisName).toLowerCase().includes(searchTerm)  ||
+            //String(quality.specialist['workingArea']).toLowerCase().includes(searchTerm) ||
             String(quality.partNumber).toLowerCase().includes(searchTerm) ||
             String(quality.enventDetail).toLowerCase().includes(searchTerm)  ||
             String(quality.packageNumber).toLowerCase().includes(searchTerm) ||
@@ -241,7 +247,7 @@ export class ResultsComponent implements OnInit {
         element.partNumber ? element.partNumber : '-',
         element.miningOperation ? element.miningOperation : '-',
         element.specialist ? element.specialist['workingArea'] : '-',
-        element.evaluationAnalisis ? element.evaluationAnalisis : '-',
+        element.evaluationAnalisisName ? element.evaluationAnalisisName : '-',
         element.createdBy ? element.createdBy.name : '',
         element.state ? element.state : ''
       ];

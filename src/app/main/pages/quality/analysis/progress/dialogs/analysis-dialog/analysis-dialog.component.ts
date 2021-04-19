@@ -136,6 +136,8 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
   areaResponsable$: Observable<any[]>;
 
   resultAnalysis = 0;
+  evaluationName = '';
+
 
   private subscription = new Subscription();
 
@@ -152,6 +154,9 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
 
     if (this.data.evaluationAnalisis) {
       this.resultAnalysis = this.data.evaluationAnalisis;
+    }
+    if (this.data.evaluationAnalisisName) {
+      this.evaluationName = this.data.evaluationAnalisisName;
     }
 
     this.emailArray = this.data.emailList;
@@ -218,6 +223,16 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
         result = ((codeQuality + codeCost) / 2) * codeFrecuency;
         roundResult = Math.round(result);
         this.resultAnalysis = roundResult;
+
+        if ( 0 < roundResult &&  roundResult < 5) {
+           this.evaluationName = 'Menor';
+        } else if ( 4 < roundResult &&  roundResult < 10) {
+           this.evaluationName = 'Moderado';
+        } else if ( 9 < roundResult &&  roundResult < 20) {
+           this.evaluationName = 'Significativo';
+        } else if ( 19 < roundResult &&  roundResult < 26) {
+           this.evaluationName = 'Alto';
+        }
 
         return roundResult;
       })
@@ -342,12 +357,14 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
     console.log('onBookChange: ', item)
   } */
   save(): void {
+
     try {
 
       if (this.analysisForm.valid && this.listAreaForm.invalid) {
         const resp = this.qualityService.updateQualityEvaluationAnalisis(
           this.data.id,
           this.resultAnalysis,
+          this.evaluationName,
           this.analysisForm.value
         );
         this.subscription.add(
@@ -393,6 +410,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
           this.listAreaForm.value,
           this.emailArray,
           this.resultAnalysis,
+          this.evaluationName,
           this.state
         );
         this.subscription.add(
