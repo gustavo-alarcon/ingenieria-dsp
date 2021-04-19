@@ -597,6 +597,7 @@ export class QualityService {
     formAnalysis,
     formCorrective,
     emailList,
+    analisis: number,
     status
   ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
@@ -611,8 +612,9 @@ export class QualityService {
       processTimeElapsed: quality.processTimeElapsed,
       processPercentageElapsed: quality.processPercentageElapsed,
       tracingAt: new Date(),
-      //analysis: formAnalysis,
+      analysis: formAnalysis,
       state: status,
+      evaluationAnalisis: analisis,
     };
     batch.update(qualityDocRef, data);
 

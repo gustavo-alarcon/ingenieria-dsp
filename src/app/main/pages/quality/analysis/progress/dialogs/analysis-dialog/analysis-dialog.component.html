@@ -3,7 +3,7 @@
 <div>
     <div class="ms-dialog-header">
         <mat-icon class="ms-dialog-header__icon">add_task</mat-icon>
-        <h3 class="ms-dialog-header__title">Analisis <span style="font-size: 0.8rem; color: grey; margin-left: 1rem"> </span> </h3>           
+        <h3 class="ms-dialog-header__title">Análisis <span style="font-size: 0.8rem; color: grey; margin-left: 1rem"> </span> </h3>           
         <span class="ms-fill"></span>
         <button mat-icon-button mat-dialog-close>
             <mat-icon>cancel</mat-icon>
@@ -31,7 +31,7 @@
                     <form [formGroup]="analysisForm" autocomplete="off" class="container__form">
                     <ng-template matStepLabel >
                         <div class="container__result" >
-                            <span  class="step-text" style="margin-top: 10px;" > Analisis </span>
+                            <span  class="step-text" style="margin-top: 10px;" > Análisis </span>
                             <span *ngIf="resultEvaluation$  | async as result " 
                             [ngClass]="{
                                          'btn-result-1':   result > 0 &&  result < 5
@@ -173,7 +173,7 @@
                             <div [formGroupName]="i" class="form-corrective__container">
                                
                                 <mat-form-field appearance="outline"   class="form-corrective__input1">
-                                    <mat-label>Accion correctiva {{i+1}}</mat-label>
+                                    <mat-label>Acción correctiva {{i+1}}</mat-label>
                                     <input matInput placeholder="Escribe..." formControlName="corrective">
                                     <mat-error *ngIf="areas.controls[i].get('corrective').errors">
                                         Campo <strong>requerido.</strong>
