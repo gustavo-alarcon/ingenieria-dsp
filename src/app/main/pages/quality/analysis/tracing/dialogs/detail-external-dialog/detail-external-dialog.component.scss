@@ -15,18 +15,17 @@
     }
 
     &__icon {
-        margin-top: 0px; 
+        margin-top: 0px;
         cursor: pointer;
-        color: black ;
-        margin-right: 20px  ;
+        color: black;
+        margin-right: 20px;
     }
     &__icon-clear {
-        margin-top: 0px; 
+        margin-top: 0px;
         cursor: pointer;
-        color: black ;
+        color: black;
     }
 }
-
 
 .container-image {
     margin-top: 5px;
@@ -42,41 +41,82 @@
         max-width: 100%;
         width: 80%;
         height: auto;
-    }    
+    }
 }
 
-.container-file{
+.container-file {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     margin-bottom: 5px;
-    .mat-icon{
+    .mat-icon {
         font-size: 50px;
         height: 50px;
         width: 50px;
     }
-  
-    &__name{
-        color: #0064EA;
+
+    &__name {
+        color: #0064ea;
         text-decoration: none;
         font-size: medium;
     }
 }
 
-.timer-container{
-    &__input{
+.corrective-actions__title {
+    color: #2b2b2b;
+    font-weight: 700;
+    margin-top: 12px;
+}
+
+.corrective-actions__list {
+    display: flex;
+    width: 100%;
+    border: dashed 1px grey;
+    margin-bottom: 12px;
+
+    .corrective-actions {
+        &__index {
+            padding: 8px;
+            background: grey;
+            color: white;
+            font-weight: 500;
+            margin-right: 8px;
+
+            &--done {
+                background: green;
+            }
+        }
+
+        &__description {
+            padding: 8px;
+            color: #2b2b2b;
+            font-weight: 300;
+            margin-right: 36px;
+        }
+
+        &__area {
+            padding: 8px;
+            color: #2b2b2b;
+            font-weight: 300;
+            margin-right: 8px;
+        }
+    }
+}
+
+.timer-container {
+    &__input {
         width: 100%;
     }
 }
-.footer__btn-close{
-    border: 1px solid #B00020;
+.footer__btn-close {
+    border: 1px solid #b00020;
     background: white;
     padding: 0px 30px 0px 30px;
     margin-right: 20px;
 }
 
-.footer__btn-save{
-    background: #6200EE;
+.footer__btn-save {
+    background: #6200ee;
     color: white;
     padding: 0px 30px 0px 30px;
 }
