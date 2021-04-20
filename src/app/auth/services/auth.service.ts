@@ -8,7 +8,7 @@ import { Observable, of } from 'rxjs';
 
 import { HttpClient } from '@angular/common/http';
 import { User } from 'src/app/main/models/user-model';
-import { shareReplay, switchMap, take } from 'rxjs/operators';
+import { shareReplay, switchMap } from 'rxjs/operators';
 import { GeneralConfig } from '../models/generalConfig.model';
 
 
@@ -20,7 +20,7 @@ export class AuthService {
 
   user$: Observable<User>;
   version$: Observable<GeneralConfig>;
-  version: string = 'V4.8.14r';
+  version: string = 'V4.9.14r';
 
   constructor(
     private afAuth: AngularFireAuth,

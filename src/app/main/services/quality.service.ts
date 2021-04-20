@@ -23,7 +23,7 @@ export class QualityService {
   constructor(
     private afs: AngularFirestore,
     private storage: AngularFireStorage
-  ) {}
+  ) { }
 
   /**
    * add internal events entry
@@ -87,15 +87,15 @@ export class QualityService {
       question4: null,
     };
     batch.set(qualityDocRef, data);
-/* 
-    emailList.forEach(el => {
-      const qualityEmailDocRef = this.afs.firestore.doc(`db/ferreyros/quality/${quality.id}`);
-      const data1: any = {
-        emailList: firebase.default.firestore.FieldValue.arrayUnion(el)
-      };
-      batch.update(qualityEmailDocRef, data1);
-    });
- */
+    /* 
+        emailList.forEach(el => {
+          const qualityEmailDocRef = this.afs.firestore.doc(`db/ferreyros/quality/${quality.id}`);
+          const data1: any = {
+            emailList: firebase.default.firestore.FieldValue.arrayUnion(el)
+          };
+          batch.update(qualityEmailDocRef, data1);
+        });
+     */
     return of(batch);
   }
 
@@ -288,7 +288,7 @@ export class QualityService {
       .collection(`/db/generalConfig/qualityListSpecialist`)
       .doc(id)
       .delete()
-      .then(() => {})
+      .then(() => { })
       .catch((error) => {
         console.log(error);
       });
@@ -445,7 +445,7 @@ export class QualityService {
   updateQualitySpecialist(
     quality: Quality,
     nameSpecialist: string,
-    emailList ,
+    emailList,
     status: string
   ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
@@ -476,7 +476,7 @@ export class QualityService {
 
     return of(batch);
   }
- 
+
   /**
    * add the name addCauseFailureList
    * @param {string} form - name CauseFailureList
@@ -504,8 +504,8 @@ export class QualityService {
 
     return of(batch);
   }
-   // get all CauseFailureList
-   getAllCauseFailureList(): Observable<CauseFailureList[]> {
+  // get all CauseFailureList
+  getAllCauseFailureList(): Observable<CauseFailureList[]> {
     return this.afs
       .collection<CauseFailureList>(
         `/db/generalConfig/qualityCauseFailureList`,
@@ -518,7 +518,7 @@ export class QualityService {
    * @param {string} form - name CauseFailureList
    * @param {User} user - User's data in actual session
    */
-   addMiningOperationList(
+  addMiningOperationList(
     form,
     user: User
   ): Observable<firebase.default.firestore.WriteBatch> {
@@ -540,7 +540,7 @@ export class QualityService {
 
     return of(batch);
   }
- 
+
   // get all CauseFailureList
   getAllMiningOperationList(): Observable<CauseFailureList[]> {
     return this.afs
@@ -597,7 +597,7 @@ export class QualityService {
     formAnalysis,
     formCorrective,
     emailList,
-    analisis: number,
+    analysis: number,
     evaluationName: string,
     status
   ): Observable<firebase.default.firestore.WriteBatch> {
@@ -615,8 +615,8 @@ export class QualityService {
       tracingAt: new Date(),
       analysis: formAnalysis,
       state: status,
-      evaluationAnalisis: analisis,
-      evaluationAnalisisName: evaluationName,
+      evaluationAnalisis: analysis,
+      evaluationAnalysisName: evaluationName,
     };
     batch.update(qualityDocRef, data);
 
@@ -639,11 +639,12 @@ export class QualityService {
     return of(batch);
   }
 
-  updateQualityEvaluationAnalisis(
+  updateQualityEvaluationAnalysis(
     entryId: string,
     analisis: number,
     evaluationName: string,
-    formAnalysis
+    formAnalysis,
+    correctiveActions
   ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
@@ -727,7 +728,7 @@ export class QualityService {
     entryId,
     form,
     user: User
-    ): Observable<firebase.default.firestore.WriteBatch> {
+  ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
     // create reference for document in evaluation entries collection

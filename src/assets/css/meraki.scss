@@ -31,7 +31,6 @@
 
             font-weight: 900;
             margin: 0px 24px 0px 0px;
-
         }
 
         &__button {
@@ -66,7 +65,6 @@
             .mat-icon {
                 margin-right: 12px !important;
             }
-
         }
     }
 }
@@ -89,7 +87,7 @@
     padding: 16px;
 
     &__button {
-        border: 1px #6200ee solid;
+        border: 1px #6200ee solid !important;
         color: #6200ee;
         align-self: center;
 
@@ -97,6 +95,11 @@
             margin-right: 12px !important;
             align-self: center;
             color: rgba(0, 0, 0, 0.38) !important;
+        }
+
+        &--mobile {
+            width: 100% !important;
+            margin: 4px 0px !important;
         }
     }
 

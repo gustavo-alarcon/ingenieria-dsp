@@ -203,14 +203,6 @@
         </mat-expansion-panel-header>
         <mat-nav-list>
           <div>
-            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/quality-dashboard']"
-              routerLinkActive="active" (click)="drawer.toggle()">
-              <mat-icon mat-list-icon class="mat-icon-menu">dashboard</mat-icon>
-              <span class="mat-item-list-span">
-                Dashboard
-              </span>
-            </a>
-
             <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/quality-internal-events']"
               routerLinkActive="active" (click)="drawer.toggle()">
               <mat-icon mat-list-icon class="mat-icon-menu">note_alt</mat-icon>
@@ -320,7 +312,7 @@
       </button>
     </mat-toolbar>
     <div class="main-background">
-      
+
       <router-outlet></router-outlet>
     </div>
   </mat-sidenav-content>
