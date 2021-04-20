@@ -31,16 +31,6 @@
 
             font-weight: 900;
             margin: 0px 24px 0px 0px;
-
-            &--desktop {
-                font-size: 2rem;
-                width: auto;
-            }
-
-            &--mobile {
-                font-size: 1.6rem;
-                width: 75%;
-            }
         }
 
         &__button {
@@ -62,15 +52,6 @@
                     line-height: 36px;
                 }
             }
-
-            &--desktop {
-                margin: 0px 8px !important;
-            }
-
-            &--mobile {
-                width: 100% !important;
-                margin: 8px 0px !important;
-            }
         }
 
         &__input {
@@ -83,15 +64,6 @@
 
             .mat-icon {
                 margin-right: 12px !important;
-            }
-
-            &--desktop {
-                margin: 0px 8px !important;
-            }
-
-            &--mobile {
-                width: 100% !important;
-                margin: 4px 0px !important;
             }
         }
     }
@@ -115,7 +87,7 @@
     padding: 16px;
 
     &__button {
-        border: 1px #6200ee solid;
+        border: 1px #6200ee solid !important;
         color: #6200ee;
         align-self: center;
 
@@ -125,13 +97,9 @@
             color: rgba(0, 0, 0, 0.38) !important;
         }
 
-        &--desktop {
-            margin: 0px 8px !important;
-        }
-
         &--mobile {
             width: 100% !important;
-            margin: 8px 0px !important;
+            margin: 4px 0px !important;
         }
     }
 

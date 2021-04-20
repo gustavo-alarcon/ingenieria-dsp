@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject, Subscription, Observable } from 'rxjs';
+import { BehaviorSubject, Subscription, Observable, combineLatest } from 'rxjs';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import * as XLSX from 'xlsx';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -7,8 +7,11 @@ import { AuthService } from '../../../../auth/services/auth.service';
 import { QualityService } from '../../../services/quality.service';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { User } from '../../../models/user-model';
-import { finalize, take } from 'rxjs/operators';
+import { finalize, take, startWith, map } from 'rxjs/operators';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { ComponentList, MiningOperation, FileAdditional } from '../../../models/quality.model';
+import { MatDialog } from '@angular/material/dialog';
+import { AddMiningOperationDialogComponent } from './dialogs/add-mining-operation-dialog/add-mining-operation-dialog.component';
 
 @Component({
   selector: 'app-external-events',
@@ -55,7 +58,20 @@ export class ExternalEventsComponent implements OnInit {
   subscriptions = new Subscription();
   isMobile = false;
 
+  componentList: ComponentList[] = [
+    { code: 1, name: 'Componente 1' },
+    { code: 2, name: 'Componente 2'},
+    { code: 3, name: 'Componente 3'},
+    { code: 4, name: 'Componente 4'},
+    { code: 5, name: 'Componente 5'},
+  ];
+
+  miningOperation$: Observable<MiningOperation[]>;
+
+  dataFiles: FileAdditional[] = [];
+
   constructor(
+    public dialog: MatDialog,
     private breakpoint: BreakpointObserver,
     private fb: FormBuilder,
     private snackbar: MatSnackBar,
@@ -66,6 +82,29 @@ export class ExternalEventsComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.initFormInternal();
+
+    this.miningOperation$ = combineLatest(
+      this.externalForm.get('miningOperation').valueChanges.pipe(
+        startWith(''),
+        map((name) => (name ? name : ''))
+      ),
+      this.qualityService.getAllMiningOperationList()
+    ).pipe(
+      map(([formValue, miningOperation]) => {
+        const filter = miningOperation.filter((el) =>
+          formValue
+            ? el.name.toLowerCase().includes(formValue.toLowerCase())
+            : true
+        );
+        if (!(filter.length === 1) && formValue.length) {
+          this.externalForm.get('miningOperation').setErrors({ invalid: true });
+        }
+
+        return filter;
+      })
+    );
+
     this.subscriptions.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
       .subscribe(res => {
         if (res.matches) {
@@ -85,7 +124,6 @@ export class ExternalEventsComponent implements OnInit {
     this.pathStorageDetail = `quality/detail/pictures`;
     this.pathStorageFile = `quality/files`;
 
-    this.initFormInternal();
   }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
@@ -96,7 +134,9 @@ export class ExternalEventsComponent implements OnInit {
       workdOrden: ['', Validators.required],
       component: ['', Validators.required],
       nPackage: ['', Validators.required],
-      componentHourMeter: ['', Validators.required],
+      componentHourMeter: ['', [
+        Validators.required,
+        Validators.pattern(/^(0|\-?[1-9][0-9]*)$/)  ]],
       nPart: ['', Validators.required],
       miningOperation: ['', Validators.required],
       question1: ['', Validators.required],
@@ -107,36 +147,46 @@ export class ExternalEventsComponent implements OnInit {
 
   }
 
-
-  uploadFiles(event, i?: number): void {
-    if (!event.target.files[0]) {
+  uploadFiles(event): void {
+    const files = event.target.files;
+    if (!files) {
       return;
     }
+
     const date = new Date();
-    this.loading.next(true);
-    const file = event.target.files[0];
-    const filename = event.target.files[0].name;
+    for (let event of files){
+      this.loading.next(true);
+      const file = event;
+      const filename = event.name;
 
-    const name = `${this.pathStorageFile}/${date}-${filename}`;
-    const fileRef = this.storage.ref(name);
-    const task = this.storage.upload(name, file);
+      const name = `${this.pathStorageFile}/${date}-${filename}`;
+      const fileRef = this.storage.ref(name);
+      const task = this.storage.upload(name, file);
 
-    this.uploadPercent$ = task.percentageChanges();
-    this.subscription.add(
-      task.snapshotChanges()
-        .pipe(
-          finalize(() => {
-            fileRef.getDownloadURL().subscribe((url) => {
-              if (url) {
-                this.uploadFile = url;
-                this.nameFileSelect = filename;
-                this.fileSelect = true;
-              }
-            });
-            this.loading.next(false);
-          })
-        ).subscribe()
-    );
+      this.uploadPercent$ = task.percentageChanges();
+      this.subscription.add(
+        task
+          .snapshotChanges()
+          .pipe(
+            finalize(() => {
+              fileRef.getDownloadURL().subscribe((link) => {
+                if (link) {
+                  const dataImage: FileAdditional = {
+                    name: filename,
+                    url: link,
+                  };
+
+                  this.dataFiles.push(dataImage);
+
+                  this.fileSelect = true;
+                }
+              });
+              this.loading.next(false);
+            })
+          ).subscribe()
+      );
+    }
+
   }
 
   isActive(snapshot): boolean {
@@ -151,7 +201,7 @@ export class ExternalEventsComponent implements OnInit {
         this.loading.next(false);
         return;
       } else {
-        this.imagesGeneral = [];
+       /*  this.imagesGeneral = [];
         const imagesObjGeneral = {};
         this.imagesGeneral = [
           ...this.imagesGeneral,
@@ -160,23 +210,21 @@ export class ExternalEventsComponent implements OnInit {
         this.imagesGeneral.pop();
         this.imagesGeneral.forEach((value, index) => {
           imagesObjGeneral[index] = value;
-        });
+        }); */
+
+        this.imagesGeneral = [];
+        this.imagesGeneral = [...this.imagesUploadGeneral];
 
         this.imagesDetail = [];
-        const imagesObjDetail = {};
-        this.imagesDetail = [...this.imagesDetail, ...this.imagesUploadDetail];
-        this.imagesDetail.pop();
-        this.imagesDetail.forEach((value, index) => {
-          imagesObjDetail[index] = value;
-        });
+        this.imagesDetail = [...this.imagesUploadDetail];
 
         this.qualityService
           .addQualityExternal(
             this.externalForm.value,
             this.user,
-            imagesObjGeneral,
-            imagesObjDetail,
-            this.uploadFile
+            this.imagesGeneral,
+            this.imagesDetail,
+            this.dataFiles
           )
           .pipe(take(1))
           .subscribe((res) => {
@@ -193,6 +241,11 @@ export class ExternalEventsComponent implements OnInit {
                 this.filesGeneral = [];
                 this.uploadFile = [];
                 this.nameFileSelect = '';
+                this.imagesDetail = [];
+                this.imagesGeneral = [];
+                this.dataFiles = [];
+                this.externalForm.markAsPristine();
+                this.externalForm.markAsUntouched();
               })
               .catch((err) => {
                 this.snackbar.open('🚨 Hubo un error.', 'Aceptar', {
@@ -202,7 +255,7 @@ export class ExternalEventsComponent implements OnInit {
           });
       }
     } catch (error) {
-      this.snackbar.open('🚨 Hubo un error.' + `${error}`, 'Aceptar', {
+      this.snackbar.open('🚨 Hubo un error, debe de ingresar todo los datos requeridos', 'Aceptar', {
         duration: 6000,
       });
       this.loading.next(false);
@@ -238,6 +291,62 @@ export class ExternalEventsComponent implements OnInit {
     for (let i = 0; i < files.length; i++) {
       this.filesDetail.push(files.item(i));
     }
+  }
+  onAddminingOperation(): void {
+    this.dialog.open(AddMiningOperationDialogComponent, {
+      maxWidth: 500,
+      width: '90vw',
+    });
+  }
+
+  async deleteImageGeneral(event): Promise<void>{
+    try {
+      this.loading.next(true);
+      this.qualityService.deleteImage(event);
+
+      const i = this.imagesUploadGeneral.indexOf( event );
+      if ( i !== -1 ) {
+        this.imagesUploadGeneral.splice( i, 1 );
+      }
+      this.loading.next(false);
+
+    } catch (error) {
+      console.log(error);
+      this.loading.next(false);
+    }
+
+  }
+ async deleteImageDetail(event): Promise<void>{
+    try {
+      this.loading.next(true);
+      this.qualityService.deleteImage(event);
+
+      const i = this.imagesUploadGeneral.indexOf( event );
+      if ( i !== -1 ) {
+        this.imagesUploadGeneral.splice( i, 1 );
+      }
+      this.loading.next(false);
+
+    } catch (error) {
+      console.log(error);
+      this.loading.next(false);
+    }
+
+  }
+
+  async deleteDataFiles(url, index): Promise<void>{
+    try {
+      this.loading.next(true);
+      this.qualityService.deleteImage(url);
+
+      this.dataFiles.splice(index, 1);
+      this.loading.next(false);
+
+    } catch (error) {
+      console.log(error);
+      this.loading.next(false);
+    }
+
   }
 
 

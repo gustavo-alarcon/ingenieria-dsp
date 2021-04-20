@@ -1,4 +1,3 @@
-
 <div>
     <div class="ms-dialog-header">
         <mat-icon class="ms-dialog-header__icon">visibility</mat-icon>
@@ -11,82 +10,96 @@
     <mat-divider></mat-divider>
 
     <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
-    <mat-dialog-content style="margin-top: 20px;" >
+    <mat-dialog-content style="margin-top: 20px;">
         <div>
             <form [formGroup]="detailFormGroup" class="timer-container">
                 <p><span style="font-weight: bold;"> OT actual :</span> {{data.workOrder ? data.workOrder : ''}}</p>
                 <p><span style="font-weight: bold;"> Componente :</span> {{data.component ? data.component : ''}}</p>
-                <p><span style="font-weight: bold;"> Número de paqueteo :</span> {{data.packageNumber ? data.packageNumber : ''}}</p>
-                <p><span style="font-weight: bold;"> Horómetro de componente :</span> {{data.componentHourMeter ? data.componentHourMeter : ''}}</p>
-                <p><span style="font-weight: bold;"> Número de parte :</span> {{data.partNumber ? data.partNumber : ''}}</p>
-                <p><span style="font-weight: bold;"> Tipo de evento :</span> {{data.eventType? data.eventType : ''}}</p>
-                <p><span style="font-weight: bold;"> Operacion minera :</span> {{data.miningOperation ? data.miningOperation : ''}} </p>
-                <p><span style="font-weight: bold;"> Fecha :</span>
-                {{data.createdAt ? ((data.createdAt['seconds'] * 1000) | date : 'dd/MM/yy - hh:mm:ss'): ''}}
+                <p><span style="font-weight: bold;"> Número de paqueteo :</span> {{data.packageNumber ?
+                    data.packageNumber : ''}}</p>
+                <p><span style="font-weight: bold;"> Horómetro de componente :</span> {{data.componentHourMeter ?
+                    data.componentHourMeter : ''}}</p>
+                <p><span style="font-weight: bold;"> Número de parte :</span> {{data.partNumber ? data.partNumber : ''}}
                 </p>
-                
+                <p><span style="font-weight: bold;"> Tipo de evento :</span> {{data.eventType? data.eventType : ''}}</p>
+                <p><span style="font-weight: bold;"> Operación minera :</span> {{data.miningOperation ?
+                    data.miningOperation : ''}} </p>
+                <p><span style="font-weight: bold;"> Fecha :</span>
+                    {{data.createdAt ? ((data.createdAt['seconds'] * 1000) | date : 'dd/MM/yy - hh:mm:ss'): ''}}
+                </p>
+
                 <mat-form-field appearance="outline" id="result" class="timer-container__input">
                     <mat-label>Especialista</mat-label>
-                      <input  matInput type="text" placeholder="Especialista" formControlName="specialist"  readonly                     
-                      >  
-                </mat-form-field>              
+                    <input matInput type="text" placeholder="Especialista" formControlName="specialist" readonly>
+                </mat-form-field>
                 <br>
+
+                <ng-container *ngIf="data.correctiveActions">
+                    <p class="corrective-actions__title">Acciones correctivas</p>
+                    <div *ngFor="let action of data.correctiveActions; let i = index" class="corrective-actions__list">
+                        <span class="corrective-actions__index"
+                            [ngClass]="{'corrective-actions__index--done' : action.kit}">{{i+1}}</span>
+                        <span class="corrective-actions__description">{{action.corrective}}</span>
+                        <span class="ms-fill"></span>
+                        <span class="corrective-actions__area">{{action.name.name}}</span>
+                    </div>
+                </ng-container>
+
                 <mat-form-field appearance="outline" id="result" class="timer-container__input">
                     <mat-label>1 ¿Cuentame que sucedió?</mat-label>
-                      <input  matInput type="text" placeholder="Bahia" formControlName="question1"  readonly                       
-                      >
+                    <input matInput type="text" placeholder="Bahia" formControlName="question1" readonly>
                 </mat-form-field>
-                <br> 
+                <br>
                 <mat-form-field appearance="outline" id="result" class="timer-container__input">
                     <mat-label>2. ¿Qué acciones de corrección se realizaron para solucionar el problema?</mat-label>
-                      <input  matInput type="text" placeholder="Bahia" formControlName="question2"  readonly                       
-                      >
-                    
+                    <input matInput type="text" placeholder="Bahia" formControlName="question2" readonly>
+
                 </mat-form-field>
-                <br> 
+                <br>
                 <mat-form-field appearance="outline" id="result" class="timer-container__input">
                     <mat-label>3. Cuál crees que fue la causa de la falla?</mat-label>
-                      <input  matInput type="text" placeholder="Bahia" formControlName="question3"  readonly                       
-                      >                    
+                    <input matInput type="text" placeholder="Bahia" formControlName="question3" readonly>
                 </mat-form-field>
-                <br> 
+                <br>
                 <mat-form-field appearance="outline" id="result" class="timer-container__input">
                     <mat-label>4. ¿Qué recomendarias para evitar que este problema vuelva a suceder?</mat-label>
-                      <input  matInput type="text" placeholder="Bahia" formControlName="question4"  readonly                      
-                      >
+                    <input matInput type="text" placeholder="Bahia" formControlName="question4" readonly>
                 </mat-form-field>
-                
-                <h3>Imagen general</h3>              
-                <div class="container-image" >
+
+                <p class="corrective-actions__title">Imágenes generales</p>
+                <div class="container-image">
                     <picture *ngFor="let item of imagesGeneral; index as i">
                         <a [href]="item" target="_blank" style="cursor: zoom-in">
                             <img [src]="item" alt="" class="container-image__img">
                         </a>
                     </picture>
                 </div>
-                
-                <h3>Imagen detalle</h3>
-                <div class="container-image" >
-                    <picture  *ngFor="let item of imagesDetail; index as i">
+
+                <p class="corrective-actions__title">Imágenes de detalle</p>
+                <div class="container-image">
+                    <picture *ngFor="let item of imagesDetail; index as i">
                         <a [href]="item" target="_blank" style="cursor: zoom-in">
-                            <img [src]="item" alt="" class="container-image__img" >
+                            <img [src]="item" alt="" class="container-image__img">
                         </a>
                     </picture>
                 </div>
 
-                <h3>Archivo adicional</h3>
+                <p class="corrective-actions__title">Archivos adicionales</p>
                 <div class="container-file">
-                    <mat-icon>insert_drive_file</mat-icon>
-                    <div *ngIf="nameFile">
-                        <a [href]="nameFile" class="container-file__name" >
-                            Descargar archivo
-                        </a>
+                    <div *ngIf="this.data.fileAdditional; else nofile">
+                        <mat-icon>insert_drive_file</mat-icon>
+                        <div *ngFor="let item of this.data.fileAdditional">
+                            <a [href]="item.url" class="container-file__name">
+                                {{item.name}}
+                            </a>
+                        </div>
                     </div>
-                    <div *ngIf="!nameFile">
-                         No tiene archivo
-                    </div>
-                    
+                    <ng-template #nofile>
+                        <mat-icon>insert_drive_file</mat-icon>
+                        No tiene archivos
+                    </ng-template>
                 </div>
+
             </form>
         </div>
 

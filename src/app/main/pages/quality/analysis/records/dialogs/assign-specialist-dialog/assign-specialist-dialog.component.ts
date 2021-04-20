@@ -15,8 +15,11 @@ import {
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject, Observable, combineLatest, Subscription } from 'rxjs';
 import { QualityService } from 'src/app/main/services/quality.service';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Quality, QualityBroadcastList } from 'src/app/main/models/quality.model';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {
+  Quality,
+  QualityBroadcastList,
+} from 'src/app/main/models/quality.model';
 import {
   MatAutocomplete,
   MatAutocompleteSelectedEvent,
@@ -30,7 +33,6 @@ import {
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 
 import { MatChipInputEvent } from '@angular/material/chips';
-import { QualityListSpecialist } from '../../../../../../models/quality.model';
 import { OnDestroy } from '@angular/core';
 import { AuthService } from '../../../../../../../auth/services/auth.service';
 import { EvaluationsUser } from 'src/app/main/models/evaluations.model';
@@ -60,75 +62,77 @@ export class AssignSpecialistDialogComponent implements OnInit, OnDestroy {
   selectable = true;
   removable = true;
   separatorKeysCodes: number[] = [ENTER, COMMA];
- 
-  
-  @ViewChild('fruitInput') fruitInput: ElementRef<HTMLInputElement>;
+
+  @ViewChild('emailInput') emailInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
-  // Autocomplete  
+  // Autocomplete
   selectedSpecialist = new BehaviorSubject<any>(null);
   selectedSpecialist$ = this.selectedSpecialist.asObservable();
   actualSpecialist: any = null;
-
 
   specialist$: Observable<any[]>;
   nameSpecialist = 'Técnico Especialista';
 
   user: User;
   emailUser;
+  counter = 0;
 
   private subscription = new Subscription();
 
   constructor(
     private fb: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: Quality,
-    public dialogRef: MatDialogRef<AssignSpecialistDialogComponent>,
+    //public dialogRef: MatDialogRef<AssignSpecialistDialogComponent>,
     private qualityService: QualityService,
     private snackbar: MatSnackBar,
     public auth: AuthService,
-
+    private dialog: MatDialog
   ) {
-    this.subscription.add(
-      this.auth.user$.subscribe((user) => {
-        this.user = user;
-        this.emailUser = this.user.email;
-        this.emailArray.push(this.emailUser);
-
-      })
-    );
-
+    
   }
-
 
   ngOnInit(): void {
     this.initForm();
+    this.subscription.add(
+      this.auth.user$.subscribe((user) => {
+        this.user = user;
+        const email = this.user.email;
+
+        this.counter++;
+        if (this.counter === 1) {
+          this.emailArray.push(email);
+        }
+      })
+    );
 
     this.specialist$ = combineLatest(
       this.specialistForm.get('specialist').valueChanges.pipe(
         startWith(''),
         debounceTime(300),
         distinctUntilChanged(),
-        map(specialist => specialist.name ? specialist.name : specialist)
-        ),
+        map((specialist) => (specialist.name ? specialist.name : specialist))
+      ),
       this.qualityService.getAllQualityListSpecialist(this.nameSpecialist)
-    ).pipe(map( ([formValue, specialists]) => {
+    ).pipe(
+      map(([formValue, specialists]) => {
 
-      const filter = specialists.filter((specialist) => {
-        return specialist.name.toLowerCase().includes(formValue.toLowerCase());
-      });
+        const filter = specialists.filter((el) =>
+          formValue
+            ? el.name.toLowerCase().includes(formValue.toLowerCase())
+            : ''
+        );
 
-      /* 
-      let filter = specialists.filter(el => formValue ? el.name.toLowerCase().includes(formValue.toLowerCase()):'');
-      return filter; 
-      if (!(filter.length == 1 && filter[0] === formValue) && formValue.length) {
-        this.specialistForm.get('specialist').setErrors({ invalid: true });
-      }
-      */
-      return filter;
-      }
-     ));
+        if ( !(filter.length === 2 && filter[0]['name'] === formValue) &&
+          formValue.length
+        ) {
+          this.specialistForm.get('specialist').setErrors({ invalid: true });
+        }
 
-     
+        return filter;
+      })
+    );
+
     this.filteredBroadcast$ = this.qualityService.getAllBroadcastList().pipe(
       tap((res: QualityBroadcastList[]) => {
         return res;
@@ -153,8 +157,6 @@ export class AssignSpecialistDialogComponent implements OnInit, OnDestroy {
       return filter;
       }
      )); */
-
-
   }
 
   ngOnDestroy(): void {
@@ -165,24 +167,21 @@ export class AssignSpecialistDialogComponent implements OnInit, OnDestroy {
     this.specialistForm = this.fb.group({
       specialist: [null, Validators.required],
     });
-
   }
 
   save(): void {
     try {
-      if (this.specialistForm.valid  ) {
+      if (this.specialistForm.valid) {
         const resp = this.qualityService.updateQualitySpecialist(
-          this.data.id,
+          this.data,
           this.specialistForm.get('specialist').value,
-         Object.assign({}, this.emailArray),
-         // this.emailArray,
-          this.user,
+          this.emailArray,
           this.state
-       );
+        );
         this.loading.next(true);
         this.subscription.add(
           resp.subscribe((batch) => {
-            if (batch) {  
+            if (batch) {
               batch
                 .commit()
                 .then(() => {
@@ -190,7 +189,8 @@ export class AssignSpecialistDialogComponent implements OnInit, OnDestroy {
                   this.snackbar.open('✅ Se guardo correctamente!', 'Aceptar', {
                     duration: 6000,
                   });
-                  this.dialogRef.close();
+                  //this.dialogRef.close();
+                  this.dialog.closeAll();
                 })
                 .catch((err) => {
                   this.loading.next(false);
@@ -202,7 +202,6 @@ export class AssignSpecialistDialogComponent implements OnInit, OnDestroy {
           })
         );
       }
-
     } catch (error) {
       console.log(error);
       this.loading.next(false);
@@ -218,9 +217,9 @@ export class AssignSpecialistDialogComponent implements OnInit, OnDestroy {
   }
   addBroadcast(event: MatChipInputEvent): void {
     const input = event.input;
-    console.log('input :', input)
+    console.log('input :', input);
     const value = event.value;
-    console.log('value :', value)
+    console.log('value :', value);
 
     // Add our fruit
     if ((value || '').trim()) {
@@ -236,26 +235,25 @@ export class AssignSpecialistDialogComponent implements OnInit, OnDestroy {
   }
   selectedBroadcast(event: MatAutocompleteSelectedEvent): void {
     event.option.value.emailList.map((el) => {
-       this.emailArray.push(el);
+      this.emailArray.push(el);
     });
 
-    this.fruitInput.nativeElement.value = '';
+    this.emailInput.nativeElement.value = '';
     this.broadcastControl.setValue(null);
   }
-
 
   showEntrySpecialist(specialist: EvaluationsUser): string | null {
     return specialist ? specialist.name : null;
   }
 
   selectedEntrySpecialist(event: any): void {
-    const emailSpecialist =  event.option.value.email;
+    const emailSpecialist = event.option.value.email;
     this.emailArray.push(emailSpecialist);
 
     this.selectedSpecialist.next(event.option.value);
     this.actualSpecialist = event.option.value;
   }
- /*  private _filter(value: string): string[] {
+  /*  private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
 
     return this.allFruits.filter(fruit => fruit.toLowerCase().indexOf(filterValue) === 0);

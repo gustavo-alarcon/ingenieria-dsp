@@ -10,13 +10,15 @@ import { AssignSpecialistDialogComponent } from './dialogs/assign-specialist-dia
 import { DetailInternalDialogComponent } from './dialogs/detail-internal-dialog/detail-internal-dialog.component';
 import { DetailExternalDialogComponent } from './dialogs/detail-external-dialog/detail-external-dialog.component';
 
-
 @NgModule({
-  declarations: [RecordsComponent, ConfigurationsComponent, TimeLineDialogComponent, AssignSpecialistDialogComponent, DetailInternalDialogComponent, DetailExternalDialogComponent],
-  imports: [
-    CommonModule,
-    RecordsRoutingModule,
-    MaterialModule,
-  ]
+  declarations: [
+    RecordsComponent,
+    ConfigurationsComponent,
+    TimeLineDialogComponent,
+    AssignSpecialistDialogComponent,
+    DetailInternalDialogComponent,
+    DetailExternalDialogComponent,
+  ],
+  imports: [CommonModule, RecordsRoutingModule, MaterialModule],
 })
-export class RecordsModule { }
+export class RecordsModule {}

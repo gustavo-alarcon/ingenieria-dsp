@@ -1,5 +1,15 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
-import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage';
+import {
+  Component,
+  OnInit,
+  Input,
+  Output,
+  EventEmitter,
+  OnDestroy,
+} from '@angular/core';
+import {
+  AngularFireStorage,
+  AngularFireUploadTask,
+} from '@angular/fire/storage';
 import { Observable, Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { Ng2ImgMaxService } from 'ng2-img-max';
@@ -7,14 +17,14 @@ import { Ng2ImgMaxService } from 'ng2-img-max';
 @Component({
   selector: 'app-upload-task',
   templateUrl: './upload-task.component.html',
-  styleUrls: ['./upload-task.component.scss']
+  styleUrls: ['./upload-task.component.scss'],
 })
 export class UploadTaskComponent implements OnInit, OnDestroy {
-
   @Input() file: File;
   @Input() pathStorage: string;
-  
+
   @Output() onNewImage: EventEmitter<string> = new EventEmitter<string>();
+  @Output() onDeleteImage: EventEmitter<string> = new EventEmitter<string>();
 
   task: AngularFireUploadTask;
 
@@ -25,8 +35,8 @@ export class UploadTaskComponent implements OnInit, OnDestroy {
   subcription = new Subscription();
   constructor(
     private storage: AngularFireStorage,
-    private ng2ImgMax: Ng2ImgMaxService,
-  ) { }
+    private ng2ImgMax: Ng2ImgMaxService
+  ) {}
 
   ngOnInit(): void {
     this.startUpload();
@@ -43,18 +53,28 @@ export class UploadTaskComponent implements OnInit, OnDestroy {
           finalize(async () => {
             this.downloadURL = await ref.getDownloadURL().toPromise();
             this.onNewImage.emit(this.downloadURL);
-          }),
+          })
         );
       })
     );
   }
 
   isActive(snapshot): boolean {
-    return snapshot.state === 'running' && snapshot.bytesTransferred < snapshot.totalBytes;
+    return (
+      snapshot.state === 'running' &&
+      snapshot.bytesTransferred < snapshot.totalBytes
+    );
   }
 
   ngOnDestroy(): void {
     this.subcription.unsubscribe();
   }
 
+  deleteImage(url): void {
+    this.onDeleteImage.emit(url);
+
+    if (url) {
+      this.downloadURL = '';
+    }
+  }
 }

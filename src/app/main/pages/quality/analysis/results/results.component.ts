@@ -38,6 +38,7 @@ export class ResultsComponent implements OnInit {
     'component',
     'numberPart',
     'workShop',
+    'miningOperation',
     'specialist',
     'accCorrective',
     'riskLevel',
@@ -71,17 +72,26 @@ export class ResultsComponent implements OnInit {
     }
   ];
 
+
   constructor(
     public dialog: MatDialog,
-    private fb: FormBuilder,
     private qualityService: QualityService,
-    private auth: AuthService,
     private breakpoint: BreakpointObserver,
     private andonService: AndonService,
     private miDatePipe: DatePipe
-  ) {}
+  ) { }
 
   ngOnInit(): void {
+    this.subscriptions.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
+      .subscribe(res => {
+        if (res.matches) {
+          this.isMobile = true;
+        } else {
+          this.isMobile = false;
+        }
+      })
+    );
+
     const view = this.andonService.getCurrentMonthOfViewDate();
 
     const beginDate = view.from;
@@ -101,14 +111,7 @@ export class ResultsComponent implements OnInit {
           this.isMobile = false;
         }
       })
-    )
-
-    /* this.quality$ = this.qualityService.getAllQuality().pipe(
-      tap((res: Quality[]) => {
-        console.log('Quality', res);
-        this.settingsDataSource.data = res;
-      })
-    ); */
+    );
 
     this.quality$ = combineLatest(
       this.qualityService.getAllQuality(),
@@ -146,13 +149,20 @@ export class ResultsComponent implements OnInit {
         let preFilterWorkShop: Quality[] = [];
 
 
-        if (codeEventType || workShop ) {
+        if (codeEventType || workShop) {
           preFilterEventType = qualities.filter(quality => quality.eventType === codeEventType);
 
           preFilterSearch = preFilterEventType.filter(quality => {
             return String(quality.workOrder).toLowerCase().includes(searchTerm) ||
-            String(quality.component).toLowerCase().includes(searchTerm) ||
-            String(quality.workShop).toLowerCase().includes(searchTerm) ;
+              String(quality.component).toLowerCase().includes(searchTerm) ||
+              String(quality.workShop).toLowerCase().includes(searchTerm) ||
+              String(quality.enventDetail).toLowerCase().includes(searchTerm) ||
+              String(quality.evaluationAnalisisName).toLowerCase().includes(searchTerm) ||
+              //String(quality.specialist['workingArea']).toLowerCase().includes(searchTerm) ||
+              String(quality.partNumber).toLowerCase().includes(searchTerm) ||
+              String(quality.packageNumber).toLowerCase().includes(searchTerm) ||
+              String(quality.miningOperation).toLowerCase().includes(searchTerm) ||
+              String(quality.componentHourMeter).toLowerCase().includes(searchTerm);
           }).filter((quality) => {
             return this.getFilterTime(quality.createdAt, date);
           });
@@ -163,7 +173,14 @@ export class ResultsComponent implements OnInit {
             preFilterSearch = preFilterWorkShop.filter(quality => {
               return String(quality.workOrder).toLowerCase().includes(searchTerm) ||
                 String(quality.component).toLowerCase().includes(searchTerm) ||
-                String(quality.workShop).toLowerCase().includes(searchTerm) ;
+                String(quality.workShop).toLowerCase().includes(searchTerm) ||
+                String(quality.partNumber).toLowerCase().includes(searchTerm) ||
+                String(quality.evaluationAnalisisName).toLowerCase().includes(searchTerm) ||
+                //String(quality.specialist['workingArea']).toLowerCase().includes(searchTerm) ||
+                String(quality.enventDetail).toLowerCase().includes(searchTerm) ||
+                String(quality.packageNumber).toLowerCase().includes(searchTerm) ||
+                String(quality.miningOperation).toLowerCase().includes(searchTerm) ||
+                String(quality.componentHourMeter).toLowerCase().includes(searchTerm);
             }).filter((quality) => {
               return this.getFilterTime(quality.createdAt, date);
             });
@@ -171,9 +188,16 @@ export class ResultsComponent implements OnInit {
 
         } else {
           preFilterSearch = qualities.filter(quality => {
-            return  String(quality.workOrder).toLowerCase().includes(searchTerm) ||
-            String(quality.component).toLowerCase().includes(searchTerm) ||
-            String(quality.workShop).toLowerCase().includes(searchTerm) ;
+            return String(quality.workOrder).toLowerCase().includes(searchTerm) ||
+              String(quality.component).toLowerCase().includes(searchTerm) ||
+              String(quality.workShop).toLowerCase().includes(searchTerm) ||
+              String(quality.evaluationAnalisisName).toLowerCase().includes(searchTerm) ||
+              //String(quality.specialist['workingArea']).toLowerCase().includes(searchTerm) ||
+              String(quality.partNumber).toLowerCase().includes(searchTerm) ||
+              String(quality.enventDetail).toLowerCase().includes(searchTerm) ||
+              String(quality.packageNumber).toLowerCase().includes(searchTerm) ||
+              String(quality.miningOperation).toLowerCase().includes(searchTerm) ||
+              String(quality.componentHourMeter).toLowerCase().includes(searchTerm);
           }).filter((quality) => {
             return this.getFilterTime(quality.createdAt, date);
           });
@@ -221,8 +245,8 @@ export class ResultsComponent implements OnInit {
     table_xlsx.push(headersXlsx);
 
     this.settingsDataSource.data.forEach(element => {
-      let  temp1 = [];
-      let  temp2 = [];
+      let temp1 = [];
+      let temp2 = [];
 
       temp1 = [
         this.miDatePipe.transform(element['createdAt']['seconds'] * 1000, 'dd/MM/yyyy h:mm:ss a'),
@@ -232,24 +256,24 @@ export class ResultsComponent implements OnInit {
         element.partNumber ? element.partNumber : '-',
         element.miningOperation ? element.miningOperation : '-',
         element.specialist ? element.specialist['workingArea'] : '-',
-        element.evaluationAnalisis ? element.evaluationAnalisis : '-',
+        element.evaluationAnalisisName ? element.evaluationAnalisisName : '-',
         element.createdBy ? element.createdBy.name : '',
         element.state ? element.state : ''
       ];
 
-      element.correctiveActions.forEach( item2 => {
+      element.correctiveActions.forEach(item2 => {
         temp2 = [
-             ...temp1,
-            item2['createdAt'] ? this.miDatePipe.transform(item2['createdAt']['seconds'] * 1000, 'dd/MM/yyyy h:mm:ss a') : '-' ,
-            item2['corrective'] ? item2['corrective'] : '-',
-            item2['name'] ? item2['name']['name'] : '-',
-            item2['kit'] ? 'Finalizado' : 'Pendiente',
-            item2['closedAt'] ? this.miDatePipe.transform(item2['closedAt']['seconds'] * 1000, 'dd/MM/yyyy h:mm:ss a') : '-',
-            item2['user'] ? item2['user']['name'] : '-',
-          ];
+          ...temp1,
+          item2['createdAt'] ? this.miDatePipe.transform(item2['createdAt']['seconds'] * 1000, 'dd/MM/yyyy h:mm:ss a') : '-',
+          item2['corrective'] ? item2['corrective'] : '-',
+          item2['name'] ? item2['name']['name'] : '-',
+          item2['kit'] ? 'Finalizado' : 'Pendiente',
+          item2['closedAt'] ? this.miDatePipe.transform(item2['closedAt']['seconds'] * 1000, 'dd/MM/yyyy h:mm:ss a') : '-',
+          item2['user'] ? item2['user']['name'] : '-',
+        ];
 
         table_xlsx.push(temp2);
-        });
+      });
     });
 
     /* generate worksheet */
@@ -265,7 +289,7 @@ export class ResultsComponent implements OnInit {
 
   }
 
-  accCorrective(item): void{
+  accCorrective(item): void {
     this.dialog.open(AccCorrectiveDialogComponent, {
       maxWidth: 900,
       width: '90vw',
@@ -273,7 +297,7 @@ export class ResultsComponent implements OnInit {
     });
   }
 
-  timeline(item): void{
+  timeline(item): void {
     this.dialog.open(TimeLineDialogComponent, {
       maxWidth: 900,
       width: '90vw',
@@ -281,7 +305,7 @@ export class ResultsComponent implements OnInit {
     });
   }
 
-  deleteQuality(item): void{
+  deleteQuality(item): void {
     this.dialog.open(DeleteDialogComponent, {
       maxWidth: 500,
       width: '90vw',

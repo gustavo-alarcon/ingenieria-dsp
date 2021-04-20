@@ -29,9 +29,7 @@ import { QualityService } from '../../../../../../services/quality.service';
 import {
   tap,
   startWith,
-  map,
-  debounceTime,
-  distinctUntilChanged,
+  map
 } from 'rxjs/operators';
 import { CauseFailureDialogComponent } from '../cause-failure-dialog/cause-failure-dialog.component';
 import { ProcessDialogComponent } from '../process-dialog/process-dialog.component';
@@ -52,7 +50,6 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
   category$: Observable<Quality[]>;
   causeFailure$: Observable<CauseFailureList[]>;
   process$: Observable<ProcessList[]>;
-  //category$: Observable<string[]>;
 
   // step 1
   isLinear = false;
@@ -135,6 +132,10 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
   resultEvaluation$: Observable<any>;
   areaResponsable$: Observable<any[]>;
 
+  resultAnalysis = 0;
+  evaluationName = '';
+
+
   private subscription = new Subscription();
 
   constructor(
@@ -144,13 +145,19 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
     @Inject(MAT_DIALOG_DATA) public data: Quality,
     private qualityService: QualityService,
     private snackbar: MatSnackBar
-  ) {}
+  ) { }
+
   ngOnInit(): void {
     this.initForm();
 
-    console.log(' analisys _ ', this.data.analysis);
+    if (this.data.evaluationAnalisis) {
+      this.resultAnalysis = this.data.evaluationAnalisis;
+    }
+    if (this.data.evaluationAnalisisName) {
+      this.evaluationName = this.data.evaluationAnalisisName;
+    }
 
-    this.emailArray = Object.values(this.data.emailList['0']);
+    this.emailArray = this.data.emailList;
 
     this.filteredBroadcast$ = this.qualityService.getAllBroadcastList().pipe(
       tap((res: QualityBroadcastList[]) => {
@@ -205,45 +212,25 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
       this.analysisForm.get('frequency').valueChanges.pipe()
     ).pipe(
       map(([formQuality, formCost, formFrequency]) => {
-        const codeQuality = formQuality.code;
-        const codeCost = formCost.code;
-        const codeFrecuency = formFrequency.code;
+        const codeQuality = formQuality;
+        const codeCost = formCost;
+        const codeFrecuency = formFrequency;
 
         let result: number;
         let roundResult: number;
         result = ((codeQuality + codeCost) / 2) * codeFrecuency;
         roundResult = Math.round(result);
+        this.resultAnalysis = roundResult;
 
-        const resp = this.qualityService.updateQualityEvaluationAnalisis(
-          this.data.id,
-          roundResult
-        );
-        this.subscription.add(
-          resp.subscribe((batch) => {
-            if (batch) {
-              batch
-                .commit()
-                .then(() => {
-                  this.snackbar.open(
-                    '✅ Se realizo analisis correctamente!',
-                    'Aceptar',
-                    {
-                      duration: 6000,
-                    }
-                  );
-                })
-                .catch((err) => {
-                  this.snackbar.open(
-                    '🚨 Hubo un error al actualizar  !',
-                    'Aceptar',
-                    {
-                      duration: 6000,
-                    }
-                  );
-                });
-            }
-          })
-        );
+        if (0 < roundResult && roundResult < 5) {
+          this.evaluationName = 'Menor';
+        } else if (4 < roundResult && roundResult < 10) {
+          this.evaluationName = 'Moderado';
+        } else if (9 < roundResult && roundResult < 20) {
+          this.evaluationName = 'Significativo';
+        } else if (19 < roundResult && roundResult < 26) {
+          this.evaluationName = 'Alto';
+        }
 
         return roundResult;
       })
@@ -261,26 +248,34 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
   }
 
   initForm(): void {
-    /* if (this.data.analysis) {
-       this.analysisForm = this.fb.group({
-        causeFailure: [this.data.analysis['causeFailure'], Validators.required],
-        process: [this.data.analysis['process'], Validators.required],     
-        quality: ['', Validators.required],
-        cost: [this.data.analysis['cost']['name'], Validators.required],
-        frequency: [this.data.analysis['frequency']['name'], Validators.required],
+    if (this.data.analysis) {
+      this.analysisForm = this.fb.group({
+        causeFailure: this.data.analysis['causeFailure'],
+        process: this.data.analysis['process'],
+        quality: this.data.analysis['quality'],
+        cost: this.data.analysis['cost'],
+        frequency: this.data.analysis['frequency'],
       });
-       
-       this.analysisForm.controls['quality'].setValue(this.data.analysis['quality']['name']);
+      //this.analysisForm.get('quality').setValue(this.data.analysis['quality']['name']);
+      //this.analysisForm.controls['quality'].setValue(this.data.analysis['quality']);
 
-    } else{ */
-    this.analysisForm = this.fb.group({
-      causeFailure: ['', Validators.required],
-      process: ['', Validators.required],
-      quality: [],
-      cost: ['', Validators.required],
-      frequency: ['', Validators.required],
-    });
-    /* } */
+      // setValue es para agregarle un valor
+      /*  this.analysisForm.controls['quality'].setValue(
+        this.data.analysis['quality'],
+        { onlySelf: true }
+       ); */
+
+      //this.analysisForm.get('quality').setValue(this.data.analysis['quality']);
+
+    } else {
+      this.analysisForm = this.fb.group({
+        causeFailure: ['', Validators.required],
+        process: ['', Validators.required],
+        quality: ['', Validators.required],
+        cost: ['', Validators.required],
+        frequency: ['', Validators.required],
+      });
+    }
 
     this.listAreaForm = this.fb.group({
       areas: this.fb.array([
@@ -319,6 +314,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
     });
     this.areas.push(group);
   }
+
   deleteControl(index: number): void {
     const emailSelect = this.areas.controls[index].get('name').value;
     const emailDelete = emailSelect.email;
@@ -333,44 +329,75 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
 
   onclickArea(event, index): void {
     const emailSelect = this.areas.controls[index].get('name').value;
-    console.log('emailSelect: ', emailSelect);
     const emailDelete = emailSelect.email;
     const email = event.email;
     if (event.email) {
       this.emailArray.push(email);
     }
   }
-  /* 
-  changeArea($event, i): void{
-    const emailSelect = this.areas.controls[i].get('name').value;
-    console.log('change area : ', emailSelect)
 
-    console.log('change area : ', $event)
-    console.log('change area : ', i)
-  }
-  changeAreaSelect($event,i): void {
-    const emailSelect = this.areas.controls[i].get('name').value;
-    console.log('changeAreaSelect area : ', emailSelect)
-
-    console.log('change area : ', $event)
-    console.log('change area : ', i)
-  }
-  onBookChange(item,i): void {
-    const emailSelect = this.areas.controls[i].get('name').value;
-    console.log('onBookChange area : ', emailSelect)
-    console.log('onBookChange: ', item)
-  } */
   save(): void {
+
+    try {
+      if (this.analysisForm.valid && this.listAreaForm.valid) {
+        const resp = this.qualityService.updateQualityEvaluationAnalysis(
+          this.data.id,
+          this.resultAnalysis,
+          this.evaluationName,
+          this.analysisForm.value,
+          this.listAreaForm
+        );
+        this.subscription.add(
+          resp.subscribe((batch) => {
+            if (batch) {
+              batch
+                .commit()
+                .then(() => {
+                  this.snackbar.open(
+                    '✅ Análisis guardado correctamente!',
+                    'Aceptar',
+                    {
+                      duration: 6000,
+                    }
+                  );
+                  this.dialog.closeAll();
+                })
+                .catch((err) => {
+                  this.snackbar.open(
+                    '🚨 Hubo un error al actualizar  !',
+                    'Aceptar',
+                    {
+                      duration: 6000,
+                    }
+                  );
+                });
+            }
+          })
+        );
+      } else {
+        this.snackbar.open('Formulario incompleto', 'Aceptar', {
+          duration: 6000
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      this.loading.next(false);
+    }
+  }
+
+  saveAndSendEmail(): void {
     try {
       if (this.analysisForm.valid && this.listAreaForm.valid) {
         const resp = this.qualityService.saveCorrectiveActions(
-          this.data.id,
+          this.data,
           this.analysisForm.value,
           this.listAreaForm.value,
-          //this.emailArray,
-          Object.assign({}, this.emailArray),
+          this.emailArray,
+          this.resultAnalysis,
+          this.evaluationName,
           this.state
         );
+
         this.subscription.add(
           resp.subscribe((batch) => {
             if (batch) {
@@ -395,10 +422,12 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
           })
         );
       }
+
     } catch (error) {
       console.log(error);
       this.loading.next(false);
     }
+
   }
 
   onAddCategory(): void {
@@ -407,12 +436,14 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
       width: '90vw',
     });
   }
+
   onAddCauseFailure(): void {
     this.dialog.open(CauseFailureDialogComponent, {
       maxWidth: 500,
       width: '90vw',
     });
   }
+
   onAddProcess(): void {
     this.dialog.open(ProcessDialogComponent, {
       maxWidth: 500,
@@ -427,6 +458,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
       this.emailArray.splice(index, 1);
     }
   }
+
   addBroadcast(event: MatChipInputEvent): void {
     const input = event.input;
     const value = event.value;
@@ -440,10 +472,10 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
     if (input) {
       input.value = '';
     }
-    console.log('this.emailArray : ', this.emailArray);
 
     this.broadcastControl.setValue(null);
   }
+  
   selectedBroadcast(event: MatAutocompleteSelectedEvent): void {
     event.option.value.emailList.map((el) => {
       this.emailArray.push(el);

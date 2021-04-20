@@ -211,7 +211,7 @@ export class EvaluationsProgressComponent implements OnInit, OnDestroy {
 
             return EvalInterval;
 
-          }(), 5000)
+          }(), 5000);
         });
 
         preFilterSearch.map(evaluation => {

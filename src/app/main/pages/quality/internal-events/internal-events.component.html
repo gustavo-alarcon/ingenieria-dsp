@@ -12,10 +12,20 @@
             <h3 class="title-form">Información del evento</h3>
             <form [formGroup]="internalForm" autocomplete="off" class="container-form">
                 <div class="container-form__work">
-                    <mat-form-field appearance="outline" class="container-form__work__input"
-                        [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
+
+                    <mat-form-field appearance="outline" id="result"  class="container-form__work__input"
+                    [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
                         <mat-label>Taller</mat-label>
-                        <input matInput type="text" placeholder="taller" formControlName="workShop" />
+                        <mat-select formControlName="workShop">
+                            <mat-option *ngFor="let item of workShopList" [value]="item">
+                                {{item.name}} 
+                            </mat-option>
+                        </mat-select>
+                        <mat-hint *ngIf="!(componentList)">
+                            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                            <p>Cargando lista ...</p>
+                        </mat-hint>
+    
                         <mat-error *ngIf="internalForm.controls['workShop'].errors">
                             Campo <strong>requerido.</strong>
                         </mat-error>
@@ -30,14 +40,24 @@
                         </mat-error>
                     </mat-form-field>
 
-                    <mat-form-field appearance="outline" class="container-form__work__input"
-                        [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
+                    <mat-form-field appearance="outline" id="result"  class="container-form__work__input"
+                    [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
                         <mat-label>Componente</mat-label>
-                        <input matInput type="text" placeholder="Componente" formControlName="component" />
+                        <mat-select formControlName="component">
+                            <mat-option *ngFor="let item of componentList" [value]="item">
+                                {{item.name}} 
+                            </mat-option>
+                        </mat-select>
+                        <mat-hint *ngIf="!(componentList)">
+                            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                            <p>Cargando lista ...</p>
+                        </mat-hint>
+    
                         <mat-error *ngIf="internalForm.controls['component'].errors">
                             Campo <strong>requerido.</strong>
                         </mat-error>
                     </mat-form-field>
+
                     <mat-form-field appearance="outline" class="container-form__work__input"
                         [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
                         <mat-label>Nro de parte</mat-label>
@@ -75,7 +95,9 @@
                 </div>
                 <div *ngFor="let file of filesGeneral">
                     <app-upload-task [file]="file" [pathStorage]="pathStorageGeneral"
-                        (onNewImage)="addNewImageGeneral($event)">
+                        (onNewImage)="addNewImageGeneral($event)"
+                        (onDeleteImage)="deleteImageGeneral($event)"
+                        >
                     </app-upload-task>
                 </div>
 
@@ -95,17 +117,34 @@
                         </label>
                     </div>
                 </div>
-
+                
                 <div *ngFor="let file of filesDetail">
                     <app-upload-task [file]="file" [pathStorage]="pathStorageDetail"
-                        (onNewImage)="addNewImageDetail($event)">
+                        (onNewImage)="addNewImageDetail($event)"
+                        (onDeleteImage)="deleteImageDetail($event)"
+                        >
                     </app-upload-task>
                 </div>
+              
 
                 <div class="container-form__uploadXlx">
                     <h3 class="container-form__title">Archivo adicional</h3>
-                    <p *ngIf="fileSelect" style="color:#0064EA;">{{nameFileSelect}} </p>
-                    <input #fileInput2 style="display: none" type="file" id="fileInput2" (change)="uploadFiles($event)"
+                    <p *ngIf="fileSelect" style="color:#0064EA;">
+                        <span *ngFor="let item of dataFiles; let i = index">
+                            {{item.name}} 
+                            <button
+                                mat-icon-button
+                                aria-label="deletelistResult"
+                                class="btn-delete"
+                                (click)="deleteDataFiles(item.url,i)"
+                                >
+                                <mat-icon style="color: red">delete</mat-icon>
+                            </button>
+                            <br>
+                         </span>
+                    </p>
+                    <input #fileInput2 style="display: none"  id="fileInput2" (change)="uploadFiles($event)"
+                          type="file" multiple
                         accept="*">
                     <button type="file" mat-stroked-button class="ms-button" accept="*" (click)="fileInput2.click()">
                         <mat-icon>add</mat-icon>

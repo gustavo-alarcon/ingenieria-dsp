@@ -28,8 +28,12 @@
                             {{ specialist['name']}}           
                         </mat-option>        
                     </mat-autocomplete>
-                    <mat-error>* Campo requerido</mat-error>
-              </mat-form-field>
+                    <mat-error>
+                        <span *ngIf="specialistForm.get('specialist').errors?.required">Por favor, complete el campo.</span>
+                        <span *ngIf="specialistForm.get('specialist').errors?.invalid">Dato inválido. Complete con alguna opción
+                          válida.</span>
+                      </mat-error>
+                </mat-form-field>
 
                 <mat-form-field *ngIf="filteredBroadcast$ | async as broadcasts" appearance="outline" id="result" class="timer-container__input">                     
                     <mat-label>Enviar a</mat-label>
@@ -44,7 +48,7 @@
                       </mat-chip>
                       <input
                         placeholder="agregar nueva lista de difusion..."
-                        #fruitInput
+                        #emailInput
                         [formControl]="broadcastControl"
                         [matAutocomplete]="auto"
                         [matChipInputFor]="chipList"

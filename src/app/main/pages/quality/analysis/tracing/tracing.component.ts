@@ -1,5 +1,5 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
@@ -13,13 +13,14 @@ import { DetailExternalDialogComponent } from './dialogs/detail-external-dialog/
 import { DetailInternalDialogComponent } from './dialogs/detail-internal-dialog/detail-internal-dialog.component';
 import { ReportsDialogComponent } from './dialogs/reports-dialog/reports-dialog.component';
 import { TimeLineDialogComponent } from './dialogs/time-line-dialog/time-line-dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-tracing',
   templateUrl: './tracing.component.html',
   styleUrls: ['./tracing.component.scss']
 })
-export class TracingComponent implements OnInit {
+export class TracingComponent implements OnInit, OnDestroy {
 
   loading = new BehaviorSubject<boolean>(true);
   loading$ = this.loading.asObservable();
@@ -50,7 +51,8 @@ export class TracingComponent implements OnInit {
     private breakpoint: BreakpointObserver,
     public dialog: MatDialog,
     private qualityService: QualityService,
-    private auth: AuthService
+    private auth: AuthService,
+    private snackbar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
@@ -71,17 +73,9 @@ export class TracingComponent implements OnInit {
         filter(input => input !== null),
         startWith<any>('')),
       this.eventTypeControl.valueChanges.pipe(startWith('')),
-      this.auth.getGeneralConfig()
+      this.auth.getGeneralConfigQuality()
     ).pipe(
       map(([qualities, search, codeEventType, generalConfig]) => {
-        // total task pending
-        this.totalTask = 0;
-        qualities.map(el => {
-          if (el.taskDone < el.correctiveActions.length) {
-            const result = el.correctiveActions.length - el.taskDone;
-            this.totalTask += result;
-          }
-        });
 
         const searchTerm = search.toLowerCase().trim();
         let preFilterEventType: Quality[] = [];
@@ -92,60 +86,122 @@ export class TracingComponent implements OnInit {
 
           preFilterSearch = preFilterEventType.filter(quality => {
             return String(quality.workOrder).toLowerCase().includes(searchTerm) ||
-              String(quality.component).toLowerCase().includes(searchTerm) ||
-              String(quality.workShop).toLowerCase().includes(searchTerm);
+            String(quality.component).toLowerCase().includes(searchTerm) ||
+            String(quality.specialist['name']).toLowerCase().includes(searchTerm) ||
+            String(quality.workShop).toLowerCase().includes(searchTerm)  ||
+            String(quality.partNumber).toLowerCase().includes(searchTerm) ||
+            String(quality.enventDetail).toLowerCase().includes(searchTerm)  ||
+            String(quality.packageNumber).toLowerCase().includes(searchTerm) ||
+            String(quality.miningOperation).toLowerCase().includes(searchTerm) ||
+            String(quality.componentHourMeter).toLowerCase().includes(searchTerm);
           });
         } else {
           preFilterSearch = qualities.filter(quality => {
             return String(quality.workOrder).toLowerCase().includes(searchTerm) ||
-              String(quality.component).toLowerCase().includes(searchTerm) ||
-              String(quality.workShop).toLowerCase().includes(searchTerm);
+            String(quality.component).toLowerCase().includes(searchTerm) ||
+            String(quality.specialist['name']).toLowerCase().includes(searchTerm) ||
+            String(quality.workShop).toLowerCase().includes(searchTerm)  ||
+            String(quality.partNumber).toLowerCase().includes(searchTerm) ||
+            String(quality.enventDetail).toLowerCase().includes(searchTerm)  ||
+            String(quality.packageNumber).toLowerCase().includes(searchTerm) ||
+            String(quality.miningOperation).toLowerCase().includes(searchTerm) ||
+            String(quality.componentHourMeter).toLowerCase().includes(searchTerm);
           });
         }
+        // total task pending
+        this.totalTask = 0;
+        preFilterSearch.map((el) => {
+          if (el.taskDone < el.correctiveActions.length) {
+            const result = el.correctiveActions.length - el.taskDone;
+            this.totalTask += result;
+          }
+        });
 
-        preFilterSearch.map(quality => {
-          if (quality.registryTimer) {
-            clearInterval(quality.registryTimer);
+        preFilterSearch.map(evaluation => {
+          if (evaluation.tracingTimer) {
+            clearInterval(evaluation.tracingTimer);
           }
 
-          quality.registryTimer = setInterval(() => {
+          let registryDay
+          let registryHours
+          let registryMinutes
+          let registrySeconds
+          let registryTotalMilliseconds
+
+          if (evaluation.registryTimeElapsed) {
+            // Time calcultaions for registry
+            registryDay = evaluation.registryTimeElapsed.days * (1000 * 60 * 60 * 24);
+            registryHours = evaluation.registryTimeElapsed.hours * (1000 * 60 * 60);
+            registryMinutes = evaluation.registryTimeElapsed.minutes * (1000 * 60);
+            registrySeconds = evaluation.registryTimeElapsed.seconds * (1000);
+            registryTotalMilliseconds = registryDay + registryHours + registryMinutes + registrySeconds;
+          }
+
+          let processDay
+          let processHours
+          let processMinutes
+          let processSeconds
+          let processTotalMilliseconds
+
+          if (evaluation.registryTimeElapsed) {
+            // Time calcultaions for registry
+            processDay = evaluation.processTimeElapsed.days * (1000 * 60 * 60 * 24);
+            processHours = evaluation.processTimeElapsed.hours * (1000 * 60 * 60);
+            processMinutes = evaluation.processTimeElapsed.minutes * (1000 * 60);
+            processSeconds = evaluation.processTimeElapsed.seconds * (1000);
+            processTotalMilliseconds = processDay + processHours + processMinutes + processSeconds;
+          }
+
+          let tracingDistance = 0;
+
+          evaluation.tracingTimer = setInterval(function EvalInterval() {
             // Get today's date and time
-            const now = new Date().getTime();
-            const registry = quality.createdAt['seconds'] * 1000;
+            let now = new Date().getTime();
+
+
+            let tracing = evaluation.tracingAt ? evaluation.tracingAt['seconds'] * 1000 : now;
             // Find the distance between now and the count down date
-            const distance = now - registry;
+            tracingDistance = now - tracing;
 
             // Time calculations for days, hours, minutes and seconds
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            let days = Math.floor(tracingDistance / (1000 * 60 * 60 * 24));
+            let hours = Math.floor((tracingDistance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            let minutes = Math.floor((tracingDistance % (1000 * 60 * 60)) / (1000 * 60));
+            let seconds = Math.floor((tracingDistance % (1000 * 60)) / 1000);
 
             // Output the result in an element with id="demo"
-            quality.registryTimeElapsed = {
+            evaluation.tracingTimeElapsed = {
               days: days,
               hours: hours,
               minutes: minutes,
               seconds: seconds
-            };
+            }
 
             // Time calcultaions for limit
-            const limitDay = generalConfig.registryTimer.days * (1000 * 60 * 60 * 24);
-            const limitHours = generalConfig.registryTimer.hours * (1000 * 60 * 60);
-            const limitMinutes = generalConfig.registryTimer.minutes * (1000 * 60);
-            const limitTotalMilliseconds = limitDay + limitHours + limitMinutes;
-            const registryPercentageElapsed = distance / limitTotalMilliseconds;
+            let limitDay = generalConfig.tracingTimer.days * (1000 * 60 * 60 * 24);
+            let limitHours = generalConfig.tracingTimer.hours * (1000 * 60 * 60);
+            let limitMinutes = generalConfig.tracingTimer.minutes * (1000 * 60);
+            let limitTotalMilliseconds = limitDay + limitHours + limitMinutes;
 
-            quality.registryPercentageElapsed = 100 - (Math.ceil(registryPercentageElapsed * 100) > 100 ? 100 : Math.ceil(registryPercentageElapsed * 100));
+            let tracingPercentageElapsed = tracingDistance / limitTotalMilliseconds;
+            evaluation.processPercentageElapsed = 100 - (Math.ceil(tracingPercentageElapsed * 100) > 100 ? 100 : Math.ceil(tracingPercentageElapsed * 100));
 
-            quality.attentionTimeElapsed = {
-              days: days,
-              hours: hours,
-              minutes: minutes,
-              seconds: seconds
-            };
+            // Time calculation for total attention
+            let attentionDays = Math.floor((tracingDistance + processTotalMilliseconds + registryTotalMilliseconds) / (1000 * 60 * 60 * 24));
+            let attentionHours = Math.floor(((tracingDistance + processTotalMilliseconds + registryTotalMilliseconds) % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            let attentionMinutes = Math.floor(((tracingDistance + processTotalMilliseconds + registryTotalMilliseconds) % (1000 * 60 * 60)) / (1000 * 60));
+            let attentionSeconds = Math.floor(((tracingDistance + processTotalMilliseconds + registryTotalMilliseconds) % (1000 * 60)) / 1000);
 
-          }, 5000);
+            evaluation.attentionTimeElapsed = {
+              days: attentionDays,
+              hours: attentionHours,
+              minutes: attentionMinutes,
+              seconds: attentionSeconds
+            }
+
+            return EvalInterval;
+
+          }(), 5000);
         });
 
         return preFilterSearch;
@@ -158,6 +214,9 @@ export class TracingComponent implements OnInit {
       })
     );
 
+  }
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   settingDialog(): void {

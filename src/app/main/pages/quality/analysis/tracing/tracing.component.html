@@ -46,11 +46,11 @@
           </span>
           <div>
             <mat-menu #requestsMenu="matMenu">
-              <button mat-menu-item (click)="accCorrective(item)">
-                <mat-icon>fact_check</mat-icon> Acc Correctivas
-              </button>
               <button mat-menu-item (click)="detailDialog(item, item.eventType)">
                 <mat-icon>visibility</mat-icon> Detalle
+              </button>
+              <button mat-menu-item (click)="accCorrective(item)">
+                <mat-icon>fact_check</mat-icon> Acc Correctivas
               </button>
               <button mat-menu-item (click)="timeline(item)">
                 <mat-icon>timeline</mat-icon> Línea de tiempo
@@ -67,10 +67,10 @@
         <div class="info-box">
           <div class="lj" matTooltip="WOF" matTooltipPosition="above"><span>OT {{item.workOrder}}</span> </div>
           <div class="info-row"> Componente: <span> {{item.component}}</span> </div>
-          <div class="info-row"> Taller: <span> {{item.partNumber}}</span></div>
+          <div *ngIf="item.workShop" class="info-row"> Taller: <span> {{item.workShop? item.workShop : '-'}}</span></div>
+          <div *ngIf="item.miningOperation" class="info-row"> Operación minera: <span> {{item.miningOperation? item.miningOperation : '-'}}</span></div>
           <div class="info-row"> Especialista: <span> {{item.specialist['name']}}</span></div>
-          <div class="info-row"> Fecha: <span> {{(item.createdAt['seconds'] * 1000) | date : 'dd/MM/yy
-              hh:mm:ss'}}</span></div>
+          <div class="info-row"> Fecha: <span> {{(item.createdAt['seconds'] * 1000) | date : 'dd/MM/yy - hh:mm:ss'}} </span></div>
         </div>
         <div class="ms-fill"></div>
       </div>
@@ -80,10 +80,10 @@
         <div class="timer-black" [ngStyle]="{'width.%': item.registryPercentageElapsed }">
         </div>
         <div class="progress-view">
-          {{item.registryTimeElapsed?.days | number : '2.'}} /
-          {{item.registryTimeElapsed?.hours | number : '2.'}} :
-          {{item.registryTimeElapsed?.minutes | number : '2.'}} :
-          {{item.registryTimeElapsed?.seconds | number : '2.'}}
+          {{item.tracingTimeElapsed?.days | number : '2.'}} /
+          {{item.tracingTimeElapsed?.hours | number : '2.'}} :
+          {{item.tracingTimeElapsed?.minutes | number : '2.'}} :
+          {{item.tracingTimeElapsed?.seconds | number : '2.'}}
         </div>
       </div>
     </div>

@@ -14,13 +14,13 @@
     <mat-dialog-content style="margin-top: 20px;" >
         <div>
             <form [formGroup]="detailFormGroup" class="timer-container">
-                <p><span style="font-weight: bold;"> OT actual :</span> {{data.workOrder ? data.workOrder : ''}}</p>
-                <p><span style="font-weight: bold;"> Componente :</span> {{data.component ? data.component : ''}}</p>
-                <p><span style="font-weight: bold;"> Número de paqueteo :</span> {{data.packageNumber ? data.packageNumber : ''}}</p>
-                <p><span style="font-weight: bold;"> Horómetro de componente :</span> {{data.componentHourMeter ? data.componentHourMeter : ''}}</p>
-                <p><span style="font-weight: bold;"> Número de parte :</span> {{data.partNumber ? data.partNumber : ''}}</p>
-                <p><span style="font-weight: bold;"> Tipo de evento :</span> {{data.eventType? data.eventType : ''}}</p>
-                <p><span style="font-weight: bold;"> Operacion minera :</span> {{data.miningOperation ? data.miningOperation : ''}} </p>
+                <p><span style="font-weight: bold;"> OT actual :</span> {{data.workOrder ? data.workOrder : '-'}}</p>
+                <p><span style="font-weight: bold;"> Componente :</span> {{data.component ? data.component : '-'}}</p>
+                <p><span style="font-weight: bold;"> Número de paqueteo :</span> {{data.packageNumber ? data.packageNumber : '-'}}</p>
+                <p><span style="font-weight: bold;"> Horómetro de componente :</span> {{data.componentHourMeter ? data.componentHourMeter : '-'}}</p>
+                <p><span style="font-weight: bold;"> Número de parte :</span> {{data.partNumber ? data.partNumber : '-'}}</p>
+                <p><span style="font-weight: bold;"> Tipo de evento :</span> {{data.eventType? data.eventType : '-'}}</p>
+                <p><span style="font-weight: bold;"> Operación minera :</span> {{data.miningOperation ? data.miningOperation : '-'}} </p>
                 <p><span style="font-weight: bold;"> Fecha :</span>
                 {{data.createdAt ? ((data.createdAt['seconds'] * 1000) | date : 'dd/MM/yy - hh:mm:ss'): ''}}
                 </p>
@@ -76,17 +76,20 @@
 
                 <h3>Archivo adicional</h3>
                 <div class="container-file">
-                    <mat-icon>insert_drive_file</mat-icon>
-                    <div *ngIf="nameFile">
-                        <a [href]="nameFile" class="container-file__name" >
-                            Descargar archivo
-                        </a>
+                    <div *ngIf="this.data.fileAdditional; else nofile" >
+                        <mat-icon>insert_drive_file</mat-icon>
+                        <div *ngFor="let item of this.data.fileAdditional" >
+                            <a [href]="item.url" class="container-file__name" >
+                                {{item.name}}
+                            </a>
+                        </div>
                     </div>
-                    <div *ngIf="!nameFile">
-                         No tiene archivo
-                    </div>
-                    
+                    <ng-template  #nofile>
+                        <mat-icon>insert_drive_file</mat-icon>
+                        No tiene archivos
+                    </ng-template>                    
                 </div>
+                
             </form>
         </div>
 
