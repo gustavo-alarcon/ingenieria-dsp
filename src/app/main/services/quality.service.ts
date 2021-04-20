@@ -617,6 +617,7 @@ export class QualityService {
       state: status,
       evaluationAnalisis: analysis,
       evaluationAnalysisName: evaluationName,
+      correctiveActions: formCorrective.areas
     };
     batch.update(qualityDocRef, data);
 
@@ -628,37 +629,38 @@ export class QualityService {
       batch.update(qualityEmailDocRef, data1);
     });
 
-    formCorrective.areas.forEach(el => {
-      const qualityEmailDocRef = this.afs.firestore.doc(`db/ferreyros/quality/${quality.id}`);
-      const data2: any = {
-        correctiveActions: firebase.default.firestore.FieldValue.arrayUnion(el)
-      };
-      batch.update(qualityEmailDocRef, data2);
-    });
-
     return of(batch);
   }
 
   updateQualityEvaluationAnalysis(
-    entryId: string,
+    quality: Quality,
     analisis: number,
     evaluationName: string,
     formAnalysis,
-    correctiveActions
+    formCorrective?
   ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
     // create reference for document in evaluation entries collection
     const qualityDocRef = this.afs.firestore.doc(
-      `db/ferreyros/quality/${entryId}`
+      `db/ferreyros/quality/${quality.id}`
     );
     // Structuring the data model
     const data: any = {
       evaluationAnalisis: analisis,
       evaluationAnalisisName: evaluationName,
       analysis: formAnalysis,
-
+      correctiveActions: formCorrective.areas
     };
+
+    /* formCorrective.areas.forEach(el => {
+      const qualityEmailDocRef = this.afs.firestore.doc(`db/ferreyros/quality/${quality.id}`);
+      const data2: any = {
+        correctiveActions: firebase.default.firestore.FieldValue.arrayUnion(el)
+      };
+      batch.update(qualityEmailDocRef, data2);
+    });
+ */
     batch.update(qualityDocRef, data);
 
     return of(batch);
