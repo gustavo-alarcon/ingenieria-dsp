@@ -32,7 +32,7 @@ export interface Evaluation {
     inquiryAt?: Date;
     attentionTimeElapsed?: EvaluationTimer;
     finalizedAt?: Date;
-    finalizedBy: User;
+    finalizedBy: User;              //Inspector
     result?: string; // Esta info viene de una lista standard (pendiente)
     kindOfTest?: string;
     comments?: string;
@@ -46,7 +46,7 @@ export interface Evaluation {
     extends?: string[];
     emailList?: Array<string>;
 }
-
+//Al que creo, al inspector y a la lista de difusion
 export interface EvaluationRegistryForm {
     otMain: string; // Orden de trabajo
     otChild: string; // Segmento / Operación
