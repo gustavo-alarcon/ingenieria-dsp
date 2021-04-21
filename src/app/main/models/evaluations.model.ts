@@ -137,3 +137,11 @@ export interface EvaluationsUser {
     editedAt: Date;
     editedBy: User;
 }
+
+export interface EvaluationBroadcastList {
+    id?: string;
+    name: string;
+    emailList: Array<string>;
+    createdAt: Date;
+    createdBy: User;
+  }

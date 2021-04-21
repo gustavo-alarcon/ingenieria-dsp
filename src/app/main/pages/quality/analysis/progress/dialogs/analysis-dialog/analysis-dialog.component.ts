@@ -256,6 +256,15 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
         cost: this.data.analysis['cost'],
         frequency: this.data.analysis['frequency'],
       });
+
+      this.listAreaForm = this.fb.group({
+        areas: this.fb.array([]),
+      });
+
+      this.data.correctiveActions.forEach(accion => {
+        this.addControl(accion);
+      });
+      
       //this.analysisForm.get('quality').setValue(this.data.analysis['quality']['name']);
       //this.analysisForm.controls['quality'].setValue(this.data.analysis['quality']);
 
@@ -275,22 +284,23 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
         cost: ['', Validators.required],
         frequency: ['', Validators.required],
       });
+
+      this.listAreaForm = this.fb.group({
+        areas: this.fb.array([
+          this.fb.group({
+            corrective: ['', Validators.required],
+            name: ['', Validators.required],
+            kit: false,
+            url: null,
+            nameFile: null,
+            createdAt: this.date,
+            closedAt: null,
+            user: null,
+          }),
+        ]),
+      });
     }
 
-    this.listAreaForm = this.fb.group({
-      areas: this.fb.array([
-        this.fb.group({
-          corrective: ['', Validators.required],
-          name: ['', Validators.required],
-          kit: false,
-          url: null,
-          nameFile: null,
-          createdAt: this.date,
-          closedAt: null,
-          user: null,
-        }),
-      ]),
-    });
   }
 
   ngOnDestroy(): void {
@@ -301,17 +311,36 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
     return this.listAreaForm.get('areas') as FormArray;
   }
 
-  addControl(): void {
-    const group = this.fb.group({
-      corrective: ['', Validators.required],
-      name: ['', Validators.required],
-      kit: false,
-      url: null,
-      nameFile: null,
-      createdAt: this.date,
-      closedAt: null,
-      user: null,
-    });
+  addControl(accion?): void {
+
+    let group;
+
+    if (accion) {
+      group = this.fb.group({
+        corrective: [accion.corrective ? accion.corrective : null, Validators.required],
+        name: [accion.name ? accion.name : null, Validators.required],
+        kit: false,
+        url: null,
+        nameFile: null,
+        createdAt: this.date,
+        closedAt: null,
+        user: null,
+      });
+    }else{
+      group = this.fb.group({
+        corrective: ['', Validators.required],
+        name: ['', Validators.required],
+        kit: false,
+        url: null,
+        nameFile: null,
+        createdAt: this.date,
+        closedAt: null,
+        user: null,
+      });
+
+    }
+
+    
     this.areas.push(group);
   }
 
@@ -339,13 +368,13 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
   save(): void {
 
     try {
-      if (this.analysisForm.valid && this.listAreaForm.valid) {
+      if (this.analysisForm.valid ) {
         const resp = this.qualityService.updateQualityEvaluationAnalysis(
-          this.data.id,
+          this.data,
           this.resultAnalysis,
           this.evaluationName,
           this.analysisForm.value,
-          this.listAreaForm
+          this.listAreaForm.value
         );
         this.subscription.add(
           resp.subscribe((batch) => {
@@ -375,7 +404,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
           })
         );
       } else {
-        this.snackbar.open('Formulario incompleto', 'Aceptar', {
+        this.snackbar.open('Formulario análisis incompleto', 'Aceptar', {
           duration: 6000
         });
       }
@@ -387,7 +416,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
 
   saveAndSendEmail(): void {
     try {
-      if (this.analysisForm.valid && this.listAreaForm.valid) {
+      if (this.analysisForm.valid && this.areas.length >= 1) {
         const resp = this.qualityService.saveCorrectiveActions(
           this.data,
           this.analysisForm.value,
@@ -421,6 +450,10 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
             }
           })
         );
+      } else {
+        this.snackbar.open('No realizo análisis ó no agrego acciones correctivas', 'Aceptar', {
+          duration: 6000
+        });
       }
 
     } catch (error) {

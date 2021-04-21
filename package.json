@@ -1,6 +1,6 @@
 {
   "name": "ingenieria-dsp",
-  "version": "4.9.14",
+  "version": "4.10.14",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
