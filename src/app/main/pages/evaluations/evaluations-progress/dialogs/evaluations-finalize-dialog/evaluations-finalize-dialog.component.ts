@@ -101,6 +101,8 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
       })
     );
 
+    this.emailArray.push(this.data.createdBy.email);
+
     this.result$ = this.evaluationServices.getAllEvaluationsSettingsResultType();
     this.kindOfTests$ = this.evaluationServices.getAllEvaluationsSettingsKindOfTest();
 

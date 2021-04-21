@@ -243,13 +243,13 @@ export class QualityService {
     return this.afs.collection<Quality>(`/db/ferreyros/quality`).valueChanges();
   }
   // get all QualityListSpecialist
-  getAllQualityListSpecialist(name: string): Observable<EvaluationsUser[]> {
+  getAllQualityListSpecialist(): Observable<EvaluationsUser[]> {
     return this.afs
       .collection<EvaluationsUser>(`/evaluations-settings`, (ref) =>
-        ref.where('description', '==', name)
+        ref.where('workingArea', 'in', ['Soporte técnico', 'Confiabilidad'])
       )
       .valueChanges();
-  }
+  } 
 
   /**
    * Creates the qualityListSpecialist entry into firestore's qualityListSpecialist collection
