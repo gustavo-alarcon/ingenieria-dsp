@@ -72,7 +72,7 @@ export class AssignSpecialistDialogComponent implements OnInit, OnDestroy {
   actualSpecialist: any = null;
 
   specialist$: Observable<any[]>;
-  nameSpecialist = 'Técnico Especialista';
+  nameSpecialist = 'Soporte técnico';
 
   user: User;
   emailUser;
@@ -113,7 +113,7 @@ export class AssignSpecialistDialogComponent implements OnInit, OnDestroy {
         distinctUntilChanged(),
         map((specialist) => (specialist.name ? specialist.name : specialist))
       ),
-      this.qualityService.getAllQualityListSpecialist(this.nameSpecialist)
+      this.qualityService.getAllQualityListSpecialist()
     ).pipe(
       map(([formValue, specialists]) => {
 
@@ -123,7 +123,7 @@ export class AssignSpecialistDialogComponent implements OnInit, OnDestroy {
             : ''
         );
 
-        if ( !(filter.length === 2 && filter[0]['name'] === formValue) &&
+        if ( !(filter.length === 1 && filter[0]['name'] === formValue) &&
           formValue.length
         ) {
           this.specialistForm.get('specialist').setErrors({ invalid: true });
