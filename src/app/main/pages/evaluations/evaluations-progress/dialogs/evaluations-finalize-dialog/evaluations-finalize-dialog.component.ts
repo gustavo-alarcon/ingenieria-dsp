@@ -13,6 +13,8 @@ import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material
 import { ENTER, COMMA } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { User } from '../../../../../models/user-model';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-evaluations-finalize-dialog',
@@ -98,8 +100,6 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
         }
       })
     );
-
-    this.emailArray.push(this.data.createdBy.email);
 
     this.result$ = this.evaluationServices.getAllEvaluationsSettingsResultType();
     this.kindOfTests$ = this.evaluationServices.getAllEvaluationsSettingsKindOfTest();
