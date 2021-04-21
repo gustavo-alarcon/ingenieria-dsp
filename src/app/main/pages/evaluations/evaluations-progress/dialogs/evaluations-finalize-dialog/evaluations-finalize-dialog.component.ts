@@ -1,14 +1,20 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Evaluation, EvaluationsKindOfTest, EvaluationsResultTypeUser } from 'src/app/main/models/evaluations.model';
+import { Evaluation, EvaluationBroadcastList, EvaluationsKindOfTest, EvaluationsResultTypeUser } from 'src/app/main/models/evaluations.model';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { debounceTime, distinctUntilChanged, finalize, map, startWith, switchMap, take, tap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Ng2ImgMaxService } from 'ng2-img-max';
 import { EvaluationsService } from 'src/app/main/services/evaluations.service';
 import { AuthService } from 'src/app/auth/services/auth.service';
+import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { ENTER, COMMA } from '@angular/cdk/keycodes';
+import { MatChipInputEvent } from '@angular/material/chips';
+import { User } from '../../../../../models/user-model';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-evaluations-finalize-dialog',
@@ -39,6 +45,23 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
 
   arrayAux: string[];
 
+  //Chip email
+  emailArray: string[] = [];
+  filteredBroadcast$: Observable<EvaluationBroadcastList[]>;
+  broadcastControl = new FormControl();
+  listBroadcast: string[] = [];
+   // chips
+   visible = true;
+   selectable = true;
+   removable = true;
+   separatorKeysCodes: number[] = [ENTER, COMMA];
+ 
+   @ViewChild('emailInput') emailInput: ElementRef<HTMLInputElement>;
+   @ViewChild('auto') matAutocomplete: MatAutocomplete;
+
+   user: User;
+   counter = 0;
+
   constructor(
     private fb: FormBuilder,
     private snackBar: MatSnackBar,
@@ -66,10 +89,26 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.createFormFinalize();
 
+    this.subscription.add(
+      this.auth.user$.subscribe((user) => {
+        this.user = user;
+        const email = this.user.email;
+
+        this.counter++;
+        if (this.counter === 1) {
+          this.emailArray.push(email);
+        }
+      })
+    );
+
     this.result$ = this.evaluationServices.getAllEvaluationsSettingsResultType();
     this.kindOfTests$ = this.evaluationServices.getAllEvaluationsSettingsKindOfTest();
 
-
+    this.filteredBroadcast$ = this.evaluationServices.getAllBroadcastList().pipe(
+      tap((res: EvaluationBroadcastList[]) => {
+        return res;
+      })
+    );
   }
 
   createFormFinalize(): void {
@@ -121,7 +160,7 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
         .pipe(
           take(1)
         ).subscribe(user => {
-          this.evaluationServices.updateImagesFinalizeData(this.data, this.imagesUpload, this.finalizeForm.value, user)
+          this.evaluationServices.updateImagesFinalizeData(this.data, this.imagesUpload, this.finalizeForm.value, user, this.emailArray)
             .pipe(
               take(1)
             ).subscribe(batch => {
@@ -204,5 +243,41 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
     } else if (this.finalizeForm.get('kindOfTest').errors) {
       document.getElementById('kindOfTest').scrollIntoView();
     }
+  }
+
+
+  
+  removeEmail(email: string): void {
+    const index = this.emailArray.indexOf(email);
+
+    if (index >= 0) {
+      this.emailArray.splice(index, 1);
+    }
+  }
+  addBroadcast(event: MatChipInputEvent): void {
+    const input = event.input;
+    console.log('input :', input);
+    const value = event.value;
+    console.log('value :', value);
+
+    // Add our fruit
+    if ((value || '').trim()) {
+      this.emailArray.push(value.trim());
+    }
+
+    // Reset the input value
+    if (input) {
+      input.value = '';
+    }
+
+    this.broadcastControl.setValue(null);
+  }
+  selectedBroadcast(event: MatAutocompleteSelectedEvent): void {
+    event.option.value.emailList.map((el) => {
+      this.emailArray.push(el);
+    });
+
+    this.emailInput.nativeElement.value = '';
+    this.broadcastControl.setValue(null);
   }
 }

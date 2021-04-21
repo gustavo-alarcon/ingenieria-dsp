@@ -10,6 +10,7 @@ import {
   Andon,
 } from '../models/andon.model';
 import * as firebase from 'firebase/app';
+import { AndonBroadcastList } from '../models/andon.model';
 
 @Injectable({
   providedIn: 'root',
@@ -52,7 +53,8 @@ export class AndonService {
     nameBahia: string,
     otchild: number,
     user: User,
-    imagesObj
+    imagesObj,
+    emailArray
   ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
@@ -78,7 +80,8 @@ export class AndonService {
       state: 'stopped', // => stopped //retaken
       workReturnDate: null,
       comments: null,
-      returnUser: null
+      returnUser: null,
+      emailList: emailArray
     };
     batch.set(andonDocRef, data);
 
@@ -110,7 +113,7 @@ export class AndonService {
    * @param {AndonProblemType} form - Form data passed on request creation
    * @param {User} user - User's data in actual session
    */
-  addAndonSettingsProblemType(
+ /*  addAndonSettingsProblemType(
     listProblemType: AndonProblemType[],
     user: User
   ): Observable<firebase.default.firestore.WriteBatch> {
@@ -132,7 +135,7 @@ export class AndonService {
       }
     });
     return of(batch);
-  }
+  } */
   deleteAndonSettingsProblemType(id: string): void {
     this.afs.firestore
       .collection(`/db/generalConfig/andonProblemType`)
@@ -143,6 +146,55 @@ export class AndonService {
         console.log(error);
       });
   }
+
+
+
+  getAllAndonProblemType(): Observable<
+  AndonProblemType[]
+> {
+  return this.afs
+    .collection<AndonProblemType>(
+      `/db/generalConfig/andonProblemType`,
+      (ref) => ref.orderBy('createdAt', 'asc')
+    )
+    .valueChanges();
+}
+
+  addAndonProblemType(
+    form: AndonProblemType,
+    user: User
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    const date = new Date();
+    const batch = this.afs.firestore.batch();
+    const qualityDocRef = this.afs.firestore
+      .collection(`/db/generalConfig/andonProblemType`)
+      .doc();
+
+    const data: any = {
+      id: qualityDocRef.id,
+      name: form.name,
+      email: form.email,
+      createdBy: user,
+      createdAt: date,
+    };
+    batch.set(qualityDocRef, data);
+    return of(batch);
+  }
+
+  deleteAndonProblemType(
+    id: string
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    const broadcastDocRef = this.afs.firestore.doc(
+      `/db/generalConfig/andonProblemType/${id}`
+    );
+    //
+    batch.delete(broadcastDocRef);
+    return of(batch);
+  }
+
+
 
   // get all andonListBahias
   getAllAndonSettingsListBahias(): Observable<AndonListBahias[]> {
@@ -334,5 +386,96 @@ export class AndonService {
         ref.where('state', '==', state)
       )
       .valueChanges();
+  }
+
+  
+  // BROADCAS LIST
+  // get all EvaluationBroadcastlist
+  getAllBroadcastList(): Observable<AndonBroadcastList[]> {
+    return this.afs
+      .collection<AndonBroadcastList>(
+        `/db/generalConfig/andonBroadcastList`,
+        (ref) => ref.orderBy('createdAt', 'asc')
+      )
+      .valueChanges();
+  }
+
+  updateBrodcastEmailList(
+    entryId: string,
+    broadcast: string
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    // create reference for document in evaluation entries collection
+    const qualityDocRef = this.afs.firestore.doc(
+      `/db/generalConfig/andonBroadcastList/${entryId}`
+    );
+    // Structuring the data model
+    const data: any = {
+      emailList: firebase.default.firestore.FieldValue.arrayRemove(broadcast),
+      /*  editedAt: new Date(),
+        edited: user, */
+    };
+    batch.update(qualityDocRef, data);
+
+    return of(batch);
+  }
+  updateBrodcastList(
+    entryId: string,
+    broadcast: string,
+    user: User
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    // create reference for document in evaluation entries collection
+    const qualityDocRef = this.afs.firestore.doc(
+      `/db/generalConfig/andonBroadcastList/${entryId}`
+    );
+    // Structuring the data model
+    const data: any = {
+      emailList: firebase.default.firestore.FieldValue.arrayUnion(broadcast),
+      editedAt: new Date(),
+      edited: user,
+    };
+    batch.update(qualityDocRef, data);
+
+    return of(batch);
+  }
+
+  addNewBrodcastList(
+    nameBroadcast: string,
+    user: User
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    // create reference for document in evaluation entries collection
+    const qualityDocRef = this.afs.firestore
+      .collection(`/db/generalConfig/andonBroadcastList`)
+      .doc();
+
+    // Structuring the data model
+    const data: any = {
+      id: qualityDocRef.id,
+      name: nameBroadcast,
+      emailList: null,
+      createdAt: new Date(),
+      createdBy: user,
+    };
+    batch.set(qualityDocRef, data);
+
+    return of(batch);
+  }
+
+  deleteListBroadcast(
+    id: string
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    const broadcastDocRef = this.afs.firestore.doc(
+      `/db/generalConfig/andonBroadcastList/${id}`
+    );
+    //
+    batch.delete(broadcastDocRef);
+    return of(batch);
   }
 }

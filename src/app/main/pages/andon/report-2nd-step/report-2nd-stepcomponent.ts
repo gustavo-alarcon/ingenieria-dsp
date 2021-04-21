@@ -1,5 +1,18 @@
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  AfterViewInit,
+  ElementRef,
+  ViewChild,
+} from '@angular/core';
+import {
+  FormGroup,
+  FormBuilder,
+  Validators,
+  FormArray,
+  FormControl,
+} from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, Subscription, Observable } from 'rxjs';
 import { AndonService } from '../../../services/andon.service';
@@ -11,13 +24,21 @@ import { Andon, AndonProblemType } from './../../../models/andon.model';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { AuthService } from '../../../../auth/services/auth.service';
 import { User } from '../../../models/user-model';
+import { AndonBroadcastList } from '../../../models/andon.model';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import {
+  MatAutocomplete,
+  MatAutocompleteSelectedEvent,
+} from '@angular/material/autocomplete';
+import { MatChipInputEvent } from '@angular/material/chips';
 
 @Component({
   selector: 'app-report-2nd-step',
   templateUrl: './report-2nd-step.component.html',
   styleUrls: ['./report-2nd-step.component.scss'],
 })
-export class report2ndStepComponent implements OnInit, OnDestroy, AfterViewInit {
+export class report2ndStepComponent
+  implements OnInit, OnDestroy, AfterViewInit {
   loading = new BehaviorSubject<boolean>(false);
   loading$ = this.loading.asObservable();
   reportForm: FormGroup;
@@ -45,6 +66,22 @@ export class report2ndStepComponent implements OnInit, OnDestroy, AfterViewInit 
   subscriptions = new Subscription();
   isMobile = false;
 
+  //Chip email
+  emailArray: string[] = [];
+  filteredBroadcast$: Observable<AndonBroadcastList[]>;
+  broadcastControl = new FormControl();
+  listBroadcast: string[] = [];
+  // chips
+  visible = true;
+  selectable = true;
+  removable = true;
+  separatorKeysCodes: number[] = [ENTER, COMMA];
+
+  @ViewChild('emailInput') emailInput: ElementRef<HTMLInputElement>;
+  @ViewChild('auto') matAutocomplete: MatAutocomplete;
+
+  counter = 0;
+
   constructor(
     private fb: FormBuilder,
     public router: Router,
@@ -54,8 +91,7 @@ export class report2ndStepComponent implements OnInit, OnDestroy, AfterViewInit 
     private storage: AngularFireStorage,
     private route: ActivatedRoute,
     private breakpoint: BreakpointObserver,
-    public authService: AuthService,
-
+    public authService: AuthService
   ) {
     const info = this.route.snapshot.paramMap.get('id');
     let parts = [];
@@ -69,19 +105,30 @@ export class report2ndStepComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   ngOnInit(): void {
-    this.subscriptions.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
-      .subscribe(res => {
-        if (res.matches) {
-          this.isMobile = true;
-        } else {
-          this.isMobile = false;
+    this.subscriptions.add(
+      this.breakpoint
+        .observe([Breakpoints.HandsetPortrait])
+        .subscribe((res) => {
+          if (res.matches) {
+            this.isMobile = true;
+          } else {
+            this.isMobile = false;
+          }
+        })
+    );
+
+    this.subscriptions.add(
+      this.authService.user$.subscribe((user) => {
+        this.user = user;
+
+        const email = this.user.email;
+
+        this.counter++;
+        if (this.counter === 1) {
+          this.emailArray.push(email);
         }
       })
-    )
-
-    this.subscriptions.add(this.authService.user$.subscribe(user => {
-      this.user = user;
-    }));
+    );
 
     this.reportForm = this.fb.group({
       problemType: ['', Validators.required],
@@ -91,19 +138,22 @@ export class report2ndStepComponent implements OnInit, OnDestroy, AfterViewInit 
     this.loading.next(true);
     this.pathStorage = `andon/${this.currentId}/pictures/${this.currentId}`;
 
-
-
     this.typeProblem$ = this.andonService.getAllAndonSettingsProblemType().pipe(
       tap((res) => {
         return res;
       })
     );
+
+    this.filteredBroadcast$ = this.andonService.getAllBroadcastList().pipe(
+      tap((res: AndonBroadcastList[]) => {
+        return res;
+      })
+    );
+
     this.loading.next(false);
   }
 
-  ngAfterViewInit(): void {
-
-  }
+  ngAfterViewInit(): void {}
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
@@ -124,24 +174,33 @@ export class report2ndStepComponent implements OnInit, OnDestroy, AfterViewInit 
         this.images.forEach((value, index) => {
           imagesObj[index] = value;
         });
-        this.andonService.addAndOn(this.reportForm.value, this.workShop, this.nameBahia, this.otChild, this.user, imagesObj)
+        this.andonService
+          .addAndOn(
+            this.reportForm.value,
+            this.workShop,
+            this.nameBahia,
+            this.otChild,
+            this.user,
+            imagesObj,
+            this.emailArray          )
           .pipe(take(1))
           .subscribe((res) => {
-            res.commit().then(() => {
-              //this.loading.next(false)
-              this.snackbar.open('✅ se guardo correctamente!', 'Aceptar', {
-                duration: 6000
-              });
-              const code = this.workShop;
-              this.router.navigate(['main/andon-reports', code]);
-              this.loading.next(false);
-            })
-              .catch(err => {
+            res
+              .commit()
+              .then(() => {
+                //this.loading.next(false)
+                this.snackbar.open('✅ se guardo correctamente!', 'Aceptar', {
+                  duration: 6000,
+                });
+                const code = this.workShop;
+                this.router.navigate(['main/andon-reports', code]);
+                this.loading.next(false);
+              })
+              .catch((err) => {
                 this.snackbar.open('🚨 Hubo un error.', 'Aceptar', {
-                  duration: 6000
+                  duration: 6000,
                 });
               });
-
           });
       }
     } catch (error) {
@@ -149,7 +208,6 @@ export class report2ndStepComponent implements OnInit, OnDestroy, AfterViewInit 
         duration: 6000,
       });
       this.loading.next(false);
-
     }
   }
 
@@ -181,7 +239,8 @@ export class report2ndStepComponent implements OnInit, OnDestroy, AfterViewInit 
                 });
                 this.loading.next(false);
               })
-            ).subscribe()
+            )
+            .subscribe()
         );
       })
     );
@@ -217,5 +276,45 @@ export class report2ndStepComponent implements OnInit, OnDestroy, AfterViewInit 
     this.imagesUpload.pop();
     this.imagesUpload.push(image);
     this.imagesUpload.push('');
+  }
+
+  removeEmail(email: string): void {
+    const index = this.emailArray.indexOf(email);
+
+    if (index >= 0) {
+      this.emailArray.splice(index, 1);
+    }
+  }
+  addBroadcast(event: MatChipInputEvent): void {
+    const input = event.input;
+    console.log('input :', input);
+    const value = event.value;
+    console.log('value :', value);
+
+    // Add our fruit
+    if ((value || '').trim()) {
+      this.emailArray.push(value.trim());
+    }
+
+    // Reset the input value
+    if (input) {
+      input.value = '';
+    }
+
+    this.broadcastControl.setValue(null);
+  }
+  selectedBroadcast(event: MatAutocompleteSelectedEvent): void {
+    event.option.value.emailList.map((el) => {
+      this.emailArray.push(el);
+    });
+
+    this.emailInput.nativeElement.value = '';
+    this.broadcastControl.setValue(null);
+  }
+
+  onClickProblemType(item): void {
+    const email = item.email;
+
+    this.emailArray.push(email);
   }
 }
