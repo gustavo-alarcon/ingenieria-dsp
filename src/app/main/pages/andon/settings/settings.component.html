@@ -4,58 +4,103 @@
         <h1 class="ms-toolbar__title">Configuraciones</h1>               
     </div>
     <mat-accordion>
+
         <div class="container-settings">
-            <mat-expansion-panel class="container-settings__color-expantion" 
+            <mat-expansion-panel class="container-settings__color-expantion"
             (opened)="panelOpenState = true" (closed)="panelOpenState = false">
                 <mat-expansion-panel-header style="height: 58px;">
                     <mat-panel-title class="container-settings__header-title">
-                        Listas
+                        Listas  
                     </mat-panel-title>
                 </mat-expansion-panel-header>
                 <div style="border: 10px;"></div>
                 <mat-card class="mat-elevation-z0">
-                    <mat-card-content>
-                        <mat-card class="mat-elevation-z0" style="margin-left: -10px;margin-top: 5px;">
-                            <mat-card-header>
-                                <mat-card-title>
-                                    <span>Tipos de Problemas</span>
-                                    <button type="button" aria-label="saveDataDifusion" mat-button class="container-settings__btn-save" (click)="saveDataProblemType()">
-                                        GUARDAR
-                                    </button>
-                                </mat-card-title>
-                            </mat-card-header>
-                        </mat-card>
+                    <div class="container-diffusion">
+       
+                        <div >
+                            <mat-card-content class="container-expansion2">
+                                <div class="container-expansion2__container-form" >
+                                    <mat-card class="mat-elevation-z0" style="margin-left: -10px;margin-top: 5px;">
+                                        <mat-card-header>
+                                            <mat-card-title class="container-title">
+                                                <span>Tipo de problema </span>                                        
+                                            </mat-card-title>
+                                        </mat-card-header>
+                                    </mat-card>
+    
+                                
+                                    <form [formGroup]="problemTypeForm" class="container-expansion2__form"  >             
+                   
+                                        <mat-form-field  class="container-expansion2__form--input"
+                                            appearance="outline">
+                                            <mat-label>Tipo de problema</mat-label>
+                                            <input type="text" autocomplete="off" formControlName="name"  placeholder="Escribe..."
+                                            matInput  />
+                                            <mat-error *ngIf="problemTypeForm.controls['name'].errors">
+                                                Campo <strong>requerido.</strong>
+                                            </mat-error>
+                                        </mat-form-field>
+    
+                                        <mat-form-field class="container-expansion2__form--input"
+                                            appearance="outline">
+                                            <mat-label>Correo</mat-label>
+                                            <input type="text" autocomplete="off" formControlName="email" placeholder="Escribe..."
+                                            matInput />
+                                            <mat-error *ngIf="problemTypeForm.controls['email'].errors">
+                                                Campo <strong>requerido.</strong>
+                                            </mat-error>
+                                        </mat-form-field>
+    
+                                        <button type="submit" aria-label="saveDataDifusion" mat-button class="container-expansion2__form--btn"
+                                                (click)="saveProblemType()" >
+                                                GUARDAR
+                                        </button>
                         
-                        <mat-card class="mat-elevation-z0 container-expansion1__content-card">
-                            <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
-                            <mat-card-header class="container-expansion1__content-card--header">
-                                <mat-form-field>
-                                    <mat-label>Escribir</mat-label>
-                                    <input type="text" matInput placeholder="Escribir" [formControl]="listProblemTypeFormControl" (keyup.enter)="addListProblemType()" [errorStateMatcher]="matcher" autocomplete="off">
-                                    <button mat-button *ngIf="listProblemTypeFormControl.value" matSuffix mat-icon-button aria-label="clearResult" (click)="listProblemTypeFormControl.reset()">
-                                        <mat-icon>close</mat-icon>
-                                    </button>
-                                    <mat-hint>Presione ENTER para agregar</mat-hint>
-                                    <mat-error *ngIf="listProblemTypeFormControl.hasError('required')">
-                                        El campo es <strong>Requerido</strong>
-                                    </mat-error>
-                                </mat-form-field>
-                            </mat-card-header>
-                            <mat-card-content class="container-expansion1__content-card-content">
-                                <div role="list" *ngFor="let result of listProblemTypeArray;let i=index">
-                                    <div class="item-list">
-                                        <span>{{result.problemType}}</span>
-                                        <span>
-                                            <button mat-icon-button aria-label="deletelistResult" (click)="deleteListProblemType(i)" >
-                                                <mat-icon style="color: #828282">delete</mat-icon>
-                                            </button>
-                                        </span>
-                                    </div>
+                                    </form>
                                 </div>
-                            </mat-card-content>
-                        </mat-card>                
-                    </mat-card-content>
-                </mat-card>
+                                
+                                <div>                            
+                                    
+                                        <div class="container-table" *ngIf="problemType$ | async " >
+                                          <table mat-table [dataSource]="historyMobilDataSource" class="mat-elevation-z8">
+                                    
+                                            <ng-container matColumnDef="name">
+                                              <th mat-header-cell *matHeaderCellDef class="table__cell theader">Tipo Problema</th>
+                                              <td mat-cell *matCellDef="let element" class="table__cell"> {{element.name ? element.name : '---'}}
+                                              </td>
+                                            </ng-container>
+                                    
+                                            <ng-container matColumnDef="email">
+                                              <th mat-header-cell *matHeaderCellDef class="table__cell theader">Email</th>
+                                              <td mat-cell *matCellDef="let element" class="table__cell"> {{element.email ? element.email : '---'}}
+                                              </td>
+                                            </ng-container>
+    
+                                            <ng-container matColumnDef="actions" stickyEnd>
+                                                <th mat-header-cell *matHeaderCellDef class="table__cell theader">
+                                                  Accion
+                                                </th>
+                                                <td mat-cell *matCellDef="let element" class="table__cell">
+                                                    <button mat-icon-button aria-label="deletelistResult" (click)="deleteProblemType(element)" >
+                                                        <mat-icon style="color: #828282">delete</mat-icon>
+                                                    </button>
+                                                </td>
+                                              </ng-container>
+                                    
+                                            <tr mat-header-row *matHeaderRowDef="historyMobilDisplayedColumns"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: historyMobilDisplayedColumns;"></tr>
+                                          </table>
+                                         
+                                        </div>
+                                        <mat-paginator #historyMobilPaginator class="ms-paginator" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+                                        </mat-paginator>
+                                </div>
+                                               
+                            </mat-card-content>    
+                        </div>
+                    </div>         
+    
+                </mat-card>           
             </mat-expansion-panel>
         </div>
 

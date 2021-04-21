@@ -28,12 +28,6 @@ export interface EvaluationTimer {
   seconds: number
 }
 
-export interface AndonProblemType{
-  id: string;
-  problemType: string;
-  createdAt: Date;
-  createdBy: User;
-}
 export interface AndonListBahias{
   id: string;
   name: string;
@@ -46,6 +40,14 @@ export interface AndonBroadcastList {
   id?: string;
   name: string;
   emailList: Array<string>;
+  createdAt: Date;
+  createdBy: User;
+}
+
+export interface AndonProblemType {
+  id: string;
+  name: string;
+  email: string;
   createdAt: Date;
   createdBy: User;
 }
