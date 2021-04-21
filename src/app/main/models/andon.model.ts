@@ -19,6 +19,8 @@ export interface Andon {
   workReturnDate?: Date;
   comments?: string;
   returnUser?: string;
+  emailList?: Array<string>;
+
 }
 
 export interface EvaluationTimer {

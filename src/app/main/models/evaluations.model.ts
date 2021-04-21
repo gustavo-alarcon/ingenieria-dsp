@@ -44,6 +44,7 @@ export interface Evaluation {
     editedBy: User;
     length?: number;
     extends?: string[];
+    emailList?: Array<string>;
 }
 
 export interface EvaluationRegistryForm {

@@ -109,7 +109,7 @@ export class AssignSpecialistDialogComponent implements OnInit, OnDestroy {
     this.specialist$ = combineLatest(
       this.specialistForm.get('specialist').valueChanges.pipe(
         startWith(''),
-        debounceTime(300),
+        debounceTime(150),
         distinctUntilChanged(),
         map((specialist) => (specialist.name ? specialist.name : specialist))
       ),
