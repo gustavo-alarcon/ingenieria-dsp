@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Evaluation } from '../../../models/evaluations.model';
 import { MatPaginator } from '@angular/material/paginator';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-budgets-daily-entries',
@@ -9,7 +11,7 @@ import { MatPaginator } from '@angular/material/paginator';
   styleUrls: ['./budgets-daily-entries.component.scss']
 })
 export class BudgetsDailyEntriesComponent implements OnInit {
- 
+
   budgetsDailyEntriesDataSource = new MatTableDataSource<Evaluation>();
   budgetsDailyEntriesDisplayedColumns: string[] = [
     'otMain',
@@ -38,22 +40,36 @@ export class BudgetsDailyEntriesComponent implements OnInit {
   }
 
   @ViewChild("fileInput2", { read: ElementRef }) fileButton: ElementRef;
-   
-  constructor() { }
+
+  subscriptions = new Subscription();
+  isMobile = false;
+
+  constructor(
+    private breakpoint: BreakpointObserver,
+  ) { }
 
   ngOnInit(): void {
+    this.subscriptions.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
+      .subscribe(res => {
+        if (res.matches) {
+          this.isMobile = true;
+        } else {
+          this.isMobile = false;
+        }
+      })
+    )
   }
-  uploadFile(): void{
+  uploadFile(): void {
 
   }
-  editDialog(): void{
+  editDialog(): void {
 
   }
-  deleteDialog(): void{
+  deleteDialog(): void {
 
   }
-  saveDataTable(): void{
-    
+  saveDataTable(): void {
+
   }
 
 }

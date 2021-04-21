@@ -82,6 +82,16 @@ export class ExternalEventsComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.subscription.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
+      .subscribe(res => {
+        if (res.matches) {
+          this.isMobile = true;
+        } else {
+          this.isMobile = false;
+        }
+      })
+    )
+
     this.initFormInternal();
 
     this.miningOperation$ = combineLatest(
@@ -104,16 +114,6 @@ export class ExternalEventsComponent implements OnInit {
         return filter;
       })
     );
-
-    this.subscriptions.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
-      .subscribe(res => {
-        if (res.matches) {
-          this.isMobile = true;
-        } else {
-          this.isMobile = false;
-        }
-      })
-    )
 
     this.subscription.add(
       this.authService.user$.subscribe((user) => {
