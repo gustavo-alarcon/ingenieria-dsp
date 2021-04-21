@@ -48,7 +48,7 @@
     overflow-x: scroll;
     overflow-y: hidden;
     &__content-card {
-        width: 400px;
+        width: 350px;
         height: 246px;
         background: #ffffff;
         border: 1px solid #f1eeee;
@@ -123,4 +123,28 @@ mat-accordion .mat-expansion-panel {
     letter-spacing: 0.5px;
 
     color: #828282;
+}
+
+.container-diffusion{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+
+    &__title{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        &--name{
+            font-size: 18px; 
+            margin-top: 10px; 
+            margin-left: 0;
+            padding-left: 0;
+            margin-right: 30px;
+        }
+        .mat-icon{
+            width: 30px;
+            height: 30px;
+            font-size: 30px;
+        }
+    }
+    
 }

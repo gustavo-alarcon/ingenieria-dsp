@@ -41,3 +41,11 @@ export interface AndonListBahias{
   createdAt: Date;
   createdBy: User;
 }
+
+export interface AndonBroadcastList {
+  id?: string;
+  name: string;
+  emailList: Array<string>;
+  createdAt: Date;
+  createdBy: User;
+}

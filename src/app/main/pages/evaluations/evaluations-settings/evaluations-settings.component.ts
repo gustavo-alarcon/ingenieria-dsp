@@ -2,15 +2,20 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription, Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { EvaluationsBroadcastUser, EvaluationsKindOfTest, EvaluationsResultTypeUser, EvaluationsUser } from 'src/app/main/models/evaluations.model';
 import { User } from 'src/app/main/models/user-model';
 import * as XLSX from 'xlsx';
 import { EvaluationsService } from 'src/app/main/services/evaluations.service';
-import { FormControl, FormGroupDirective, NgForm, Validators } from '@angular/forms';
+import { FormControl, FormGroupDirective, NgForm, Validators, FormArray } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
+import { EvaluationBroadcastList } from '../../../models/evaluations.model';
+import { tap } from 'rxjs/operators';
+import { MatDialog } from '@angular/material/dialog';
+import { DeleteBroadcastDialogComponent } from './dialogs/delete-broadcast-dialog/delete-broadcast-dialog.component';
+import { AddBroadcastDialogComponent } from './dialogs/add-broadcast-dialog/add-broadcast-dialog.component';
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
@@ -71,7 +76,13 @@ export class EvaluationsSettingsComponent implements OnInit, OnDestroy {
 
   private subscription = new Subscription();
 
+  broadcast$: Observable<EvaluationBroadcastList[]>;
+  broadcastListArray: EvaluationBroadcastList[] = [];
+  broadcastFormArray = new FormArray([]);
+
+
   constructor(
+    public dialog: MatDialog,
     public auth: AuthService,
     private snackbar: MatSnackBar,
     private evalService: EvaluationsService,
@@ -80,6 +91,7 @@ export class EvaluationsSettingsComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+
     this.loading.next(true);
     this.loadingKindOfTest.next(true);
     this.settingsDataSource.sort = this.sort;
@@ -127,6 +139,21 @@ export class EvaluationsSettingsComponent implements OnInit, OnDestroy {
       })
     );
 
+    this.broadcast$ = this.evalService.getAllBroadcastList().pipe(
+      tap((res: EvaluationBroadcastList[]) => {
+        if (res) {
+          this.broadcastListArray = res;
+        }
+        res.map((el) => {
+          this.broadcastFormArray.push(
+            new FormControl('', [
+              Validators.required,
+              Validators.pattern(/^[\w]{1,}[\w.+-]{0,}@[\w-]{1,}([.][a-zA-Z]{2,}|[.][\w-]{2,}[.][a-zA-Z]{2,})$/)
+              ])
+          );
+        });
+      })
+    );
 
     this.loading.next(false);
     this.loadingKindOfTest.next(false);
@@ -401,7 +428,111 @@ export class EvaluationsSettingsComponent implements OnInit, OnDestroy {
     }
   }
 
+  
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+  
+  //BROADCAST LIST
+
+  addBroadcast(): void{
+    this.dialog.open(AddBroadcastDialogComponent, {
+      maxWidth: 500,
+      width: '90vw',
+    });
+  }
+
+  addListDiffusion(broadcast: EvaluationBroadcastList, index: number): void {
+    try {
+      const name = broadcast.name;
+      const newBroadcast = this.broadcastFormArray.controls[index].value.trim().toLowerCase();
+
+      if ( broadcast.id){
+        const entryId = broadcast.id;
+
+        const resp = this.evalService.updateBrodcastList(entryId, newBroadcast, this.user);
+        //this.loading.next(true);
+        this.subscription.add(resp.subscribe(
+          batch => {
+            if (batch) {
+              batch.commit()
+                .then(() => {
+                  //this.loading.next(false);
+                  this.snackbar.open('✅ Se guardo correctamente!', 'Aceptar', {
+                    duration: 6000
+                  });
+                  this.broadcastFormArray.removeAt(index);
+
+                })
+                .catch(err => {
+                  //this.loading.next(false);
+                  this.snackbar.open('🚨 Hubo un error al actualizar  !', 'Aceptar', {
+                    duration: 6000
+                  });
+                });
+            }
+          }
+        ));
+      }
+
+    } catch (error) {
+      console.log(error);
+      this.loading.next(false);
+    }
+
+  }
+
+  async deleteListBroadcast(
+    broadcast: EvaluationBroadcastList,
+    index: number
+  ): Promise<void> {
+    if (broadcast.id != null) {
+      this.loading.next(true);
+      this.dialog.open(DeleteBroadcastDialogComponent, {
+        maxWidth: 500,
+        width: '90vw',
+        data: broadcast,
+      });
+      this.loading.next(false);
+    } else {
+      this.broadcastListArray.splice(index, 1);
+    }
+  }
+
+  
+  updateBrocastListEmail(
+    broadcast: EvaluationBroadcastList,
+    broadcastList: string
+  ): void {
+    try {
+      const resp = this.evalService.updateBrodcastEmailList(
+        broadcast.id,
+        broadcastList
+      );
+      //this.loading.next(true);
+      this.subscription.add(
+        resp.subscribe((batch) => {
+          if (batch) {
+            batch
+              .commit()
+              .then(() => {
+                // this.loading.next(false);
+                this.snackbar.open('✅ Se elimino correctamente!', 'Aceptar', {
+                  duration: 6000,
+                });
+              })
+              .catch((err) => {
+                // this.loading.next(false);
+                this.snackbar.open('🚨 Hubo un error al crear!', 'Aceptar', {
+                  duration: 6000,
+                });
+              });
+          }
+        })
+      );
+    } catch (error) {
+      console.log(error);
+      this.loading.next(false);
+    }
   }
 }

@@ -82,7 +82,7 @@
                         </table>
                         <mat-paginator #settingsPaginator [pageSizeOptions]="[20,30,40]"></mat-paginator>
                     </div>
-                    <mat-card class="mat-elevation-z0" style="margin-left: -10px;margin-top: 10px;">
+                   <!--  <mat-card class="mat-elevation-z0" style="margin-left: -10px;margin-top: 10px;">
                         <mat-card-header>
                             <mat-card-title>
                                 <span>
@@ -129,7 +129,7 @@
                                 </div>
                             </div>
                         </mat-card-content>
-                    </mat-card>
+                    </mat-card> -->
                 </mat-card-content>
             </mat-card>
         </mat-expansion-panel>
@@ -244,6 +244,82 @@
                 </mat-card>
             </div>
 
+        </mat-expansion-panel>
+
+        <div style="margin-top: 30px;"></div>
+
+        <mat-expansion-panel class="container-settings__color-expantion" 
+            (opened)="panelOpenState = true"  (closed)="panelOpenState = false">
+                <mat-expansion-panel-header style="height: 58px;">
+                    <mat-panel-title class="container-settings__header-title">
+                        Envío de correos
+                    </mat-panel-title>
+                   
+                </mat-expansion-panel-header>
+                <div style="border: 10px;"></div>
+    
+                <mat-card class="mat-elevation-z0">
+                    <div class="container-diffusion"*ngIf="broadcast$ |async as broadcastList">
+                        <div *ngFor="let broadcast of broadcastList; let i=index">
+                            <mat-card-content>
+                                <mat-card class="mat-elevation-z0" style="margin-left: -10px;margin-top: 5px;">
+                                    <mat-card-header>
+                                        <mat-card-title > 
+                                            <div class="container-diffusion__title" >
+                                                 <p class="container-diffusion__title--name"> Lista de {{broadcast.name}} </p>                                            
+                                                <button mat-icon-button aria-label="deletelistResult" class="container-diffusion__btn"
+                                                (click)="deleteListBroadcast(broadcast,i)" >
+                                                    <mat-icon style="color: #FF2D2D; ">delete</mat-icon>
+                                                </button>
+                                            </div>                                        
+                                        </mat-card-title>
+                                    </mat-card-header>
+                                </mat-card>
+                                
+                                <mat-card class="mat-elevation-z0 container-expansion1__content-card">
+                                    <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+                                    <mat-card-header class="container-expansion1__content-card--header">
+    
+                                        <mat-form-field>
+                                            <mat-label>Escribir</mat-label>
+                                            <input type="email" matInput placeholder="Escribir" [formControl]="broadcastFormArray.controls[i]" 
+                                            (keyup.enter)="addListDiffusion(broadcast,i)"  [errorStateMatcher]="matcher" autocomplete="off">
+                                            <button mat-button *ngIf="broadcastFormArray.controls[i].errors" matSuffix mat-icon-button aria-label="clearResult" 
+                                            (click)="broadcastFormArray.controls[i].reset()">
+                                                <mat-icon>close</mat-icon>
+                                            </button>
+                                            <mat-hint>Presione ENTER para agregar</mat-hint>
+                                            <mat-error *ngIf="broadcastFormArray.controls[i].hasError('required')">
+                                                El campo es <strong>Requerido</strong>
+                                            </mat-error>
+                                        </mat-form-field>
+    
+                                    </mat-card-header>
+                                    <mat-card-content class="container-expansion1__content-card-content">
+                                        <div role="list" *ngFor="let item of broadcast['emailList'] ;let j=index">
+                                            <div class="item-list">
+                                                <span>{{item}}</span>
+                                                <span>
+                                                    <button mat-icon-button aria-label="deletelistResult" 
+                                                    (click)="updateBrocastListEmail(broadcast, item)" >
+                                                        <mat-icon style="color: #828282">delete</mat-icon>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </mat-card-content>
+                                </mat-card>                
+                            </mat-card-content>                       
+                        </div>
+                    </div>
+                    
+                    <button type="button" aria-label="saveDataDifusion" mat-button class="container-settings__btn-add" style="margin-top: 50px;"
+                     (click)="addBroadcast()">
+                        AGREGAR
+                    </button>          
+    
+                </mat-card>           
+    
         </mat-expansion-panel>
     </mat-accordion>
 </div>
