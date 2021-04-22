@@ -249,7 +249,7 @@ export class QualityService {
         ref.where('workingArea', 'in', ['Soporte técnico', 'Confiabilidad'])
       )
       .valueChanges();
-  } 
+  }
 
   /**
    * Creates the qualityListSpecialist entry into firestore's qualityListSpecialist collection

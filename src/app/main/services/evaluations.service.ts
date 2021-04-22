@@ -63,7 +63,7 @@ export class EvaluationsService {
       description: form.description ? form.description : '',
       quantity: 1,
       internalStatus: 'registered', // =>  [registered / progress /consultation / finalized]
-      status: 'PPM',
+      status: null,
       wof: form.wof ? form.wof : '',
       task: '',
       observations: form.observations ? form.observations : '',
@@ -80,7 +80,7 @@ export class EvaluationsService {
       finalizedBy: null,
       finalizedAt: null,
       result: null,
-      kindOfTest: null,
+      kindOfTest: 'PPM',
       comments: null,
       createdAt: new Date(),
       createdBy: user,
