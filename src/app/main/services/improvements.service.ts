@@ -294,8 +294,8 @@ export class ImprovementsService {
         }),
         switchMap(firstEvaluation => {
 
-          if (firstEvaluation.evaluatedPart === null) {
-            return this.afs.collection<Replacement>(`/db/ferreyros/replacements`, ref => ref.where('replacedPart', '==', firstEvaluation.evaluatedPart))
+          if (firstEvaluation.evaluatedPart === 'check replacement') {
+            return this.afs.collection<Replacement>(`/db/ferreyros/replacements`, ref => ref.where('replacedPart', '==', firstEvaluation.improvedPart))
               .valueChanges()
               .pipe(
                 map(res => {
@@ -331,7 +331,7 @@ export class ImprovementsService {
     }
 
     if (!hasStock && !isAvailableNow) {
-      result = null;
+      result = 'check replacement';
       console.log(data.improvedPart, " - Met codition 2 - Let's check for replacement");
       return result;
     }
