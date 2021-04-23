@@ -19,8 +19,8 @@ import { GeneralConfig } from '../models/generalConfig.model';
 export class AuthService {
 
   user$: Observable<User>;
-  version$: Observable<GeneralConfig>;F
-  version: string = 'V4.12.17r';
+  version$: Observable<GeneralConfig>; F
+  version: string = 'V4.12.18r';
 
   constructor(
     private afAuth: AngularFireAuth,
