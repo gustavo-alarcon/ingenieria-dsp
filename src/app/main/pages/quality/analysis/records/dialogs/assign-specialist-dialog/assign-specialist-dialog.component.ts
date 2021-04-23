@@ -89,7 +89,7 @@ export class AssignSpecialistDialogComponent implements OnInit, OnDestroy {
     public auth: AuthService,
     private dialog: MatDialog
   ) {
-    
+
   }
 
   ngOnInit(): void {
@@ -117,13 +117,10 @@ export class AssignSpecialistDialogComponent implements OnInit, OnDestroy {
     ).pipe(
       map(([formValue, specialists]) => {
 
-        const filter = specialists.filter((el) =>
-          formValue
-            ? el.name.toLowerCase().includes(formValue.toLowerCase())
-            : ''
+        const filter = specialists.filter((el) =>el.name.toLowerCase().includes(formValue.toLowerCase())
         );
 
-        if ( !(filter.length === 1 && filter[0]['name'] === formValue) &&
+        if (!(filter.length === 1 && filter[0]['name'] === formValue) &&
           formValue.length
         ) {
           this.specialistForm.get('specialist').setErrors({ invalid: true });
