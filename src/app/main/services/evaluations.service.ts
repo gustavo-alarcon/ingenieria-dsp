@@ -437,7 +437,7 @@ export class EvaluationsService {
 
       for (let j = 500 * index; j < limit; j++) {
         // create reference for document in improvements collection
-        const evaluationDocRef = this.afs.firestore.collection(`/db/ferreyros/evaluations`).doc();
+        const evaluationDocRef = this.afs.firestore.collection(`/evaluations-settings`).doc();
         // Structuring the data model
         listEvaluationsSettings[j].id = evaluationDocRef.id;
         listEvaluationsSettings[j].createdAt = new Date();
