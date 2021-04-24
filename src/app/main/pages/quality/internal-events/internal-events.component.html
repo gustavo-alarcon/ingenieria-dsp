@@ -31,6 +31,31 @@
                         </mat-error>
                     </mat-form-field>
 
+                    <mat-form-field *ngIf="workshop$ | async as miningOperations"  class="container-form__work__input"
+                        [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'"
+                        appearance="outline">
+                        <mat-label>Taller</mat-label>
+                        <input autocomplete="off" formControlName="workShop" [matAutocomplete]="miningOperationAutocomplete" type="text"
+                            matInput />
+                        <mat-autocomplete autoActiveFirstOption #miningOperationAutocomplete="matAutocomplete">
+                            <mat-option (click)="onAddWorkshop()" [value]="">
+                            <mat-icon>add_circle_outline</mat-icon>Añadir
+                            </mat-option>
+                            <mat-option *ngFor="let item of miningOperations" [value]="item.name">
+                            {{ item.name }}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <mat-hint *ngIf="!(workshop$ | async)">
+                            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                            <p>Cargando lista ...</p>
+                        </mat-hint>
+                        <mat-error>
+                            <span *ngIf="internalForm.get('workShop').errors?.required">Por favor, complete el campo.</span>
+                            <span *ngIf="internalForm.get('workShop').errors?.invalid">Dato inválido. Complete con alguna opción
+                            válida.</span>
+                        </mat-error>
+                    </mat-form-field>
+
                     <mat-form-field appearance="outline" class="container-form__work__input"
                         [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
                         <mat-label>Orden de trabajo</mat-label>

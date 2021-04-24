@@ -4,15 +4,17 @@ import {
   FormBuilder
 } from '@angular/forms';
 import { Component, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
-import { BehaviorSubject, Subscription, Observable } from 'rxjs';
+import { BehaviorSubject, Subscription, Observable, combineLatest } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { QualityService } from 'src/app/main/services/quality.service';
 import { User } from '../../../models/user-model';
-import { finalize, take } from 'rxjs/operators';
+import { finalize, take, startWith, map } from 'rxjs/operators';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { ComponentList, WorkShopList, FileAdditional } from '../../../models/quality.model';
+import { MatDialog } from '@angular/material/dialog';
+import { AddWorkshopComponent } from './dialogs/add-workshop/add-workshop.component';
 
 @Component({
   selector: 'app-internal-events',
@@ -71,6 +73,9 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
     { code: 5, name: 'Taller 5'},
   ];
 
+  workshop$: Observable<WorkShopList[]>;
+
+
   @ViewChild("fileInput2", { read: ElementRef }) fileButton: ElementRef;
 
   dataFiles: FileAdditional[] = [];
@@ -81,11 +86,13 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
     private snackbar: MatSnackBar,
     private authService: AuthService,
     private qualityService: QualityService,
-    private storage: AngularFireStorage
+    private storage: AngularFireStorage,
+    private dialog: MatDialog
   ) {}
 
 
   ngOnInit(): void {
+    this.initFormInternal();
     this.subscription.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
       .subscribe(res => {
         if (res.matches) {
@@ -105,7 +112,26 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
     this.pathStorageDetail = `quality/detail/pictures`;
     this.pathStorageFile = `quality/files`;
 
-    this.initFormInternal();
+    this.workshop$ = combineLatest(
+      this.internalForm.get('workShop').valueChanges.pipe(
+        startWith(''),
+        map((name) => (name ? name : ''))
+      ),
+      this.qualityService.getAllWorkshopList()
+    ).pipe(
+      map(([formValue, miningOperation]) => {
+        const filter = miningOperation.filter((el) =>
+          formValue
+            ? el.name.toLowerCase().includes(formValue.toLowerCase())
+            : true
+        );
+        if (!(filter.length === 1) && formValue.length) {
+          this.internalForm.get('workShop').setErrors({ invalid: true });
+        }
+
+        return filter;
+      })
+    );
   }
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
@@ -303,6 +329,12 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
       this.loading.next(false);
     }
 
+  }
+  onAddWorkshop(): void {
+    this.dialog.open(AddWorkshopComponent, {
+      maxWidth: 500,
+      width: '90vw',
+    });
   }
 
 }

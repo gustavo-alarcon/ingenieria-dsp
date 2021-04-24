@@ -9,6 +9,7 @@ import {
   QualityListResponsibleArea,
   QualityBroadcastList,
   CauseFailureList,
+  WorkShopList,
 } from '../models/quality.model';
 import { User } from '../models/user-model';
 import * as firebase from 'firebase/app';
@@ -546,6 +547,39 @@ export class QualityService {
     return this.afs
       .collection<CauseFailureList>(
         `/db/generalConfig/miningOperationList`,
+        (ref) => ref.orderBy('createdAt', 'asc')
+      )
+      .valueChanges();
+  }
+
+  addWorkshopList(
+    form,
+    user: User
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    // create reference for document in evaluation entries collection
+    const qualityDocRef = this.afs.firestore
+      .collection(`/db/generalConfigQuality/workshopList`)
+      .doc();
+
+    // Structuring the data model
+    const data: any = {
+      id: qualityDocRef.id,
+      name: form.workshop,
+      createdAt: new Date(),
+      createdBy: user,
+    };
+    batch.set(qualityDocRef, data);
+
+    return of(batch);
+  }
+
+  // get all CauseFailureList
+  getAllWorkshopList(): Observable<WorkShopList[]> {
+    return this.afs
+      .collection<WorkShopList>(
+        `/db/generalConfigQuality/workshopList`,
         (ref) => ref.orderBy('createdAt', 'asc')
       )
       .valueChanges();
