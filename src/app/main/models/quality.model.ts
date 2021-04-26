@@ -130,10 +130,9 @@ export interface WorkShopList {
 }
 
 export interface MiningOperation {
-  id?: string;
+  id: number;
   name: string;
   createdAt: Date;
-  createdBy: User;
 }
 export interface FileAdditional {
   name: string;

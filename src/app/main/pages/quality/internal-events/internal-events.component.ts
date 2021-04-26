@@ -125,7 +125,7 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
         startWith(''),
         map((name) => (name ? name : ''))
       ),
-      this.qualityService.getAllComponentsList()
+      this.qualityService.getAllComponentsListInternal()
     ).pipe(
       map(([formValue, components]) => {
         const filter = components.filter((el) =>

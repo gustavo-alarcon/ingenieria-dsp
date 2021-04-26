@@ -15,7 +15,7 @@ import { User } from '../models/user-model';
 import * as firebase from 'firebase/app';
 import { EvaluationsUser } from '../models/evaluations.model';
 import { logging } from 'protractor';
-import { Quality } from '../models/quality.model';
+import { Quality, MiningOperation } from '../models/quality.model';
 
 @Injectable({
   providedIn: 'root',
@@ -527,13 +527,13 @@ export class QualityService {
     const batch = this.afs.firestore.batch();
     // create reference for document in evaluation entries collection
     const qualityDocRef = this.afs.firestore
-      .collection(`/db/generalConfig/miningOperationList`)
+      .collection(`/db/generalConfigQuality/miningOperationList`)
       .doc();
 
     // Structuring the data model
     const data: any = {
       id: qualityDocRef.id,
-      name: form.miningOperation,
+      name: form.name,
       createdAt: new Date(),
       createdBy: user,
     };
@@ -543,14 +543,30 @@ export class QualityService {
   }
 
   // get all CauseFailureList
-  getAllMiningOperationList(): Observable<CauseFailureList[]> {
+  getAllMiningOperationList(): Observable<MiningOperation[]> {
     return this.afs
-      .collection<CauseFailureList>(
-        `/db/generalConfig/miningOperationList`,
+      .collection<MiningOperation>(
+        `/db/generalConfigQuality/miningOperationList`,
         (ref) => ref.orderBy('createdAt', 'asc')
       )
       .valueChanges();
   }
+
+  deleteMiningOperation(
+    entryId,
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    // create reference for document in evaluation entries collection
+    const qualityDocRef = this.afs.firestore.doc(
+      `/db/generalConfigQuality/miningOperationList/${entryId}`
+    );
+
+    batch.delete(qualityDocRef);
+
+    return of(batch);
+  }
+
 
   addWorkshopList(
     form,
@@ -600,7 +616,7 @@ export class QualityService {
     return of(batch);
   }
 
-  addComponentList(
+  addComponentListInternal(
     form,
     user: User
   ): Observable<firebase.default.firestore.WriteBatch> {
@@ -608,7 +624,7 @@ export class QualityService {
     const batch = this.afs.firestore.batch();
     // create reference for document in evaluation entries collection
     const qualityDocRef = this.afs.firestore
-      .collection(`/db/generalConfigQuality/componentList`)
+      .collection(`/db/generalConfigQuality/componentListInternal`)
       .doc();
 
     // Structuring the data model
@@ -623,23 +639,69 @@ export class QualityService {
     return of(batch);
   }
 
-  getAllComponentsList(): Observable<WorkShopList[]> {
+  getAllComponentsListInternal(): Observable<WorkShopList[]> {
     return this.afs
       .collection<WorkShopList>(
-        `/db/generalConfigQuality/componentList`,
+        `/db/generalConfigQuality/componentListInternal`,
         (ref) => ref.orderBy('createdAt', 'asc')
       )
       .valueChanges();
   }
 
-  deleteComponent(
+  deleteComponentInternal(
     entryId,
   ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
     // create reference for document in evaluation entries collection
     const qualityDocRef = this.afs.firestore.doc(
-      `/db/generalConfigQuality/componentList/${entryId}`
+      `/db/generalConfigQuality/componentListInternal/${entryId}`
+    );
+
+    batch.delete(qualityDocRef);
+
+    return of(batch);
+  }
+  addComponentListExternal(
+    form,
+    user: User
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    // create reference for document in evaluation entries collection
+    const qualityDocRef = this.afs.firestore
+      .collection(`/db/generalConfigQuality/componentListExternal`)
+      .doc();
+
+    // Structuring the data model
+    const data: any = {
+      id: qualityDocRef.id,
+      name: form.name,
+      createdAt: new Date(),
+      createdBy: user,
+    };
+    batch.set(qualityDocRef, data);
+
+    return of(batch);
+  }
+
+  getAllComponentsListExternal(): Observable<WorkShopList[]> {
+    return this.afs
+      .collection<WorkShopList>(
+        `/db/generalConfigQuality/componentListExternal`,
+        (ref) => ref.orderBy('createdAt', 'asc')
+      )
+      .valueChanges();
+  }
+
+  deleteComponentExternal(
+    entryId,
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    // create reference for document in evaluation entries collection
+    const qualityDocRef = this.afs.firestore.doc(
+      `/db/generalConfigQuality/componentListExternal/${entryId}`
     );
 
     batch.delete(qualityDocRef);

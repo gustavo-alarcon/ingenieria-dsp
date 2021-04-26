@@ -59,7 +59,7 @@ export class AddComponentComponent implements OnInit {
       })
     );
 
-    this.component$ =  this.qualityService.getAllComponentsList()
+    this.component$ =  this.qualityService.getAllComponentsListInternal()
     .pipe(tap(res => {
       this.dataSource.data = res;
     }
@@ -91,7 +91,7 @@ export class AddComponentComponent implements OnInit {
         return;
       } else {
         this.qualityService
-        .addComponentList(this.form.value, this.user)
+        .addComponentListInternal(this.form.value, this.user)
         .pipe(take(1))
         .subscribe((res) => {
           res.commit().then(() => {
@@ -120,7 +120,7 @@ export class AddComponentComponent implements OnInit {
   deleteItem(id): void{
     try {
       if (id){
-        const resp = this.qualityService.deleteComponent( id );
+        const resp = this.qualityService.deleteComponentInternal( id );
         this.subscription.add(
           resp.subscribe((batch) => {
             if (batch) {

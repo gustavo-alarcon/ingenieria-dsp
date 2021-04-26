@@ -12,6 +12,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { ComponentList, MiningOperation, FileAdditional } from '../../../models/quality.model';
 import { MatDialog } from '@angular/material/dialog';
 import { AddMiningOperationDialogComponent } from './dialogs/add-mining-operation-dialog/add-mining-operation-dialog.component';
+import { AddComponentComponent } from './dialogs/add-component/add-component.component';
 
 @Component({
   selector: 'app-external-events',
@@ -58,10 +59,8 @@ export class ExternalEventsComponent implements OnInit {
   subscriptions = new Subscription();
   isMobile = false;
 
-  componentList: ComponentList[] = [
-  ];
-
   miningOperation$: Observable<MiningOperation[]>;
+  component$: Observable<ComponentList[]>;
 
   dataFiles: FileAdditional[] = [];
 
@@ -104,6 +103,27 @@ export class ExternalEventsComponent implements OnInit {
         );
         if (!(filter.length === 1) && formValue.length) {
           this.externalForm.get('miningOperation').setErrors({ invalid: true });
+        }
+
+        return filter;
+      })
+    );
+
+    this.component$ = combineLatest(
+      this.externalForm.get('component').valueChanges.pipe(
+        startWith(''),
+        map((name) => (name ? name : ''))
+      ),
+      this.qualityService.getAllComponentsListExternal()
+    ).pipe(
+      map(([formValue, components]) => {
+        const filter = components.filter((el) =>
+          formValue
+            ? el.name.toLowerCase().includes(formValue.toLowerCase())
+            : true
+        );
+        if (!(filter.length === 1) && formValue.length) {
+          this.externalForm.get('component').setErrors({ invalid: true });
         }
 
         return filter;
@@ -342,6 +362,13 @@ export class ExternalEventsComponent implements OnInit {
       this.loading.next(false);
     }
 
+  }
+
+  onAddComponent(): void {
+    this.dialog.open(AddComponentComponent, {
+      maxWidth: 500,
+      width: '90vw',
+    });
   }
 
 
