@@ -67,10 +67,10 @@ export class QualityService {
       eventType: 'Interno', //Interno , Externo
       fileAdditional: dataFile,
       workOrder: form.workdOrden,
-      component: form.component.name,
+      component: form.component,
       specialist: null,
       partNumber: form.nPart,
-      workShop: form.workShop.name,
+      workShop: form.workShop,
       enventDetail: form.eventDetail,
       packageNumber: null,
       componentHourMeter: null,
@@ -141,7 +141,7 @@ export class QualityService {
       fileAdditional: dataFiles,
       eventType: 'Externo', //Interno , Externo
       workOrder: form.workdOrden,
-      component: form.component.name,
+      component: form.component,
       specialist: null,
       partNumber: form.nPart,
       workShop: null,
@@ -491,13 +491,13 @@ export class QualityService {
     const batch = this.afs.firestore.batch();
     // create reference for document in evaluation entries collection
     const qualityDocRef = this.afs.firestore
-      .collection(`/db/generalConfig/qualityCauseFailureList`)
+      .collection(`/db/generalConfigQuality/causeFailureList`)
       .doc();
 
     // Structuring the data model
     const data: any = {
       id: qualityDocRef.id,
-      name: form.causeFailure,
+      name: form.name,
       createdAt: new Date(),
       createdBy: user,
     };
@@ -509,11 +509,27 @@ export class QualityService {
   getAllCauseFailureList(): Observable<CauseFailureList[]> {
     return this.afs
       .collection<CauseFailureList>(
-        `/db/generalConfig/qualityCauseFailureList`,
+        `/db/generalConfigQuality/causeFailureList`,
         (ref) => ref.orderBy('createdAt', 'asc')
       )
       .valueChanges();
   }
+
+  deleteCauseFailure(
+    entryId,
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    // create reference for document in evaluation entries collection
+    const qualityDocRef = this.afs.firestore.doc(
+      `/db/generalConfigQuality/causeFailureList/${entryId}`
+    );
+
+    batch.delete(qualityDocRef);
+
+    return of(batch);
+  }
+
   /**
    * add the name addCauseFailureList
    * @param {string} form - name CauseFailureList
@@ -721,13 +737,13 @@ export class QualityService {
     const batch = this.afs.firestore.batch();
     // create reference for document in evaluation entries collection
     const qualityDocRef = this.afs.firestore
-      .collection(`/db/generalConfig/qualityProcessList`)
+      .collection(`/db/generalConfigQuality/processList`)
       .doc();
 
     // Structuring the data model
     const data: any = {
       id: qualityDocRef.id,
-      name: form.process,
+      name: form.name,
       createdAt: new Date(),
       createdBy: user,
     };
@@ -739,10 +755,25 @@ export class QualityService {
   getAllProcessList(): Observable<CauseFailureList[]> {
     return this.afs
       .collection<CauseFailureList>(
-        `/db/generalConfig/qualityProcessList`,
+        `/db/generalConfigQuality/processList`,
         (ref) => ref.orderBy('createdAt', 'asc')
       )
       .valueChanges();
+  }
+
+  deleteProcess(
+    entryId,
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    // create reference for document in evaluation entries collection
+    const qualityDocRef = this.afs.firestore.doc(
+      `/db/generalConfigQuality/processList/${entryId}`
+    );
+
+    batch.delete(qualityDocRef);
+
+    return of(batch);
   }
 
   /**
