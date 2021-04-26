@@ -60,7 +60,7 @@
                             matInput />
                         <mat-autocomplete autoActiveFirstOption #causeFailureAutocomplete="matAutocomplete">
                             <mat-option (click)="onAddCauseFailure()" [value]="">
-                            <mat-icon>add_circle_outline</mat-icon>Añadir
+                            <mat-icon>add_circle_outline</mat-icon>Añadir/Eliminar
                             </mat-option>
                             <mat-option *ngFor="let causeFailure of causeFailuries" [value]="causeFailure.name">
                             {{ causeFailure.name }}
@@ -84,7 +84,7 @@
                             matInput />
                         <mat-autocomplete autoActiveFirstOption #processAutocomplete="matAutocomplete">
                             <mat-option (click)="onAddProcess()" [value]="">
-                            <mat-icon>add_circle_outline</mat-icon>Añadir
+                            <mat-icon>add_circle_outline</mat-icon>Añadir/Eliminar
                             </mat-option>
                             <mat-option *ngFor="let item of process" [value]="item.name">
                             {{ item.name }}

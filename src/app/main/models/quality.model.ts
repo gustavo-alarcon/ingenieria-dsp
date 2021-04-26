@@ -119,19 +119,20 @@ export interface FrequencyList {
   name: string;
 }
 export interface ComponentList {
-  code: number;
+  id: number;
   name: string;
+  createdAt: Date;
 }
 export interface WorkShopList {
-  code: number;
+  id: number;
   name: string;
+  createdAt: Date;
 }
 
 export interface MiningOperation {
-  id?: string;
+  id: number;
   name: string;
   createdAt: Date;
-  createdBy: User;
 }
 export interface FileAdditional {
   name: string;
