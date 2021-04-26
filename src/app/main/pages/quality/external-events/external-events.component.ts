@@ -59,11 +59,6 @@ export class ExternalEventsComponent implements OnInit {
   isMobile = false;
 
   componentList: ComponentList[] = [
-    { code: 1, name: 'Componente 1' },
-    { code: 2, name: 'Componente 2'},
-    { code: 3, name: 'Componente 3'},
-    { code: 4, name: 'Componente 4'},
-    { code: 5, name: 'Componente 5'},
   ];
 
   miningOperation$: Observable<MiningOperation[]>;

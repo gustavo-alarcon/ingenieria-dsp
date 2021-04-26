@@ -566,7 +566,7 @@ export class QualityService {
     // Structuring the data model
     const data: any = {
       id: qualityDocRef.id,
-      name: form.workshop,
+      name: form.name,
       createdAt: new Date(),
       createdBy: user,
     };
@@ -583,6 +583,68 @@ export class QualityService {
         (ref) => ref.orderBy('createdAt', 'asc')
       )
       .valueChanges();
+  }
+
+  deleteWorshop(
+    entryId,
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    // create reference for document in evaluation entries collection
+    const qualityDocRef = this.afs.firestore.doc(
+      `/db/generalConfigQuality/workshopList/${entryId}`
+    );
+
+    batch.delete(qualityDocRef);
+
+    return of(batch);
+  }
+
+  addComponentList(
+    form,
+    user: User
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    // create reference for document in evaluation entries collection
+    const qualityDocRef = this.afs.firestore
+      .collection(`/db/generalConfigQuality/componentList`)
+      .doc();
+
+    // Structuring the data model
+    const data: any = {
+      id: qualityDocRef.id,
+      name: form.name,
+      createdAt: new Date(),
+      createdBy: user,
+    };
+    batch.set(qualityDocRef, data);
+
+    return of(batch);
+  }
+
+  getAllComponentsList(): Observable<WorkShopList[]> {
+    return this.afs
+      .collection<WorkShopList>(
+        `/db/generalConfigQuality/componentList`,
+        (ref) => ref.orderBy('createdAt', 'asc')
+      )
+      .valueChanges();
+  }
+
+  deleteComponent(
+    entryId,
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    // create reference for document in evaluation entries collection
+    const qualityDocRef = this.afs.firestore.doc(
+      `/db/generalConfigQuality/componentList/${entryId}`
+    );
+
+    batch.delete(qualityDocRef);
+
+    return of(batch);
   }
   /**
    * add the name ProcessList
