@@ -23,7 +23,7 @@ export class DetailExternalDialogComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: Quality,
-    public dialogRef: MatDialogRef<DetailExternalDialogComponent>,  
+    public dialogRef: MatDialogRef<DetailExternalDialogComponent>,
   ) { }
 
   ngOnInit(): void {
@@ -36,7 +36,7 @@ export class DetailExternalDialogComponent implements OnInit {
 
   initForm(): void{
     this.detailFormGroup = this.fb.group({
-      specialist: [this.data.specialist, Validators.required],
+      specialist: [this.data.specialist['name'], Validators.required],
       question1: [this.data.question1, Validators.required],
       question2: [this.data.question2, Validators.required],
       question3: [this.data.question3, Validators.required],

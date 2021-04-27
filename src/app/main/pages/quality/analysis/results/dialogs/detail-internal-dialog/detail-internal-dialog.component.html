@@ -1,5 +1,3 @@
-
-
 <div>
     <div class="ms-dialog-header">
         <mat-icon class="ms-dialog-header__icon">visibility</mat-icon>
@@ -11,26 +9,39 @@
     </div>
     <mat-divider></mat-divider>
 
-    <mat-dialog-content style="margin-top: 20px;" >
-    <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+    <mat-dialog-content style="margin-top: 20px;">
+        <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
         <div>
             <form [formGroup]="detailFormGroup" class="timer-container">
                 <p><span style="font-weight: bold;"> OT actual :</span> {{data.workOrder ? data.workOrder : ''}}</p>
-                <p><span style="font-weight: bold;"> Número de parte :</span> {{data.partNumber ? data.partNumber : ''}}</p>
+                <p><span style="font-weight: bold;"> Número de parte :</span> {{data.partNumber ? data.partNumber : ''}}
+                </p>
                 <p><span style="font-weight: bold;"> Taller:</span> {{data.workShop ? data.workShop : ''}}</p>
                 <p><span style="font-weight: bold;"> Tipo de evento :</span> {{data.eventType? data.eventType : ''}}</p>
                 <p><span style="font-weight: bold;"> Fecha :</span>
                     {{data.createdAt ? ((data.createdAt['seconds'] * 1000) | date : 'dd/MM/yy - hh:mm:ss'): ''}}
-                    </p>
+                </p>
 
                 <mat-form-field appearance="outline" id="result" class="timer-container__input">
                     <mat-label>Detalle de evento</mat-label>
-                      <input  matInput type="text" placeholder="Detalle de evento" formControlName="enventDetail"  readonly                     
-                      >  
-                </mat-form-field>              
-                <br>
-                <h3>Imagen general</h3>              
-                <div class="container-image" >
+                    <input matInput type="text" placeholder="Detalle de evento" formControlName="enventDetail" readonly>
+                </mat-form-field>
+
+
+                <p class="corrective-actions__title">Análisis</p>
+                <div style="margin-left: 8px">
+                    <p><span style="font-weight: bold; color: grey"> Calidad:</span> {{data.analysisQuality ?
+                        data.analysisQuality :
+                        '-'}}</p>
+                    <p><span style="font-weight: bold; color: grey"> Costo:</span> {{data.analysisCost ?
+                        data.analysisCost : '-'}}
+                    </p>
+                    <p><span style="font-weight: bold; color: grey"> Frecuencia:</span> {{data.analysisFrequency ?
+                        data.analysisFrequency : '-'}}</p>
+                </div>
+
+                <p class="corrective-actions__title">Imagen general</p>
+                <div class="container-image">
                     <picture *ngFor="let item of imagesGeneral; index as i">
                         <a [href]="item" target="_blank" style="cursor: zoom-in">
                             <img [src]="item" alt="" class="container-image__img">
@@ -38,31 +49,31 @@
                     </picture>
                 </div>
 
-                <h3>Imagen detalle</h3>
-                <div class="container-image" >
-                    <picture  *ngFor="let item of imagesDetail; index as i">
+                <p class="corrective-actions__title">Imagen detalle</p>
+                <div class="container-image">
+                    <picture *ngFor="let item of imagesDetail; index as i">
                         <a [href]="item" target="_blank" style="cursor: zoom-in">
-                            <img [src]="item" alt="" class="container-image__img" >
+                            <img [src]="item" alt="" class="container-image__img">
                         </a>
                     </picture>
                 </div>
 
-                <h3>Archivo adicional</h3>
+                <p class="corrective-actions__title">Archivo adicional</p>
                 <div class="container-file">
-                    <div *ngIf="this.data.fileAdditional; else nofile" >
-                        <div *ngFor="let item of this.data.fileAdditional" >
+                    <div *ngIf="this.data.fileAdditional; else nofile">
+                        <div *ngFor="let item of this.data.fileAdditional">
                             <mat-icon>insert_drive_file</mat-icon>
-                            <a [href]="item.url" class="container-file__name" >
+                            <a [href]="item.url" class="container-file__name">
                                 {{item.name}}
                             </a>
                         </div>
                     </div>
-                    <ng-template  #nofile>
+                    <ng-template #nofile>
                         <mat-icon>insert_drive_file</mat-icon>
                         No tiene archivos
-                    </ng-template>                    
+                    </ng-template>
                 </div>
-                                
+
             </form>
         </div>
 
