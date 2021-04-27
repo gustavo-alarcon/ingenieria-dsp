@@ -66,9 +66,17 @@
                 </mat-form-field>
 
                 <h3 class="corrective-actions__title">Análisis</h3>
-                <p><span style="font-weight: bold;"> Calidad:</span> {{data.analysisQuality ? data.analysisQuality : '-'}}</p>
-                <p><span style="font-weight: bold;"> Costo:</span> {{data.analysisCost ? data.analysisCost : '-'}}</p>
-                <p><span style="font-weight: bold;"> Frecuencia:</span> {{data.analysisFrequency ? data.analysisFrequency : '-'}}</p>
+                <div style="margin-left: 8px">
+                    <p><span style="font-weight: bold; color: grey"> Calidad:</span> {{data.analysisQuality ?
+                        data.analysisQuality :
+                        '-'}}</p>
+                    <p><span style="font-weight: bold; color: grey"> Costo:</span> {{data.analysisCost ?
+                        data.analysisCost : '-'}}
+                    </p>
+                    <p><span style="font-weight: bold; color: grey"> Frecuencia:</span> {{data.analysisFrequency ?
+                        data.analysisFrequency : '-'}}</p>
+                </div>
+
 
 
                 <p class="corrective-actions__title">Imágenes generales</p>
