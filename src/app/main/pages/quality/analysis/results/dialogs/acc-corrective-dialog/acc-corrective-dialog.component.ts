@@ -24,6 +24,7 @@ export class AccCorrectiveDialogComponent implements OnInit {
     'state',
     'dateEnd',
     'user',
+    'evidence',
   ];
   @ViewChild('settingsPaginator', { static: false }) set content(
     paginator: MatPaginator

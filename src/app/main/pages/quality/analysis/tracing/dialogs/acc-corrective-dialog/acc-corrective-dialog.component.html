@@ -14,11 +14,11 @@
             <div class="container__details">
                 <p><span style="font-weight: bold;"> OT Actual :</span> {{data.workOrder ? data.workOrder : ''}}</p>
                 <p><span style="font-weight: bold;"> Componente :</span> {{data.component ? data.component : ''}}</p>
-                <p><span style="font-weight: bold;"> Número de paqueteo :</span> {{data.packageNumber ? data.packageNumber : ''}}</p>
-                <p><span style="font-weight: bold;"> Horómetro de componente :</span> {{data.componentHourMeter ? data.componentHourMeter : ''}}</p>
+                <p *ngIf="data.packageNumber"><span style="font-weight: bold;"> Número de paqueteo :</span> {{data.packageNumber ? data.packageNumber : ''}}</p>
+                <p *ngIf="data.componentHourMeter"><span  style="font-weight: bold;"> Horómetro de componente :</span> {{data.componentHourMeter ? data.componentHourMeter : ''}}</p>
                 <p><span style="font-weight: bold;"> Número de parte :</span> {{data.partNumber ? data.partNumber : ''}}</p>
                 <p><span style="font-weight: bold;"> Tipo de evento :</span> {{data.eventType ? data.eventType : ''}} </p>
-                <p><span style="font-weight: bold;"> Operacion minera :</span> {{data.miningOperation ? data.miningOperation : ''}} </p>
+                <p *ngIf="data.miningOperation"><span style="font-weight: bold;"> Operacion minera :</span> {{data.miningOperation ? data.miningOperation : ''}} </p>
                 <p><span style="font-weight: bold;"> Fecha :</span>
                     {{data.createdAt ? ((data.createdAt['seconds'] * 1000) | date : 'dd/MM/yy - hh:mm:ss'): ''}}
                 </p>
@@ -44,7 +44,7 @@
 
                     <mat-form-field appearance="outline"   class="container__form--input2">
                         <mat-label>Area responsable</mat-label>
-                        <input matInput placeholder="Escribe..." readonly name="name"  [(ngModel)]="item.name.name">
+                        <input matInput placeholder="Escribe..." readonly name="name"  [(ngModel)]="item.name">
                        <!--  <mat-error *ngIf="listAreaForm.get('name').errors">
                             Campo <strong>requerido.</strong>
                         </mat-error> -->
