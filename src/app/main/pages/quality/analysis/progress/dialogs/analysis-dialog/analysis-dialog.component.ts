@@ -76,58 +76,6 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
 
   date = new Date();
 
-  qualityList: QualityList[] = [
-    {
-      code: 1,
-      name:
-        'Defecto tolerable que no altera la calidad ni la confiabilidad del produccto',
-    },
-    {
-      code: 2,
-      name:
-        'Defectos menores que son detectables y facilmente corregibles.(Trabajos de habilidad, ajustes)',
-    },
-    {
-      code: 3,
-      name:
-        'Defectos que requieren algun metodo de reconstrucción para poder usar.',
-    },
-    {
-      code: 4,
-      name:
-        'Defectos mayores que incumplen con los criterios de calidad del taller y expectativas del cliente',
-    },
-    {
-      code: 5,
-      name:
-        'Defectos que inhabilitan el uso de la pieza o de reconstruirla de forma definitiva',
-    },
-  ];
-
-  costList: CostList[] = [
-    { code: 1, name: 'Las pérdidas materiales son menores de $100.       ' },
-    { code: 2, name: 'Las pérdidas materiales fluctúan entre $101 y $1000.' },
-    { code: 3, name: 'Las pérdidas materiales fluctúan entre $1001 y $7000.' },
-    {
-      code: 4,
-      name: 'Las pérdidas materiales fluctúan entre $7001 y $30,000.',
-    },
-    { code: 5, name: 'Las pérdidas materiales fluctúan entre $30,001 a más.' },
-  ];
-
-  frequencyList: FrequencyList[] = [
-    { code: 1, name: 'Ha ocurrido en el ultimo año | Rara vez ' },
-    {
-      code: 2,
-      name: 'Ha ocurrido en el área en el ultimo semestre | Ocasional ',
-    },
-    {
-      code: 3,
-      name: 'Ha ocurrido en el área en el ultimos 03 meses | Poco probable',
-    },
-    { code: 4, name: 'Ha ocurrido en el área en el ultimos mes | Probable ' },
-    { code: 5, name: 'Ha ocurrido en el área esta semana | Muy probable ' },
-  ];
 
   resultEvaluation$: Observable<any>;
   areaResponsable$: Observable<any[]>;
@@ -206,36 +154,6 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
       })
     );
 
-    this.resultEvaluation$ = combineLatest(
-      this.analysisForm.get('quality').valueChanges.pipe(),
-      this.analysisForm.get('cost').valueChanges.pipe(),
-      this.analysisForm.get('frequency').valueChanges.pipe()
-    ).pipe(
-      map(([formQuality, formCost, formFrequency]) => {
-        const codeQuality = formQuality;
-        const codeCost = formCost;
-        const codeFrecuency = formFrequency;
-
-        let result: number;
-        let roundResult: number;
-        result = ((codeQuality + codeCost) / 2) * codeFrecuency;
-        roundResult = Math.round(result);
-        this.resultAnalysis = roundResult;
-
-        if (0 < roundResult && roundResult < 5) {
-          this.evaluationName = 'Menor';
-        } else if (4 < roundResult && roundResult < 10) {
-          this.evaluationName = 'Moderado';
-        } else if (9 < roundResult && roundResult < 20) {
-          this.evaluationName = 'Significativo';
-        } else if (19 < roundResult && roundResult < 26) {
-          this.evaluationName = 'Alto';
-        }
-
-        return roundResult;
-      })
-    );
-
     this.areaResponsable$ = this.qualityService
       .getAllQualityListResponsibleAreas()
       .pipe(
@@ -252,9 +170,6 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
       this.analysisForm = this.fb.group({
         causeFailure: this.data.analysis['causeFailure'],
         process: this.data.analysis['process'],
-        quality: this.data.analysis['quality'],
-        cost: this.data.analysis['cost'],
-        frequency: this.data.analysis['frequency'],
       });
 
       this.listAreaForm = this.fb.group({
@@ -280,9 +195,6 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
       this.analysisForm = this.fb.group({
         causeFailure: ['', Validators.required],
         process: ['', Validators.required],
-        quality: ['', Validators.required],
-        cost: ['', Validators.required],
-        frequency: ['', Validators.required],
       });
 
       this.listAreaForm = this.fb.group({
@@ -508,7 +420,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
 
     this.broadcastControl.setValue(null);
   }
-  
+
   selectedBroadcast(event: MatAutocompleteSelectedEvent): void {
     event.option.value.emailList.map((el) => {
       this.emailArray.push(el);

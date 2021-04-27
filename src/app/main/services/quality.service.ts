@@ -443,13 +443,17 @@ export class QualityService {
     return of(batch);
   }
 
-  updateQualitySpecialist(
+  saveQualitySpecialist(
     quality: Quality,
-    nameSpecialist: string,
+    form,
     emailList,
-    status: string
+    status: string,
+    resultAnalysis,
+    evaluationName
   ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
+    console.log(' resultAnalysis: ',  resultAnalysis)
+    console.log('    evaluationName:', evaluationName)
     const batch = this.afs.firestore.batch();
     // create reference for document in evaluation entries collection
 
@@ -461,7 +465,12 @@ export class QualityService {
       registryTimeElapsed: quality.registryTimeElapsed,
       registryPercentageElapsed: quality.registryPercentageElapsed,
       processAt: new Date(),
-      specialist: nameSpecialist,
+      specialist: form.specialist,
+      analysisQuality: form.quality.name,
+      analysisCost: form.cost.name,
+      analysisFrequency: form.frequency.name,
+      evaluationAnalisis: resultAnalysis,
+      evaluationAnalysisName: evaluationName,
       state: status,
     }
 

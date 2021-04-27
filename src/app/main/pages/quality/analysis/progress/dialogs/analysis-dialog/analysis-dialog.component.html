@@ -29,18 +29,19 @@
             <mat-vertical-stepper [linear]="isLinear" #stepper>
                 <mat-step [stepControl]="firstFormGroup">
                     <form [formGroup]="analysisForm" autocomplete="off" class="container__form">
+                    
                     <ng-template matStepLabel >
                         <div class="container__result" >
-                            <span  class="step-text" style="margin-top: 10px;" > Análisis </span>
-                            <span *ngIf="resultEvaluation$  | async as result " 
-                            [ngClass]="{
-                                         'btn-result-1':   result > 0 &&  result < 5
-                                        ,'btn-result-2':   result > 4 &&  result < 10
-                                        ,'btn-result-3':   result > 9 &&  result < 20
-                                        ,'btn-result-4':   result > 19 && result < 26
-                                        }"
-                            > [ {{result}} ]
-                           </span>
+                          <span  class="step-text" style="margin-top: 10px;" > Análisis </span>
+                            <!--   <span *ngIf="resultEvaluation$  | async as result " 
+                                [ngClass]="{
+                                            'btn-result-1':   result > 0 &&  result < 5
+                                            ,'btn-result-2':   result > 4 &&  result < 10
+                                            ,'btn-result-3':   result > 9 &&  result < 20
+                                            ,'btn-result-4':   result > 19 && result < 26
+                                            }"
+                                > [ {{result}} ]
+                            </span> -->
                            <span *ngIf="data.evaluationAnalisis" 
                            [ngClass]="{
                                         'btn-result-1':   data.evaluationAnalisis > 0 && data.evaluationAnalisis < 5
@@ -51,7 +52,7 @@
                            > [ {{data.evaluationAnalisis}} ]
                           </span>
                         </div>
-                    </ng-template>                   
+                    </ng-template>  
 
                     <mat-form-field *ngIf="causeFailure$ | async as causeFailuries"  class="container__form--input"
                         appearance="outline">
@@ -101,67 +102,12 @@
                         </mat-error>
                     </mat-form-field>
 
-                    <br> 
-
-                    <mat-form-field  appearance="outline" id="result"  class="container__form--input">
-                        <mat-label>Calidad</mat-label>
-                        <mat-select formControlName="quality">
-                            <mat-option  *ngFor="let item of qualityList" [value]="item.code"><span
-                                style="color: #8f8a8a;">({{item.code}})</span> {{item.name}} 
-                                </mat-option>
-                        </mat-select>
-                        <mat-hint *ngIf="!(qualityList)">
-                            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-                            <p>Cargando lista ...</p>
-                        </mat-hint>
-    
-                        <mat-error *ngIf="analysisForm.controls['quality'].errors">
-                            Campo <strong>requerido.</strong>
-                        </mat-error>
-                    </mat-form-field> 
-
-                    <br> 
-
-                    <mat-form-field appearance="outline" id="result"  class="container__form--input">
-                        <mat-label>Costo</mat-label>
-                        <mat-select formControlName="cost">
-                            <mat-option *ngFor="let item of costList" [value]="item.code"><span
-                                style="color: #8f8a8a;">({{item.code}})</span> {{item.name}} 
-                                </mat-option>
-                        </mat-select>
-                        <mat-hint *ngIf="!(costList)">
-                            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-                            <p>Cargando lista ...</p>
-                        </mat-hint>
-    
-                        <mat-error *ngIf="analysisForm.controls['cost'].errors">
-                            Campo <strong>requerido.</strong>
-                        </mat-error>
-                    </mat-form-field> 
-
-                    <br> 
-
-                    <mat-form-field appearance="outline" id="result"  class="container__form--input">
-                        <mat-label>Frecuencia</mat-label>
-                        <mat-select formControlName="frequency">
-                            <mat-option *ngFor="let item of frequencyList" [value]="item.code"><span
-                                style="color: #8f8a8a;">({{item.code}})</span> {{item.name}} 
-                                </mat-option>
-                        </mat-select>
-                        <mat-hint *ngIf="!(frequencyList)">
-                            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-                            <p>Cargando lista ...</p>
-                        </mat-hint>
-    
-                        <mat-error *ngIf="analysisForm.controls['frequency'].errors">
-                            Campo <strong>requerido.</strong>
-                        </mat-error>
-                    </mat-form-field>                    
-                    <br>                    
+                    <br>                              
     
                 </form>
     
                 </mat-step>
+
                 <mat-step [stepControl]="secondFormGroup">
                 
                   <form class="form-corrective" [formGroup]="listAreaForm" autocomplete="off">               

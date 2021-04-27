@@ -35,6 +35,57 @@
                       </mat-error>
                 </mat-form-field>
 
+                <mat-form-field  appearance="outline" id="result"   style="margin-bottom: 8px; display: block">
+                    <mat-label>Calidad</mat-label>
+                    <mat-select formControlName="quality">
+                        <mat-option  *ngFor="let item of qualityList" [value]="item"><span
+                            style="color: #8f8a8a;">({{item.code}})</span> {{item.name}} 
+                            </mat-option>
+                    </mat-select>
+                    <mat-hint *ngIf="!(qualityList)">
+                        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                        <p>Cargando lista ...</p>
+                    </mat-hint>
+
+                    <mat-error *ngIf="specialistForm.controls['quality'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field> 
+
+                <mat-form-field appearance="outline" id="result"   style="margin-bottom: 8px; display: block">
+                    <mat-label>Costo</mat-label>
+                    <mat-select formControlName="cost">
+                        <mat-option *ngFor="let item of costList" [value]="item"><span
+                            style="color: #8f8a8a;">({{item.code}})</span> {{item.name}} 
+                            </mat-option>
+                    </mat-select>
+                    <mat-hint *ngIf="!(costList)">
+                        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                        <p>Cargando lista ...</p>
+                    </mat-hint>
+
+                    <mat-error *ngIf="specialistForm.controls['cost'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field> 
+
+                <mat-form-field appearance="outline" id="result"   style="margin-bottom: 8px; display: block">
+                    <mat-label>Frecuencia</mat-label>
+                    <mat-select formControlName="frequency">
+                        <mat-option *ngFor="let item of frequencyList" [value]="item"><span
+                            style="color: #8f8a8a;">({{item.code}})</span> {{item.name}} 
+                            </mat-option>
+                    </mat-select>
+                    <mat-hint *ngIf="!(frequencyList)">
+                        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                        <p>Cargando lista ...</p>
+                    </mat-hint>
+
+                    <mat-error *ngIf="specialistForm.controls['frequency'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>                    
+
                 <mat-form-field *ngIf="filteredBroadcast$ | async as broadcasts" appearance="outline" id="result" class="timer-container__input">                     
                     <mat-label>Enviar a</mat-label>
                     <mat-chip-list #chipList aria-label="Fruit selection">
@@ -63,6 +114,11 @@
                 </mat-form-field>
                 
                 <br>
+
+                <span *ngIf="resultEvaluation$  | async as result " >
+
+                </span>
+
             </form>
         </div>
 

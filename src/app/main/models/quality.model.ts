@@ -31,6 +31,9 @@ export interface Quality {
   attentionTimeElapsed?: QualityTimer;
   //finalizedAt?: Date;
   //finalizedBy: User;
+  analysisQuality: string;
+  analysisCost: string;
+  analysisFrequency: string;
   evaluationAnalisisName?: string;
   fileAdditional?: FileAdditional;
   taskDone?: number;
