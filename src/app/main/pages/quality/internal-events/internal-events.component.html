@@ -12,22 +12,29 @@
             <h3 class="title-form">Información del evento</h3>
             <form [formGroup]="internalForm" autocomplete="off" class="container-form">
                 <div class="container-form__work">
-
-                    <mat-form-field appearance="outline" id="result"  class="container-form__work__input"
-                    [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
+                                        
+                    <mat-form-field *ngIf="workshop$ | async as workshops"  class="container-form__work__input"
+                        [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'"
+                        appearance="outline">
                         <mat-label>Taller</mat-label>
-                        <mat-select formControlName="workShop">
-                            <mat-option *ngFor="let item of workShopList" [value]="item">
-                                {{item.name}} 
+                        <input autocomplete="off" formControlName="workShop" [matAutocomplete]="autocomplete" type="text"
+                            matInput />
+                        <mat-autocomplete multiple  autoActiveFirstOption #autocomplete="matAutocomplete">
+                            <mat-option (click)="onAddWorkshop()" [value]="">
+                            <mat-icon>add_circle_outline</mat-icon>Añadir/Eliminar
                             </mat-option>
-                        </mat-select>
-                        <mat-hint *ngIf="!(componentList)">
+                            <mat-option  *ngFor="let item of workshops" [value]="item.name">
+                            {{ item.name }}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <mat-hint *ngIf="!(workshop$ | async)">
                             <mat-progress-bar mode="indeterminate"></mat-progress-bar>
                             <p>Cargando lista ...</p>
                         </mat-hint>
-    
-                        <mat-error *ngIf="internalForm.controls['workShop'].errors">
-                            Campo <strong>requerido.</strong>
+                        <mat-error>
+                            <span *ngIf="internalForm.get('workShop').errors?.required">Por favor, complete el campo.</span>
+                            <span *ngIf="internalForm.get('workShop').errors?.invalid">Dato inválido. Complete con alguna opción
+                            válida.</span>
                         </mat-error>
                     </mat-form-field>
 
@@ -38,23 +45,30 @@
                         <mat-error *ngIf="internalForm.controls['workdOrden'].errors">
                             Campo <strong>requerido.</strong>
                         </mat-error>
-                    </mat-form-field>
+                    </mat-form-field>   
 
-                    <mat-form-field appearance="outline" id="result"  class="container-form__work__input"
-                    [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
+                    <mat-form-field *ngIf="component$ | async as components"  class="container-form__work__input"
+                        [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'"
+                        appearance="outline">
                         <mat-label>Componente</mat-label>
-                        <mat-select formControlName="component">
-                            <mat-option *ngFor="let item of componentList" [value]="item">
-                                {{item.name}} 
+                        <input autocomplete="off" formControlName="component" [matAutocomplete]="autocomplete" type="text"
+                            matInput />
+                        <mat-autocomplete multiple  autoActiveFirstOption #autocomplete="matAutocomplete">
+                            <mat-option (click)="onAddComponent()" [value]="">
+                            <mat-icon>add_circle_outline</mat-icon>Añadir/Eliminar
                             </mat-option>
-                        </mat-select>
-                        <mat-hint *ngIf="!(componentList)">
+                            <mat-option  *ngFor="let item of components" [value]="item.name">
+                            {{ item.name }}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <mat-hint *ngIf="!(component$ | async)">
                             <mat-progress-bar mode="indeterminate"></mat-progress-bar>
                             <p>Cargando lista ...</p>
                         </mat-hint>
-    
-                        <mat-error *ngIf="internalForm.controls['component'].errors">
-                            Campo <strong>requerido.</strong>
+                        <mat-error>
+                            <span *ngIf="internalForm.get('component').errors?.required">Por favor, complete el campo.</span>
+                            <span *ngIf="internalForm.get('component').errors?.invalid">Dato inválido. Complete con alguna opción
+                            válida.</span>
                         </mat-error>
                     </mat-form-field>
 

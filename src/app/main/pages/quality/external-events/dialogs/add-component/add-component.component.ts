@@ -1,22 +1,23 @@
-import { User } from 'src/app/main/models/user-model';
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { BehaviorSubject, Subscription, Observable } from 'rxjs';
-import { take, tap } from 'rxjs/operators';
-import { AuthService } from 'src/app/auth/services/auth.service';
-import { QualityService } from 'src/app/main/services/quality.service';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { CauseFailureList } from '../../../../../../models/quality.model';
+import { ComponentList } from '../../../../../models/quality.model';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { QualityService } from '../../../../../services/quality.service';
+import { AuthService } from '../../../../../../auth/services/auth.service';
+import { MatDialog } from '@angular/material/dialog';
+import { User } from '../../../../../models/user-model';
+import { tap, take } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-cause-failure-dialog',
-  templateUrl: './cause-failure-dialog.component.html',
-  styleUrls: ['./cause-failure-dialog.component.scss']
+  selector: 'app-add-component',
+  templateUrl: './add-component.component.html',
+  styleUrls: ['./add-component.component.scss']
 })
-export class CauseFailureDialogComponent implements OnInit, OnDestroy {
+export class AddComponentComponent implements OnInit {
+
   form: FormGroup;
 
   loading = new BehaviorSubject<boolean>(false);
@@ -26,7 +27,7 @@ export class CauseFailureDialogComponent implements OnInit, OnDestroy {
 
   subscription = new Subscription();
 
-  dataSource = new MatTableDataSource<CauseFailureList>();
+  dataSource = new MatTableDataSource<ComponentList>();
   displayedColumns: string[] = [
     'component',
     'date',
@@ -39,7 +40,7 @@ export class CauseFailureDialogComponent implements OnInit, OnDestroy {
     this.dataSource.paginator = paginator;
   }
 
-  causeFailure$: Observable<CauseFailureList[]>;
+  component$: Observable<ComponentList[]>;
 
   constructor(
         private snackbar: MatSnackBar,
@@ -58,7 +59,7 @@ export class CauseFailureDialogComponent implements OnInit, OnDestroy {
       })
     );
 
-    this.causeFailure$ =  this.qualityService.getAllCauseFailureList()
+    this.component$ =  this.qualityService.getAllComponentsListExternal()
     .pipe(tap(res => {
       this.dataSource.data = res;
     }
@@ -90,7 +91,7 @@ export class CauseFailureDialogComponent implements OnInit, OnDestroy {
         return;
       } else {
         this.qualityService
-        .addCauseFailureList(this.form.value, this.user)
+        .addComponentListExternal(this.form.value, this.user)
         .pipe(take(1))
         .subscribe((res) => {
           res.commit().then(() => {
@@ -119,7 +120,7 @@ export class CauseFailureDialogComponent implements OnInit, OnDestroy {
   deleteItem(id): void{
     try {
       if (id){
-        const resp = this.qualityService.deleteCauseFailure( id );
+        const resp = this.qualityService.deleteComponentExternal( id );
         this.subscription.add(
           resp.subscribe((batch) => {
             if (batch) {
@@ -148,4 +149,5 @@ export class CauseFailureDialogComponent implements OnInit, OnDestroy {
       this.loading.next(false);
     }
   }
+
 }

@@ -28,7 +28,7 @@
                     {{data.createdAt ? ((data.createdAt['seconds'] * 1000) | date : 'dd/MM/yy - hh:mm:ss'): ''}}
                 </p>
 
-                <ng-container *ngIf="data.correctiveActions">
+                <!-- <ng-container *ngIf="data.correctiveActions">
                     <p class="corrective-actions__title">Acciones correctivas</p>
                     <div *ngFor="let action of data.correctiveActions; let i = index" class="corrective-actions__list">
                         <span class="corrective-actions__index" [ngClass]="{'corrective-actions__index--done' : action.kit}">{{i+1}}</span>
@@ -36,7 +36,7 @@
                         <span class="ms-fill"></span>
                         <span class="corrective-actions__area">{{action.name.name}}</span>
                     </div>
-                </ng-container>
+                </ng-container> -->
                 <br>
 
                 <mat-form-field appearance="outline" id="result" class="timer-container__input">
@@ -64,6 +64,12 @@
                     <mat-label>4. ¿Qué recomendarias para evitar que este problema vuelva a suceder?</mat-label>
                     <input matInput type="text" placeholder="Bahia" formControlName="question4" readonly>
                 </mat-form-field>
+
+                <h3 class="corrective-actions__title">Análisis</h3>
+                <p><span style="font-weight: bold;"> Calidad:</span> {{data.analysisQuality ? data.analysisQuality : '-'}}</p>
+                <p><span style="font-weight: bold;"> Costo:</span> {{data.analysisCost ? data.analysisCost : '-'}}</p>
+                <p><span style="font-weight: bold;"> Frecuencia:</span> {{data.analysisFrequency ? data.analysisFrequency : '-'}}</p>
+
 
                 <p class="corrective-actions__title">Imágenes generales</p>
                 <div class="container-image">

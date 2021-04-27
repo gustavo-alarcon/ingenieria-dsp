@@ -2,7 +2,7 @@
 <div>
     <div class="ms-dialog-header">
         <mat-icon class="ms-dialog-header__icon">add_circle_outline</mat-icon>
-        <h3 class="ms-dialog-header__title">Agregar/Eliminar causante de falla</h3>
+        <h3 class="ms-dialog-header__title">Agregar/Eliminar componente</h3>
         <span class="ms-fill"></span>
         <button mat-icon-button mat-dialog-close>
             <mat-icon>cancel</mat-icon>
@@ -15,7 +15,7 @@
         <div>
             <form [formGroup]="form" class="form">
                 <mat-form-field appearance="outline" class="form__input" >
-                    <mat-label>Causante de falla</mat-label>
+                    <mat-label>Componente</mat-label>
                       <input autocomplete="off" matInput type="text" placeholder=" Escribir..." formControlName="name"                                               
                       >
                     <mat-error *ngIf="form.controls['name'].errors">
@@ -28,7 +28,7 @@
                 </button>
                
             </form>
-            <div class="container-table" *ngIf="causeFailure$ | async ">
+            <div class="container-table" *ngIf="component$ | async ">
                 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
                     <ng-container matColumnDef="component">
