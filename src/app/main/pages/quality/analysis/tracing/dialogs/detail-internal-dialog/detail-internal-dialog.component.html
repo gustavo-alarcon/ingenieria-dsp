@@ -26,23 +26,30 @@
                     <mat-label>Detalle de evento</mat-label>
                     <input matInput type="text" placeholder="Detalle de evento" formControlName="enventDetail" readonly>
                 </mat-form-field>
+
+                <p class="corrective-actions__title">Análisis</p>
+                <div style="margin-left: 8px">
+                    <p><span style="font-weight: bold; color: grey"> Calidad:</span> {{data.analysisQuality ?
+                        data.analysisQuality :
+                        '-'}}</p>
+                    <p><span style="font-weight: bold; color: grey"> Costo:</span> {{data.analysisCost ?
+                        data.analysisCost : '-'}}
+                    </p>
+                    <p><span style="font-weight: bold; color: grey"> Frecuencia:</span> {{data.analysisFrequency ?
+                        data.analysisFrequency : '-'}}</p>
+                </div>
                 <br>
                 <ng-container *ngIf="data.correctiveActions">
                     <p class="corrective-actions__title">Acciones correctivas</p>
                     <div *ngFor="let action of data.correctiveActions; let i = index" class="corrective-actions__list">
-                        <span class="corrective-actions__index" [ngClass]="{'corrective-actions__index--done' : action.kit}">{{i+1}}</span>
+                        <span class="corrective-actions__index"
+                            [ngClass]="{'corrective-actions__index--done' : action.kit}">{{i+1}}</span>
                         <span class="corrective-actions__description">{{action.corrective}}</span>
                         <span class="ms-fill"></span>
                         <span class="corrective-actions__area">{{action.name.name}}</span>
                     </div>
                 </ng-container>
 
-                <h3 class="corrective-actions__title">Análisis</h3>
-                <p><span style="font-weight: bold;"> Calidad:</span> {{data.analysisQuality ? data.analysisQuality : '-'}}</p>
-                <p><span style="font-weight: bold;"> Costo:</span> {{data.analysisCost ? data.analysisCost : '-'}}</p>
-                <p><span style="font-weight: bold;"> Frecuencia:</span> {{data.analysisFrequency ? data.analysisFrequency : '-'}}</p>
-
-                
                 <p class="corrective-actions__title">Imágenes generales</p>
                 <div class="container-image">
                     <picture *ngFor="let item of imagesGeneral; index as i">

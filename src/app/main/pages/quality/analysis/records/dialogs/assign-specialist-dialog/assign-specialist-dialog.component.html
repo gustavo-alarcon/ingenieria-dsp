@@ -1,4 +1,3 @@
-
 <div>
     <div class="ms-dialog-header">
         <mat-icon class="ms-dialog-header__icon">how_to_reg</mat-icon>
@@ -10,37 +9,41 @@
     </div>
     <mat-divider></mat-divider>
 
-    <mat-dialog-content style="margin-top: 20px;" >
+    <mat-dialog-content style="margin-top: 20px;">
         <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
         <div>
-            <form [formGroup]="specialistForm" class="timer-container">                
-               
+            <form [formGroup]="specialistForm" class="timer-container">
+
                 <mat-form-field *ngIf="specialist$ | async as specialists" style="margin-bottom: 8px; display: block"
                     appearance="outline">
                     <mat-label>Especialista</mat-label>
-                    <input autocomplete="off" formControlName="specialist" [matAutocomplete]="specialistAutocomplete" type="text"
-                    matInput name="specialist" />
+                    <input autocomplete="off" formControlName="specialist" [matAutocomplete]="specialistAutocomplete"
+                        type="text" matInput name="specialist" />
                     <mat-autocomplete autoActiveFirstOption #specialistAutocomplete="matAutocomplete"
-                   (optionSelected)="selectedEntrySpecialist($event)" 
-                   [displayWith]="showEntrySpecialist"
-                        >
-                        <mat-option *ngFor="let specialist of specialists" [value]="specialist">           
-                            {{ specialist['name']}}           
-                        </mat-option>        
+                        (optionSelected)="selectedEntrySpecialist($event)" [displayWith]="showEntrySpecialist">
+                        <mat-option *ngFor="let specialist of specialists" [value]="specialist">
+                            {{ specialist['name']}}
+                        </mat-option>
                     </mat-autocomplete>
                     <mat-error>
-                        <span *ngIf="specialistForm.get('specialist').errors?.required">Por favor, complete el campo.</span>
-                        <span *ngIf="specialistForm.get('specialist').errors?.invalid">Dato inválido. Complete con alguna opción
-                          válida.</span>
-                      </mat-error>
+                        <span *ngIf="specialistForm.get('specialist').errors?.required">Por favor, complete el
+                            campo.</span>
+                        <span *ngIf="specialistForm.get('specialist').errors?.invalid">Dato inválido. Complete con
+                            alguna opción
+                            válida.</span>
+                    </mat-error>
                 </mat-form-field>
+                
+                <p style="margin-left: 2px;
+                font-weight: 500;">Análisis</p>
 
-                <mat-form-field  appearance="outline" id="result"   style="margin-bottom: 8px; display: block">
+                <mat-form-field appearance="outline" id="result"
+                    style="margin-bottom: 8px; display: block; font-size: 12px;">
                     <mat-label>Calidad</mat-label>
                     <mat-select formControlName="quality">
-                        <mat-option  *ngFor="let item of qualityList" [value]="item"><span
-                            style="color: #8f8a8a;">({{item.code}})</span> {{item.name}} 
-                            </mat-option>
+                        <mat-option *ngFor="let item of qualityList" [value]="item"><span
+                                style="color: #8f8a8a;">({{item.code}})</span> {{item.name}}
+                        </mat-option>
                     </mat-select>
                     <mat-hint *ngIf="!(qualityList)">
                         <mat-progress-bar mode="indeterminate"></mat-progress-bar>
@@ -50,14 +53,15 @@
                     <mat-error *ngIf="specialistForm.controls['quality'].errors">
                         Campo <strong>requerido.</strong>
                     </mat-error>
-                </mat-form-field> 
+                </mat-form-field>
 
-                <mat-form-field appearance="outline" id="result"   style="margin-bottom: 8px; display: block">
+                <mat-form-field appearance="outline" id="result"
+                    style="margin-bottom: 8px; display: block; font-size: 12px;">
                     <mat-label>Costo</mat-label>
                     <mat-select formControlName="cost">
                         <mat-option *ngFor="let item of costList" [value]="item"><span
-                            style="color: #8f8a8a;">({{item.code}})</span> {{item.name}} 
-                            </mat-option>
+                                style="color: #8f8a8a;">({{item.code}})</span> {{item.name}}
+                        </mat-option>
                     </mat-select>
                     <mat-hint *ngIf="!(costList)">
                         <mat-progress-bar mode="indeterminate"></mat-progress-bar>
@@ -67,14 +71,15 @@
                     <mat-error *ngIf="specialistForm.controls['cost'].errors">
                         Campo <strong>requerido.</strong>
                     </mat-error>
-                </mat-form-field> 
+                </mat-form-field>
 
-                <mat-form-field appearance="outline" id="result"   style="margin-bottom: 8px; display: block">
+                <mat-form-field appearance="outline" id="result"
+                    style="margin-bottom: 8px; display: block; font-size: 12px;">
                     <mat-label>Frecuencia</mat-label>
                     <mat-select formControlName="frequency">
                         <mat-option *ngFor="let item of frequencyList" [value]="item"><span
-                            style="color: #8f8a8a;">({{item.code}})</span> {{item.name}} 
-                            </mat-option>
+                                style="color: #8f8a8a;">({{item.code}})</span> {{item.name}}
+                        </mat-option>
                     </mat-select>
                     <mat-hint *ngIf="!(frequencyList)">
                         <mat-progress-bar mode="indeterminate"></mat-progress-bar>
@@ -84,38 +89,35 @@
                     <mat-error *ngIf="specialistForm.controls['frequency'].errors">
                         Campo <strong>requerido.</strong>
                     </mat-error>
-                </mat-form-field>                    
+                </mat-form-field>
 
-                <mat-form-field *ngIf="filteredBroadcast$ | async as broadcasts" appearance="outline" id="result" class="timer-container__input">                     
+                <p style="margin-left: 2px;
+                font-weight: 500;">Notificaciones</p>
+
+                <mat-form-field *ngIf="filteredBroadcast$ | async as broadcasts" appearance="outline" id="result"
+                    class="timer-container__input">
                     <mat-label>Enviar a</mat-label>
                     <mat-chip-list #chipList aria-label="Fruit selection">
-                      <mat-chip
-                        *ngFor="let email of emailArray"
-                        [selectable]="selectable"
-                        [removable]="removable"
-                        (removed)="removeEmail(email)">
-                        {{email}}
-                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                      </mat-chip>
-                      <input
-                        placeholder="agregar nueva lista de difusion..."
-                        #emailInput
-                        [formControl]="broadcastControl"
-                        [matAutocomplete]="auto"
-                        [matChipInputFor]="chipList"
-                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                        (matChipInputTokenEnd)="addBroadcast($event)">
+                        <mat-chip *ngFor="let email of emailArray" [selectable]="selectable" [removable]="removable"
+                            (removed)="removeEmail(email)">
+                            {{email}}
+                            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                        </mat-chip>
+                        <input placeholder="agregar nueva lista de difusion..." #emailInput
+                            [formControl]="broadcastControl" [matAutocomplete]="auto" [matChipInputFor]="chipList"
+                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                            (matChipInputTokenEnd)="addBroadcast($event)">
                     </mat-chip-list>
                     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedBroadcast($event)">
-                      <mat-option *ngFor="let broadcast of broadcasts" [value]="broadcast">
-                        {{broadcast.name}}
-                      </mat-option>
+                        <mat-option *ngFor="let broadcast of broadcasts" [value]="broadcast">
+                            {{broadcast.name}}
+                        </mat-option>
                     </mat-autocomplete>
                 </mat-form-field>
-                
+
                 <br>
 
-                <span *ngIf="resultEvaluation$  | async as result " >
+                <span *ngIf="resultEvaluation$  | async as result ">
 
                 </span>
 
@@ -124,7 +126,7 @@
 
     </mat-dialog-content>
 
-    <mat-dialog-actions align="end">        
+    <mat-dialog-actions align="end">
         <button mat-stroked-button color="warn" mat-dialog-close [disabled]="loading$ | async">CANCELAR</button>
         <button mat-stroked-button color="primary" (click)="save()" [disabled]="loading$ | async">INICIAR</button>
     </mat-dialog-actions>
