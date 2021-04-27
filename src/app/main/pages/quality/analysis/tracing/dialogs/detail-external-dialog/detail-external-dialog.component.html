@@ -66,6 +66,12 @@
                     <input matInput type="text" placeholder="Bahia" formControlName="question4" readonly>
                 </mat-form-field>
 
+                <h3 class="corrective-actions__title">Análisis</h3>
+                <p><span style="font-weight: bold;"> Calidad:</span> {{data.analysisQuality ? data.analysisQuality : '-'}}</p>
+                <p><span style="font-weight: bold;"> Costo:</span> {{data.analysisCost ? data.analysisCost : '-'}}</p>
+                <p><span style="font-weight: bold;"> Frecuencia:</span> {{data.analysisFrequency ? data.analysisFrequency : '-'}}</p>
+
+
                 <p class="corrective-actions__title">Imágenes generales</p>
                 <div class="container-image">
                     <picture *ngFor="let item of imagesGeneral; index as i">

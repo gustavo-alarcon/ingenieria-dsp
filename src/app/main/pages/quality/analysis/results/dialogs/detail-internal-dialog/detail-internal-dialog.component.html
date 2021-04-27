@@ -29,6 +29,11 @@
                       >  
                 </mat-form-field>              
                 <br>
+                <h3 class="corrective-actions__title">Análisis</h3>
+                <p><span style="font-weight: bold;"> Calidad:</span> {{data.analysisQuality ? data.analysisQuality : '-'}}</p>
+                <p><span style="font-weight: bold;"> Costo:</span> {{data.analysisCost ? data.analysisCost : '-'}}</p>
+                <p><span style="font-weight: bold;"> Frecuencia:</span> {{data.analysisFrequency ? data.analysisFrequency : '-'}}</p>
+
                 <h3>Imagen general</h3>              
                 <div class="container-image" >
                     <picture *ngFor="let item of imagesGeneral; index as i">
