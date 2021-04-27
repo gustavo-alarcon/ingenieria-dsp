@@ -23,7 +23,7 @@ export class DetailExternalDialogComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: Quality,
-    public dialogRef: MatDialogRef<DetailExternalDialogComponent>,  
+    public dialogRef: MatDialogRef<DetailExternalDialogComponent>,
   ) { }
 
   ngOnInit(): void {
