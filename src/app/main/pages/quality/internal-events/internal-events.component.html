@@ -85,7 +85,8 @@
                 <mat-form-field appearance="outline" class="container-form__area"
                     [ngClass]="isMobile ? 'container-form__area--mobile' : 'container-form__area--desktop'">
                     <mat-label>Detalle de evento</mat-label>
-                    <input matInput type="text" placeholder="Detalle del evento" formControlName="eventDetail">
+                    <textarea matInput type="text" placeholder="Detalle del evento" formControlName="eventDetail" rows="2" >
+                    </textarea>
                     <mat-error *ngIf="internalForm.controls['eventDetail'].errors">
                         Campo <strong>requerido.</strong>
                     </mat-error>

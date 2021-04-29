@@ -63,6 +63,7 @@ export class ResultsComponent implements OnInit {
 
   workShopControl = new FormControl('');
   eventTypeControl = new FormControl('');
+  statusControl = new FormControl('');
   searchControl = new FormControl('');
 
   eventType = [
@@ -71,6 +72,22 @@ export class ResultsComponent implements OnInit {
     },
     {
       code: 'Externo', event: 'Externos'
+    }
+  ];
+  //  state?: string; // => registered / process / tracing / finalized
+
+  status = [
+    {
+      code: 'registered', name: 'Registro'
+    },
+    {
+      code: 'process', name: 'Proceso'
+    },
+    {
+      code: 'tracing', name: 'Siguimiento'
+    },
+    {
+      code: 'finalized', name: 'Finalizado'
     }
   ];
 
@@ -122,6 +139,11 @@ export class ResultsComponent implements OnInit {
         filter((input) => input !== null),
         startWith<any>('')
       ),
+      this.statusControl.valueChanges.pipe(
+        debounceTime(300),
+        filter((input) => input !== null),
+        startWith<any>('')
+      ),
       this.eventTypeControl.valueChanges.pipe(
         debounceTime(300),
         filter((input) => input !== null),
@@ -141,7 +163,7 @@ export class ResultsComponent implements OnInit {
         map(end => end ? end.setHours(23, 59, 59) : null)
       )
     ).pipe(
-      map(([qualities, workShop, codeEventType, search, startdate, enddate]) => {
+      map(([qualities, workShop, status , codeEventType, search, startdate, enddate]) => {
 
         const date = { begin: startdate, end: enddate };
 
@@ -151,16 +173,20 @@ export class ResultsComponent implements OnInit {
         let preFilterWorkShop: Quality[] = [];
 
 
-        if (codeEventType || workShop) {
+        if (codeEventType || workShop || status) {
           preFilterEventType = qualities.filter(quality => quality.eventType === codeEventType);
+          preFilterEventType = qualities.filter(quality => quality.state === status);
 
           preFilterSearch = preFilterEventType.filter(quality => {
             return String(quality.workOrder).toLowerCase().includes(searchTerm) ||
               String(quality.component).toLowerCase().includes(searchTerm) ||
               String(quality.workShop).toLowerCase().includes(searchTerm) ||
               String(quality.enventDetail).toLowerCase().includes(searchTerm) ||
-              String(quality.evaluationAnalisisName).toLowerCase().includes(searchTerm) ||
-              //String(quality.specialist['workingArea']).toLowerCase().includes(searchTerm) ||
+              String(quality.evaluationAnalysisName).toLowerCase().includes(searchTerm) ||
+              String(quality.specialist ? quality.specialist['name'] : '').toLowerCase().includes(searchTerm) ||
+              String(quality.createdBy ? quality.createdBy['name'] : '').toLowerCase().includes(searchTerm) ||
+              String(quality.analysis ? quality.analysis['causeFailure'] : '').toLowerCase().includes(searchTerm) ||
+              String(quality.analysis ? quality.analysis['process'] : '').toLowerCase().includes(searchTerm) ||
               String(quality.partNumber).toLowerCase().includes(searchTerm) ||
               String(quality.packageNumber).toLowerCase().includes(searchTerm) ||
               String(quality.miningOperation).toLowerCase().includes(searchTerm) ||
@@ -177,8 +203,11 @@ export class ResultsComponent implements OnInit {
                 String(quality.component).toLowerCase().includes(searchTerm) ||
                 String(quality.workShop).toLowerCase().includes(searchTerm) ||
                 String(quality.partNumber).toLowerCase().includes(searchTerm) ||
-                String(quality.evaluationAnalisisName).toLowerCase().includes(searchTerm) ||
-                //String(quality.specialist['workingArea']).toLowerCase().includes(searchTerm) ||
+                String(quality.evaluationAnalysisName).toLowerCase().includes(searchTerm) ||
+                String(quality.specialist ? quality.specialist['name'] : '').toLowerCase().includes(searchTerm) ||
+                String(quality.createdBy ? quality.createdBy['name'] : '').toLowerCase().includes(searchTerm) ||
+                String(quality.analysis ? quality.analysis['causeFailure'] : '').toLowerCase().includes(searchTerm) ||
+                String(quality.analysis ? quality.analysis['process'] : '').toLowerCase().includes(searchTerm) ||                
                 String(quality.enventDetail).toLowerCase().includes(searchTerm) ||
                 String(quality.packageNumber).toLowerCase().includes(searchTerm) ||
                 String(quality.miningOperation).toLowerCase().includes(searchTerm) ||
@@ -193,8 +222,11 @@ export class ResultsComponent implements OnInit {
             return String(quality.workOrder).toLowerCase().includes(searchTerm) ||
               String(quality.component).toLowerCase().includes(searchTerm) ||
               String(quality.workShop).toLowerCase().includes(searchTerm) ||
-              String(quality.evaluationAnalisisName).toLowerCase().includes(searchTerm) ||
-              //String(quality.specialist['workingArea']).toLowerCase().includes(searchTerm) ||
+              String(quality.evaluationAnalysisName).toLowerCase().includes(searchTerm) ||
+              String(quality.specialist ? quality.specialist['name'] : '').toLowerCase().includes(searchTerm) ||
+              String(quality.createdBy ? quality.createdBy['name'] : '').toLowerCase().includes(searchTerm) ||
+              String(quality.analysis ? quality.analysis['causeFailure'] : '').toLowerCase().includes(searchTerm) ||
+              String(quality.analysis ? quality.analysis['process'] : '').toLowerCase().includes(searchTerm) ||
               String(quality.partNumber).toLowerCase().includes(searchTerm) ||
               String(quality.enventDetail).toLowerCase().includes(searchTerm) ||
               String(quality.packageNumber).toLowerCase().includes(searchTerm) ||
@@ -276,7 +308,7 @@ export class ResultsComponent implements OnInit {
         element.analysis ? element.analysis['process'] : '-',
         element.analysis ? element.analysis['causeFailure'] : '-',
         element.specialist ? element.specialist['workingArea'] : '-',
-        element.evaluationAnalisisName ? element.evaluationAnalisisName : '-',
+        element.evaluationAnalysisName ? element.evaluationAnalysisName : '-',
         element.createdBy ? element.createdBy.name : '',
         element.state ? element.state : ''
       ];

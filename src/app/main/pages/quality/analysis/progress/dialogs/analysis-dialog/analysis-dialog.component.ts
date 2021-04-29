@@ -101,8 +101,8 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
     if (this.data.evaluationAnalisis) {
       this.resultAnalysis = this.data.evaluationAnalisis;
     }
-    if (this.data.evaluationAnalisisName) {
-      this.evaluationName = this.data.evaluationAnalisisName;
+    if (this.data.evaluationAnalysisName) {
+      this.evaluationName = this.data.evaluationAnalysisName;
     }
 
     this.emailArray = this.data.emailList;
@@ -170,6 +170,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
       this.analysisForm = this.fb.group({
         causeFailure: this.data.analysis['causeFailure'],
         process: this.data.analysis['process'],
+        observation: this.data.analysis['observation'],
       });
 
       this.listAreaForm = this.fb.group({
@@ -195,6 +196,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
       this.analysisForm = this.fb.group({
         causeFailure: ['', Validators.required],
         process: ['', Validators.required],
+        observation: [null],
       });
 
       this.listAreaForm = this.fb.group({
@@ -280,7 +282,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
   save(): void {
 
     try {
-      if (this.analysisForm.valid ) {
+      if (this.areas.valid ) {
         const resp = this.qualityService.updateQualityEvaluationAnalysis(
           this.data,
           this.resultAnalysis,

@@ -68,7 +68,7 @@ export class RecordsComponent implements OnInit {
         filter(input => input !== null),
         startWith<any>('')),
       this.eventTypeControl.valueChanges.pipe(startWith('')),
-      this.auth.getGeneralConfig()
+      this.auth.getGeneralConfigQuality()
     ).pipe(
       map(([qualities, search, codeEventType, generalConfig]) => {
 

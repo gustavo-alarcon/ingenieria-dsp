@@ -33,7 +33,11 @@
                 <p><span style="font-weight: bold;"> Calidad:</span> {{data.analysisQuality ? data.analysisQuality : '-'}}</p>
                 <p><span style="font-weight: bold;"> Costo:</span> {{data.analysisCost ? data.analysisCost : '-'}}</p>
                 <p><span style="font-weight: bold;"> Frecuencia:</span> {{data.analysisFrequency ? data.analysisFrequency : '-'}}</p>
-
+                <p><span style="font-weight: bold;"> Nivel de riesgo:</span> {{data.evaluationAnalysisName ? data.evaluationAnalysisName : '-'}}</p>
+                <p><span style="font-weight: bold;"> Causante de falla:</span> {{data.analysis ? data.analysis['causeFailure'] : '-'}}</p>
+                <p><span style="font-weight: bold;"> Proceso:</span> {{data.analysis ? data.analysis['process'] : '-'}}</p>
+                <p><span style="font-weight: bold;"> Observacion:</span> {{data.analysis ? data.analysis['observation'] : '-'}}</p>
+                
                 <h3>Imagen general</h3>              
                 <div class="container-image" >
                     <picture *ngFor="let item of imagesGeneral; index as i">

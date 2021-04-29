@@ -104,7 +104,8 @@
                 <mat-form-field appearance="outline" class="container-form__area"
                     [ngClass]="isMobile ? 'container-form__area--mobile' : 'container-form__area--desktop'">
                     <mat-label>1 ¿Cuéntame que sucedió?</mat-label>
-                    <input matInput type="text" placeholder=" Escribir..." formControlName="question1">
+                    <textarea  matInput type="text" placeholder=" Escribir..." formControlName="question1" rows="2">
+                    </textarea>
                     <mat-error *ngIf="externalForm.controls['question1'].errors">
                         Campo <strong>requerido.</strong>
                     </mat-error>
@@ -113,7 +114,8 @@
                 <mat-form-field appearance="outline" class="container-form__area"
                     [ngClass]="isMobile ? 'container-form__area--mobile' : 'container-form__area--desktop'">
                     <mat-label>2. ¿Qué acciones de corrección se realizaron para solucionar el problema?</mat-label>
-                    <input matInput type="text" placeholder=" Escribir..." formControlName="question2">
+                    <textarea matInput type="text" placeholder=" Escribir..." formControlName="question2" rows="2">
+                    </textarea>
                     <mat-error *ngIf="externalForm.controls['question2'].errors">
                         Campo <strong>requerido.</strong>
                     </mat-error>
@@ -122,7 +124,8 @@
                 <mat-form-field appearance="outline" class="container-form__area"
                     [ngClass]="isMobile ? 'container-form__area--mobile' : 'container-form__area--desktop'">
                     <mat-label>3. ¿Cuál crees que fue la causa de la falla?</mat-label>
-                    <input matInput type="text" placeholder=" Escribir..." formControlName="question3">
+                    <textarea matInput type="text" placeholder=" Escribir..." formControlName="question3" rows="2">
+                    </textarea>
                     <mat-error *ngIf="externalForm.controls['question3'].errors">
                         Campo <strong>requerido.</strong>
                     </mat-error>
@@ -131,7 +134,8 @@
                 <mat-form-field appearance="outline" class="container-form__area"
                     [ngClass]="isMobile ? 'container-form__area--mobile' : 'container-form__area--desktop'">
                     <mat-label>4. ¿Qué recomendarias para evitar que este problema vuelva a suceder?</mat-label>
-                    <input matInput type="text" placeholder=" Escribir...    " formControlName="question4">
+                    <textarea matInput type="text" placeholder=" Escribir..." formControlName="question4" rows="2">
+                    </textarea>
                     <mat-error *ngIf="externalForm.controls['question4'].errors">
                         Campo <strong>requerido.</strong>
                     </mat-error>
