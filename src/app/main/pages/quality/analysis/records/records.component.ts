@@ -169,7 +169,7 @@ export class RecordsComponent implements OnInit {
 
   assignSpecialist(item: Evaluation): void {
     this.dialog.open(AssignSpecialistDialogComponent, {
-      maxWidth: 500,
+      maxWidth: 600,
       width: '90vw',
       data: item,
     });
