@@ -387,13 +387,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.lineChartOptions = {
       responsive: true,
       scales: {
-        xAxes: [{}],
-        yAxes: [
+        xAxes: [
           {
             ticks: {
               beginAtZero: true,
             },
-          },
+          }
+        ],
+        yAxes: [
         ],
       },
       plugins: {
