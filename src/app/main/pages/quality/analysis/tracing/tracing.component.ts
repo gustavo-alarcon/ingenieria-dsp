@@ -158,7 +158,6 @@ export class TracingComponent implements OnInit, OnDestroy {
             // Get today's date and time
             const now = new Date().getTime();
 
-
             const tracing = quality.tracingAt ? quality.tracingAt['seconds'] * 1000 : now;
             // Find the distance between now and the count down date
             tracingDistance = now - tracing;
@@ -184,20 +183,20 @@ export class TracingComponent implements OnInit, OnDestroy {
             const limitTotalMilliseconds = limitDay + limitHours + limitMinutes;
 
             const tracingPercentageElapsed = tracingDistance / limitTotalMilliseconds;
-            quality.processPercentageElapsed = 100 - (Math.ceil(tracingPercentageElapsed * 100) > 100 ? 100 : Math.ceil(tracingPercentageElapsed * 100));
+            quality.tracingPercentageElapsed = 100 - (Math.ceil(tracingPercentageElapsed * 100) > 100 ? 100 : Math.ceil(tracingPercentageElapsed * 100));
 
             // Time calculation for total attention
-            const attentionDays = Math.floor((tracingDistance + processTotalMilliseconds + registryTotalMilliseconds) / (1000 * 60 * 60 * 24));
-            const attentionHours = Math.floor(((tracingDistance + processTotalMilliseconds + registryTotalMilliseconds) % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const attentionMinutes = Math.floor(((tracingDistance + processTotalMilliseconds + registryTotalMilliseconds) % (1000 * 60 * 60)) / (1000 * 60));
-            const attentionSeconds = Math.floor(((tracingDistance + processTotalMilliseconds + registryTotalMilliseconds) % (1000 * 60)) / 1000);
+            const attentionDays = Math.floor((tracingDistance + processTotalMilliseconds ) / (1000 * 60 * 60 * 24));
+            const attentionHours = Math.floor(((tracingDistance + processTotalMilliseconds ) % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const attentionMinutes = Math.floor(((tracingDistance + processTotalMilliseconds ) % (1000 * 60 * 60)) / (1000 * 60));
+            const attentionSeconds = Math.floor(((tracingDistance + processTotalMilliseconds ) % (1000 * 60)) / 1000);
 
             quality.attentionTimeElapsed = {
               days: attentionDays,
               hours: attentionHours,
               minutes: attentionMinutes,
               seconds: attentionSeconds
-            }
+            };
 
             return EvalInterval;
 

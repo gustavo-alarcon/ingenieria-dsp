@@ -168,16 +168,18 @@ export class ResultsComponent implements OnInit {
         const date = { begin: startdate, end: enddate };
 
         const searchTerm = search.toLowerCase().trim();
+        const searchworkshop = workShop.toLowerCase().trim();
         let preFilterSearch: Quality[] = [...qualities];
         let preFilterEventType: Quality[] = [];
         let preFilterWorkShop: Quality[] = [];
+        let preFilterStatus: Quality[] = [];
 
 
         if (codeEventType || workShop || status) {
-          preFilterEventType = qualities.filter(quality => quality.eventType === codeEventType);
-          preFilterEventType = qualities.filter(quality => quality.state === status);
+          preFilterEventType = codeEventType ? qualities.filter(quality => quality.eventType === codeEventType) : qualities ;
+          preFilterStatus = status ? preFilterEventType.filter(quality => quality.state === status) : preFilterEventType ;
 
-          preFilterSearch = preFilterEventType.filter(quality => {
+          preFilterSearch = preFilterStatus.filter(quality => {
             return String(quality.workOrder).toLowerCase().includes(searchTerm) ||
               String(quality.component).toLowerCase().includes(searchTerm) ||
               String(quality.workShop).toLowerCase().includes(searchTerm) ||
@@ -196,7 +198,12 @@ export class ResultsComponent implements OnInit {
           });
 
           if (workShop) {
-            preFilterWorkShop = preFilterEventType.filter(quality => quality.workShop === workShop);
+
+            preFilterWorkShop = preFilterStatus.filter(quality => {
+              return String(quality.workShop).toLowerCase().includes(searchworkshop);
+            }).filter((quality) => {
+              return this.getFilterTime(quality.createdAt, date);
+            });
 
             preFilterSearch = preFilterWorkShop.filter(quality => {
               return String(quality.workOrder).toLowerCase().includes(searchTerm) ||
