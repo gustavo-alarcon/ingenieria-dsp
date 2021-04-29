@@ -15,7 +15,7 @@
             [ngClass]="isMobile ? 'ms-kanban-toolbar__input--mobile' : 'ms-kanban-toolbar__input--desktop'">
             <mat-icon matPrefix>location_on</mat-icon>
             <mat-select [formControl]="eventTypeControl">
-                <mat-option value="">Todos</mat-option>
+                <mat-option value="">Todos los eventos</mat-option>
                 <mat-option *ngFor="let item of eventType" [value]="item.code">
                     {{item.event}}
                 </mat-option>

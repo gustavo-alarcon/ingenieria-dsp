@@ -194,7 +194,10 @@ export class ResultsComponent implements OnInit {
               String(quality.component).toLowerCase().includes(searchTerm) ||
               String(quality.workShop).toLowerCase().includes(searchTerm) ||
               String(quality.evaluationAnalisisName).toLowerCase().includes(searchTerm) ||
-              //String(quality.specialist['workingArea']).toLowerCase().includes(searchTerm) ||
+              String(quality.specialist ? quality.specialist['workingArea'] : '').toLowerCase().includes(searchTerm) ||
+              String(quality.createdBy ? quality.createdBy['name'] : '').toLowerCase().includes(searchTerm) ||
+              String(quality.analysis ? quality.analysis['causeFailure'] : '').toLowerCase().includes(searchTerm) ||
+              String(quality.analysis ? quality.analysis['process'] : '').toLowerCase().includes(searchTerm) ||
               String(quality.partNumber).toLowerCase().includes(searchTerm) ||
               String(quality.enventDetail).toLowerCase().includes(searchTerm) ||
               String(quality.packageNumber).toLowerCase().includes(searchTerm) ||

@@ -32,13 +32,13 @@ export class ConfigurationsDialogComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.generalConfig$ = this.auth.getGeneralConfig()
+    this.generalConfig$ = this.auth.getGeneralConfigQuality()
       .pipe(
         tap(res => {
           this.timerFormGroup = this.fb.group({
-            days: [res.registryTimer.days, Validators.required],
-            hours: [res.registryTimer.hours, Validators.required],
-            minutes: [res.registryTimer.minutes, [Validators.required]]
+            days: [res.tracingTimer.days, Validators.required],
+            hours: [res.tracingTimer.hours, Validators.required],
+            minutes: [res.tracingTimer.minutes, [Validators.required]]
           });
         })
       )

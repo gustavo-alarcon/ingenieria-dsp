@@ -104,73 +104,71 @@ export class ProgressComponent implements OnInit {
           });
         }
 
-        preFilterSearch.map(evaluation => {
-          if (evaluation.processTimer) {
-            clearInterval(evaluation.processTimer);
+        preFilterSearch.map(quality => {
+          if (quality.processTimer) {
+            clearInterval(quality.processTimer);
           }
 
-          let registryDay
-          let registryHours
-          let registryMinutes
-          let registrySeconds
-          let registryTotalMilliseconds
+          let registryDay;
+          let registryHours;
+          let registryMinutes;
+          let registrySeconds;
+          let registryTotalMilliseconds;
 
-          if (evaluation.registryTimeElapsed) {
+          if (quality.registryTimeElapsed) {
             // Time calcultaions for registry
-            registryDay = evaluation.registryTimeElapsed.days * (1000 * 60 * 60 * 24);
-            registryHours = evaluation.registryTimeElapsed.hours * (1000 * 60 * 60);
-            registryMinutes = evaluation.registryTimeElapsed.minutes * (1000 * 60);
-            registrySeconds = evaluation.registryTimeElapsed.seconds * (1000);
+            registryDay = quality.registryTimeElapsed.days * (1000 * 60 * 60 * 24);
+            registryHours = quality.registryTimeElapsed.hours * (1000 * 60 * 60);
+            registryMinutes = quality.registryTimeElapsed.minutes * (1000 * 60);
+            registrySeconds = quality.registryTimeElapsed.seconds * (1000);
             registryTotalMilliseconds = registryDay + registryHours + registryMinutes + registrySeconds;
           }
 
           let processDistance = 0;
 
-          evaluation.processTimer = setInterval(function EvalInterval() {
+          quality.processTimer = setInterval(function EvalInterval() {
             // Get today's date and time
-            let now = new Date().getTime();
+            const now = new Date().getTime();
 
-
-            let process = evaluation.processAt ? evaluation.processAt['seconds'] * 1000 : now;
+            const process = quality.processAt ? quality.processAt['seconds'] * 1000 : now;
             // Find the distance between now and the count down date
             processDistance = now - process;
 
             // Time calculations for days, hours, minutes and seconds
-            let days = Math.floor(processDistance / (1000 * 60 * 60 * 24));
-            let hours = Math.floor((processDistance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            let minutes = Math.floor((processDistance % (1000 * 60 * 60)) / (1000 * 60));
-            let seconds = Math.floor((processDistance % (1000 * 60)) / 1000);
+            const days = Math.floor(processDistance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((processDistance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((processDistance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((processDistance % (1000 * 60)) / 1000);
 
             // Output the result in an element with id="demo"
-            evaluation.processTimeElapsed = {
+            quality.processTimeElapsed = {
               days: days,
               hours: hours,
               minutes: minutes,
               seconds: seconds
-            }
+            };
 
             // Time calcultaions for limit
-            let limitDay = generalConfig.processTimer.days * (1000 * 60 * 60 * 24);
-            let limitHours = generalConfig.processTimer.hours * (1000 * 60 * 60);
-            let limitMinutes = generalConfig.processTimer.minutes * (1000 * 60);
-            let limitTotalMilliseconds = limitDay + limitHours + limitMinutes;
+            const limitDay = generalConfig.processTimer.days * (1000 * 60 * 60 * 24);
+            const limitHours = generalConfig.processTimer.hours * (1000 * 60 * 60);
+            const limitMinutes = generalConfig.processTimer.minutes * (1000 * 60);
+            const limitTotalMilliseconds = limitDay + limitHours + limitMinutes;
 
-            let processPercentageElapsed = processDistance / limitTotalMilliseconds;
-            evaluation.processPercentageElapsed = 100 - (Math.ceil(processPercentageElapsed * 100) > 100 ? 100 : Math.ceil(processPercentageElapsed * 100));
+            const processPercentageElapsed = processDistance / limitTotalMilliseconds;
+            quality.processPercentageElapsed = 100 - (Math.ceil(processPercentageElapsed * 100) > 100 ? 100 : Math.ceil(processPercentageElapsed * 100));
 
             // Time calculation for total attention
-            let attentionDays = Math.floor((processDistance + registryTotalMilliseconds) / (1000 * 60 * 60 * 24));
-            let attentionHours = Math.floor(((processDistance + registryTotalMilliseconds) % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            let attentionMinutes = Math.floor(((processDistance + registryTotalMilliseconds) % (1000 * 60 * 60)) / (1000 * 60));
-            let attentionSeconds = Math.floor(((processDistance + registryTotalMilliseconds) % (1000 * 60)) / 1000);
+            const attentionDays = Math.floor((processDistance + registryTotalMilliseconds) / (1000 * 60 * 60 * 24));
+            const attentionHours = Math.floor(((processDistance + registryTotalMilliseconds) % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const attentionMinutes = Math.floor(((processDistance + registryTotalMilliseconds) % (1000 * 60 * 60)) / (1000 * 60));
+            const attentionSeconds = Math.floor(((processDistance + registryTotalMilliseconds) % (1000 * 60)) / 1000);
 
-            evaluation.attentionTimeElapsed = {
+            quality.attentionTimeElapsed = {
               days: attentionDays,
               hours: attentionHours,
               minutes: attentionMinutes,
               seconds: attentionSeconds
-            }
-
+            };
             return EvalInterval;
 
           }(), 5000);

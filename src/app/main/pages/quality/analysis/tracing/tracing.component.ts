@@ -117,60 +117,60 @@ export class TracingComponent implements OnInit, OnDestroy {
           }
         });
 
-        preFilterSearch.map(evaluation => {
-          if (evaluation.tracingTimer) {
-            clearInterval(evaluation.tracingTimer);
+        preFilterSearch.map(quality => {
+          if (quality.tracingTimer) {
+            clearInterval(quality.tracingTimer);
           }
 
-          let registryDay
-          let registryHours
-          let registryMinutes
-          let registrySeconds
-          let registryTotalMilliseconds
+          let registryDay;
+          let registryHours;
+          let registryMinutes;
+          let registrySeconds;
+          let registryTotalMilliseconds;
 
-          if (evaluation.registryTimeElapsed) {
+          if (quality.registryTimeElapsed) {
             // Time calcultaions for registry
-            registryDay = evaluation.registryTimeElapsed.days * (1000 * 60 * 60 * 24);
-            registryHours = evaluation.registryTimeElapsed.hours * (1000 * 60 * 60);
-            registryMinutes = evaluation.registryTimeElapsed.minutes * (1000 * 60);
-            registrySeconds = evaluation.registryTimeElapsed.seconds * (1000);
+            registryDay = quality.registryTimeElapsed.days * (1000 * 60 * 60 * 24);
+            registryHours = quality.registryTimeElapsed.hours * (1000 * 60 * 60);
+            registryMinutes = quality.registryTimeElapsed.minutes * (1000 * 60);
+            registrySeconds = quality.registryTimeElapsed.seconds * (1000);
             registryTotalMilliseconds = registryDay + registryHours + registryMinutes + registrySeconds;
           }
 
-          let processDay
-          let processHours
-          let processMinutes
-          let processSeconds
-          let processTotalMilliseconds
+          let processDay;
+          let processHours;
+          let processMinutes;
+          let processSeconds;
+          let processTotalMilliseconds;
 
-          if (evaluation.registryTimeElapsed) {
+          if (quality.processTimeElapsed) {
             // Time calcultaions for registry
-            processDay = evaluation.processTimeElapsed.days * (1000 * 60 * 60 * 24);
-            processHours = evaluation.processTimeElapsed.hours * (1000 * 60 * 60);
-            processMinutes = evaluation.processTimeElapsed.minutes * (1000 * 60);
-            processSeconds = evaluation.processTimeElapsed.seconds * (1000);
+            processDay = quality.processTimeElapsed.days * (1000 * 60 * 60 * 24);
+            processHours = quality.processTimeElapsed.hours * (1000 * 60 * 60);
+            processMinutes = quality.processTimeElapsed.minutes * (1000 * 60);
+            processSeconds = quality.processTimeElapsed.seconds * (1000);
             processTotalMilliseconds = processDay + processHours + processMinutes + processSeconds;
           }
 
           let tracingDistance = 0;
 
-          evaluation.tracingTimer = setInterval(function EvalInterval() {
+          quality.tracingTimer = setInterval(function EvalInterval() {
             // Get today's date and time
-            let now = new Date().getTime();
+            const now = new Date().getTime();
 
 
-            let tracing = evaluation.tracingAt ? evaluation.tracingAt['seconds'] * 1000 : now;
+            const tracing = quality.tracingAt ? quality.tracingAt['seconds'] * 1000 : now;
             // Find the distance between now and the count down date
             tracingDistance = now - tracing;
 
             // Time calculations for days, hours, minutes and seconds
-            let days = Math.floor(tracingDistance / (1000 * 60 * 60 * 24));
-            let hours = Math.floor((tracingDistance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            let minutes = Math.floor((tracingDistance % (1000 * 60 * 60)) / (1000 * 60));
-            let seconds = Math.floor((tracingDistance % (1000 * 60)) / 1000);
+            const days = Math.floor(tracingDistance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((tracingDistance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((tracingDistance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((tracingDistance % (1000 * 60)) / 1000);
 
             // Output the result in an element with id="demo"
-            evaluation.tracingTimeElapsed = {
+            quality.tracingTimeElapsed = {
               days: days,
               hours: hours,
               minutes: minutes,
@@ -178,21 +178,21 @@ export class TracingComponent implements OnInit, OnDestroy {
             }
 
             // Time calcultaions for limit
-            let limitDay = generalConfig.tracingTimer.days * (1000 * 60 * 60 * 24);
-            let limitHours = generalConfig.tracingTimer.hours * (1000 * 60 * 60);
-            let limitMinutes = generalConfig.tracingTimer.minutes * (1000 * 60);
-            let limitTotalMilliseconds = limitDay + limitHours + limitMinutes;
+            const limitDay = generalConfig.tracingTimer.days * (1000 * 60 * 60 * 24);
+            const limitHours = generalConfig.tracingTimer.hours * (1000 * 60 * 60);
+            const limitMinutes = generalConfig.tracingTimer.minutes * (1000 * 60);
+            const limitTotalMilliseconds = limitDay + limitHours + limitMinutes;
 
-            let tracingPercentageElapsed = tracingDistance / limitTotalMilliseconds;
-            evaluation.processPercentageElapsed = 100 - (Math.ceil(tracingPercentageElapsed * 100) > 100 ? 100 : Math.ceil(tracingPercentageElapsed * 100));
+            const tracingPercentageElapsed = tracingDistance / limitTotalMilliseconds;
+            quality.processPercentageElapsed = 100 - (Math.ceil(tracingPercentageElapsed * 100) > 100 ? 100 : Math.ceil(tracingPercentageElapsed * 100));
 
             // Time calculation for total attention
-            let attentionDays = Math.floor((tracingDistance + processTotalMilliseconds + registryTotalMilliseconds) / (1000 * 60 * 60 * 24));
-            let attentionHours = Math.floor(((tracingDistance + processTotalMilliseconds + registryTotalMilliseconds) % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            let attentionMinutes = Math.floor(((tracingDistance + processTotalMilliseconds + registryTotalMilliseconds) % (1000 * 60 * 60)) / (1000 * 60));
-            let attentionSeconds = Math.floor(((tracingDistance + processTotalMilliseconds + registryTotalMilliseconds) % (1000 * 60)) / 1000);
+            const attentionDays = Math.floor((tracingDistance + processTotalMilliseconds + registryTotalMilliseconds) / (1000 * 60 * 60 * 24));
+            const attentionHours = Math.floor(((tracingDistance + processTotalMilliseconds + registryTotalMilliseconds) % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const attentionMinutes = Math.floor(((tracingDistance + processTotalMilliseconds + registryTotalMilliseconds) % (1000 * 60 * 60)) / (1000 * 60));
+            const attentionSeconds = Math.floor(((tracingDistance + processTotalMilliseconds + registryTotalMilliseconds) % (1000 * 60)) / 1000);
 
-            evaluation.attentionTimeElapsed = {
+            quality.attentionTimeElapsed = {
               days: attentionDays,
               hours: attentionHours,
               minutes: attentionMinutes,

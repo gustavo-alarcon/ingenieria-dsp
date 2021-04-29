@@ -280,7 +280,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
   save(): void {
 
     try {
-      if (this.analysisForm.valid ) {
+      if (this.areas.valid ) {
         const resp = this.qualityService.updateQualityEvaluationAnalysis(
           this.data,
           this.resultAnalysis,
