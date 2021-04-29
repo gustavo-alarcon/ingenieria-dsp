@@ -845,8 +845,8 @@ export class QualityService {
     );
     // Structuring the data model
     const data: any = {
-      evaluationAnalisis: analisis,
-      evaluationAnalisisName: evaluationName,
+      evaluationAnalysis: analisis,
+      evaluationAnalysisName: evaluationName,
       analysis: formAnalysis,
       correctiveActions: formCorrective.areas
     };

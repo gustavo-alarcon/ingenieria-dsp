@@ -34,7 +34,10 @@ export interface Quality {
   analysisQuality: string;
   analysisCost: string;
   analysisFrequency: string;
-  evaluationAnalisisName?: string;
+  //analysisCauseFailure: string;
+  //analysisProcess: string;
+  //analysisObservation: string;
+  evaluationAnalysisName?: string;
   fileAdditional?: FileAdditional;
   taskDone?: number;
   causeFailureList: Array<string>;
