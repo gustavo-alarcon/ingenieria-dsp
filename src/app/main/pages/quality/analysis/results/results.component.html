@@ -10,18 +10,7 @@
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-date-range-picker #picker></mat-date-range-picker>
         </mat-form-field>
-
-        <mat-form-field appearance="outline" class="ms-kanban-toolbar__input"
-            [ngClass]="isMobile ? 'ms-kanban-toolbar__input--mobile' : 'ms-kanban-toolbar__input--desktop'">
-            <mat-icon matPrefix>location_on</mat-icon>
-            <mat-select [formControl]="statusControl">
-                <mat-option value="">Todos los estados</mat-option>
-                <mat-option *ngFor="let item of status" [value]="item.code">
-                    {{item.name}}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
-
+        
         <mat-form-field appearance="outline" class="ms-kanban-toolbar__input"
             [ngClass]="isMobile ? 'ms-kanban-toolbar__input--mobile' : 'ms-kanban-toolbar__input--desktop'">
             <mat-icon matPrefix>location_on</mat-icon>
@@ -32,7 +21,18 @@
                 </mat-option>
             </mat-select>
         </mat-form-field>
-
+    
+        <mat-form-field appearance="outline" class="ms-kanban-toolbar__input"
+            [ngClass]="isMobile ? 'ms-kanban-toolbar__input--mobile' : 'ms-kanban-toolbar__input--desktop'">
+            <mat-icon matPrefix>location_on</mat-icon>
+            <mat-select [formControl]="statusControl">
+                <mat-option value="">Todos los estados</mat-option>
+                <mat-option *ngFor="let item of status" [value]="item.code">
+                    {{item.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    
         <mat-form-field appearance="outline" class="ms-kanban-toolbar__input"
             [ngClass]="isMobile ? 'ms-kanban-toolbar__input--mobile' : 'ms-kanban-toolbar__input--desktop'">
             <mat-label>Taller</mat-label>
