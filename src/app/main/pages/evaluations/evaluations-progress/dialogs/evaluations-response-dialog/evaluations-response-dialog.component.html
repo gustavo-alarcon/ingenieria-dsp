@@ -1,0 +1,88 @@
+<div style="max-width: 500px">
+
+    <h2 mat-dialog-title>
+        <div class="container-h2">
+            <button mat-icon-button class="container-h2__button">
+                <mat-icon class="container-h2__icon">question_answer</mat-icon>
+                <span class="container-h2__title">
+                    Responder
+                </span>
+            </button>
+            <button mat-icon-button mat-dialog-close [disabled]="loading$ | async">
+                <mat-icon class="container-h2__icon-close">close</mat-icon>
+            </button>
+        </div>
+        <mat-divider style="margin-top: 20px;"></mat-divider>
+        <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+    </h2>
+    <mat-dialog-content class="mat-typography">
+        <p><span style="font-weight: bold;"> OT MAIN :</span> {{data.otMain ? data.otMain : ''}}</p>
+        <p><span style="font-weight: bold;"> OT CHILD :</span> {{data.otChild ? data.otChild : ''}}</p>
+        <p><span style="font-weight: bold;"> Correlativo :</span> {{data.position ? data.position : ''}}</p>
+        <p><span style="font-weight: bold;"> N° de parte :</span> {{data.partNumber ? data.partNumber : ''}}</p>
+        <p><span style="font-weight: bold;"> Cantidad :</span> {{data.quantity ? data.quantity : ''}}</p>
+        <p><span style="font-weight: bold;"> Descripcion :</span> {{data.description ? data.description : ''}}</p>
+        <p><span style="font-weight: bold;"> Tipo de Atencion :</span> {{data.status ? data.status : ''}}</p>
+        <p><span style="font-weight: bold;"> Usuario :</span> {{data.createdBy ? (data.createdBy.name ? data.createdBy.name : data.createdBy) : 'Sin asignar'}}
+        </p>
+        <p><span style="font-weight: bold;"> WOF (Orden de Fabricacion) :</span> {{data.wof ? data.wof : ''}}</p>
+        <p><span style="font-weight: bold;"> Trabajo :</span> {{data.task ? data.task : ''}}</p>
+        <p><span style="font-weight: bold;"> Observaciones :</span> {{data.observations ? data.observations : ''}}</p>
+        <mat-divider style="margin: 16px 0px"></mat-divider>
+
+        <ng-container *ngIf="inquiry$ | async as inquiry">
+            <div class="item-consult">
+                <button mat-icon-button>
+                    <mat-icon>help_center</mat-icon>
+                    <span style="margin-left: 20px;">
+                        Consulta
+                    </span>
+                </button>
+            </div>
+            <div style="margin-top: 10px;"></div>
+            <mat-list-item role="listitem" class="item-question">{{inquiry.inquiry}}
+            </mat-list-item>
+            <div class="container-h2__image">
+                <a [href]="inquiry.inquiryImage" target="_blank" style="cursor: zoom-in">
+                    <img [src]="inquiry.inquiryImage" style="width: 100%" class="mat-elevation-z4" *ngIf="inquiry.inquiryImage">
+                </a>
+            </div>
+        </ng-container>
+
+        <ng-container>
+            <form [formGroup]="answerForm">
+                <div class="item-consult">
+                    <button mat-icon-button>
+                        <mat-icon>help_center</mat-icon>
+                        <span style="margin-left: 20px;">
+                            Respuesta
+                        </span>
+                    </button>
+                </div>
+                <div class="form-inputs">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Escribe tu respuesta</mat-label>
+                        <input matInput formControlName="answer" placeholder="Resultado" autocomplete="off">
+                    </mat-form-field>
+                </div>
+                <label for="inquiryImage">
+                    <div class="container-h2__image">
+                        <img [src]="imagesUpload" onError="this.src='../../../../../../../assets/img/camara.png'"
+                            alt="inquiry image" style="width: 100%" [ngClass]="{'mat-elevation-z4': imagesUpload}" />
+                        <button mat-icon-button (click)="deleteImage()" *ngIf="imagesUpload">
+                            <mat-icon color="warn">delete</mat-icon>
+                        </button>
+                    </div>
+                </label>
+                <input id="inquiryImage" type="file" style="display: none;" accept="image/x-png, image/jpg, image/jpeg"
+                    (change)="uploadFile($event)" />
+            </form>
+        </ng-container>
+
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close [disabled]="loading$ | async">CERRAR</button>
+        <button type="button" mat-raised-button color="primary" class="footer__btn-save"
+        (click)="onSubmit()" [disabled]="loading$ | async">GUARDAR</button>
+    </mat-dialog-actions>
+</div>

@@ -1,0 +1,144 @@
+<div class="container">
+    <div class="ms-dialog-header">
+        <mat-icon class="ms-dialog-header__icon">published_with_changes</mat-icon>
+        <h3 class="ms-dialog-header__title">Validación de reemplazos</h3>
+        <span class="ms-fill"></span>
+        <button mat-icon-button class="ms-dialog-header__close">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+    <mat-divider></mat-divider>
+    <form class="container-form" [formGroup]="validationLogisticForm" (ngSubmit)="save()" autocomplete="off" style="margin-top: 12px;">
+        <mat-dialog-content class="mat-typography">
+            <h3>Detalles de mejora</h3>
+            <!-- description -->
+            <div class="container-form__description">
+                <div class="container-form__description--inputs">
+                    <mat-form-field appearance="outline" style="width: 200px;">
+                        <mat-label>Nombre</mat-label>
+                        <input matInput placeholder="Nombre" formControlName="name">
+                        <mat-error *ngIf="validationLogisticForm.controls['name'].errors">
+                            Campo <strong>requerido.</strong>
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" style="width: 200px;">
+                        <mat-label>Modelo</mat-label>
+                        <input matInput placeholder="Modelo" formControlName="model">
+                        <mat-error *ngIf="validationLogisticForm.controls['model'].errors">
+                            Campo <strong>requerido.</strong>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field appearance="outline" style="width: 430px;">
+                        <mat-label>Descripción</mat-label>
+                        <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="6.15"
+                            cdkAutosizeMaxRows="15" formControlName="description" placeholder="Descripción"></textarea>
+                        <mat-error *ngIf="validationLogisticForm.controls['description'].errors">
+                            Campo <strong>requerido.</strong>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <!-- fin description -->
+            <div class="container-form__checked">
+                <div class="container-form__checked--input">
+                    <mat-form-field appearance="outline" style="width: 200px;">
+                        <mat-label>Compononte</mat-label>
+                        <input matInput placeholder="Compononte" formControlName="component">
+                        <mat-error *ngIf="validationLogisticForm.controls['component'].errors">
+                            Campo <strong>requerido.</strong>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="container-form__checked--date">
+                    <mat-form-field appearance="outline" style="width: 200px;">
+                        <mat-label>Fecha de publicación</mat-label>
+                        <input matInput [matDatepicker]="picker1" formControlName="date">
+                        <mat-error *ngIf="validationLogisticForm.controls['date'].errors">
+                            Campo <strong>requerido.</strong>
+                        </mat-error>
+                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="container-form__checked--cheked">
+                    <span>Parte crítica</span>
+                    <mat-checkbox class="checked-margin" color="primary" formControlName="criticalPart"></mat-checkbox>
+                    <span>Tarifa</span>
+                    <mat-checkbox class="checked-margin" color="primary" formControlName="rate"></mat-checkbox>
+                </div>
+            </div>
+            <h3>Lista de partes</h3>
+
+            <div formArrayName="parts">
+                <div *ngFor="let _ of parts.controls; index as i; index as j" class="form-array">
+                    <div [formGroupName]="i" class="container-form-array">
+                        <mat-form-field appearance="outline" style="width: 120px;" class="container-form-array__inputs">
+                            <mat-label>Parte</mat-label>
+                            <input matInput placeholder="Label" formControlName="sparePart">
+                            <mat-error *ngIf="parts.controls[i].get('sparePart').errors">
+                                Campo <strong>requerido.</strong>
+                            </mat-error>
+                            <mat-icon matSuffix>settings</mat-icon>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" style="width: 80px;" class="container-form-array__inputs">
+                            <mat-label>Cantidad</mat-label>
+                            <input matInput placeholder="Cantidad" formControlName="quantity">
+                            <mat-error *ngIf="parts.controls[i].get('quantity').errors">
+                                Campo <strong>requerido.</strong>
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" style="width: 100px;" class="container-form-array__inputs">
+                            <mat-label>Nº de parte actual</mat-label>
+                            <input matInput placeholder="Nº de parte actual" formControlName="currentPart">
+                            <mat-error *ngIf="parts.controls[i].get('currentPart').errors">
+                                Campo <strong>requerido.</strong>
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" style="width: 100px;" class="container-form-array__inputs">
+                            <mat-label>Nº de parte mejorada</mat-label>
+                            <input matInput placeholder="Nº de parte mejorada" formControlName="improvedPart">
+                            <mat-error *ngIf="parts.controls[i].get('improvedPart').errors">
+                                Campo <strong>requerido.</strong>
+                            </mat-error>
+                        </mat-form-field>
+                        <div class="container-form-array__checked">
+                            <span>Kit</span>
+                            <mat-checkbox class="checked-margin" color="primary" formControlName="kit"></mat-checkbox>
+                        </div>
+                        <mat-form-field appearance="outline" style="width:80px" class="container-form-array__inputs">
+                            <mat-label>Stock</mat-label>
+                            <input matInput type="number" placeholder="Stock" formControlName="stock" min="0" step="1">
+                            <mat-error *ngIf="parts.controls[i].get('stock').errors">
+                                Campo <strong>requerido.</strong>
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" style="width:150px" class="container-form-array__inputs">
+                            <mat-label>Fecha de disponibilidad</mat-label>
+                            <input matInput type="text" mask="00/00/0000" placeholder="dd/mm/yyyy"
+                                formControlName="availability">
+                            <mat-error *ngIf="parts.controls[i].get('availability').errors">
+                                Campo <strong>requerido.</strong>
+                            </mat-error>
+                        </mat-form-field>
+                        <div>
+                            <div class="container-form-array__checked">
+                                <span>Reemplazo</span>
+                                <mat-checkbox class="checked-margin" color="warn" formControlName="generateReplacement">
+                                </mat-checkbox>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </mat-dialog-content>
+        <mat-dialog-actions align="end">
+            <button type="button" mat-stroked-button color="warn" class="footer__btn-close"
+                mat-dialog-close>CERRAR</button>
+            <button type="button" mat-raised-button color="primary" class="footer__btn-save"
+                (click)="save()">GUARDAR</button>
+        </mat-dialog-actions>
+    </form>
+</div>

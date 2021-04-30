@@ -1,0 +1,47 @@
+table {
+    width: 100%;
+}
+
+.btn-add {
+    border: 1px #6200ee solid;
+    color: #6200ee;
+    margin-left: 10px;
+    padding: 0px 30px 0px 30px;
+    margin-top: 30px;
+    margin-left: 30px;
+}
+
+.table-header {
+    font-weight: bold;
+    padding: 10px;
+}
+
+.footer {
+    text-align: end;
+    margin: 50px 10px 50px 10px;
+
+    &__btn-close {
+        color: #b00020;
+        border: 1px solid #b00020;
+        margin-right: 20px;
+        padding: 0px 30px 0px 30px;
+    }
+
+    &__btn-save {
+        background: #6200ee;
+        color: white;
+        padding: 0px 30px 0px 30px;
+    }
+}
+table {
+    .table__cell {
+        min-width: 90px;
+        padding: 0px 8px;
+    }
+}
+
+.default {
+    border: 1px dashed lightgray;
+    padding: 1rem;
+    border-radius: 10px 10px;
+}

@@ -1,0 +1,25 @@
+.timer-container{
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+
+}
+
+.timer-title{
+    font-family: Roboto;
+    font-size: 1.1em;
+    margin-bottom: 0;
+}
+
+.timer {
+    width: 50px;
+    font-size: 2em;
+    font-family: Poppins;
+}
+
+.puntos {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

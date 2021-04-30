@@ -1,0 +1,29 @@
+.container {
+    width: 100%;
+    min-height: 91vh;
+    display: flex;
+    justify-content: center;
+
+    .default {
+        // background: cyan;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+        &-title {
+            align-self: center;
+            font-family: "Poppins", sans-serif;
+            font-weight: 600;
+            font-size: 2.2rem;
+            line-height: 36px;
+            color: #333;
+            text-align: center;
+        }
+
+        &-image {
+            margin: 20px;
+            width: 80vw;
+            max-width: 90vh;
+        }
+    }
+}

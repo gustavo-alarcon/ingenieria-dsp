@@ -1,0 +1,47 @@
+.container-header{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: stretch;
+
+    h1 {
+        margin: 0px;
+        align-self: center;
+    }
+
+    &--border {
+        border: 1px dashed lightcoral;
+        padding: 12px;
+        border-radius: 10px;
+        margin-bottom: 12px;
+    }
+
+    .timer {
+        display: flex;
+        align-self: center;
+    }
+}
+
+.imge{
+    width: 100%;
+}
+
+.container-images {
+    margin-top: 24px;
+}
+
+.container-title {
+    display: flex;
+    align-items: stretch;
+
+    .icon {
+        align-self: center;
+        margin-right: 8px;
+    }
+
+    .title {
+        margin: 0px;
+        align-self: center;
+    }
+}

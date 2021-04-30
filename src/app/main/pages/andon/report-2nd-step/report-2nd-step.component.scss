@@ -1,0 +1,138 @@
+.container {
+    margin: 30px 70px 30px 70px;
+}
+
+.header-container {
+    display: inline-flex;
+    margin-bottom: 10px;
+}
+
+.body-container {
+    text-align: center;
+}
+
+.report {
+    margin-top: 50px;
+    background: white;
+    padding: 24px 24px;
+    border: 1px solid lightgrey;
+    border-radius: 10px 10px 10px 10px;
+    width: fit-content;
+    margin: 24px auto;
+
+    &__title {
+        font-weight: bold;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+    }
+    &__form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        &--input {
+            width: 350px;
+        }
+        &--img {
+            width: 300px;
+            height: 200px;
+        }
+        &--card {
+            width: 400px;
+            height: 250px;
+            background: #f1f1f1;
+        }
+    }
+}
+
+.btn {
+    margin-top: 30px;
+    border: 1px solid #6200ee;
+    color: white;
+    background: #6200ee;
+    padding: 4px 40px 4px 40px;
+}
+.drop {
+    width: 300px;
+    height: 200px;
+}
+
+/* 
+  ##Dispositivo = Tablets de baja resolucion y telefnos Mobiles (horizontal)
+  ##Resolucion = B/w 481px to 767px
+*/
+
+@media (min-width: 481px) and (max-width: 767px) {
+    .report {
+        margin-top: 50px;
+        padding: 24px 24px;
+        border: 1px solid lightgrey;
+        border-radius: 10px 10px 10px 10px;
+        width: fit-content;
+        margin: 24px auto;
+        box-shadow: 2px 2px 4px lightgrey;
+
+        &__title {
+            font-weight: bold;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+        }
+        &__form {
+            &--input {
+                width: 350px;
+            }
+            &--img {
+                width: 300px;
+                height: 200px;
+            }
+        }
+    }
+
+    .dropzone {
+        width: 400px;
+        height: 300px;
+    }
+}
+
+/* 
+    ##Dispositivo = Mayoria de telefonos moviles (vertical)
+    ##Resolucion = B/w 320px to 479px
+  */
+
+@media (min-width: 320px) and (max-width: 480px) {
+    .report {
+        margin-top: 50px;
+        padding: 24px 24px;
+        border: 1px solid lightgrey;
+        border-radius: 10px 10px 10px 10px;
+        width: fit-content;
+        margin: 24px auto;
+        box-shadow: 2px 2px 4px lightgrey;
+        &__title {
+            font-weight: bold;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+        }
+        &__form {
+            &--input {
+                width: 260px;
+            }
+            &--img {
+                width: 250px;
+                height: 150px;
+            }
+        }
+
+        .btn {
+            margin-top: 30px;
+            background: #6200ee;
+            color: white;
+            padding: 4px 40px 4px 40px;
+            border: none;
+        }
+    }
+
+    .dropzone {
+        width: 300px;
+        height: 200px;
+    }
+}

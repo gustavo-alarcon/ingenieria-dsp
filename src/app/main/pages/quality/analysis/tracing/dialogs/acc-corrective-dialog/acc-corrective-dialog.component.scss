@@ -1,0 +1,39 @@
+
+.container{
+    display: flex;
+    flex-direction: column;
+    &__details{
+        margin-top: 20px;
+    }
+    &__informations{
+       
+    }
+    &__form{
+        display: flex;
+        flex-direction: row;
+
+        &--kit{
+            margin-top: 15px;
+            margin-right: 15px;
+        }
+        &--input1{
+            width: 260px;
+            margin-right: 15px; 
+        }
+        &--input2{
+            width: 160px;
+            margin-right: 15px; 
+        }
+        &--text{
+            margin-top: 5px;
+            font-size: 0.8em;
+            color: #0064EA;
+        }
+        &--btnadd{
+            margin: 0px 20px 50px 20px;
+            padding: 0px 20px 0px 20px;
+        }
+    }
+
+}
+

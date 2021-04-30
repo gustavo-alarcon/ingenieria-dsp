@@ -1,0 +1,31 @@
+<h2 mat-dialog-title>
+    <div class="container-header">
+        <div class="container-title">
+            <mat-icon class="icon">image</mat-icon>
+            <h3 class="title">
+                Imagenes
+            </h3>
+        </div>
+        <button mat-icon-button mat-dialog-close>
+            <mat-icon style="color: gray;">close</mat-icon>
+        </button>
+    </div>
+    <mat-divider style="margin-top: 10px;"></mat-divider>
+</h2>
+<mat-dialog-content class="mat-typography" style="color: gray;">
+    <ng-container *ngIf="images.length > 0; else default">
+        <div *ngFor="let img of images;let i=index;" class="images">
+            <a [href]="img" target="_blank" style="cursor: zoom-in">
+                <img [src]="img" *ngIf="img" class="images__image"  onError="this.src='../../../../../../../assets/img/camara.png'">
+            </a>
+         </div> 
+    </ng-container>
+     <ng-template #default>
+         <div class="default">
+             Sin imágenes
+         </div>
+     </ng-template>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close>CERRAR</button>
+</mat-dialog-actions>

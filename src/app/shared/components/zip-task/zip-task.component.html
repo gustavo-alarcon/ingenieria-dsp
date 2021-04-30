@@ -1,0 +1,9 @@
+<div style="position: relative;">
+    <div class="ms-zip-image" [ngStyle]="zipImage" [ngClass]="{'ms-zip-image--selected' : selected, 'ms-zip-image--reception' : reception}" (click)="toggleSelection()">
+    </div>
+    <div *ngIf="loading$ | async">
+        <mat-progress-bar *ngIf="loading$ | async" mode="indeterminate"></mat-progress-bar>
+        <span>comprimiendo</span>
+    </div>
+
+</div>

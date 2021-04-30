@@ -1,0 +1,250 @@
+.container {
+    margin: 30px 70px 30px 70px;
+}
+
+.header-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.container-title {
+    display: flex;
+    flex-direction: row;
+    margin-top: 10px;
+}
+
+.body-container {
+    display: flex;
+
+    &--mobile {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+.container1 {
+    margin: 16px;
+
+    &--mobile {
+        width: 100%;
+    }
+
+    &--desktop {
+        width: 50%;
+    }
+
+    &__problem {
+        background: white;
+        border-radius: 10px;
+        padding: 16px;
+
+        &--title {
+            text-align: center;
+            border-radius: 10px 10px 0px 0px;
+            padding: 16px;
+            margin: 0px;
+            font-weight: bold;
+            background: #ffffff;
+            color: #2b2b2b;
+        }
+
+        &--report {
+            background: #ffffff;
+            border-radius: 0px 0px 30px 30px;
+            margin: 20px;
+        }
+    }
+
+    &__top {
+        background: white;
+        border-radius: 10px;
+        padding: 16px;
+        margin: 16px 0px;
+
+        &--title1 {
+            text-align: center;
+            border-radius: 10px 10px 0px 0px;
+            padding: 16px;
+            margin: 0px;
+            font-weight: bold;
+            background: #ffffff;
+            color: #2b2b2b;
+        }
+    }
+
+    &__answer {
+        background: white;
+        border-radius: 10px;
+        padding: 16px;
+        margin: 16px 0px;
+
+        &--title {
+            text-align: center;
+            border-radius: 10px 10px 0px 0px;
+            padding: 16px;
+            margin: 0px;
+            font-weight: bold;
+            background: #ffffff;
+            color: #2b2b2b;
+        }
+
+        &--report {
+            background: #f9f9f9;
+            border-radius: 0px 0px 30px 30px;
+            margin: 20px;
+        }
+    }
+}
+
+.top-ten {
+    display: flex;
+
+    &__list1 {
+        list-style: none;
+        &--item {
+            width: 200px;
+        }
+    }
+    &__list2 {
+        list-style: none;
+        &--item {
+            width: 200px;
+        }
+    }
+}
+
+.container2 {
+    margin: 16px;
+
+    &--mobile {
+        width: 100%;
+    }
+
+    &--desktop {
+        width: 50%;
+    }
+
+    &__taller {
+        background: white;
+        border-radius: 10px;
+        padding: 16px;
+
+        &--title {
+            text-align: center;
+            border-radius: 10px 10px 0px 0px;
+            padding: 16px;
+            margin: 0px;
+            font-weight: bold;
+            background: #ffffff;
+            color: #2b2b2b;
+        }
+
+        &--cards {
+            display: grid;
+            column-gap: 1em;
+            row-gap: 1em;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            padding: 8px 8px;
+            border-radius: 10px 10px 0px 0px;
+
+            &-card {
+                box-shadow: 0px 0px 5.66077px 5.66077px rgba(177, 175, 175, 0.25);
+                margin: 8px auto;
+                background: #f2c94c;
+                border-radius: 30px;
+                width: 154px;
+                height: 170px;
+                cursor: pointer;
+            }
+
+            &-name {
+                font-family: "Poppins", sans-serif;
+                font-size: 1.5em;
+            }
+        }
+    }
+
+    &__card {
+        box-shadow: 0px 0px 5.66077px 5.66077px rgba(177, 175, 175, 0.25);
+        margin: 20px 20px 10px 20px;
+        background: #f2c94c;
+        border-radius: 30px;
+        height: 170px;
+        cursor: pointer;
+        &--name {
+            font-family: "Poppins", sans-serif;
+            font-size: 1.5em;
+        }
+        &--quatity {
+            font-weight: 700;
+            text-align: center;
+            font-size: 4rem;
+            margin-top: 30px;
+        }
+    }
+}
+
+.charts {
+    margin-right: 20px;
+}
+
+.title-card {
+    display: flex;
+    align-items: stretch;
+    margin: 14px 0px 0px 14px;
+
+    .icon {
+        align-self: center;
+        margin-right: 4px;
+    }
+
+    .title {
+        margin: 0px;
+        align-self: center;
+    }
+}
+
+.value-card {
+    font-weight: 700;
+    text-align: center;
+    font-size: 4rem;
+    margin-top: 30px;
+}
+
+/* 
+  ##Dispositivo = Tablets de baja resolucion y telefnos Mobiles (horizontal)
+  ##Resolucion = B/w 481px to 767px
+*/
+
+@media (min-width: 481px) and (max-width: 767px) {
+    .body-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .container1 {
+        width: 100%;
+    }
+
+    .top-ten {
+        display: flex;
+
+        &__list1 {
+            list-style: none;
+            &--item {
+                width: 180px;
+            }
+        }
+        &__list2 {
+            list-style: none;
+            &--item {
+                width: 180px;
+            }
+        }
+    }
+
+    .container2 {
+        width: 100%;
+    }
+}

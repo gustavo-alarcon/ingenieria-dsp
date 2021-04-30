@@ -1,0 +1,17 @@
+<div class="ms-container">
+  <div class="ms-toolbar">
+    <mat-icon class="ms-toolbar__icon">table_view</mat-icon>
+    <h1 class="ms-toolbar__title">Pre-evaluaciones</h1>
+  </div>
+  <div class="container-body">
+    <nav mat-tab-nav-bar>
+      <a mat-tab-link *ngFor="let link of navLinks" [routerLink]="link.link" routerLinkActive #rla="routerLinkActive"
+        [active]="rla.isActive" label="SOLICITUDES">
+        {{link.label}}
+      </a>
+    </nav>
+    <div class="container-router">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

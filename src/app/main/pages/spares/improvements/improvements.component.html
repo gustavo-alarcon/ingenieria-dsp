@@ -1,0 +1,115 @@
+<div class="ms-container">
+  <div class="ms-toolbar">
+    <mat-icon class="ms-toolbar__icon">turned_in</mat-icon>
+    <h1 class="ms-toolbar__title" [ngClass]="isMobile ? 'ms-toolbar__title--mobile' : 'ms-toolbar__title--desktop'">
+      Mejoras</h1>
+    <button mat-stroked-button class="ms-toolbar__button" (click)="openDialog('create')"
+      [ngClass]="isMobile ? 'ms-toolbar__button--mobile' : 'ms-toolbar__button--desktop'">
+      <mat-icon>add</mat-icon>
+      CREAR
+    </button>
+    <mat-form-field appearance="outline" class="ms-toolbar__input"
+      [ngClass]="isMobile ? 'ms-toolbar__input--mobile' : 'ms-toolbar__input--desktop'">
+      <mat-label>Buscar</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input matInput type="text" [formControl]="searchControl" placeholder="Escribir..." autocomplete="off">
+    </mat-form-field>
+    <span class="ms-fill"></span>
+    <button mat-stroked-button class="ms-toolbar__button" [routerLink]="['/main/replacements']"
+      [ngClass]="isMobile ? 'ms-toolbar__button--mobile' : 'ms-toolbar__button--desktop'">
+      <mat-icon>launch</mat-icon>
+      Ir a reemplazos
+    </button>
+  </div>
+  <mat-divider></mat-divider>
+
+  <div *ngIf="improvement$ |async; else default" class="body-container mat-elevation-z4">
+    <table mat-table [dataSource]="improvementDataSource" matSort (matSortChange)="sortData($event)">
+
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef class="ms-table__header" mat-sort-header> Fecha </th>
+        <td mat-cell *matCellDef="let element" class="ms-table__header"> {{(element.date.seconds * 1000) | date :
+          'dd/MM/yy'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef class="ms-table__header" mat-sort-header> Nombre de Mejora </th>
+        <td mat-cell *matCellDef="let element" class="ms-table__header"> {{element.name}} </td>
+      </ng-container>
+      <ng-container matColumnDef="component">
+        <th mat-header-cell *matHeaderCellDef class="ms-table__header" mat-sort-header> Componente </th>
+        <td mat-cell *matCellDef="let element" class="ms-table__header"> {{element.component}} </td>
+      </ng-container>
+      <ng-container matColumnDef="model">
+        <th mat-header-cell *matHeaderCellDef class="ms-table__header" mat-sort-header> Modelo </th>
+        <td mat-cell *matCellDef="let element" class="ms-table__header"> {{element.model}} </td>
+      </ng-container>
+      <ng-container matColumnDef="criticalPart">
+        <th mat-header-cell *matHeaderCellDef class="ms-table__header" mat-sort-header> Mejora critica </th>
+        <td mat-cell *matCellDef="let element" class="ms-table__header"> {{element.criticalPart ? 'Si':'No'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="createdBy">
+        <th mat-header-cell *matHeaderCellDef class="ms-table__header" mat-sort-header> Usuario </th>
+        <td mat-cell *matCellDef="let element" class="ms-table__header"> {{element.createdBy.name}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="state">
+        <th mat-header-cell *matHeaderCellDef class="ms-table__header" mat-sort-header> Estado </th>
+        <td mat-cell *matCellDef="let element" class="ms-table__header">
+          <button mat-button (click)="showImprovementEntry(element)"
+            [ngClass]="{'btn-state-register': element.state==='registered','btn-state-validate': element.state==='validated','btn-state-replacement': element.state==='replacement'}">
+            <span *ngIf="element.state === 'registered'">Registrado</span>
+            <span *ngIf="element.state === 'replacement'">Reemplazo</span>
+            <span *ngIf="element.state === 'validated'">Validado</span>
+          </button>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions" stickyEnd>
+        <th mat-header-cell *matHeaderCellDef class="ms-table__header">
+          Acciones
+        </th>
+        <td mat-cell *matCellDef="let element; let i = index">
+          <ng-container>
+            <mat-menu #rawMenu="matMenu">
+              <button class="w3-small" mat-menu-item *ngIf="element.state==='validated' || element.state==='registered'"
+                (click)="openDialog('validate', element, i)">
+                <mat-icon>check_circle</mat-icon>
+                Validar
+              </button>
+              <button class="w3-small" mat-menu-item *ngIf="element.state==='replacement'"
+                (click)="openDialog('replacement', element, i)">
+                <mat-icon>published_with_changes</mat-icon>
+                Reemplazo
+              </button>
+              <button class="w3-small" mat-menu-item (click)="openDialog('edit', element, i)">
+                <mat-icon>edit</mat-icon>
+                Editar
+              </button>
+              <button *ngIf="element.state==='registered'" class="w3-small" mat-menu-item
+                (click)="openDialog('delete',element,i)">
+                <mat-icon>delete</mat-icon>
+                Borrar
+              </button>
+            </mat-menu>
+
+            <button mat-icon-button [matMenuTriggerFor]="rawMenu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+          </ng-container>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="improvementDisplayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: improvementDisplayedColumns;"></tr>
+    </table>
+    <mat-paginator #improvementPaginator class="ms-paginator" [pageSizeOptions]="[20, 30, 40]" showFirstLastButtons>
+    </mat-paginator>
+  </div>
+  <ng-template #default>
+    <div class="ms-default">
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    </div>
+  </ng-template>
+</div>

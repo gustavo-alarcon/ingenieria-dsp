@@ -1,0 +1,104 @@
+<div class="container">
+    <h2 mat-dialog-title>
+        Mejora - {{data.name}}
+        <mat-divider></mat-divider>
+    </h2>
+    <form class="container-form" [formGroup]="showForm">
+        <mat-dialog-content class="mat-typography">
+            <h3>Detalles de mejora</h3>
+            <!-- description -->
+            <div class="container-form__description">
+                <div class="container-form__description--inputs">
+                    <mat-form-field appearance="outline" style="width: 200px;">
+                        <mat-label>Nombre</mat-label>
+                        <input matInput placeholder="Nombre" formControlName="name" readonly>
+                        <!-- <mat-error *ngIf="emailFormControl.hasError('required')">
+                            Email is <strong>required</strong>
+                          </mat-error> -->
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" style="width: 200px;">
+                        <mat-label>Modelo</mat-label>
+                        <input matInput placeholder="Modelo" formControlName="model" readonly>
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field appearance="outline" style="width: 430px;">
+                        <mat-label>Descripción</mat-label>
+                        <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="6.15"
+                            cdkAutosizeMaxRows="15" formControlName="description" placeholder="Descripción"
+                            readonly></textarea>
+                    </mat-form-field>
+                </div>
+            </div>
+            <!-- fin description -->
+            <div class="container-form__checked">
+                <div class="container-form__checked--input">
+                    <mat-form-field appearance="outline" style="width: 200px;">
+                        <mat-label>Compononte</mat-label>
+                        <input matInput placeholder="Compononte" formControlName="component" readonly>
+                    </mat-form-field>
+                </div>
+                <div class="container-form__checked--date">
+                    <mat-form-field appearance="outline" style="width: 200px;">
+                        <mat-label>Fecha de publicación</mat-label>
+                        <input matInput [matDatepicker]="picker1" formControlName="date" readonly>
+                        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                        <mat-datepicker #picker1></mat-datepicker>
+                    </mat-form-field>
+                </div>
+                <div class="container-form__checked--cheked">
+                    <span>Parte crítica</span>
+                    <mat-checkbox class="checked-margin" color="primary" formControlName="criticalPart" readonly>
+                    </mat-checkbox>
+                    <span>Tarifa</span>
+                    <mat-checkbox class="checked-margin" color="primary" formControlName="rate" readonly></mat-checkbox>
+                </div>
+            </div>
+            <h3>Lista de partes</h3>
+
+            <div formArrayName="parts">
+                <div *ngFor="let _ of parts.controls; index as i; index as j" class="form-array">
+                    <div [formGroupName]="i" class="container-form-array">
+                        <mat-form-field appearance="outline" style="width: 120px;" class="container-form-array__inputs">
+                            <mat-label>Parte</mat-label>
+                            <input matInput placeholder="Label" formControlName="sparePart" readonly>
+                            <mat-icon matSuffix>settings</mat-icon>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" style="width: 80px;" class="container-form-array__inputs">
+                            <mat-label>Cantidad</mat-label>
+                            <input matInput placeholder="Cantidad" formControlName="quantity" readonly>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" style="width: 100px;" class="container-form-array__inputs">
+                            <mat-label>Nº de parte actual</mat-label>
+                            <input matInput placeholder="Nº de parte actual" formControlName="currentPart" readonly>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" style="width: 100px;" class="container-form-array__inputs">
+                            <mat-label>Nº de parte mejorada</mat-label>
+                            <input matInput placeholder="Nº de parte mejorada" formControlName="improvedPart" readonly>
+                        </mat-form-field>
+                        <div class="container-form-array__checked">
+                            <span>Kit</span>
+                            <mat-checkbox class="checked-margin" color="primary" formControlName="kit" readonly>
+                            </mat-checkbox>
+                        </div>
+                        <mat-form-field appearance="outline" style="width:80px" class="container-form-array__inputs">
+                            <mat-label>Stock</mat-label>
+                            <input matInput type="number" placeholder="Stock" formControlName="stock" min="0" step="1"
+                                readonly>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" style="width:150px" class="container-form-array__inputs">
+                            <mat-label>Fecha de disponibilidad</mat-label>
+                            <input matInput type="text" mask="00/00/0000" placeholder="dd/mm/yyyy"
+                                formControlName="availability" readonly>
+                            <mat-error *ngIf="parts.controls[i].get('availability').errors">
+                                Campo <strong>requerido.</strong>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </mat-dialog-content>
+        <mat-dialog-actions align="end">
+        </mat-dialog-actions>
+    </form>
+</div>

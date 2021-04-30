@@ -1,0 +1,23 @@
+
+<div>
+    <div class="ms-dialog-header">
+        <mat-icon class="ms-dialog-header__icon">delete</mat-icon>
+        <h3 class="ms-dialog-header__title">Borrar</h3>
+        <span class="ms-fill"></span>
+        <button mat-icon-button mat-dialog-close>
+            <mat-icon>cancel</mat-icon>
+        </button>
+    </div>
+    <mat-divider></mat-divider>
+
+    <mat-dialog-content style="margin-top: 20px;" >
+        <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+        <p style="text-align: center;">¿Esta seguro de borrar el evento {{data.eventType    }} ({{data.workOrder}})? </p>
+        
+    </mat-dialog-content>
+    
+    <mat-dialog-actions align="end">
+        <button mat-stroked-button color="warn" mat-dialog-close [disabled]="loading$ | async">CANCELAR</button>
+        <button mat-stroked-button color="primary" (click)="save()" [disabled]="loading$ | async">SI, BORRAR</button>
+    </mat-dialog-actions>
+</div>

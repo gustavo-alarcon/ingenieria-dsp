@@ -1,0 +1,76 @@
+<div class="container">
+    <div class="ms-dialog-header">
+        <mat-icon class="ms-dialog-header__icon">add_circle_outline</mat-icon>
+        <h3 class="ms-dialog-header__title"> Nueva solicitud</h3>
+        <span class="ms-fill"></span>
+        <button mat-icon-button mat-dialog-close class="ms-dialog-header__close">
+            <mat-icon>clear</mat-icon>
+        </button>
+    </div>
+    <mat-divider></mat-divider>
+    <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+
+    <form class="container-form" [formGroup]="createEvaluateForm" autocomplete="off">
+        <mat-dialog-content class="mat-typography">
+            <div class="inputs">
+
+                <mat-form-field appearance="outline">
+                    <mat-label>WOF</mat-label>
+                    <input matInput placeholder="WOF" formControlName="wof">
+                    <mat-error type="text" *ngIf="createEvaluateForm.controls['wof'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>OT Child</mat-label>
+                    <input matInput placeholder="OT Child" formControlName="otChild">
+                    <mat-error type="text" *ngIf="createEvaluateForm.controls['otChild'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>N° de Parte</mat-label>
+                    <input type="text" matInput placeholder="N° de parte" formControlName="partNumber">
+                    <mat-error *ngIf="createEvaluateForm.controls['partNumber'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Descripción</mat-label>
+                    <input type="text" matInput placeholder="Descripción" formControlName="description">
+                    <mat-error *ngIf="createEvaluateForm.controls['description'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Taller</mat-label>
+                    <mat-select formControlName="workshop">
+                        <mat-option *ngFor="let item of workshops" [value]="item.code">
+                            {{item.location}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="createEvaluateForm.controls['workshop'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Observaciones</mat-label>
+                    <input type="text" matInput placeholder="Observaciones" formControlName="observations">
+                </mat-form-field>
+
+            </div>
+
+        </mat-dialog-content>
+        <mat-dialog-actions align="end">
+            <button type="button" mat-stroked-button color="warn" class="footer__btn-close"
+                mat-dialog-close>CERRAR</button>
+            <button type="submit" mat-raised-button color="primary" class="footer__btn-save"
+                [disabled]="!createEvaluateForm.valid" (click)="save()">GUARDAR</button>
+        </mat-dialog-actions>
+    </form>
+</div>

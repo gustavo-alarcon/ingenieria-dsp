@@ -1,0 +1,57 @@
+<div class="ms-dialog-header">
+    <mat-icon class="ms-dialog-header__icon">play_circle</mat-icon>
+    <h3 class="ms-dialog-header__title">Retomar</h3>
+    <span class="ms-fill"></span>
+    <button mat-icon-button class="ms-dialog-header__close" mat-dialog-close>
+        <mat-icon style="color: gray;">close</mat-icon>
+    </button>
+</div>
+<mat-divider></mat-divider>
+
+<mat-dialog-content class="mat-typography" style="color: gray; margin-top: 24px">
+    <form [formGroup]="returnForm" autocomplete="off" class="form">
+        <div class="form-container__form-inputs">
+            <mat-form-field appearance="outline" id="result" class="form__input">
+                <mat-label>Comentarios</mat-label>
+                <textarea matInput placeholder="Comentarios" formControlName="comments"></textarea>
+                <mat-error *ngIf="returnForm.controls['comments'].errors">
+                    Campo <strong>requerido.</strong>
+                </mat-error>
+            </mat-form-field>
+
+        </div>
+
+        <mat-card *ngFor="let img of images; let i = index;" class="form__image1" class="mat-elevation-z0">
+            <a [href]="img" target="_blank" style="cursor:zoom-in">
+                <img [src]="img" *ngIf="img" class="form__image1--image">
+            </a>
+        </mat-card>
+
+        <div class="dropzone" appDropzone (hovered)="toggleHover($event)" (dropped)="onDrop($event)"
+            [class.hovering]="isHovering">
+            <p>Arrastra imagenes aqui</p>
+            <div class="file">
+                <label class="file-label">
+                    <input class="file-input" type="file" (change)="onDrop($event.target.files)">
+                    <span class="file-cta">
+                        <span class="file-label">
+                            seleccione un imagen
+                        </span>
+                    </span>
+                </label>
+            </div>
+        </div>
+        <h3>Uploads</h3>
+
+        <div *ngFor="let file of files">
+            <app-upload-task [file]="file" [pathStorage]="pathStorage" (onNewImage)="addNewImage($event)">
+            </app-upload-task>
+        </div>
+
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close>CERRAR</button>
+    <button type="button" mat-raised-button color="primary" class="footer__btn-save" cdkFocusInitial (click)="save()">
+        RETOMAR</button>
+</mat-dialog-actions>

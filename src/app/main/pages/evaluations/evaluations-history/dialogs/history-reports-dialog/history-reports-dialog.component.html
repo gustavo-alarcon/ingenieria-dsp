@@ -1,0 +1,27 @@
+<div>
+    <div class="ms-dialog-header">
+        <mat-icon class="ms-dialog-header__icon">description</mat-icon>
+        <h3 class="ms-dialog-header__title"> Reporte de evaluaciones</h3>
+        <span class="ms-fill"></span>
+        <button mat-icon-button class="ms-dialog-header__close" mat-dialog-close>
+            <mat-icon>cancel</mat-icon>
+        </button>
+    </div>
+    <mat-divider></mat-divider>
+
+    <mat-dialog-content>
+        <p class="ms-dialog-info">El reporte se generará solo con la información filtrada y las evaluaciones que tengan
+            como resultado <b>fuera de servicio</b></p>
+        <p class="ms-dialog-info">Se reportarán: <b>{{data.length | number : '2.'}} Evaluaciones</b></p>
+        <br>
+        <div *ngIf="loading$ | async">
+            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            <span>Generando PDF ...</span><br>
+            <span style="font-size: 0.8rem;" class="ms-dialog-info">Este proceso puede demorar algunos minutos por la descarga de imágenes</span>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-stroked-button color="warn" mat-dialog-close>CERRAR</button>
+        <button mat-stroked-button class="ms-dialog-button" (click)="generatePDF()">GENERAR</button>
+    </mat-dialog-actions>
+</div>

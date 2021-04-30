@@ -1,0 +1,121 @@
+
+<div>
+    <div class="ms-dialog-header">
+        <mat-icon class="ms-dialog-header__icon">note_alt</mat-icon>
+        <h3 class="ms-dialog-header__title"> Editar eventos externos</h3>
+        <span class="ms-fill"></span>
+        <button mat-icon-button mat-dialog-close>
+            <mat-icon>cancel</mat-icon>
+        </button>
+    </div>
+    <mat-divider></mat-divider>
+
+    <mat-dialog-content style="margin-top: 20px;" >
+        <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+        <form [formGroup]="externalForm" autocomplete="off" class="container-form">
+
+            <div class="container-form__work">
+
+                <mat-form-field appearance="outline" class="container-form__work__input"
+                    [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
+                    <mat-label>Orden de trabajo actual</mat-label>
+                    <input matInput type="number" placeholder="Orden de trabajo" formControlName="workdOrden" />
+                    <mat-error *ngIf="externalForm.controls['workdOrden'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="container-form__work__input"
+                    [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
+                    <mat-label>Componente</mat-label>
+                    <input matInput type="text" placeholder="Component" formControlName="component" />
+                    <mat-error *ngIf="externalForm.controls['component'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="container-form__work__input"
+                    [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
+                    <mat-label> Numero de paqueteo</mat-label>
+                    <input matInput type="number" placeholder="Numero de paqueteo" formControlName="nPackage" />
+                    <mat-error *ngIf="externalForm.controls['nPackage'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="container-form__work__input"
+                    [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
+                    <mat-label> Horometro de componente</mat-label>
+                    <input matInput type="text" placeholder="Horometro de componente"
+                        formControlName="componentHourMeter" />
+                    <mat-error *ngIf="externalForm.controls['componentHourMeter'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="container-form__work__input"
+                    [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
+                    <mat-label> Numero de parte (Causante de falla)</mat-label>
+                    <input matInput type="text" placeholder="Numero de parte" formControlName="nPart" />
+                    <mat-error *ngIf="externalForm.controls['nPart'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="container-form__work__input"
+                    [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
+                    <mat-label> Operacion minera</mat-label>
+                    <input matInput type="text" placeholder="Operacion minera" formControlName="miningOperation" />
+                    <mat-error *ngIf="externalForm.controls['miningOperation'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
+
+
+            </div>
+            <br />
+            <mat-form-field appearance="outline" class="container-form__area"
+                [ngClass]="isMobile ? 'container-form__area--mobile' : 'container-form__area--desktop'">
+                <mat-label>1 ¿Cuéntame que sucedió?</mat-label>
+                <input matInput type="text" placeholder=" Escribir..." formControlName="question1">
+                <mat-error *ngIf="externalForm.controls['question1'].errors">
+                    Campo <strong>requerido.</strong>
+                </mat-error>
+            </mat-form-field>
+            <br>
+            <mat-form-field appearance="outline" class="container-form__area"
+                [ngClass]="isMobile ? 'container-form__area--mobile' : 'container-form__area--desktop'">
+                <mat-label>2. ¿Qué acciones de corrección se realizaron para solucionar el problema?</mat-label>
+                <input matInput type="text" placeholder=" Escribir..." formControlName="question2">
+                <mat-error *ngIf="externalForm.controls['question2'].errors">
+                    Campo <strong>requerido.</strong>
+                </mat-error>
+            </mat-form-field>
+            <br>
+            <mat-form-field appearance="outline" class="container-form__area"
+                [ngClass]="isMobile ? 'container-form__area--mobile' : 'container-form__area--desktop'">
+                <mat-label>3. ¿Cuál crees que fue la causa de la falla?</mat-label>
+                <input matInput type="text" placeholder=" Escribir..." formControlName="question3">
+                <mat-error *ngIf="externalForm.controls['question3'].errors">
+                    Campo <strong>requerido.</strong>
+                </mat-error>
+            </mat-form-field>
+            <br>
+            <mat-form-field appearance="outline" class="container-form__area"
+                [ngClass]="isMobile ? 'container-form__area--mobile' : 'container-form__area--desktop'">
+                <mat-label>4. ¿Qué recomendarias para evitar que este problema vuelva a suceder?</mat-label>
+                <input matInput type="text" placeholder=" Escribir...    " formControlName="question4">
+                <mat-error *ngIf="externalForm.controls['question4'].errors">
+                    Campo <strong>requerido.</strong>
+                </mat-error>
+            </mat-form-field>
+            <br>
+
+        </form>
+    </mat-dialog-content>
+    
+    <mat-dialog-actions align="end">
+        <button mat-stroked-button color="warn" mat-dialog-close [disabled]="loading$ | async">CANCELAR</button>
+        <button mat-stroked-button color="primary" (click)="save()" [disabled]="loading$ | async">GUARDAR</button>
+    </mat-dialog-actions>
+</div>

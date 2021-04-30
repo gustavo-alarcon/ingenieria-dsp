@@ -1,0 +1,39 @@
+
+
+<div>
+    <div class="ms-dialog-header">
+        <mat-icon class="ms-dialog-header__icon">settings</mat-icon>
+        <h3 class="ms-dialog-header__title"> Configuraciones </h3>
+        <span class="ms-fill"></span>
+        <button mat-icon-button mat-dialog-close>
+            <mat-icon>cancel</mat-icon>
+        </button>
+    </div>
+    <mat-divider></mat-divider>
+
+    <mat-dialog-content style="margin-top: 20px;" *ngIf="generalConfig$ | async">
+        <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+        <p style="text-align: center;">Tiempo máximo en solicitud (días:hh:mm)</p>
+        <div>
+            <form [formGroup]="timerFormGroup" class="timer-container">
+                <mat-form-field class="timer">
+                    <input matInput type="number" min="0" formControlName="days" autocomplete="off" required>
+                </mat-form-field>
+                <span class="timer puntos"> : </span>
+                <mat-form-field class="timer">
+                    <input matInput type="number" min="0" formControlName="hours" autocomplete="off" required>
+                </mat-form-field>
+                <span class="timer puntos"> : </span>
+                <mat-form-field class="timer">
+                    <input matInput type="number" min="0" formControlName="minutes" autocomplete="off" required>
+                </mat-form-field>
+            </form>
+        </div>
+
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+        <button mat-stroked-button color="warn" mat-dialog-close [disabled]="loading$ | async">CANCELAR</button>
+        <button mat-stroked-button color="primary" (click)="save()" [disabled]="loading$ | async">GUARDAR</button>
+    </mat-dialog-actions>
+</div>

@@ -1,0 +1,22 @@
+<div class="container">
+    <div mat-dialog-title class="header">
+        <mat-icon class="header__icon">play_circle_outline</mat-icon>
+        <h3 class="header__title">
+            Iniciar proceso
+        </h3>
+        <span class="ms-fill"></span>
+        <button mat-icon-button mat-dialog-close>
+            <mat-icon class="header__icon">close</mat-icon>
+        </button>
+    </div>
+    <mat-divider></mat-divider>
+    <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+    <mat-dialog-content style="margin-top: 20px;">
+        <p style="text-align: center;">Esta seguro de inciar el proceso de evaluación para la OT - {{data.otMain}}</p>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close>CERRAR</button>
+        <button type="button" mat-raised-button color="primary" class="footer__btn-save"
+            (click)="save()">GUARDAR</button>
+    </mat-dialog-actions>
+</div>

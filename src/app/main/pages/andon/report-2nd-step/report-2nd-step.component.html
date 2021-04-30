@@ -1,0 +1,98 @@
+<div class="ms-container">
+    <div class="ms-toolbar">
+        <mat-icon class="ms-toolbar__icon">radio_button_checked</mat-icon>
+        <h1 class="ms-toolbar__title" [ngClass]="isMobile ? 'ms-toolbar__title--mobile' : 'ms-toolbar__title--desktop'">
+            Reportar
+        </h1>
+    </div>
+    <mat-divider></mat-divider>
+    <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+
+    <div class="body-container">
+        <div class="report mat-elevation-z4">
+            <form action="" [formGroup]="reportForm" autocomplete="off" class="report__form">
+                <p style="margin-left: 0px;">OT CHILD : {{otChild ? otChild : '---'}} </p>
+                <mat-form-field appearance="outline" id="result" class="report__form--input">
+                    <mat-label>Tipo de problema</mat-label>
+                    <mat-select formControlName="problemType" class="">
+                        <mat-option *ngFor="let item of typeProblem$ | async" [value]="item.name"
+                        (click)="onClickProblemType(item)"
+                        >
+                            {{item.name}}</mat-option>
+                    </mat-select>
+                    <mat-hint *ngIf="!(typeProblem$ | async)">
+                        <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                        <p>Cargando lista ...</p>
+                    </mat-hint>
+                    <mat-error *ngIf="reportForm.controls['problemType'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
+                <br />
+                <mat-form-field appearance="outline" id="result" class="report__form--input">
+                    <mat-label>Descripcion</mat-label>
+                    <textarea matInput placeholder="Descripcion" formControlName="description">
+
+                    </textarea>
+                    <mat-error *ngIf="reportForm.controls['description'].errors">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field *ngIf="filteredBroadcast$ | async as broadcasts" appearance="outline" id="result" class="report__form--input">                     
+                    <mat-label>Enviar a</mat-label>
+                    <mat-chip-list #chipList aria-label="Fruit selection">
+                      <mat-chip
+                        *ngFor="let email of emailArray"
+                        [selectable]="selectable"
+                        [removable]="removable"
+                        (removed)="removeEmail(email)">
+                        {{email}}
+                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                      </mat-chip>
+                      <input
+                        placeholder="agregar nueva lista de difusion..."
+                        #emailInput
+                        [formControl]="broadcastControl"
+                        [matAutocomplete]="auto"
+                        [matChipInputFor]="chipList"
+                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                        (matChipInputTokenEnd)="addBroadcast($event)">
+                    </mat-chip-list>
+                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedBroadcast($event)">
+                      <mat-option *ngFor="let broadcast of broadcasts" [value]="broadcast">
+                        {{broadcast.name}}
+                      </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+
+                <mat-divider style="margin: 20px 0px;"></mat-divider>
+                <div class="dropzone" appDropzone (hovered)="toggleHover($event)" (dropped)="onDrop($event)"
+                    [class.hovering]="isHovering">
+                    <p>Arrastrar imágenes</p>
+                    <div class="file">
+                        <label class="file-label">
+                            <input class="file-input" type="file" (change)="onDrop($event.target.files)">
+                            <span class="file-cta">
+                                <span class="file-label">
+                                    Seleccione
+                                </span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                <h3>Uploads</h3>
+
+                <div *ngFor="let file of files">
+                    <app-upload-task [file]="file" [pathStorage]="pathStorage" (onNewImage)="addNewImage($event)">
+                    </app-upload-task>
+                </div>
+
+                <button mat-button type="submit" class="btn" (click)="save()">
+                    GUARDAR
+                </button>
+
+            </form>
+        </div>
+    </div>
+</div>

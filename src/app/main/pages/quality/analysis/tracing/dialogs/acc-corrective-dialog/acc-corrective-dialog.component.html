@@ -1,0 +1,80 @@
+<div>
+    <div class="ms-dialog-header">
+        <mat-icon class="ms-dialog-header__icon">fact_check</mat-icon>
+        <h3 class="ms-dialog-header__title">Acciones correctivas </h3>           
+        <span class="ms-fill"></span>
+        <button mat-icon-button mat-dialog-close>
+            <mat-icon>cancel</mat-icon>
+        </button>
+    </div>
+    <mat-divider></mat-divider>
+    <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+    <mat-dialog-content >
+        <div class="container">
+            <div class="container__details">
+                <p><span style="font-weight: bold;"> OT Actual :</span> {{data.workOrder ? data.workOrder : ''}}</p>
+                <p><span style="font-weight: bold;"> Componente :</span> {{data.component ? data.component : ''}}</p>
+                <p *ngIf="data.packageNumber"><span style="font-weight: bold;"> Número de paqueteo :</span> {{data.packageNumber ? data.packageNumber : ''}}</p>
+                <p *ngIf="data.componentHourMeter"><span  style="font-weight: bold;"> Horómetro de componente :</span> {{data.componentHourMeter ? data.componentHourMeter : ''}}</p>
+                <p><span style="font-weight: bold;"> Número de parte :</span> {{data.partNumber ? data.partNumber : ''}}</p>
+                <p><span style="font-weight: bold;"> Tipo de evento :</span> {{data.eventType ? data.eventType : ''}} </p>
+                <p *ngIf="data.miningOperation"><span style="font-weight: bold;"> Operacion minera :</span> {{data.miningOperation ? data.miningOperation : ''}} </p>
+                <p><span style="font-weight: bold;"> Fecha :</span>
+                    {{data.createdAt ? ((data.createdAt['seconds'] * 1000) | date : 'dd/MM/yy - hh:mm:ss'): ''}}
+                </p>
+            </div>
+            <mat-divider style="width: 100%;"> </mat-divider>
+            <div class="container__informations">
+                <h3 style="margin-top: 15px; font-weight: bold;">Acciones correctivas</h3>
+                <form   *ngFor="let item of dataArea; let i = index"
+                     class="container__form"
+                    >
+                    <div class="container__form--kit">
+                        <mat-checkbox class="checked-margin" color="primary" name="kit"  [(ngModel)]="item.kit">
+                        </mat-checkbox>
+                    </div>
+
+                    <mat-form-field appearance="outline"   class="container__form--input1">
+                        <mat-label>Accion correctiva {{i}}</mat-label>
+                        <input matInput placeholder="Escribe..." readonly name="corrective"  [(ngModel)]="item.corrective">
+                        <!-- <mat-error *ngIf="listAreaForm.get('corrective').errors">
+                            Campo <strong>requerido.</strong>
+                        </mat-error> -->
+                    </mat-form-field>       
+
+                    <mat-form-field appearance="outline"   class="container__form--input2">
+                        <mat-label>Area responsable</mat-label>
+                        <input matInput placeholder="Escribe..." readonly name="name"  [(ngModel)]="item.name">
+                       <!--  <mat-error *ngIf="listAreaForm.get('name').errors">
+                            Campo <strong>requerido.</strong>
+                        </mat-error> -->
+                    </mat-form-field>   
+                    
+                    <h3 *ngIf="item.nameFile"  class="container__form--text" name=""   >{{item.nameFile}} </h3>
+                    <div >
+                        <input #fileInput2 style="display: none" type="file" 
+                               id="fileInput2"
+                               (change)="uploadFiles($event,item)" accept="*"
+                            
+                               >
+                               <br>
+                        <button type="file" mat-stroked-button color="primary" aria-label="add"  mat-button class="container__form--btnadd"
+                                accept="*" 
+                            (click)="fileInput2.click()">
+                            <mat-icon aria-label="agregar" color="primary">add</mat-icon>
+                            ADJUNTAR 
+                        </button>                            
+                    </div>         
+                    
+                </form>
+
+            </div>
+        </div>
+        
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-stroked-button color="warn" mat-dialog-close [disabled]="loading$ | async">CANCELAR</button>
+        <button mat-stroked-button color="primary" (click)="save()" [disabled]="loading$ | async">GUARDAR</button>
+    </mat-dialog-actions>
+   
+</div>

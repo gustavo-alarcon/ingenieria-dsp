@@ -1,0 +1,82 @@
+<div>
+    <div class="ms-dialog-header">
+        <mat-icon class="ms-dialog-header__icon">visibility</mat-icon>
+        <h3 class="ms-dialog-header__title"> Detalle evento interno </h3>
+        <span class="ms-fill"></span>
+        <button mat-icon-button mat-dialog-close>
+            <mat-icon>cancel</mat-icon>
+        </button>
+    </div>
+    <mat-divider></mat-divider>
+
+    <mat-dialog-content style="margin-top: 20px;">
+        <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+        <div>
+            <form [formGroup]="detailFormGroup" class="timer-container">
+                <p><span style="font-weight: bold;"> OT actual :</span> {{data.workOrder ? data.workOrder : ''}}</p>
+                <p><span style="font-weight: bold;"> Número de parte :</span> {{data.partNumber ? data.partNumber : ''}}
+                </p>
+                <p><span style="font-weight: bold;"> Taller:</span> {{data.workShop ? data.workShop : ''}}</p>
+                <p><span style="font-weight: bold;"> Tipo de evento :</span> {{data.eventType? data.eventType : ''}}</p>
+                <p><span style="font-weight: bold;"> Fecha :</span>
+                    {{data.createdAt ? ((data.createdAt['seconds'] * 1000) | date : 'dd/MM/yy - hh:mm:ss'): ''}}
+                </p>
+
+                <mat-form-field appearance="outline" id="result" class="timer-container__input">
+                    <mat-label>Detalle de evento</mat-label>
+                      <input  matInput type="text" placeholder="Detalle de evento" formControlName="enventDetail"  readonly                     
+                      >  
+                </mat-form-field>              
+                <br>
+                <h3 class="corrective-actions__title">Análisis</h3>
+                <p><span style="font-weight: bold;"> Calidad:</span> {{data.analysisQuality ? data.analysisQuality : '-'}}</p>
+                <p><span style="font-weight: bold;"> Costo:</span> {{data.analysisCost ? data.analysisCost : '-'}}</p>
+                <p><span style="font-weight: bold;"> Frecuencia:</span> {{data.analysisFrequency ? data.analysisFrequency : '-'}}</p>
+                <p><span style="font-weight: bold;"> Nivel de riesgo:</span> {{data.evaluationAnalysisName ? data.evaluationAnalysisName : '-'}}</p>
+                <p><span style="font-weight: bold;"> Causante de falla:</span> {{data.analysis ? data.analysis['causeFailure'] : '-'}}</p>
+                <p><span style="font-weight: bold;"> Proceso:</span> {{data.analysis ? data.analysis['process'] : '-'}}</p>
+                <p><span style="font-weight: bold;"> Observacion:</span> {{data.analysis ? data.analysis['observation'] : '-'}}</p>
+                
+                <h3>Imagen general</h3>              
+                <div class="container-image" >
+                    <picture *ngFor="let item of imagesGeneral; index as i">
+                        <a [href]="item" target="_blank" style="cursor: zoom-in">
+                            <img [src]="item" alt="" class="container-image__img">
+                        </a>
+                    </picture>
+                </div>
+
+                <p class="corrective-actions__title">Imagen detalle</p>
+                <div class="container-image">
+                    <picture *ngFor="let item of imagesDetail; index as i">
+                        <a [href]="item" target="_blank" style="cursor: zoom-in">
+                            <img [src]="item" alt="" class="container-image__img">
+                        </a>
+                    </picture>
+                </div>
+
+                <p class="corrective-actions__title">Archivo adicional</p>
+                <div class="container-file">
+                    <div *ngIf="this.data.fileAdditional; else nofile">
+                        <div *ngFor="let item of this.data.fileAdditional">
+                            <mat-icon>insert_drive_file</mat-icon>
+                            <a [href]="item.url" class="container-file__name">
+                                {{item.name}}
+                            </a>
+                        </div>
+                    </div>
+                    <ng-template #nofile>
+                        <mat-icon>insert_drive_file</mat-icon>
+                        No tiene archivos
+                    </ng-template>
+                </div>
+
+            </form>
+        </div>
+
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+        <button mat-stroked-button color="warn" mat-dialog-close [disabled]="loading$ | async">CANCELAR</button>
+    </mat-dialog-actions>
+</div>

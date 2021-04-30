@@ -1,0 +1,36 @@
+<div class="ms-container">
+    <div class="ms-toolbar">
+        <button mat-icon-button class="ms-toolbar__button--back" routerLink="..">
+            <mat-icon>keyboard_backspace</mat-icon>
+        </button>
+
+        <h1 class="ms-toolbar__title">Generar despacho</h1>
+        <span class="ms-fill"></span>
+        <button mat-stroked-button class="ms-toolbar__button" [disabled]="!checkIfImagesSelected()"
+            (click)="generateReport()">
+            <mat-icon>article</mat-icon>
+            GENERAR DESPACHO
+        </button>
+    </div>
+    <mat-divider></mat-divider>
+
+    <div class="dropzone" appDropzone (hovered)="toggleHover($event)" (dropped)="onDrop($event)"
+        [class.hovering]="isHovering" style="height:125px">
+        <p>Arrastrar imágenes</p>
+        <div class="file">
+            <label class="file-label">
+                <input #uploadFiles class="file-input" type="file" multiple (change)="onDrop($event.target.files)">
+                <button mat-stroked-button (click)="uploadFiles.click()" class="ms-button">
+                    <mat-icon class="ms-button--icon">add_photo_alternate</mat-icon>
+                    Seleccionar imágenes
+                </button>
+            </label>
+        </div>
+    </div>
+
+    <div class="ms-dropzone-grid">
+        <app-zip-task *ngFor="let file of files" [counter]="imageCounter" [file]="file" [pathStorage]="pathStorage"
+            (onNewImage)="addNewImage($event)" [reception]="checkReception(file)" style="padding: 10px;">
+        </app-zip-task>
+    </div>
+</div>
