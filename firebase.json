@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "/dist/ingenieria-dsp",
+    "public": "dist/ingenieria-dsp",
     "ignore": [
       "firebase.json",
       "**/.*",
