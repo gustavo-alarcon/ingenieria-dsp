@@ -180,7 +180,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
       this.data.correctiveActions.forEach(accion => {
         this.addControl(accion);
       });
-      
+
       //this.analysisForm.get('quality').setValue(this.data.analysis['quality']['name']);
       //this.analysisForm.controls['quality'].setValue(this.data.analysis['quality']);
 
@@ -240,7 +240,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
         closedAt: null,
         user: null,
       });
-    }else{
+    } else {
       group = this.fb.group({
         corrective: ['', Validators.required],
         name: ['', Validators.required],
@@ -254,7 +254,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
 
     }
 
-    
+
     this.areas.push(group);
   }
 
@@ -282,7 +282,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
   save(): void {
 
     try {
-      if (this.areas.valid ) {
+      if (this.areas.valid) {
         const resp = this.qualityService.updateQualityEvaluationAnalysis(
           this.data,
           this.resultAnalysis,
@@ -306,6 +306,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
                   this.dialog.closeAll();
                 })
                 .catch((err) => {
+
                   this.snackbar.open(
                     '🚨 Hubo un error al actualizar  !',
                     'Aceptar',
