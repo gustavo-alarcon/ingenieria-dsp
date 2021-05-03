@@ -55,17 +55,42 @@
                     <input matInput type="text" placeholder="Bahia" formControlName="question4" readonly>
                 </mat-form-field>
 
-                <h3 class="corrective-actions__title">Análisis</h3>
-                <p><span style="font-weight: bold;"> Calidad:</span> {{data.analysisQuality ? data.analysisQuality : '-'}}</p>
-                <p><span style="font-weight: bold;"> Costo:</span> {{data.analysisCost ? data.analysisCost : '-'}}</p>
-                <p><span style="font-weight: bold;"> Frecuencia:</span> {{data.analysisFrequency ? data.analysisFrequency : '-'}}</p>
-                <p><span style="font-weight: bold;"> Nivel de riesgo:</span> {{data.evaluationAnalysisName ? data.evaluationAnalysisName : '-'}}</p>
-                <p><span style="font-weight: bold;"> Causante de falla:</span> {{data.analysis ? data.analysis['causeFailure'] : '-'}}</p>
-                <p><span style="font-weight: bold;"> Proceso:</span> {{data.analysis ? data.analysis['process'] : '-'}}</p>
-                <p><span style="font-weight: bold;"> Observacion:</span> {{data.analysis ? data.analysis['observation'] : '-'}}</p>
-                
+                <div class="details-title">
+                    <h3>Análisis</h3>
+                    <span class="ms-fill details-title__decoration"></span>
+                </div>
 
-                <p class="corrective-actions__title">Imágenes generales</p>
+                <p class="analysis-result"><span> Calidad:</span> {{data.analysisQuality ? data.analysisQuality : '-'}}
+                </p>
+                <p class="analysis-result"><span> Costo:</span> {{data.analysisCost ? data.analysisCost : '-'}}</p>
+                <p class="analysis-result"><span> Frecuencia:</span> {{data.analysisFrequency ? data.analysisFrequency :
+                    '-'}}</p>
+                <p class="analysis-result"><span> Nivel de riesgo:</span> {{data.evaluationAnalysisName ?
+                    (data.evaluationAnalysisName + ' (' + data.evaluationAnalisis + ')') : '-'}}</p>
+                <p class="analysis-result"><span> Causante de falla:</span> {{data.analysis ?
+                    data.analysis['causeFailure'] : '-'}}</p>
+                <p class="analysis-result"><span> Proceso:</span> {{data.analysis ? data.analysis['process'] : '-'}}</p>
+                <p class="analysis-result"><span> Observación:</span> {{data.analysis ? data.analysis['observation'] :
+                    '-'}}</p>
+
+                <ng-container *ngIf="data.correctiveActions">
+                    <div class="details-title">
+                        <h3>Acciones correctivas</h3>
+                        <span class="ms-fill details-title__decoration"></span>
+                    </div>
+                    <div *ngFor="let action of data.correctiveActions; let i = index" class="corrective-actions__list">
+                        <span class="corrective-actions__index"
+                            [ngClass]="{'corrective-actions__index--done' : action.kit}">{{i+1}}</span>
+                        <span class="corrective-actions__description">{{action.corrective}}</span>
+                        <span class="ms-fill"></span>
+                        <span class="corrective-actions__area">{{action.name}}</span>
+                    </div>
+                </ng-container>
+
+                <div class="details-title">
+                    <h3>Imágenes generales</h3>
+                    <span class="ms-fill details-title__decoration"></span>
+                </div>
                 <div class="container-image">
                     <picture *ngFor="let item of imagesGeneral; index as i">
                         <a [href]="item" target="_blank" style="cursor: zoom-in">
@@ -74,7 +99,10 @@
                     </picture>
                 </div>
 
-                <p class="corrective-actions__title">Imágenes de detalle</p>
+                <div class="details-title">
+                    <h3>Imágenes de detalle</h3>
+                    <span class="ms-fill details-title__decoration"></span>
+                </div>
                 <div class="container-image">
                     <picture *ngFor="let item of imagesDetail; index as i">
                         <a [href]="item" target="_blank" style="cursor: zoom-in">
@@ -83,7 +111,10 @@
                     </picture>
                 </div>
 
-                <p class="corrective-actions__title">Archivos adicionales</p>
+                <div class="details-title">
+                    <h3>Archivos adicionales</h3>
+                    <span class="ms-fill details-title__decoration"></span>
+                </div>
                 <div class="container-file">
                     <div *ngIf="this.data.fileAdditional; else nofile">
                         <mat-icon>insert_drive_file</mat-icon>
