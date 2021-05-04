@@ -50,17 +50,17 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
   filteredBroadcast$: Observable<EvaluationBroadcastList[]>;
   broadcastControl = new FormControl();
   listBroadcast: string[] = [];
-   // chips
-   visible = true;
-   selectable = true;
-   removable = true;
-   separatorKeysCodes: number[] = [ENTER, COMMA];
- 
-   @ViewChild('emailInput') emailInput: ElementRef<HTMLInputElement>;
-   @ViewChild('auto') matAutocomplete: MatAutocomplete;
+  // chips
+  visible = true;
+  selectable = true;
+  removable = true;
+  separatorKeysCodes: number[] = [ENTER, COMMA];
 
-   user: User;
-   counter = 0;
+  @ViewChild('emailInput') emailInput: ElementRef<HTMLInputElement>;
+  @ViewChild('auto') matAutocomplete: MatAutocomplete;
+
+  user: User;
+  counter = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -101,7 +101,10 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
       })
     );
 
-    this.emailArray.push(this.data.createdBy.email);
+    if (this.data.createdBy) {
+      this.emailArray.push(this.data.createdBy.email);
+    }
+
 
     this.result$ = this.evaluationServices.getAllEvaluationsSettingsResultType();
     this.kindOfTests$ = this.evaluationServices.getAllEvaluationsSettingsKindOfTest();
@@ -248,7 +251,7 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
   }
 
 
-  
+
   removeEmail(email: string): void {
     const index = this.emailArray.indexOf(email);
 

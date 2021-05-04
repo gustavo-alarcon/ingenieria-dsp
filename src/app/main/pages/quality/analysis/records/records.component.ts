@@ -68,7 +68,7 @@ export class RecordsComponent implements OnInit {
         filter(input => input !== null),
         startWith<any>('')),
       this.eventTypeControl.valueChanges.pipe(startWith('')),
-      this.auth.getGeneralConfig()
+      this.auth.getGeneralConfigQuality()
     ).pipe(
       map(([qualities, search, codeEventType, generalConfig]) => {
 
@@ -169,7 +169,7 @@ export class RecordsComponent implements OnInit {
 
   assignSpecialist(item: Evaluation): void {
     this.dialog.open(AssignSpecialistDialogComponent, {
-      maxWidth: 500,
+      maxWidth: 600,
       width: '90vw',
       data: item,
     });

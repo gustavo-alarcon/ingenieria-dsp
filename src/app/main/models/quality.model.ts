@@ -31,7 +31,13 @@ export interface Quality {
   attentionTimeElapsed?: QualityTimer;
   //finalizedAt?: Date;
   //finalizedBy: User;
-  evaluationAnalisisName?: string;
+  analysisQuality: string;
+  analysisCost: string;
+  analysisFrequency: string;
+  //analysisCauseFailure: string;
+  //analysisProcess: string;
+  //analysisObservation: string;
+  evaluationAnalysisName?: string;
   fileAdditional?: FileAdditional;
   taskDone?: number;
   causeFailureList: Array<string>;
@@ -119,19 +125,20 @@ export interface FrequencyList {
   name: string;
 }
 export interface ComponentList {
-  code: number;
+  id: number;
   name: string;
+  createdAt: Date;
 }
 export interface WorkShopList {
-  code: number;
+  id: number;
   name: string;
+  createdAt: Date;
 }
 
 export interface MiningOperation {
-  id?: string;
+  id: number;
   name: string;
   createdAt: Date;
-  createdBy: User;
 }
 export interface FileAdditional {
   name: string;

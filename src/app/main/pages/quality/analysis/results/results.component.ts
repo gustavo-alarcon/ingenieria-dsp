@@ -41,6 +41,8 @@ export class ResultsComponent implements OnInit {
     'miningOperation',
     'specialist',
     'accCorrective',
+    'causeFailure',
+    'process',
     'riskLevel',
     'user',
     'state',
@@ -61,6 +63,7 @@ export class ResultsComponent implements OnInit {
 
   workShopControl = new FormControl('');
   eventTypeControl = new FormControl('');
+  statusControl = new FormControl('');
   searchControl = new FormControl('');
 
   eventType = [
@@ -69,6 +72,22 @@ export class ResultsComponent implements OnInit {
     },
     {
       code: 'Externo', event: 'Externos'
+    }
+  ];
+  //  state?: string; // => registered / process / tracing / finalized
+
+  status = [
+    {
+      code: 'registered', name: 'Registro'
+    },
+    {
+      code: 'process', name: 'Proceso'
+    },
+    {
+      code: 'tracing', name: 'Siguimiento'
+    },
+    {
+      code: 'finalized', name: 'Finalizado'
     }
   ];
 
@@ -120,6 +139,11 @@ export class ResultsComponent implements OnInit {
         filter((input) => input !== null),
         startWith<any>('')
       ),
+      this.statusControl.valueChanges.pipe(
+        debounceTime(300),
+        filter((input) => input !== null),
+        startWith<any>('')
+      ),
       this.eventTypeControl.valueChanges.pipe(
         debounceTime(300),
         filter((input) => input !== null),
@@ -139,26 +163,32 @@ export class ResultsComponent implements OnInit {
         map(end => end ? end.setHours(23, 59, 59) : null)
       )
     ).pipe(
-      map(([qualities, workShop, codeEventType, search, startdate, enddate]) => {
+      map(([qualities, workShop, status , codeEventType, search, startdate, enddate]) => {
 
         const date = { begin: startdate, end: enddate };
 
         const searchTerm = search.toLowerCase().trim();
+        const searchworkshop = workShop.toLowerCase().trim();
         let preFilterSearch: Quality[] = [...qualities];
         let preFilterEventType: Quality[] = [];
         let preFilterWorkShop: Quality[] = [];
+        let preFilterStatus: Quality[] = [];
 
 
-        if (codeEventType || workShop) {
-          preFilterEventType = qualities.filter(quality => quality.eventType === codeEventType);
+        if (codeEventType || workShop || status) {
+          preFilterEventType = codeEventType ? qualities.filter(quality => quality.eventType === codeEventType) : qualities ;
+          preFilterStatus = status ? preFilterEventType.filter(quality => quality.state === status) : preFilterEventType ;
 
-          preFilterSearch = preFilterEventType.filter(quality => {
+          preFilterSearch = preFilterStatus.filter(quality => {
             return String(quality.workOrder).toLowerCase().includes(searchTerm) ||
               String(quality.component).toLowerCase().includes(searchTerm) ||
               String(quality.workShop).toLowerCase().includes(searchTerm) ||
               String(quality.enventDetail).toLowerCase().includes(searchTerm) ||
-              String(quality.evaluationAnalisisName).toLowerCase().includes(searchTerm) ||
-              //String(quality.specialist['workingArea']).toLowerCase().includes(searchTerm) ||
+              String(quality.evaluationAnalysisName).toLowerCase().includes(searchTerm) ||
+              String(quality.specialist ? quality.specialist['name'] : '').toLowerCase().includes(searchTerm) ||
+              String(quality.createdBy ? quality.createdBy['name'] : '').toLowerCase().includes(searchTerm) ||
+              String(quality.analysis ? quality.analysis['causeFailure'] : '').toLowerCase().includes(searchTerm) ||
+              String(quality.analysis ? quality.analysis['process'] : '').toLowerCase().includes(searchTerm) ||
               String(quality.partNumber).toLowerCase().includes(searchTerm) ||
               String(quality.packageNumber).toLowerCase().includes(searchTerm) ||
               String(quality.miningOperation).toLowerCase().includes(searchTerm) ||
@@ -168,15 +198,23 @@ export class ResultsComponent implements OnInit {
           });
 
           if (workShop) {
-            preFilterWorkShop = preFilterEventType.filter(quality => quality.workShop === workShop);
+
+            preFilterWorkShop = preFilterStatus.filter(quality => {
+              return String(quality.workShop).toLowerCase().includes(searchworkshop);
+            }).filter((quality) => {
+              return this.getFilterTime(quality.createdAt, date);
+            });
 
             preFilterSearch = preFilterWorkShop.filter(quality => {
               return String(quality.workOrder).toLowerCase().includes(searchTerm) ||
                 String(quality.component).toLowerCase().includes(searchTerm) ||
                 String(quality.workShop).toLowerCase().includes(searchTerm) ||
                 String(quality.partNumber).toLowerCase().includes(searchTerm) ||
-                String(quality.evaluationAnalisisName).toLowerCase().includes(searchTerm) ||
-                //String(quality.specialist['workingArea']).toLowerCase().includes(searchTerm) ||
+                String(quality.evaluationAnalysisName).toLowerCase().includes(searchTerm) ||
+                String(quality.specialist ? quality.specialist['name'] : '').toLowerCase().includes(searchTerm) ||
+                String(quality.createdBy ? quality.createdBy['name'] : '').toLowerCase().includes(searchTerm) ||
+                String(quality.analysis ? quality.analysis['causeFailure'] : '').toLowerCase().includes(searchTerm) ||
+                String(quality.analysis ? quality.analysis['process'] : '').toLowerCase().includes(searchTerm) ||                
                 String(quality.enventDetail).toLowerCase().includes(searchTerm) ||
                 String(quality.packageNumber).toLowerCase().includes(searchTerm) ||
                 String(quality.miningOperation).toLowerCase().includes(searchTerm) ||
@@ -191,8 +229,11 @@ export class ResultsComponent implements OnInit {
             return String(quality.workOrder).toLowerCase().includes(searchTerm) ||
               String(quality.component).toLowerCase().includes(searchTerm) ||
               String(quality.workShop).toLowerCase().includes(searchTerm) ||
-              String(quality.evaluationAnalisisName).toLowerCase().includes(searchTerm) ||
-              //String(quality.specialist['workingArea']).toLowerCase().includes(searchTerm) ||
+              String(quality.evaluationAnalysisName).toLowerCase().includes(searchTerm) ||
+              String(quality.specialist ? quality.specialist['name'] : '').toLowerCase().includes(searchTerm) ||
+              String(quality.createdBy ? quality.createdBy['name'] : '').toLowerCase().includes(searchTerm) ||
+              String(quality.analysis ? quality.analysis['causeFailure'] : '').toLowerCase().includes(searchTerm) ||
+              String(quality.analysis ? quality.analysis['process'] : '').toLowerCase().includes(searchTerm) ||
               String(quality.partNumber).toLowerCase().includes(searchTerm) ||
               String(quality.enventDetail).toLowerCase().includes(searchTerm) ||
               String(quality.packageNumber).toLowerCase().includes(searchTerm) ||
@@ -229,7 +270,16 @@ export class ResultsComponent implements OnInit {
       'Orden de trabajo',
       'Componente',
       'Nro de parte',
-      'Taller / Op Minera',
+      'Taller',
+      'Operacion Minera',
+      'Detalle de evento',
+      'Numero de plaqueteo',
+      'Pregunta 1',
+      'Pregunta 2',
+      'Pregunta 3',
+      'Pregunta 4',
+      'Proceso',
+      'Causante de falla',
       'Especialista',
       'Nivel de riesgo',
       'Usuario',
@@ -254,9 +304,18 @@ export class ResultsComponent implements OnInit {
         element.workOrder ? element.workOrder : '-',
         element.component ? element.component : '-',
         element.partNumber ? element.partNumber : '-',
+        element.workShop ? element.workShop : '-',
         element.miningOperation ? element.miningOperation : '-',
+        element.enventDetail ? element.enventDetail : '-',
+        element.packageNumber ? element.packageNumber : '-',
+        element.question1 ? element.question1 : '-',
+        element.question2 ? element.question2 : '-',
+        element.question3 ? element.question3 : '-',
+        element.question4 ? element.question4 : '-',
+        element.analysis ? element.analysis['process'] : '-',
+        element.analysis ? element.analysis['causeFailure'] : '-',
         element.specialist ? element.specialist['workingArea'] : '-',
-        element.evaluationAnalisisName ? element.evaluationAnalisisName : '-',
+        element.evaluationAnalysisName ? element.evaluationAnalysisName : '-',
         element.createdBy ? element.createdBy.name : '',
         element.state ? element.state : ''
       ];

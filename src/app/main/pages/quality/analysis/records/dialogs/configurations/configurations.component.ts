@@ -32,7 +32,7 @@ export class ConfigurationsComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.generalConfig$ = this.auth.getGeneralConfig()
+    this.generalConfig$ = this.auth.getGeneralConfigQuality()
       .pipe(
         tap(res => {
           this.timerFormGroup = this.fb.group({

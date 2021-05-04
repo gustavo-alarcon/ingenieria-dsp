@@ -51,6 +51,9 @@
               <button mat-menu-item (click)="analysis(item)">
                 <mat-icon>add_task</mat-icon> Análisis
               </button>
+              <button mat-menu-item (click)="generateReport(item)">
+                <mat-icon>picture_as_pdf</mat-icon> Reporte
+              </button>
               <button mat-menu-item (click)="timeline(item)">
                 <mat-icon>timeline</mat-icon> Línea de tiempo
               </button>
@@ -73,7 +76,7 @@
       <div class="timer-container">
         <div class="timer-color">
         </div>
-        <div class="timer-black" [ngStyle]="{'width.%': item.registryPercentageElapsed }">
+        <div class="timer-black" [ngStyle]="{'width.%': item.processPercentageElapsed }">
         </div>
         <div class="progress-view">
           {{item.processTimeElapsed?.days | number : '2.'}} /

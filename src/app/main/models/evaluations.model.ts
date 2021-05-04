@@ -42,8 +42,9 @@ export interface Evaluation {
     createdBy: User;
     editedAt: Date;
     editedBy: User;
-    length?: number;                //Siempre en mm
-    extends?: string[];     
+    length?: number;
+    extends?: string[];
+    emailList?: Array<string>;
 }
 //Al que creo, al inspector y a la lista de difusion
 export interface EvaluationRegistryForm {

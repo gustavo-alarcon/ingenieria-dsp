@@ -62,6 +62,7 @@ export class ReportsComponent implements OnInit {
         preFilterSearch = andons.filter((andon) => {
           return (
             String(andon.name).toLowerCase().includes(searchTerm) ||
+            String(andon.problemType).toLowerCase().includes(searchTerm) ||
             String(andon.otChild).toLowerCase().includes(searchTerm)
           );
         });

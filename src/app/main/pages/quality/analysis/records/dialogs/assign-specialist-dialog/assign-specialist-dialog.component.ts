@@ -37,6 +37,7 @@ import { OnDestroy } from '@angular/core';
 import { AuthService } from '../../../../../../../auth/services/auth.service';
 import { EvaluationsUser } from 'src/app/main/models/evaluations.model';
 import { map } from 'rxjs/operators';
+import { CostList, FrequencyList, QualityList } from '../../../../../../models/quality.model';
 
 @Component({
   selector: 'app-assign-specialist-dialog',
@@ -72,7 +73,7 @@ export class AssignSpecialistDialogComponent implements OnInit, OnDestroy {
   actualSpecialist: any = null;
 
   specialist$: Observable<any[]>;
-  nameSpecialist = 'Técnico Especialista';
+  nameSpecialist = 'Soporte técnico';
 
   user: User;
   emailUser;
@@ -80,16 +81,72 @@ export class AssignSpecialistDialogComponent implements OnInit, OnDestroy {
 
   private subscription = new Subscription();
 
+  qualityList: QualityList[] = [
+    {
+      code: 1,
+      name:
+        'Defecto tolerable que no altera la calidad ni la confiabilidad del produccto',
+    },
+    {
+      code: 2,
+      name:
+        'Defectos menores que son detectables y facilmente corregibles.(Trabajos de habilidad, ajustes)',
+    },
+    {
+      code: 3,
+      name:
+        'Defectos que requieren algun metodo de reconstrucción para poder usar.',
+    },
+    {
+      code: 4,
+      name:
+        'Defectos mayores que incumplen con los criterios de calidad del taller y expectativas del cliente',
+    },
+    {
+      code: 5,
+      name:
+        'Defectos que inhabilitan el uso de la pieza o de reconstruirla de forma definitiva',
+    },
+  ];
+
+  costList: CostList[] = [
+    { code: 1, name: 'Las pérdidas materiales son menores de $100.       ' },
+    { code: 2, name: 'Las pérdidas materiales fluctúan entre $101 y $1000.' },
+    { code: 3, name: 'Las pérdidas materiales fluctúan entre $1001 y $7000.' },
+    {
+      code: 4,
+      name: 'Las pérdidas materiales fluctúan entre $7001 y $30,000.',
+    },
+    { code: 5, name: 'Las pérdidas materiales fluctúan entre $30,001 a más.' },
+  ];
+
+  frequencyList: FrequencyList[] = [
+    { code: 1, name: 'Ha ocurrido en el ultimo año | Rara vez ' },
+    {
+      code: 2,
+      name: 'Ha ocurrido en el área en el ultimo semestre | Ocasional ',
+    },
+    {
+      code: 3,
+      name: 'Ha ocurrido en el área en el ultimos 03 meses | Poco probable',
+    },
+    { code: 4, name: 'Ha ocurrido en el área en el ultimos mes | Probable ' },
+    { code: 5, name: 'Ha ocurrido en el área esta semana | Muy probable ' },
+  ];
+
+  resultEvaluation$: Observable<any>;
+  resultAnalysis = 0;
+  evaluationName = '';
+
   constructor(
     private fb: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: Quality,
-    //public dialogRef: MatDialogRef<AssignSpecialistDialogComponent>,
     private qualityService: QualityService,
     private snackbar: MatSnackBar,
     public auth: AuthService,
     private dialog: MatDialog
   ) {
-    
+
   }
 
   ngOnInit(): void {
@@ -109,21 +166,18 @@ export class AssignSpecialistDialogComponent implements OnInit, OnDestroy {
     this.specialist$ = combineLatest(
       this.specialistForm.get('specialist').valueChanges.pipe(
         startWith(''),
-        debounceTime(300),
+        debounceTime(150),
         distinctUntilChanged(),
         map((specialist) => (specialist.name ? specialist.name : specialist))
       ),
-      this.qualityService.getAllQualityListSpecialist(this.nameSpecialist)
+      this.qualityService.getAllQualityListSpecialist()
     ).pipe(
       map(([formValue, specialists]) => {
 
-        const filter = specialists.filter((el) =>
-          formValue
-            ? el.name.toLowerCase().includes(formValue.toLowerCase())
-            : ''
+        const filter = specialists.filter((el) =>el.name.toLowerCase().includes(formValue.toLowerCase())
         );
 
-        if ( !(filter.length === 2 && filter[0]['name'] === formValue) &&
+        if (!(filter.length === 1 && filter[0]['name'] === formValue) &&
           formValue.length
         ) {
           this.specialistForm.get('specialist').setErrors({ invalid: true });
@@ -138,6 +192,37 @@ export class AssignSpecialistDialogComponent implements OnInit, OnDestroy {
         return res;
       })
     );
+
+    this.resultEvaluation$ = combineLatest(
+      this.specialistForm.get('quality').valueChanges.pipe(),
+      this.specialistForm.get('cost').valueChanges.pipe(),
+      this.specialistForm.get('frequency').valueChanges.pipe()
+    ).pipe(
+      map(([formQuality, formCost, formFrequency]) => {
+        const codeQuality = formQuality.code;
+        const codeCost = formCost.code;
+        const codeFrecuency = formFrequency.code;
+
+        let result: number;
+        let roundResult: number;
+        result = ((codeQuality + codeCost) / 2) * codeFrecuency;
+        roundResult = Math.round(result);
+        this.resultAnalysis = roundResult;
+
+        if (0 < roundResult && roundResult < 5) {
+          this.evaluationName = 'Menor';
+        } else if (4 < roundResult && roundResult < 10) {
+          this.evaluationName = 'Moderado';
+        } else if (9 < roundResult && roundResult < 20) {
+          this.evaluationName = 'Significativo';
+        } else if (19 < roundResult && roundResult < 26) {
+          this.evaluationName = 'Alto';
+        }
+
+        return roundResult;
+      })
+    );
+
 
     /* this.filteredBroadcast$ = combineLatest(
       this.broadcastControl.valueChanges.pipe(
@@ -166,17 +251,22 @@ export class AssignSpecialistDialogComponent implements OnInit, OnDestroy {
   initForm(): void {
     this.specialistForm = this.fb.group({
       specialist: [null, Validators.required],
+      quality: ['', Validators.required],
+      cost: ['', Validators.required],
+      frequency: ['', Validators.required],
     });
   }
 
   save(): void {
     try {
       if (this.specialistForm.valid) {
-        const resp = this.qualityService.updateQualitySpecialist(
+        const resp = this.qualityService.saveQualitySpecialist(
           this.data,
-          this.specialistForm.get('specialist').value,
+          this.specialistForm.value,
           this.emailArray,
-          this.state
+          this.state,
+          this.resultAnalysis,
+          this.evaluationName ,
         );
         this.loading.next(true);
         this.subscription.add(

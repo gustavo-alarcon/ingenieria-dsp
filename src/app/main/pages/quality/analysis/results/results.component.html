@@ -10,18 +10,29 @@
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-date-range-picker #picker></mat-date-range-picker>
         </mat-form-field>
-
+        
         <mat-form-field appearance="outline" class="ms-kanban-toolbar__input"
             [ngClass]="isMobile ? 'ms-kanban-toolbar__input--mobile' : 'ms-kanban-toolbar__input--desktop'">
             <mat-icon matPrefix>location_on</mat-icon>
             <mat-select [formControl]="eventTypeControl">
-                <mat-option value="">Todos</mat-option>
+                <mat-option value="">Todos los eventos</mat-option>
                 <mat-option *ngFor="let item of eventType" [value]="item.code">
                     {{item.event}}
                 </mat-option>
             </mat-select>
         </mat-form-field>
-
+    
+        <mat-form-field appearance="outline" class="ms-kanban-toolbar__input"
+            [ngClass]="isMobile ? 'ms-kanban-toolbar__input--mobile' : 'ms-kanban-toolbar__input--desktop'">
+            <mat-icon matPrefix>location_on</mat-icon>
+            <mat-select [formControl]="statusControl">
+                <mat-option value="">Todos los estados</mat-option>
+                <mat-option *ngFor="let item of status" [value]="item.code">
+                    {{item.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    
         <mat-form-field appearance="outline" class="ms-kanban-toolbar__input"
             [ngClass]="isMobile ? 'ms-kanban-toolbar__input--mobile' : 'ms-kanban-toolbar__input--desktop'">
             <mat-label>Taller</mat-label>
@@ -84,7 +95,7 @@
                 </ng-container>
 
                 <ng-container matColumnDef="miningOperation">
-                    <th mat-header-cell *matHeaderCellDef class="table__cell theader"> Operacion minera </th>
+                    <th mat-header-cell *matHeaderCellDef class="table__cell theader"> Operación minera </th>
                     <td mat-cell *matCellDef="let element" class="table__cell"> {{element.miningOperation?
                         element.miningOperation: '-'}} </td>
                 </ng-container>
@@ -92,7 +103,7 @@
                 <ng-container matColumnDef="specialist">
                     <th mat-header-cell *matHeaderCellDef class="table__cell theader"> Especialista </th>
                     <td mat-cell *matCellDef="let element" align="center" class="table__cell"> {{element.specialist ?
-                        element.specialist.workingArea :'-'}}
+                        element.specialist.name :'-'}}
                     </td>
                 </ng-container>
 
@@ -102,10 +113,22 @@
                         {{element.correctiveActions.length }} </td>
                 </ng-container>
 
+                <ng-container matColumnDef="causeFailure">
+                    <th mat-header-cell *matHeaderCellDef class="table__cell theader"> Causante de falla</th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{element.analysis ?element.analysis.causeFailure :'-' }} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="process">
+                    <th mat-header-cell *matHeaderCellDef class="table__cell theader"> Proceso </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{element.analysis ? element.analysis.process : '-' }} </td>
+                </ng-container>
+
                 <ng-container matColumnDef="riskLevel">
                     <th mat-header-cell *matHeaderCellDef class="table__cell theader"> Nivel de riesgo </th>
                     <td mat-cell *matCellDef="let element" class="table__cell">
-                        {{element.evaluationAnalisisName? element.evaluationAnalisisName: '-'}}
+                        {{element.evaluationAnalysisName? element.evaluationAnalysisName: '-'}}
                     </td>
                 </ng-container>
 

@@ -12,6 +12,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { ComponentList, MiningOperation, FileAdditional } from '../../../models/quality.model';
 import { MatDialog } from '@angular/material/dialog';
 import { AddMiningOperationDialogComponent } from './dialogs/add-mining-operation-dialog/add-mining-operation-dialog.component';
+import { AddComponentComponent } from './dialogs/add-component/add-component.component';
 
 @Component({
   selector: 'app-external-events',
@@ -58,15 +59,8 @@ export class ExternalEventsComponent implements OnInit {
   subscriptions = new Subscription();
   isMobile = false;
 
-  componentList: ComponentList[] = [
-    { code: 1, name: 'Componente 1' },
-    { code: 2, name: 'Componente 2'},
-    { code: 3, name: 'Componente 3'},
-    { code: 4, name: 'Componente 4'},
-    { code: 5, name: 'Componente 5'},
-  ];
-
   miningOperation$: Observable<MiningOperation[]>;
+  component$: Observable<ComponentList[]>;
 
   dataFiles: FileAdditional[] = [];
 
@@ -82,6 +76,16 @@ export class ExternalEventsComponent implements OnInit {
 
 
   ngOnInit(): void {
+    this.subscription.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
+      .subscribe(res => {
+        if (res.matches) {
+          this.isMobile = true;
+        } else {
+          this.isMobile = false;
+        }
+      })
+    )
+
     this.initFormInternal();
 
     this.miningOperation$ = combineLatest(
@@ -105,15 +109,26 @@ export class ExternalEventsComponent implements OnInit {
       })
     );
 
-    this.subscriptions.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
-      .subscribe(res => {
-        if (res.matches) {
-          this.isMobile = true;
-        } else {
-          this.isMobile = false;
+    this.component$ = combineLatest(
+      this.externalForm.get('component').valueChanges.pipe(
+        startWith(''),
+        map((name) => (name ? name : ''))
+      ),
+      this.qualityService.getAllComponentsListExternal()
+    ).pipe(
+      map(([formValue, components]) => {
+        const filter = components.filter((el) =>
+          formValue
+            ? el.name.toLowerCase().includes(formValue.toLowerCase())
+            : true
+        );
+        if (!(filter.length === 1) && formValue.length) {
+          this.externalForm.get('component').setErrors({ invalid: true });
         }
+
+        return filter;
       })
-    )
+    );
 
     this.subscription.add(
       this.authService.user$.subscribe((user) => {
@@ -347,6 +362,13 @@ export class ExternalEventsComponent implements OnInit {
       this.loading.next(false);
     }
 
+  }
+
+  onAddComponent(): void {
+    this.dialog.open(AddComponentComponent, {
+      maxWidth: 500,
+      width: '90vw',
+    });
   }
 
 

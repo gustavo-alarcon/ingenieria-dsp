@@ -22,21 +22,28 @@
                         </mat-error>
                     </mat-form-field>
 
-                    <mat-form-field appearance="outline" id="result"  class="container-form__work__input"
-                    [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
+                    <mat-form-field *ngIf="component$ | async as components"  class="container-form__work__input"
+                        [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'"
+                        appearance="outline">
                         <mat-label>Componente</mat-label>
-                        <mat-select formControlName="component">
-                            <mat-option *ngFor="let item of componentList" [value]="item">
-                                {{item.name}} 
+                        <input autocomplete="off" formControlName="component" [matAutocomplete]="autocomplete" type="text"
+                            matInput />
+                        <mat-autocomplete multiple  autoActiveFirstOption #autocomplete="matAutocomplete">
+                            <mat-option (click)="onAddComponent()" [value]="">
+                            <mat-icon>add_circle_outline</mat-icon>Añadir/Eliminar
                             </mat-option>
-                        </mat-select>
-                        <mat-hint *ngIf="!(componentList)">
+                            <mat-option  *ngFor="let item of components" [value]="item.name">
+                            {{ item.name }}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <mat-hint *ngIf="!(component$ | async)">
                             <mat-progress-bar mode="indeterminate"></mat-progress-bar>
                             <p>Cargando lista ...</p>
                         </mat-hint>
-    
-                        <mat-error *ngIf="externalForm.controls['component'].errors">
-                            Campo <strong>requerido.</strong>
+                        <mat-error>
+                            <span *ngIf="externalForm.get('component').errors?.required">Por favor, complete el campo.</span>
+                            <span *ngIf="externalForm.get('component').errors?.invalid">Dato inválido. Complete con alguna opción
+                            válida.</span>
                         </mat-error>
                     </mat-form-field>
 
@@ -76,7 +83,7 @@
                             matInput />
                         <mat-autocomplete autoActiveFirstOption #miningOperationAutocomplete="matAutocomplete">
                             <mat-option (click)="onAddminingOperation()" [value]="">
-                            <mat-icon>add_circle_outline</mat-icon>Añadir
+                            <mat-icon>add_circle_outline</mat-icon>Añadir/Eliminar
                             </mat-option>
                             <mat-option *ngFor="let item of miningOperations" [value]="item.name">
                             {{ item.name }}
@@ -97,7 +104,8 @@
                 <mat-form-field appearance="outline" class="container-form__area"
                     [ngClass]="isMobile ? 'container-form__area--mobile' : 'container-form__area--desktop'">
                     <mat-label>1 ¿Cuéntame que sucedió?</mat-label>
-                    <input matInput type="text" placeholder=" Escribir..." formControlName="question1">
+                    <textarea  matInput type="text" placeholder=" Escribir..." formControlName="question1" rows="2">
+                    </textarea>
                     <mat-error *ngIf="externalForm.controls['question1'].errors">
                         Campo <strong>requerido.</strong>
                     </mat-error>
@@ -106,7 +114,8 @@
                 <mat-form-field appearance="outline" class="container-form__area"
                     [ngClass]="isMobile ? 'container-form__area--mobile' : 'container-form__area--desktop'">
                     <mat-label>2. ¿Qué acciones de corrección se realizaron para solucionar el problema?</mat-label>
-                    <input matInput type="text" placeholder=" Escribir..." formControlName="question2">
+                    <textarea matInput type="text" placeholder=" Escribir..." formControlName="question2" rows="2">
+                    </textarea>
                     <mat-error *ngIf="externalForm.controls['question2'].errors">
                         Campo <strong>requerido.</strong>
                     </mat-error>
@@ -115,7 +124,8 @@
                 <mat-form-field appearance="outline" class="container-form__area"
                     [ngClass]="isMobile ? 'container-form__area--mobile' : 'container-form__area--desktop'">
                     <mat-label>3. ¿Cuál crees que fue la causa de la falla?</mat-label>
-                    <input matInput type="text" placeholder=" Escribir..." formControlName="question3">
+                    <textarea matInput type="text" placeholder=" Escribir..." formControlName="question3" rows="2">
+                    </textarea>
                     <mat-error *ngIf="externalForm.controls['question3'].errors">
                         Campo <strong>requerido.</strong>
                     </mat-error>
@@ -124,7 +134,8 @@
                 <mat-form-field appearance="outline" class="container-form__area"
                     [ngClass]="isMobile ? 'container-form__area--mobile' : 'container-form__area--desktop'">
                     <mat-label>4. ¿Qué recomendarias para evitar que este problema vuelva a suceder?</mat-label>
-                    <input matInput type="text" placeholder=" Escribir...    " formControlName="question4">
+                    <textarea matInput type="text" placeholder=" Escribir..." formControlName="question4" rows="2">
+                    </textarea>
                     <mat-error *ngIf="externalForm.controls['question4'].errors">
                         Campo <strong>requerido.</strong>
                     </mat-error>
