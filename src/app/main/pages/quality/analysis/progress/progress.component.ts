@@ -225,6 +225,10 @@ export class ProgressComponent implements OnInit {
 
   }
 
+  printPdf(item: Quality){
+    this.qualityService.printQualityPdf(item)
+  }
+
   timeline(item): void {
     this.dialog.open(TimeLineDialogComponent, {
       width: '90vw',
