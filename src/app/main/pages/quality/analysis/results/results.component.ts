@@ -163,7 +163,7 @@ export class ResultsComponent implements OnInit {
         map(end => end ? end.setHours(23, 59, 59) : null)
       )
     ).pipe(
-      map(([qualities, workShop, status , codeEventType, search, startdate, enddate]) => {
+      map(([qualities, workShop, status, codeEventType, search, startdate, enddate]) => {
 
         const date = { begin: startdate, end: enddate };
 
@@ -176,8 +176,8 @@ export class ResultsComponent implements OnInit {
 
 
         if (codeEventType || workShop || status) {
-          preFilterEventType = codeEventType ? qualities.filter(quality => quality.eventType === codeEventType) : qualities ;
-          preFilterStatus = status ? preFilterEventType.filter(quality => quality.state === status) : preFilterEventType ;
+          preFilterEventType = codeEventType ? qualities.filter(quality => quality.eventType === codeEventType) : qualities;
+          preFilterStatus = status ? preFilterEventType.filter(quality => quality.state === status) : preFilterEventType;
 
           preFilterSearch = preFilterStatus.filter(quality => {
             return String(quality.workOrder).toLowerCase().includes(searchTerm) ||
@@ -214,7 +214,7 @@ export class ResultsComponent implements OnInit {
                 String(quality.specialist ? quality.specialist['name'] : '').toLowerCase().includes(searchTerm) ||
                 String(quality.createdBy ? quality.createdBy['name'] : '').toLowerCase().includes(searchTerm) ||
                 String(quality.analysis ? quality.analysis['causeFailure'] : '').toLowerCase().includes(searchTerm) ||
-                String(quality.analysis ? quality.analysis['process'] : '').toLowerCase().includes(searchTerm) ||                
+                String(quality.analysis ? quality.analysis['process'] : '').toLowerCase().includes(searchTerm) ||
                 String(quality.enventDetail).toLowerCase().includes(searchTerm) ||
                 String(quality.packageNumber).toLowerCase().includes(searchTerm) ||
                 String(quality.miningOperation).toLowerCase().includes(searchTerm) ||
@@ -354,6 +354,10 @@ export class ResultsComponent implements OnInit {
       width: '90vw',
       data: item
     });
+  }
+
+  printPdf(item: Quality) {
+    this.qualityService.printQualityPdf(item)
   }
 
   timeline(item): void {

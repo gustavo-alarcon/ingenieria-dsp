@@ -86,26 +86,26 @@ export class TracingComponent implements OnInit, OnDestroy {
 
           preFilterSearch = preFilterEventType.filter(quality => {
             return String(quality.workOrder).toLowerCase().includes(searchTerm) ||
-            String(quality.component).toLowerCase().includes(searchTerm) ||
-            String(quality.specialist['name']).toLowerCase().includes(searchTerm) ||
-            String(quality.workShop).toLowerCase().includes(searchTerm)  ||
-            String(quality.partNumber).toLowerCase().includes(searchTerm) ||
-            String(quality.enventDetail).toLowerCase().includes(searchTerm)  ||
-            String(quality.packageNumber).toLowerCase().includes(searchTerm) ||
-            String(quality.miningOperation).toLowerCase().includes(searchTerm) ||
-            String(quality.componentHourMeter).toLowerCase().includes(searchTerm);
+              String(quality.component).toLowerCase().includes(searchTerm) ||
+              String(quality.specialist['name']).toLowerCase().includes(searchTerm) ||
+              String(quality.workShop).toLowerCase().includes(searchTerm) ||
+              String(quality.partNumber).toLowerCase().includes(searchTerm) ||
+              String(quality.enventDetail).toLowerCase().includes(searchTerm) ||
+              String(quality.packageNumber).toLowerCase().includes(searchTerm) ||
+              String(quality.miningOperation).toLowerCase().includes(searchTerm) ||
+              String(quality.componentHourMeter).toLowerCase().includes(searchTerm);
           });
         } else {
           preFilterSearch = qualities.filter(quality => {
             return String(quality.workOrder).toLowerCase().includes(searchTerm) ||
-            String(quality.component).toLowerCase().includes(searchTerm) ||
-            String(quality.specialist['name']).toLowerCase().includes(searchTerm) ||
-            String(quality.workShop).toLowerCase().includes(searchTerm)  ||
-            String(quality.partNumber).toLowerCase().includes(searchTerm) ||
-            String(quality.enventDetail).toLowerCase().includes(searchTerm)  ||
-            String(quality.packageNumber).toLowerCase().includes(searchTerm) ||
-            String(quality.miningOperation).toLowerCase().includes(searchTerm) ||
-            String(quality.componentHourMeter).toLowerCase().includes(searchTerm);
+              String(quality.component).toLowerCase().includes(searchTerm) ||
+              String(quality.specialist['name']).toLowerCase().includes(searchTerm) ||
+              String(quality.workShop).toLowerCase().includes(searchTerm) ||
+              String(quality.partNumber).toLowerCase().includes(searchTerm) ||
+              String(quality.enventDetail).toLowerCase().includes(searchTerm) ||
+              String(quality.packageNumber).toLowerCase().includes(searchTerm) ||
+              String(quality.miningOperation).toLowerCase().includes(searchTerm) ||
+              String(quality.componentHourMeter).toLowerCase().includes(searchTerm);
           });
         }
         // total task pending
@@ -186,10 +186,10 @@ export class TracingComponent implements OnInit, OnDestroy {
             quality.tracingPercentageElapsed = 100 - (Math.ceil(tracingPercentageElapsed * 100) > 100 ? 100 : Math.ceil(tracingPercentageElapsed * 100));
 
             // Time calculation for total attention
-            const attentionDays = Math.floor((tracingDistance + processTotalMilliseconds ) / (1000 * 60 * 60 * 24));
-            const attentionHours = Math.floor(((tracingDistance + processTotalMilliseconds ) % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const attentionMinutes = Math.floor(((tracingDistance + processTotalMilliseconds ) % (1000 * 60 * 60)) / (1000 * 60));
-            const attentionSeconds = Math.floor(((tracingDistance + processTotalMilliseconds ) % (1000 * 60)) / 1000);
+            const attentionDays = Math.floor((tracingDistance + processTotalMilliseconds) / (1000 * 60 * 60 * 24));
+            const attentionHours = Math.floor(((tracingDistance + processTotalMilliseconds) % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const attentionMinutes = Math.floor(((tracingDistance + processTotalMilliseconds) % (1000 * 60 * 60)) / (1000 * 60));
+            const attentionSeconds = Math.floor(((tracingDistance + processTotalMilliseconds) % (1000 * 60)) / 1000);
 
             quality.attentionTimeElapsed = {
               days: attentionDays,
@@ -254,6 +254,10 @@ export class TracingComponent implements OnInit, OnDestroy {
         break;
     }
 
+  }
+
+  printPdf(item: Quality) {
+    this.qualityService.printQualityPdf(item)
   }
 
   timeline(item): void {
