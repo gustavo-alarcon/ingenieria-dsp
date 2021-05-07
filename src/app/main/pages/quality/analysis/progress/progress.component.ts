@@ -225,7 +225,7 @@ export class ProgressComponent implements OnInit {
 
   }
 
-  printPdf(item: Quality){
+  printPdf(item: Quality) {
     this.qualityService.printQualityPdf(item)
   }
 

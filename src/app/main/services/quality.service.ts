@@ -454,7 +454,7 @@ export class QualityService {
     evaluationName
   ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
-    console.log(' resultAnalysis: ',  resultAnalysis)
+    console.log(' resultAnalysis: ', resultAnalysis)
     console.log('    evaluationName:', evaluationName)
     const batch = this.afs.firestore.batch();
     // create reference for document in evaluation entries collection
@@ -887,6 +887,8 @@ export class QualityService {
 
     return of(batch);
   }
+
+
   finalizedCorrectiveActions(
     quality: Quality,
     status: string
@@ -989,9 +991,9 @@ export class QualityService {
     return await this.storage.storage.refFromURL(imagesObj).delete();
   }
 
-  printQualityPdf(data: Quality){
-    let imgAddress = <const>'../../../assets/img-quality/'
-    console.log(data)
+  async printQualityPdf(data: Quality) {
+    let imgAddress = <const>'../../../assets/img-quality/';
+    const defaultImage = 'https://firebasestorage.googleapis.com/v0/b/ferreyros-mvp.appspot.com/o/assets%2Fwithout-image.jpg?alt=media&token=d0676f36-9c69-490c-b8e7-790e7a7038a8';;
     let doc = new jsPDF({
       orientation: "portrait",
       unit: "mm",
@@ -999,92 +1001,117 @@ export class QualityService {
     })
 
     //Importando Plantilla
-    let img = new Image(595,842)
-    img.src = imgAddress+'report_1.png';
+    let img = new Image(595, 842)
+    img.src = imgAddress + 'report_1.png';
 
 
-  //First page
+    //First page
     doc.addImage(img, 'PNG', 0, 0, 210, 297);
     //Setting body styles
     doc.setFontSize(10)
 
     //Fecha de emisión
     let emisionDate = null
-    if(data.createdAt instanceof Date){
-      emisionDate = this.getDateFromSec(data.createdAt.valueOf()/1000)
+    if (data.createdAt instanceof Date) {
+      emisionDate = this.getDateFromSec(data.createdAt.valueOf() / 1000)
     } else {
       emisionDate = this.getDateFromSec(data.createdAt["seconds"])
     }
-    doc.text(`${emisionDate.day}/${emisionDate.month}/${emisionDate.year}`, 79, 51, {align: "center"})
+    doc.text(`${emisionDate.day}/${emisionDate.month}/${emisionDate.year}`, 79, 51, { align: "center" })
 
     //Lugar donde ocurrió
-    doc.text(`LUGAR`, 155, 48, {align: "center"})
+    doc.text('---', 155, 48, { align: "center" })
 
     //OT que reporta
-    doc.text(`OT REPORTE`, 155, 57, {align: "center"})
+    doc.text(('' + data.workOrder), 155, 57, { align: "center" })
 
     //Analista
-    doc.text(`ANALISTA`, 79, 67, {align: "center"})
+    doc.text(data.specialist['name'], 79, 67, { align: "center" })
 
-    //Supervisor involucrado
-    doc.text(`SUPERV`, 155, 67, {align: "center"})
+    //Colaborador del análisis
+    doc.text(`---`, 155, 67, { align: "center" })
 
-    //TAlller
-    doc.text(`TAlller`, 72, 75, {align: "center"})
-    //Aarea
-    doc.text(`Aarea`, 117, 75, {align: "center"})
+    //Talller
+    doc.text(data.workShop, 72, 75, { align: "center" })
+
+    //Área
+    doc.text(`---`, 117, 75, { align: "center" })
+
     //Bahia
-    doc.text(`Bahia`, 162, 75, {align: "center"})
+    doc.text(`---`, 162, 75, { align: "center" })
 
     //Tipo reha
-    doc.text(`Tipo reha`, 79, 81, {align: "center"})
+    doc.text(data.eventType, 79, 81, { align: "center" })
 
     //Modelo
-    doc.text(`Modelo`, 155, 81, {align: "center"})
+    doc.text('---', 155, 81, { align: "center" })
 
     //Componente
-    doc.text(`Componente`, 79, 89, {align: "center"})
+    doc.text(data.component, 79, 89, { align: "center" })
 
     //Nro de parte
-    doc.text(`Nro de parte`, 155, 89, {align: "center"})
+    doc.text('' + data.partNumber, 155, 89, { align: "center" })
 
     //Descripción
-    doc.text(`Descripción`, 79, 97, {align: "center"})
+    doc.text('---', 79, 97, { align: "center" })
 
-    //Síntoma de falla
-    doc.text(`Síntoma de falla`, 155, 97, {align: "center"})
+    //Proceso
+    doc.text(data.analysis ? data.analysis['process'] : '---', 135, 96, { align: "center" })
 
     //Modo de falla
     doc.text(
-      doc.splitTextToSize(`modoDeFalla`, 100-59).slice(0,2), 
-      58, 102, {align: "left", maxWidth: 100-59})
+      doc.splitTextToSize('---', 100 - 59).slice(0, 2),
+      58, 103, { align: "left", maxWidth: 100 - 59 })
 
     //Causa raíz
     doc.text(
-      doc.splitTextToSize(`Causa raíz`, 176-135).slice(0,2), 
-      135, 102, {align: "left", maxWidth: 176-135})
+      doc.splitTextToSize(data.analysis ? data.analysis['causeFailure'] : '---', 176 - 135).slice(0, 2),
+      135, 103, { align: "left", maxWidth: 176 - 135 })
 
+    const detailsExternalEvent = data.question1 + ' ********* ' +
+      data.question2 + ' ********* ' +
+      data.question3 + ' ********* ' +
+      data.question4;
     //Análisis
-    let analisis = "Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis Análisis "
+    let eventDetails = data.enventDetail ? data.enventDetail : detailsExternalEvent;
     doc.text(
-      doc.splitTextToSize(`${analisis}`, 176-58).slice(0,18), 
-      58, 117, {align: "left", maxWidth: 176-58})
+      doc.splitTextToSize(`${eventDetails}`, 176 - 58).slice(0, 18),
+      58, 117, { align: "left", maxWidth: 176 - 58 })
 
-  //Segunda hoja
+    //Observaciones
+    let observations = data.analysis ? (data.analysis['observations'] ? data.analysis['observations'] : '---') : '---'
+    doc.text(
+      doc.splitTextToSize(`${observations}`, 176 - 58).slice(0, 18),
+      58, 157, { align: "left", maxWidth: 176 - 58 })
+
+    //Segunda hoja
     doc.addPage("a4", "portrait")
-    let img2 = new Image(595,842)
-    img2.src = imgAddress+'report_2.png'
+    let img2 = new Image(595, 842)
+    img2.src = imgAddress + 'report_2.png';
     doc.addImage(img2, 'PNG', 0, 11, 210, 272);
 
-    let imgGen = new Image(595,842)
-    imgGen.src= imgAddress+'timeline-s1.png';
-    doc.addImage(imgGen, 'PNG', 28, 77, 70, 25)
+    // let imgGen = new Image(595, 842)
+    // imgGen.src = imgAddress + 'timeline-s1.png';
+    let image1: HTMLImageElement;
+    if (data.generalImages[0]) {
+      image1 = await this.getDataUri(data.generalImages[0]);
+    } else {
+      image1 = await this.getDataUri(defaultImage);
+    }
+    doc.addImage(image1, 'PNG', 28, 28, 70, 70)
 
-    let imgSpec = new Image(595,842)
-    imgSpec.src= imgAddress+'timeline-s2.png';
-    doc.addImage(imgSpec, 'PNG', 107, 77, 70, 25)
-    
-  //Tercera hoja
+    // let imgSpec = new Image(595, 842)
+    // imgSpec.src = imgAddress + 'timeline-s2.png';
+
+    let image2: HTMLImageElement;
+    if (data.detailImages[0]) {
+      image2 = await this.getDataUri(data.detailImages[0]);
+    } else {
+      image2 = await this.getDataUri(defaultImage);
+    }
+    doc.addImage(image2, 'PNG', 107, 28, 70, 70)
+
+    //Tercera hoja
     doc.addPage("a4", "portrait")
     let h = 10
 
@@ -1105,128 +1132,140 @@ export class QualityService {
       denom: "Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación ",
       respon: "Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable ",
       area: "Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable "
-    },{
+    }, {
       denom: "Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación ",
       respon: "Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable ",
       area: "Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable "
     }]
 
 
-    doc.text("Acciones Correctivas:", 26, 42-h, {align: "left"})
+    doc.text("Acciones Correctivas:", 26, 42 - h, { align: "left" })
 
     //Header square
     //Horizontal line
-      doc.line(26, 42, 180, 42)
-      doc.line(26, 42+h, 180, 42+h)
+    doc.line(26, 42, 180, 42)
+    doc.line(26, 42 + h, 180, 42 + h)
     //Vertical lines
-      doc.line(26, 42, 26, 42+h)
-      doc.line(107, 42, 107, 42+h)
-      doc.line(152, 42, 152, 42+h)
-      doc.line(180, 42, 180, 42+h)
+    doc.line(26, 42, 26, 42 + h)
+    doc.line(107, 42, 107, 42 + h)
+    doc.line(152, 42, 152, 42 + h)
+    doc.line(180, 42, 180, 42 + h)
 
     //Text header
     doc.text(
-      doc.splitTextToSize(`Denominación`, 104-28).slice(0,2), 
-      68, 45.5, {align: "center", maxWidth: 104-28})
+      doc.splitTextToSize(`Denominación`, 104 - 28).slice(0, 2),
+      68, 45.5, { align: "center", maxWidth: 104 - 28 })
 
     doc.text(
-      doc.splitTextToSize(`Responsable`, 150-108).slice(0,2), 
-      130, 45.5, {align: "center", maxWidth: 150-108})
+      doc.splitTextToSize(`Responsable`, 150 - 108).slice(0, 2),
+      130, 45.5, { align: "center", maxWidth: 150 - 108 })
 
     doc.text(
-      doc.splitTextToSize(`Área responsable`, 178-152).slice(0,2), 
-      166, 45.5, {align: "center", maxWidth: 178-152})
-    
+      doc.splitTextToSize(`Área responsable`, 178 - 152).slice(0, 2),
+      166, 45.5, { align: "center", maxWidth: 178 - 152 })
+
     //Text body
-    correctiveActions.forEach((value, index)=> {
+    data.correctiveActions.forEach((value, index) => {
       //Horizontal line
-        //doc.line(26, 42, 180, 42)
-        doc.line(26, 42+h*(index+2), 180, 42+h*(index+2))
+      //doc.line(26, 42, 180, 42)
+      doc.line(26, 42 + h * (index + 2), 180, 42 + h * (index + 2))
       //Vertical lines
-        doc.line(26, 42+h*(index+1), 26, 42+h*(index+2))
-        doc.line(107, 42+h*(index+1), 107, 42+h*(index+2))
-        doc.line(152, 42+h*(index+1), 152, 42+h*(index+2))
-        doc.line(180, 42+h*(index+1), 180, 42+h*(index+2))
+      doc.line(26, 42 + h * (index + 1), 26, 42 + h * (index + 2))
+      doc.line(107, 42 + h * (index + 1), 107, 42 + h * (index + 2))
+      doc.line(152, 42 + h * (index + 1), 152, 42 + h * (index + 2))
+      doc.line(180, 42 + h * (index + 1), 180, 42 + h * (index + 2))
       //Text
-        //Denominacion
-        doc.text(
-          doc.splitTextToSize(value.denom, 104-28).slice(0,2), 
-          68, 45.5 + h*(index+1), {align: "center", maxWidth: 104-28})
-    
-        //Responsable
-        doc.text(
-          doc.splitTextToSize(value.respon, 150-108).slice(0,2), 
-          130, 45.5 + h*(index+1), {align: "center", maxWidth: 150-108})
-    
-        //Area
-        doc.text(
-          doc.splitTextToSize(value.area, 178-152).slice(0,2), 
-          166, 45.5 + h*(index+1), {align: "center", maxWidth: 178-152})
+      //Denominacion
+      doc.text(
+        doc.splitTextToSize(value['corrective'], 104 - 28).slice(0, 2),
+        68, 45.5 + h * (index + 1), { align: "center", maxWidth: 104 - 28 })
+
+      //Responsable
+      doc.text(
+        doc.splitTextToSize('---', 150 - 108).slice(0, 2),
+        130, 45.5 + h * (index + 1), { align: "center", maxWidth: 150 - 108 })
+
+      //Area
+      doc.text(
+        doc.splitTextToSize(value['name'], 178 - 152).slice(0, 2),
+        166, 45.5 + h * (index + 1), { align: "center", maxWidth: 178 - 152 })
     })
 
     let responsibles = [{
-        sap: "4654654654",
-        name: "Juan Pérez"
-      }, {
-        sap: "4654654654",
-        name: "Juan Pérez"
-      }, {
-        sap: "4654654654",
-        name: "Juan Pérez"
-      }, {
-        sap: "4654654654",
-        name: "Juan Pérez"
-      }, {
-        sap: "4654654654",
-        name: "Juan Pérez"
-      }, 
+      sap: "4654654654",
+      name: "Juan Pérez"
+    }, {
+      sap: "4654654654",
+      name: "Juan Pérez"
+    }, {
+      sap: "4654654654",
+      name: "Juan Pérez"
+    }, {
+      sap: "4654654654",
+      name: "Juan Pérez"
+    }, {
+      sap: "4654654654",
+      name: "Juan Pérez"
+    },
     ]
 
 
-    doc.text("Responsables:", 26, 42+h*(correctiveActions.length+2), {align: "left"})
+    doc.text("Responsables:", 26, 42 + h * (correctiveActions.length + 2), { align: "left" })
     //Header square
     //Horizontal line
-      doc.line(26, 42+h*(correctiveActions.length+3), 180, 42+h*(correctiveActions.length+3))
-      doc.line(26, 42+h+h*(correctiveActions.length+3), 180, 42+h+h*(correctiveActions.length+3))
+    doc.line(26, 42 + h * (correctiveActions.length + 3), 180, 42 + h * (correctiveActions.length + 3))
+    doc.line(26, 42 + h + h * (correctiveActions.length + 3), 180, 42 + h + h * (correctiveActions.length + 3))
     //Vertical lines
-      doc.line(26, 42+h*(correctiveActions.length+3), 26, 42+h*(correctiveActions.length+4))
-      doc.line(62, 42+h*(correctiveActions.length+3), 62, 42+h*(correctiveActions.length+4))
-      doc.line(180, 42+h*(correctiveActions.length+3), 180, 42+h*(correctiveActions.length+4))
+    doc.line(26, 42 + h * (correctiveActions.length + 3), 26, 42 + h * (correctiveActions.length + 4))
+    doc.line(62, 42 + h * (correctiveActions.length + 3), 62, 42 + h * (correctiveActions.length + 4))
+    doc.line(180, 42 + h * (correctiveActions.length + 3), 180, 42 + h * (correctiveActions.length + 4))
 
     //Text header
-    doc.text('Código SAP', 42, 45.5 + +h*(correctiveActions.length+3), {align: "center"})
+    doc.text('Código SAP', 42, 45.5 + +h * (correctiveActions.length + 3), { align: "center" })
 
-    doc.text('Nombres y Apellidos', 120, 45.5 + +h*(correctiveActions.length+3), {align: "center"})
+    doc.text('Nombres y Apellidos', 120, 45.5 + +h * (correctiveActions.length + 3), { align: "center" })
 
     //Text body
-    responsibles.forEach((value, index)=> {
+    responsibles.forEach((value, index) => {
       //Header square
       //Horizontal line
-        //doc.line(26, 42+h*(correctiveActions.length+3), 180, 42+h*(correctiveActions.length+3))
-        doc.line(26, 42+h+h*(correctiveActions.length+3+index+1), 180, 42+h+h*(correctiveActions.length+3+index+1))
+      //doc.line(26, 42+h*(correctiveActions.length+3), 180, 42+h*(correctiveActions.length+3))
+      doc.line(26, 42 + h + h * (correctiveActions.length + 3 + index + 1), 180, 42 + h + h * (correctiveActions.length + 3 + index + 1))
       //Vertical lines
-        doc.line(26, 42+h*(correctiveActions.length+3+index+1), 26, 42+h*(correctiveActions.length+4+index+1))
-        doc.line(62, 42+h*(correctiveActions.length+3+index+1), 62, 42+h*(correctiveActions.length+4+index+1))
-        doc.line(180, 42+h*(correctiveActions.length+3+index+1), 180, 42+h*(correctiveActions.length+4+index+1))
+      doc.line(26, 42 + h * (correctiveActions.length + 3 + index + 1), 26, 42 + h * (correctiveActions.length + 4 + index + 1))
+      doc.line(62, 42 + h * (correctiveActions.length + 3 + index + 1), 62, 42 + h * (correctiveActions.length + 4 + index + 1))
+      doc.line(180, 42 + h * (correctiveActions.length + 3 + index + 1), 180, 42 + h * (correctiveActions.length + 4 + index + 1))
 
       //Text header
-      doc.text(value.sap, 42, 45.5 + +h*(correctiveActions.length+3+index+1), {align: "center"})
+      doc.text('---', 42, 45.5 + +h * (correctiveActions.length + 3 + index + 1), { align: "center" })
 
-      doc.text(value.name, 120, 45.5 + +h*(correctiveActions.length+3+index+1), {align: "center"})
+      doc.text('---', 120, 45.5 + +h * (correctiveActions.length + 3 + index + 1), { align: "center" })
     })
 
-    doc.text("Link de evidencias:", 26, 42+h*(correctiveActions.length+responsibles.length+5), {align: "left"})
-    doc.setTextColor(6,69,173);
-//    doc.setTextColor(0,0,255);
+    doc.text("Link de aplicación:", 26, 42 + h * (correctiveActions.length + responsibles.length + 5), { align: "left" })
+    doc.setTextColor(6, 69, 173);
+    //    doc.setTextColor(0,0,255);
 
-    doc.textWithLink('http://www.google.com', 26, 42+h*(correctiveActions.length+responsibles.length+6), { url: 'http://www.google.com' });
+    doc.textWithLink('Ferreyros MVP', 26, 42 + h * (correctiveActions.length + responsibles.length + 6), { url: 'https://ferreyros-mvp.web.app/main/quality-analysis' });
 
 
 
     let blob = doc.output('blob');
 
-    saveAs(blob);
-  
+    saveAs(blob, 'Reporte_de_calidad_' + data.workOrder + '_' + (new Date).toLocaleDateString());
+
+  };
+
+  getDataUri(url): Promise<HTMLImageElement> {
+    return new Promise(resolve => {
+      var image = new Image();
+
+      image.onload = () => {
+        resolve(image);
+      };
+
+      image.src = url;
+    })
   }
 
   getDateFromSec(seconds: number): {
@@ -1251,7 +1290,7 @@ export class QualityService {
     if (day.length < 2)
       day = '0' + day;
 
-    return {year, month, day, hours, minutes}
+    return { year, month, day, hours, minutes }
   }
 
 }
