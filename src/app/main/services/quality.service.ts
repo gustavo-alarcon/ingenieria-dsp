@@ -1056,7 +1056,7 @@ export class QualityService {
     doc.text('---', 79, 97, { align: "center" })
 
     //Proceso
-    doc.text(data.analysis ? data.analysis['process'] : '---', 135, 96, { align: "center" })
+    doc.text(data.analysis ? data.analysis['process'] : '---', 135, 96, { align: "left" })
 
     //Modo de falla
     doc.text(
