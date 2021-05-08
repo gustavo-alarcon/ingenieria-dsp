@@ -1019,8 +1019,10 @@ export class QualityService {
     }
     doc.text(`${emisionDate.day}/${emisionDate.month}/${emisionDate.year}`, 79, 51, { align: "center" })
 
-    //Lugar donde ocurrió
-    doc.text('---', 155, 48, { align: "center" })
+    //Nivel de riesgo
+    const riskName = data.evaluationAnalysisName ? data.evaluationAnalysisName : '---';
+    const riskNumber = data.evaluationAnalisis ? data.evaluationAnalisis : '---';
+    doc.text(riskName + ' (' + riskNumber +')', 155, 48, { align: "center" })
 
     //OT que reporta
     doc.text(('' + data.workOrder), 155, 57, { align: "center" })
