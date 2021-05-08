@@ -48,8 +48,11 @@ exports.createUserSetClaims = functions.auth.user().onCreate(async (user) => {
 exports.sendGrid = functions.firestore.document(`db/ferreyros/evaluations/{evalId}`)
     .onUpdate((event) => {
         let eval = event.after.data();
-        if(eval.internalStatus == "finalized"){
+        if((eval.internalStatus == "finalized") &&
+            ((eval.result == "fuera de servicio") || (eval.result == "ampliacion") || (eval.result.toLowerCase() == "dsr"))){
 
+            //Cuando resultado de fin Fuera de Servicio o ampliación
+            //Pre evaluacion: OT Child / OF / NP / Task / Resultado
             console.log("receiving request")
 
             const data = {
@@ -63,12 +66,15 @@ exports.sendGrid = functions.firestore.document(`db/ferreyros/evaluations/{evalI
                         partNumber: eval.partNumber,
                         quantity: eval.quantity,
                         kindOfTest: eval.kindOfTest ? eval.kindOfTest:"--",
-                        result: eval.result ? eval.result : "--",
+                        result: eval.result,
                         length_mm: eval.length ? eval.length : 0,
                         inspector: eval.finalizedBy.name,
                         observations: eval.observations,
                         comments: eval.comments ? eval.comments : "Sin comentarios",
-                        extends: eval.extends ? eval.extends : []
+                        extends: eval.extends ? eval.extends : [],
+                        otChild: eval.otChild,
+                        task: eval.task,
+                        of: eval.wof
                     },
                     subject: "Mensaje Prueba SendGrid",
                 }],
