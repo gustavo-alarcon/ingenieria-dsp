@@ -55,8 +55,7 @@ export class ReportComponent implements OnInit, OnDestroy {
       {
         name: ['', [Validators.required, noSelection()]],
         otChild: ['', Validators.required],
-      },
-      { updateOn: "blur" }
+      }
     );
 
     this.nameBahias$ = combineLatest(
@@ -121,10 +120,7 @@ export class ReportComponent implements OnInit, OnDestroy {
 
 export function noSelection(): ValidatorFn {
   return (control: AbstractControl): { noSelection: string } | null => {
-    console.log(control.value);
-
     return typeof control.value === 'object'
       ? null : { noSelection: 'Seleccionar una bahía de la lista' };
   }
-
 }
