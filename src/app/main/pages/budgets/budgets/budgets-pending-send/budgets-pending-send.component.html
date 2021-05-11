@@ -1,0 +1,39 @@
+<div *ngIf="auth.user$ | async as user">
+  <div class="ms-kanban-toolbar">
+    <div class="cantidad">
+      Cant. W.O.
+      <span class="quantity">{{ cantWO }}</span>
+    </div>
+
+    <mat-form-field
+      *ngFor="let searchBox of searchBoxes"
+      appearance="outline"
+      class="ms-kanban-toolbar__input"
+      [ngClass]="
+        isMobile
+          ? 'ms-kanban-toolbar__input--mobile'
+          : 'ms-kanban-toolbar__input--desktop'
+      "
+    >
+      <mat-icon matPrefix style="margin-right: 12px">{{
+        searchBox.icon
+      }}</mat-icon>
+      <input
+        matInput
+        type="text"
+        placeholder="{{ searchBox.placeholder }}"
+        autocomplete="off"
+      />
+    </mat-form-field>
+
+    <button
+      [disabled]="cantWO < 1"
+      class="download"
+      mat-raised-button
+      color="primary"
+    >
+      DESCARGAR
+      <mat-icon aria-label="agregar" class="icon-add">download</mat-icon>
+    </button>
+  </div>
+</div>
