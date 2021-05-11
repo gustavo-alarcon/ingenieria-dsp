@@ -1,0 +1,24 @@
+<div class="ms-container">
+  <div class="ms-toolbar">
+    <mat-icon mat-list-icon class="mat-icon-menu">fact_check</mat-icon>
+    <h1 class="ms-toolbar__title">Presupuestos</h1>
+  </div>
+  <div class="container-body">
+    <nav mat-tab-nav-bar>
+      <a
+        mat-tab-link
+        *ngFor="let link of navLinks"
+        [routerLink]="link.link"
+        routerLinkActive
+        #rla="routerLinkActive"
+        [active]="rla.isActive"
+        label="{{link.label}}"
+      >
+        {{ link.label }}
+      </a>
+    </nav>
+    <div class="container-router">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
