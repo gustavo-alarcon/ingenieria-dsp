@@ -1025,16 +1025,16 @@ export class QualityService {
     doc.text(riskName + ' (' + riskNumber +')', 155, 48, { align: "center" })
 
     //OT que reporta
-    doc.text(('' + data.workOrder), 155, 57, { align: "center" })
+    doc.text(data.workOrder ? ('' + data.workOrder) : '---', 155, 57, { align: "center" })
 
     //Analista
-    doc.text(data.specialist['name'], 79, 67, { align: "center" })
+    doc.text(data.specialist ? data.specialist['name'] : '---', 79, 67, { align: "center" })
 
     //Colaborador del análisis
     doc.text(`---`, 155, 67, { align: "center" })
 
     //Talller
-    doc.text(data.workShop, 72, 75, { align: "center" })
+    doc.text(data.workShop ? data.workShop : '---', 72, 75, { align: "center" })
 
     //Área
     doc.text(`---`, 117, 75, { align: "center" })
@@ -1043,16 +1043,16 @@ export class QualityService {
     doc.text(`---`, 162, 75, { align: "center" })
 
     //Tipo reha
-    doc.text(data.eventType, 79, 81, { align: "center" })
+    doc.text(data.eventType ? data.eventType : '---', 79, 81, { align: "center" })
 
     //Modelo
     doc.text('---', 155, 81, { align: "center" })
 
     //Componente
-    doc.text(data.component, 79, 89, { align: "center" })
+    doc.text(data.component ? data.component : '---', 79, 89, { align: "center" })
 
     //Nro de parte
-    doc.text('' + data.partNumber, 155, 89, { align: "center" })
+    doc.text(data.partNumber ? ('' + data.partNumber) : '---', 155, 89, { align: "center" })
 
     //Descripción
     doc.text('---', 79, 97, { align: "center" })
@@ -1070,21 +1070,21 @@ export class QualityService {
       doc.splitTextToSize(data.analysis ? data.analysis['causeFailure'] : '---', 176 - 135).slice(0, 2),
       135, 103, { align: "left", maxWidth: 176 - 135 })
 
-    const detailsExternalEvent = data.question1 + ' ********* ' +
-      data.question2 + ' ********* ' +
-      data.question3 + ' ********* ' +
+    const detailsExternalEvent = data.question1 + ' *** ' +
+      data.question2 + ' *** ' +
+      data.question3 + ' *** ' +
       data.question4;
     //Análisis
     let eventDetails = data.enventDetail ? data.enventDetail : detailsExternalEvent;
     doc.text(
-      doc.splitTextToSize(`${eventDetails}`, 176 - 58).slice(0, 18),
+      doc.splitTextToSize(`${eventDetails}`, 176 - 58).slice(0, 8),
       58, 117, { align: "left", maxWidth: 176 - 58 })
 
     //Observaciones
     let observations = data.analysis ? (data.analysis['observations'] ? data.analysis['observations'] : '---') : '---'
     doc.text(
-      doc.splitTextToSize(`${observations}`, 176 - 58).slice(0, 18),
-      58, 157, { align: "left", maxWidth: 176 - 58 })
+      doc.splitTextToSize(`${observations}`, 176 - 58).slice(0, 6),
+      58, 155, { align: "left", maxWidth: 176 - 58 })
 
     //Segunda hoja
     doc.addPage("a4", "portrait")
