@@ -92,8 +92,6 @@ export class GenerateReceptionComponent implements OnInit, OnDestroy {
   }
 
   generateReport(): void {
-    console.log(this.resizedFiles);
-
     this.dialog.open(GenerateComponent, {
       width: '90vw',
       maxWidth: '600px',
