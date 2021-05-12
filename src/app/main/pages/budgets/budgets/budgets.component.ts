@@ -11,7 +11,7 @@ export class BudgetsComponent implements OnInit {
 
   public activeLinkIndex = -1;
 
-  public navLinks: Array<any> = [
+  public navLinks: Array<TabInterface> = [
     {
       label: 'RESUMEN',
       link: './summary',
@@ -32,8 +32,16 @@ export class BudgetsComponent implements OnInit {
   public ngOnInit(): void {
     this.router.events.subscribe((res) => {
       this.activeLinkIndex = this.navLinks.indexOf(
-        this.navLinks.find((tab) => tab.link === '.' + this.router.url)
+        this.navLinks.find(
+          (tab: TabInterface) => tab.link === '.' + this.router.url
+        )
       );
     });
   }
+}
+
+interface TabInterface {
+  label: string;
+  link: string;
+  index: number;
 }
