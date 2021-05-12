@@ -38,6 +38,10 @@ const routes: Routes = [
         loadChildren: () => import('./pages/evaluations/evaluations.module').then(m => m.EvaluationsModule)
       },
       {
+        path: 'budgets',
+        loadChildren: () => import('./pages/budgets/budgets/budgets.module').then(m => m.BudgetsModule)
+      },
+      {
         path: 'budgets-daily-entries',
         loadChildren: () => import('./pages/budgets/budgets-daily-entries/budgets-daily-entries.module').then(m => m.BudgetsDailyEntriesModule)
       },
