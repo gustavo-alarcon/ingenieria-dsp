@@ -46,6 +46,10 @@ const routes: Routes = [
         loadChildren: () => import('./pages/budgets/budgets-daily-entries/budgets-daily-entries.module').then(m => m.BudgetsDailyEntriesModule)
       },
       {
+        path: 'budgets-configurations',
+        loadChildren: () => import('./pages/budgets/budgets-configurations/budgets-configurations.module').then(m => m.BudgetsConfigurationsModule)
+      },
+      {
         path: 'dashboard',
         loadChildren: () => import('./pages/andon/dashboard/dashboard.module').then(m => m.DashboardModule)
       },
