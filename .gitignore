@@ -1,5 +1,7 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
-
+#galarcon
+.firebaserc
+mail.js
 # compiled output
 /dist
 /tmp
@@ -46,3 +48,5 @@ testem.log
 Thumbs.db
 .firebase/hosting.ZGlzdC9pbmdlbmllcmlhLWRzcA.cache
 firebase-debug.log
+firestore-debug.log
+ui-debug.log

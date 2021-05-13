@@ -7,6 +7,8 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
 import { map } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root'
@@ -21,11 +23,18 @@ export class EvaluationsService {
     'CRANKSHAFT',
   ]
 
+  endPointsFerreyros = [
+    { name: 'Correos Preevaluaciones', endpoint: '' },
+    { name: 'Correos Andon', endpoint: '' },
+    { name: 'Correos Calidad', endpoint: '' }
+  ]
+
   constructor(
     private afs: AngularFirestore,
     private storage: AngularFireStorage,
     private afAuth: AngularFireAuth,
-
+    private http: HttpClient,
+    private snackbar: MatSnackBar
   ) { }
 
 
@@ -252,7 +261,7 @@ export class EvaluationsService {
   }
 
 
-  updateImagesFinalizeData(evaluation: Evaluation, finalImages, entry: EvaluationFinishForm, user: User, emailList): Observable<firebase.default.firestore.WriteBatch> {
+  updateImagesFinalizeData(evaluation: Evaluation, finalImages, entry: EvaluationFinishForm, user: User, emailList: string[]): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
 
@@ -286,6 +295,47 @@ export class EvaluationsService {
       batch.update(qualityEmailDocRef, data1);
     });
 
+    console.log('evaluation: ', evaluation);
+    console.log('finalImages: ', finalImages);
+    console.log('entry: ', entry);
+    console.log('emailList: ', emailList);
+
+    let extendsList = '';
+    if (entry.extends.length) {
+      entry.extends.forEach(element => {
+        extendsList = element + '@@';
+      });
+    }
+
+    const emailData =
+    {
+      "type": "preevaluation",
+      "component": evaluation.description,
+      "partNumber": evaluation.partNumber,
+      "quantity": evaluation.quantity,
+      "kindOfTest": entry.kindOfTest,
+      "result": entry.result,
+      "lenght_mm": entry.length,
+      "inspector": evaluation.finalizedBy.name,
+      "comments": evaluation.comments,
+      "observations": entry.comments,
+      "extends": extendsList,
+      "emailList": emailList.reduce((acc, current) => {
+        return current + ',';
+      })
+    };
+
+    this.http.post<any>(this.endPointsFerreyros['preevaluaciones'], emailData).subscribe(data => {
+      if (data === 'preevaluations') {
+        this.snackbar.open('📧 Instrucciones enviadas con éxito!', 'Aceptar', {
+          duration: 6000
+        });
+      } else {
+        this.snackbar.open('⚠️ El endpoint de correos, no está respondiendo!', 'Aceptar', {
+          duration: 6000
+        });
+      }
+    })
 
     return of(batch);
   }
@@ -556,7 +606,7 @@ export class EvaluationsService {
   //# 
   // BROADCAS LIST
   // get all EvaluationBroadcastlist
-   getAllBroadcastList(): Observable<EvaluationBroadcastList[]> {
+  getAllBroadcastList(): Observable<EvaluationBroadcastList[]> {
     return this.afs
       .collection<EvaluationBroadcastList>(
         `/db/generalConfig/evaluationBroadcastList`,
