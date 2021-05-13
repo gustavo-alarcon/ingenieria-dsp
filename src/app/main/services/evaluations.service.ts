@@ -23,11 +23,7 @@ export class EvaluationsService {
     'CRANKSHAFT',
   ]
 
-  endPointsFerreyros = [
-    { name: 'Correos Preevaluaciones', endpoint: '' },
-    { name: 'Correos Andon', endpoint: '' },
-    { name: 'Correos Calidad', endpoint: '' }
-  ]
+  endPointsPreevaluations = '';
 
   constructor(
     private afs: AngularFirestore,
@@ -295,18 +291,6 @@ export class EvaluationsService {
       batch.update(qualityEmailDocRef, data1);
     });
 
-    console.log('evaluation: ', evaluation);
-    console.log('finalImages: ', finalImages);
-    console.log('entry: ', entry);
-    console.log('emailList: ', emailList);
-
-    let extendsList = '';
-    if (entry.extends.length) {
-      entry.extends.forEach(element => {
-        extendsList = element + '@@';
-      });
-    }
-
     const emailData =
     {
       "type": "preevaluation",
@@ -316,16 +300,14 @@ export class EvaluationsService {
       "kindOfTest": entry.kindOfTest,
       "result": entry.result,
       "lenght_mm": entry.length,
-      "inspector": evaluation.finalizedBy.name,
-      "comments": evaluation.comments,
-      "observations": entry.comments,
-      "extends": extendsList,
-      "emailList": emailList.reduce((acc, current) => {
-        return current + ',';
-      })
+      "inspector": user.name,
+      "comments": entry.comments,
+      "observations": evaluation.observations,
+      "extends": entry.extends ? entry.extends.join('@@') : '',
+      "emailList": emailList ? emailList.toString() : ''
     };
 
-    this.http.post<any>(this.endPointsFerreyros['preevaluaciones'], emailData).subscribe(data => {
+    this.http.post<any>(this.endPointsPreevaluations, emailData).subscribe(data => {
       if (data === 'preevaluations') {
         this.snackbar.open('📧 Instrucciones enviadas con éxito!', 'Aceptar', {
           duration: 6000
