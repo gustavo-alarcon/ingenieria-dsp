@@ -2,6 +2,10 @@ import { MyErrorStateMatcher } from './../../evaluations/evaluations-settings/ev
 import { FormControl, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { BudgetsService } from 'src/app/main/services/budgets.service';
+import { AuthService } from 'src/app/auth/services/auth.service';
+import { take } from 'rxjs/operators';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-budgets-configurations',
@@ -30,13 +34,47 @@ export class BudgetsConfigurationsComponent implements OnInit {
   public listReasonsForRejectionArray: Array<any> = [];
   public listReasonsForModificationArray: Array<any> = [];
 
-  constructor() {}
+  constructor(
+    private budgetService: BudgetsService,
+    private authService: AuthService,
+    private snackbar: MatSnackBar
+  ) { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
-  public saveReasonsForRejection(): void {}
+  public saveReasonsForRejection(): void {
+    // valdiations
+    this.loading.next(true);
 
-  public saveReasonsForModifiacation(): void {}
+    this.authService.user$
+      .pipe(
+        take(1)
+      ).subscribe(user => {
+        this.budgetService.saveRejectionReasonsEntry('nombre', user)
+          .pipe(
+            take(1)
+          )
+          .subscribe(batch => {
+            if (batch) {
+              batch.commit()
+                .then(() => {
+                  this.loading.next(false);
+                  this.snackbar.open('✅ Operación exitosa!', 'Aceptar', {
+                    duration: 6000
+                  });
+                })
+                .catch(err => {
+                  console.log(err);
+                  this.snackbar.open('🚨 Hubo un error guardando el documento', 'Aceptar', {
+                    duration: 6000
+                  });
+                })
+            }
+          })
+      })
+  }
 
-  public addDeleteListResult(s: string, i?: number): void {}
+  public saveReasonsForModifiacation(): void { }
+
+  public addDeleteListResult(s: string, i?: number): void { }
 }
