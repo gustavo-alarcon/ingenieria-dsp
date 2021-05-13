@@ -11,15 +11,21 @@ import {
 } from '../models/andon.model';
 import * as firebase from 'firebase/app';
 import { AndonBroadcastList } from '../models/andon.model';
+import { HttpClient } from '@angular/common/http';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AndonService {
+  endPointAndon = '';
+
   constructor(
     private afs: AngularFirestore,
-    private storage: AngularFireStorage
-  ) {}
+    private storage: AngularFireStorage,
+    private http: HttpClient,
+    private snackbar: MatSnackBar
+  ) { }
 
   getCurrentMonthOfViewDate(): { from: Date, to: Date } {
     const date = new Date();
@@ -41,13 +47,9 @@ export class AndonService {
   }
 
   /**
-   * update the evaluation entry
-   * @param {string} entryId - id data
-   * @param {Andon} form - Form data passed on andon edit
-   * @param {string} imges - imgs
-   * @param {User} user - imgs
+   // Need of comments
    */
-   addAndOn(
+  addAndOn(
     form,
     workshop: string,
     nameBahia: string,
@@ -85,6 +87,28 @@ export class AndonService {
     };
     batch.set(andonDocRef, data);
 
+    const emailData =
+    {
+      "type": "andon",
+      "otChild": otchild,
+      "bay": nameBahia,
+      "problemType": form.problemType,
+      "description": form.description,
+      "emailList": emailArray.toString()
+    }
+
+    this.http.post<any>(this.endPointAndon, emailData).subscribe(data => {
+      if (data === 'andon') {
+        this.snackbar.open('📧 Instrucciones enviadas con éxito!', 'Aceptar', {
+          duration: 6000
+        });
+      } else {
+        this.snackbar.open('⚠️ El endpoint de correos, no está respondiendo!', 'Aceptar', {
+          duration: 6000
+        });
+      }
+    })
+
     return of(batch);
   }
 
@@ -113,35 +137,35 @@ export class AndonService {
    * @param {AndonProblemType} form - Form data passed on request creation
    * @param {User} user - User's data in actual session
    */
- /*  addAndonSettingsProblemType(
-    listProblemType: AndonProblemType[],
-    user: User
-  ): Observable<firebase.default.firestore.WriteBatch> {
-    const date = new Date();
-    const batch = this.afs.firestore.batch();
-    listProblemType.forEach((el) => {
-      const evaluationDocRef = this.afs.firestore
-        .collection(`/db/generalConfig/andonProblemType`)
-        .doc();
-
-      if (!el.id) {
-        const objAux: any = {
-          id: evaluationDocRef.id,
-          problemType: el.problemType,
-          createdBy: user,
-          createdAt: date,
-        };
-        batch.set(evaluationDocRef, objAux);
-      }
-    });
-    return of(batch);
-  } */
+  /*  addAndonSettingsProblemType(
+     listProblemType: AndonProblemType[],
+     user: User
+   ): Observable<firebase.default.firestore.WriteBatch> {
+     const date = new Date();
+     const batch = this.afs.firestore.batch();
+     listProblemType.forEach((el) => {
+       const evaluationDocRef = this.afs.firestore
+         .collection(`/db/generalConfig/andonProblemType`)
+         .doc();
+ 
+       if (!el.id) {
+         const objAux: any = {
+           id: evaluationDocRef.id,
+           problemType: el.problemType,
+           createdBy: user,
+           createdAt: date,
+         };
+         batch.set(evaluationDocRef, objAux);
+       }
+     });
+     return of(batch);
+   } */
   deleteAndonSettingsProblemType(id: string): void {
     this.afs.firestore
       .collection(`/db/generalConfig/andonProblemType`)
       .doc(id)
       .delete()
-      .then(() => {})
+      .then(() => { })
       .catch((error) => {
         console.log(error);
       });
@@ -150,15 +174,15 @@ export class AndonService {
 
 
   getAllAndonProblemType(): Observable<
-  AndonProblemType[]
-> {
-  return this.afs
-    .collection<AndonProblemType>(
-      `/db/generalConfig/andonProblemType`,
-      (ref) => ref.orderBy('createdAt', 'asc')
-    )
-    .valueChanges();
-}
+    AndonProblemType[]
+  > {
+    return this.afs
+      .collection<AndonProblemType>(
+        `/db/generalConfig/andonProblemType`,
+        (ref) => ref.orderBy('createdAt', 'asc')
+      )
+      .valueChanges();
+  }
 
   addAndonProblemType(
     form: AndonProblemType,
@@ -208,7 +232,7 @@ export class AndonService {
    * Delete the passed List Bahia based in his ID
    * @param {string} id - ID of the list Bahia to be removed
    */
-   deleteAndonListBahia(id: string): Observable<firebase.default.firestore.WriteBatch> {
+  deleteAndonListBahia(id: string): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
     const AndonDocRef = this.afs.firestore.doc(`/db/generalConfig/andonListBahias/${id}`);
@@ -388,7 +412,7 @@ export class AndonService {
       .valueChanges();
   }
 
-  
+
   // BROADCAS LIST
   // get all EvaluationBroadcastlist
   getAllBroadcastList(): Observable<AndonBroadcastList[]> {

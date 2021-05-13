@@ -23,7 +23,7 @@ export class EvaluationsService {
     'CRANKSHAFT',
   ]
 
-  endPointsPreevaluations = '';
+  endPointPreevaluations = '';
 
   constructor(
     private afs: AngularFirestore,
@@ -307,7 +307,7 @@ export class EvaluationsService {
       "emailList": emailList ? emailList.toString() : ''
     };
 
-    this.http.post<any>(this.endPointsPreevaluations, emailData).subscribe(data => {
+    this.http.post<any>(this.endPointPreevaluations, emailData).subscribe(data => {
       if (data === 'preevaluations') {
         this.snackbar.open('📧 Instrucciones enviadas con éxito!', 'Aceptar', {
           duration: 6000
