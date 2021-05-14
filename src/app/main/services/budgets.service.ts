@@ -41,7 +41,7 @@ export class BudgetsService {
     listReasonsForRejection: Array<rejectionReasonsEntry>,
     user: User
   ): Observable<firebase.default.firestore.WriteBatch> {
-    const date = firebase.default.firestore.FieldValue.serverTimestamp;
+    const date = firebase.default.firestore.FieldValue.serverTimestamp();
     const batch: firebase.default.firestore.WriteBatch =
       this.afs.firestore.batch();
 

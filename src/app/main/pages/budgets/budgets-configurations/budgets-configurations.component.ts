@@ -40,6 +40,8 @@ export class BudgetsConfigurationsComponent implements OnInit {
   public listReasonsForRejectionArray: Array<rejectionReasonsEntry> = [];
   public listReasonsForModificationArray: Array<modificationReasonEntry> = [];
 
+  public reasonsForModification$ :Observable<Array<modificationReasonEntry>>;
+
   // Current User
   public user: User;
 
@@ -87,6 +89,8 @@ export class BudgetsConfigurationsComponent implements OnInit {
           }
         })
     );
+
+    this.reasonsForModification$ = this.budgetService.getAllReasonsForModificationEntries();
 
     this.loading.next(false);
   }
@@ -240,9 +244,18 @@ export class BudgetsConfigurationsComponent implements OnInit {
           // Searching for repeated values
           const equal = (currentItem: modificationReasonEntry) =>
             currentItem.name !== temp.name;
-          if (this.listReasonsForModificationArray.every(equal)) {
-            this.listReasonsForModificationArray.push(temp);
-          }
+
+            this.reasonsForModification$.subscribe((data)=>{
+              if(data.every(equal)){
+                console.log(temp);
+                data.push(temp)
+              }
+            })
+
+
+          // if (this.listReasonsForModificationArray.every(equal)) {
+          //   this.listReasonsForModificationArray.push(temp);
+          // }
           // Reset the text in the form control
           this.listReasonsForModificationFormControl.reset();
         }
