@@ -17,95 +17,56 @@
             <div style="border: 10px"></div>
             <mat-card class="mat-elevation-z0">
               <mat-card-content>
-                <mat-card
-                  class="mat-elevation-z0"
-                  style="margin-left: -32px; margin-top: 10px"
-                >
+                <mat-card class="mat-elevation-z0" style="margin-left: -32px; margin-top: 10px">
                   <mat-card-header>
                     <mat-card-title>
                       <span>Motivos de rechazo</span>
-                      <button
-                        type="button"
-                        aria-label="saveDataDifusion"
-                        mat-button
-                        class="container-settings__btn-save"
-                        (click)="saveReasonsForRejection()"
-                      >
+                      <button type="button" aria-label="saveDataDifusion" mat-button
+                        class="container-settings__btn-save" (click)="saveReasonsForRejection()">
                         GUARDAR
                       </button>
                     </mat-card-title>
                   </mat-card-header>
                 </mat-card>
 
-                <mat-card
-                  class="mat-elevation-z0 container-expansion1__content-card"
-                >
-                  <mat-progress-bar
-                    mode="indeterminate"
-                    *ngIf="loading$ | async"
-                  ></mat-progress-bar>
-                  <mat-card-header
-                    class="container-expansion1__content-card--header"
-                  >
+                <mat-card class="mat-elevation-z0 container-expansion1__content-card">
+                  <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+                  <mat-card-header class="container-expansion1__content-card--header">
                     <mat-form-field>
                       <mat-label>Escribir</mat-label>
-                      <input
-                        type="text"
-                        matInput
-                        placeholder="Escribir"
-                        [formControl]="listReasonsForRejectionFormControl"
-                        (keyup.enter)="
+                      <input type="text" matInput placeholder="Escribir"
+                        [formControl]="listReasonsForRejectionFormControl" (keyup.enter)="
                           addOrDeleteEntryInReasonsForRejectionList('add')
-                        "
-                        [errorStateMatcher]="matcher"
-                        autocomplete="off"
-                      />
-                      <button
-                        mat-button
-                        *ngIf="listReasonsForRejectionFormControl.value"
-                        matSuffix
-                        mat-icon-button
-                        aria-label="clearResult"
-                        (click)="listReasonsForRejectionFormControl.reset()"
-                      >
+                        " [errorStateMatcher]="matcher" autocomplete="off" />
+                      <button mat-button *ngIf="listReasonsForRejectionFormControl.value" matSuffix mat-icon-button
+                        aria-label="clearResult" (click)="listReasonsForRejectionFormControl.reset()">
                         <mat-icon>close</mat-icon>
                       </button>
                       <mat-hint>Presione ENTER para agregar</mat-hint>
-                      <mat-error
-                        *ngIf="
+                      <mat-error *ngIf="
                           listReasonsForRejectionFormControl.hasError(
                             'required'
                           )
-                        "
-                      >
+                        ">
                         El campo es <strong>Requerido</strong>
                       </mat-error>
                     </mat-form-field>
                   </mat-card-header>
-                  <mat-card-content
-                    class="container-expansion1__content-card-content"
-                  >
-                    <div
-                      role="list"
-                      *ngFor="
+                  <mat-card-content class="container-expansion1__content-card-content">
+                    <div role="list" *ngFor="
                         let reasonForRejection of listReasonsForRejectionArray;
                         let i = index
-                      "
-                    >
+                      ">
                       <div class="item-list">
                         <span>{{ reasonForRejection.name }}</span>
 
                         <span>
-                          <button
-                            mat-icon-button
-                            aria-label="deletelistReasonsForRejection"
-                            (click)="
+                          <button mat-icon-button aria-label="deletelistReasonsForRejection" (click)="
                               addOrDeleteEntryInReasonsForRejectionList(
                                 'delete',
                                 i
                               )
-                            "
-                          >
+                            ">
                             <mat-icon style="color: #828282">delete</mat-icon>
                           </button>
                         </span>
@@ -118,93 +79,54 @@
 
             <mat-card class="mat-elevation-z0">
               <mat-card-content>
-                <mat-card
-                  class="mat-elevation-z0"
-                  style="margin-left: -32px; margin-top: 10px"
-                >
+                <mat-card class="mat-elevation-z0" style="margin-left: -32px; margin-top: 10px">
                   <mat-card-header>
                     <mat-card-title>
                       <span> Motivos de modificación </span>
-                      <button
-                        type="button"
-                        aria-label="saveDataDifusion"
-                        mat-button
-                        class="container-settings__btn-save"
-                        (click)="saveReasonsForModification()"
-                      >
+                      <button type="button" aria-label="saveDataDifusion" mat-button
+                        class="container-settings__btn-save" (click)="saveReasonsForModification()">
                         GUARDAR
                       </button>
                     </mat-card-title>
                   </mat-card-header>
                 </mat-card>
-                <mat-card
-                  class="mat-elevation-z0 container-expansion1__content-card"
-                >
-                  <mat-progress-bar
-                    mode="indeterminate"
-                    *ngIf="loading$ | async"
-                  ></mat-progress-bar>
-                  <mat-card-header
-                    class="container-expansion1__content-card--header"
-                  >
+                <mat-card class="mat-elevation-z0 container-expansion1__content-card">
+                  <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+                  <mat-card-header class="container-expansion1__content-card--header">
                     <mat-form-field>
                       <mat-label>Escribir</mat-label>
-                      <input
-                        type="text"
-                        matInput
-                        placeholder="Escribir"
-                        [formControl]="listReasonsForModificationFormControl"
-                        (keyup.enter)="
+                      <input type="text" matInput placeholder="Escribir"
+                        [formControl]="listReasonsForModificationFormControl" (keyup.enter)="
                           addOrDeleteEntryInReasonsForModificationList('add')
-                        "
-                        [errorStateMatcher]="matcher"
-                        autocomplete="off"
-                      />
-                      <button
-                        mat-button
-                        *ngIf="listReasonsForModificationFormControl.value"
-                        matSuffix
-                        mat-icon-button
-                        aria-label="clearResult"
-                        (click)="listReasonsForModificationFormControl.reset()"
-                      >
+                        " [errorStateMatcher]="matcher" autocomplete="off" />
+                      <button mat-button *ngIf="listReasonsForModificationFormControl.value" matSuffix mat-icon-button
+                        aria-label="clearResult" (click)="listReasonsForModificationFormControl.reset()">
                         <mat-icon>close</mat-icon>
                       </button>
                       <mat-hint>Presione ENTER para agregar</mat-hint>
-                      <mat-error
-                        *ngIf="
+                      <mat-error *ngIf="
                           listReasonsForModificationFormControl.hasError(
                             'required'
                           )
-                        "
-                      >
+                        ">
                         El campo es <strong>Requerido</strong>
                       </mat-error>
                     </mat-form-field>
                   </mat-card-header>
-                  <mat-card-content
-                    class="container-expansion1__content-card-content"
-                  >
-                    <div
-                      role="list"
-                      *ngFor="
-                        let reasonForModification of listReasonsForModificationArray;
+                  <mat-card-content class="container-expansion1__content-card-content">
+                    <div role="list" *ngFor="
+                        let reasonForModification of reasonsForModificationList$ | async;
                         let i = index
-                      "
-                    >
+                      ">
                       <div class="item-list">
                         <span>{{ reasonForModification.name }}</span>
                         <span>
-                          <button
-                            mat-icon-button
-                            aria-label="deletelistReasonsForRejection"
-                            (click)="
+                          <button mat-icon-button aria-label="deletelistReasonsForRejection" (click)="
                               addOrDeleteEntryInReasonsForModificationList(
                                 'delete',
                                 i
                               )
-                            "
-                          >
+                            ">
                             <mat-icon style="color: #828282">delete</mat-icon>
                           </button>
                         </span>

@@ -27,6 +27,7 @@ export class BudgetsConfigurationsComponent implements OnInit {
     null,
     Validators.required
   );
+
   public listReasonsForModificationFormControl: FormControl = new FormControl(
     null,
     Validators.required
@@ -49,7 +50,7 @@ export class BudgetsConfigurationsComponent implements OnInit {
     private budgetService: BudgetsService,
     private authService: AuthService,
     private snackbar: MatSnackBar
-  ) {}
+  ) { }
 
   public ngOnInit(): void {
     this.loading.next(true);
@@ -174,8 +175,6 @@ export class BudgetsConfigurationsComponent implements OnInit {
     }
   }
 
-  public saveReasonsForModifiacation(): void {}
-
   public async addOrDeleteEntryInReasonsForRejectionList(
     action: string,
     index?: number
@@ -230,7 +229,7 @@ export class BudgetsConfigurationsComponent implements OnInit {
     switch (action) {
       case 'add': {
         // Add an item to the local ReasonsForModification array
-        if (this.listReasonsForRejectionFormControl.valid) {
+        if (this.listReasonsForModificationFormControl.valid) {
           const temp: modificationReasonEntry = {
             id: null,
             name: this.listReasonsForModificationFormControl.value.trim(),
