@@ -140,6 +140,7 @@ mat-accordion .mat-expansion-panel {
   font-weight: normal;
   font-size: 12px;
   line-height: 24px;
+  height: 32px;
   /* or 200% */
 
   letter-spacing: 0.5px;
@@ -168,4 +169,8 @@ mat-accordion .mat-expansion-panel {
       font-size: 30px;
     }
   }
+}
+
+.container-settings__color-expantion {
+  margin-top: 30px;
 }
