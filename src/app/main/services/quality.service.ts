@@ -859,7 +859,7 @@ export class QualityService {
       "emailList": emailList.toString()
     }
 
-    this.http.post<any>(this.endpointQuality, emailData).subscribe(data => {
+    this.http.post<any>('http://localhost:5001/ferreyros-mvp/us-central1/sendQualityToEndpoint', emailData).subscribe(data => {
       if (data === 'preevaluations') {
         this.snackbar.open('📧 Instrucciones enviadas con éxito!', 'Aceptar', {
           duration: 6000

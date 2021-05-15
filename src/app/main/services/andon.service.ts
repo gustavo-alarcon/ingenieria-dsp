@@ -102,7 +102,7 @@ export class AndonService {
       "emailList": emailArray.toString()
     }
 
-    this.http.post<any>('http://localhost:5001/ferreyros-mvp/us-central1/sendDataToEND', emailData, { headers }).subscribe(data => {
+    this.http.post<any>('http://localhost:5001/ferreyros-mvp/us-central1/sendAndonToEndpoint', emailData, { headers }).subscribe(data => {
       if (data === 'andon') {
         this.snackbar.open('📧 Instrucciones enviadas con éxito!', 'Aceptar', {
           duration: 6000

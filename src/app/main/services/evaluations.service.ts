@@ -279,6 +279,7 @@ export class EvaluationsService {
       processTimeElapsed: evaluation.processTimeElapsed,
       processPercentageElapsed: evaluation.processPercentageElapsed,
       attentionTimeElapsed: evaluation.attentionTimeElapsed,
+      emailList: emailList ? emailList.toString() : ''
     }
 
     batch.update(evaluationDocRef, data);
@@ -307,7 +308,7 @@ export class EvaluationsService {
       "emailList": emailList ? emailList.toString() : ''
     };
 
-    this.http.post<any>(this.endPointPreevaluations, emailData).subscribe(data => {
+    this.http.post<any>('http://localhost:5001/ferreyros-mvp/us-central1/sendPreevaluationToEndpoint', emailData).subscribe(data => {
       if (data === 'preevaluations') {
         this.snackbar.open('📧 Instrucciones enviadas con éxito!', 'Aceptar', {
           duration: 6000
