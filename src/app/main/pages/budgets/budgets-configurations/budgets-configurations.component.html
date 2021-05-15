@@ -210,24 +210,6 @@
                         </span>
                       </div>
                     </div>
-                    <!-- <div role="list" *ngFor="
-                        let reasonForModification of reasonsForModification$ | async;
-                        let i = index
-                      ">
-                      <div class="item-list">
-                        <span>{{ reasonForModification.name }}</span>
-                        <span>
-                          <button mat-icon-button aria-label="deletelistReasonsForRejection" (click)="
-                              addOrDeleteEntryInReasonsForModificationList(
-                                'delete',
-                                i
-                              )
-                            ">
-                            <mat-icon style="color: #828282">delete</mat-icon>
-                          </button>
-                        </span>
-                      </div>
-                    </div> -->
                   </mat-card-content>
                 </mat-card>
               </mat-card-content>
@@ -244,7 +226,15 @@
           </mat-expansion-panel-header>
           <div style="display: flex; flex-wrap: wrap">
             <div style="border: 10px"></div>
-            <!-- WIP -->
+            <button
+              type="button"
+              mat-button
+              class="container-settings__btn-add"
+              style="margin-top: 50px"
+              (click)="addGroup()"
+            >
+              AGREGAR
+            </button>
           </div>
         </mat-expansion-panel>
       </mat-accordion>

@@ -1,3 +1,5 @@
+import { AddGroupDialogComponent } from './dialogs/add-group-dialog/add-group-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 import {
   modificationReasonEntry,
   rejectionReasonsEntry,
@@ -40,7 +42,7 @@ export class BudgetsConfigurationsComponent implements OnInit {
   public listReasonsForRejectionArray: Array<rejectionReasonsEntry> = [];
   public listReasonsForModificationArray: Array<modificationReasonEntry> = [];
 
-  public reasonsForModification$ :Observable<Array<modificationReasonEntry>>;
+  public reasonsForModification$: Observable<Array<modificationReasonEntry>>;
 
   // Current User
   public user: User;
@@ -51,7 +53,8 @@ export class BudgetsConfigurationsComponent implements OnInit {
   constructor(
     private budgetService: BudgetsService,
     private authService: AuthService,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    private dialog: MatDialog
   ) {}
 
   public ngOnInit(): void {
@@ -90,7 +93,8 @@ export class BudgetsConfigurationsComponent implements OnInit {
         })
     );
 
-    this.reasonsForModification$ = this.budgetService.getAllReasonsForModificationEntries();
+    this.reasonsForModification$ =
+      this.budgetService.getAllReasonsForModificationEntries();
 
     this.loading.next(false);
   }
@@ -271,5 +275,12 @@ export class BudgetsConfigurationsComponent implements OnInit {
         break;
       }
     }
+  }
+
+  public addGroup(): void {
+    this.dialog.open(AddGroupDialogComponent, {
+      maxWidth: 500,
+      width: '90vw',
+    });
   }
 }
