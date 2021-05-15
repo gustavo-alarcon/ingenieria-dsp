@@ -1,3 +1,4 @@
+import { BudgetsService } from 'src/app/main/services/budgets.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
@@ -17,7 +18,8 @@ export class AddGroupDialogComponent implements OnInit {
     private fb: FormBuilder,
     public authService: AuthService,
     private snackbar: MatSnackBar,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private budgetsService: BudgetsService
   ) {}
 
   form: FormGroup;
@@ -41,7 +43,7 @@ export class AddGroupDialogComponent implements OnInit {
 
   initForm(): void {
     this.form = this.fb.group({
-      broadcast: ['', Validators.required],
+      groupName: ['', Validators.required],
     });
   }
 
@@ -50,6 +52,36 @@ export class AddGroupDialogComponent implements OnInit {
   }
 
   public save() {
-    alert('Hello world');
+    if (this.form.valid) {
+      const resp = this.budgetsService.addNewBroadcastList(
+        this.form.get('groupName').value,
+        this.user
+      );
+
+
+      this.loading.next(true);
+      this.subscription.add(
+        resp.subscribe((batch) => {
+          if (batch) {
+            batch
+              .commit()
+              .then(() => {
+                // this.loading.next(false);
+                this.snackbar.open('✅ Se guardo correctamente!', 'Aceptar', {
+                  duration: 6000,
+                });
+                this.dialog.closeAll();
+              })
+              .catch((err) => {
+                this.loading.next(false);
+                this.snackbar.open('🚨 Hubo un error al crear!', 'Aceptar', {
+                  duration: 6000,
+                });
+              });
+          }
+        })
+      );
+    }
+
   }
 }
