@@ -40,6 +40,8 @@ export class BudgetsConfigurationsComponent implements OnInit {
   public listReasonsForRejectionArray: Array<rejectionReasonsEntry> = [];
   public listReasonsForModificationArray: Array<modificationReasonEntry> = [];
 
+  public reasonsForModification$ :Observable<Array<modificationReasonEntry>>;
+
   // Current User
   public user: User;
 
@@ -87,6 +89,8 @@ export class BudgetsConfigurationsComponent implements OnInit {
           }
         })
     );
+
+    this.reasonsForModification$ = this.budgetService.getAllReasonsForModificationEntries();
 
     this.loading.next(false);
   }
