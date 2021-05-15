@@ -13,7 +13,7 @@ import { Observable, of } from 'rxjs';
   providedIn: 'root',
 })
 export class BudgetsService {
-  constructor(private afs: AngularFirestore) { }
+  constructor(private afs: AngularFirestore) {}
 
   public getAllReasonsForRejectionEntries(): Observable<
     rejectionReasonsEntry[]
@@ -41,7 +41,7 @@ export class BudgetsService {
     listReasonsForRejection: Array<rejectionReasonsEntry>,
     user: User
   ): Observable<firebase.default.firestore.WriteBatch> {
-    const date = firebase.default.firestore.FieldValue.serverTimestamp;
+    const date = firebase.default.firestore.FieldValue.serverTimestamp();
     const batch: firebase.default.firestore.WriteBatch =
       this.afs.firestore.batch();
 
@@ -98,7 +98,7 @@ export class BudgetsService {
       .collection('/db/generalConfig/budgetsListRejectionReasons')
       .doc(id)
       .delete()
-      .then(() => { })
+      .then(() => {})
       .catch((error) => {
         console.error(error);
       });
@@ -109,7 +109,7 @@ export class BudgetsService {
       .collection('/db/generalConfig/budgetsListModificationReasons')
       .doc(id)
       .delete()
-      .then(() => { })
+      .then(() => {})
       .catch((error) => {
         console.error(error);
       });

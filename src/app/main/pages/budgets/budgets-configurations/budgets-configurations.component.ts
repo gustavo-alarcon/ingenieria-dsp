@@ -50,7 +50,7 @@ export class BudgetsConfigurationsComponent implements OnInit {
     private budgetService: BudgetsService,
     private authService: AuthService,
     private snackbar: MatSnackBar
-  ) { }
+  ) {}
 
   public ngOnInit(): void {
     this.loading.next(true);
@@ -194,7 +194,7 @@ export class BudgetsConfigurationsComponent implements OnInit {
           const equal = (currentItem: rejectionReasonsEntry) =>
             currentItem.name !== temp.name;
           if (this.listReasonsForRejectionArray.every(equal)) {
-            this.listReasonsForRejectionArray.push(temp);
+            this.listReasonsForRejectionArray.unshift(temp);
           }
           // Reset the text in the form control
           this.listReasonsForRejectionFormControl.reset();
@@ -241,7 +241,7 @@ export class BudgetsConfigurationsComponent implements OnInit {
           const equal = (currentItem: modificationReasonEntry) =>
             currentItem.name !== temp.name;
           if (this.listReasonsForModificationArray.every(equal)) {
-            this.listReasonsForModificationArray.push(temp);
+            this.listReasonsForModificationArray.unshift(temp);
           }
           // Reset the text in the form control
           this.listReasonsForModificationFormControl.reset();
