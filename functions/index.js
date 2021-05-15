@@ -144,3 +144,16 @@ exports.sendGrid = functions.firestore.document(`db/ferreyros/evaluations/{evalI
         }
     }
 )
+
+exports.sendDataToEndpoitFerreyros = functions.https.onRequest((data, params) => {
+    if (params) {
+        const body = params.body;
+
+        console.log(params);
+    }
+})
+
+exports.sendDataToEND = functions.firestore.document(`db/ferreyros/andon/{andonId}`)
+    .onWrite((event) => {
+        console.log(event.after.data());
+    })

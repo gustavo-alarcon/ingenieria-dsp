@@ -18,7 +18,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   providedIn: 'root',
 })
 export class AndonService {
-  endPointAndon = '';
+  endPointAndon = 'https://script.google.com/macros/s/AKfycbwDNTccLhAyVb0MSHPei2g2IZ0WD8ONDZ_PxS65gs-95NjVJbJbMM3QCklegTDkD68cWw/exec';
 
   constructor(
     private afs: AngularFirestore,
@@ -85,7 +85,12 @@ export class AndonService {
       returnUser: null,
       emailList: emailArray
     };
+
     batch.set(andonDocRef, data);
+
+    const headers = {
+      'Access-Control-Allow-Origin': '*'
+    }
 
     const emailData =
     {
@@ -97,7 +102,7 @@ export class AndonService {
       "emailList": emailArray.toString()
     }
 
-    this.http.post<any>(this.endPointAndon, emailData).subscribe(data => {
+    this.http.post<any>('http://localhost:5001/ferreyros-mvp/us-central1/sendDataToEND', emailData, { headers }).subscribe(data => {
       if (data === 'andon') {
         this.snackbar.open('📧 Instrucciones enviadas con éxito!', 'Aceptar', {
           duration: 6000
