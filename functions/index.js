@@ -1,14 +1,8 @@
 const functions = require("firebase-functions");
 const admin = require('firebase-admin');
-//const { sendMailExample } = require('./functions/send-emails/send-mail-example');
 const { createUserSetClaims } = require('./functions/auth/create-user-claims');
 const gaxios = require('gaxios')
 const SENDGRID_APY_KEY = require('./keys.json').ferreyros_01
-
-
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-//
 
 admin.initializeApp();
 admin.firestore().settings({ timestampsInSnapshots: true });

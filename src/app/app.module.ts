@@ -19,6 +19,7 @@ import { LandingComponent } from './shared/landing/landing.component';
 import { UpdateReadyComponent } from './shared/update-ready/update-ready.component';
 import { MaterialModule } from './material/material.module';
 
+import { USE_EMULATOR as USE_AUTH_EMULATOR } from '@angular/fire/auth';
 import { USE_EMULATOR as USE_FIRESTORE_EMULATOR } from '@angular/fire/firestore';
 import { USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/functions';
 
@@ -46,6 +47,7 @@ import { USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/functions'
     UpdateReadyComponent
   ],
   providers: [{ provide: BUCKET, useValue: environment.firebase.storageBucket },
+  { provide: USE_AUTH_EMULATOR, useValue: environment.useEmulators ? ['localhost', 9099] : undefined },
   { provide: USE_FIRESTORE_EMULATOR, useValue: environment.useEmulators ? ['localhost', 8080] : undefined },
   { provide: USE_FUNCTIONS_EMULATOR, useValue: environment.useEmulators ? ['localhost', 5001] : undefined },
   ],
