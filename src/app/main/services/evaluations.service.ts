@@ -7,6 +7,8 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
 import { map } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root'
@@ -21,11 +23,14 @@ export class EvaluationsService {
     'CRANKSHAFT',
   ]
 
+  endPointPreevaluations = '';
+
   constructor(
     private afs: AngularFirestore,
     private storage: AngularFireStorage,
     private afAuth: AngularFireAuth,
-
+    private http: HttpClient,
+    private snackbar: MatSnackBar
   ) { }
 
 
@@ -252,7 +257,7 @@ export class EvaluationsService {
   }
 
 
-  updateImagesFinalizeData(evaluation: Evaluation, finalImages, entry: EvaluationFinishForm, user: User, emailList): Observable<firebase.default.firestore.WriteBatch> {
+  updateImagesFinalizeData(evaluation: Evaluation, finalImages, entry: EvaluationFinishForm, user: User, emailList: string[]): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
 
@@ -274,6 +279,7 @@ export class EvaluationsService {
       processTimeElapsed: evaluation.processTimeElapsed,
       processPercentageElapsed: evaluation.processPercentageElapsed,
       attentionTimeElapsed: evaluation.attentionTimeElapsed,
+      emailList: emailList ? emailList.toString() : ''
     }
 
     batch.update(evaluationDocRef, data);
@@ -286,6 +292,33 @@ export class EvaluationsService {
       batch.update(qualityEmailDocRef, data1);
     });
 
+    const emailData =
+    {
+      "type": "preevaluation",
+      "component": evaluation.description,
+      "partNumber": evaluation.partNumber,
+      "quantity": evaluation.quantity,
+      "kindOfTest": entry.kindOfTest,
+      "result": entry.result,
+      "lenght_mm": entry.length,
+      "inspector": user.name,
+      "comments": entry.comments,
+      "observations": evaluation.observations,
+      "extends": entry.extends ? entry.extends.join('@@') : '',
+      "emailList": emailList ? emailList.toString() : ''
+    };
+
+    this.http.post<any>('http://localhost:5001/ferreyros-mvp/us-central1/sendPreevaluationToEndpoint', emailData).subscribe(data => {
+      if (data === 'preevaluations') {
+        this.snackbar.open('📧 Instrucciones enviadas con éxito!', 'Aceptar', {
+          duration: 6000
+        });
+      } else {
+        this.snackbar.open('⚠️ El endpoint de correos, no está respondiendo!', 'Aceptar', {
+          duration: 6000
+        });
+      }
+    })
 
     return of(batch);
   }
@@ -556,7 +589,7 @@ export class EvaluationsService {
   //# 
   // BROADCAS LIST
   // get all EvaluationBroadcastlist
-   getAllBroadcastList(): Observable<EvaluationBroadcastList[]> {
+  getAllBroadcastList(): Observable<EvaluationBroadcastList[]> {
     return this.afs
       .collection<EvaluationBroadcastList>(
         `/db/generalConfig/evaluationBroadcastList`,
