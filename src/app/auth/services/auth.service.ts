@@ -8,8 +8,11 @@ import { Observable, of } from 'rxjs';
 
 import { HttpClient } from '@angular/common/http';
 import { User } from 'src/app/main/models/user-model';
-import { shareReplay, switchMap } from 'rxjs/operators';
+import { map, shareReplay, switchMap, tap } from 'rxjs/operators';
 import { GeneralConfig } from '../models/generalConfig.model';
+import { UserClaims } from '../models/claims.model';
+import { UIConfig } from '../models/uiConfig.model';
+import { UiConfig } from '../classes/ui-config';
 
 
 @Injectable({
@@ -19,6 +22,7 @@ import { GeneralConfig } from '../models/generalConfig.model';
 export class AuthService {
 
   user$: Observable<User>;
+  uiConfig = new UiConfig('default');
   version$: Observable<GeneralConfig>; F
   version: string = 'V5.15.22r';
 
@@ -32,13 +36,13 @@ export class AuthService {
         switchMap(user => {
           if (user) {
             return this.afs.collection('users').doc<User>(user.uid)
-              .valueChanges();
+              .valueChanges()
           } else {
             return of(null);
           }
         }),
         shareReplay(1)
-      )
+      );
   }
 
   getGeneralConfig(): Observable<GeneralConfig> {
@@ -74,5 +78,7 @@ export class AuthService {
   getGeneralConfigDoc(): Observable<GeneralConfig> {
     return this.afs.doc<GeneralConfig>('/db/generalConfig').valueChanges().pipe(shareReplay(1));
   }
+
+
 
 }

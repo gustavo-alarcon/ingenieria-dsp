@@ -13,6 +13,17 @@
       </mat-card-content>
     </mat-card>
     <hr class="hr-line">
+    <mat-nav-list style="width: 100%" class="admin">
+      <div>
+        <a mat-list-item (click)="call()">
+          <mat-icon mat-list-icon class="mat-icon-menu">settings</mat-icon>
+          <span class="mat-item-list-span">
+            Administrar
+          </span>
+        </a>
+      </div>
+    </mat-nav-list>
+
     <mat-accordion class="spare-parts">
       <mat-expansion-panel>
         <mat-expansion-panel-header>

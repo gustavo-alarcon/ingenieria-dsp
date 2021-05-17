@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
-import { map, shareReplay, tap } from 'rxjs/operators';
+import { map, shareReplay, take, tap } from 'rxjs/operators';
 import { AuthService } from '../../auth/services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
@@ -9,6 +9,7 @@ import { User } from '../models/user-model';
 import { GeneralConfig } from 'src/app/auth/models/generalConfig.model';
 import { MatDialog } from '@angular/material/dialog';
 import { UpdateReadyComponent } from 'src/app/shared/update-ready/update-ready.component';
+import { AngularFireFunctions } from '@angular/fire/functions';
 
 
 @Component({
@@ -38,7 +39,8 @@ export class MainComponent {
     public authService: AuthService,
     private router: Router,
     private afs: AngularFirestore,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private afFun: AngularFireFunctions
   ) {
 
     this.authService.currentUser().subscribe(
@@ -50,7 +52,7 @@ export class MainComponent {
 
     this.version$ = this.authService.getGeneralConfigDoc().pipe(
       map(conf => {
-        
+
         if (conf.version !== this.authService.version) {
           this.dialog.open(UpdateReadyComponent, {
             maxWidth: '350px',
@@ -72,6 +74,14 @@ export class MainComponent {
     }
   }
 
-  
+  call(): void {
+    const callable = this.afFun.httpsCallable('setClaimsAsTechnician')
+    callable({ uid: 'FB9fONRljPdFvxnfWGdPrLRyWzX2' })
+      .pipe(
+        take(1)
+      ).subscribe(res => {
+        console.log(res);
+      })
+  }
 
 }

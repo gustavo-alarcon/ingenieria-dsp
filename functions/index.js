@@ -36,6 +36,31 @@ exports.createUserSetClaims = functions.auth.user().onCreate(async (user) => {
     return await createUserSetClaims(user);
 });
 
+exports.setClaimsAsTechnician = functions.https.onCall(async (data, context) => {
+    functions.logger.info(`User ${data.uid} claims updated`, { structuredData: true });
+    const uid = data.uid;
+    const roles = {
+        superuser: false,
+        admin: false,
+        technician: true
+    }
+    console.log(uid);
+    console.log(context.auth.token.name);
+    try {
+        await admin.auth().setCustomUserClaims(uid, roles);
+        await admin.firestore().collection('users').doc(uid).update({
+            editedAt: admin.firestore.FieldValue.serverTimestamp(),
+            editedBy: context.auth.token.name
+        });
+        return 'Claims updated';
+
+    } catch (error) {
+        functions.logger.info(error, { structuredData: true });
+        return;
+    }
+
+});
+
 // exports.sendMailExample = functions.https.onCall(async (data, context) => {
 //     return await sendMailExample(data, context);
 // });
