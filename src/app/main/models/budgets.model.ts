@@ -15,3 +15,11 @@ export interface modificationReasonEntry {
   createdBy: User;
   createdAt: firebase.default.firestore.FieldValue;
 }
+
+export interface BudgetsBroadcastList {
+  id?: string;
+  name: string;
+  emailList: Array<string>;
+  createdAt: Date;
+  createdBy: User;
+}

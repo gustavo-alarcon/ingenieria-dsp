@@ -151,6 +151,7 @@ mat-accordion .mat-expansion-panel {
 .container-diffusion {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+  padding: 1em;
 
   &__title {
     display: flex;
@@ -171,6 +172,10 @@ mat-accordion .mat-expansion-panel {
   }
 }
 
-.container-settings__btn-add{
+.container-settings__btn-add {
+  margin: 1em;
+}
+
+.loading-animation {
   margin: 1em;
 }
