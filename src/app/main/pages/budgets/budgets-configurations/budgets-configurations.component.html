@@ -8,22 +8,18 @@
       <mat-accordion>
 
         <mat-expansion-panel class="container-settings__color-expantion">
-          <mat-expansion-panel-header style="height: 58px">
+          <mat-expansion-panel-header class="mat-expansion-panel-header">
             <mat-panel-title class="container-settings__header-title">
               Listas desplegables
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <div style="display: flex; flex-wrap: wrap">
-            <div style="border: 10px"></div>
+          <div class="main-container-flex">
             <mat-card class="mat-elevation-z0">
               <mat-card-content>
-                <mat-card
-                  class="mat-elevation-z0"
-                  style="margin-left: -32px; margin-top: 10px"
-                >
+                <mat-card class="mat-elevation-z0">
                   <mat-card-header>
                     <mat-card-title>
-                      <span>Motivos de rechazo</span>
+                      <span class="mini-title">Motivos de rechazo</span>
                       <button
                         type="button"
                         aria-label="saveDataDifusion"
@@ -106,7 +102,7 @@
                               )
                             "
                           >
-                            <mat-icon style="color: #828282">delete</mat-icon>
+                            <mat-icon class="delete-color">delete</mat-icon>
                           </button>
                         </span>
                       </div>
@@ -118,13 +114,10 @@
 
             <mat-card class="mat-elevation-z0">
               <mat-card-content>
-                <mat-card
-                  class="mat-elevation-z0"
-                  style="margin-left: -32px; margin-top: 10px"
-                >
+                <mat-card class="mat-elevation-z0">
                   <mat-card-header>
                     <mat-card-title>
-                      <span> Motivos de modificación </span>
+                      <span class="mini-title"> Motivos de modificación </span>
                       <button
                         type="button"
                         aria-label="saveDataDifusion"
@@ -205,7 +198,7 @@
                               )
                             "
                           >
-                            <mat-icon style="color: #828282">delete</mat-icon>
+                            <mat-icon class="delete-color">delete</mat-icon>
                           </button>
                         </span>
                       </div>
@@ -219,14 +212,108 @@
 
  
         <mat-expansion-panel class="container-settings__color-expantion">
-          <mat-expansion-panel-header style="height: 58px">
+          <mat-expansion-panel-header class="mat-expansion-panel-header">
             <mat-panel-title class="container-settings__header-title">
               Configurador de grupos
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <div style="display: flex; flex-wrap: wrap">
-            <div style="border: 10px"></div>
-            <!-- WIP -->
+
+          <mat-progress-bar
+            class="loading-animation"
+            mode="indeterminate"
+            *ngIf="loading$ | async"
+          ></mat-progress-bar>
+
+          <div
+            class="container-diffusion"
+            *ngIf="broadcast$ | async as broadcastList"
+          >
+            <div *ngFor="let broadcast of broadcastList; let i = index">
+              <mat-card-content>
+                <mat-card class="mat-elevation-z0">
+                  <mat-card-header>
+                    <mat-card-title>
+                      <div class="container-diffusion__title">
+                        <p class="container-diffusion__title--name">
+                          Lista de {{ broadcast.name }}
+                        </p>
+                      </div>
+                    </mat-card-title>
+                  </mat-card-header>
+                </mat-card>
+
+                <mat-card
+                  class="mat-elevation-z0 container-expansion1__content-card"
+                >
+                  <mat-card-header
+                    class="container-expansion1__content-card--header"
+                  >
+                    <mat-form-field>
+                      <mat-label>Escribir</mat-label>
+                      <input
+                        type="email"
+                        matInput
+                        placeholder="Escribir"
+                        [formControl]="broadcastFormArray.controls[i]"
+                        (keyup.enter)="addListDiffusion(broadcast, i)"
+                        [errorStateMatcher]="matcher"
+                        autocomplete="off"
+                      />
+                      <button
+                        mat-button
+                        *ngIf="broadcastFormArray.controls[i].errors"
+                        matSuffix
+                        mat-icon-button
+                        aria-label="clearResult"
+                        (click)="broadcastFormArray.controls[i].reset()"
+                      >
+                        <mat-icon>close</mat-icon>
+                      </button>
+                      <mat-hint>Presione ENTER para agregar</mat-hint>
+                      <mat-error
+                        *ngIf="
+                          broadcastFormArray.controls[i].hasError('required')
+                        "
+                      >
+                        El campo es <strong>Requerido</strong>
+                      </mat-error>
+                    </mat-form-field>
+                  </mat-card-header>
+                  <mat-card-content
+                    class="container-expansion1__content-card-content"
+                  >
+                    <div
+                      role="list"
+                      *ngFor="let item of broadcast['emailList']; let j = index"
+                    >
+                      <div class="item-list">
+                        <span>{{ item }}</span>
+                        <span>
+                          <button
+                            mat-icon-button
+                            aria-label="deletelistResult"
+                            (click)="updateBroadcastListEmail(broadcast, item)"
+                          >
+                            <mat-icon class="delete-color">delete</mat-icon>
+                          </button>
+                        </span>
+                      </div>
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+              </mat-card-content>
+            </div>
+          </div>
+
+          <div class="main-container-flex">
+            <button
+              type="button"
+              mat-button
+              class="container-settings__btn-add"
+              (click)="addGroup()"
+            >
+              AGREGAR
+            </button>
           </div>
         </mat-expansion-panel>
       </mat-accordion>

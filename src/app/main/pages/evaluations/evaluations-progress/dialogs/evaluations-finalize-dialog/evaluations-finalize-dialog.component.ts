@@ -1,10 +1,10 @@
 import { Component, OnInit, Inject, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Evaluation, EvaluationBroadcastList, EvaluationsKindOfTest, EvaluationsResultTypeUser } from 'src/app/main/models/evaluations.model';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { finalize, take, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, finalize, map, startWith, switchMap, take, tap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Ng2ImgMaxService } from 'ng2-img-max';
 import { EvaluationsService } from 'src/app/main/services/evaluations.service';
@@ -13,6 +13,8 @@ import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material
 import { ENTER, COMMA } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { User } from '../../../../../models/user-model';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-evaluations-finalize-dialog',
@@ -81,7 +83,7 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
     } else {
       this.arrayAux = [null];
     }
-    
+
   }
 
   ngOnInit(): void {

@@ -6,6 +6,7 @@ import { BudgetsConfigurationsComponent } from './budgets-configurations.compone
 import { RouterModule, Routes } from '@angular/router';
 
 import { MaterialModule } from 'src/app/material/material.module';
+import { AddGroupDialogComponent } from './dialogs/add-group-dialog/add-group-dialog.component';
 
 const routes: Routes = [
   {
@@ -15,7 +16,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  declarations: [BudgetsConfigurationsComponent],
+  declarations: [BudgetsConfigurationsComponent, AddGroupDialogComponent],
   imports: [
     CommonModule,
     BudgetsConfigurationsRoutingModule,
