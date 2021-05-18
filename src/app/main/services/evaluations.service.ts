@@ -284,42 +284,6 @@ export class EvaluationsService {
 
     batch.update(evaluationDocRef, data);
 
-    emailList.forEach(el => {
-      const qualityEmailDocRef = this.afs.firestore.doc(`/db/ferreyros/evaluations/${evaluation.id}`);
-      const data1: any = {
-        emailList: firebase.default.firestore.FieldValue.arrayUnion(el)
-      };
-      batch.update(qualityEmailDocRef, data1);
-    });
-
-    const emailData =
-    {
-      "type": "preevaluation",
-      "component": evaluation.description,
-      "partNumber": evaluation.partNumber,
-      "quantity": evaluation.quantity,
-      "kindOfTest": entry.kindOfTest,
-      "result": entry.result,
-      "lenght_mm": entry.length,
-      "inspector": user.name,
-      "comments": entry.comments,
-      "observations": evaluation.observations,
-      "extends": entry.extends ? entry.extends.join('@@') : '',
-      "emailList": emailList ? emailList.toString() : ''
-    };
-
-    this.http.post<any>('http://localhost:5001/ferreyros-mvp/us-central1/sendPreevaluationToEndpoint', emailData).subscribe(data => {
-      if (data === 'preevaluations') {
-        this.snackbar.open('📧 Instrucciones enviadas con éxito!', 'Aceptar', {
-          duration: 6000
-        });
-      } else {
-        this.snackbar.open('⚠️ El endpoint de correos, no está respondiendo!', 'Aceptar', {
-          duration: 6000
-        });
-      }
-    })
-
     return of(batch);
   }
 

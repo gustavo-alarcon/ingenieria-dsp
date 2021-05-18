@@ -88,32 +88,6 @@ export class AndonService {
 
     batch.set(andonDocRef, data);
 
-    const headers = {
-      'Access-Control-Allow-Origin': '*'
-    }
-
-    const emailData =
-    {
-      "type": "andon",
-      "otChild": otchild,
-      "bay": nameBahia,
-      "problemType": form.problemType,
-      "description": form.description,
-      "emailList": emailArray.toString()
-    }
-
-    this.http.post<any>('http://localhost:5001/ferreyros-mvp/us-central1/sendAndonToEndpoint', emailData, { headers }).subscribe(data => {
-      if (data === 'andon') {
-        this.snackbar.open('📧 Instrucciones enviadas con éxito!', 'Aceptar', {
-          duration: 6000
-        });
-      } else {
-        this.snackbar.open('⚠️ El endpoint de correos, no está respondiendo!', 'Aceptar', {
-          duration: 6000
-        });
-      }
-    })
-
     return of(batch);
   }
 

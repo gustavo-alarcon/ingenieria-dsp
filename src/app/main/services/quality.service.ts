@@ -827,50 +827,6 @@ export class QualityService {
 
     batch.update(qualityDocRef, data);
 
-    emailList.forEach(el => {
-      const qualityEmailDocRef = this.afs.firestore.doc(`db/ferreyros/quality/${quality.id}`);
-      const data1: any = {
-        emailList: firebase.default.firestore.FieldValue.arrayUnion(el)
-      };
-      batch.update(qualityEmailDocRef, data1);
-    });
-
-    let actionsForEmail = [];
-    if (formCorrective['areas'].length) {
-      actionsForEmail = formCorrective['areas'].map(element => {return [element['corrective'], element['name']]});
-    }
-    // [[correctivo 1, Logística], [ccorectivo 2, RRHH]]
-    const emailData =
-    {
-      "type": "quality",
-      "otChild": quality.workOrder,
-      "partNumber": quality.partNumber,
-      "workshop": quality.workShop ? quality.workShop : '---',
-      "details": quality.enventDetail ? quality.enventDetail : (quality.question1 + '***' +
-        quality.question2 + '***' +
-        quality.question3 + '***' +
-        quality.question4),
-      "riskLevel": quality.evaluationAnalysisName + '(' + quality.evaluationAnalisis + ')',
-      "Quality": quality.analysisQuality ? quality.analysisQuality : '---',
-      "failRoot": formAnalysis['causeFailure'] ? formAnalysis['causeFailure'] : '---',
-      "process": formAnalysis['process'] ? formAnalysis['process'] : '---',
-      "observations": formAnalysis['observation'] ? formAnalysis['observation'] : '---',
-      "correctiveActions": actionsForEmail,
-      "emailList": emailList.toString()
-    }
-
-    this.http.post<any>('http://localhost:5001/ferreyros-mvp/us-central1/sendQualityToEndpoint', emailData).subscribe(data => {
-      if (data === 'preevaluations') {
-        this.snackbar.open('📧 Instrucciones enviadas con éxito!', 'Aceptar', {
-          duration: 6000
-        });
-      } else {
-        this.snackbar.open('⚠️ El endpoint de correos, no está respondiendo!', 'Aceptar', {
-          duration: 6000
-        });
-      }
-    });
-
     return of(batch);
   }
 
