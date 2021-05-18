@@ -15,7 +15,7 @@ export class BudgetsDailyEntriesComponent implements OnInit {
   public budgetsDailyEntriesDataSource: MatTableDataSource<Evaluation> =
     new MatTableDataSource<Evaluation>();
 
-  public budgetsDailyEntriesDisplayedColumns: string[] = [
+  public budgetsDailyEntriesDisplayedColumns: Array<string> = [
     'otMain',
     'otChild',
     'position',
@@ -36,6 +36,94 @@ export class BudgetsDailyEntriesComponent implements OnInit {
     'processAt',
     'finalizedAt',
   ];
+
+  // public budgetsDailyEntriesDisplayedColumns: Array<string> = [
+  //   'taller',
+  //   'woMain',
+  //   'ioMain',
+  //   'woChild',
+  //   'ioChild',
+  //   'statusWoChild',
+  //   'otTaller',
+  //   'otMadre',
+  //   'fechaAperturaChild',
+  //   'fechaReleasedIoChild',
+  //   'cliente',
+  //   'gm/ngm',
+  //   'modelo',
+  //   'tipoSS',
+  //   'servicio',
+  //   'tipoAtencion',
+  //   'modalidadPresupuesto',
+  //   'componente',
+  //   'afa',
+  //   'fechaUltimoListado',
+  //   'fechaUltimoEnvioDocumentoADM',
+  //   'ultimoDocumento',
+  //   'fechaDefinicionDeCargos',
+  //   'definicionDeCargos',
+  //   'fechaUltimoEnvioPPTO',
+  //   'fechaEnvioPPTO01',
+  //   'fechaEnvioPPTO02',
+  //   'motivoDeModificacion02',
+  //   'fechaEnvioPPTO03',
+  //   'motivoDeModificacion03',
+  //   'detalleDeModificacion03',
+  //   'fechaEnvioPPTO04',
+  //   'motivoDeModificacion04',
+  //   'detalleDeModificacion04',
+  //   'fechaDeAprobacionORechazo',
+  //   'statusPresupuesto',
+  //   'vv$servicios',
+  //   'vv$repuestos',
+  //   'totalvvPPTOUS$',
+  //   '$componenteNuevo',
+  //   '%reparacion(60%)',
+  //   'horasSTD',
+  //   'horasReales',
+  //   'tiempoObjetivoEnvioPPTO',
+  //   'NoPPTOSModificadosOAdicionales',
+  //   'observacionesEnElPresupuesto',
+  //   'fechaDeTerminoDeRep',
+  //   'fechaUltimoInput',
+  //   'motivoDeInput',
+  //   'fechaDeFactDeTaller',
+  //   'costo$ServiciosCliente',
+  //   'costo$ServiciosDeOperacion',
+  //   'rentabilidadServicios%',
+  //   'costo$RepuestosCLIENTE',
+  //   'costo$RepuestosOperacion',
+  //   'rentabilidadRepuestos%',
+  //   'observacionesTaller',
+  //   'realDevueltoAServicios',
+  //   'diferenciaServicios',
+  //   'realDevueltoARepuestos',
+  //   'diferenciaRepuestos',
+  //   'totalVVFacturadoUS$',
+  //   'mesFactVenta',
+  //   '%horasSTDvsHorasDBS',
+  //   'fechaFirstLabour',
+  //   'fechaLastLabour',
+  //   'diasDemoraFact',
+  //   'diasFactLastLabour',
+  //   'elaborarPPTO',
+  //   'tipoDeComponente',
+  //   'tipo(AA//P&P)',
+  //   'taller02',
+  //   'diasDesdeAperturaChild',
+  //   'resumen',
+  //   'definicionDeCargos',
+  //   'informe',
+  //   'cotizacionFesa',
+  //   'cotizacionText',
+  //   'id',
+  //   'clave',
+  //   'obj',
+  //   'diasPPTO',
+  //   'mesTer',
+  //   'anio',
+  //   'fechaLPD'
+  // ];
 
   @ViewChild('budgetsDailyEntriesPaginator', { static: false }) set content(
     paginator: MatPaginator
@@ -67,12 +155,15 @@ export class BudgetsDailyEntriesComponent implements OnInit {
     const fileReader: FileReader = new FileReader();
 
     fileReader.onload = () => {
-      const data: Uint8Array = new Uint8Array(fileReader.result as ArrayBufferLike);
+      const data: Uint8Array = new Uint8Array(
+        fileReader.result as ArrayBufferLike
+      );
       const workbook: XLSX.WorkBook = XLSX.read(data, { type: 'array' });
-      // SheetNames[0] should contain the data. For some reason SheetNames[1] contains the data
-      const sheet: XLSX.WorkSheet = workbook.Sheets[workbook.SheetNames[1]];
-      // Empty headers [H5]
-      console.log(sheet.B5, sheet.C5, sheet.H5);
+      const sheet: XLSX.WorkSheet = workbook.Sheets[workbook.SheetNames[0]];
+
+      console.log(XLSX.utils.sheet_to_json(sheet, { header: 1 }));
+
+      //console.log(sheet.B5, sheet.C5, sheet.H5);
     };
 
     fileReader.readAsArrayBuffer(file);
