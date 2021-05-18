@@ -3,7 +3,7 @@ const admin = require('firebase-admin');
 //const { sendMailExample } = require('./functions/send-emails/send-mail-example');
 const { createUserSetClaims } = require('./functions/auth/create-user-claims');
 const gaxios = require('gaxios')
-const SENDGRID_APY_KEY = require('./keys.json').ferreyros_01
+// const SENDGRID_APY_KEY = require('./keys.json').ferreyros_01
 
 
 // // Create and Deploy Your First Cloud Functions
@@ -146,86 +146,26 @@ exports.createUserSetClaims = functions.auth.user().onCreate(async (user) => {
 //     )
 
 exports.sendAndonToEndpoint = functions.firestore.document(`db/ferreyros/andon/{andonId}`)
-    .onWrite((event) => {
+    .onWrite(async (event) => {
         const andon = event.after.data();
 
-        const data =
-        {
-            "type": "andon",
-            "otChild": andon.otChild,
-            "bay": andon.name,
-            "problemType": andon.problemType,
-            "description": andon.description,
-            "emailList": andon.emailList.toString()
-        }
-
-        const options = {
-            "method": "POST",
-            "url": "https://script.google.com/macros/s/AKfycbwDNTccLhAyVb0MSHPei2g2IZ0WD8ONDZ_PxS65gs-95NjVJbJbMM3QCklegTDkD68cWw/exec",
-            "port": null,
-            "headers": {
-                "authorization": `*`,
-                "content-type": "application/json"
-            },
-            data: data
-        };
-
-        console.log("Just before sending email: ", data);
-
-        return gaxios.request(options)
-            .then(res2 => {
-                console.log(`✉️ Andon data sent!`)
-            })
-            .catch(error => {
-                console.log("Error: ")
-                if (error.response) {
-                    // The request was made and the server responded with a status code
-                    // that falls out of the range of 2xx
-                    console.log(error.response.data);
-                    console.log(error.response.status);
-                    console.log(error.response.headers);
-                } else if (error.request) {
-                    // The request was made but no response was received
-                    // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                    // http.ClientRequest in node.js
-                    console.log(error.request);
-                } else {
-                    // Something happened in setting up the request that triggered an Error
-                    console.log(error.message);
-                }
-                console.log(error.config);
-            })
-    })
-
-exports.sendPreevaluationToEndpoint = functions.firestore.document(`db/ferreyros/evaluations/{evalId}`)
-    .onUpdate((event) => {
-        let eval = event.after.data();
-        if ((eval.internalStatus == "finalized") &&
-            ((eval.result == "fuera de servicio") || (eval.result == "ampliacion") || (eval.result.toLowerCase() == "dsr"))) {
-
-            //Cuando resultado de fin Fuera de Servicio o ampliación
-            //Pre evaluacion: OT Child / OF / NP / Task / Resultado
-            console.log("receiving request")
+        let url;
+        await admin.firestore().doc('/db/generalConfig').onSnapshot(val => {
+            url = val.data()['endpoint'];
 
             const data =
             {
-                "type": "preevaluation",
-                "component": eval.description ? eval.description : '-',
-                "partNumber": eval.partNumber ? eval.partNumber : '-',
-                "quantity": eval.quantity ? eval.quantity : '-',
-                "kindOfTest": eval.kindOfTest ? eval.kindOfTest : '-',
-                "result": eval.result ? eval.result : '-',
-                "lenght_mm": eval.length ? eval.length : '-',
-                "inspector": eval.finalizedBy.name ? eval.finalizedBy.name : eval.finalizedBy,
-                "comments": eval.comments ? eval.comments : '-',
-                "observations": eval.observations ? eval.observations : '-',
-                "extends": eval.extends ? eval.extends.join('@@') : '',
-                "emailList": eval.emailList ? eval.emailList.toString() : ''
+                "type": "andon",
+                "otChild": andon.otChild,
+                "bay": andon.name,
+                "problemType": andon.problemType,
+                "description": andon.description,
+                "emailList": andon.emailList.toString()
             }
 
             const options = {
                 "method": "POST",
-                "url": "https://script.google.com/macros/s/AKfycbwDNTccLhAyVb0MSHPei2g2IZ0WD8ONDZ_PxS65gs-95NjVJbJbMM3QCklegTDkD68cWw/exec",
+                "url": url,
                 "port": null,
                 "headers": {
                     "authorization": `*`,
@@ -238,7 +178,7 @@ exports.sendPreevaluationToEndpoint = functions.firestore.document(`db/ferreyros
 
             return gaxios.request(options)
                 .then(res2 => {
-                    console.log(`✉️ Preevaluation data sent!`)
+                    console.log(`✉️ Andon data sent!`)
                 })
                 .catch(error => {
                     console.log("Error: ")
@@ -259,79 +199,159 @@ exports.sendPreevaluationToEndpoint = functions.firestore.document(`db/ferreyros
                     }
                     console.log(error.config);
                 })
-        }
-    }
-    )
+        });
+    })
 
-exports.sendQualityToEndpoint = functions.firestore.document(`db/ferreyros/quality/{qualityId}`)
-    .onUpdate((event) => {
-        let quality = event.after.data();
-        if (quality.status == "tracing") {
+exports.sendPreevaluationToEndpoint = functions.firestore.document(`db/ferreyros/evaluations/{evalId}`)
+    .onUpdate(async (event) => {
+        let eval = event.after.data();
+        if ((eval.internalStatus == "finalized") &&
+            ((eval.result == "fuera de servicio") || (eval.result == "ampliacion") || (eval.result.toLowerCase() == "dsr"))) {
 
             //Cuando resultado de fin Fuera de Servicio o ampliación
             //Pre evaluacion: OT Child / OF / NP / Task / Resultado
             console.log("receiving request")
 
-            let actionsForEmail = [];
-            if (correctiveActions.length) {
-                actionsForEmail = correctiveActions.map(element => { return [element['corrective'], element['name']] });
-            }
+            let url;
+            await admin.firestore().doc('/db/generalConfig').onSnapshot(val => {
+                url = val.data()['endpoint'];
 
-            const data =
-            {
-                "type": "quality",
-                "otChild": quality.workOrder ? quality.workOrder : '-',
-                "partNumber": quality.partNumber ? quality.partNumber : '-',
-                "workshop": quality.workShop ? quality.workShop : '-',
-                "details": quality.enventDetail ? quality.enventDetail : (quality.question1 + '. ' +
-                    quality.question2 + '. ' +
-                    quality.question3 + '. ' +
-                    quality.question4),
-                "riskLevel": quality.evaluationAnalysisName + '(' + quality.evaluationAnalisis + ')',
-                "Quality": quality.analysisQuality ? quality.analysisQuality : '-',
-                "failRoot": quality.analysis.causeFailure ? quality.analysis.causeFailure : '---',
-                "process": quality.analysis.process ? quality.analysis.process : '---',
-                "observations": quality.analysis.observation ? quality.analysis.observation : '---',
-                "correctiveActions": actionsForEmail,
-                "emailList": quality.emailList.toString()
-            }
+                const data =
+                {
+                    "type": "preevaluation",
+                    "otMain": eval.otMain ? eval.otMain : '-',
+                    "otChild": eval.otChild ? eval.otChild : '-',
+                    "wof": eval.wof ? eval.wof : '-',
+                    "task": eval.task ? eval.task : '-',
+                    "component": eval.description ? eval.description : '-',
+                    "partNumber": eval.partNumber ? eval.partNumber : '-',
+                    "quantity": eval.quantity ? eval.quantity : '-',
+                    "kindOfTest": eval.kindOfTest ? eval.kindOfTest : '-',
+                    "result": eval.result ? eval.result : '-',
+                    "lenght_mm": eval.length ? eval.length : '-',
+                    "inspector": eval.finalizedBy.name ? eval.finalizedBy.name : eval.finalizedBy,
+                    "comments": eval.comments ? eval.comments : '-',
+                    "observations": eval.observations ? eval.observations : '-',
+                    "extends": eval.extends ? eval.extends.join('@@') : '',
+                    "emailList": eval.emailList ? eval.emailList.toString() : ''
+                }
 
-            const options = {
-                "method": "POST",
-                "url": "https://script.google.com/macros/s/AKfycbwDNTccLhAyVb0MSHPei2g2IZ0WD8ONDZ_PxS65gs-95NjVJbJbMM3QCklegTDkD68cWw/exec",
-                "port": null,
-                "headers": {
-                    "authorization": `*`,
-                    "content-type": "application/json"
-                },
-                data: data
-            };
+                const options = {
+                    "method": "POST",
+                    "url": url,
+                    "port": null,
+                    "headers": {
+                        "authorization": `*`,
+                        "content-type": "application/json"
+                    },
+                    data: data
+                };
 
-            console.log("Just before sending email: ", data)
+                console.log("Just before sending email: ", data);
 
-            return gaxios.request(options)
-                .then(res2 => {
-                    console.log(`✉️ Quality data sent!`)
-                })
-                .catch(error => {
-                    console.log("Error: ")
-                    if (error.response) {
-                        // The request was made and the server responded with a status code
-                        // that falls out of the range of 2xx
-                        console.log(error.response.data);
-                        console.log(error.response.status);
-                        console.log(error.response.headers);
-                    } else if (error.request) {
-                        // The request was made but no response was received
-                        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                        // http.ClientRequest in node.js
-                        console.log(error.request);
-                    } else {
-                        // Something happened in setting up the request that triggered an Error
-                        console.log(error.message);
-                    }
-                    console.log(error.config);
-                })
+                return gaxios.request(options)
+                    .then(res2 => {
+                        console.log(`✉️ Preevaluation data sent!`)
+                    })
+                    .catch(error => {
+                        console.log("Error: ")
+                        if (error.response) {
+                            // The request was made and the server responded with a status code
+                            // that falls out of the range of 2xx
+                            console.log(error.response.data);
+                            console.log(error.response.status);
+                            console.log(error.response.headers);
+                        } else if (error.request) {
+                            // The request was made but no response was received
+                            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                            // http.ClientRequest in node.js
+                            console.log(error.request);
+                        } else {
+                            // Something happened in setting up the request that triggered an Error
+                            console.log(error.message);
+                        }
+                        console.log(error.config);
+                    })
+
+            });
+        }
+    }
+    )
+
+exports.sendQualityToEndpoint = functions.firestore.document(`db/ferreyros/quality/{qualityId}`)
+    .onUpdate(async (event) => {
+        let quality = event.after.data();
+        if (quality.state == "tracing") {
+            console.log("receiving request");
+
+            let url;
+            await admin.firestore().doc('/db/generalConfig').onSnapshot(val => {
+                url = val.data()['endpoint'];
+
+                let actionsForEmail = [];
+                if (quality.correctiveActions.length) {
+                    actionsForEmail = quality.correctiveActions.map(element => { return [element['corrective'], element['name']] });
+                }
+
+                const data =
+                {
+                    "type": "quality",
+                    "otChild": quality.workOrder ? quality.workOrder : '-',
+                    "partNumber": quality.partNumber ? quality.partNumber : '-',
+                    "workshop": quality.workShop ? quality.workShop : '-',
+                    "details": quality.enventDetail ? quality.enventDetail : (quality.question1 + '. ' +
+                        quality.question2 + '. ' +
+                        quality.question3 + '. ' +
+                        quality.question4),
+                    "riskLevel": quality.evaluationAnalysisName + '(' + quality.evaluationAnalisis + ')',
+                    "eventType": quality.eventType ? quality.eventType : '-',
+                    "quality": quality.analysisQuality ? quality.analysisQuality : '-',
+                    "failRoot": quality.analysis.causeFailure ? quality.analysis.causeFailure : '---',
+                    "process": quality.analysis.process ? quality.analysis.process : '---',
+                    "observations": quality.analysis.observation ? quality.analysis.observation : '---',
+                    "correctiveActions": actionsForEmail,
+                    "emailList": quality.emailList.toString()
+                }
+
+                const options = {
+                    "method": "POST",
+                    "url": url,
+                    "port": null,
+                    "headers": {
+                        "authorization": `*`,
+                        "content-type": "application/json"
+                    },
+                    data: data
+                };
+
+                console.log("Just before sending email: ", data)
+
+                return gaxios.request(options)
+                    .then(res2 => {
+                        console.log(`✉️ Quality data sent!`)
+                    })
+                    .catch(error => {
+                        console.log("Error: ")
+                        if (error.response) {
+                            // The request was made and the server responded with a status code
+                            // that falls out of the range of 2xx
+                            console.log(error.response.data);
+                            console.log(error.response.status);
+                            console.log(error.response.headers);
+                        } else if (error.request) {
+                            // The request was made but no response was received
+                            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                            // http.ClientRequest in node.js
+                            console.log(error.request);
+                        } else {
+                            // Something happened in setting up the request that triggered an Error
+                            console.log(error.message);
+                        }
+                        console.log(error.config);
+                    })
+            });
+
+
         }
     }
     )
