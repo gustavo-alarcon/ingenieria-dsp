@@ -1,4 +1,3 @@
-import { Timestamp } from 'rxjs/internal/operators/timestamp';
 import { User } from './user-model';
 import * as firebase from 'firebase/app';
 
@@ -20,6 +19,6 @@ export interface BudgetsBroadcastList {
   id?: string;
   name: string;
   emailList: Array<string>;
-  createdAt: Date;
+  createdAt: firebase.default.firestore.FieldValue;
   createdBy: User;
 }

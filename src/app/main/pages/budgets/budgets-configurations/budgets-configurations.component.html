@@ -6,24 +6,20 @@
   <div class="container-body">
     <div class="container-settings">
       <mat-accordion>
-        <div style="margin-top: 30px"></div>
+
         <mat-expansion-panel class="container-settings__color-expantion">
-          <mat-expansion-panel-header style="height: 58px">
+          <mat-expansion-panel-header class="mat-expansion-panel-header">
             <mat-panel-title class="container-settings__header-title">
               Listas desplegables
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <div style="display: flex; flex-wrap: wrap">
-            <div style="border: 10px"></div>
+          <div class="main-container-flex">
             <mat-card class="mat-elevation-z0">
               <mat-card-content>
-                <mat-card
-                  class="mat-elevation-z0"
-                  style="margin-left: -32px; margin-top: 10px"
-                >
+                <mat-card class="mat-elevation-z0">
                   <mat-card-header>
                     <mat-card-title>
-                      <span>Motivos de rechazo</span>
+                      <span class="mini-title">Motivos de rechazo</span>
                       <button
                         type="button"
                         aria-label="saveDataDifusion"
@@ -106,7 +102,7 @@
                               )
                             "
                           >
-                            <mat-icon style="color: #828282">delete</mat-icon>
+                            <mat-icon class="delete-color">delete</mat-icon>
                           </button>
                         </span>
                       </div>
@@ -118,13 +114,10 @@
 
             <mat-card class="mat-elevation-z0">
               <mat-card-content>
-                <mat-card
-                  class="mat-elevation-z0"
-                  style="margin-left: -32px; margin-top: 10px"
-                >
+                <mat-card class="mat-elevation-z0">
                   <mat-card-header>
                     <mat-card-title>
-                      <span> Motivos de modificación </span>
+                      <span class="mini-title"> Motivos de modificación </span>
                       <button
                         type="button"
                         aria-label="saveDataDifusion"
@@ -205,7 +198,7 @@
                               )
                             "
                           >
-                            <mat-icon style="color: #828282">delete</mat-icon>
+                            <mat-icon class="delete-color">delete</mat-icon>
                           </button>
                         </span>
                       </div>
@@ -217,9 +210,9 @@
           </div>
         </mat-expansion-panel>
 
-        <div style="margin-top: 30px"></div>
+ 
         <mat-expansion-panel class="container-settings__color-expantion">
-          <mat-expansion-panel-header style="height: 58px">
+          <mat-expansion-panel-header class="mat-expansion-panel-header">
             <mat-panel-title class="container-settings__header-title">
               Configurador de grupos
             </mat-panel-title>
@@ -237,10 +230,7 @@
           >
             <div *ngFor="let broadcast of broadcastList; let i = index">
               <mat-card-content>
-                <mat-card
-                  class="mat-elevation-z0"
-                  style="margin-left: -10px; margin-top: 5px"
-                >
+                <mat-card class="mat-elevation-z0">
                   <mat-card-header>
                     <mat-card-title>
                       <div class="container-diffusion__title">
@@ -304,7 +294,7 @@
                             aria-label="deletelistResult"
                             (click)="updateBroadcastListEmail(broadcast, item)"
                           >
-                            <mat-icon style="color: #828282">delete</mat-icon>
+                            <mat-icon class="delete-color">delete</mat-icon>
                           </button>
                         </span>
                       </div>
@@ -315,7 +305,7 @@
             </div>
           </div>
 
-          <div style="display: flex; flex-wrap: wrap">
+          <div class="main-container-flex">
             <button
               type="button"
               mat-button
