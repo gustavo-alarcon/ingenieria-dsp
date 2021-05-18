@@ -18,14 +18,19 @@ import { logging } from 'protractor';
 import { Quality, MiningOperation } from '../models/quality.model';
 import jsPDF from 'jspdf';
 import { saveAs } from 'file-saver';
+import { HttpClient } from '@angular/common/http';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root',
 })
 export class QualityService {
+  endpointQuality = '';
   constructor(
     private afs: AngularFirestore,
-    private storage: AngularFireStorage
+    private storage: AngularFireStorage,
+    private http: HttpClient,
+    private snackbar: MatSnackBar
   ) { }
 
   /**
@@ -819,15 +824,8 @@ export class QualityService {
       evaluationAnalysisName: evaluationName,
       correctiveActions: formCorrective.areas
     };
-    batch.update(qualityDocRef, data);
 
-    emailList.forEach(el => {
-      const qualityEmailDocRef = this.afs.firestore.doc(`db/ferreyros/quality/${quality.id}`);
-      const data1: any = {
-        emailList: firebase.default.firestore.FieldValue.arrayUnion(el)
-      };
-      batch.update(qualityEmailDocRef, data1);
-    });
+    batch.update(qualityDocRef, data);
 
     return of(batch);
   }
@@ -1022,7 +1020,7 @@ export class QualityService {
     //Nivel de riesgo
     const riskName = data.evaluationAnalysisName ? data.evaluationAnalysisName : '---';
     const riskNumber = data.evaluationAnalisis ? data.evaluationAnalisis : '---';
-    doc.text(riskName + ' (' + riskNumber +')', 155, 48, { align: "center" })
+    doc.text(riskName + ' (' + riskNumber + ')', 155, 48, { align: "center" })
 
     //OT que reporta
     doc.text(data.workOrder ? ('' + data.workOrder) : '---', 155, 57, { align: "center" })

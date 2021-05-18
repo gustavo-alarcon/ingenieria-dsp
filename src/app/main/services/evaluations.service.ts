@@ -7,6 +7,8 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
 import { map } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root'
@@ -21,11 +23,14 @@ export class EvaluationsService {
     'CRANKSHAFT',
   ]
 
+  endPointPreevaluations = '';
+
   constructor(
     private afs: AngularFirestore,
     private storage: AngularFireStorage,
     private afAuth: AngularFireAuth,
-
+    private http: HttpClient,
+    private snackbar: MatSnackBar
   ) { }
 
 
@@ -252,7 +257,7 @@ export class EvaluationsService {
   }
 
 
-  updateImagesFinalizeData(evaluation: Evaluation, finalImages, entry: EvaluationFinishForm, user: User, emailList): Observable<firebase.default.firestore.WriteBatch> {
+  updateImagesFinalizeData(evaluation: Evaluation, finalImages, entry: EvaluationFinishForm, user: User, emailList: string[]): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
 
@@ -274,18 +279,10 @@ export class EvaluationsService {
       processTimeElapsed: evaluation.processTimeElapsed,
       processPercentageElapsed: evaluation.processPercentageElapsed,
       attentionTimeElapsed: evaluation.attentionTimeElapsed,
+      emailList: emailList ? emailList.toString() : ''
     }
 
     batch.update(evaluationDocRef, data);
-
-    emailList.forEach(el => {
-      const qualityEmailDocRef = this.afs.firestore.doc(`/db/ferreyros/evaluations/${evaluation.id}`);
-      const data1: any = {
-        emailList: firebase.default.firestore.FieldValue.arrayUnion(el)
-      };
-      batch.update(qualityEmailDocRef, data1);
-    });
-
 
     return of(batch);
   }
@@ -556,7 +553,7 @@ export class EvaluationsService {
   //# 
   // BROADCAS LIST
   // get all EvaluationBroadcastlist
-   getAllBroadcastList(): Observable<EvaluationBroadcastList[]> {
+  getAllBroadcastList(): Observable<EvaluationBroadcastList[]> {
     return this.afs
       .collection<EvaluationBroadcastList>(
         `/db/generalConfig/evaluationBroadcastList`,
