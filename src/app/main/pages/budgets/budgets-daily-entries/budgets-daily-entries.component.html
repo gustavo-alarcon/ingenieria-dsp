@@ -39,195 +39,848 @@
         matSort
         class="mat-elevation-z8"
       >
-        <ng-container matColumnDef="otMain">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">MAIN</th>
+        <ng-container matColumnDef="taller">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">TALLER</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.otMain ? element.otMain : "---" }}
-          </td>
-        </ng-container>
-        
-        <ng-container matColumnDef="otChild">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">CHILD</th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.otChild ? element.otChild : "---" }}
+            {{ element.taller ? element.taller : "---" }}
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="position">
+        <ng-container matColumnDef="woMain">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">WO MAIN</th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.woMain ? element.woMain : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="ioMain">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">IO MAIN</th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.ioMain ? element.ioMain : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="woChild">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">WO CHILD</th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.woChild ? element.woChild : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="ioChild">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">IO CHILD</th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.ioChild ? element.ioChild : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="statusWoChild">
           <th mat-header-cell *matHeaderCellDef class="table__cell">
-            Posición
+            STATUS WO CHILD
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.position ? element.position : "---" }}
+            {{ element.statusWoChild ? element.statusWoChild : "---" }}
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="partNumber">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">NP</th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.partNumber ? element.partNumber : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="description">
+        <ng-container matColumnDef="otTaller">
           <th mat-header-cell *matHeaderCellDef class="table__cell">
-            Descripción
+            OT TALLER
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.description ? element.description : "---" }}
+            {{ element.otTaller ? element.otTaller : "---" }}
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="quantity">
+        <ng-container matColumnDef="otMadre">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">OT MADRE</th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.otMadre ? element.otMadre : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="fechaAperturaChild">
           <th mat-header-cell *matHeaderCellDef class="table__cell">
-            Cantidad
+            FECHA APERTURA CHILD
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.quantity ? element.quantity : "---" }}
+            {{
+              element.fechaAperturaChild ? element.fechaAperturaChild : "---"
+            }}
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="internalStatus">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">Estado</th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            <button
-              mat-button
-              [ngClass]="{
-                'btn-state-registered': element.internalStatus === 'registered',
-                'btn-state-progress': element.internalStatus === 'processed',
-                'btn-state-consultation':
-                  element.internalStatus === 'consultation',
-                'btn-state-finalizado': element.internalStatus === 'finalized'
-              }"
-            >
-              <span *ngIf="element.internalStatus === 'registered'"
-                >Registrado</span
-              >
-              <span *ngIf="element.internalStatus === 'processed'"
-                >Proceso</span
-              >
-              <span *ngIf="element.internalStatus === 'consultation'"
-                >Consulta</span
-              >
-              <span *ngIf="element.internalStatus === 'finalized'"
-                >Finalizado</span
-              >
-            </button>
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="status">
+        <ng-container matColumnDef="fechaReleasedIoChild">
           <th mat-header-cell *matHeaderCellDef class="table__cell">
-            Atención
+            FECHA RELEASED IO CHILD
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.status ? element.status : "---" }}
+            {{
+              element.fechaReleasedIoChild
+                ? element.fechaReleasedIoChild
+                : "---"
+            }}
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="createdBy">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">Usuario</th>
+        <ng-container matColumnDef="cliente">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">CLIENTE</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.createdBy ? element.createdBy : "---" }}
+            {{ element.cliente ? element.cliente : "---" }}
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="wof">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">WOF</th>
+        <ng-container matColumnDef="gmorngm">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">GM/NGM</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.wof ? element.wof : "---" }}
+            {{ element.gmorngm ? element.gmorngm : "---" }}
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="task">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">Tarea</th>
+        <ng-container matColumnDef="modelo">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">MODELO</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.task ? element.task : "---" }}
+            {{ element.modelo ? element.modelo : "---" }}
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="observations">
+        <ng-container matColumnDef="tipoSS">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">TIPO SS</th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.tipoSS ? element.tipoSS : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="servicio">
           <th mat-header-cell *matHeaderCellDef class="table__cell">
-            Observaciones
+            SERVICIO
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.observations ? element.observations : "---" }}
+            {{ element.servicio ? element.servicio : "---" }}
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="workshop">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">Taller</th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.workshop ? element.workshop : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="createdAt">
+        <ng-container matColumnDef="tipoAtencion">
           <th mat-header-cell *matHeaderCellDef class="table__cell">
-            Fecha de solicitud
-          </th>
-          <!-- <td mat-cell *matCellDef="let element" class="table__cell"><span
-                  *ngIf="element.createdAt; else defaultcreatedAt">{{element.createdAt | date :
-                  'dd/MM/yy hh:mm:ss'}}</span>
-                <ng-template #defaultProcessAt>---</ng-template>
-              </td> -->
-        </ng-container>
-
-        <ng-container matColumnDef="result">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            Resultado
+            TIPO ATENCION
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.result ? element.result : "---" }}
+            {{ element.tipoAtencion ? element.tipoAtencion : "---" }}
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="kindOfTest">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">Ensayo</th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.kindOfTest ? element.kindOfTest : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="comments">
+        <ng-container matColumnDef="modalidadPresupuesto">
           <th mat-header-cell *matHeaderCellDef class="table__cell">
-            Comentarios
+            MODALIDAD PRESUPUESTO
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.comments ? element.comments : "---" }}
+            {{
+              element.modalidadPresupuesto
+                ? element.modalidadPresupuesto
+                : "---"
+            }}
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="finalizedBy">
+        <ng-container matColumnDef="componente">
           <th mat-header-cell *matHeaderCellDef class="table__cell">
-            Inspector
+            COMPONENTE
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.finalizedBy ? element.finalizedBy : "---" }}
+            {{ element.componente ? element.componente : "---" }}
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="processAt">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            Fecha Proceso
-          </th>
+        <ng-container matColumnDef="afa">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">AFA</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            <span *ngIf="element.processAt; else defaultProcessAt">{{
-              element.processAt | date: "dd/MM/yy hh:mm:ss"
-            }}</span>
-            <ng-template #defaultProcessAt>---</ng-template>
+            {{ element.afa ? element.afa : "---" }}
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="finalizedAt">
+        <ng-container matColumnDef="fechaUltimoListado">
           <th mat-header-cell *matHeaderCellDef class="table__cell">
-            Fecha Cierre
+            FECHA ULTIMO LISTADO
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            <span *ngIf="element.finalizedAt; else defaultfinalizedAt">{{
-              element.finalizedAt | date: "dd/MM/yy hh:mm:ss"
-            }}</span>
-            <ng-template #defaultfinalizedAt>---</ng-template>
+            {{
+              element.fechaUltimoListado ? element.fechaUltimoListado : "---"
+            }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="fechaUltimoEnvioDocumentoADM">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+          FECHA ULTIMO ENVIO DOCUMENTO ADM
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{
+              element.fechaUltimoEnvioDocumentoADM
+                ? element.fechaUltimoEnvioDocumentoADM
+                : "---"
+            }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="ultimoDocumento">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            ULTIMO DOCUMENTO
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.ultimoDocumento ? element.ultimoDocumento : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="fechaDefinicionDeCargos">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            FECHA DEFINICION DE CARGOS
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{
+              element.fechaDefinicionDeCargos
+                ? element.fechaDefinicionDeCargos
+                : "---"
+            }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="definicionDeCargo">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            DEFINICION DE CARGO
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.definicionDeCargo ? element.definicionDeCargo : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="fechaUltimoEnvioPPTO">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            FECHA ULTIMO ENVIO PPTO
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{
+              element.fechaUltimoEnvioPPTO
+                ? element.fechaUltimoEnvioPPTO
+                : "---"
+            }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="fechaEnvioPPTO01">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            FECHA ENVIO PPTO 01
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.fechaEnvioPPTO01 ? element.fechaEnvioPPTO01 : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="fechaEnvioPPTO02">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            FECHA ENVIO PPTO 02
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.fechaEnvioPPTO02 ? element.fechaEnvioPPTO02 : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="motivoDeModificacion02">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            MOTIVO DE MODIFICACION 02
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{
+              element.motivoDeModificacion02
+                ? element.motivoDeModificacion02
+                : "---"
+            }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="fechaEnvioPPTO03">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            FECHA ENVIO PPTO 03
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.fechaEnvioPPTO03 ? element.fechaEnvioPPTO03 : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="motivoDeModificacion03">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            MOTIVO DE MODIFICACION 03
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{
+              element.motivoDeModificacion03
+                ? element.motivoDeModificacion03
+                : "---"
+            }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="detalleDeModificacion03">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            DETALLE DE MODIFICACION 03
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{
+              element.detalleDeModificacion03
+                ? element.detalleDeModificacion03
+                : "---"
+            }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="fechaEnvioPPTO04">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            FECHA ENVIO PPTO 04
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.fechaEnvioPPTO04 ? element.fechaEnvioPPTO04 : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="motivoDeModificacion04">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            MOTIVO DE MODIFICACION 04
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{
+              element.motivoDeModificacion04
+                ? element.motivoDeModificacion04
+                : "---"
+            }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="detalleDeModificacion04">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            DETALLE DE MODIFICACION 04
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{
+              element.detalleDeModificacion04
+                ? element.detalleDeModificacion04
+                : "---"
+            }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="fechaDeAprobacionORechazo">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            FECHA DE APROBACION/RECHAZO
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{
+              element.fechaDeAprobacionORechazo
+                ? element.fechaDeAprobacionORechazo
+                : "---"
+            }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="statusPresupuesto">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            STATUS PRESUPUESTO
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.statusPresupuesto ? element.statusPresupuesto : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="vv$servicios">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            VV$ SERVICIOS
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.vv$servicios ? element.vv$servicios : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="vv$repuestos">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            VV$ REPUESTOS
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.vv$repuestos ? element.vv$repuestos : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="totalvvPPTOUS$">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            TOTAL VV PPTO US$
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.totalvvPPTOUS$ ? element.totalvvPPTOUS$ : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="$componenteNuevo">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            $ COMPONENTE NUEVO
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.$componenteNuevo ? element.$componenteNuevo : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="reparacion60">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            % REPARACION (60%)
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.reparacion60 ? element.reparacion60 : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="horasSTD">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            HORAS STD
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.horasSTD ? element.horasSTD : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="horasReales">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            HORAS REALES
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.horasReales ? element.horasReales : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="tiempoObjetivoEnvioPPTO">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            TIEMPO OBJETIVO ENVIO PPTO
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{
+              element.tiempoObjetivoEnvioPPTO
+                ? element.tiempoObjetivoEnvioPPTO
+                : "---"
+            }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="NoPPTOSModificadosOAdicionales">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            NO PPTO's MODIFICADOS/ADICIONALES
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{
+              element.NoPPTOSModificadosOAdicionales
+                ? element.NoPPTOSModificadosOAdicionales
+                : "---"
+            }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="observacionesEnElPresupuesto">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            OBSERVACIONES EN EL PRESUPUESTO
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{
+              element.observacionesEnElPresupuesto
+                ? element.observacionesEnElPresupuesto
+                : "---"
+            }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="fechaDeTerminoDeRep">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            FECHA DE TERMINO DE REP
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{
+              element.fechaDeTerminoDeRep ? element.fechaDeTerminoDeRep : "---"
+            }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="fechaUltimoInput">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            FECHA ULTIMO INPUT
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.fechaUltimoInput ? element.fechaUltimoInput : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="motivoDeInput">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            MOTIVO DE INPUT
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.motivoDeInput ? element.motivoDeInput : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="fechaDeFactDeTaller">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            FECHA DE FACT DE TALLER
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{
+              element.fechaDeFactDeTaller ? element.fechaDeFactDeTaller : "---"
+            }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="costo$ServiciosCliente">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            COSTO $ SERVICIOS CLIENTE
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{
+              element.costo$ServiciosCliente
+                ? element.costo$ServiciosCliente
+                : "---"
+            }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="costo$ServiciosDeOperacion">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            COSTO $ SERVICIOS DE OPERACION
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{
+              element.costo$ServiciosDeOperacion
+                ? element.costo$ServiciosDeOperacion
+                : "---"
+            }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="rentabilidadServiciosPercent">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+         RENTABILIDAD SERVICIOS %
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{
+              element.rentabilidadServiciosPercent
+                ? element.rentabilidadServiciosPercent
+                : "---"
+            }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="costo$RepuestosCLIENTE">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            COSTO $ REPUESTOS CLIENTE
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{
+              element.costo$RepuestosCLIENTE
+                ? element.costo$RepuestosCLIENTE
+                : "---"
+            }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="costo$RepuestosOperacion">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            COSTO $ REPUESTOS OPERACION
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{
+              element.costo$RepuestosOperacion
+                ? element.costo$RepuestosOperacion
+                : "---"
+            }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="rentabilidadRepuestosPercent">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            RENTABILIDAD REPUESTOS %
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{
+              element.rentabilidadRepuestosPercent
+                ? element.rentabilidadRepuestosPercent
+                : "---"
+            }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="observacionesTaller">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            OBSERVACIONES TALLER
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{
+              element.observacionesTaller ? element.observacionesTaller : "---"
+            }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="realDevueltoAServicios">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            REAL DEVUELTO A SERVICIOS
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{
+              element.realDevueltoAServicios
+                ? element.realDevueltoAServicios
+                : "---"
+            }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="diferenciaServicios">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            DIFERENCIAS SERVICIOS
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{
+              element.diferenciaServicios ? element.diferenciaServicios : "---"
+            }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="realDevueltoARepuestos">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            REAL DEVUELTO A REPUESTOS
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{
+              element.realDevueltoARepuestos
+                ? element.realDevueltoARepuestos
+                : "---"
+            }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="diferenciaRepuestos">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            DIFERENCIA REPUESTOS
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{
+              element.diferenciaRepuestos ? element.diferenciaRepuestos : "---"
+            }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="totalVVFacturadoUS$">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            TOTAL VV FACTURADO US$
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{
+              element.totalVVFacturadoUS$ ? element.totalVVFacturadoUS$ : "---"
+            }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="mesFactVenta">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            MES FACT VENTA
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.mesFactVenta ? element.mesFactVenta : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="percentHorasSTDvsHorasDBS">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            % HORAS STD VS HORAS DBS
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{
+              element.percentHorasSTDvsHorasDBS
+                ? element.percentHorasSTDvsHorasDBS
+                : "---"
+            }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="fechaFirstLabour">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            FECHA FIRST LABOUR
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.fechaFirstLabour ? element.fechaFirstLabour : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="fechaLastLabour">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            FECHA LAST LABOUR
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.fechaLastLabour ? element.fechaLastLabour : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="diasDemoraFact">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            DIAS DEMORA FACT
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.diasDemoraFact ? element.diasDemoraFact : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="diasFactLastLabour">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            DIAS FACT LAST LABOUR
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{
+              element.diasFactLastLabour ? element.diasFactLastLabour : "---"
+            }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="elaborarPPTO">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            ELABORAR PPTO
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.elaborarPPTO ? element.elaborarPPTO : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="tipoDeComponente">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            TIPO DE COMPONENTE
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.tipoDeComponente ? element.tipoDeComponente : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="tipoAAorPandP">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            (TIPO AA//P&P)
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.tipoAAorPandP ? element.tipoAAorPandP : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="taller02">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            TALLER 02
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.taller02 ? element.taller02 : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="diasDesdeAperturaChild">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            DIAS DESDE APERTURA CHILD
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{
+              element.diasDesdeAperturaChild
+                ? element.diasDesdeAperturaChild
+                : "---"
+            }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="resumen">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">RESUMEN</th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.resumen ? element.resumen : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="definicionDeCargos">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            DEFINICION DE CARGOS
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{
+              element.definicionDeCargos ? element.definicionDeCargos : "---"
+            }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="informe">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">INFORME</th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.informe ? element.informe : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="cotizacionFesa">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            COTIZACION FESA
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.cotizacionFesa ? element.cotizacionFesa : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="cotizacionText">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            COTIZACION TEXT
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.cotizacionText ? element.cotizacionText : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">ID</th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.id ? element.id : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="clave">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">CLAVE</th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.clave ? element.clave : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="obj">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">OBJ</th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.obj ? element.obj : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="diasPPTO">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            DIAS PPTO
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.diasPPTO ? element.diasPPTO : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="mesTer">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">MES TER</th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.mesTer ? element.mesTer : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="anio">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">AÑO</th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.anio ? element.anio : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="fechaLPD">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            FECHA LPD
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.fechaLPD ? element.fechaLPD : "---" }}
           </td>
         </ng-container>
 
@@ -273,13 +926,170 @@
     >
     </mat-paginator>
   </div>
+  <!-- 
+  <ng-container matColumnDef="otMain">
+    <th mat-header-cell *matHeaderCellDef class="table__cell">MAIN</th>
+    <td mat-cell *matCellDef="let element" class="table__cell">
+      {{ element.otMain ? element.otMain : "---" }}
+    </td>
+  </ng-container>
 
+  <ng-container matColumnDef="otChild">
+    <th mat-header-cell *matHeaderCellDef class="table__cell">CHILD</th>
+    <td mat-cell *matCellDef="let element" class="table__cell">
+      {{ element.otChild ? element.otChild : "---" }}
+    </td>
+  </ng-container>
 
+  <ng-container matColumnDef="position">
+    <th mat-header-cell *matHeaderCellDef class="table__cell">Posición</th>
+    <td mat-cell *matCellDef="let element" class="table__cell">
+      {{ element.position ? element.position : "---" }}
+    </td>
+  </ng-container>
 
+  <ng-container matColumnDef="partNumber">
+    <th mat-header-cell *matHeaderCellDef class="table__cell">NP</th>
+    <td mat-cell *matCellDef="let element" class="table__cell">
+      {{ element.partNumber ? element.partNumber : "---" }}
+    </td>
+  </ng-container>
 
+  <ng-container matColumnDef="description">
+    <th mat-header-cell *matHeaderCellDef class="table__cell">Descripción</th>
+    <td mat-cell *matCellDef="let element" class="table__cell">
+      {{ element.description ? element.description : "---" }}
+    </td>
+  </ng-container>
 
+  <ng-container matColumnDef="quantity">
+    <th mat-header-cell *matHeaderCellDef class="table__cell">Cantidad</th>
+    <td mat-cell *matCellDef="let element" class="table__cell">
+      {{ element.quantity ? element.quantity : "---" }}
+    </td>
+  </ng-container>
 
+  <ng-container matColumnDef="internalStatus">
+    <th mat-header-cell *matHeaderCellDef class="table__cell">Estado</th>
+    <td mat-cell *matCellDef="let element" class="table__cell">
+      <button
+        mat-button
+        [ngClass]="{
+          'btn-state-registered': element.internalStatus === 'registered',
+          'btn-state-progress': element.internalStatus === 'processed',
+          'btn-state-consultation': element.internalStatus === 'consultation',
+          'btn-state-finalizado': element.internalStatus === 'finalized'
+        }"
+      >
+        <span *ngIf="element.internalStatus === 'registered'">Registrado</span>
+        <span *ngIf="element.internalStatus === 'processed'">Proceso</span>
+        <span *ngIf="element.internalStatus === 'consultation'">Consulta</span>
+        <span *ngIf="element.internalStatus === 'finalized'">Finalizado</span>
+      </button>
+    </td>
+  </ng-container>
 
+  <ng-container matColumnDef="status">
+    <th mat-header-cell *matHeaderCellDef class="table__cell">Atención</th>
+    <td mat-cell *matCellDef="let element" class="table__cell">
+      {{ element.status ? element.status : "---" }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="createdBy">
+    <th mat-header-cell *matHeaderCellDef class="table__cell">Usuario</th>
+    <td mat-cell *matCellDef="let element" class="table__cell">
+      {{ element.createdBy ? element.createdBy : "---" }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="wof">
+    <th mat-header-cell *matHeaderCellDef class="table__cell">WOF</th>
+    <td mat-cell *matCellDef="let element" class="table__cell">
+      {{ element.wof ? element.wof : "---" }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="task">
+    <th mat-header-cell *matHeaderCellDef class="table__cell">Tarea</th>
+    <td mat-cell *matCellDef="let element" class="table__cell">
+      {{ element.task ? element.task : "---" }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="observations">
+    <th mat-header-cell *matHeaderCellDef class="table__cell">Observaciones</th>
+    <td mat-cell *matCellDef="let element" class="table__cell">
+      {{ element.observations ? element.observations : "---" }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="workshop">
+    <th mat-header-cell *matHeaderCellDef class="table__cell">Taller</th>
+    <td mat-cell *matCellDef="let element" class="table__cell">
+      {{ element.workshop ? element.workshop : "---" }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="createdAt">
+    <th mat-header-cell *matHeaderCellDef class="table__cell">
+      Fecha de solicitud
+    </th>
+    <td mat-cell *matCellDef="let element" class="table__cell">
+      <span *ngIf="element.createdAt; else defaultcreatedAt">{{
+        element.createdAt | date: "dd/MM/yy hh:mm:ss"
+      }}</span>
+      <ng-template #defaultProcessAt>---</ng-template>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="result">
+    <th mat-header-cell *matHeaderCellDef class="table__cell">Resultado</th>
+    <td mat-cell *matCellDef="let element" class="table__cell">
+      {{ element.result ? element.result : "---" }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="kindOfTest">
+    <th mat-header-cell *matHeaderCellDef class="table__cell">Ensayo</th>
+    <td mat-cell *matCellDef="let element" class="table__cell">
+      {{ element.kindOfTest ? element.kindOfTest : "---" }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="comments">
+    <th mat-header-cell *matHeaderCellDef class="table__cell">Comentarios</th>
+    <td mat-cell *matCellDef="let element" class="table__cell">
+      {{ element.comments ? element.comments : "---" }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="finalizedBy">
+    <th mat-header-cell *matHeaderCellDef class="table__cell">Inspector</th>
+    <td mat-cell *matCellDef="let element" class="table__cell">
+      {{ element.finalizedBy ? element.finalizedBy : "---" }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="processAt">
+    <th mat-header-cell *matHeaderCellDef class="table__cell">Fecha Proceso</th>
+    <td mat-cell *matCellDef="let element" class="table__cell">
+      <span *ngIf="element.processAt; else defaultProcessAt">{{
+        element.processAt | date: "dd/MM/yy hh:mm:ss"
+      }}</span>
+      <ng-template #defaultProcessAt>---</ng-template>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="finalizedAt">
+    <th mat-header-cell *matHeaderCellDef class="table__cell">Fecha Cierre</th>
+    <td mat-cell *matCellDef="let element" class="table__cell">
+      <span *ngIf="element.finalizedAt; else defaultfinalizedAt">{{
+        element.finalizedAt | date: "dd/MM/yy hh:mm:ss"
+      }}</span>
+      <ng-template #defaultfinalizedAt>---</ng-template>
+    </td>
+  </ng-container> -->
 
   <!-- <ng-template #default>
         <div class="default">
