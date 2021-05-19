@@ -132,7 +132,7 @@ export class HistoryUploadFileDialogComponent implements OnInit {
           task: el[9] ? el[9] : null,
           createdAt: regDate ? new Date(regDate['Y'], regDate['M'], regDate['D'], regDate['h'], regDate['m'], regDate['s']) : null,
           observations: el[11] ? el[11] : null,
-          workshop: el[12],
+          workshop: el[12] ? el[12] : null,
           result: el[13] ? el[13] : null,
           comments: el[14] ? el[14] : null,
           kindOfTest: el[15] ? el[15] : null,
@@ -188,6 +188,7 @@ export class HistoryUploadFileDialogComponent implements OnInit {
         this.selected = XLSX.utils.sheet_to_json(ws, { header: 1 });
 
         this.upLoadXlsToTable2(this.selected);
+        console.log(this.currentData);
       };
       reader.readAsBinaryString(event.target.files[0]);
     }
@@ -240,10 +241,10 @@ export class HistoryUploadFileDialogComponent implements OnInit {
       });
 
       this.currentData = xlsxData;
-
       this.settingDataSource.data = this.currentData;
 
       this.fileButton.nativeElement.value = null;
+
       this.loading.next(false);
     } else {
       this.snackbar.open("🚨 Archivo vacío ", "Aceptar", {
