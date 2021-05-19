@@ -160,6 +160,7 @@ exports.sendAndonToEndpoint = functions.firestore.document(`db/ferreyros/andon/{
                 "bay": andon.name,
                 "problemType": andon.problemType,
                 "description": andon.description,
+                "images": andon.images ? andon.images.join('@@') : '',
                 "emailList": andon.emailList.toString()
             }
 
@@ -233,6 +234,7 @@ exports.sendPreevaluationToEndpoint = functions.firestore.document(`db/ferreyros
                     "comments": eval.comments ? eval.comments : '-',
                     "observations": eval.observations ? eval.observations : '-',
                     "extends": eval.extends ? eval.extends.join('@@') : '',
+                    "images": eval.iamges ? eval.iamges.join('@@') : '',
                     "emailList": eval.emailList ? eval.emailList.toString() : ''
                 }
 
@@ -310,6 +312,8 @@ exports.sendQualityToEndpoint = functions.firestore.document(`db/ferreyros/quali
                     "process": quality.analysis.process ? quality.analysis.process : '---',
                     "observations": quality.analysis.observation ? quality.analysis.observation : '---',
                     "correctiveActions": actionsForEmail,
+                    "detailImages": quality.detailImages ? quality.detailImages.join('@@') : '',
+                    "generalImages": quality.generalImages ? quality.generalImages.join('@@') : '',
                     "emailList": quality.emailList.toString()
                 }
 
