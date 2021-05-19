@@ -46,5 +46,3 @@ testem.log
 Thumbs.db
 .firebase/hosting.ZGlzdC9pbmdlbmllcmlhLWRzcA.cache
 firebase-debug.log
-firestore-debug.log
-ui-debug.log

@@ -1,14 +1,17 @@
+import { AddGroupDialogComponent } from './dialogs/add-group-dialog/add-group-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 import {
+  BudgetsBroadcastList,
   modificationReasonEntry,
   rejectionReasonsEntry,
 } from './../../../models/budgets.model';
 import { MyErrorStateMatcher } from './../../evaluations/evaluations-settings/evaluations-settings.component';
-import { FormControl, Validators } from '@angular/forms';
+import { FormArray, FormControl, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, pipe, Subscription } from 'rxjs';
 import { BudgetsService } from 'src/app/main/services/budgets.service';
 import { AuthService } from 'src/app/auth/services/auth.service';
-import { take } from 'rxjs/operators';
+import { take, tap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { User } from 'src/app/main/models/user-model';
 
@@ -40,7 +43,11 @@ export class BudgetsConfigurationsComponent implements OnInit {
   public listReasonsForRejectionArray: Array<rejectionReasonsEntry> = [];
   public listReasonsForModificationArray: Array<modificationReasonEntry> = [];
 
-  public reasonsForModification$ :Observable<Array<modificationReasonEntry>>;
+  public reasonsForModification$: Observable<Array<modificationReasonEntry>>;
+
+  public broadcast$: Observable<Array<BudgetsBroadcastList>>;
+  public broadcastListArray: Array<BudgetsBroadcastList> = [];
+  public broadcastFormArray = new FormArray([]);
 
   // Current User
   public user: User;
@@ -51,7 +58,8 @@ export class BudgetsConfigurationsComponent implements OnInit {
   constructor(
     private budgetService: BudgetsService,
     private authService: AuthService,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    private dialog: MatDialog
   ) {}
 
   public ngOnInit(): void {
@@ -90,7 +98,26 @@ export class BudgetsConfigurationsComponent implements OnInit {
         })
     );
 
-    this.reasonsForModification$ = this.budgetService.getAllReasonsForModificationEntries();
+    this.reasonsForModification$ =
+      this.budgetService.getAllReasonsForModificationEntries();
+
+    this.broadcast$ = this.budgetService.getAllBroadcastList().pipe(
+      tap((res: Array<BudgetsBroadcastList>) => {
+        if (res) {
+          this.broadcastListArray = res;
+        }
+        res.map((el) => {
+          this.broadcastFormArray.push(
+            new FormControl('', [
+              Validators.required,
+              Validators.pattern(
+                /^[\w]{1,}[\w.+-]{0,}@[\w-]{1,}([.][a-zA-Z]{2,}|[.][\w-]{2,}[.][a-zA-Z]{2,})$/
+              ),
+            ])
+          );
+        });
+      })
+    );
 
     this.loading.next(false);
   }
@@ -270,6 +297,133 @@ export class BudgetsConfigurationsComponent implements OnInit {
         this.listReasonsForModificationArray.splice(index, 1);
         break;
       }
+    }
+  }
+
+  public addGroup(): void {
+    this.dialog.open(AddGroupDialogComponent, {
+      maxWidth: 500,
+      width: '90vw',
+    });
+  }
+
+  public updateBroadcastListEmail(
+    broadcast: BudgetsBroadcastList,
+    broadcastList: string
+  ): void {
+    try {
+      const resp = this.budgetService.updateBroadcastEmailList(
+        broadcast.id,
+        broadcastList,
+        this.user
+      );
+      this.loading.next(true);
+      this.subscription.add(
+        resp.subscribe((batch) => {
+          if (batch) {
+            batch
+              .commit()
+              .then(() => {
+                this.loading.next(false);
+                this.snackbar.open('✅ Se elimino correctamente!', 'Aceptar', {
+                  duration: 6000,
+                });
+              })
+              .catch((err) => {
+                this.loading.next(false);
+                this.snackbar.open('🚨 Hubo un error al crear!', 'Aceptar', {
+                  duration: 6000,
+                });
+              });
+          }
+        })
+      );
+    } catch (error) {
+      console.log(error);
+      this.loading.next(false);
+    }
+  }
+
+  public addListDiffusion(
+    broadcast: BudgetsBroadcastList,
+    index: number
+  ): void {
+    try {
+      const newBroadcast = this.broadcastFormArray.controls[index].value
+        .trim()
+        .toLowerCase();
+
+      let duplicate: boolean = false;
+
+      // Check for duplicates
+      const currentEmailList: Array<string> =
+        this.broadcastListArray[index].emailList;
+
+      if (currentEmailList) {
+        if (currentEmailList.length > 0) {
+          duplicateFor: for (
+            let i: number = 0;
+            i < currentEmailList.length;
+            i++
+          ) {
+            const currentString: string = currentEmailList[i];
+
+            if (currentString == newBroadcast) {
+              duplicate = true;
+              break duplicateFor;
+            }
+          }
+        }
+      }
+
+      // Check if input is valid
+      if (this.broadcastFormArray.controls[index].valid && !duplicate) {
+        if (broadcast.id) {
+          const entryId = broadcast.id;
+
+          const resp = this.budgetService.updateBroadcastList(
+            entryId,
+            newBroadcast,
+            this.user
+          );
+          this.loading.next(true);
+          this.subscription.add(
+            resp.subscribe((batch) => {
+              if (batch) {
+                batch
+                  .commit()
+                  .then(() => {
+                    this.loading.next(false);
+                    this.snackbar.open(
+                      '✅ Se guardo correctamente!',
+                      'Aceptar',
+                      {
+                        duration: 6000,
+                      }
+                    );
+                    this.broadcastFormArray.removeAt(index);
+                  })
+                  .catch((err) => {
+                    this.loading.next(false);
+                    this.snackbar.open(
+                      '🚨 Hubo un error al actualizar  !',
+                      'Aceptar',
+                      {
+                        duration: 6000,
+                      }
+                    );
+                  });
+              }
+            })
+          );
+        }
+      } else {
+        // Reset the text in the form control
+        this.broadcastFormArray.reset();
+      }
+    } catch (error) {
+      console.log(error);
+      this.loading.next(false);
     }
   }
 }

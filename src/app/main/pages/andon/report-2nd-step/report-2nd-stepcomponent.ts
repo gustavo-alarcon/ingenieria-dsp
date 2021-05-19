@@ -153,7 +153,7 @@ export class report2ndStepComponent
     this.loading.next(false);
   }
 
-  ngAfterViewInit(): void { }
+  ngAfterViewInit(): void {}
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
@@ -182,7 +182,7 @@ export class report2ndStepComponent
             this.otChild,
             this.user,
             imagesObj,
-            this.emailArray)
+            this.emailArray          )
           .pipe(take(1))
           .subscribe((res) => {
             res

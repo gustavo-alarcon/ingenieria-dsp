@@ -1,0 +1,59 @@
+<div class="container">
+  <div mat-dialog-title class="header">
+    <mat-icon class="header__icon">list</mat-icon>
+    <h3 class="header__title">Nombre del grupo</h3>
+    <span class="ms-fill"></span>
+
+    <div mat-dialog-close class="header__icon-clear">
+      <mat-icon>clear</mat-icon>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+
+  <mat-progress-bar
+    mode="indeterminate"
+    *ngIf="loading$ | async"
+  ></mat-progress-bar>
+  <mat-dialog-content style="margin-top: 20px">
+    <div>
+      <form [formGroup]="form" class="timer-container">
+        <mat-form-field
+          appearance="outline"
+          id="result"
+          class="timer-container__input"
+        >
+          <mat-label>Ingrese el nombre del grupo</mat-label>
+          <input
+            matInput
+            type="text"
+            placeholder="Ingrese el nombre del grupo"
+            formControlName="groupName"
+          />
+          <mat-error *ngIf="form.controls['groupName'].errors">
+            Campo <strong>requerido.</strong>
+          </mat-error>
+        </mat-form-field>
+      </form>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button
+      type="button"
+      mat-stroked-button
+      color="warn"
+      class="footer__btn-close"
+      mat-dialog-close
+    >
+      CERRAR
+    </button>
+    <button
+      type="button"
+      mat-raised-button
+      color="primary"
+      class="footer__btn-save"
+      (click)="save()"
+    >
+      GUARDAR
+    </button>
+  </mat-dialog-actions>
+</div>

@@ -21,6 +21,9 @@ a:active {
 }
 
 .container-settings {
+  // &__color-expantion {
+  //   margin-top: 10px;
+  // }
   &__header-title {
     height: 68px;
     font-family: Poppins;
@@ -128,6 +131,27 @@ mat-accordion .mat-expansion-panel {
   border-bottom-right-radius: 10px;
 }
 
+.mat-expansion-panel-header {
+  height: 58px;
+}
+
+.container-settings__color-expantion {
+  margin-top: 30px;
+}
+
+.delete-color {
+  color: #828282;
+}
+
+.mini-title {
+  margin-left: -25px;
+}
+
+.main-container-flex {
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .item-list {
   width: 100%;
   display: flex;
@@ -151,6 +175,7 @@ mat-accordion .mat-expansion-panel {
 .container-diffusion {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+  padding: 1em;
 
   &__title {
     display: flex;
@@ -171,6 +196,10 @@ mat-accordion .mat-expansion-panel {
   }
 }
 
-.container-settings__color-expantion {
-  margin-top: 30px;
+.container-settings__btn-add {
+  margin: 1em;
+}
+
+.loading-animation {
+  margin: 1em;
 }
