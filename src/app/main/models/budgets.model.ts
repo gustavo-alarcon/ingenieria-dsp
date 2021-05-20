@@ -3,7 +3,7 @@ export interface budgetsExcelColumns {
   woMain: string;
   ioMain: string;
   woChild: string;
-  ioChild: string;  
+  ioChild: string;
   statusWoChild: string;
   otTaller: string;
   otMadre: string;
@@ -27,6 +27,7 @@ export interface budgetsExcelColumns {
   fechaEnvioPPTO01: string;
   fechaEnvioPPTO02: string;
   motivoDeModificacion02: string;
+  detalleDeModificacion02: string;
   fechaEnvioPPTO03: string;
   motivoDeModificacion03: string;
   detalleDeModificacion03: string;
@@ -35,14 +36,21 @@ export interface budgetsExcelColumns {
   detalleDeModificacion04: string;
   fechaDeAprobacionORechazo: string;
   statusPresupuesto: string;
+  motivoDelRechazo: string;
+  detalleDelRechazo: string;
   vv$servicios: string;
+  vv$adicionalesServicios: string;
+  vv$descuentoServicios: string;
   vv$repuestos: string;
+  vv$adicionalesRepuestos: string;
+  vv$descuentoRepuestos: string;
   totalvvPPTOUS$: string;
   $componenteNuevo: string;
   reparacion60: string;
   horasSTD: string;
   horasReales: string;
   tiempoObjetivoEnvioPPTO: string;
+  diasRestantesEnvioPPTO: string;
   NoPPTOSModificadosOAdicionales: string;
   observacionesEnElPresupuesto: string;
   fechaDeTerminoDeRep: string;

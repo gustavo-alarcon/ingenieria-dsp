@@ -46,6 +46,7 @@ export class BudgetsDailyEntriesComponent implements OnInit {
     'fechaEnvioPPTO01',
     'fechaEnvioPPTO02',
     'motivoDeModificacion02',
+    'detalleDeModificacion02',
     'fechaEnvioPPTO03',
     'motivoDeModificacion03',
     'detalleDeModificacion03',
@@ -54,14 +55,21 @@ export class BudgetsDailyEntriesComponent implements OnInit {
     'detalleDeModificacion04',
     'fechaDeAprobacionORechazo',
     'statusPresupuesto',
+    'motivoDelRechazo',
+    'detalleDelRechazo',
     'vv$servicios',
+    'vv$adicionalesServicios',
+    'vv$descuentoServicios',
     'vv$repuestos',
+    'vv$adicionalesRepuestos',
+    'vv$descuentoRepuestos',
     'totalvvPPTOUS$',
     '$componenteNuevo',
     'reparacion60',
     'horasSTD',
     'horasReales',
     'tiempoObjetivoEnvioPPTO',
+    'diasRestantesEnvioPPTO',
     'NoPPTOSModificadosOAdicionales',
     'observacionesEnElPresupuesto',
     'fechaDeTerminoDeRep',
@@ -183,6 +191,7 @@ export class BudgetsDailyEntriesComponent implements OnInit {
           let _fechaDeTerminoDeRep;
           let _fechaUltimoInput;
           let _fechaDeFactDeTaller;
+          let _mesFactVenta;
           let _fechaFirstLabour;
           let _fechaLastLabour;
           let _fechaLPD;
@@ -194,15 +203,16 @@ export class BudgetsDailyEntriesComponent implements OnInit {
           if (el[24]) _fechaUltimoEnvioPPTO = this.formatDate(el[24]);
           if (el[25]) _fechaEnvioPPTO01 = this.formatDate(el[25]);
           if (el[26]) _fechaEnvioPPTO02 = this.formatDate(el[26]);
-          if (el[28]) _fechaEnvioPPTO03 = this.formatDate(el[28]);
-          if (el[31]) _fechaEnvioPPTO04 = this.formatDate(el[31]);
-          if (el[34]) _fechaDeAprobacionORechazo = this.formatDate(el[34]);
-          if (el[46]) _fechaDeTerminoDeRep = this.formatDate(el[46]);
-          if (el[47]) _fechaUltimoInput = this.formatDate(el[47]);
-          if (el[49]) _fechaDeFactDeTaller = this.formatDate(el[49]);
-          if (el[64]) _fechaFirstLabour = this.formatDate(el[64]);
-          if (el[65]) _fechaLastLabour = this.formatDate(el[65]);
-          if (el[84]) _fechaLPD = this.formatDate(el[84]);
+          if (el[29]) _fechaEnvioPPTO03 = this.formatDate(el[29]);
+          if (el[32]) _fechaEnvioPPTO04 = this.formatDate(el[32]);
+          if (el[35]) _fechaDeAprobacionORechazo = this.formatDate(el[35]);
+          if (el[54]) _fechaDeTerminoDeRep = this.formatDate(el[54]);
+          if (el[55]) _fechaUltimoInput = this.formatDate(el[55]);
+          if (el[57]) _fechaDeFactDeTaller = this.formatDate(el[57]);
+          if (el[70]) _mesFactVenta = this.formatDate(el[70]);
+          if (el[72]) _fechaFirstLabour = this.formatDate(el[72]);
+          if (el[73]) _fechaLastLabour = this.formatDate(el[73]);
+          if (el[92]) _fechaLPD = this.formatDate(el[92]);
 
           const data: budgetsExcelColumns = {
             id: null,
@@ -244,68 +254,76 @@ export class BudgetsDailyEntriesComponent implements OnInit {
             fechaEnvioPPTO01: _fechaEnvioPPTO01 ? _fechaEnvioPPTO01 : null,
             fechaEnvioPPTO02: _fechaEnvioPPTO02 ? _fechaEnvioPPTO02 : null,
             motivoDeModificacion02: el[27] ? el[27] : null,
+            detalleDeModificacion02: el[28] ? el[28] : null,
             fechaEnvioPPTO03: _fechaEnvioPPTO03 ? _fechaEnvioPPTO03 : null,
-            motivoDeModificacion03: el[29] ? el[29] : null,
-            detalleDeModificacion03: el[30] ? el[30] : null,
+            motivoDeModificacion03: el[30] ? el[30] : null,
+            detalleDeModificacion03: el[31] ? el[31] : null,
             fechaEnvioPPTO04: _fechaEnvioPPTO04 ? _fechaEnvioPPTO04 : null,
-            motivoDeModificacion04: el[32] ? el[32] : null,
-            detalleDeModificacion04: el[33] ? el[33] : null,
+            motivoDeModificacion04: el[33] ? el[33] : null,
+            detalleDeModificacion04: el[34] ? el[34] : null,
             fechaDeAprobacionORechazo: _fechaDeAprobacionORechazo
               ? _fechaDeAprobacionORechazo
               : null,
-            statusPresupuesto: el[35] ? el[35] : null,
-            vv$servicios: el[36] ? el[36] : null,
-            vv$repuestos: el[37] ? el[37] : null,
-            totalvvPPTOUS$: el[38] ? el[38] : null,
-            $componenteNuevo: el[39] ? el[39] : null,
-            reparacion60: el[40] ? el[40] : null,
-            horasSTD: el[41] ? el[41] : null,
-            horasReales: el[42] ? el[42] : null,
-            tiempoObjetivoEnvioPPTO: el[43] ? el[43] : null,
-            NoPPTOSModificadosOAdicionales: el[44] ? el[44] : null,
-            observacionesEnElPresupuesto: el[45] ? el[45] : null,
+            statusPresupuesto: el[36] ? el[36] : null,
+            motivoDelRechazo: el[37] ? el[37] : null,
+            detalleDelRechazo: el[38] ? el[38] : null,
+            vv$servicios: el[39] ? el[39] : null,
+            vv$adicionalesServicios: el[40] ? el[40] : null,
+            vv$descuentoServicios: el[41] ? el[41] : null,
+            vv$repuestos: el[42] ? el[42] : null,
+            vv$adicionalesRepuestos: el[43] ? el[43] : null,
+            vv$descuentoRepuestos: el[44] ? el[44] : null,
+            totalvvPPTOUS$: el[45] ? el[45] : null,
+            $componenteNuevo: el[46] ? el[46] : null,
+            reparacion60: el[47] ? el[47] : null,
+            horasSTD: el[48] ? el[48] : null,
+            horasReales: el[49] ? el[49] : null,
+            tiempoObjetivoEnvioPPTO: el[50] ? el[50] : null,
+            diasRestantesEnvioPPTO: el[51] ? el[51] : null,
+            NoPPTOSModificadosOAdicionales: el[52] ? el[52] : null,
+            observacionesEnElPresupuesto: el[53] ? el[53] : null,
             fechaDeTerminoDeRep: _fechaDeTerminoDeRep
               ? _fechaDeTerminoDeRep
               : null,
             fechaUltimoInput: _fechaUltimoInput ? _fechaUltimoInput : null,
-            motivoDeInput: el[48] ? el[48] : null,
+            motivoDeInput: el[56] ? el[56] : null,
             fechaDeFactDeTaller: _fechaDeFactDeTaller
               ? _fechaDeFactDeTaller
               : null,
-            costo$ServiciosCliente: el[50] ? el[50] : null,
-            costo$ServiciosDeOperacion: el[51] ? el[51] : null,
-            rentabilidadServiciosPercent: el[52] ? el[52] : null,
-            costo$RepuestosCLIENTE: el[53] ? el[53] : null,
-            costo$RepuestosOperacion: el[54] ? el[54] : null,
-            rentabilidadRepuestosPercent: el[55] ? el[55] : null,
-            observacionesTaller: el[56] ? el[56] : null,
-            realDevueltoAServicios: el[57] ? el[57] : null,
-            diferenciaServicios: el[58] ? el[58] : null,
-            realDevueltoARepuestos: el[59] ? el[59] : null,
-            diferenciaRepuestos: el[60] ? el[60] : null,
-            totalVVFacturadoUS$: el[61] ? el[61] : null,
-            mesFactVenta: el[62] ? el[62] : null,
-            percentHorasSTDvsHorasDBS: el[63] ? el[63] : null,
+            costo$ServiciosCliente: el[58] ? el[58] : null,
+            costo$ServiciosDeOperacion: el[59] ? el[59] : null,
+            rentabilidadServiciosPercent: el[60] ? el[60] : null,
+            costo$RepuestosCLIENTE: el[61] ? el[61] : null,
+            costo$RepuestosOperacion: el[62] ? el[62] : null,
+            rentabilidadRepuestosPercent: el[63] ? el[63] : null,
+            observacionesTaller: el[64] ? el[64] : null,
+            realDevueltoAServicios: el[65] ? el[65] : null,
+            diferenciaServicios: el[66] ? el[66] : null,
+            realDevueltoARepuestos: el[67] ? el[67] : null,
+            diferenciaRepuestos: el[68] ? el[68] : null,
+            totalVVFacturadoUS$: el[69] ? el[69] : null,
+            mesFactVenta: _mesFactVenta ? _mesFactVenta : null,
+            percentHorasSTDvsHorasDBS: el[71] ? el[71] : null,
             fechaFirstLabour: _fechaFirstLabour ? _fechaFirstLabour : null,
             fechaLastLabour: _fechaLastLabour ? _fechaLastLabour : null,
-            diasDemoraFact: el[66] ? el[66] : null,
-            diasFactLastLabour: el[67] ? el[67] : null,
-            elaborarPPTO: el[68] ? el[68] : null,
-            tipoDeComponente: el[69] ? el[69] : null,
-            tipoAAorPandP: el[70] ? el[70] : null,
-            taller02: el[71] ? el[71] : null,
-            diasDesdeAperturaChild: el[72] ? el[72] : null,
-            resumen: el[73] ? el[73] : null,
-            definicionDeCargos: el[74] ? el[74] : null,
-            informe: el[75] ? el[75] : null,
-            cotizacionFesa: el[76] ? el[76] : null,
-            cotizacionText: el[77] ? el[77] : null,
-            excelid: el[78] ? el[78] : null,
-            clave: el[79] ? el[79] : null,
-            obj: el[80] ? el[80] : null,
-            diasPPTO: el[81] ? el[81] : null,
-            mesTer: el[82] ? el[82] : null,
-            anio: el[83] ? el[83] : null,
+            diasDemoraFact: el[74] ? el[74] : null,
+            diasFactLastLabour: el[75] ? el[75] : null,
+            elaborarPPTO: el[76] ? el[76] : null,
+            tipoDeComponente: el[77] ? el[77] : null,
+            tipoAAorPandP: el[78] ? el[78] : null,
+            taller02: el[79] ? el[79] : null,
+            diasDesdeAperturaChild: el[80] ? el[80] : null,
+            resumen: el[81] ? el[81] : null,
+            definicionDeCargos: el[82] ? el[82] : null,
+            informe: el[83] ? el[83] : null,
+            cotizacionFesa: el[84] ? el[84] : null,
+            cotizacionText: el[85] ? el[85] : null,
+            excelid: el[86] ? el[86] : null,
+            clave: el[87] ? el[87] : null,
+            obj: el[88] ? el[88] : null,
+            diasPPTO: el[89] ? el[89] : null,
+            mesTer: el[90] ? el[90] : null,
+            anio: el[91] ? el[91] : null,
             fechaLPD: _fechaLPD ? _fechaLPD : null,
           };
           parsedExcelData.push(data);

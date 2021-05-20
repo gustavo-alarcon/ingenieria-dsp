@@ -303,6 +303,19 @@
           </td>
         </ng-container>
 
+        <ng-container matColumnDef="detalleDeModificacion02">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            DETALLE DE MODIFICACION 02
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{
+              element.detalleDeModificacion02
+                ? element.detalleDeModificacion02
+                : "---"
+            }}
+          </td>
+        </ng-container>
+
         <ng-container matColumnDef="fechaEnvioPPTO03">
           <th mat-header-cell *matHeaderCellDef class="table__cell">
             FECHA ENVIO PPTO 03
@@ -395,6 +408,24 @@
           </td>
         </ng-container>
 
+        <ng-container matColumnDef="motivoDelRechazo">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            MOTIVO DEL RECHAZO
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.motivoDelRechazo ? element.motivoDelRechazo : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="detalleDelRechazo">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            DETALLE DEL RECHAZO
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.detalleDelRechazo ? element.detalleDelRechazo : "---" }}
+          </td>
+        </ng-container>
+
         <ng-container matColumnDef="vv$servicios">
           <th mat-header-cell *matHeaderCellDef class="table__cell">
             VV$ SERVICIOS
@@ -404,12 +435,64 @@
           </td>
         </ng-container>
 
+        <ng-container matColumnDef="vv$adicionalesServicios">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            VV$ ADICIONALES SERVICIOS
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{
+              element.vv$adicionalesServicios
+                ? element.vv$adicionalesServicios
+                : "---"
+            }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="vv$descuentoServicios">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            VV$ DESCUENTO SERVICIOS
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{
+              element.vv$descuentoServicios
+                ? element.vv$descuentoServicios
+                : "---"
+            }}
+          </td>
+        </ng-container>
+
         <ng-container matColumnDef="vv$repuestos">
           <th mat-header-cell *matHeaderCellDef class="table__cell">
             VV$ REPUESTOS
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.vv$repuestos ? element.vv$repuestos : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="vv$adicionalesRepuestos">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            VV$ ADICIONALES REPUESTOS
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{
+              element.vv$adicionalesRepuestos
+                ? element.vv$adicionalesRepuestos
+                : "---"
+            }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="vv$descuentoRepuestos">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            VV$ DESCUENTO REPUESTOS
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{
+              element.vv$descuentoRepuestos
+                ? element.vv$descuentoRepuestos
+                : "---"
+            }}
           </td>
         </ng-container>
 
@@ -466,6 +549,19 @@
             {{
               element.tiempoObjetivoEnvioPPTO
                 ? element.tiempoObjetivoEnvioPPTO
+                : "---"
+            }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="diasRestantesEnvioPPTO">
+          <th mat-header-cell *matHeaderCellDef class="table__cell">
+            DIAS RESTANTES ENVIO PPTO
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{
+              element.diasRestantesEnvioPPTO
+                ? element.diasRestantesEnvioPPTO
                 : "---"
             }}
           </td>
