@@ -31,6 +31,11 @@
   <mat-divider></mat-divider>
 
   <div class="body-container">
+    <mat-progress-bar
+      mode="indeterminate"
+      *ngIf="loading$ | async"
+    ></mat-progress-bar>
+
     <div style="overflow: auto">
       <table
         mat-table
@@ -1048,7 +1053,7 @@
       aria-label="add"
       mat-button
       class="footer__btn-save"
-      (click)="saveDataTable()"
+      (click)="uploadDataToFirestore()"
       [disabled]="!budgetsDailyEntriesDataSource.data.length"
     >
       Enviar

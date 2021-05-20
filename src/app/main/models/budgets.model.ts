@@ -92,5 +92,5 @@ export interface budgetsExcelColumns {
   mesTer: string;
   anio: string;
   fechaLPD: string;
-  id?: string;
+  id?: any;
 }

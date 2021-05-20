@@ -1,10 +1,11 @@
+import { BudgetsService } from './../../../services/budgets.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { budgetsExcelColumns } from './../../../models/budgets.model';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription, Observable } from 'rxjs';
 import * as XLSX from 'xlsx';
 import moment from 'moment';
 
@@ -120,12 +121,18 @@ export class BudgetsDailyEntriesComponent implements OnInit {
     this.budgetsDailyEntriesDataSource.paginator = paginator;
   }
 
+  @ViewChild('loadFileInputElement') loadFileInputElementRef: ElementRef;
+
+  loading: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  loading$: Observable<boolean> = this.loading.asObservable();
+
   public subscriptions: Subscription = new Subscription();
   public isMobile: boolean = false;
 
   constructor(
     private breakpoint: BreakpointObserver,
-    private MatSnackBar: MatSnackBar
+    private MatSnackBar: MatSnackBar,
+    private BudgetsService: BudgetsService
   ) {}
 
   public ngOnInit(): void {
@@ -143,6 +150,7 @@ export class BudgetsDailyEntriesComponent implements OnInit {
   }
 
   public loadFile(fileList: File[]): void {
+    this.loading.next(true);
     const file: File = fileList[0];
     const fileReader: FileReader = new FileReader();
 
@@ -166,7 +174,7 @@ export class BudgetsDailyEntriesComponent implements OnInit {
     fileReader.readAsArrayBuffer(file);
   }
 
-  public parseExcelData(rawData: any) {
+  public parseExcelData(rawData: any): void {
     let parsedExcelData: Array<budgetsExcelColumns> = [];
 
     // Remove the headers
@@ -359,6 +367,8 @@ export class BudgetsDailyEntriesComponent implements OnInit {
       });
 
       this.budgetsDailyEntriesDataSource.data = parsedExcelData;
+      this.loadFileInputElementRef.nativeElement.value = null;
+      this.loading.next(false);
     } else {
       this.MatSnackBar.open('🚨 Archivo vacío ', 'Aceptar', {
         duration: 6000,
@@ -371,8 +381,40 @@ export class BudgetsDailyEntriesComponent implements OnInit {
   }
 
   editDialog(): void {}
-  deleteDialog(index: number): void {
+  deleteDialog(index: number): void {}
 
+  uploadDataToFirestore(): void {
+    this.loading.next(true);
+
+    this.BudgetsService.uploadDailyExcelBatchArray(
+      this.budgetsDailyEntriesDataSource.data
+    ).subscribe((batchArray) => {
+      if (batchArray.length > 0) {
+        batchArray.forEach((batch) => {
+          batch
+            .commit()
+            .then(() => {
+              this.loading.next(false);
+              this.MatSnackBar.open(
+                '✅ Archivo subido correctamente!',
+                'Aceptar',
+                {
+                  duration: 6000,
+                }
+              );
+            })
+            .catch((err) => {
+              this.loading.next(false);
+              this.MatSnackBar.open(
+                '🚨 Hubo un error subiendo el archivo.',
+                'Aceptar',
+                {
+                  duration: 6000,
+                }
+              );
+            });
+        });
+      }
+    });
   }
-  saveDataTable(): void {}
 }
