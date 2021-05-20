@@ -179,6 +179,7 @@ export class BudgetsDailyEntriesComponent implements OnInit {
         if (el.length > 0) {
           // Format dates
           let _fechaAperturaChild;
+          let _fechaReleasedIoChild;
           let _fechaUltimoListado;
           let _fechaUltimoEnvioDocumentoADM;
           let _fechaDefinicionDeCargos;
@@ -195,8 +196,13 @@ export class BudgetsDailyEntriesComponent implements OnInit {
           let _fechaFirstLabour;
           let _fechaLastLabour;
           let _fechaLPD;
+          let _resumen;
+          let _informe;
+          let _cotizacionFesa;
+          let _cotizacionText;
 
           if (el[8]) _fechaAperturaChild = this.formatDate(el[8]);
+          if (el[9]) _fechaReleasedIoChild = this.formatDate(el[9]);
           if (el[19]) _fechaUltimoListado = this.formatDate(el[19]);
           if (el[20]) _fechaUltimoEnvioDocumentoADM = this.formatDate(el[20]);
           if (el[22]) _fechaDefinicionDeCargos = this.formatDate(el[22]);
@@ -214,6 +220,26 @@ export class BudgetsDailyEntriesComponent implements OnInit {
           if (el[73]) _fechaLastLabour = this.formatDate(el[73]);
           if (el[92]) _fechaLPD = this.formatDate(el[92]);
 
+          _resumen =
+            Object.prototype.toString.call(el[81]) === '[object Date]'
+              ? this.formatDate(el[81])
+              : el[81];
+
+          _informe =
+            Object.prototype.toString.call(el[83]) === '[object Date]'
+              ? this.formatDate(el[83])
+              : el[83];
+
+          _cotizacionFesa =
+            Object.prototype.toString.call(el[84]) === '[object Date]'
+              ? this.formatDate(el[84])
+              : el[84];
+
+          _cotizacionText =
+            Object.prototype.toString.call(el[85]) === '[object Date]'
+              ? this.formatDate(el[85])
+              : el[85];
+
           const data: budgetsExcelColumns = {
             id: null,
             taller: el[0] ? el[0] : null,
@@ -227,7 +253,9 @@ export class BudgetsDailyEntriesComponent implements OnInit {
             fechaAperturaChild: _fechaAperturaChild
               ? _fechaAperturaChild
               : null,
-            fechaReleasedIoChild: el[9] ? el[9] : null,
+            fechaReleasedIoChild: _fechaReleasedIoChild
+              ? _fechaReleasedIoChild
+              : null,
             cliente: el[10] ? el[10] : null,
             gmorngm: el[11] ? el[11] : null,
             modelo: el[12] ? el[12] : null,
@@ -313,11 +341,11 @@ export class BudgetsDailyEntriesComponent implements OnInit {
             tipoAAorPandP: el[78] ? el[78] : null,
             taller02: el[79] ? el[79] : null,
             diasDesdeAperturaChild: el[80] ? el[80] : null,
-            resumen: el[81] ? el[81] : null,
+            resumen: _resumen ? _resumen : null,
             definicionDeCargos: el[82] ? el[82] : null,
-            informe: el[83] ? el[83] : null,
-            cotizacionFesa: el[84] ? el[84] : null,
-            cotizacionText: el[85] ? el[85] : null,
+            informe: _informe ? _informe : null,
+            cotizacionFesa: _cotizacionFesa ? _cotizacionFesa : null,
+            cotizacionText: _cotizacionText ? _cotizacionText : null,
             excelid: el[86] ? el[86] : null,
             clave: el[87] ? el[87] : null,
             obj: el[88] ? el[88] : null,
@@ -343,6 +371,8 @@ export class BudgetsDailyEntriesComponent implements OnInit {
   }
 
   editDialog(): void {}
-  deleteDialog(): void {}
+  deleteDialog(index: number): void {
+
+  }
   saveDataTable(): void {}
 }
