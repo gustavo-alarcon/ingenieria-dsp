@@ -6,6 +6,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Subscription } from 'rxjs';
 import * as XLSX from 'xlsx';
+import moment from 'moment';
 
 @Component({
   selector: 'app-budgets-daily-entries',
@@ -102,6 +103,7 @@ export class BudgetsDailyEntriesComponent implements OnInit {
     'mesTer',
     'anio',
     'fechaLPD',
+    'actions',
   ];
 
   @ViewChild('budgetsDailyEntriesPaginator', { static: false }) set content(
@@ -167,6 +169,41 @@ export class BudgetsDailyEntriesComponent implements OnInit {
       rawData.forEach((el) => {
         // if the row contains data
         if (el.length > 0) {
+          // Format dates
+          let _fechaAperturaChild;
+          let _fechaUltimoListado;
+          let _fechaUltimoEnvioDocumentoADM;
+          let _fechaDefinicionDeCargos;
+          let _fechaUltimoEnvioPPTO;
+          let _fechaEnvioPPTO01;
+          let _fechaEnvioPPTO02;
+          let _fechaEnvioPPTO03;
+          let _fechaEnvioPPTO04;
+          let _fechaDeAprobacionORechazo;
+          let _fechaDeTerminoDeRep;
+          let _fechaUltimoInput;
+          let _fechaDeFactDeTaller;
+          let _fechaFirstLabour;
+          let _fechaLastLabour;
+          let _fechaLPD;
+
+          if (el[8]) _fechaAperturaChild = this.formatDate(el[8]);
+          if (el[19]) _fechaUltimoListado = this.formatDate(el[19]);
+          if (el[20]) _fechaUltimoEnvioDocumentoADM = this.formatDate(el[20]);
+          if (el[22]) _fechaDefinicionDeCargos = this.formatDate(el[22]);
+          if (el[24]) _fechaUltimoEnvioPPTO = this.formatDate(el[24]);
+          if (el[25]) _fechaEnvioPPTO01 = this.formatDate(el[25]);
+          if (el[26]) _fechaEnvioPPTO02 = this.formatDate(el[26]);
+          if (el[28]) _fechaEnvioPPTO03 = this.formatDate(el[28]);
+          if (el[31]) _fechaEnvioPPTO04 = this.formatDate(el[31]);
+          if (el[34]) _fechaDeAprobacionORechazo = this.formatDate(el[34]);
+          if (el[46]) _fechaDeTerminoDeRep = this.formatDate(el[46]);
+          if (el[47]) _fechaUltimoInput = this.formatDate(el[47]);
+          if (el[49]) _fechaDeFactDeTaller = this.formatDate(el[49]);
+          if (el[64]) _fechaFirstLabour = this.formatDate(el[64]);
+          if (el[65]) _fechaLastLabour = this.formatDate(el[65]);
+          if (el[84]) _fechaLPD = this.formatDate(el[84]);
+
           const data: budgetsExcelColumns = {
             id: null,
             taller: el[0] ? el[0] : null,
@@ -177,7 +214,9 @@ export class BudgetsDailyEntriesComponent implements OnInit {
             statusWoChild: el[5] ? el[5] : null,
             otTaller: el[6] ? el[6] : null,
             otMadre: el[7] ? el[7] : null,
-            fechaAperturaChild: el[8] ? el[8] : null,
+            fechaAperturaChild: _fechaAperturaChild
+              ? _fechaAperturaChild
+              : null,
             fechaReleasedIoChild: el[9] ? el[9] : null,
             cliente: el[10] ? el[10] : null,
             gmorngm: el[11] ? el[11] : null,
@@ -188,22 +227,32 @@ export class BudgetsDailyEntriesComponent implements OnInit {
             modalidadPresupuesto: el[16] ? el[16] : null,
             componente: el[17] ? el[17] : null,
             afa: el[18] ? el[18] : null,
-            fechaUltimoListado: el[19] ? el[19] : null,
-            fechaUltimoEnvioDocumentoADM: el[20] ? el[20] : null,
+            fechaUltimoListado: _fechaUltimoListado
+              ? _fechaUltimoListado
+              : null,
+            fechaUltimoEnvioDocumentoADM: _fechaUltimoEnvioDocumentoADM
+              ? _fechaUltimoEnvioDocumentoADM
+              : null,
             ultimoDocumento: el[21] ? el[21] : null,
-            fechaDefinicionDeCargos: el[22] ? el[22] : null,
+            fechaDefinicionDeCargos: _fechaDefinicionDeCargos
+              ? _fechaDefinicionDeCargos
+              : null,
             definicionDeCargo: el[23] ? el[23] : null,
-            fechaUltimoEnvioPPTO: el[24] ? el[24] : null,
-            fechaEnvioPPTO01: el[25] ? el[25] : null,
-            fechaEnvioPPTO02: el[26] ? el[26] : null,
+            fechaUltimoEnvioPPTO: _fechaUltimoEnvioPPTO
+              ? _fechaUltimoEnvioPPTO
+              : null,
+            fechaEnvioPPTO01: _fechaEnvioPPTO01 ? _fechaEnvioPPTO01 : null,
+            fechaEnvioPPTO02: _fechaEnvioPPTO02 ? _fechaEnvioPPTO02 : null,
             motivoDeModificacion02: el[27] ? el[27] : null,
-            fechaEnvioPPTO03: el[28] ? el[28] : null,
+            fechaEnvioPPTO03: _fechaEnvioPPTO03 ? _fechaEnvioPPTO03 : null,
             motivoDeModificacion03: el[29] ? el[29] : null,
             detalleDeModificacion03: el[30] ? el[30] : null,
-            fechaEnvioPPTO04: el[31] ? el[31] : null,
+            fechaEnvioPPTO04: _fechaEnvioPPTO04 ? _fechaEnvioPPTO04 : null,
             motivoDeModificacion04: el[32] ? el[32] : null,
             detalleDeModificacion04: el[33] ? el[33] : null,
-            fechaDeAprobacionORechazo: el[34] ? el[34] : null,
+            fechaDeAprobacionORechazo: _fechaDeAprobacionORechazo
+              ? _fechaDeAprobacionORechazo
+              : null,
             statusPresupuesto: el[35] ? el[35] : null,
             vv$servicios: el[36] ? el[36] : null,
             vv$repuestos: el[37] ? el[37] : null,
@@ -215,10 +264,14 @@ export class BudgetsDailyEntriesComponent implements OnInit {
             tiempoObjetivoEnvioPPTO: el[43] ? el[43] : null,
             NoPPTOSModificadosOAdicionales: el[44] ? el[44] : null,
             observacionesEnElPresupuesto: el[45] ? el[45] : null,
-            fechaDeTerminoDeRep: el[46] ? el[46] : null,
-            fechaUltimoInput: el[47] ? el[47] : null,
+            fechaDeTerminoDeRep: _fechaDeTerminoDeRep
+              ? _fechaDeTerminoDeRep
+              : null,
+            fechaUltimoInput: _fechaUltimoInput ? _fechaUltimoInput : null,
             motivoDeInput: el[48] ? el[48] : null,
-            fechaDeFactDeTaller: el[49] ? el[49] : null,
+            fechaDeFactDeTaller: _fechaDeFactDeTaller
+              ? _fechaDeFactDeTaller
+              : null,
             costo$ServiciosCliente: el[50] ? el[50] : null,
             costo$ServiciosDeOperacion: el[51] ? el[51] : null,
             rentabilidadServiciosPercent: el[52] ? el[52] : null,
@@ -233,8 +286,8 @@ export class BudgetsDailyEntriesComponent implements OnInit {
             totalVVFacturadoUS$: el[61] ? el[61] : null,
             mesFactVenta: el[62] ? el[62] : null,
             percentHorasSTDvsHorasDBS: el[63] ? el[63] : null,
-            fechaFirstLabour: el[64] ? el[64] : null,
-            fechaLastLabour: el[65] ? el[65] : null,
+            fechaFirstLabour: _fechaFirstLabour ? _fechaFirstLabour : null,
+            fechaLastLabour: _fechaLastLabour ? _fechaLastLabour : null,
             diasDemoraFact: el[66] ? el[66] : null,
             diasFactLastLabour: el[67] ? el[67] : null,
             elaborarPPTO: el[68] ? el[68] : null,
@@ -253,7 +306,7 @@ export class BudgetsDailyEntriesComponent implements OnInit {
             diasPPTO: el[81] ? el[81] : null,
             mesTer: el[82] ? el[82] : null,
             anio: el[83] ? el[83] : null,
-            fechaLPD: el[84] ? el[84] : null,
+            fechaLPD: _fechaLPD ? _fechaLPD : null,
           };
           parsedExcelData.push(data);
         }
@@ -265,12 +318,10 @@ export class BudgetsDailyEntriesComponent implements OnInit {
         duration: 6000,
       });
     }
+  }
 
-    parsedExcelData.forEach((el) => {
-      console.log(el);
-    });
-
-    console.log(parsedExcelData.length);
+  private formatDate(date: Date): string {
+    return moment(date).format('DD/MM/YYYY');
   }
 
   editDialog(): void {}

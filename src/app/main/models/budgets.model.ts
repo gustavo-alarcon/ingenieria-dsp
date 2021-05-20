@@ -3,11 +3,11 @@ export interface budgetsExcelColumns {
   woMain: string;
   ioMain: string;
   woChild: string;
-  ioChild: string;
+  ioChild: string;  
   statusWoChild: string;
   otTaller: string;
   otMadre: string;
-  fechaAperturaChild: string;
+  fechaAperturaChild: Date;
   fechaReleasedIoChild: string;
   cliente: string;
   gmorngm: string;
