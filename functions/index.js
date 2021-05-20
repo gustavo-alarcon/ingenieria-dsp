@@ -147,7 +147,7 @@ exports.createUserSetClaims = functions.auth.user().onCreate(async (user) => {
 
 exports.sendAndonToEndpoint = functions.firestore.document(`db/ferreyros/andon/{andonId}`)
     .onWrite(async (event) => {
-        const andon = event.after.data();
+        const andon = await event.after.data();
 
         let url;
         await admin.firestore().doc('/db/generalConfig').onSnapshot(val => {
@@ -160,7 +160,7 @@ exports.sendAndonToEndpoint = functions.firestore.document(`db/ferreyros/andon/{
                 "bay": andon.name,
                 "problemType": andon.problemType,
                 "description": andon.description,
-                "images": andon.images ? andon.images.join('@@') : '',
+                "images": andon.images ? Object.values(andon.images).join('@@') : '',
                 "emailList": andon.emailList.toString()
             }
 
@@ -234,7 +234,7 @@ exports.sendPreevaluationToEndpoint = functions.firestore.document(`db/ferreyros
                     "comments": eval.comments ? eval.comments : '-',
                     "observations": eval.observations ? eval.observations : '-',
                     "extends": eval.extends ? eval.extends.join('@@') : '',
-                    "images": eval.iamges ? eval.iamges.join('@@') : '',
+                    "images": (eval.resultImage1 && eval.resultImage2) ? [eval.resultImage1, eval.resultImage2].join('@@') : '',
                     "emailList": eval.emailList ? eval.emailList.toString() : ''
                 }
 
