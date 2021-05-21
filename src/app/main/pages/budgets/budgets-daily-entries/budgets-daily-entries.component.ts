@@ -1,3 +1,5 @@
+import { DeleteDialogComponent } from './dialogs/delete-dialog/delete-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 import { BudgetsService } from './../../../services/budgets.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { budgetsExcelColumns } from './../../../models/budgets.model';
@@ -133,8 +135,9 @@ export class BudgetsDailyEntriesComponent implements OnInit {
   constructor(
     private breakpoint: BreakpointObserver,
     private MatSnackBar: MatSnackBar,
-    private BudgetsService: BudgetsService
-  ) { }
+    private BudgetsService: BudgetsService,
+    private dialog: MatDialog
+  ) {}
 
   public ngOnInit(): void {
     this.subscriptions.add(
@@ -381,16 +384,37 @@ export class BudgetsDailyEntriesComponent implements OnInit {
     return moment(date).format('DD/MM/YYYY');
   }
 
-  editDialog(): void { }
-  deleteDialog(index: number): void { }
+  deleteDialog(index: number): void {
+    const currentWOCHILD: string =
+      this.budgetsDailyEntriesDataSource.data[index].woChild;
+
+    const dialogRef = this.dialog.open(DeleteDialogComponent, {
+      data: { currentWOCHILD },
+    });
+
+    dialogRef
+      .afterClosed()
+      .toPromise()
+      .then((res: string) => {
+        if (res == 'delete') {
+          this.budgetsDailyEntriesDataSource.data.splice(index, 1);
+        }
+        this.refresh();
+      });
+  }
+
+  // Function to refresh the mat-table data source
+  refresh(): void {
+    this.budgetsDailyEntriesDataSource.data =
+      this.budgetsDailyEntriesDataSource.data;
+  }
 
   uploadDataToFirestore(): void {
     this.loading.next(true);
 
     this.BudgetsService.getBudgets()
-      .pipe(
-        take(1)
-      ).subscribe(list => {
+      .pipe(take(1))
+      .subscribe((list) => {
         this.BudgetsService.uploadDailyExcelBatchArray(
           this.budgetsDailyEntriesDataSource.data,
           list
@@ -422,8 +446,6 @@ export class BudgetsDailyEntriesComponent implements OnInit {
             });
           }
         });
-      })
-
-
+      });
   }
 }

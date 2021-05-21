@@ -28,26 +28,32 @@ export class BudgetsService {
 
         list[j].id = budgetsDocRef.id;
 
-        // The for loop runs immediately to completion while all your asynchronous operations are started.
-        // When they complete some time in the future and call their callbacks, the value of your loop index
-        // variable i will be at its last value for all the callbacks.
+        // The current BUDGET has a WO CHILD
+        if (list[j].woChild) {
+          // Get all the woChild
+          let firestoreWOChildList: Array<string> = [];
 
-        // Use .forEach() to iterate since it creates its own function closure
-        // each iteration of the loop can have it's own value
-        ((index: number, list: Array<budgetsExcelColumns>) => {
-          this.afs.firestore
-            .collection(`/db/ferreyros/budgets`)
-            .where('woChild', '==', `${list[index]}`)
-            .get()
-            .then((querySnapshot) => {
-              querySnapshot.forEach((doc) => {
-                console.log(doc.data());
-              });
-            });
-          console.log(j, list);
-        })(j, list);
+          collection.forEach((doc) => {
+            if (doc.woChild) firestoreWOChildList.push(doc.woChild);
+          });
 
-        batch.set(budgetsDocRef, list[j]);
+          // Check if WO Child already exists in db
+          const repeatedWOChildList: Array<string> = [];
+
+          firestoreWOChildList.forEach((woChild: string) => {
+            if (woChild == list[j].woChild) repeatedWOChildList.push(woChild);
+          });
+
+          // if this arr contains elements then wo child already exists in db
+          if (repeatedWOChildList) {
+            // ignore
+          } else {
+            batch.set(budgetsDocRef, list[j]);
+          }
+
+          // reset
+          firestoreWOChildList.length = 0;
+        }
       }
 
       batchArray.push(batch);
@@ -55,8 +61,14 @@ export class BudgetsService {
     return of(batchArray);
   }
 
+  search(s: string, find: string) {
+    return s == find;
+  }
+
   getBudgets(): Observable<budgetsExcelColumns[]> {
-    const ref = this.afs.collection<budgetsExcelColumns>('/db/ferreyros/budgets');
+    const ref = this.afs.collection<budgetsExcelColumns>(
+      '/db/ferreyros/budgets'
+    );
     const refObs = ref.valueChanges();
 
     return refObs;
