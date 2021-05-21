@@ -814,8 +814,12 @@ export class UiConfig {
         this.andon.dashboard.menu = true;
         this.andon.history.menu = true;
         // quality
-        this.quality.internalEvents = true;
-        this.quality.externalEvents = true;
+        this.quality.internalEvents.menu = true;
+        this.quality.internalEvents.forms.component = true;
+        this.quality.internalEvents.forms.workshop = true;
+        this.quality.externalEvents.menu = true;
+        this.quality.externalEvents.forms.component = true;
+        this.quality.externalEvents.forms.miningOperation = true;
         this.quality.analysis.menu = true;
         this.quality.analysis.tabs.registers.actions.details = true;
         this.quality.analysis.tabs.registers.actions.timeLine = true;
