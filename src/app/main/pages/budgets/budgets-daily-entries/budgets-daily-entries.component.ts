@@ -400,6 +400,9 @@ export class BudgetsDailyEntriesComponent implements OnInit {
           this.budgetsDailyEntriesDataSource.data.splice(index, 1);
         }
         this.refresh();
+        this.MatSnackBar.open('✅ Eliminado correctamente!', 'Aceptar', {
+          duration: 6000,
+        });
       });
   }
 

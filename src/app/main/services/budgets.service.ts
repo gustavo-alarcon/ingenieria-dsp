@@ -16,6 +16,14 @@ export class BudgetsService {
     let batchCount = Math.ceil(list.length / 500);
     let batchArray = [];
 
+    // Get all the woChild from the db
+    let firestoreWOChildList: Array<string> = [];
+    collection.forEach((doc) => {
+      if (doc.woChild) firestoreWOChildList.push(doc.woChild);
+    });
+
+    console.log(firestoreWOChildList);
+
     for (let index = 0; index < batchCount; index++) {
       const batch = this.afs.firestore.batch();
       let limit =
@@ -30,13 +38,6 @@ export class BudgetsService {
 
         // The current BUDGET has a WO CHILD
         if (list[j].woChild) {
-          // Get all the woChild
-          let firestoreWOChildList: Array<string> = [];
-
-          collection.forEach((doc) => {
-            if (doc.woChild) firestoreWOChildList.push(doc.woChild);
-          });
-
           // Check if WO Child already exists in db
           const repeatedWOChildList: Array<string> = [];
 
@@ -50,7 +51,6 @@ export class BudgetsService {
           } else {
             batch.set(budgetsDocRef, list[j]);
           }
-
           // reset
           firestoreWOChildList.length = 0;
         }
