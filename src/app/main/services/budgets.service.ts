@@ -10,7 +10,8 @@ export class BudgetsService {
   constructor(private afs: AngularFirestore) {}
 
   uploadDailyExcelBatchArray(
-    list: Array<budgetsExcelColumns>
+    list: Array<budgetsExcelColumns>,
+    collection: budgetsExcelColumns[]
   ): Observable<firebase.default.firestore.WriteBatch[]> {
     let batchCount = Math.ceil(list.length / 500);
     let batchArray = [];
@@ -52,5 +53,12 @@ export class BudgetsService {
       batchArray.push(batch);
     }
     return of(batchArray);
+  }
+
+  getBudgets(): Observable<budgetsExcelColumns[]> {
+    const ref = this.afs.collection<budgetsExcelColumns>('/db/ferreyros/budgets');
+    const refObs = ref.valueChanges();
+
+    return refObs;
   }
 }

@@ -8,6 +8,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { BehaviorSubject, Subscription, Observable } from 'rxjs';
 import * as XLSX from 'xlsx';
 import moment from 'moment';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-budgets-daily-entries',
@@ -133,7 +134,7 @@ export class BudgetsDailyEntriesComponent implements OnInit {
     private breakpoint: BreakpointObserver,
     private MatSnackBar: MatSnackBar,
     private BudgetsService: BudgetsService
-  ) {}
+  ) { }
 
   public ngOnInit(): void {
     this.subscriptions.add(
@@ -380,41 +381,49 @@ export class BudgetsDailyEntriesComponent implements OnInit {
     return moment(date).format('DD/MM/YYYY');
   }
 
-  editDialog(): void {}
-  deleteDialog(index: number): void {}
+  editDialog(): void { }
+  deleteDialog(index: number): void { }
 
   uploadDataToFirestore(): void {
     this.loading.next(true);
 
-    this.BudgetsService.uploadDailyExcelBatchArray(
-      this.budgetsDailyEntriesDataSource.data
-    ).subscribe((batchArray) => {
-      if (batchArray.length > 0) {
-        batchArray.forEach((batch) => {
-          batch
-            .commit()
-            .then(() => {
-              this.loading.next(false);
-              this.MatSnackBar.open(
-                '✅ Archivo subido correctamente!',
-                'Aceptar',
-                {
-                  duration: 6000,
-                }
-              );
-            })
-            .catch((err) => {
-              this.loading.next(false);
-              this.MatSnackBar.open(
-                '🚨 Hubo un error subiendo el archivo.',
-                'Aceptar',
-                {
-                  duration: 6000,
-                }
-              );
+    this.BudgetsService.getBudgets()
+      .pipe(
+        take(1)
+      ).subscribe(list => {
+        this.BudgetsService.uploadDailyExcelBatchArray(
+          this.budgetsDailyEntriesDataSource.data,
+          list
+        ).subscribe((batchArray) => {
+          if (batchArray.length > 0) {
+            batchArray.forEach((batch) => {
+              batch
+                .commit()
+                .then(() => {
+                  this.loading.next(false);
+                  this.MatSnackBar.open(
+                    '✅ Archivo subido correctamente!',
+                    'Aceptar',
+                    {
+                      duration: 6000,
+                    }
+                  );
+                })
+                .catch((err) => {
+                  this.loading.next(false);
+                  this.MatSnackBar.open(
+                    '🚨 Hubo un error subiendo el archivo.',
+                    'Aceptar',
+                    {
+                      duration: 6000,
+                    }
+                  );
+                });
             });
+          }
         });
-      }
-    });
+      })
+
+
   }
 }
