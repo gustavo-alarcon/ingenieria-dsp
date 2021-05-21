@@ -161,8 +161,20 @@ export class UiConfig {
 
     quality: {
         menu: boolean;
-        internalEvents: boolean;
-        externalEvents: boolean;
+        internalEvents: {
+            menu: boolean;
+            forms: {
+                workshop: boolean;
+                component: boolean;
+            }
+        }
+        externalEvents: {
+            menu: boolean;
+            forms: {
+                component: boolean;
+                miningOperation: boolean;
+            }
+        }
         analysis: {
             menu: boolean;
             tabs: {
@@ -186,6 +198,10 @@ export class UiConfig {
                         report: boolean;
                         timeLine: boolean;
                     };
+                    forms: {
+                        failRoot: boolean;
+                        process: boolean;
+                    }
                 };
                 tracing: {
                     toolbar: {
@@ -422,8 +438,20 @@ export class UiConfig {
 
         this.quality = {
             menu: false,
-            internalEvents: false,
-            externalEvents: false,
+            internalEvents: {
+                menu: false,
+                forms: {
+                    workshop: false,
+                    component: false
+                }
+            },
+            externalEvents: {
+                menu: false,
+                forms: {
+                    component: false,
+                    miningOperation: false
+                }
+            },
             analysis: {
                 menu: false,
                 tabs: {
@@ -446,6 +474,10 @@ export class UiConfig {
                             analysis: false,
                             report: false,
                             timeLine: false
+                        },
+                        forms: {
+                            failRoot: false,
+                            process: false
                         }
                     },
                     tracing: {
@@ -661,8 +693,20 @@ export class UiConfig {
 
         this.quality = {
             menu: true,
-            internalEvents: true,
-            externalEvents: true,
+            internalEvents: {
+                menu: true,
+                forms: {
+                    workshop: true,
+                    component: true
+                }
+            },
+            externalEvents: {
+                menu: true,
+                forms: {
+                    component: true,
+                    miningOperation: true
+                }
+            },
             analysis: {
                 menu: true,
                 tabs: {
@@ -685,6 +729,10 @@ export class UiConfig {
                             analysis: true,
                             report: true,
                             timeLine: true
+                        },
+                        forms: {
+                            failRoot: true,
+                            process: true
                         }
                     },
                     tracing: {
@@ -737,7 +785,7 @@ export class UiConfig {
      * @private
      * @memberof UiConfig
      */
-     private setAdministratorUI(): void {
+    private setAdministratorUI(): void {
         // spare parts
         this.spareParts.menu = true;
         this.spareParts.sparesCheck.menu = true;
@@ -822,8 +870,8 @@ export class UiConfig {
         this.andon.dashboard.menu = true;
         this.andon.history.menu = true;
         // quality
-        this.quality.internalEvents = true;
-        this.quality.externalEvents = true;
+        this.quality.internalEvents.menu = true;
+        this.quality.externalEvents.menu = true;
         this.quality.analysis.menu = true;
         this.quality.analysis.tabs.registers.actions.details = true;
         this.quality.analysis.tabs.registers.actions.timeLine = true;
