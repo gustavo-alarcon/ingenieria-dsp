@@ -14,6 +14,10 @@ const routes: Routes = [
         component: LandingComponent
       },
       {
+        path: 'admin',
+        loadChildren: () => import('./pages/admin/admin.module').then(m => m.AdminModule)
+      },
+      {
         path: 'improvements',
         loadChildren: () => import('./pages/spares/improvements/improvements.module').then(m => m.ImprovementsModule)
       },

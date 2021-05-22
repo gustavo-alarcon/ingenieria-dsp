@@ -23,7 +23,12 @@ export class MainGuard implements CanActivate {
             if (token.claims.technician) {
               // set UI permissions for technician user
               this.authService.uiConfig = new UiConfig('technician');
-              console.log(this.authService.uiConfig);
+            } else if (token.claims.admin) {
+              // set UI permissions for administrator user
+              this.authService.uiConfig = new UiConfig('administrator');
+            } else if (token.claims.superuser) {
+              // set UI permissions for super user
+              this.authService.uiConfig = new UiConfig('superuser');
             }
           }
         })

@@ -17,6 +17,7 @@ const createUserSetClaims = (async (user) => {
             name: user.displayName,
             picture: user.photoURL,
             phoneNumber: user.phoneNumber,
+            role: 'Técnico',
             createdAt
         }, { merge: true });
     } catch (error) {

@@ -33,7 +33,28 @@ exports.googleChatBot = functions.https.onRequest((request, response) => {
 
 
 exports.createUserSetClaims = functions.auth.user().onCreate(async (user) => {
-    return await createUserSetClaims(user);
+    functions.logger.info(`create user ${user.email} ${user.uid}`, { structuredData: true });
+    const basics = {
+        superuser: false,
+        admin: false,
+        technician: true
+    }
+    const createdAt = admin.firestore.FieldValue.serverTimestamp();
+    try {
+        await admin.auth().setCustomUserClaims(user.uid, basics);
+        return await admin.firestore().collection('users').doc(user.uid).set({
+            email: user.email,
+            uid: user.uid,
+            name: user.displayName,
+            picture: user.photoURL,
+            phoneNumber: user.phoneNumber,
+            role: 'Técnico',
+            createdAt
+        }, { merge: true });
+    } catch (error) {
+        functions.logger.info(error, { structuredData: true });
+        return;
+    }
 });
 
 exports.setClaimsAsTechnician = functions.https.onCall(async (data, context) => {
@@ -44,21 +65,110 @@ exports.setClaimsAsTechnician = functions.https.onCall(async (data, context) => 
         admin: false,
         technician: true
     }
-    console.log(uid);
-    console.log(context.auth.token.name);
+
     try {
         await admin.auth().setCustomUserClaims(uid, roles);
         await admin.firestore().collection('users').doc(uid).update({
+            role: 'Técnico',
             editedAt: admin.firestore.FieldValue.serverTimestamp(),
             editedBy: context.auth.token.name
         });
+
+        await admin
+            .auth()
+            .revokeRefreshTokens(uid)
+            .then(() => {
+                return admin.auth().getUser(uid);
+            })
+            .then((userRecord) => {
+                return new Date(userRecord.tokensValidAfterTime).getTime() / 1000;
+            })
+            .then((timestamp) => {
+                console.log(`Tokens revoked at: ${timestamp}`);
+            });
+
         return 'Claims updated';
 
     } catch (error) {
         functions.logger.info(error, { structuredData: true });
         return;
     }
+});
 
+exports.setClaimsAsAdministrator = functions.https.onCall(async (data, context) => {
+    functions.logger.info(`User ${data.uid} claims updated`, { structuredData: true });
+    const uid = data.uid;
+    const roles = {
+        superuser: false,
+        admin: true,
+        technician: false
+    }
+
+    try {
+        await admin.auth().setCustomUserClaims(uid, roles);
+        await admin.firestore().collection('users').doc(uid).update({
+            role: 'Administrador',
+            editedAt: admin.firestore.FieldValue.serverTimestamp(),
+            editedBy: context.auth.token.name
+        });
+
+        await admin
+            .auth()
+            .revokeRefreshTokens(uid)
+            .then(() => {
+                return admin.auth().getUser(uid);
+            })
+            .then((userRecord) => {
+                return new Date(userRecord.tokensValidAfterTime).getTime() / 1000;
+            })
+            .then((timestamp) => {
+                console.log(`Tokens revoked at: ${timestamp}`);
+            });
+
+        return 'Claims updated';
+
+    } catch (error) {
+        functions.logger.info(error, { structuredData: true });
+        return;
+    }
+});
+
+exports.setClaimsAsSuperuser = functions.https.onCall(async (data, context) => {
+    functions.logger.info(`User ${data.uid} claims updated`, { structuredData: true });
+    const uid = data.uid;
+    const roles = {
+        superuser: true,
+        admin: false,
+        technician: false
+    }
+
+    try {
+        await admin.auth().setCustomUserClaims(uid, roles);
+        await admin.firestore().collection('users').doc(uid).update({
+            role: 'Super Usuario',
+            editedAt: admin.firestore.FieldValue.serverTimestamp(),
+            editedBy: context.auth.token.name
+        });
+
+        await admin
+            .auth()
+            .revokeRefreshTokens(uid)
+            .then(() => {
+                return admin.auth().getUser(uid);
+            })
+            .then((userRecord) => {
+                return new Date(userRecord.tokensValidAfterTime).getTime() / 1000;
+            })
+            .then((timestamp) => {
+                console.log(`Tokens revoked at: ${timestamp}`);
+            });
+
+        return 'Claims updated';
+
+    } catch (error) {
+        functions.logger.info(error, { structuredData: true });
+        return;
+    }
 });
 
 // exports.sendMailExample = functions.https.onCall(async (data, context) => {

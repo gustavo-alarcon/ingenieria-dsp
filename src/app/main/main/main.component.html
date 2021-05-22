@@ -15,8 +15,8 @@
     <hr class="hr-line">
     <mat-nav-list style="width: 100%" class="admin">
       <div>
-        <a mat-list-item (click)="call()">
-          <mat-icon mat-list-icon class="mat-icon-menu">settings</mat-icon>
+        <a mat-list-item [routerLink]="['/main/admin']" routerLinkActive="active" (click)="drawer.toggle()">
+          <mat-icon mat-list-icon class="mat-icon-menu">admin_panel_settings</mat-icon>
           <span class="mat-item-list-span">
             Administrar
           </span>

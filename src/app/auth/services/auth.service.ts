@@ -79,6 +79,8 @@ export class AuthService {
     return this.afs.doc<GeneralConfig>('/db/generalConfig').valueChanges().pipe(shareReplay(1));
   }
 
-
+  getUsers(): Observable<User[]> {
+    return this.afs.collection<User>('/users', ref => ref.orderBy('name')).valueChanges()
+  }
 
 }
