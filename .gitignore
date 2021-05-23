@@ -4,6 +4,7 @@ firestore-debug.log
 /dist
 /tmp
 /out-tsc
+/functions/backup
 # Only exists if Bazel was run
 /bazel-out
 

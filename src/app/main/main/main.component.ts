@@ -1,12 +1,9 @@
 import { Component } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
-import { map, shareReplay, tap } from 'rxjs/operators';
+import { map, shareReplay } from 'rxjs/operators';
 import { AuthService } from '../../auth/services/auth.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
-import { User } from '../models/user-model';
-import { GeneralConfig } from 'src/app/auth/models/generalConfig.model';
+import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { UpdateReadyComponent } from 'src/app/shared/update-ready/update-ready.component';
 
@@ -22,9 +19,6 @@ export class MainComponent {
   openedMenu = false;
   title: string;
 
-  private itemsCollection: AngularFirestoreCollection<User>;
-  items: Observable<User[]>;
-
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
       map(result => result.matches),
@@ -37,20 +31,12 @@ export class MainComponent {
     private breakpointObserver: BreakpointObserver,
     public authService: AuthService,
     private router: Router,
-    private afs: AngularFirestore,
     private dialog: MatDialog
   ) {
 
-    this.authService.currentUser().subscribe(
-      (value) => {
-        this.itemsCollection = afs.collection<User>('users', ref => ref.where('uid', '==', value.uid));
-        this.items = this.itemsCollection.valueChanges();
-      }
-    );
-
     this.version$ = this.authService.getGeneralConfigDoc().pipe(
       map(conf => {
-        
+
         if (conf.version !== this.authService.version) {
           this.dialog.open(UpdateReadyComponent, {
             maxWidth: '350px',
@@ -71,7 +57,5 @@ export class MainComponent {
       console.log('error');
     }
   }
-
-  
 
 }

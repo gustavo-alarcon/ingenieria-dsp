@@ -7,6 +7,7 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, map, startWith, tap } from 'rxjs/operators';
+import { AuthService } from 'src/app/auth/services/auth.service';
 import { Replacement } from '../../../models/replacements.models';
 import { ReplacementsService } from '../../../services/replacements.service';
 import { CreateDialogReplacementsComponent } from './dialogs/create-dialog-replacements/create-dialog-replacements.component';
@@ -47,6 +48,7 @@ export class ReplacementsComponent implements OnInit, OnDestroy {
   constructor(
     private breakpoint: BreakpointObserver,
     private repServices: ReplacementsService,
+    public authService: AuthService,
     private dialog: MatDialog
   ) { }
 

@@ -12,19 +12,20 @@
             <h3 class="title-form">Información del evento</h3>
             <form [formGroup]="internalForm" autocomplete="off" class="container-form">
                 <div class="container-form__work">
-                                        
-                    <mat-form-field *ngIf="workshop$ | async as workshops"  class="container-form__work__input"
+
+                    <mat-form-field *ngIf="workshop$ | async as workshops" class="container-form__work__input"
                         [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'"
                         appearance="outline">
                         <mat-label>Taller</mat-label>
-                        <input autocomplete="off" formControlName="workShop" [matAutocomplete]="autocomplete" type="text"
-                            matInput />
-                        <mat-autocomplete multiple  autoActiveFirstOption #autocomplete="matAutocomplete">
-                            <mat-option (click)="onAddWorkshop()" [value]="">
-                            <mat-icon>add_circle_outline</mat-icon>Añadir/Eliminar
+                        <input autocomplete="off" formControlName="workShop" [matAutocomplete]="autocomplete"
+                            type="text" matInput />
+                        <mat-autocomplete multiple autoActiveFirstOption #autocomplete="matAutocomplete">
+                            <mat-option *ngIf="authService.uiConfig.quality.internalEvents.forms.workshop"
+                                (click)="onAddWorkshop()" [value]="">
+                                <mat-icon>add_circle_outline</mat-icon>Añadir/Eliminar
                             </mat-option>
-                            <mat-option  *ngFor="let item of workshops" [value]="item.name">
-                            {{ item.name }}
+                            <mat-option *ngFor="let item of workshops" [value]="item.name">
+                                {{ item.name }}
                             </mat-option>
                         </mat-autocomplete>
                         <mat-hint *ngIf="!(workshop$ | async)">
@@ -32,9 +33,11 @@
                             <p>Cargando lista ...</p>
                         </mat-hint>
                         <mat-error>
-                            <span *ngIf="internalForm.get('workShop').errors?.required">Por favor, complete el campo.</span>
-                            <span *ngIf="internalForm.get('workShop').errors?.invalid">Dato inválido. Complete con alguna opción
-                            válida.</span>
+                            <span *ngIf="internalForm.get('workShop').errors?.required">Por favor, complete el
+                                campo.</span>
+                            <span *ngIf="internalForm.get('workShop').errors?.invalid">Dato inválido. Complete con
+                                alguna opción
+                                válida.</span>
                         </mat-error>
                     </mat-form-field>
 
@@ -45,20 +48,21 @@
                         <mat-error *ngIf="internalForm.controls['workdOrden'].errors">
                             Campo <strong>requerido.</strong>
                         </mat-error>
-                    </mat-form-field>   
+                    </mat-form-field>
 
-                    <mat-form-field *ngIf="component$ | async as components"  class="container-form__work__input"
+                    <mat-form-field *ngIf="component$ | async as components" class="container-form__work__input"
                         [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'"
                         appearance="outline">
                         <mat-label>Componente</mat-label>
-                        <input autocomplete="off" formControlName="component" [matAutocomplete]="autocomplete" type="text"
-                            matInput />
-                        <mat-autocomplete multiple  autoActiveFirstOption #autocomplete="matAutocomplete">
-                            <mat-option (click)="onAddComponent()" [value]="">
-                            <mat-icon>add_circle_outline</mat-icon>Añadir/Eliminar
+                        <input autocomplete="off" formControlName="component" [matAutocomplete]="autocomplete"
+                            type="text" matInput />
+                        <mat-autocomplete multiple autoActiveFirstOption #autocomplete="matAutocomplete">
+                            <mat-option *ngIf="authService.uiConfig.quality.internalEvents.forms.component"
+                                (click)="onAddComponent()" [value]="">
+                                <mat-icon>add_circle_outline</mat-icon>Añadir/Eliminar
                             </mat-option>
-                            <mat-option  *ngFor="let item of components" [value]="item.name">
-                            {{ item.name }}
+                            <mat-option *ngFor="let item of components" [value]="item.name">
+                                {{ item.name }}
                             </mat-option>
                         </mat-autocomplete>
                         <mat-hint *ngIf="!(component$ | async)">
@@ -66,9 +70,11 @@
                             <p>Cargando lista ...</p>
                         </mat-hint>
                         <mat-error>
-                            <span *ngIf="internalForm.get('component').errors?.required">Por favor, complete el campo.</span>
-                            <span *ngIf="internalForm.get('component').errors?.invalid">Dato inválido. Complete con alguna opción
-                            válida.</span>
+                            <span *ngIf="internalForm.get('component').errors?.required">Por favor, complete el
+                                campo.</span>
+                            <span *ngIf="internalForm.get('component').errors?.invalid">Dato inválido. Complete con
+                                alguna opción
+                                válida.</span>
                         </mat-error>
                     </mat-form-field>
 
@@ -85,7 +91,8 @@
                 <mat-form-field appearance="outline" class="container-form__area"
                     [ngClass]="isMobile ? 'container-form__area--mobile' : 'container-form__area--desktop'">
                     <mat-label>Detalle de evento</mat-label>
-                    <textarea matInput type="text" placeholder="Detalle del evento" formControlName="eventDetail" rows="2" >
+                    <textarea matInput type="text" placeholder="Detalle del evento" formControlName="eventDetail"
+                        rows="2">
                     </textarea>
                     <mat-error *ngIf="internalForm.controls['eventDetail'].errors">
                         Campo <strong>requerido.</strong>
@@ -110,9 +117,7 @@
                 </div>
                 <div *ngFor="let file of filesGeneral">
                     <app-upload-task [file]="file" [pathStorage]="pathStorageGeneral"
-                        (onNewImage)="addNewImageGeneral($event)"
-                        (onDeleteImage)="deleteImageGeneral($event)"
-                        >
+                        (onNewImage)="addNewImageGeneral($event)" (onDeleteImage)="deleteImageGeneral($event)">
                     </app-upload-task>
                 </div>
 
@@ -132,35 +137,28 @@
                         </label>
                     </div>
                 </div>
-                
+
                 <div *ngFor="let file of filesDetail">
                     <app-upload-task [file]="file" [pathStorage]="pathStorageDetail"
-                        (onNewImage)="addNewImageDetail($event)"
-                        (onDeleteImage)="deleteImageDetail($event)"
-                        >
+                        (onNewImage)="addNewImageDetail($event)" (onDeleteImage)="deleteImageDetail($event)">
                     </app-upload-task>
                 </div>
-              
+
 
                 <div class="container-form__uploadXlx">
                     <h3 class="container-form__title">Archivo adicional</h3>
                     <p *ngIf="fileSelect" style="color:#0064EA;">
                         <span *ngFor="let item of dataFiles; let i = index">
-                            {{item.name}} 
-                            <button
-                                mat-icon-button
-                                aria-label="deletelistResult"
-                                class="btn-delete"
-                                (click)="deleteDataFiles(item.url,i)"
-                                >
+                            {{item.name}}
+                            <button mat-icon-button aria-label="deletelistResult" class="btn-delete"
+                                (click)="deleteDataFiles(item.url,i)">
                                 <mat-icon style="color: red">delete</mat-icon>
                             </button>
                             <br>
-                         </span>
+                        </span>
                     </p>
-                    <input #fileInput2 style="display: none"  id="fileInput2" (change)="uploadFiles($event)"
-                          type="file" multiple
-                        accept="*">
+                    <input #fileInput2 style="display: none" id="fileInput2" (change)="uploadFiles($event)" type="file"
+                        multiple accept="*">
                     <button type="file" mat-stroked-button class="ms-button" accept="*" (click)="fileInput2.click()">
                         <mat-icon>add</mat-icon>
                         ADJUNTAR
