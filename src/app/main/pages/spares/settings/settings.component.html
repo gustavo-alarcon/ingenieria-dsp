@@ -6,6 +6,7 @@
     <input #fileInput2 style="display: none" type="file" (change)=" onFileSelected($event)" accept=".xls,.xlsx"
       id="fileInput2">
     <button mat-stroked-button class="ms-toolbar__button" accept=".xls,.xlsx" (click)="fileInput2.click()"
+      *ngIf="authService.uiConfig.spareParts.configuration.toolbar.upload"
       [ngClass]="isMobile ? 'ms-toolbar__button--mobile' : 'ms-toolbar__button--desktop'">
       <mat-icon>add</mat-icon>
       SUBIR ARCHIVO
@@ -95,7 +96,7 @@
         CANCELAR
       </button>
       <button type="file" aria-label="add" mat-button class="footer__btn-save" (click)="saveDataTable()"
-        [disabled]="!settingDataSource.data.length">
+        *ngIf="authService.uiConfig.spareParts.configuration.actions.save" [disabled]="!settingDataSource.data.length">
         GUARDAR
       </button>
     </div>

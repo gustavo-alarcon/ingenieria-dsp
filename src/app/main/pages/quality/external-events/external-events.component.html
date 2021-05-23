@@ -22,18 +22,19 @@
                         </mat-error>
                     </mat-form-field>
 
-                    <mat-form-field *ngIf="component$ | async as components"  class="container-form__work__input"
+                    <mat-form-field *ngIf="component$ | async as components" class="container-form__work__input"
                         [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'"
                         appearance="outline">
                         <mat-label>Componente</mat-label>
-                        <input autocomplete="off" formControlName="component" [matAutocomplete]="autocomplete" type="text"
-                            matInput />
-                        <mat-autocomplete multiple  autoActiveFirstOption #autocomplete="matAutocomplete">
-                            <mat-option (click)="onAddComponent()" [value]="">
-                            <mat-icon>add_circle_outline</mat-icon>Añadir/Eliminar
+                        <input autocomplete="off" formControlName="component" [matAutocomplete]="autocomplete"
+                            type="text" matInput />
+                        <mat-autocomplete multiple autoActiveFirstOption #autocomplete="matAutocomplete">
+                            <mat-option *ngIf="authService.uiConfig.quality.externalEvents.forms.component"
+                                (click)="onAddComponent()" [value]="">
+                                <mat-icon>add_circle_outline</mat-icon>Añadir/Eliminar
                             </mat-option>
-                            <mat-option  *ngFor="let item of components" [value]="item.name">
-                            {{ item.name }}
+                            <mat-option *ngFor="let item of components" [value]="item.name">
+                                {{ item.name }}
                             </mat-option>
                         </mat-autocomplete>
                         <mat-hint *ngIf="!(component$ | async)">
@@ -41,9 +42,11 @@
                             <p>Cargando lista ...</p>
                         </mat-hint>
                         <mat-error>
-                            <span *ngIf="externalForm.get('component').errors?.required">Por favor, complete el campo.</span>
-                            <span *ngIf="externalForm.get('component').errors?.invalid">Dato inválido. Complete con alguna opción
-                            válida.</span>
+                            <span *ngIf="externalForm.get('component').errors?.required">Por favor, complete el
+                                campo.</span>
+                            <span *ngIf="externalForm.get('component').errors?.invalid">Dato inválido. Complete con
+                                alguna opción
+                                válida.</span>
                         </mat-error>
                     </mat-form-field>
 
@@ -75,18 +78,20 @@
                         </mat-error>
                     </mat-form-field>
 
-                    <mat-form-field *ngIf="miningOperation$ | async as miningOperations"  class="container-form__work__input"
+                    <mat-form-field *ngIf="miningOperation$ | async as miningOperations"
+                        class="container-form__work__input"
                         [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'"
                         appearance="outline">
                         <mat-label>Operación minera</mat-label>
-                        <input autocomplete="off" formControlName="miningOperation" [matAutocomplete]="miningOperationAutocomplete" type="text"
-                            matInput />
+                        <input autocomplete="off" formControlName="miningOperation"
+                            [matAutocomplete]="miningOperationAutocomplete" type="text" matInput />
                         <mat-autocomplete autoActiveFirstOption #miningOperationAutocomplete="matAutocomplete">
-                            <mat-option (click)="onAddminingOperation()" [value]="">
-                            <mat-icon>add_circle_outline</mat-icon>Añadir/Eliminar
+                            <mat-option *ngIf="authService.uiConfig.quality.externalEvents.forms.miningOperation"
+                                (click)="onAddminingOperation()" [value]="">
+                                <mat-icon>add_circle_outline</mat-icon>Añadir/Eliminar
                             </mat-option>
                             <mat-option *ngFor="let item of miningOperations" [value]="item.name">
-                            {{ item.name }}
+                                {{ item.name }}
                             </mat-option>
                         </mat-autocomplete>
                         <mat-hint *ngIf="!(miningOperation$ | async)">
@@ -94,9 +99,11 @@
                             <p>Cargando lista ...</p>
                         </mat-hint>
                         <mat-error>
-                            <span *ngIf="externalForm.get('miningOperation').errors?.required">Por favor, complete el campo.</span>
-                            <span *ngIf="externalForm.get('miningOperation').errors?.invalid">Dato inválido. Complete con alguna opción
-                            válida.</span>
+                            <span *ngIf="externalForm.get('miningOperation').errors?.required">Por favor, complete el
+                                campo.</span>
+                            <span *ngIf="externalForm.get('miningOperation').errors?.invalid">Dato inválido. Complete
+                                con alguna opción
+                                válida.</span>
                         </mat-error>
                     </mat-form-field>
                 </div>
@@ -104,7 +111,7 @@
                 <mat-form-field appearance="outline" class="container-form__area"
                     [ngClass]="isMobile ? 'container-form__area--mobile' : 'container-form__area--desktop'">
                     <mat-label>1 ¿Cuéntame que sucedió?</mat-label>
-                    <textarea  matInput type="text" placeholder=" Escribir..." formControlName="question1" rows="2">
+                    <textarea matInput type="text" placeholder=" Escribir..." formControlName="question1" rows="2">
                     </textarea>
                     <mat-error *ngIf="externalForm.controls['question1'].errors">
                         Campo <strong>requerido.</strong>
@@ -161,9 +168,7 @@
 
                 <div *ngFor="let file of filesGeneral">
                     <app-upload-task [file]="file" [pathStorage]="pathStorageGeneral"
-                        (onNewImage)="addNewImageGeneral($event)"
-                        (onDeleteImage)="deleteImageGeneral($event)"
-                        >
+                        (onNewImage)="addNewImageGeneral($event)" (onDeleteImage)="deleteImageGeneral($event)">
                     </app-upload-task>
                 </div>
 
@@ -186,9 +191,7 @@
 
                 <div *ngFor="let file of filesDetail">
                     <app-upload-task [file]="file" [pathStorage]="pathStorageDetail"
-                        (onNewImage)="addNewImageDetail($event)"
-                        (onDeleteImage)="deleteImageDetail($event)"
-                        >
+                        (onNewImage)="addNewImageDetail($event)" (onDeleteImage)="deleteImageDetail($event)">
                     </app-upload-task>
                 </div>
 
@@ -196,21 +199,16 @@
                     <h3 class="container-form__title">Archivo adicional</h3>
                     <p *ngIf="fileSelect" style="color:#0064EA;">
                         <span *ngFor="let item of dataFiles; let i= index">
-                            {{item.name}} 
-                            <button
-                                mat-icon-button
-                                aria-label="deletelistResult"
-                                class="btn-delete"
-                                (click)="deleteDataFiles(item.url,i)"
-                                >
+                            {{item.name}}
+                            <button mat-icon-button aria-label="deletelistResult" class="btn-delete"
+                                (click)="deleteDataFiles(item.url,i)">
                                 <mat-icon style="color: red">delete</mat-icon>
                             </button>
-                            <br> 
+                            <br>
                         </span>
                     </p>
-                    <input #fileInput2 style="display: none"  id="fileInput2" (change)="uploadFiles($event)"
-                          type="file" multiple
-                        accept="*">
+                    <input #fileInput2 style="display: none" id="fileInput2" (change)="uploadFiles($event)" type="file"
+                        multiple accept="*">
                     <button type="file" mat-stroked-button class="ms-button" accept="*" (click)="fileInput2.click()">
                         <mat-icon>add</mat-icon>
                         ADJUNTAR

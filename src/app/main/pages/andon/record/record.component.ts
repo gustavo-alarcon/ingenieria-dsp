@@ -12,6 +12,7 @@ import * as XLSX from 'xlsx';
 import { EvaluationsService } from '../../../services/evaluations.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { DatePipe } from '@angular/common';
+import { AuthService } from 'src/app/auth/services/auth.service';
 
 @Component({
   selector: 'app-record',
@@ -75,8 +76,7 @@ export class RecordComponent implements OnInit, OnDestroy {
 
   constructor(
     private breakpoint: BreakpointObserver,
-    private dbs: EvaluationsService,
-    private fb: FormBuilder,
+    public authService: AuthService,
     private andonService: AndonService,
     public dialog: MatDialog,
     private miDatePipe: DatePipe

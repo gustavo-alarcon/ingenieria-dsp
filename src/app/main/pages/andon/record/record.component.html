@@ -21,6 +21,7 @@
     </mat-form-field>
     <span class="ms-fill"></span>
     <button mat-stroked-button (click)="downloadXls()" class="ms-toolbar__button"
+      *ngIf="authService.uiConfig.andon.history.toolbar.download"
       [ngClass]="isMobile ? 'ms-toolbar__button--mobile' : 'ms-toolbar__button--desktop'">
       DESCARGAR
     </button>
@@ -129,7 +130,8 @@
           <td mat-cell *matCellDef="let element; let i = index" class="table__cell">
             <ng-container>
               <mat-menu #rawMenu="matMenu">
-                <button class="w3-small" mat-menu-item (click)="imageDialog(element)">
+                <button class="w3-small" mat-menu-item (click)="imageDialog(element)"
+                  *ngIf="authService.uiConfig.andon.history.actions.images">
                   <mat-icon>image</mat-icon>
                   Imagenes
                 </button>

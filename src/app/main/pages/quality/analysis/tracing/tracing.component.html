@@ -23,7 +23,8 @@
     <div class="ms-kanban-toolbar__counter">
       {{counter | number : '2.'}}
     </div>
-    <button mat-icon-button class="ms-kanban-toolbar__button--icon" (click)="settingDialog()">
+    <button mat-icon-button class="ms-kanban-toolbar__button--icon" (click)="settingDialog()"
+      *ngIf="authService.uiConfig.quality.analysis.tabs.tracing.toolbar.configuration">
       <mat-icon>settings</mat-icon>
     </button>
   </div>
@@ -46,16 +47,20 @@
           </span>
           <div>
             <mat-menu #requestsMenu="matMenu">
-              <button mat-menu-item (click)="detailDialog(item, item.eventType)">
+              <button mat-menu-item *ngIf="authService.uiConfig.quality.analysis.tabs.tracing.actions.details"
+                (click)="detailDialog(item, item.eventType)">
                 <mat-icon>visibility</mat-icon> Detalle
               </button>
-              <button mat-menu-item (click)="accCorrective(item)">
+              <button mat-menu-item *ngIf="authService.uiConfig.quality.analysis.tabs.tracing.actions.correctiveActions"
+                (click)="accCorrective(item)">
                 <mat-icon>fact_check</mat-icon> Acc Correctivas
               </button>
-              <button mat-menu-item (click)="printPdf(item)">
+              <button mat-menu-item *ngIf="authService.uiConfig.quality.analysis.tabs.tracing.actions.report"
+                (click)="printPdf(item)">
                 <mat-icon>picture_as_pdf</mat-icon> Reporte
               </button>
-              <button mat-menu-item (click)="timeline(item)">
+              <button mat-menu-item *ngIf="authService.uiConfig.quality.analysis.tabs.tracing.actions.timeLine"
+                (click)="timeline(item)">
                 <mat-icon>timeline</mat-icon> Línea de tiempo
               </button>
             </mat-menu>

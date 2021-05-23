@@ -49,7 +49,7 @@ export class ProgressComponent implements OnInit {
     public dialog: MatDialog,
     private fb: FormBuilder,
     private qualityService: QualityService,
-    private auth: AuthService
+    public authService: AuthService
   ) { }
 
   ngOnInit(): void {
@@ -70,7 +70,7 @@ export class ProgressComponent implements OnInit {
         filter(input => input !== null),
         startWith<any>('')),
       this.eventTypeControl.valueChanges.pipe(startWith('')),
-      this.auth.getGeneralConfigQuality()
+      this.authService.getGeneralConfigQuality()
     ).pipe(
       map(([qualities, search, codeEventType, generalConfig]) => {
 

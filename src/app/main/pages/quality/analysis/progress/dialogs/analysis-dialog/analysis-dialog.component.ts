@@ -35,6 +35,7 @@ import { CauseFailureDialogComponent } from '../cause-failure-dialog/cause-failu
 import { ProcessDialogComponent } from '../process-dialog/process-dialog.component';
 import { CostList } from '../../../../../../models/quality.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthService } from 'src/app/auth/services/auth.service';
 
 @Component({
   selector: 'app-analysis-dialog',
@@ -92,7 +93,8 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
     public dialogRef: MatDialogRef<AnalysisDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Quality,
     private qualityService: QualityService,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    public authService: AuthService
   ) { }
 
   ngOnInit(): void {
