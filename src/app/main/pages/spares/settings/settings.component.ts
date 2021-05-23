@@ -42,7 +42,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
   constructor(
     private breakpoint: BreakpointObserver,
-    private auth: AuthService,
+    public authService: AuthService,
     private impServices: ImprovementsService,
     private snackbar: MatSnackBar
   ) { }
@@ -135,7 +135,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
   saveDataTable() {
     this.loading.next(true);
 
-    this.auth.user$.pipe(
+    this.authService.user$.pipe(
       take(1),
       switchMap(user => {
         return this.impServices.addSettings(this.settingDataSource.data, user);

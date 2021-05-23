@@ -1,4 +1,8 @@
 export class UiConfig {
+    adminPanel: {
+        menu: boolean;
+    }
+
     spareParts: {
         menu: boolean;
         improvements: {
@@ -229,7 +233,8 @@ export class UiConfig {
                 };
             };
         };
-        configurations: {
+        configuration: {
+            menu: boolean;
             panel: {
                 lists: boolean;
                 broadcast: boolean;
@@ -239,11 +244,21 @@ export class UiConfig {
 
     evaluations: {
         menu: boolean;
-        templates: boolean;
-        technicalSupport: boolean;
-        results: boolean;
-        reports: boolean;
-        configurations: boolean;
+        templates: {
+            menu: boolean;
+        };
+        technicalSupport: {
+            menu: boolean;
+        };
+        results: {
+            menu: boolean;
+        };
+        reports: {
+            menu: boolean;
+        };
+        configuration: {
+            menu: boolean;
+        };
     }
 
     constructor(role) {
@@ -276,6 +291,10 @@ export class UiConfig {
      * @memberof UiConfig
      */
     private init(): void {
+        this.adminPanel = {
+            menu: false
+        }
+
         this.spareParts = {
             menu: false,
             improvements: {
@@ -506,7 +525,8 @@ export class UiConfig {
                     }
                 }
             },
-            configurations: {
+            configuration: {
+                menu: false,
                 panel: {
                     lists: false,
                     broadcast: false
@@ -516,11 +536,21 @@ export class UiConfig {
 
         this.evaluations = {
             menu: false,
-            templates: false,
-            technicalSupport: false,
-            results: false,
-            reports: false,
-            configurations: false
+            templates: {
+                menu: false,
+            },
+            technicalSupport: {
+                menu: false,
+            },
+            results: {
+                menu: false,
+            },
+            reports: {
+                menu: false,
+            },
+            configuration: {
+                menu: false
+            }
         }
     }
 
@@ -531,6 +561,10 @@ export class UiConfig {
      * @memberof UiConfig
      */
     private setSuperuserUI(): void {
+        this.adminPanel = {
+            menu: true
+        }
+
         this.spareParts = {
             menu: true,
             improvements: {
@@ -761,7 +795,8 @@ export class UiConfig {
                     }
                 }
             },
-            configurations: {
+            configuration: {
+                menu: true,
                 panel: {
                     lists: true,
                     broadcast: true
@@ -771,11 +806,21 @@ export class UiConfig {
 
         this.evaluations = {
             menu: true,
-            templates: true,
-            technicalSupport: true,
-            results: true,
-            reports: true,
-            configurations: true
+            templates: {
+                menu: true,
+            },
+            technicalSupport: {
+                menu: true,
+            },
+            results: {
+                menu: true,
+            },
+            reports: {
+                menu: true,
+            },
+            configuration: {
+                menu: true
+            }
         }
     }
 
@@ -786,6 +831,9 @@ export class UiConfig {
      * @memberof UiConfig
      */
     private setAdministratorUI(): void {
+        // admin panel
+        this.adminPanel.menu = false;
+
         // spare parts
         this.spareParts.menu = true;
         this.spareParts.sparesCheck.menu = true;
@@ -831,12 +879,14 @@ export class UiConfig {
         this.quality.analysis.tabs.results.actions.edit = true;
         this.quality.analysis.tabs.results.actions.details = true;
         this.quality.analysis.tabs.results.actions.timeLine = true;
+        this.quality.configuration.menu = true;
         // evaluations
         this.evaluations.menu = true;
-        this.evaluations.templates = true;
-        this.evaluations.technicalSupport = true;
-        this.evaluations.results = true;
-        this.evaluations.reports = true;
+        this.evaluations.templates.menu = true;
+        this.evaluations.technicalSupport.menu = true;
+        this.evaluations.results.menu = true;
+        this.evaluations.reports.menu = true;
+        this.evaluations.configuration.menu = true;
     }
 
     /**
@@ -846,6 +896,9 @@ export class UiConfig {
      * @memberof UiConfig
      */
     private setTechnicianUI(): void {
+        // admin panel
+        this.adminPanel.menu = false;
+
         // spare parts
         this.spareParts.menu = true;
         this.spareParts.sparesCheck.menu = true;
@@ -889,10 +942,10 @@ export class UiConfig {
         this.quality.analysis.tabs.results.actions.timeLine = true;
         // evaluations
         this.evaluations.menu = true;
-        this.evaluations.templates = true;
-        this.evaluations.technicalSupport = true;
-        this.evaluations.results = true;
-        this.evaluations.reports = true;
+        this.evaluations.templates.menu = true;
+        this.evaluations.technicalSupport.menu = true;
+        this.evaluations.results.menu = true;
+        this.evaluations.reports.menu = true;
     }
 
 }

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
-import { map, shareReplay} from 'rxjs/operators';
+import { map, shareReplay } from 'rxjs/operators';
 import { AuthService } from '../../auth/services/auth.service';
 import { Router } from '@angular/router';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
@@ -40,12 +40,7 @@ export class MainComponent {
     private dialog: MatDialog
   ) {
 
-    this.authService.currentUser().subscribe(
-      (value) => {
-        this.itemsCollection = afs.collection<User>('users', ref => ref.where('uid', '==', value.uid));
-        this.items = this.itemsCollection.valueChanges();
-      }
-    );
+    console.log(this.authService.uiConfig);
 
     this.version$ = this.authService.getGeneralConfigDoc().pipe(
       map(conf => {

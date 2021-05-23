@@ -8,10 +8,8 @@ import { Observable, of } from 'rxjs';
 
 import { HttpClient } from '@angular/common/http';
 import { User } from 'src/app/main/models/user-model';
-import { map, shareReplay, switchMap, tap } from 'rxjs/operators';
+import { shareReplay, switchMap } from 'rxjs/operators';
 import { GeneralConfig } from '../models/generalConfig.model';
-import { UserClaims } from '../models/claims.model';
-import { UIConfig } from '../models/uiConfig.model';
 import { UiConfig } from '../classes/ui-config';
 
 
@@ -22,7 +20,7 @@ import { UiConfig } from '../classes/ui-config';
 export class AuthService {
 
   user$: Observable<User>;
-  uiConfig = new UiConfig('default');
+  uiConfig: UiConfig;
   version$: Observable<GeneralConfig>; F
   version: string = 'V5.15.22r';
 

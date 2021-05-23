@@ -7,7 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Observable, Subscription } from 'rxjs';
-import { take, tap } from 'rxjs/operators';
+import { map, take, tap } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { User } from '../../models/user-model';
 
@@ -59,6 +59,14 @@ export class AdminComponent implements OnInit {
       tap(res => {
         this.users = [...res];
         this.usersDataSource.data = [...res];
+      }),
+      tap(users => {
+        users.forEach(user => {
+          this.setTechnician(user);
+          console.log(user.name);
+        })
+        console.log('USERS UPDATED');
+
       })
     )
   }
@@ -77,6 +85,18 @@ export class AdminComponent implements OnInit {
 
   setAdministrator(user: User) {
     const callable = this.afFun.httpsCallable('setClaimsAsAdministrator')
+    callable({ uid: user.uid })
+      .pipe(
+        take(1)
+      ).subscribe(res => {
+        this.snackbar.open(res, 'Aceptar', {
+          duration: 6000
+        });
+      })
+  }
+
+  setTechnician(user: User) {
+    const callable = this.afFun.httpsCallable('setClaimsAsTechnician')
     callable({ uid: user.uid })
       .pipe(
         take(1)
