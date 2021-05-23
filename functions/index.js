@@ -289,8 +289,8 @@ exports.sendAndonToEndpoint = functions.firestore.document(`db/ferreyros/andon/{
                 "bay": andon.name,
                 "problemType": andon.problemType,
                 "description": andon.description,
-                "emailList": andon.emailList.toString()
-                "images": andon.images ? andon.images.join('@@') : '',
+                "emailList": andon.emailList.toString(),
+                "images": andon.images ? andon.images.join('@@') : ''
             }
 
             const options = {
