@@ -4,8 +4,6 @@ import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
 import { AuthService } from '../../auth/services/auth.service';
 import { Router } from '@angular/router';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
-import { User } from '../models/user-model';
 import { MatDialog } from '@angular/material/dialog';
 import { UpdateReadyComponent } from 'src/app/shared/update-ready/update-ready.component';
 
@@ -21,9 +19,6 @@ export class MainComponent {
   openedMenu = false;
   title: string;
 
-  private itemsCollection: AngularFirestoreCollection<User>;
-  items: Observable<User[]>;
-
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
       map(result => result.matches),
@@ -36,11 +31,8 @@ export class MainComponent {
     private breakpointObserver: BreakpointObserver,
     public authService: AuthService,
     private router: Router,
-    private afs: AngularFirestore,
     private dialog: MatDialog
   ) {
-
-    console.log(this.authService.uiConfig);
 
     this.version$ = this.authService.getGeneralConfigDoc().pipe(
       map(conf => {

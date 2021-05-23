@@ -21,7 +21,8 @@
     <div class="ms-kanban-toolbar__counter">
       {{counter | number : '2.'}}
     </div>
-    <button mat-icon-button class="ms-kanban-toolbar__button--icon" (click)="settingDialog()">
+    <button mat-icon-button class="ms-kanban-toolbar__button--icon" (click)="settingDialog()"
+      *ngIf="authService.uiConfig.quality.analysis.tabs.registers.toolbar.configuration">
       <mat-icon>settings</mat-icon>
     </button>
   </div>
@@ -39,13 +40,17 @@
           </div>
           <div>
             <mat-menu #requestsMenu="matMenu">
-              <button mat-menu-item (click)="detailDialog(item, item.eventType)">
+              <button mat-menu-item *ngIf="authService.uiConfig.quality.analysis.tabs.registers.actions.details"
+                (click)="detailDialog(item, item.eventType)">
                 <mat-icon>visibility</mat-icon> Detalle
               </button>
-              <button mat-menu-item (click)="assignSpecialist(item)">
+              <button mat-menu-item
+                *ngIf="authService.uiConfig.quality.analysis.tabs.registers.actions.assignSpecialist"
+                (click)="assignSpecialist(item)">
                 <mat-icon>how_to_reg</mat-icon> Asignar Esp.
               </button>
-              <button mat-menu-item (click)="timeline(item)">
+              <button mat-menu-item *ngIf="authService.uiConfig.quality.analysis.tabs.registers.actions.timeLine"
+                (click)="timeline(item)">
                 <mat-icon>timeline</mat-icon> Línea de tiempo
               </button>
             </mat-menu>
@@ -57,9 +62,12 @@
         <div class="info-box">
           <div class="lj"><span>OT {{item.workOrder}}</span> </div>
           <div class="info-row"> Componente: <span> {{item.component}}</span> </div>
-          <div *ngIf="item.workShop" class="info-row"> Taller: <span> {{item.workShop? item.workShop : '-'}}</span></div>
-          <div *ngIf="item.miningOperation" class="info-row"> Operación minera: <span> {{item.miningOperation? item.miningOperation : '-'}}</span></div>
-          <div class="info-row"> Fecha: <span> {{(item.createdAt['seconds'] * 1000) | date : 'dd/MM/yy hh:mm:ss'}}</span>
+          <div *ngIf="item.workShop" class="info-row"> Taller: <span> {{item.workShop? item.workShop : '-'}}</span>
+          </div>
+          <div *ngIf="item.miningOperation" class="info-row"> Operación minera: <span> {{item.miningOperation?
+              item.miningOperation : '-'}}</span></div>
+          <div class="info-row"> Fecha: <span> {{(item.createdAt['seconds'] * 1000) | date : 'dd/MM/yy
+              hh:mm:ss'}}</span>
           </div>
         </div>
         <div class="ms-fill"></div>

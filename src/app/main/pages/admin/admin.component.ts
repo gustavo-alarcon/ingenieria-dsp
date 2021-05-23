@@ -6,8 +6,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Observable, Subscription } from 'rxjs';
-import { map, take, tap } from 'rxjs/operators';
+import { combineLatest, Observable, Subscription } from 'rxjs';
+import { map, startWith, take, tap } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { User } from '../../models/user-model';
 
@@ -55,18 +55,21 @@ export class AdminComponent implements OnInit {
       })
     )
 
-    this.users$ = this.auth.getUsers().pipe(
-      tap(res => {
-        this.users = [...res];
-        this.usersDataSource.data = [...res];
-      }),
-      tap(users => {
-        users.forEach(user => {
-          this.setTechnician(user);
-          console.log(user.name);
-        })
-        console.log('USERS UPDATED');
+    this.users$ = combineLatest(
+      this.auth.getUsers(),
+      this.searchControl.valueChanges.pipe(startWith(''), map(value => value.toLowerCase()))
+    ).pipe(
+      map(([list, search]) => {
 
+        const filteredUsers = list.filter(user => {
+          return user.name.toLowerCase().includes(search) ||
+            user.email.toLowerCase().includes(search)
+        });
+
+        this.users = [...filteredUsers];
+        this.usersDataSource.data = [...filteredUsers];
+
+        return filteredUsers;
       })
     )
   }

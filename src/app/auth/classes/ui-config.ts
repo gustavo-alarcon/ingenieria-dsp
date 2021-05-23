@@ -188,7 +188,7 @@ export class UiConfig {
                     };
                     actions: {
                         details: boolean;
-                        assignEspecialist: boolean;
+                        assignSpecialist: boolean;
                         timeLine: boolean;
                     };
                 };
@@ -480,7 +480,7 @@ export class UiConfig {
                         },
                         actions: {
                             details: false,
-                            assignEspecialist: false,
+                            assignSpecialist: false,
                             timeLine: false
                         }
                     },
@@ -750,7 +750,7 @@ export class UiConfig {
                         },
                         actions: {
                             details: true,
-                            assignEspecialist: true,
+                            assignSpecialist: true,
                             timeLine: true
                         }
                     },
@@ -839,29 +839,64 @@ export class UiConfig {
         this.spareParts.sparesCheck.menu = true;
         this.spareParts.sparesCheck.toolbar.attachSis = true;
         this.spareParts.sparesCheck.actions.download = true;
+        this.spareParts.improvements.menu = true;
+        this.spareParts.improvements.toolbar.create = true;
+        this.spareParts.improvements.actions.validate = true;
+        this.spareParts.improvements.actions.replace = true;
+        this.spareParts.improvements.actions.edit = true;
+        this.spareParts.improvements.actions.delete = true;
+        this.spareParts.replacements.menu = true;
+        this.spareParts.replacements.toolbar.bulk = true;
+        this.spareParts.replacements.toolbar.create = true;
+        this.spareParts.replacements.actions.edit = true;
+        this.spareParts.replacements.actions.delete = true;
+        this.spareParts.frequency.menu = true;
+        this.spareParts.summary.menu = true;
+        this.spareParts.summary.toolbar.download = true;
+        this.spareParts.summary.actions.delete = true;
+        this.spareParts.configuration.menu = true;
+        this.spareParts.configuration.toolbar.upload = true;
+        this.spareParts.configuration.actions.save = true;
         // pre-evaluations
         this.preEvaluations.menu = true;
         this.preEvaluations.tabs.requests.toolbar.create = true;
+        this.preEvaluations.tabs.requests.toolbar.configuration = true;
         this.preEvaluations.tabs.requests.actions.init = true;
         this.preEvaluations.tabs.requests.actions.observations = true;
         this.preEvaluations.tabs.requests.actions.timeLine = true;
+        this.preEvaluations.tabs.process.toolbar.configuration = true;
         this.preEvaluations.tabs.process.actions.finalize = true;
         this.preEvaluations.tabs.process.actions.images = true;
         this.preEvaluations.tabs.process.actions.inquiries = true;
         this.preEvaluations.tabs.process.actions.observations = true;
         this.preEvaluations.tabs.process.actions.setPending = true;
         this.preEvaluations.tabs.process.actions.timeLine = true;
+        this.preEvaluations.tabs.results.toolbar.bulk = true;
+        this.preEvaluations.tabs.results.toolbar.report = true;
+        this.preEvaluations.tabs.results.toolbar.download = true;
+        this.preEvaluations.tabs.results.actions.edit = true;
+        this.preEvaluations.tabs.results.actions.delete = true;
         this.preEvaluations.tabs.results.actions.observations = true;
         this.preEvaluations.tabs.results.actions.images = true;
         this.preEvaluations.tabs.results.actions.timeLine = true;
+        this.preEvaluations.tabs.configurations.panel.notifications = true;
+        this.preEvaluations.tabs.configurations.panel.lists = true;
+        this.preEvaluations.tabs.configurations.panel.broadcast = true;
         // presupuestos
+        this.budgets.menu = true;
         this.budgets.dailyEntry.menu = true;
         this.budgets.budgets.menu = true;
+        this.budgets.configuration.menu = true;
         // andon
+        this.andon.menu = true;
         this.andon.report.menu = true;
         this.andon.dashboard.menu = true;
         this.andon.history.menu = true;
+        this.andon.history.toolbar.download = true;
+        this.andon.history.actions.images = true;
+        this.andon.configuration.menu = true;
         // quality
+        this.quality.menu = true;
         this.quality.internalEvents.menu = true;
         this.quality.internalEvents.forms.component = true;
         this.quality.internalEvents.forms.workshop = true;
@@ -869,17 +904,32 @@ export class UiConfig {
         this.quality.externalEvents.forms.component = true;
         this.quality.externalEvents.forms.miningOperation = true;
         this.quality.analysis.menu = true;
+        this.quality.analysis.tabs.registers.toolbar.configuration = true;
         this.quality.analysis.tabs.registers.actions.details = true;
+        this.quality.analysis.tabs.registers.actions.assignSpecialist = true;
         this.quality.analysis.tabs.registers.actions.timeLine = true;
+        this.quality.analysis.tabs.process.toolbar.configuration = true;
         this.quality.analysis.tabs.process.actions.details = true;
+        this.quality.analysis.tabs.process.actions.analysis = true;
+        this.quality.analysis.tabs.process.actions.report = true;
         this.quality.analysis.tabs.process.actions.timeLine = true;
+        this.quality.analysis.tabs.process.forms.failRoot = true;
+        this.quality.analysis.tabs.process.forms.process = true;
+        this.quality.analysis.tabs.tracing.toolbar.configuration = true;
         this.quality.analysis.tabs.tracing.actions.details = true;
         this.quality.analysis.tabs.tracing.actions.correctiveActions = true;
+        this.quality.analysis.tabs.tracing.actions.report = true;
         this.quality.analysis.tabs.tracing.actions.timeLine = true;
+        this.quality.analysis.tabs.results.toolbar.download = true;
+        this.quality.analysis.tabs.results.actions.delete = true;
         this.quality.analysis.tabs.results.actions.edit = true;
         this.quality.analysis.tabs.results.actions.details = true;
         this.quality.analysis.tabs.results.actions.timeLine = true;
+        this.quality.analysis.tabs.results.actions.report = true;
+        this.quality.analysis.tabs.results.actions.correctiveActions = true;
         this.quality.configuration.menu = true;
+        this.quality.configuration.panel.lists = true;
+        this.quality.configuration.panel.broadcast = true;
         // evaluations
         this.evaluations.menu = true;
         this.evaluations.templates.menu = true;
@@ -916,17 +966,19 @@ export class UiConfig {
         this.preEvaluations.tabs.process.actions.observations = true;
         this.preEvaluations.tabs.process.actions.setPending = true;
         this.preEvaluations.tabs.process.actions.timeLine = true;
+        this.preEvaluations.tabs.results.actions.edit = true;
         this.preEvaluations.tabs.results.actions.observations = true;
         this.preEvaluations.tabs.results.actions.images = true;
         this.preEvaluations.tabs.results.actions.timeLine = true;
         // presupuestos
-        this.budgets.dailyEntry.menu = true;
-        this.budgets.budgets.menu = true;
+
         // andon
+        this.andon.menu = true;
         this.andon.report.menu = true;
         this.andon.dashboard.menu = true;
         this.andon.history.menu = true;
         // quality
+        this.quality.menu = true;
         this.quality.internalEvents.menu = true;
         this.quality.externalEvents.menu = true;
         this.quality.analysis.menu = true;

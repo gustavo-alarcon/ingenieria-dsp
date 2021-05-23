@@ -85,7 +85,7 @@ export class EvaluationsProgressComponent implements OnInit, OnDestroy {
     private breakpoint: BreakpointObserver,
     public dialog: MatDialog,
     private evaltService: EvaluationsService,
-    private auth: AuthService
+    public authService: AuthService
   ) { }
 
 
@@ -107,7 +107,7 @@ export class EvaluationsProgressComponent implements OnInit, OnDestroy {
         filter(input => input !== null),
         startWith<any>('')),
       this.workshopControl.valueChanges.pipe(startWith('')),
-      this.auth.getGeneralConfig()
+      this.authService.getGeneralConfig()
     ).pipe(
       map(([evaluations, search, workshopCodes, generalConfig]) => {
         const searchTerm = search.toLowerCase().trim();
