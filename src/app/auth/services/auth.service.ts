@@ -22,7 +22,7 @@ export class AuthService {
   user$: Observable<User>;
   uiConfig: UiConfig;
   version$: Observable<GeneralConfig>;
-  version: string = 'V5.16.23r';
+  version: string = 'V6.16.23r';
 
   constructor(
     private afAuth: AngularFireAuth,
