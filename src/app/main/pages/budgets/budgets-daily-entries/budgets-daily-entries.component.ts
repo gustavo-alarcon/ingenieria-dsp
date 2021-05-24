@@ -190,47 +190,10 @@ export class BudgetsDailyEntriesComponent implements OnInit {
         // if the row contains data
         if (el.length > 0) {
           // Format dates
-          let _fechaAperturaChild;
-          let _fechaReleasedIoChild;
-          let _fechaUltimoListado;
-          let _fechaUltimoEnvioDocumentoADM;
-          let _fechaDefinicionDeCargos;
-          let _fechaUltimoEnvioPPTO;
-          let _fechaEnvioPPTO01;
-          let _fechaEnvioPPTO02;
-          let _fechaEnvioPPTO03;
-          let _fechaEnvioPPTO04;
-          let _fechaDeAprobacionORechazo;
-          let _fechaDeTerminoDeRep;
-          let _fechaUltimoInput;
-          let _fechaDeFactDeTaller;
-          let _mesFactVenta;
-          let _fechaFirstLabour;
-          let _fechaLastLabour;
-          let _fechaLPD;
           let _resumen;
           let _informe;
           let _cotizacionFesa;
           let _cotizacionText;
-
-          if (el[8]) _fechaAperturaChild = this.formatDate(el[8]);
-          if (el[9]) _fechaReleasedIoChild = this.formatDate(el[9]);
-          if (el[19]) _fechaUltimoListado = this.formatDate(el[19]);
-          if (el[20]) _fechaUltimoEnvioDocumentoADM = this.formatDate(el[20]);
-          if (el[22]) _fechaDefinicionDeCargos = this.formatDate(el[22]);
-          if (el[24]) _fechaUltimoEnvioPPTO = this.formatDate(el[24]);
-          if (el[25]) _fechaEnvioPPTO01 = this.formatDate(el[25]);
-          if (el[26]) _fechaEnvioPPTO02 = this.formatDate(el[26]);
-          if (el[29]) _fechaEnvioPPTO03 = this.formatDate(el[29]);
-          if (el[32]) _fechaEnvioPPTO04 = this.formatDate(el[32]);
-          if (el[35]) _fechaDeAprobacionORechazo = this.formatDate(el[35]);
-          if (el[54]) _fechaDeTerminoDeRep = this.formatDate(el[54]);
-          if (el[55]) _fechaUltimoInput = this.formatDate(el[55]);
-          if (el[57]) _fechaDeFactDeTaller = this.formatDate(el[57]);
-          if (el[70]) _mesFactVenta = this.formatDate(el[70]);
-          if (el[72]) _fechaFirstLabour = this.formatDate(el[72]);
-          if (el[73]) _fechaLastLabour = this.formatDate(el[73]);
-          if (el[92]) _fechaLPD = this.formatDate(el[92]);
 
           _resumen =
             Object.prototype.toString.call(el[81]) === '[object Date]'
@@ -262,12 +225,8 @@ export class BudgetsDailyEntriesComponent implements OnInit {
             statusWoChild: el[5] ? el[5] : null,
             otTaller: el[6] ? el[6] : null,
             otMadre: el[7] ? el[7] : null,
-            fechaAperturaChild: _fechaAperturaChild
-              ? _fechaAperturaChild
-              : null,
-            fechaReleasedIoChild: _fechaReleasedIoChild
-              ? _fechaReleasedIoChild
-              : null,
+            fechaAperturaChild: el[8] ? el[8] : null,
+            fechaReleasedIoChild: el[9] ? el[9] : null,
             cliente: el[10] ? el[10] : null,
             gmorngm: el[11] ? el[11] : null,
             modelo: el[12] ? el[12] : null,
@@ -277,33 +236,23 @@ export class BudgetsDailyEntriesComponent implements OnInit {
             modalidadPresupuesto: el[16] ? el[16] : null,
             componente: el[17] ? el[17] : null,
             afa: el[18] ? el[18] : null,
-            fechaUltimoListado: _fechaUltimoListado
-              ? _fechaUltimoListado
-              : null,
-            fechaUltimoEnvioDocumentoADM: _fechaUltimoEnvioDocumentoADM
-              ? _fechaUltimoEnvioDocumentoADM
-              : null,
+            fechaUltimoListado: el[19] ? el[19] : null,
+            fechaUltimoEnvioDocumentoADM: el[20] ? el[20] : null,
             ultimoDocumento: el[21] ? el[21] : null,
-            fechaDefinicionDeCargos: _fechaDefinicionDeCargos
-              ? _fechaDefinicionDeCargos
-              : null,
+            fechaDefinicionDeCargos: el[22] ? el[22] : null,
             definicionDeCargo: el[23] ? el[23] : null,
-            fechaUltimoEnvioPPTO: _fechaUltimoEnvioPPTO
-              ? _fechaUltimoEnvioPPTO
-              : null,
-            fechaEnvioPPTO01: _fechaEnvioPPTO01 ? _fechaEnvioPPTO01 : null,
-            fechaEnvioPPTO02: _fechaEnvioPPTO02 ? _fechaEnvioPPTO02 : null,
+            fechaUltimoEnvioPPTO: el[24] ? el[24] : null,
+            fechaEnvioPPTO01: el[25] ? el[25] : null,
+            fechaEnvioPPTO02: el[26] ? el[26] : null,
             motivoDeModificacion02: el[27] ? el[27] : null,
             detalleDeModificacion02: el[28] ? el[28] : null,
-            fechaEnvioPPTO03: _fechaEnvioPPTO03 ? _fechaEnvioPPTO03 : null,
+            fechaEnvioPPTO03: el[29] ? el[29] : null,
             motivoDeModificacion03: el[30] ? el[30] : null,
             detalleDeModificacion03: el[31] ? el[31] : null,
-            fechaEnvioPPTO04: _fechaEnvioPPTO04 ? _fechaEnvioPPTO04 : null,
+            fechaEnvioPPTO04: el[32] ? el[32] : null,
             motivoDeModificacion04: el[33] ? el[33] : null,
             detalleDeModificacion04: el[34] ? el[34] : null,
-            fechaDeAprobacionORechazo: _fechaDeAprobacionORechazo
-              ? _fechaDeAprobacionORechazo
-              : null,
+            fechaDeAprobacionORechazo: el[35] ? el[35] : null,
             statusPresupuesto: el[36] ? el[36] : null,
             motivoDelRechazo: el[37] ? el[37] : null,
             detalleDelRechazo: el[38] ? el[38] : null,
@@ -322,14 +271,10 @@ export class BudgetsDailyEntriesComponent implements OnInit {
             diasRestantesEnvioPPTO: el[51] ? el[51] : null,
             NoPPTOSModificadosOAdicionales: el[52] ? el[52] : null,
             observacionesEnElPresupuesto: el[53] ? el[53] : null,
-            fechaDeTerminoDeRep: _fechaDeTerminoDeRep
-              ? _fechaDeTerminoDeRep
-              : null,
-            fechaUltimoInput: _fechaUltimoInput ? _fechaUltimoInput : null,
+            fechaDeTerminoDeRep: el[54] ? el[54] : null,
+            fechaUltimoInput: el[55] ? el[55] : null,
             motivoDeInput: el[56] ? el[56] : null,
-            fechaDeFactDeTaller: _fechaDeFactDeTaller
-              ? _fechaDeFactDeTaller
-              : null,
+            fechaDeFactDeTaller: el[57] ? el[57] : null,
             costo$ServiciosCliente: el[58] ? el[58] : null,
             costo$ServiciosDeOperacion: el[59] ? el[59] : null,
             rentabilidadServiciosPercent: el[60] ? el[60] : null,
@@ -342,10 +287,10 @@ export class BudgetsDailyEntriesComponent implements OnInit {
             realDevueltoARepuestos: el[67] ? el[67] : null,
             diferenciaRepuestos: el[68] ? el[68] : null,
             totalVVFacturadoUS$: el[69] ? el[69] : null,
-            mesFactVenta: _mesFactVenta ? _mesFactVenta : null,
+            mesFactVenta: el[70] ? el[70] : null,
             percentHorasSTDvsHorasDBS: el[71] ? el[71] : null,
-            fechaFirstLabour: _fechaFirstLabour ? _fechaFirstLabour : null,
-            fechaLastLabour: _fechaLastLabour ? _fechaLastLabour : null,
+            fechaFirstLabour: el[72] ? el[72] : null,
+            fechaLastLabour: el[73] ? el[73] : null,
             diasDemoraFact: el[74] ? el[74] : null,
             diasFactLastLabour: el[75] ? el[75] : null,
             elaborarPPTO: el[76] ? el[76] : null,
@@ -364,7 +309,7 @@ export class BudgetsDailyEntriesComponent implements OnInit {
             diasPPTO: el[89] ? el[89] : null,
             mesTer: el[90] ? el[90] : null,
             anio: el[91] ? el[91] : null,
-            fechaLPD: _fechaLPD ? _fechaLPD : null,
+            fechaLPD: el[92] ? el[92] : null,
           };
           parsedExcelData.push(data);
         }
@@ -428,6 +373,8 @@ export class BudgetsDailyEntriesComponent implements OnInit {
               batch
                 .commit()
                 .then(() => {
+                  this.budgetsDailyEntriesDataSource.data.length = 0;
+                  this.refresh();
                   this.loading.next(false);
                   this.MatSnackBar.open(
                     '✅ Archivo subido correctamente!',
@@ -451,5 +398,10 @@ export class BudgetsDailyEntriesComponent implements OnInit {
             });
           });
       });
+  }
+
+  cancelUploadDataToFirestore(): void {
+    this.budgetsDailyEntriesDataSource.data.length = 0;
+    this.refresh();
   }
 }
