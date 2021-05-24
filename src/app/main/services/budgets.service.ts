@@ -1,3 +1,4 @@
+import * as firebase from 'firebase/app';
 import { budgetsExcelColumns } from './../models/budgets.model';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Injectable } from '@angular/core';
@@ -11,18 +12,21 @@ export class BudgetsService {
 
   uploadDailyExcelBatchArray(
     list: Array<budgetsExcelColumns>,
-    collection: budgetsExcelColumns[]
+    firestoreBudgetsSnapshot: firebase.default.firestore.QuerySnapshot<budgetsExcelColumns>
   ): Observable<firebase.default.firestore.WriteBatch[]> {
     let batchCount = Math.ceil(list.length / 500);
     let batchArray = [];
 
     // Get all the woChild from the db
     let firestoreWOChildList: Array<string> = [];
-    collection.forEach((doc) => {
-      if (doc.woChild) firestoreWOChildList.push(doc.woChild);
-    });
 
-    console.log(firestoreWOChildList);
+    // Check if there are documents in the QuerySnapshot
+    if (!firestoreBudgetsSnapshot.empty) {
+      firestoreBudgetsSnapshot.forEach((doc) => {
+        const data = doc.data();
+        if (data.woChild) firestoreWOChildList.push(data.woChild);
+      });
+    }
 
     for (let index = 0; index < batchCount; index++) {
       const batch = this.afs.firestore.batch();
@@ -41,9 +45,11 @@ export class BudgetsService {
           // Check if WO Child already exists in db
           const repeatedWOChildList: Array<string> = [];
 
+          // Validacion
           firestoreWOChildList.forEach((woChild: string) => {
             if (woChild == list[j].woChild) repeatedWOChildList.push(woChild);
           });
+          
 
           // if this arr contains elements then wo child already exists in db
           if (repeatedWOChildList) {
@@ -51,9 +57,9 @@ export class BudgetsService {
           } else {
             batch.set(budgetsDocRef, list[j]);
           }
-          // reset
-          firestoreWOChildList.length = 0;
         }
+
+        //batch.set(budgetsDocRef, list[j]);
       }
 
       batchArray.push(batch);
@@ -72,5 +78,16 @@ export class BudgetsService {
     const refObs = ref.valueChanges();
 
     return refObs;
+  }
+
+  getBudgetsSnapshot(): Observable<
+    firebase.default.firestore.QuerySnapshot<budgetsExcelColumns>
+  > {
+    const ref = this.afs.collection<budgetsExcelColumns>(
+      '/db/ferreyros/budgets'
+    );
+    const refSnapshot = ref.get();
+
+    return refSnapshot;
   }
 }

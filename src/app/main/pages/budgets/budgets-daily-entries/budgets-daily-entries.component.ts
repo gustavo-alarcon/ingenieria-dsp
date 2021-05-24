@@ -415,12 +415,12 @@ export class BudgetsDailyEntriesComponent implements OnInit {
   uploadDataToFirestore(): void {
     this.loading.next(true);
 
-    this.BudgetsService.getBudgets()
+    this.BudgetsService.getBudgetsSnapshot()
       .pipe(take(1))
-      .subscribe((list) => {
+      .subscribe((firestoreBudgetsSnapshot) => {
         this.BudgetsService.uploadDailyExcelBatchArray(
           this.budgetsDailyEntriesDataSource.data,
-          list
+          firestoreBudgetsSnapshot
         ).subscribe((batchArray) => {
           if (batchArray.length > 0) {
             batchArray.forEach((batch) => {
