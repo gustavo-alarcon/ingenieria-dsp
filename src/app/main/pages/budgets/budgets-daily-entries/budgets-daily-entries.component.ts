@@ -1,3 +1,4 @@
+import { take } from 'rxjs/operators';
 import { DeleteDialogComponent } from './dialogs/delete-dialog/delete-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { BudgetsService } from './../../../services/budgets.service';
@@ -10,7 +11,6 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { BehaviorSubject, Subscription, Observable } from 'rxjs';
 import * as XLSX from 'xlsx';
 import moment from 'moment';
-import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-budgets-daily-entries',
@@ -421,8 +421,9 @@ export class BudgetsDailyEntriesComponent implements OnInit {
         this.BudgetsService.uploadDailyExcelBatchArray(
           this.budgetsDailyEntriesDataSource.data,
           firestoreBudgetsSnapshot
-        ).subscribe((batchArray) => {
-          if (batchArray.length > 0) {
+        )
+          .pipe(take(1))
+          .subscribe((batchArray) => {
             batchArray.forEach((batch) => {
               batch
                 .commit()
@@ -436,7 +437,8 @@ export class BudgetsDailyEntriesComponent implements OnInit {
                     }
                   );
                 })
-                .catch((err) => {
+                .catch((error) => {
+                  console.error(error);
                   this.loading.next(false);
                   this.MatSnackBar.open(
                     '🚨 Hubo un error subiendo el archivo.',
@@ -447,8 +449,7 @@ export class BudgetsDailyEntriesComponent implements OnInit {
                   );
                 });
             });
-          }
-        });
+          });
       });
   }
 }
