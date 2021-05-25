@@ -14,7 +14,7 @@ export class BudgetsPendingApprovalComponent implements OnInit {
     private breakpoint: BreakpointObserver
   ) {}
 
-  public searchBoxes: object = [
+  public searchBoxes: Array<any> = [
     { placeholder: 'Taller', icon: 'business' },
     { placeholder: 'WO MAIN', icon: 'search' },
     { placeholder: 'WO CHILD', icon: 'search' },

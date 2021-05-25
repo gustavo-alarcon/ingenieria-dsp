@@ -28,7 +28,7 @@ import { USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/functions'
     AppComponent,
     NotFoundComponent,
     LandingComponent,
-    UpdateReadyComponent
+    UpdateReadyComponent,
   ],
   imports: [
     BrowserModule,
@@ -41,10 +41,20 @@ import { USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/functions'
     HttpClientModule,
     NgxMaskModule.forRoot(),
     LazyLoadImageModule,
-    MaterialModule
+    MaterialModule,
   ],
-  entryComponents: [
-    UpdateReadyComponent
+  entryComponents: [UpdateReadyComponent],
+  providers: [
+    // {provide: BUCKET, useValue: environment.firebase.storageBucket },
+    // { provide: USE_AUTH_EMULATOR, useValue: false ? ['localhost', 9099] : undefined },
+    {
+      provide: USE_FIRESTORE_EMULATOR,
+      useValue: environment.useEmulators ? ['localhost', 8080] : undefined,
+    },
+    {
+      provide: USE_FUNCTIONS_EMULATOR,
+      useValue: environment.useEmulators ? ['localhost', 5001] : undefined,
+    },
   ],
   providers: [{ provide: BUCKET, useValue: environment.firebase.storageBucket },
   { provide: USE_AUTH_EMULATOR, useValue: environment.useEmulators ? ['localhost', 9099] : undefined },
@@ -53,4 +63,4 @@ import { USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/functions'
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
