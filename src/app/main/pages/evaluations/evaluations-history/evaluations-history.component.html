@@ -1,18 +1,15 @@
-<div *ngIf="auth.user$ | async as user">
+<div *ngIf="authService.user$ | async as user">
   <div class="ms-kanban-toolbar">
     <ng-container *ngIf="user.role == 'Administrador'">
-      <!-- <button type="file" mat-stroked-button class="ms-kanban-toolbar__button" (click)="openDialog('create')"
-        [ngClass]="isMobile ? 'ms-kanban-toolbar__button--mobile' : 'ms-kanban-toolbar__button--desktop'">
-        <mat-icon aria-label="agregar" class="icon-add">add</mat-icon>
-        CREAR
-      </button> -->
       <button type="file" mat-stroked-button class="ms-kanban-toolbar__button" (click)="uploadFileDialog()"
+        *ngIf="authService.uiConfig.preEvaluations.tabs.results.toolbar.bulk"
         [ngClass]="isMobile ? 'ms-kanban-toolbar__button--mobile' : 'ms-kanban-toolbar__button--desktop'">
         <mat-icon aria-label="agregar" class="icon-add">add</mat-icon>
         LOTE
       </button>
 
       <button mat-stroked-button class="ms-kanban-toolbar__button" (click)="downloadXlsx(historyDataSource.data)"
+        *ngIf="authService.uiConfig.preEvaluations.tabs.results.toolbar.download"
         [disabled]="historyDataSource.data.length < 1"
         [ngClass]="isMobile ? 'ms-kanban-toolbar__button--mobile' : 'ms-kanban-toolbar__button--desktop'">
         <mat-icon aria-label="agregar" class="icon-add">download</mat-icon>
@@ -20,6 +17,7 @@
       </button>
 
       <button mat-stroked-button class="ms-kanban-toolbar__button" (click)="openDialog('report')"
+        *ngIf="authService.uiConfig.preEvaluations.tabs.results.toolbar.report"
         [disabled]="historyDataSource.data.length < 1"
         [ngClass]="isMobile ? 'ms-kanban-toolbar__button--mobile' : 'ms-kanban-toolbar__button--desktop'">
         <mat-icon aria-label="agregar" class="icon-add">description</mat-icon>
@@ -187,24 +185,27 @@
           <ng-container>
             <mat-menu #rawMenu="matMenu">
               <button class="w3-small" mat-menu-item (click)="openDialog('edit', element, i)"
-                *ngIf="user.role == 'Administrador'">
+                *ngIf="authService.uiConfig.preEvaluations.tabs.results.actions.edit">
                 <mat-icon>edit</mat-icon>
                 Editar
               </button>
               <button class="w3-small" mat-menu-item (click)="openDialog('delete',element,i)"
-                *ngIf="user.role == 'Administrador'">
+                *ngIf="authService.uiConfig.preEvaluations.tabs.results.actions.delete">
                 <mat-icon>delete</mat-icon>
                 Borrar
               </button>
-              <button class="w3-small" mat-menu-item (click)="openDialog('time-line', element, i)">
+              <button class="w3-small" mat-menu-item (click)="openDialog('time-line', element, i)"
+                *ngIf="authService.uiConfig.preEvaluations.tabs.results.actions.timeLine">
                 <mat-icon>timeline</mat-icon>
                 Linea de tiempo
               </button>
-              <button class="w3-small" mat-menu-item (click)="openDialog('observation', element, i)">
+              <button class="w3-small" mat-menu-item (click)="openDialog('observation', element, i)"
+                *ngIf="authService.uiConfig.preEvaluations.tabs.results.actions.observations">
                 <mat-icon>remove_red_eye</mat-icon>
                 Observaciones
               </button>
-              <button class="w3-small" mat-menu-item (click)="openDialog('image', element, i)">
+              <button class="w3-small" mat-menu-item (click)="openDialog('image', element, i)"
+                *ngIf="authService.uiConfig.preEvaluations.tabs.results.actions.images">
                 <mat-icon>add_photo_alternate</mat-icon>
                 Imágenes
               </button>

@@ -82,7 +82,7 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
     private breakpoint: BreakpointObserver,
     public dialog: MatDialog,
     private evaltService: EvaluationsService,
-    public auth: AuthService
+    public authService: AuthService
   ) { }
 
   ngOnInit(): void {

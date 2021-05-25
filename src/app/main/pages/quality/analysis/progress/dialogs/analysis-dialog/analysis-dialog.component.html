@@ -59,7 +59,8 @@
                             <input autocomplete="off" formControlName="causeFailure"
                                 [matAutocomplete]="causeFailureAutocomplete" type="text" matInput />
                             <mat-autocomplete autoActiveFirstOption #causeFailureAutocomplete="matAutocomplete">
-                                <mat-option (click)="onAddCauseFailure()" [value]="">
+                                <mat-option *ngIf="authService.uiConfig.quality.analysis.tabs.process.forms.failRoot"
+                                    (click)="onAddCauseFailure()" [value]="">
                                     <mat-icon>add_circle_outline</mat-icon>Añadir/Eliminar
                                 </mat-option>
                                 <mat-option *ngFor="let causeFailure of causeFailuries" [value]="causeFailure.name">
@@ -85,7 +86,8 @@
                             <input autocomplete="off" formControlName="process" [matAutocomplete]="processAutocomplete"
                                 type="text" matInput />
                             <mat-autocomplete autoActiveFirstOption #processAutocomplete="matAutocomplete">
-                                <mat-option (click)="onAddProcess()" [value]="">
+                                <mat-option *ngIf="authService.uiConfig.quality.analysis.tabs.process.forms.process"
+                                    (click)="onAddProcess()" [value]="">
                                     <mat-icon>add_circle_outline</mat-icon>Añadir/Eliminar
                                 </mat-option>
                                 <mat-option *ngFor="let item of process" [value]="item.name">

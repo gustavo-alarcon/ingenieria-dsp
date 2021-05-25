@@ -83,7 +83,7 @@ export class EvaluationsSettingsComponent implements OnInit, OnDestroy {
 
   constructor(
     public dialog: MatDialog,
-    public auth: AuthService,
+    public authService: AuthService,
     private snackbar: MatSnackBar,
     private evalService: EvaluationsService,
   ) {
@@ -95,7 +95,7 @@ export class EvaluationsSettingsComponent implements OnInit, OnDestroy {
     this.loading.next(true);
     this.loadingKindOfTest.next(true);
     this.settingsDataSource.sort = this.sort;
-    this.subscription.add(this.auth.user$.subscribe(user => {
+    this.subscription.add(this.authService.user$.subscribe(user => {
       this.user = user;
     }));
 

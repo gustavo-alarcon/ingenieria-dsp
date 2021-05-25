@@ -1,38 +1,4 @@
 <div class="container">
-  <!-- <div class="requests">
-    <div class="requests__title">
-      <h1 class="requests__title--name">En proceso</h1>
-      <div class="requests__title--icon" (click)="settingDialog()">
-        <mat-icon mat-list-icon>settings</mat-icon>
-      </div>
-      <span class="ms-fill"></span>
-
-      <div class="requests__title--select">
-        <mat-form-field style="width: 90%" appearance="null"  >
-          <mat-icon matPrefix class="requests__title--select-icon" >local_convenience_store</mat-icon>
-          <mat-select [formControl]="workshopControl" class="requests__title--select-input">
-            <mat-option value=""  >Todos</mat-option>
-            <mat-option *ngFor=" let item of workshops" [value]="item.code">
-              {{item.location}}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-
-      <div class="requests__title--search mat-elevation-z4">
-        <button mat-button class="requests__title--button">
-          <mat-icon>search</mat-icon>
-        </button>
-        <form [formGroup]="searchForm" style="margin-top:10px;">
-          <input matInput placeholder="Buscar" name="search" class="requests__title--input" formControlName="ot" autocomplete="off"/>
-        </form>
-      </div>
-
-    </div>
-    <div class="requests__quantity">
-      <span>{{counter}}</span>
-    </div>
-  </div> -->
   <div class="ms-kanban-toolbar mat-elevation-z4">
     <mat-form-field appearance="outline" class="ms-kanban-toolbar__input"
       [ngClass]="isMobile ? 'ms-kanban-toolbar__input--mobile' : 'ms-kanban-toolbar__input--desktop'">
@@ -53,7 +19,8 @@
     <div class="ms-kanban-toolbar__counter">
       {{counter | number : '2.'}}
     </div>
-    <button mat-icon-button class="ms-kanban-toolbar__button--icon" (click)="settingDialog()">
+    <button mat-icon-button class="ms-kanban-toolbar__button--icon"
+      *ngIf="authService.uiConfig.preEvaluations.tabs.process.toolbar.configuration" (click)="settingDialog()">
       <mat-icon>settings</mat-icon>
     </button>
   </div>
@@ -73,35 +40,45 @@
           <span class="ms-fill"></span>
           <div>
             <mat-menu #requestsMenu="matMenu">
-              <button mat-menu-item (click)="finalizeDialog(item)">
+              <button mat-menu-item *ngIf="authService.uiConfig.preEvaluations.tabs.process.actions.finalize"
+                (click)="finalizeDialog(item)">
                 <mat-icon>stop</mat-icon>
                 Finalizar
               </button>
-              <button mat-menu-item *ngIf="item.internalStatus !== 'pending'" (click)="activatePendingDialog(item)">
+              <button mat-menu-item
+                *ngIf="item.internalStatus !== 'pending' && authService.uiConfig.preEvaluations.tabs.process.actions.setPending"
+                (click)="activatePendingDialog(item)">
                 <mat-icon>pause</mat-icon>
                 Activar estado pendiente
               </button>
-              <button mat-menu-item *ngIf="item.internalStatus === 'pending'" (click)="activatePendingDialog(item)">
+              <button mat-menu-item
+                *ngIf="item.internalStatus === 'pending' && authService.uiConfig.preEvaluations.tabs.process.actions.setPending"
+                (click)="activatePendingDialog(item)">
                 <mat-icon>pause</mat-icon>
                 Desactivar estado pendiente
               </button>
-              <button mat-menu-item (click)="imagesDialog(item)">
+              <button mat-menu-item *ngIf="authService.uiConfig.preEvaluations.tabs.process.actions.images"
+                (click)="imagesDialog(item)">
                 <mat-icon>add_photo_alternate</mat-icon>
                 Imágenes
               </button>
-              <button mat-menu-item (click)="timeline(item)">
+              <button mat-menu-item *ngIf="authService.uiConfig.preEvaluations.tabs.process.actions.timeLine"
+                (click)="timeline(item)">
                 <mat-icon>timeline</mat-icon>
                 Línea de tiempo
               </button>
-              <button mat-menu-item (click)="observationsDialog(item)">
+              <button mat-menu-item *ngIf="authService.uiConfig.preEvaluations.tabs.process.actions.observations"
+                (click)="observationsDialog(item)">
                 <mat-icon>remove_red_eye</mat-icon>
                 Observaciones
               </button>
-              <button mat-menu-item (click)="consultDialog(item)" *ngIf="item.internalStatus === 'processed'">
+              <button mat-menu-item (click)="consultDialog(item)"
+                *ngIf="item.internalStatus === 'processed' && authService.uiConfig.preEvaluations.tabs.process.actions.inquiries">
                 <mat-icon>help</mat-icon>
                 Consultar
               </button>
-              <button mat-menu-item (click)="responseDialog(item)" *ngIf="item.internalStatus === 'consultation'">
+              <button mat-menu-item (click)="responseDialog(item)"
+                *ngIf="item.internalStatus === 'consultation' && authService.uiConfig.preEvaluations.tabs.process.actions.inquiries">
                 <mat-icon>question_answer</mat-icon>
                 Responder
               </button>
@@ -134,7 +111,7 @@
         </div>
       </div>
     </div>
-  </div>quality
+  </div>
   <ng-template #default>
     <div class="ms-default">
       <mat-progress-bar mode="indeterminate"></mat-progress-bar>

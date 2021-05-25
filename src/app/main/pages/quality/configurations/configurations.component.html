@@ -6,7 +6,7 @@
         </h1>
     </div>
     <mat-divider></mat-divider>
-    <div class="container-settings">
+    <div class="container-settings" *ngIf="authService.uiConfig.quality.configuration.panel.lists">
         <mat-expansion-panel class="container-settings__color-expantion" [expanded]="step === 1" (opened)="setStep(1)"
             hideToggle>
             <mat-expansion-panel-header style="height: 58px;">
@@ -88,7 +88,7 @@
     </div>
 
 
-    <div class="container-settings">
+    <div class="container-settings" *ngIf="authService.uiConfig.quality.configuration.panel.broadcast">
         <mat-expansion-panel class="container-settings__color-expantion" [expanded]="step === 2" (opened)="setStep(2)"
             hideToggle>
             <mat-expansion-panel-header style="height: 58px;">

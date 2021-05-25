@@ -56,6 +56,11 @@ import { USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/functions'
       useValue: environment.useEmulators ? ['localhost', 5001] : undefined,
     },
   ],
-  bootstrap: [AppComponent],
+  providers: [{ provide: BUCKET, useValue: environment.firebase.storageBucket },
+  { provide: USE_AUTH_EMULATOR, useValue: environment.useEmulators ? ['localhost', 9099] : undefined },
+  { provide: USE_FIRESTORE_EMULATOR, useValue: environment.useEmulators ? ['localhost', 8080] : undefined },
+  { provide: USE_FUNCTIONS_EMULATOR, useValue: environment.useEmulators ? ['localhost', 5001] : undefined }
+  ],
+  bootstrap: [AppComponent]
 })
 export class AppModule {}

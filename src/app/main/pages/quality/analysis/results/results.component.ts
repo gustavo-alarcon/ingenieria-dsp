@@ -97,7 +97,8 @@ export class ResultsComponent implements OnInit {
     private qualityService: QualityService,
     private breakpoint: BreakpointObserver,
     private andonService: AndonService,
-    private miDatePipe: DatePipe
+    private miDatePipe: DatePipe,
+    public authService: AuthService
   ) { }
 
   ngOnInit(): void {

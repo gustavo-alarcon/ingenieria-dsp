@@ -14,6 +14,10 @@ const routes: Routes = [
         component: LandingComponent
       },
       {
+        path: 'admin',
+        loadChildren: () => import('./pages/admin/admin.module').then(m => m.AdminModule)
+      },
+      {
         path: 'improvements',
         loadChildren: () => import('./pages/spares/improvements/improvements.module').then(m => m.ImprovementsModule)
       },
@@ -44,6 +48,10 @@ const routes: Routes = [
       {
         path: 'budgets-daily-entries',
         loadChildren: () => import('./pages/budgets/budgets-daily-entries/budgets-daily-entries.module').then(m => m.BudgetsDailyEntriesModule)
+      },
+      {
+        path: 'budgets-configurations',
+        loadChildren: () => import('./pages/budgets/budgets-configurations/budgets-configurations.module').then(m => m.BudgetsConfigurationsModule)
       },
       {
         path: 'dashboard',

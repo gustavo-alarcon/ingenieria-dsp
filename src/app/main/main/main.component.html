@@ -1,95 +1,99 @@
-<mat-sidenav-container class="sidenav-container" fullscreen>
+<mat-sidenav-container class="sidenav-container" fullscreen *ngIf="authService.user$ | async as user">
   <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset$ | async) ? 'over' : 'push'">
     <mat-toolbar class="color-toolbar-sidebar"></mat-toolbar>
-    <mat-card class="mat-elevation-z0 mat-card-user" *ngFor="let item of items | async">
+    <mat-card class="mat-elevation-z0 mat-card-user">
       <div mat-card-avatar style="margin-top: 40px;margin-bottom: 30px;">
-        <img src="{{item.picture}}" alt="">
+        <img src="{{user.picture}}" alt="">
       </div>
       <mat-card-content>
-        <mat-card-title class="text-menu-title-user">{{item.name}}</mat-card-title>
-        <mat-card-subtitle class="text-menu-title-role">{{item.role}}</mat-card-subtitle>
+        <mat-card-title class="text-menu-title-user">{{user.name}}</mat-card-title>
+        <mat-card-subtitle class="text-menu-title-role">{{user.role}}</mat-card-subtitle>
         <mat-card-subtitle class="text-menu-title-version">{{version$ | async}}</mat-card-subtitle>
       </mat-card-content>
     </mat-card>
     <hr class="hr-line">
-    <mat-accordion class="spare-parts">
+    <mat-nav-list style="width: 100%" class="admin">
+      <a mat-list-item [routerLink]="['/main/admin']" routerLinkActive="active" (click)="drawer.toggle()"
+        *ngIf="authService.uiConfig.adminPanel.menu">
+        <mat-icon mat-list-icon class="mat-icon-menu">admin_panel_settings</mat-icon>
+        <span class="mat-item-list-span">
+          Administrar
+        </span>
+      </a>
+    </mat-nav-list>
+
+    <mat-accordion class="spare-parts" *ngIf="authService.uiConfig.spareParts.menu">
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>
             <mat-nav-list>
-              <div>
-                <a mat-list-item>
-                  <mat-icon mat-list-icon class="mat-icon-menu">beenhere</mat-icon>
-                  <span class="mat-item-list-span">
-                    Repuestos
-                  </span>
-                </a>
-              </div>
+              <a mat-list-item>
+                <mat-icon mat-list-icon class="mat-icon-menu">beenhere</mat-icon>
+                <span class="mat-item-list-span">
+                  Repuestos
+                </span>
+              </a>
             </mat-nav-list>
           </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-nav-list>
-          <div>
-            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/improvements']"
-              routerLinkActive="active" (click)="drawer.toggle()">
-              <mat-icon mat-list-icon class="mat-icon-menu">turned_in</mat-icon>
-              <span class="mat-item-list-span">
-                Mejoras
-              </span>
-            </a>
-            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/replacements']"
-              routerLinkActive="active" (click)="drawer.toggle()">
-              <mat-icon mat-list-icon class="mat-icon-menu">published_with_changes</mat-icon>
-              <span class="mat-item-list-span">
-                Reemplazos
-              </span>
-            </a>
-            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/frequencies']" routerLinkActive="active"
-              (click)="drawer.toggle()">
-              <mat-icon mat-list-icon class="mat-icon-menu">view_stream</mat-icon>
-              <span class="mat-item-list-span">
-                Frecuencia de uso
-              </span>
-            </a>
-            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/summary']" routerLinkActive="active"
-              (click)="drawer.toggle()">
-              <mat-icon mat-list-icon class="mat-icon-menu">description</mat-icon>
-              <span class="mat-item-list-span">
-                Resumen
-              </span>
-            </a>
-            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/spare-parts']" routerLinkActive="active"
-              (click)="drawer.toggle()">
-              <mat-icon mat-list-icon class="mat-icon-menu">verified</mat-icon>
-              <span class="mat-item-list-span">
-                Revisión de repuestos
-              </span>
-            </a>
-            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/settings']" routerLinkActive="active"
-              (click)="drawer.toggle()">
-              <mat-icon mat-list-icon class="mat-icon-menu">settings</mat-icon>
-              <span class="mat-item-list-span">
-                Configuración
-              </span>
-            </a>
-          </div>
+          <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/improvements']" routerLinkActive="active"
+            (click)="drawer.toggle()" *ngIf="authService.uiConfig.spareParts.improvements.menu">
+            <mat-icon mat-list-icon class="mat-icon-menu">turned_in</mat-icon>
+            <span class="mat-item-list-span">
+              Mejoras
+            </span>
+          </a>
+          <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/replacements']" routerLinkActive="active"
+            (click)="drawer.toggle()" *ngIf="authService.uiConfig.spareParts.replacements.menu">
+            <mat-icon mat-list-icon class="mat-icon-menu">published_with_changes</mat-icon>
+            <span class="mat-item-list-span">
+              Reemplazos
+            </span>
+          </a>
+          <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/frequencies']" routerLinkActive="active"
+            (click)="drawer.toggle()" *ngIf="authService.uiConfig.spareParts.frequency.menu">
+            <mat-icon mat-list-icon class="mat-icon-menu">view_stream</mat-icon>
+            <span class="mat-item-list-span">
+              Frecuencia de uso
+            </span>
+          </a>
+          <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/summary']" routerLinkActive="active"
+            (click)="drawer.toggle()" *ngIf="authService.uiConfig.spareParts.summary.menu">
+            <mat-icon mat-list-icon class="mat-icon-menu">description</mat-icon>
+            <span class="mat-item-list-span">
+              Resumen
+            </span>
+          </a>
+          <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/spare-parts']" routerLinkActive="active"
+            (click)="drawer.toggle()" *ngIf="authService.uiConfig.spareParts.sparesCheck.menu">
+            <mat-icon mat-list-icon class="mat-icon-menu">verified</mat-icon>
+            <span class="mat-item-list-span">
+              Revisión de repuestos
+            </span>
+          </a>
+          <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/settings']" routerLinkActive="active"
+            (click)="drawer.toggle()" *ngIf="authService.uiConfig.spareParts.configuration.menu">
+            <mat-icon mat-list-icon class="mat-icon-menu">settings</mat-icon>
+            <span class="mat-item-list-span">
+              Configuración
+            </span>
+          </a>
         </mat-nav-list>
       </mat-expansion-panel>
     </mat-accordion>
 
-    <mat-nav-list style="width: 100%" class="evaluations">
-      <div>
-        <a mat-list-item [routerLink]="['/main/evaluations']" routerLinkActive="active" (click)="drawer.toggle()">
-          <mat-icon mat-list-icon class="mat-icon-menu">table_view</mat-icon>
-          <span class="mat-item-list-span">
-            Pre-evaluaciones
-          </span>
-        </a>
-      </div>
+    <mat-nav-list style="width: 100%" class="evaluations" *ngIf="authService.uiConfig.preEvaluations.menu">
+      <a mat-list-item [routerLink]="['/main/evaluations']" routerLinkActive="active" (click)="drawer.toggle()">
+        <mat-icon mat-list-icon class="mat-icon-menu">table_view</mat-icon>
+        <span class="mat-item-list-span">
+          Pre-evaluaciones
+        </span>
+      </a>
     </mat-nav-list>
 
-    <mat-accordion class="budget">
+    <mat-accordion class="budget" *ngIf="authService.uiConfig.budgets.menu">
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>
@@ -106,34 +110,32 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-nav-list>
-          <div>
-            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/budgets-daily-entries']"
-              routerLinkActive="active" (click)="drawer.toggle()">
-              <mat-icon mat-list-icon class="mat-icon-menu">view_day</mat-icon>
-              <span class="mat-item-list-span">
-                Entrada diaria
-              </span>
-            </a>
-            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/budgets']" routerLinkActive="active"
-              (click)="drawer.toggle()">
-              <mat-icon mat-list-icon class="mat-icon-menu">fact_check</mat-icon>
-              <span class="mat-item-list-span">
-                Presupuestos
-              </span>
-            </a>
-            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/budgets-settings']"
-              routerLinkActive="active" (click)="drawer.toggle()">
-              <mat-icon mat-list-icon class="mat-icon-menu">settings</mat-icon>
-              <span class="mat-item-list-span">
-                Configuración
-              </span>
-            </a>
-          </div>
+          <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/budgets-daily-entries']"
+            routerLinkActive="active" (click)="drawer.toggle()" *ngIf="authService.uiConfig.budgets.dailyEntry.menu">
+            <mat-icon mat-list-icon class="mat-icon-menu">view_day</mat-icon>
+            <span class="mat-item-list-span">
+              Entrada diaria
+            </span>
+          </a>
+          <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/budgets']" routerLinkActive="active"
+            (click)="drawer.toggle()" *ngIf="authService.uiConfig.budgets.budgets.menu">
+            <mat-icon mat-list-icon class="mat-icon-menu">fact_check</mat-icon>
+            <span class="mat-item-list-span">
+              Presupuestos
+            </span>
+          </a>
+          <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/budgets-configurations']"
+            routerLinkActive="active" (click)="drawer.toggle()" *ngIf="authService.uiConfig.budgets.configuration.menu">
+            <mat-icon mat-list-icon class="mat-icon-menu">settings</mat-icon>
+            <span class="mat-item-list-span">
+              Configuración
+            </span>
+          </a>
         </mat-nav-list>
       </mat-expansion-panel>
     </mat-accordion>
 
-    <mat-accordion>
+    <mat-accordion *ngIf="authService.uiConfig.andon.menu">
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>
@@ -153,28 +155,28 @@
         <mat-nav-list>
           <div>
             <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/report']" routerLinkActive="active"
-              (click)="drawer.toggle()">
+              (click)="drawer.toggle()" *ngIf="authService.uiConfig.andon.report.menu">
               <mat-icon mat-list-icon class="mat-icon-menu">radio_button_checked</mat-icon>
               <span class="mat-item-list-span">
                 Reportar
               </span>
             </a>
             <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/dashboard']" routerLinkActive="active"
-              (click)="drawer.toggle()">
+              (click)="drawer.toggle()" *ngIf="authService.uiConfig.andon.dashboard.menu">
               <mat-icon mat-list-icon class="mat-icon-menu">dashboard</mat-icon>
               <span class="mat-item-list-span">
                 Dashboard
               </span>
             </a>
             <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/andon-record']"
-              routerLinkActive="active" (click)="drawer.toggle()">
+              routerLinkActive="active" (click)="drawer.toggle()" *ngIf="authService.uiConfig.andon.history.menu">
               <mat-icon mat-list-icon class="mat-icon-menu">history</mat-icon>
               <span class="mat-item-list-span">
                 Historial
               </span>
             </a>
             <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/andon-settings']"
-              routerLinkActive="active" (click)="drawer.toggle()">
+              routerLinkActive="active" (click)="drawer.toggle()" *ngIf="authService.uiConfig.andon.configuration.menu">
               <mat-icon mat-list-icon class="mat-icon-menu">settings</mat-icon>
               <span class="mat-item-list-span">
                 Configuraciones
@@ -185,7 +187,7 @@
       </mat-expansion-panel>
     </mat-accordion>
 
-    <mat-accordion>
+    <mat-accordion *ngIf="authService.uiConfig.quality.menu">
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>
@@ -202,41 +204,41 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-nav-list>
-          <div>
-            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/quality-internal-events']"
-              routerLinkActive="active" (click)="drawer.toggle()">
-              <mat-icon mat-list-icon class="mat-icon-menu">note_alt</mat-icon>
-              <span class="mat-item-list-span">
-                Eventos internos
-              </span>
-            </a>
-            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/quality-external-events']"
-              routerLinkActive="active" (click)="drawer.toggle()">
-              <mat-icon mat-list-icon class="mat-icon-menu">note_alt</mat-icon>
-              <span class="mat-item-list-span">
-                Eventos externos
-              </span>
-            </a>
-            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/quality-analysis']"
-              routerLinkActive="active" (click)="drawer.toggle()">
-              <mat-icon mat-list-icon class="mat-icon-menu">analytics</mat-icon>
-              <span class="mat-item-list-span">
-                Análisis
-              </span>
-            </a>
-            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/quality-configurations']"
-              routerLinkActive="active" (click)="drawer.toggle()">
-              <mat-icon mat-list-icon class="mat-icon-menu">settings</mat-icon>
-              <span class="mat-item-list-span">
-                Configuraciones
-              </span>
-            </a>
-          </div>
+          <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/quality-internal-events']"
+            routerLinkActive="active" (click)="drawer.toggle()"
+            *ngIf="authService.uiConfig.quality.internalEvents.menu">
+            <mat-icon mat-list-icon class="mat-icon-menu">note_alt</mat-icon>
+            <span class="mat-item-list-span">
+              Eventos internos
+            </span>
+          </a>
+          <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/quality-external-events']"
+            routerLinkActive="active" (click)="drawer.toggle()"
+            *ngIf="authService.uiConfig.quality.externalEvents.menu">
+            <mat-icon mat-list-icon class="mat-icon-menu">note_alt</mat-icon>
+            <span class="mat-item-list-span">
+              Eventos externos
+            </span>
+          </a>
+          <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/quality-analysis']"
+            routerLinkActive="active" (click)="drawer.toggle()" *ngIf="authService.uiConfig.quality.analysis.menu">
+            <mat-icon mat-list-icon class="mat-icon-menu">analytics</mat-icon>
+            <span class="mat-item-list-span">
+              Análisis
+            </span>
+          </a>
+          <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/quality-configurations']"
+            routerLinkActive="active" (click)="drawer.toggle()" *ngIf="authService.uiConfig.quality.configuration.menu">
+            <mat-icon mat-list-icon class="mat-icon-menu">settings</mat-icon>
+            <span class="mat-item-list-span">
+              Configuraciones
+            </span>
+          </a>
         </mat-nav-list>
       </mat-expansion-panel>
     </mat-accordion>
 
-    <mat-accordion>
+    <mat-accordion *ngIf="authService.uiConfig.evaluations.menu">
       <mat-expansion-panel style="margin-bottom: 10vh;">
         <mat-expansion-panel-header>
           <mat-panel-title>
@@ -254,43 +256,41 @@
           </mat-panel-title>
         </mat-expansion-panel-header>
         <mat-nav-list>
-          <div>
-            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/init-eval-templates']"
-              routerLinkActive="active" (click)="drawer.toggle()">
-              <mat-icon mat-list-icon class="mat-icon-menu">note_alt</mat-icon>
-              <span class="mat-item-list-span">
-                Formatos
-              </span>
-            </a>
-            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/init-eval-technical-attention']"
-              routerLinkActive="active" (click)="drawer.toggle()">
-              <mat-icon mat-list-icon class="mat-icon-menu">folder_shared</mat-icon>
-              <span class="mat-item-list-span">
-                Atención técnica
-              </span>
-            </a>
-            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/init-eval-results']"
-              routerLinkActive="active" (click)="drawer.toggle()">
-              <mat-icon mat-list-icon class="mat-icon-menu">analytics</mat-icon>
-              <span class="mat-item-list-span">
-                Resultados
-              </span>
-            </a>
-            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/init-eval-reports']"
-              routerLinkActive="active" (click)="drawer.toggle()">
-              <mat-icon mat-list-icon class="mat-icon-menu">import_contacts</mat-icon>
-              <span class="mat-item-list-span">
-                Informes
-              </span>
-            </a>
-            <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/init-eval-config']"
-              routerLinkActive="active" (click)="drawer.toggle()">
-              <mat-icon mat-list-icon class="mat-icon-menu">settings</mat-icon>
-              <span class="mat-item-list-span">
-                Configuración
-              </span>
-            </a>
-          </div>
+          <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/init-eval-templates']"
+            routerLinkActive="active" (click)="drawer.toggle()" *ngIf="authService.uiConfig.evaluations.templates.menu">
+            <mat-icon mat-list-icon class="mat-icon-menu">note_alt</mat-icon>
+            <span class="mat-item-list-span">
+              Formatos
+            </span>
+          </a>
+          <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/init-eval-technical-attention']"
+            routerLinkActive="active" (click)="drawer.toggle()" *ngIf="authService.uiConfig.evaluations.technicalSupport.menu">
+            <mat-icon mat-list-icon class="mat-icon-menu">folder_shared</mat-icon>
+            <span class="mat-item-list-span">
+              Atención técnica
+            </span>
+          </a>
+          <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/init-eval-results']"
+            routerLinkActive="active" (click)="drawer.toggle()" *ngIf="authService.uiConfig.evaluations.results.menu">
+            <mat-icon mat-list-icon class="mat-icon-menu">analytics</mat-icon>
+            <span class="mat-item-list-span">
+              Resultados
+            </span>
+          </a>
+          <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/init-eval-reports']"
+            routerLinkActive="active" (click)="drawer.toggle()" *ngIf="authService.uiConfig.evaluations.reports.menu">
+            <mat-icon mat-list-icon class="mat-icon-menu">import_contacts</mat-icon>
+            <span class="mat-item-list-span">
+              Informes
+            </span>
+          </a>
+          <a mat-list-item class="mat-list-item-second" [routerLink]="['/main/init-eval-config']"
+            routerLinkActive="active" (click)="drawer.toggle()" *ngIf="authService.uiConfig.evaluations.configuration.menu">
+            <mat-icon mat-list-icon class="mat-icon-menu">settings</mat-icon>
+            <span class="mat-item-list-span">
+              Configuración
+            </span>
+          </a>
         </mat-nav-list>
       </mat-expansion-panel>
     </mat-accordion>

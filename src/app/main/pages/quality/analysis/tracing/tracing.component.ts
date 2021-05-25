@@ -51,7 +51,7 @@ export class TracingComponent implements OnInit, OnDestroy {
     private breakpoint: BreakpointObserver,
     public dialog: MatDialog,
     private qualityService: QualityService,
-    private auth: AuthService,
+    public authService: AuthService,
     private snackbar: MatSnackBar
   ) { }
 
@@ -73,7 +73,7 @@ export class TracingComponent implements OnInit, OnDestroy {
         filter(input => input !== null),
         startWith<any>('')),
       this.eventTypeControl.valueChanges.pipe(startWith('')),
-      this.auth.getGeneralConfigQuality()
+      this.authService.getGeneralConfigQuality()
     ).pipe(
       map(([qualities, search, codeEventType, generalConfig]) => {
 

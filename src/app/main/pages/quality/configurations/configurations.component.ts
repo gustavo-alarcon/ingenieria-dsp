@@ -10,19 +10,16 @@ import {
 } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject, Subscription, Observable, combineLatest } from 'rxjs';
-import { switchMap, take, tap, startWith, debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import { tap, startWith, debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { User } from 'src/app/main/models/user-model';
 import { QualityService } from 'src/app/main/services/quality.service';
 import {
   QualityListSpecialist,
-  QualityListResponsibleArea,
   QualityBroadcastList,
 } from '../../../models/quality.model';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteBroadcastDialogComponent } from './dialogs/delete-broadcast-dialog/delete-broadcast-dialog.component';
-import { FormGroupDirective, NgForm } from '@angular/forms';
-import { ErrorStateMatcher } from '@angular/material/core';
 import { AddBroadcastDialogComponent } from './dialogs/add-broadcast-dialog/add-broadcast-dialog.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -89,7 +86,7 @@ export class ConfigurationsComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    public auth: AuthService,
+    public authService: AuthService,
     private snackbar: MatSnackBar,
     private qualityService: QualityService,
     private breakpoint: BreakpointObserver,
@@ -129,7 +126,7 @@ export class ConfigurationsComponent implements OnInit {
 
     this.loading.next(true);
     this.subscription.add(
-      this.auth.user$.subscribe((user) => {
+      this.authService.user$.subscribe((user) => {
         this.user = user;
       })
     );
