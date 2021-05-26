@@ -1,4 +1,4 @@
-import { map } from 'rxjs/operators';
+import { map, shareReplay } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import {
@@ -98,15 +98,7 @@ export class BudgetsService {
     const ref = this.afs.collection<budgetsExcelColumns>(
       '/db/ferreyros/budgets'
     );
-    const refObs = ref.get({ source: 'server' }).pipe(
-      map((res) =>
-        res.docs.map((el) => {
-          return el.data();
-        })
-      )
-    );
-
-    return refObs;
+    return ref.valueChanges().pipe(shareReplay(1));
   }
 
   getBudgetsSnapshot(): Observable<

@@ -4,9 +4,10 @@ import { budgetsExcelColumns } from './../../../../models/budgets.model';
 import { take } from 'rxjs/operators';
 import { BudgetsService } from './../../../../services/budgets.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-budgets-summary',
@@ -15,6 +16,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 })
 export class BudgetsSummaryComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(
     public auth: AuthService,
@@ -127,6 +129,7 @@ export class BudgetsSummaryComponent implements OnInit {
     'mesTer',
     'anio',
     'fechaLPD',
+    'actions',
   ];
 
   public subscriptions: Subscription = new Subscription();
@@ -134,6 +137,9 @@ export class BudgetsSummaryComponent implements OnInit {
   public isMobile: boolean = false;
 
   public cantWO: number = 0;
+
+  loading: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  loading$: Observable<boolean> = this.loading.asObservable();
 
   public ngOnInit(): void {
     this.subscriptions.add(
@@ -147,18 +153,20 @@ export class BudgetsSummaryComponent implements OnInit {
           }
         })
     );
+    this.loading.next(true);
+  }
 
+  public ngAfterViewInit(): void {
+    this.tableData.sort = this.sort;
+    this.tableData.paginator = this.paginator;
     this._budgetsService
       .getBudgets()
       .pipe()
       .subscribe((res) => {
         this.tableData.data = res;
-        console.log('Budgets collection: ', this.tableData);
+        this.cantWO = this.tableData.data.length;
+        this.loading.next(false);
       });
-  }
-
-  public ngAfterViewInit(): void {
-    this.tableData.sort = this.sort;
   }
 
   public ngOnDestroy(): void {

@@ -27,9 +27,29 @@
   height: 45px !important;
 }
 
+.table-wrapper {
+  overflow: auto;
+}
+
 table {
+  margin-top: 1.5em;
+  border: 1px solid #f1eeee;
   .table__cell {
     min-width: 90px;
     padding: 0px 8px;
   }
+}
+
+th {
+  background-color: #f0eefc;
+  font-weight: bold;
+  font-size: 16px;
+  letter-spacing: 0.15px;
+  color: #2b2b2b;
+}
+
+td {
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  color: #000000;
 }
