@@ -1,10 +1,11 @@
+import { map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import {
   rejectionReasonsEntry,
   modificationReasonEntry,
   BudgetsBroadcastList,
-  budgetsExcelColumns
+  budgetsExcelColumns,
 } from '../models/budgets.model';
 
 import * as firebase from 'firebase/app';
@@ -93,17 +94,33 @@ export class BudgetsService {
     return of(batchArray);
   }
 
+  getBudgets(): Observable<budgetsExcelColumns[]> {
+    const ref = this.afs.collection<budgetsExcelColumns>(
+      '/db/ferreyros/budgets'
+    );
+    const refObs = ref.get({ source: 'server' }).pipe(
+      map((res) =>
+        res.docs.map((el) => {
+          return el.data();
+        })
+      )
+    );
+
+    return refObs;
+  }
+
   getBudgetsSnapshot(): Observable<
     firebase.default.firestore.QuerySnapshot<budgetsExcelColumns>
   > {
     const ref = this.afs.collection<budgetsExcelColumns>(
       '/db/ferreyros/budgets'
     );
+
     const refSnapshot = ref.get();
 
     return refSnapshot;
   }
-  
+
   public getAllReasonsForRejectionEntries(): Observable<
     rejectionReasonsEntry[]
   > {

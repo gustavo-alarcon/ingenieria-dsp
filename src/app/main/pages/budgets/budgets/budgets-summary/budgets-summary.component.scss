@@ -26,3 +26,10 @@
   margin-left: 5px;
   height: 45px !important;
 }
+
+table {
+  .table__cell {
+    min-width: 90px;
+    padding: 0px 8px;
+  }
+}
