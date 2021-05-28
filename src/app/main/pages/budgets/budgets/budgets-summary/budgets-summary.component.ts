@@ -129,6 +129,7 @@ export class BudgetsSummaryComponent implements OnInit {
     'mesTer',
     'anio',
     'fechaLPD',
+    'actions'
   ];
 
   public filteredValues = {

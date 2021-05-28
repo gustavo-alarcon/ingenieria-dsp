@@ -1671,6 +1671,24 @@
             <ng-container>
               <mat-menu #rawMenu="matMenu">
                 <button
+                  *ngIf="element.statusPresupuesto != 'CLIENTE INTERNO'"
+                  class="w3-small"
+                  mat-menu-item
+                  (click)="sendDialog(i)"
+                >
+                  <mat-icon>attach_email</mat-icon>
+                  Enviar PPTO
+                </button>
+                <button
+                  *ngIf="element.statusPresupuesto != 'CLIENTE INTERNO'"
+                  class="w3-small"
+                  mat-menu-item
+                  (click)="timelineDialog(i)"
+                >
+                  <mat-icon>timeline</mat-icon>
+                  Historial
+                </button>
+                <button
                   class="w3-small"
                   mat-menu-item
                   (click)="deleteDialog(i)"
