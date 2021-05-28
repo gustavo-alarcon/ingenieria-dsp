@@ -30,6 +30,12 @@ table {
   .table__cell {
     min-width: 90px;
     padding: 0px 8px;
+    &:first-child {
+      padding-left: 36px;
+    }
+  }
+  .observaciones-taller {
+    min-width: 500px;
   }
 }
 
@@ -41,13 +47,11 @@ th {
   color: #2b2b2b;
 }
 
-
 td {
   font-size: 16px;
   letter-spacing: 0.5px;
   color: #000000;
 }
-
 
 .footer {
   text-align: end;

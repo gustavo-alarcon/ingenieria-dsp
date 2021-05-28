@@ -26,10 +26,10 @@ export class BudgetsService {
     let batchArray = [];
 
     // Get all the woChild from the db
-    let firestoreWOChildList: Array<string> = [];
+    let firestoreWOChildList: Array<number> = [];
 
     // Get all the woMain from the db
-    let firestoreWOMainList: Array<string> = [];
+    let firestoreWOMainList: Array<number> = [];
 
     // Check if there are documents in the QuerySnapshot
     if (!firestoreBudgetsSnapshot.empty) {
@@ -61,7 +61,7 @@ export class BudgetsService {
           // Vertify that woChild doesn't repeat in the db
 
           // If this array contains data then you shouldn't add data to Firestore
-          const repeatedWOChildList: Array<string> = [];
+          const repeatedWOChildList: Array<number> = [];
 
           if (firestoreWOChildList.length > 0) {
             firestoreWOChildList.forEach((woChild) => {
@@ -75,7 +75,7 @@ export class BudgetsService {
         } else {
           // Verify that woMain doesn't repeat in the db
 
-          const repeatedWOMainList: Array<string> = [];
+          const repeatedWOMainList: Array<number> = [];
 
           if (firestoreWOMainList.length > 0) {
             firestoreWOMainList.forEach((woMain) => {
