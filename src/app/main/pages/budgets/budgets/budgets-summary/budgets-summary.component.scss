@@ -103,3 +103,7 @@ td {
     @include statusBubble();
   }
 }
+
+.modified--budget__highlight--row {
+  background: rgba(242, 201, 76, 0.25);
+}
