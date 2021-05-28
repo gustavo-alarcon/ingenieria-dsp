@@ -179,12 +179,8 @@ export class EvaluationsRequestsComponent implements OnInit, OnDestroy {
 
             return evalInterval
 
-          }(), 5000);
+          }(), 120000);
         });
-
-        setInterval(function hello() {
-          return hello;
-        }(), 5000);
 
         preFilterSearch.map(evaluation => {
           let match = false;
