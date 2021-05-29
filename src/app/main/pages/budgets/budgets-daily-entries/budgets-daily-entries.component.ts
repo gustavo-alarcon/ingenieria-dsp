@@ -303,13 +303,14 @@ export class BudgetsDailyEntriesComponent implements OnInit {
             informe: _informe ? _informe : null,
             cotizacionFesa: _cotizacionFesa ? _cotizacionFesa : null,
             cotizacionText: _cotizacionText ? _cotizacionText : null,
-            excelid: el[86] ? el[86] : null,
-            clave: el[87] ? el[87] : null,
-            obj: el[88] ? el[88] : null,
-            diasPPTO: el[89] ? el[89] : null,
-            mesTer: el[90] ? el[90] : null,
-            anio: el[91] ? el[91] : null,
-            fechaLPD: el[92] ? el[92] : null,
+            statusFacturacion: el[86] ? el[86] : null,
+            excelid: el[87] ? el[87] : null,
+            clave: el[88] ? el[88] : null,
+            obj: el[89] ? el[89] : null,
+            diasPPTO: el[90] ? el[90] : null,
+            mesTer: el[91] ? el[91] : null,
+            anio: el[92] ? el[92] : null,
+            fechaLPD: el[93] ? el[93] : null,
           };
           parsedExcelData.push(data);
         }
@@ -330,7 +331,7 @@ export class BudgetsDailyEntriesComponent implements OnInit {
   }
 
   deleteDialog(index: number): void {
-    const currentWOCHILD: string =
+    const currentWOCHILD: number =
       this.budgetsDailyEntriesDataSource.data[index].woChild;
 
     const dialogRef = this.dialog.open(DeleteDialogComponent, {
@@ -343,11 +344,11 @@ export class BudgetsDailyEntriesComponent implements OnInit {
       .then((res: string) => {
         if (res == 'delete') {
           this.budgetsDailyEntriesDataSource.data.splice(index, 1);
+          this.MatSnackBar.open('✅ Eliminado correctamente!', 'Aceptar', {
+            duration: 6000,
+          });
         }
         this.refresh();
-        this.MatSnackBar.open('✅ Eliminado correctamente!', 'Aceptar', {
-          duration: 6000,
-        });
       });
   }
 
