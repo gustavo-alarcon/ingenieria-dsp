@@ -966,7 +966,6 @@ export class UiConfig {
         this.preEvaluations.tabs.process.actions.observations = true;
         this.preEvaluations.tabs.process.actions.setPending = true;
         this.preEvaluations.tabs.process.actions.timeLine = true;
-        this.preEvaluations.tabs.results.actions.edit = true;
         this.preEvaluations.tabs.results.actions.observations = true;
         this.preEvaluations.tabs.results.actions.images = true;
         this.preEvaluations.tabs.results.actions.timeLine = true;
@@ -989,7 +988,6 @@ export class UiConfig {
         this.quality.analysis.tabs.tracing.actions.details = true;
         this.quality.analysis.tabs.tracing.actions.correctiveActions = true;
         this.quality.analysis.tabs.tracing.actions.timeLine = true;
-        this.quality.analysis.tabs.results.actions.edit = true;
         this.quality.analysis.tabs.results.actions.details = true;
         this.quality.analysis.tabs.results.actions.timeLine = true;
         // evaluations
