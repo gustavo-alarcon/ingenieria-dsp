@@ -154,7 +154,7 @@ export class TracingComponent implements OnInit, OnDestroy {
 
           let tracingDistance = 0;
 
-          quality.tracingTimer = setInterval(function EvalInterval() {
+          quality.tracingTimer = setInterval(function tracingInterval() {
             // Get today's date and time
             const now = new Date().getTime();
 
@@ -198,9 +198,9 @@ export class TracingComponent implements OnInit, OnDestroy {
               seconds: attentionSeconds
             };
 
-            return EvalInterval;
+            return tracingInterval;
 
-          }(), 5000);
+          }(), 120000);
         });
 
         return preFilterSearch;

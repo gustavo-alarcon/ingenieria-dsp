@@ -128,7 +128,7 @@ export class ProgressComponent implements OnInit {
 
           let processDistance = 0;
 
-          quality.processTimer = setInterval(function EvalInterval() {
+          quality.processTimer = setInterval(function progressInterval() {
             // Get today's date and time
             const now = new Date().getTime();
 
@@ -171,9 +171,9 @@ export class ProgressComponent implements OnInit {
               minutes: attentionMinutes,
               seconds: attentionSeconds
             };
-            return EvalInterval;
+            return progressInterval;
 
-          }(), 5000);
+          }(), 120000);
         });
 
         return preFilterSearch;
