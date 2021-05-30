@@ -13,6 +13,7 @@ import { ComponentList, MiningOperation, FileAdditional } from '../../../models/
 import { MatDialog } from '@angular/material/dialog';
 import { AddMiningOperationDialogComponent } from './dialogs/add-mining-operation-dialog/add-mining-operation-dialog.component';
 import { AddComponentComponent } from './dialogs/add-component/add-component.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-external-events',
@@ -71,7 +72,8 @@ export class ExternalEventsComponent implements OnInit {
     private snackbar: MatSnackBar,
     private authService: AuthService,
     private qualityService: QualityService,
-    private storage: AngularFireStorage
+    private storage: AngularFireStorage,
+    private router: Router
   ) { }
 
 
@@ -151,7 +153,7 @@ export class ExternalEventsComponent implements OnInit {
       nPackage: ['', Validators.required],
       componentHourMeter: ['', [
         Validators.required,
-        Validators.pattern(/^(0|\-?[1-9][0-9]*)$/)  ]],
+        Validators.pattern(/^(0|\-?[1-9][0-9]*)$/)]],
       nPart: ['', Validators.required],
       miningOperation: ['', Validators.required],
       question1: ['', Validators.required],
@@ -169,7 +171,7 @@ export class ExternalEventsComponent implements OnInit {
     }
 
     const date = new Date();
-    for (let event of files){
+    for (let event of files) {
       this.loading.next(true);
       const file = event;
       const filename = event.name;
@@ -216,17 +218,6 @@ export class ExternalEventsComponent implements OnInit {
         this.loading.next(false);
         return;
       } else {
-       /*  this.imagesGeneral = [];
-        const imagesObjGeneral = {};
-        this.imagesGeneral = [
-          ...this.imagesGeneral,
-          ...this.imagesUploadGeneral,
-        ];
-        this.imagesGeneral.pop();
-        this.imagesGeneral.forEach((value, index) => {
-          imagesObjGeneral[index] = value;
-        }); */
-
         this.imagesGeneral = [];
         this.imagesGeneral = [...this.imagesUploadGeneral];
 
@@ -247,9 +238,16 @@ export class ExternalEventsComponent implements OnInit {
               .commit()
               .then(() => {
                 //this.loading.next(false)
-                this.snackbar.open('✅ Se guardo correctamente!', 'Aceptar', {
+                this.snackbar.open('✅ Evento guardado correctamente!', 'IR A ANALISIS', {
                   duration: 6000,
-                });
+                }).onAction()
+                  .pipe(
+                    take(1)
+                  )
+                  .subscribe(() => {
+                    this.router.navigateByUrl('main/quality-analysis/records')
+                  })
+
                 this.loading.next(false);
                 this.externalForm.reset();
                 this.filesDetail = [];
@@ -314,14 +312,14 @@ export class ExternalEventsComponent implements OnInit {
     });
   }
 
-  async deleteImageGeneral(event): Promise<void>{
+  async deleteImageGeneral(event): Promise<void> {
     try {
       this.loading.next(true);
       this.qualityService.deleteImage(event);
 
-      const i = this.imagesUploadGeneral.indexOf( event );
-      if ( i !== -1 ) {
-        this.imagesUploadGeneral.splice( i, 1 );
+      const i = this.imagesUploadGeneral.indexOf(event);
+      if (i !== -1) {
+        this.imagesUploadGeneral.splice(i, 1);
       }
       this.loading.next(false);
 
@@ -331,14 +329,14 @@ export class ExternalEventsComponent implements OnInit {
     }
 
   }
- async deleteImageDetail(event): Promise<void>{
+  async deleteImageDetail(event): Promise<void> {
     try {
       this.loading.next(true);
       this.qualityService.deleteImage(event);
 
-      const i = this.imagesUploadGeneral.indexOf( event );
-      if ( i !== -1 ) {
-        this.imagesUploadGeneral.splice( i, 1 );
+      const i = this.imagesUploadGeneral.indexOf(event);
+      if (i !== -1) {
+        this.imagesUploadGeneral.splice(i, 1);
       }
       this.loading.next(false);
 
@@ -349,7 +347,7 @@ export class ExternalEventsComponent implements OnInit {
 
   }
 
-  async deleteDataFiles(url, index): Promise<void>{
+  async deleteDataFiles(url, index): Promise<void> {
     try {
       this.loading.next(true);
       this.qualityService.deleteImage(url);
