@@ -1,6 +1,6 @@
 {
   "name": "ingenieria-dsp",
-  "version": "6.17.23",
+  "version": "6.18.23",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -8,7 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "meraki" : "firebase emulators:start --import functions/backup --export-on-exit"
+    "meraki" : "firebase emulators:start --import functions/backup --export-on-exit ./fucntions/backup"
   },
   "private": true,
   "dependencies": {

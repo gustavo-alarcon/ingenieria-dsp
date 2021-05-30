@@ -16,6 +16,7 @@ import { ComponentList, WorkShopList, FileAdditional } from '../../../models/qua
 import { MatDialog } from '@angular/material/dialog';
 import { AddWorkshopComponent } from './dialogs/add-workshop/add-workshop.component';
 import { AddComponentComponent } from './dialogs/add-component/add-component.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-internal-events',
@@ -42,7 +43,7 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
   filesDetail: File[] = [];
   pathStorageDetail: string;
   isHoveringDetail: boolean;
-  
+
   // upload images detail
   uploadFile: string[] = [''];
   nameFiles: string[];
@@ -52,11 +53,11 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
   nameFileSelect = '';
   isHoveringFile: boolean;
   uploadPercent$: Observable<number>;
-  
-  
+
+
   subscription = new Subscription();
   user: User;
-  
+
   isMobile = false;
 
   workshop$: Observable<WorkShopList[]>;
@@ -74,8 +75,9 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private qualityService: QualityService,
     private storage: AngularFireStorage,
-    private dialog: MatDialog
-  ) {}
+    private dialog: MatDialog,
+    private router: Router
+  ) { }
 
 
   ngOnInit(): void {
@@ -163,7 +165,7 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
     }
 
     const date = new Date();
-    for (let event of files){
+    for (let event of files) {
       this.loading.next(true);
       const file = event;
       const filename = event.name;
@@ -231,9 +233,16 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
               .commit()
               .then(() => {
                 //this.loading.next(false)
-                this.snackbar.open('✅ Se guardo correctamente!', 'Aceptar', {
+                this.snackbar.open('✅ Evento guardado correctamente!', 'IR A ANALISIS', {
                   duration: 6000,
-                });
+                }).onAction()
+                  .pipe(
+                    take(1)
+                  )
+                  .subscribe(() => {
+                    this.router.navigateByUrl('main/quality-analysis/records')
+                  })
+
                 this.loading.next(false);
                 this.internalForm.reset();
                 this.filesDetail = [];
@@ -290,14 +299,14 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
       this.filesDetail.push(files.item(i));
     }
   }
- async deleteImageGeneral(event): Promise<void>{
+  async deleteImageGeneral(event): Promise<void> {
     try {
       this.loading.next(true);
       this.qualityService.deleteImage(event);
 
-      const i = this.imagesUploadGeneral.indexOf( event );
-      if ( i !== -1 ) {
-        this.imagesUploadGeneral.splice( i, 1 );
+      const i = this.imagesUploadGeneral.indexOf(event);
+      if (i !== -1) {
+        this.imagesUploadGeneral.splice(i, 1);
       }
       this.loading.next(false);
 
@@ -307,14 +316,14 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
     }
 
   }
- async deleteImageDetail(event): Promise<void>{
+  async deleteImageDetail(event): Promise<void> {
     try {
       this.loading.next(true);
       this.qualityService.deleteImage(event);
 
-      const i = this.imagesUploadGeneral.indexOf( event );
-      if ( i !== -1 ) {
-        this.imagesUploadGeneral.splice( i, 1 );
+      const i = this.imagesUploadGeneral.indexOf(event);
+      if (i !== -1) {
+        this.imagesUploadGeneral.splice(i, 1);
       }
       this.loading.next(false);
 
@@ -324,7 +333,7 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
     }
 
   }
- async deleteDataFiles(url, index): Promise<void>{
+  async deleteDataFiles(url, index): Promise<void> {
     try {
       this.loading.next(true);
       this.qualityService.deleteImage(url);

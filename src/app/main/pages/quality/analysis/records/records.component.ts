@@ -108,7 +108,7 @@ export class RecordsComponent implements OnInit {
             clearInterval(quality.registryTimer);
           }
 
-          quality.registryTimer = setInterval(() => {
+          quality.registryTimer = setInterval(function recordsInterval() {
             // Get today's date and time
             const now = new Date().getTime();
             const registry = quality.createdAt['seconds'] * 1000;
@@ -145,7 +145,9 @@ export class RecordsComponent implements OnInit {
               seconds: seconds
             };
 
-          }, 5000);
+            return recordsInterval
+
+          }(), 120000);
         });
 
         return preFilterSearch;
