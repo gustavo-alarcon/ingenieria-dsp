@@ -601,15 +601,6 @@ export class BudgetsSummaryComponent implements OnInit {
 
   public deleteDialog(element: any) {
     const dialogRef = this.MatDialog.open(BudgetsSummaryDeleteDialogComponent, {
-      // data: {
-      //   woMain:
-      //     this.tableData.data[this.tableData.filteredData.indexOf(element)]
-      //       .woMain,
-      //   woChild:
-      //     this.tableData.data[this.tableData.filteredData.indexOf(element)]
-      //       .woChild,
-      // },
-
       data: {
         woMain:
           this.tableData.filteredData[
@@ -630,8 +621,9 @@ export class BudgetsSummaryComponent implements OnInit {
           this.loading.next(true);
           this._budgetsService
             .deleteOneBudget(
-              this.tableData.data[this.tableData.filteredData.indexOf(element)]
-                .id
+              this.tableData.filteredData[
+                this.tableData.filteredData.indexOf(element)
+              ].id
             )
             .then(() => {
               this.MatSnackBar.open('✅ Eliminado correctamente!', 'Aceptar', {
