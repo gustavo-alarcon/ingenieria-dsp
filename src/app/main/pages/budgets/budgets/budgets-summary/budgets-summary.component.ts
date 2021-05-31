@@ -1,3 +1,6 @@
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { BudgetsSummaryDeleteDialogComponent } from './dialogs/budgets-summary-delete-dialog/budgets-summary-delete-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 import { FormControl } from '@angular/forms';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -22,7 +25,9 @@ export class BudgetsSummaryComponent implements OnInit {
   constructor(
     public auth: AuthService,
     private breakpoint: BreakpointObserver,
-    private _budgetsService: BudgetsService
+    private _budgetsService: BudgetsService,
+    public MatDialog: MatDialog,
+    public MatSnackBar: MatSnackBar
   ) {}
 
   // Form controllers
@@ -593,4 +598,53 @@ export class BudgetsSummaryComponent implements OnInit {
     const name = `Tabla_Resumen.xlsx`;
     XLSX.writeFile(wb, name);
   }
+
+  public deleteDialog(element: any) {
+    const dialogRef = this.MatDialog.open(BudgetsSummaryDeleteDialogComponent, {
+      data: {
+        woMain:
+          this.tableData.data[this.tableData.filteredData.indexOf(element)]
+            .woMain,
+        woChild:
+          this.tableData.data[this.tableData.filteredData.indexOf(element)]
+            .woChild,
+      },
+    });
+
+    dialogRef
+      .afterClosed()
+      .toPromise()
+      .then((res) => {
+        if (res == 'delete') {
+          this.loading.next(true);
+          this._budgetsService
+            .deleteOneBudget(
+              this.tableData.data[this.tableData.filteredData.indexOf(element)]
+                .id
+            )
+            .then(() => {
+              this.MatSnackBar.open('✅ Eliminado correctamente!', 'Aceptar', {
+                duration: 6000,
+              });
+              this.refresh();
+              this.loading.next(false);
+            })
+            .catch((error) => {
+              this.MatSnackBar.open('🚨 Ha ocurrido un error! ', 'Aceptar', {
+                duration: 6000,
+              });
+              this.loading.next(false);
+            });
+        }
+      });
+  }
+
+  // Function to refresh the mat-table data source
+  refresh(): void {
+    this.tableData.data = this.tableData.data;
+  }
+
+  public sendDialog(i: number) {}
+
+  public timelineDialog(i: number) {}
 }

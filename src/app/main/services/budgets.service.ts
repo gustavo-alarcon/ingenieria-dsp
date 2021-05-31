@@ -281,4 +281,11 @@ export class BudgetsService {
 
     return of(batch);
   }
+
+  public deleteOneBudget(id: string): Promise<void> {
+    return this.afs.firestore
+      .collection('/db/ferreyros/budgets')
+      .doc(id)
+      .delete();
+  }
 }

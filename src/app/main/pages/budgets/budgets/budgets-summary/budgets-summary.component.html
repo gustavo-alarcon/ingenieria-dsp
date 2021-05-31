@@ -1672,7 +1672,13 @@
             <ng-container>
               <mat-menu #rawMenu="matMenu">
                 <button
-                  *ngIf="element.statusPresupuesto != 'CLIENTE INTERNO'"
+                  *ngIf="
+                    !(
+                      element.statusPresupuesto == 'PPTO. APROBADO' ||
+                      element.statusPresupuesto == 'PPTO. RECHAZADO' ||
+                      element.statusPresupuesto == 'CLIENTE INTERNO'
+                    )
+                  "
                   class="w3-small"
                   mat-menu-item
                   (click)="sendDialog(i)"
@@ -1692,7 +1698,7 @@
                 <button
                   class="w3-small"
                   mat-menu-item
-                  (click)="deleteDialog(i)"
+                  (click)="deleteDialog(element)"
                 >
                   <mat-icon>delete</mat-icon>
                   Borrar
