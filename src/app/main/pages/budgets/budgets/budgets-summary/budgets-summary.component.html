@@ -4,99 +4,70 @@
       Cant. W.O.
       <span class="quantity">{{ cantWO }}</span>
     </div>
-    <mat-form-field
-      appearance="outline"
-      class="ms-kanban-toolbar__input"
-      [ngClass]="
-        isMobile
-          ? 'ms-kanban-toolbar__input--mobile'
-          : 'ms-kanban-toolbar__input--desktop'
-      "
-    >
-      <mat-icon matPrefix style="margin-right: 12px"> business </mat-icon>
+
+    <mat-form-field appearance="outline" class="ms-kanban-toolbar__input">
+      <mat-label>Taller</mat-label>
       <input
-        matInput
         type="text"
         [formControl]="tallerFormControl"
+        matInput
         placeholder="Taller"
         autocomplete="off"
+        [disabled]="cantWO < 1"
       />
+      <mat-icon matPrefix>business</mat-icon>
     </mat-form-field>
 
-    <mat-form-field
-      appearance="outline"
-      class="ms-kanban-toolbar__input"
-      [ngClass]="
-        isMobile
-          ? 'ms-kanban-toolbar__input--mobile'
-          : 'ms-kanban-toolbar__input--desktop'
-      "
-    >
-      <mat-icon matPrefix style="margin-right: 12px"> search </mat-icon>
+    <mat-form-field appearance="outline" class="ms-kanban-toolbar__input">
+      <mat-label>WO MAIN</mat-label>
       <input
-        matInput
         type="text"
         [formControl]="woMainFormControl"
+        matInput
         placeholder="WO MAIN"
         autocomplete="off"
+        [disabled]="cantWO < 1"
       />
+      <mat-icon matPrefix>search</mat-icon>
     </mat-form-field>
 
-    <mat-form-field
-      appearance="outline"
-      class="ms-kanban-toolbar__input"
-      [ngClass]="
-        isMobile
-          ? 'ms-kanban-toolbar__input--mobile'
-          : 'ms-kanban-toolbar__input--desktop'
-      "
-    >
-      <mat-icon matPrefix style="margin-right: 12px"> search </mat-icon>
+    <mat-form-field appearance="outline" class="ms-kanban-toolbar__input">
+      <mat-label>WO CHILD</mat-label>
       <input
-        matInput
         type="text"
         [formControl]="woChildFormControl"
+        matInput
         placeholder="WO CHILD"
         autocomplete="off"
+        [disabled]="cantWO < 1"
       />
+      <mat-icon matPrefix>search</mat-icon>
     </mat-form-field>
 
-    <mat-form-field
-      appearance="outline"
-      class="ms-kanban-toolbar__input"
-      [ngClass]="
-        isMobile
-          ? 'ms-kanban-toolbar__input--mobile'
-          : 'ms-kanban-toolbar__input--desktop'
-      "
-    >
-      <mat-icon matPrefix style="margin-right: 12px"> search </mat-icon>
+    <mat-form-field appearance="outline" class="ms-kanban-toolbar__input">
+      <mat-label>Cliente</mat-label>
       <input
-        matInput
         type="text"
         [formControl]="clienteFormControl"
-        placeholder="CLIENTE"
+        matInput
+        placeholder="Cliente"
         autocomplete="off"
+        [disabled]="cantWO < 1"
       />
+      <mat-icon matPrefix>search</mat-icon>
     </mat-form-field>
 
-    <mat-form-field
-      appearance="outline"
-      class="ms-kanban-toolbar__input"
-      [ngClass]="
-        isMobile
-          ? 'ms-kanban-toolbar__input--mobile'
-          : 'ms-kanban-toolbar__input--desktop'
-      "
-    >
-      <mat-icon matPrefix style="margin-right: 12px"> search </mat-icon>
+    <mat-form-field appearance="outline" class="ms-kanban-toolbar__input">
+      <mat-label>Status PPTO.</mat-label>
       <input
-        matInput
         type="text"
         [formControl]="statusFormControl"
-        placeholder="STATUS PPTO"
+        matInput
+        placeholder="Status PPTO."
         autocomplete="off"
+        [disabled]="cantWO < 1"
       />
+      <mat-icon matPrefix>search</mat-icon>
     </mat-form-field>
 
     <button
