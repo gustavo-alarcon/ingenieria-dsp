@@ -330,9 +330,11 @@ export class BudgetsDailyEntriesComponent implements OnInit {
     return moment(date).format('DD/MM/YYYY');
   }
 
-  deleteDialog(index: number): void {
+  deleteDialog(element: any): void {
     const currentWOCHILD: number =
-      this.budgetsDailyEntriesDataSource.data[index].woChild;
+      this.budgetsDailyEntriesDataSource.data[
+        this.budgetsDailyEntriesDataSource.filteredData.indexOf(element)
+      ].woChild;
 
     const dialogRef = this.dialog.open(DeleteDialogComponent, {
       data: { currentWOCHILD },
@@ -343,7 +345,10 @@ export class BudgetsDailyEntriesComponent implements OnInit {
       .toPromise()
       .then((res: string) => {
         if (res == 'delete') {
-          this.budgetsDailyEntriesDataSource.data.splice(index, 1);
+          this.budgetsDailyEntriesDataSource.data.splice(
+            this.budgetsDailyEntriesDataSource.filteredData.indexOf(element),
+            1
+          );
           this.MatSnackBar.open('✅ Eliminado correctamente!', 'Aceptar', {
             duration: 6000,
           });
