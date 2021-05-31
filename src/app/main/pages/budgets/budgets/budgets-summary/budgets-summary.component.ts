@@ -601,13 +601,24 @@ export class BudgetsSummaryComponent implements OnInit {
 
   public deleteDialog(element: any) {
     const dialogRef = this.MatDialog.open(BudgetsSummaryDeleteDialogComponent, {
+      // data: {
+      //   woMain:
+      //     this.tableData.data[this.tableData.filteredData.indexOf(element)]
+      //       .woMain,
+      //   woChild:
+      //     this.tableData.data[this.tableData.filteredData.indexOf(element)]
+      //       .woChild,
+      // },
+
       data: {
         woMain:
-          this.tableData.data[this.tableData.filteredData.indexOf(element)]
-            .woMain,
+          this.tableData.filteredData[
+            this.tableData.filteredData.indexOf(element)
+          ].woMain,
         woChild:
-          this.tableData.data[this.tableData.filteredData.indexOf(element)]
-            .woChild,
+          this.tableData.filteredData[
+            this.tableData.filteredData.indexOf(element)
+          ].woChild,
       },
     });
 
