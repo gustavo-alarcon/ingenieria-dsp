@@ -5,7 +5,7 @@
       <span class="quantity">{{ cantWO }}</span>
     </div>
 
-    <mat-form-field appearance="outline" class="ms-kanban-toolbar__input">
+    <mat-form-field appearance="outline" [ngClass]="isMobile ? 'ms-kanban-toolbar__input--mobile' : 'ms-kanban-toolbar__input'">
       <mat-label>Taller</mat-label>
       <input
         type="text"
@@ -18,7 +18,14 @@
       <mat-icon matPrefix>business</mat-icon>
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="ms-kanban-toolbar__input">
+    <mat-form-field
+      appearance="outline"
+      [ngClass]="
+        isMobile
+          ? 'ms-kanban-toolbar__input--mobile'
+          : 'ms-kanban-toolbar__input'
+      "
+    >
       <mat-label>WO MAIN</mat-label>
       <input
         type="text"
@@ -31,7 +38,14 @@
       <mat-icon matPrefix>search</mat-icon>
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="ms-kanban-toolbar__input">
+    <mat-form-field
+      appearance="outline"
+      [ngClass]="
+        isMobile
+          ? 'ms-kanban-toolbar__input--mobile'
+          : 'ms-kanban-toolbar__input'
+      "
+    >
       <mat-label>WO CHILD</mat-label>
       <input
         type="text"
@@ -44,7 +58,14 @@
       <mat-icon matPrefix>search</mat-icon>
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="ms-kanban-toolbar__input">
+    <mat-form-field
+      appearance="outline"
+      [ngClass]="
+        isMobile
+          ? 'ms-kanban-toolbar__input--mobile'
+          : 'ms-kanban-toolbar__input'
+      "
+    >
       <mat-label>Cliente</mat-label>
       <input
         type="text"
@@ -57,7 +78,14 @@
       <mat-icon matPrefix>search</mat-icon>
     </mat-form-field>
 
-    <mat-form-field appearance="outline" class="ms-kanban-toolbar__input">
+    <mat-form-field
+      [ngClass]="
+        isMobile
+          ? 'ms-kanban-toolbar__input--mobile'
+          : 'ms-kanban-toolbar__input'
+      "
+      appearance="outline"
+    >
       <mat-label>Status PPTO.</mat-label>
       <input
         type="text"
