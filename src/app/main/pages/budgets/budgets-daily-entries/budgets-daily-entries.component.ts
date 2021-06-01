@@ -3,7 +3,7 @@ import { DeleteDialogComponent } from './dialogs/delete-dialog/delete-dialog.com
 import { MatDialog } from '@angular/material/dialog';
 import { BudgetsService } from './../../../services/budgets.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { budgetsExcelColumns } from './../../../models/budgets.model';
+import { Budget } from './../../../models/budgets.model';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -18,8 +18,8 @@ import moment from 'moment';
   styleUrls: ['./budgets-daily-entries.component.scss'],
 })
 export class BudgetsDailyEntriesComponent implements OnInit {
-  public budgetsDailyEntriesDataSource: MatTableDataSource<budgetsExcelColumns> =
-    new MatTableDataSource<budgetsExcelColumns>();
+  public budgetsDailyEntriesDataSource: MatTableDataSource<Budget> =
+    new MatTableDataSource<Budget>();
 
   public budgetsDailyEntriesDisplayedColumns: Array<string> = [
     'taller',
@@ -179,7 +179,7 @@ export class BudgetsDailyEntriesComponent implements OnInit {
   }
 
   public parseExcelData(rawData: any): void {
-    let parsedExcelData: Array<budgetsExcelColumns> = [];
+    let parsedExcelData: Array<Budget> = [];
 
     // Remove the headers
     rawData.shift();
@@ -215,7 +215,7 @@ export class BudgetsDailyEntriesComponent implements OnInit {
               ? this.formatDate(el[85])
               : el[85];
 
-          const data: budgetsExcelColumns = {
+          const data: Budget = {
             id: null,
             taller: el[0] ? el[0] : null,
             woMain: el[1] ? el[1] : null,
