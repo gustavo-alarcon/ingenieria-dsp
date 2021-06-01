@@ -2,14 +2,12 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subscription, Observable, combineLatest } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, startWith, take, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, startWith, tap } from 'rxjs/operators';
 import { AndonService } from 'src/app/main/services/andon.service';
-import { AuthService } from '../../../../auth/services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Andon, AndonListBahias } from '../../../models/andon.model';
+import { AndonListBahias } from '../../../models/andon.model';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { onUpdate } from 'firebase-functions/lib/providers/remoteConfig';
 
 
 @Component({
@@ -32,12 +30,9 @@ export class ReportComponent implements OnInit, OnDestroy {
 
   constructor(
     private breakpoint: BreakpointObserver,
-    private afs: AngularFirestore,
     private fb: FormBuilder,
     public router: Router,
-    private andonService: AndonService,
-    private auth: AuthService,
-    private snackbar: MatSnackBar
+    private andonService: AndonService
   ) { }
 
   ngOnInit(): void {
@@ -106,7 +101,7 @@ export class ReportComponent implements OnInit, OnDestroy {
       const name = this.reportForm.value['name']['name'];
       const otChild = this.reportForm.value['otChild'];
 
-      const code = `${workShop}-${name}-${otChild}`;
+      const code = `${workShop}@${name}@${otChild}`;
       this.router.navigate(['main/reporte', code]);
     }
 
