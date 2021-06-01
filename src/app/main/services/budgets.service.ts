@@ -2,10 +2,10 @@ import { map, shareReplay } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import {
-  rejectionReasonsEntry,
-  modificationReasonEntry,
+  RejectionReasonsEntry,
+  ModificationReasonEntry,
   BudgetsBroadcastList,
-  budgetsExcelColumns,
+  Budget,
 } from '../models/budgets.model';
 
 import * as firebase from 'firebase/app';
@@ -19,8 +19,8 @@ export class BudgetsService {
   constructor(private afs: AngularFirestore) {}
 
   uploadDailyExcelBatchArray(
-    list: Array<budgetsExcelColumns>,
-    firestoreBudgetsSnapshot: firebase.default.firestore.QuerySnapshot<budgetsExcelColumns>
+    list: Array<Budget>,
+    firestoreBudgetsSnapshot: firebase.default.firestore.QuerySnapshot<Budget>
   ): Observable<firebase.default.firestore.WriteBatch[]> {
     let batchCount = Math.ceil(list.length / 500);
     let batchArray = [];
@@ -94,19 +94,15 @@ export class BudgetsService {
     return of(batchArray);
   }
 
-  getBudgets(): Observable<budgetsExcelColumns[]> {
-    const ref = this.afs.collection<budgetsExcelColumns>(
-      '/db/ferreyros/budgets'
-    );
+  getBudgets(): Observable<Budget[]> {
+    const ref = this.afs.collection<Budget>('/db/ferreyros/budgets');
     return ref.valueChanges().pipe(shareReplay(1));
   }
 
   getBudgetsSnapshot(): Observable<
-    firebase.default.firestore.QuerySnapshot<budgetsExcelColumns>
+    firebase.default.firestore.QuerySnapshot<Budget>
   > {
-    const ref = this.afs.collection<budgetsExcelColumns>(
-      '/db/ferreyros/budgets'
-    );
+    const ref = this.afs.collection<Budget>('/db/ferreyros/budgets');
 
     const refSnapshot = ref.get();
 
@@ -114,10 +110,10 @@ export class BudgetsService {
   }
 
   public getAllReasonsForRejectionEntries(): Observable<
-    rejectionReasonsEntry[]
+    RejectionReasonsEntry[]
   > {
     return this.afs
-      .collection<rejectionReasonsEntry>(
+      .collection<RejectionReasonsEntry>(
         '/db/generalConfig/budgetsListRejectionReasons',
         (ref) => ref.orderBy('createdAt', 'desc')
       )
@@ -125,10 +121,10 @@ export class BudgetsService {
   }
 
   public getAllReasonsForModificationEntries(): Observable<
-    rejectionReasonsEntry[]
+    RejectionReasonsEntry[]
   > {
     return this.afs
-      .collection<rejectionReasonsEntry>(
+      .collection<RejectionReasonsEntry>(
         '/db/generalConfig/budgetsListModificationReasons',
         (ref) => ref.orderBy('createdAt', 'desc')
       )
@@ -136,7 +132,7 @@ export class BudgetsService {
   }
 
   public addReasonForRejectionEntry(
-    listReasonsForRejection: Array<rejectionReasonsEntry>,
+    listReasonsForRejection: Array<RejectionReasonsEntry>,
     user: User
   ): Observable<firebase.default.firestore.WriteBatch> {
     const date = firebase.default.firestore.FieldValue.serverTimestamp();
@@ -144,7 +140,7 @@ export class BudgetsService {
       this.afs.firestore.batch();
 
     listReasonsForRejection.forEach(
-      (reasonForRejection: rejectionReasonsEntry) => {
+      (reasonForRejection: RejectionReasonsEntry) => {
         const listReasonsForRejectionDocumentRef = this.afs.firestore
           .collection('/db/generalConfig/budgetsListRejectionReasons')
           .doc();
@@ -164,7 +160,7 @@ export class BudgetsService {
   }
 
   public addReasonForModificationEntry(
-    listReasonsForModification: Array<modificationReasonEntry>,
+    listReasonsForModification: Array<ModificationReasonEntry>,
     user: User
   ): Observable<firebase.default.firestore.WriteBatch> {
     const date = firebase.default.firestore.FieldValue.serverTimestamp();
@@ -172,7 +168,7 @@ export class BudgetsService {
       this.afs.firestore.batch();
 
     listReasonsForModification.forEach(
-      (reasonForModification: modificationReasonEntry) => {
+      (reasonForModification: ModificationReasonEntry) => {
         const listReasonsForRejectionDocumentRef = this.afs.firestore
           .collection('/db/generalConfig/budgetsListModificationReasons')
           .doc();
@@ -280,5 +276,11 @@ export class BudgetsService {
     batch.update(docRef, data);
 
     return of(batch);
+  }
+
+  public deleteBudget(id: string): Observable<Promise<void>> {
+    return of(
+      this.afs.firestore.collection('/db/ferreyros/budgets').doc(id).delete()
+    );
   }
 }

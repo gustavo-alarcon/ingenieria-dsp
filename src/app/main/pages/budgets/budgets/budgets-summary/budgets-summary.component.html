@@ -4,99 +4,98 @@
       Cant. W.O.
       <span class="quantity">{{ cantWO }}</span>
     </div>
-    <mat-form-field
-      appearance="outline"
-      class="ms-kanban-toolbar__input"
-      [ngClass]="
-        isMobile
-          ? 'ms-kanban-toolbar__input--mobile'
-          : 'ms-kanban-toolbar__input--desktop'
-      "
-    >
-      <mat-icon matPrefix style="margin-right: 12px"> business </mat-icon>
+
+    <mat-form-field appearance="outline" [ngClass]="isMobile ? 'ms-kanban-toolbar__input--mobile' : 'ms-kanban-toolbar__input'">
+      <mat-label>Taller</mat-label>
       <input
-        matInput
         type="text"
         [formControl]="tallerFormControl"
+        matInput
         placeholder="Taller"
         autocomplete="off"
+        [disabled]="cantWO < 1"
       />
+      <mat-icon matPrefix>business</mat-icon>
     </mat-form-field>
 
     <mat-form-field
       appearance="outline"
-      class="ms-kanban-toolbar__input"
       [ngClass]="
         isMobile
           ? 'ms-kanban-toolbar__input--mobile'
-          : 'ms-kanban-toolbar__input--desktop'
+          : 'ms-kanban-toolbar__input'
       "
     >
-      <mat-icon matPrefix style="margin-right: 12px"> search </mat-icon>
+      <mat-label>WO MAIN</mat-label>
       <input
-        matInput
         type="text"
         [formControl]="woMainFormControl"
+        matInput
         placeholder="WO MAIN"
         autocomplete="off"
+        [disabled]="cantWO < 1"
       />
+      <mat-icon matPrefix>search</mat-icon>
     </mat-form-field>
 
     <mat-form-field
       appearance="outline"
-      class="ms-kanban-toolbar__input"
       [ngClass]="
         isMobile
           ? 'ms-kanban-toolbar__input--mobile'
-          : 'ms-kanban-toolbar__input--desktop'
+          : 'ms-kanban-toolbar__input'
       "
     >
-      <mat-icon matPrefix style="margin-right: 12px"> search </mat-icon>
+      <mat-label>WO CHILD</mat-label>
       <input
-        matInput
         type="text"
         [formControl]="woChildFormControl"
+        matInput
         placeholder="WO CHILD"
         autocomplete="off"
+        [disabled]="cantWO < 1"
       />
+      <mat-icon matPrefix>search</mat-icon>
     </mat-form-field>
 
     <mat-form-field
       appearance="outline"
-      class="ms-kanban-toolbar__input"
       [ngClass]="
         isMobile
           ? 'ms-kanban-toolbar__input--mobile'
-          : 'ms-kanban-toolbar__input--desktop'
+          : 'ms-kanban-toolbar__input'
       "
     >
-      <mat-icon matPrefix style="margin-right: 12px"> search </mat-icon>
+      <mat-label>Cliente</mat-label>
       <input
-        matInput
         type="text"
         [formControl]="clienteFormControl"
-        placeholder="CLIENTE"
+        matInput
+        placeholder="Cliente"
         autocomplete="off"
+        [disabled]="cantWO < 1"
       />
+      <mat-icon matPrefix>search</mat-icon>
     </mat-form-field>
 
     <mat-form-field
-      appearance="outline"
-      class="ms-kanban-toolbar__input"
       [ngClass]="
         isMobile
           ? 'ms-kanban-toolbar__input--mobile'
-          : 'ms-kanban-toolbar__input--desktop'
+          : 'ms-kanban-toolbar__input'
       "
+      appearance="outline"
     >
-      <mat-icon matPrefix style="margin-right: 12px"> search </mat-icon>
+      <mat-label>Status PPTO.</mat-label>
       <input
-        matInput
         type="text"
         [formControl]="statusFormControl"
-        placeholder="STATUS PPTO"
+        matInput
+        placeholder="Status PPTO."
         autocomplete="off"
+        [disabled]="cantWO < 1"
       />
+      <mat-icon matPrefix>search</mat-icon>
     </mat-form-field>
 
     <button
@@ -1668,14 +1667,20 @@
           <th mat-header-cell *matHeaderCellDef class="table__cell">
             Acciones
           </th>
-          <td mat-cell *matCellDef="let element; let i = index">
+          <td mat-cell *matCellDef="let element">
             <ng-container>
               <mat-menu #rawMenu="matMenu">
                 <button
-                  *ngIf="element.statusPresupuesto != 'CLIENTE INTERNO'"
+                  *ngIf="
+                    !(
+                      element.statusPresupuesto == 'PPTO. APROBADO' ||
+                      element.statusPresupuesto == 'PPTO. RECHAZADO' ||
+                      element.statusPresupuesto == 'CLIENTE INTERNO'
+                    )
+                  "
                   class="w3-small"
                   mat-menu-item
-                  (click)="sendDialog(i)"
+                  (click)="sendDialog(element)"
                 >
                   <mat-icon>attach_email</mat-icon>
                   Enviar PPTO
@@ -1684,7 +1689,7 @@
                   *ngIf="element.statusPresupuesto != 'CLIENTE INTERNO'"
                   class="w3-small"
                   mat-menu-item
-                  (click)="timelineDialog(i)"
+                  (click)="timelineDialog(element)"
                 >
                   <mat-icon>timeline</mat-icon>
                   Historial
@@ -1692,7 +1697,7 @@
                 <button
                   class="w3-small"
                   mat-menu-item
-                  (click)="deleteDialog(i)"
+                  (click)="deleteDialog(element)"
                 >
                   <mat-icon>delete</mat-icon>
                   Borrar
