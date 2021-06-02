@@ -2,8 +2,8 @@ import { AddGroupDialogComponent } from './dialogs/add-group-dialog/add-group-di
 import { MatDialog } from '@angular/material/dialog';
 import {
   BudgetsBroadcastList,
-  modificationReasonEntry,
-  rejectionReasonsEntry,
+  ModificationReasonEntry,
+  RejectionReasonsEntry,
 } from './../../../models/budgets.model';
 import { MyErrorStateMatcher } from './../../evaluations/evaluations-settings/evaluations-settings.component';
 import { FormArray, FormControl, Validators } from '@angular/forms';
@@ -40,10 +40,10 @@ export class BudgetsConfigurationsComponent implements OnInit {
   public matcher: MyErrorStateMatcher = new MyErrorStateMatcher();
 
   // Data
-  public listReasonsForRejectionArray: Array<rejectionReasonsEntry> = [];
-  public listReasonsForModificationArray: Array<modificationReasonEntry> = [];
+  public listReasonsForRejectionArray: Array<RejectionReasonsEntry> = [];
+  public listReasonsForModificationArray: Array<ModificationReasonEntry> = [];
 
-  public reasonsForModification$: Observable<Array<modificationReasonEntry>>;
+  public reasonsForModification$: Observable<Array<ModificationReasonEntry>>;
 
   public broadcast$: Observable<Array<BudgetsBroadcastList>>;
   public broadcastListArray: Array<BudgetsBroadcastList> = [];
@@ -214,7 +214,7 @@ export class BudgetsConfigurationsComponent implements OnInit {
       case 'add': {
         // Add an item to the local ReasonsForRejection array
         if (this.listReasonsForRejectionFormControl.valid) {
-          const temp: rejectionReasonsEntry = {
+          const temp: RejectionReasonsEntry = {
             id: null,
             name: this.listReasonsForRejectionFormControl.value.trim(),
             createdBy: null,
@@ -222,7 +222,7 @@ export class BudgetsConfigurationsComponent implements OnInit {
           };
 
           // Searching for repeated values
-          const equal = (currentItem: rejectionReasonsEntry) =>
+          const equal = (currentItem: RejectionReasonsEntry) =>
             currentItem.name !== temp.name;
           if (this.listReasonsForRejectionArray.every(equal)) {
             this.listReasonsForRejectionArray.unshift(temp);
@@ -261,7 +261,7 @@ export class BudgetsConfigurationsComponent implements OnInit {
       case 'add': {
         // Add an item to the local ReasonsForModification array
         if (this.listReasonsForModificationFormControl.valid) {
-          const temp: modificationReasonEntry = {
+          const temp: ModificationReasonEntry = {
             id: null,
             name: this.listReasonsForModificationFormControl.value.trim(),
             createdBy: null,
@@ -269,7 +269,7 @@ export class BudgetsConfigurationsComponent implements OnInit {
           };
 
           // Searching for repeated values
-          const equal = (currentItem: modificationReasonEntry) =>
+          const equal = (currentItem: ModificationReasonEntry) =>
             currentItem.name !== temp.name;
           if (this.listReasonsForModificationArray.every(equal)) {
             this.listReasonsForModificationArray.unshift(temp);

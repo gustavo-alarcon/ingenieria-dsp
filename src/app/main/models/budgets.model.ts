@@ -1,7 +1,7 @@
 import { User } from './user-model';
 import * as firebase from 'firebase/app';
 
-export interface budgetsExcelColumns {
+export interface Budget {
   taller: string;
   woMain: number;
   ioMain: number;
@@ -101,14 +101,14 @@ export interface budgetsExcelColumns {
   id?: any;
 }
 
-export interface rejectionReasonsEntry {
+export interface RejectionReasonsEntry {
   id: string;
   name: string;
   createdBy: User;
   createdAt: firebase.default.firestore.FieldValue;
 }
 
-export interface modificationReasonEntry {
+export interface ModificationReasonEntry {
   id: string;
   name: string;
   createdBy: User;

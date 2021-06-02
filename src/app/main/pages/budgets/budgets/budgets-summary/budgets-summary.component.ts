@@ -1,7 +1,11 @@
+import { BudgetsSummarySendDialogComponent } from './dialogs/budgets-summary-send-dialog/budgets-summary-send-dialog.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { BudgetsSummaryDeleteDialogComponent } from './dialogs/budgets-summary-delete-dialog/budgets-summary-delete-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 import { FormControl } from '@angular/forms';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { budgetsExcelColumns } from './../../../../models/budgets.model';
+import { Budget } from './../../../../models/budgets.model';
 import { BudgetsService } from './../../../../services/budgets.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
@@ -22,7 +26,9 @@ export class BudgetsSummaryComponent implements OnInit {
   constructor(
     public auth: AuthService,
     private breakpoint: BreakpointObserver,
-    private _budgetsService: BudgetsService
+    private _budgetsService: BudgetsService,
+    public MatDialog: MatDialog,
+    public MatSnackBar: MatSnackBar
   ) {}
 
   // Form controllers
@@ -32,8 +38,8 @@ export class BudgetsSummaryComponent implements OnInit {
   public clienteFormControl: FormControl = new FormControl();
   public statusFormControl: FormControl = new FormControl();
 
-  public tableData: MatTableDataSource<budgetsExcelColumns> =
-    new MatTableDataSource<budgetsExcelColumns>();
+  public tableData: MatTableDataSource<Budget> =
+    new MatTableDataSource<Budget>();
 
   public displayedColumns = [
     'taller',
@@ -294,10 +300,7 @@ export class BudgetsSummaryComponent implements OnInit {
   }
 
   customFilterPredicate() {
-    const myFilterPredicate = (
-      data: budgetsExcelColumns,
-      filter: string
-    ): boolean => {
+    const myFilterPredicate = (data: Budget, filter: string): boolean => {
       let searchString = JSON.parse(filter);
       return (
         this.checkIfNull(data.taller)
@@ -340,7 +343,7 @@ export class BudgetsSummaryComponent implements OnInit {
   }
 
   public downloadReport(): void {
-    const dataSource: Array<budgetsExcelColumns> = this.tableData.data;
+    const dataSource: Array<Budget> = this.tableData.data;
 
     const tableXlsx: any[] = [];
     const headersXlsx = [
@@ -593,4 +596,48 @@ export class BudgetsSummaryComponent implements OnInit {
     const name = `Tabla_Resumen.xlsx`;
     XLSX.writeFile(wb, name);
   }
+
+  public deleteDialog(element: Budget) {
+    const dialogRef = this.MatDialog.open(BudgetsSummaryDeleteDialogComponent, {
+      data: {
+        woMain: element.woMain,
+        woChild: element.woChild,
+      },
+    });
+
+    dialogRef
+      .afterClosed()
+      .toPromise()
+      .then((res) => {
+        if (res == 'delete') {
+          this.loading.next(true);
+          this._budgetsService.deleteBudget(element.id).subscribe(
+            () => {
+              this.MatSnackBar.open('✅ Eliminado correctamente!', 'Aceptar', {
+                duration: 6000,
+              });
+              this.refresh();
+              this.loading.next(false);
+            },
+            (error) => {
+              this.MatSnackBar.open('🚨 Ha ocurrido un error! ', 'Aceptar', {
+                duration: 6000,
+              });
+              this.loading.next(false);
+            }
+          );
+        }
+      });
+  }
+
+  // Function to refresh the mat-table data source
+  refresh(): void {
+    this.tableData.data = this.tableData.data;
+  }
+
+  public sendDialog(element: any) {
+    this.MatDialog.open(BudgetsSummarySendDialogComponent);
+  }
+
+  public timelineDialog(i: number) {}
 }

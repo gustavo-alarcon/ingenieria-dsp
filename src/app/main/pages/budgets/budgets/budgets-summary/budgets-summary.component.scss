@@ -1,3 +1,9 @@
+.ms-kanban-toolbar {
+  display: flex;
+  align-items: center;
+  height: auto;
+}
+
 .quantity-wrapper {
   cursor: default;
   display: flex;
@@ -20,6 +26,10 @@
     letter-spacing: 0.15px;
     margin-left: 10px;
   }
+}
+
+.ms-kanban-toolbar__input {
+  margin-right: 12px;
 }
 
 .download {
