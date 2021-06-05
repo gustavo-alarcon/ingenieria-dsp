@@ -13,7 +13,7 @@ import { HistoryImageDialogComponent } from './dialogs/history-image-dialog/hist
 import { HistoryObservationDialogComponent } from './dialogs/history-observation-dialog/history-observation-dialog.component';
 import { HistoryUploadFileDialogComponent } from './dialogs/history-upload-file-dialog/history-upload-file-dialog.component';
 import { AuthService } from 'src/app/auth/services/auth.service';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import * as XLSX from 'xlsx';
 import { HistoryCreateDialogComponent } from './dialogs/history-create-dialog/history-create-dialog.component';
 import { HistoryTimeLineComponent } from './dialogs/history-time-line/history-time-line.component';
@@ -21,11 +21,13 @@ import jsPDF from 'jspdf';
 import { HistoryReportsDialogComponent } from './dialogs/history-reports-dialog/history-reports-dialog.component';
 import { MatSort, Sort } from '@angular/material/sort';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-evaluations-history',
   templateUrl: './evaluations-history.component.html',
-  styleUrls: ['./evaluations-history.component.scss']
+  styleUrls: ['./evaluations-history.component.scss'],
+  providers: [DatePipe]
 })
 export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
 
@@ -53,6 +55,7 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
     'finalizedAt',
     'createdBy',
     'actions',
+    'date'
   ];
 
   @ViewChild('improvementPaginator', { static: false }) set content(
@@ -64,6 +67,8 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
   @ViewChild(MatSort, { static: false }) set sortContent(sort: MatSort) {
     this.historyDataSource.sort = sort;
   }
+
+  dateForm: FormGroup;
 
   statusControl = new FormControl('');
   searchControl = new FormControl('');
@@ -82,7 +87,8 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
     private breakpoint: BreakpointObserver,
     public dialog: MatDialog,
     private evaltService: EvaluationsService,
-    public authService: AuthService
+    public authService: AuthService,
+    private miDatePipe: DatePipe
   ) { }
 
   ngOnInit(): void {
@@ -96,16 +102,39 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
       })
     )
 
+    const view = this.evaltService.getCurrentMonthOfViewDate();
+
+    const beginDate = view.from;
+    const endDate = new Date();
+    endDate.setHours(23, 59, 59);
+
+    this.dateForm = new FormGroup({
+      start: new FormControl(beginDate),
+      end: new FormControl(endDate),
+    });
+    
+
     this.evaluation$ = combineLatest(
       this.evaltService.getAllEvaluations(),
       this.statusControl.valueChanges.pipe(startWith('')),
       this.searchControl.valueChanges.pipe(
         debounceTime(300),
         distinctUntilChanged(),
-        startWith('')
+        startWith(''),
+        
+      ),
+      this.dateForm.get('start').valueChanges.pipe(
+        startWith(beginDate),
+        map(begin => begin.setHours(0, 0, 0, 0))
+      ),
+      this.dateForm.get('end').valueChanges.pipe(
+        startWith(endDate),
+        map(end => end ? end.setHours(23, 59, 59) : null)
       )
     ).pipe(
-      map(([evaluations, status, search]) => {
+      map(([evaluations, status, search,startdate,enddate]) => {
+
+        const date = { begin: startdate, end: enddate };
 
         const searchTerm = search.toLowerCase();
 
@@ -120,6 +149,8 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
               String(evaluation.wof).toLowerCase().includes(searchTerm) ||
               String(evaluation.partNumber).toLowerCase().includes(searchTerm) ||
               String(evaluation.description).toLowerCase().includes(searchTerm);
+          }).filter((evaluation) =>{
+             return this.getFilterTime(evaluation.createdAt,date)
           })
         } else {
           preFilterSearch = evaluations.filter(evaluation => {
@@ -128,7 +159,9 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
               String(evaluation.wof).toLowerCase().includes(searchTerm) ||
               String(evaluation.partNumber).toLowerCase().includes(searchTerm) ||
               String(evaluation.description).toLowerCase().includes(searchTerm);
-          })
+          }).filter((evaluation) =>{
+            return this.getFilterTime(evaluation.createdAt,date)
+         })
         }
         return preFilterSearch;
       })
@@ -145,6 +178,13 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.subscriptions.unsubscribe();
+  }
+
+  getFilterTime(el, time): any {
+    const date = el.toMillis();
+    const begin = time.begin;
+    const end = time.end;
+    return date >= begin && date <= end;
   }
 
   openDialog(value: string, entry?: ImprovementEntry, index?: number): void {
@@ -237,6 +277,8 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
     });
   }
 
+  
+
   downloadXlsx(evaluations: Evaluation[]): void {
     let table_xlsx: any[] = [];
 
@@ -320,6 +362,7 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
   }
 
 }
+
 
 function compare(a: number | string, b: number | string, isAsc: boolean) {
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);

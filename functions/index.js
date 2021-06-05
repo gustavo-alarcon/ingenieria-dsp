@@ -2,7 +2,7 @@ const functions = require("firebase-functions");
 const admin = require('firebase-admin');
 const { createUserSetClaims } = require('./functions/auth/create-user-claims');
 const gaxios = require('gaxios')
-const SENDGRID_APY_KEY = require('./keys.json').ferreyros_01
+    // const SENDGRID_APY_KEY = require('./keys.json').ferreyros_01
 
 admin.initializeApp();
 admin.firestore().settings({ timestampsInSnapshots: true });
@@ -27,12 +27,11 @@ exports.googleChatBot = functions.https.onRequest((request, response) => {
                 }]
             }]
         }]
-    }
-    )
+    })
 });
 
 
-exports.createUserSetClaims = functions.auth.user().onCreate(async (user) => {
+exports.createUserSetClaims = functions.auth.user().onCreate(async(user) => {
     functions.logger.info(`create user ${user.email} ${user.uid}`, { structuredData: true });
     const basics = {
         superuser: false,
@@ -57,7 +56,7 @@ exports.createUserSetClaims = functions.auth.user().onCreate(async (user) => {
     }
 });
 
-exports.setClaimsAsTechnician = functions.https.onCall(async (data, context) => {
+exports.setClaimsAsTechnician = functions.https.onCall(async(data, context) => {
     functions.logger.info(`User ${data.uid} claims updated`, { structuredData: true });
     const uid = data.uid;
     const roles = {
@@ -95,7 +94,7 @@ exports.setClaimsAsTechnician = functions.https.onCall(async (data, context) => 
     }
 });
 
-exports.setClaimsAsAdministrator = functions.https.onCall(async (data, context) => {
+exports.setClaimsAsAdministrator = functions.https.onCall(async(data, context) => {
     functions.logger.info(`User ${data.uid} claims updated`, { structuredData: true });
     const uid = data.uid;
     const roles = {
@@ -133,7 +132,7 @@ exports.setClaimsAsAdministrator = functions.https.onCall(async (data, context) 
     }
 });
 
-exports.setClaimsAsSuperuser = functions.https.onCall(async (data, context) => {
+exports.setClaimsAsSuperuser = functions.https.onCall(async(data, context) => {
     functions.logger.info(`User ${data.uid} claims updated`, { structuredData: true });
     const uid = data.uid;
     const roles = {
@@ -275,15 +274,14 @@ exports.setClaimsAsSuperuser = functions.https.onCall(async (data, context) => {
 //     )
 
 exports.sendAndonToEndpoint = functions.firestore.document(`db/ferreyros/andon/{andonId}`)
-    .onWrite(async (event) => {
+    .onWrite(async(event) => {
         const andon = event.after.data();
 
         let url;
         await admin.firestore().doc('/db/generalConfig').onSnapshot(val => {
             url = val.data()['endpoint'];
 
-            const data =
-            {
+            const data = {
                 "type": "andon",
                 "otChild": andon.otChild,
                 "bay": andon.name,
@@ -333,7 +331,7 @@ exports.sendAndonToEndpoint = functions.firestore.document(`db/ferreyros/andon/{
     });
 
 exports.sendPreevaluationToEndpoint = functions.firestore.document(`db/ferreyros/evaluations/{evalId}`)
-    .onUpdate(async (event) => {
+    .onUpdate(async(event) => {
         let eval = event.after.data();
         if ((eval.internalStatus == "finalized") &&
             ((eval.result == "fuera de servicio") || (eval.result == "ampliacion") || (eval.result.toLowerCase() == "dsr"))) {
@@ -346,8 +344,7 @@ exports.sendPreevaluationToEndpoint = functions.firestore.document(`db/ferreyros
             await admin.firestore().doc('/db/generalConfig').onSnapshot(val => {
                 url = val.data()['endpoint'];
 
-                const data =
-                {
+                const data = {
                     "type": "preevaluation",
                     "otMain": eval.otMain ? eval.otMain : '-',
                     "otChild": eval.otChild ? eval.otChild : '-',
@@ -409,7 +406,7 @@ exports.sendPreevaluationToEndpoint = functions.firestore.document(`db/ferreyros
     });
 
 exports.sendQualityToEndpoint = functions.firestore.document(`db/ferreyros/quality/{qualityId}`)
-    .onUpdate(async (event) => {
+    .onUpdate(async(event) => {
         let quality = event.after.data();
         if (quality.state == "tracing") {
             console.log("receiving request");
@@ -423,8 +420,7 @@ exports.sendQualityToEndpoint = functions.firestore.document(`db/ferreyros/quali
                     actionsForEmail = quality.correctiveActions.map(element => { return [element['corrective'], element['name']] });
                 }
 
-                const data =
-                {
+                const data = {
                     "type": "quality",
                     "otChild": quality.workOrder ? quality.workOrder : '-',
                     "partNumber": quality.partNumber ? quality.partNumber : '-',
@@ -484,4 +480,3 @@ exports.sendQualityToEndpoint = functions.firestore.document(`db/ferreyros/quali
             });
         }
     });
-
