@@ -55,7 +55,7 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
     'finalizedAt',
     'createdBy',
     'actions',
-    'date'
+    // 'date'
   ];
 
   @ViewChild('improvementPaginator', { static: false }) set content(
@@ -112,7 +112,7 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
       start: new FormControl(beginDate),
       end: new FormControl(endDate),
     });
-    
+
 
     this.evaluation$ = combineLatest(
       this.evaltService.getAllEvaluations(),
@@ -121,7 +121,7 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
         debounceTime(300),
         distinctUntilChanged(),
         startWith(''),
-        
+
       ),
       this.dateForm.get('start').valueChanges.pipe(
         startWith(beginDate),
@@ -132,36 +132,43 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
         map(end => end ? end.setHours(23, 59, 59) : null)
       )
     ).pipe(
-      map(([evaluations, status, search,startdate,enddate]) => {
+      map(([evaluations, status, search, startdate, enddate]) => {
 
         const date = { begin: startdate, end: enddate };
-
         const searchTerm = search.toLowerCase();
 
         let preFilterStatus = [];
         let preFilterSearch = [...evaluations];
+        let preFilterWithDate = [];
+
+        preFilterSearch.filter(element => {
+          const dateMillis = element.createdAt['seconds'] * 1000;
+          if (dateMillis >= date.begin && dateMillis <= date.end) {
+            preFilterWithDate.push(element);
+          }
+        });
 
         if (status.length > 1) {
-          preFilterStatus = evaluations.filter(evaluation => evaluation.internalStatus === status);
+          preFilterStatus = preFilterWithDate.filter(evaluation => evaluation.internalStatus === status);
           preFilterSearch = preFilterStatus.filter(evaluation => {
             return String(evaluation.otMain).toLowerCase().includes(searchTerm) ||
               String(evaluation.otChild).toLowerCase().includes(searchTerm) ||
               String(evaluation.wof).toLowerCase().includes(searchTerm) ||
               String(evaluation.partNumber).toLowerCase().includes(searchTerm) ||
               String(evaluation.description).toLowerCase().includes(searchTerm);
-          }).filter((evaluation) =>{
-             return this.getFilterTime(evaluation.createdAt,date)
+          }).filter((evaluation) => {
+            return this.getFilterTime(evaluation.createdAt, date)
           })
         } else {
-          preFilterSearch = evaluations.filter(evaluation => {
+          preFilterSearch = preFilterWithDate.filter(evaluation => {
             return String(evaluation.otMain).toLowerCase().includes(searchTerm) ||
               String(evaluation.otChild).toLowerCase().includes(searchTerm) ||
               String(evaluation.wof).toLowerCase().includes(searchTerm) ||
               String(evaluation.partNumber).toLowerCase().includes(searchTerm) ||
               String(evaluation.description).toLowerCase().includes(searchTerm);
-          }).filter((evaluation) =>{
-            return this.getFilterTime(evaluation.createdAt,date)
-         })
+          }).filter((evaluation) => {
+            return this.getFilterTime(evaluation.createdAt, date)
+          })
         }
         return preFilterSearch;
       })
@@ -277,7 +284,7 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
     });
   }
 
-  
+
 
   downloadXlsx(evaluations: Evaluation[]): void {
     let table_xlsx: any[] = [];
