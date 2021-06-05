@@ -72,37 +72,11 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
     private fb: FormBuilder
   ) {}
 
-  public theArrayHasEmails(arr: string[]): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
-      const hasEmails = arr.length > 0; // true
-
-      return hasEmails ? { hasEmails: { value: control.value } } : null;
-    };
-  }
-
-  // ngDoCheck(){
-  //   of(this.emails).subscribe((valueChanges)=>{
-
-  //     console.log(valueChanges.length)
-  //     console.log(this.emailsValidation)
-  //     if(valueChanges.length > 0){
-  //       // The form should be valid
-  //       this.emailsValidation = true;
-  //     }else{
-  //       this.emailsValidation = false;
-  //     }
-  //   })
-  // }
-
   public ngOnInit(): void {
     this.form = this.fb.group({
       subject: ['', Validators.required],
       body: ['', Validators.required],
       observations: '',
-      // emailChips: [
-      //   '',
-      //   [Validators.required, this.theArrayHasEmails(this.emails)],
-      // ],
     });
 
     from(this.emails).subscribe((valueChanges) => {
