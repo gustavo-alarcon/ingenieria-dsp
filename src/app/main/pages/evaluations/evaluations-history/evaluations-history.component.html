@@ -1,29 +1,28 @@
 <div *ngIf="authService.user$ | async as user">
   <div class="ms-kanban-toolbar">
-    <ng-container *ngIf="user.role == 'Administrador'">
-      <button type="file" mat-stroked-button class="ms-kanban-toolbar__button" (click)="uploadFileDialog()"
-        *ngIf="authService.uiConfig.preEvaluations.tabs.results.toolbar.bulk"
-        [ngClass]="isMobile ? 'ms-kanban-toolbar__button--mobile' : 'ms-kanban-toolbar__button--desktop'">
-        <mat-icon aria-label="agregar" class="icon-add">add</mat-icon>
-        LOTE
-      </button>
 
-      <button mat-stroked-button class="ms-kanban-toolbar__button" (click)="downloadXlsx(historyDataSource.data)"
-        *ngIf="authService.uiConfig.preEvaluations.tabs.results.toolbar.download"
-        [disabled]="historyDataSource.data.length < 1"
-        [ngClass]="isMobile ? 'ms-kanban-toolbar__button--mobile' : 'ms-kanban-toolbar__button--desktop'">
-        <mat-icon aria-label="agregar" class="icon-add">download</mat-icon>
-        DESCARGAR
-      </button>
+    <button type="file" mat-stroked-button class="ms-kanban-toolbar__button" (click)="uploadFileDialog()"
+      *ngIf="authService.uiConfig.preEvaluations.tabs.results.toolbar.bulk"
+      [ngClass]="isMobile ? 'ms-kanban-toolbar__button--mobile' : 'ms-kanban-toolbar__button--desktop'">
+      <mat-icon aria-label="agregar" class="icon-add">add</mat-icon>
+      LOTE
+    </button>
 
-      <button mat-stroked-button class="ms-kanban-toolbar__button" (click)="openDialog('report')"
-        *ngIf="authService.uiConfig.preEvaluations.tabs.results.toolbar.report"
-        [disabled]="historyDataSource.data.length < 1"
-        [ngClass]="isMobile ? 'ms-kanban-toolbar__button--mobile' : 'ms-kanban-toolbar__button--desktop'">
-        <mat-icon aria-label="agregar" class="icon-add">description</mat-icon>
-        REPORTE
-      </button>
-    </ng-container>
+    <button mat-stroked-button class="ms-kanban-toolbar__button" (click)="downloadXlsx(historyDataSource.data)"
+      *ngIf="authService.uiConfig.preEvaluations.tabs.results.toolbar.download"
+      [disabled]="historyDataSource.data.length < 1"
+      [ngClass]="isMobile ? 'ms-kanban-toolbar__button--mobile' : 'ms-kanban-toolbar__button--desktop'">
+      <mat-icon aria-label="agregar" class="icon-add">download</mat-icon>
+      DESCARGAR
+    </button>
+
+    <button mat-stroked-button class="ms-kanban-toolbar__button" (click)="openDialog('report')"
+      *ngIf="authService.uiConfig.preEvaluations.tabs.results.toolbar.report"
+      [disabled]="historyDataSource.data.length < 1"
+      [ngClass]="isMobile ? 'ms-kanban-toolbar__button--mobile' : 'ms-kanban-toolbar__button--desktop'">
+      <mat-icon aria-label="agregar" class="icon-add">description</mat-icon>
+      REPORTE
+    </button>
 
     <mat-form-field appearance="outline" class="ms-kanban-toolbar__input"
       [ngClass]="isMobile ? 'ms-kanban-toolbar__input--mobile' : 'ms-kanban-toolbar__input--desktop'">

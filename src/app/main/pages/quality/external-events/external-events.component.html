@@ -13,24 +13,19 @@
 
                 <div class="container-form__work">
 
-                    <mat-form-field appearance="outline" class="container-form__work__input"
-                        [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
+                    <mat-form-field appearance="outline" class="container-form__work__input" [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
                         <mat-label>Orden de trabajo actual</mat-label>
-                        <input matInput type="number" placeholder="Orden de trabajo" formControlName="workdOrden" />
+                        <input matInput type="text" placeholder="Orden de trabajo" formControlName="workdOrden" />
                         <mat-error *ngIf="externalForm.controls['workdOrden'].errors">
                             Campo <strong>requerido.</strong>
                         </mat-error>
                     </mat-form-field>
 
-                    <mat-form-field *ngIf="component$ | async as components" class="container-form__work__input"
-                        [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'"
-                        appearance="outline">
+                    <mat-form-field *ngIf="component$ | async as components" class="container-form__work__input" [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'" appearance="outline">
                         <mat-label>Componente</mat-label>
-                        <input autocomplete="off" formControlName="component" [matAutocomplete]="autocomplete"
-                            type="text" matInput />
+                        <input autocomplete="off" formControlName="component" [matAutocomplete]="autocomplete" type="text" matInput />
                         <mat-autocomplete multiple autoActiveFirstOption #autocomplete="matAutocomplete">
-                            <mat-option *ngIf="authService.uiConfig.quality.externalEvents.forms.component"
-                                (click)="onAddComponent()" [value]="">
+                            <mat-option *ngIf="authService.uiConfig.quality.externalEvents.forms.component" (click)="onAddComponent()" [value]="">
                                 <mat-icon>add_circle_outline</mat-icon>Añadir/Eliminar
                             </mat-option>
                             <mat-option *ngFor="let item of components" [value]="item.name">
@@ -50,8 +45,7 @@
                         </mat-error>
                     </mat-form-field>
 
-                    <mat-form-field appearance="outline" class="container-form__work__input"
-                        [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
+                    <mat-form-field appearance="outline" class="container-form__work__input" [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
                         <mat-label> Número de paqueteo</mat-label>
                         <input matInput type="text" placeholder="Número de paqueteo" formControlName="nPackage" />
                         <mat-error *ngIf="externalForm.controls['nPackage'].errors">
@@ -59,18 +53,15 @@
                         </mat-error>
                     </mat-form-field>
 
-                    <mat-form-field appearance="outline" class="container-form__work__input"
-                        [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
+                    <mat-form-field appearance="outline" class="container-form__work__input" [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
                         <mat-label> Horómetro de componente</mat-label>
-                        <input matInput type="number" placeholder="Horómetro de componente"
-                            formControlName="componentHourMeter" />
+                        <input matInput type="number" placeholder="Horómetro de componente" formControlName="componentHourMeter" />
                         <mat-error *ngIf="externalForm.controls['componentHourMeter'].errors">
                             Campo <strong>requerido.</strong>
                         </mat-error>
                     </mat-form-field>
 
-                    <mat-form-field appearance="outline" class="container-form__work__input"
-                        [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
+                    <mat-form-field appearance="outline" class="container-form__work__input" [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
                         <mat-label> Número de parte (Causante de falla)</mat-label>
                         <input matInput type="text" placeholder="Número de parte" formControlName="nPart" />
                         <mat-error *ngIf="externalForm.controls['nPart'].errors">
@@ -78,16 +69,11 @@
                         </mat-error>
                     </mat-form-field>
 
-                    <mat-form-field *ngIf="miningOperation$ | async as miningOperations"
-                        class="container-form__work__input"
-                        [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'"
-                        appearance="outline">
+                    <mat-form-field *ngIf="miningOperation$ | async as miningOperations" class="container-form__work__input" [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'" appearance="outline">
                         <mat-label>Operación minera</mat-label>
-                        <input autocomplete="off" formControlName="miningOperation"
-                            [matAutocomplete]="miningOperationAutocomplete" type="text" matInput />
+                        <input autocomplete="off" formControlName="miningOperation" [matAutocomplete]="miningOperationAutocomplete" type="text" matInput />
                         <mat-autocomplete autoActiveFirstOption #miningOperationAutocomplete="matAutocomplete">
-                            <mat-option *ngIf="authService.uiConfig.quality.externalEvents.forms.miningOperation"
-                                (click)="onAddminingOperation()" [value]="">
+                            <mat-option *ngIf="authService.uiConfig.quality.externalEvents.forms.miningOperation" (click)="onAddminingOperation()" [value]="">
                                 <mat-icon>add_circle_outline</mat-icon>Añadir/Eliminar
                             </mat-option>
                             <mat-option *ngFor="let item of miningOperations" [value]="item.name">
@@ -108,8 +94,7 @@
                     </mat-form-field>
                 </div>
                 <br />
-                <mat-form-field appearance="outline" class="container-form__area"
-                    [ngClass]="isMobile ? 'container-form__area--mobile' : 'container-form__area--desktop'">
+                <mat-form-field appearance="outline" class="container-form__area" [ngClass]="isMobile ? 'container-form__area--mobile' : 'container-form__area--desktop'">
                     <mat-label>1 ¿Cuéntame que sucedió?</mat-label>
                     <textarea matInput type="text" placeholder=" Escribir..." formControlName="question1" rows="2">
                     </textarea>
@@ -118,8 +103,7 @@
                     </mat-error>
                 </mat-form-field>
                 <br>
-                <mat-form-field appearance="outline" class="container-form__area"
-                    [ngClass]="isMobile ? 'container-form__area--mobile' : 'container-form__area--desktop'">
+                <mat-form-field appearance="outline" class="container-form__area" [ngClass]="isMobile ? 'container-form__area--mobile' : 'container-form__area--desktop'">
                     <mat-label>2. ¿Qué acciones de corrección se realizaron para solucionar el problema?</mat-label>
                     <textarea matInput type="text" placeholder=" Escribir..." formControlName="question2" rows="2">
                     </textarea>
@@ -128,8 +112,7 @@
                     </mat-error>
                 </mat-form-field>
                 <br>
-                <mat-form-field appearance="outline" class="container-form__area"
-                    [ngClass]="isMobile ? 'container-form__area--mobile' : 'container-form__area--desktop'">
+                <mat-form-field appearance="outline" class="container-form__area" [ngClass]="isMobile ? 'container-form__area--mobile' : 'container-form__area--desktop'">
                     <mat-label>3. ¿Cuál crees que fue la causa de la falla?</mat-label>
                     <textarea matInput type="text" placeholder=" Escribir..." formControlName="question3" rows="2">
                     </textarea>
@@ -138,8 +121,7 @@
                     </mat-error>
                 </mat-form-field>
                 <br>
-                <mat-form-field appearance="outline" class="container-form__area"
-                    [ngClass]="isMobile ? 'container-form__area--mobile' : 'container-form__area--desktop'">
+                <mat-form-field appearance="outline" class="container-form__area" [ngClass]="isMobile ? 'container-form__area--mobile' : 'container-form__area--desktop'">
                     <mat-label>4. ¿Qué recomendarias para evitar que este problema vuelva a suceder?</mat-label>
                     <textarea matInput type="text" placeholder=" Escribir..." formControlName="question4" rows="2">
                     </textarea>
@@ -151,8 +133,7 @@
 
                 <h3 class="container-form__title">Imagen general</h3>
 
-                <div class="dropzone" appDropzone (hovered)="toggleHoverGeneral($event)"
-                    (dropped)="onDropGeneral($event)" [class.hovering]="isHoveringGeneral">
+                <div class="dropzone" appDropzone (hovered)="toggleHoverGeneral($event)" (dropped)="onDropGeneral($event)" [class.hovering]="isHoveringGeneral">
                     <p>Arrastrar imágenes</p>
                     <div class="file">
                         <label class="file-label">
@@ -167,15 +148,13 @@
                 </div>
 
                 <div *ngFor="let file of filesGeneral">
-                    <app-upload-task [file]="file" [pathStorage]="pathStorageGeneral"
-                        (onNewImage)="addNewImageGeneral($event)" (onDeleteImage)="deleteImageGeneral($event)">
+                    <app-upload-task [file]="file" [pathStorage]="pathStorageGeneral" (onNewImage)="addNewImageGeneral($event)" (onDeleteImage)="deleteImageGeneral($event)">
                     </app-upload-task>
                 </div>
 
                 <h3 class="container-form__title">Imagen de detalle</h3>
 
-                <div class="dropzone" appDropzone (hovered)="toggleHoverDetail($event)" (dropped)="onDropDetail($event)"
-                    [class.hovering]="isHoveringDetail">
+                <div class="dropzone" appDropzone (hovered)="toggleHoverDetail($event)" (dropped)="onDropDetail($event)" [class.hovering]="isHoveringDetail">
                     <p>Arrastrar imágenes</p>
                     <div class="file">
                         <label class="file-label">
@@ -190,8 +169,7 @@
                 </div>
 
                 <div *ngFor="let file of filesDetail">
-                    <app-upload-task [file]="file" [pathStorage]="pathStorageDetail"
-                        (onNewImage)="addNewImageDetail($event)" (onDeleteImage)="deleteImageDetail($event)">
+                    <app-upload-task [file]="file" [pathStorage]="pathStorageDetail" (onNewImage)="addNewImageDetail($event)" (onDeleteImage)="deleteImageDetail($event)">
                     </app-upload-task>
                 </div>
 
@@ -207,16 +185,14 @@
                             <br>
                         </span>
                     </p>
-                    <input #fileInput2 style="display: none" id="fileInput2" (change)="uploadFiles($event)" type="file"
-                        multiple accept="*">
+                    <input #fileInput2 style="display: none" id="fileInput2" (change)="uploadFiles($event)" type="file" multiple accept="*">
                     <button type="file" mat-stroked-button class="ms-button" accept="*" (click)="fileInput2.click()">
                         <mat-icon>add</mat-icon>
                         ADJUNTAR
                     </button>
                 </div>
 
-                <button aria-label="add" mat-button class="container-form__btn-save" [disabled]='externalForm.invalid'
-                    (click)="save()">
+                <button aria-label="add" mat-button class="container-form__btn-save" [disabled]='externalForm.invalid' (click)="save()">
                     GUARDAR
                 </button>
 
