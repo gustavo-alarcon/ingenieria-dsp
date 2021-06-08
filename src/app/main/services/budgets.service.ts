@@ -99,6 +99,22 @@ export class BudgetsService {
     return ref.valueChanges().pipe(shareReplay(1));
   }
 
+  getBudgetsPendingSend(): Observable<Budget[]> {
+    const ref = this.afs.collection<Budget>('/db/ferreyros/budgets', (ref) =>
+      ref.where('statusPresupuesto', '==', 'PDTE. ENVÍO PPTO.')
+    );
+
+    return ref.valueChanges().pipe(shareReplay(1));
+  }
+
+  getBudgetsPendingApproval(): Observable<Budget[]> {
+    const ref = this.afs.collection<Budget>('/db/ferreyros/budgets', (ref) =>
+      ref.where('statusPresupuesto', '==', 'PDTE. APROB.')
+    );
+
+    return ref.valueChanges().pipe(shareReplay(1));
+  }
+
   getBudgetsSnapshot(): Observable<
     firebase.default.firestore.QuerySnapshot<Budget>
   > {
