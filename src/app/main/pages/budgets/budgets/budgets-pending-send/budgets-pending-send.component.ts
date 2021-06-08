@@ -1,3 +1,4 @@
+import { PendingSendUpdateDialogComponent } from './dialogs/pending-send-update-dialog/pending-send-update-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { MatDialog } from '@angular/material/dialog';
@@ -580,5 +581,9 @@ export class BudgetsPendingSendComponent implements OnInit {
     this.tableData.data = this.tableData.data;
   }
 
-  public timelineDialog(i: number) {}
+  public updateDialog(budget: Budget) {
+    const ref = this.MatDialog.open(PendingSendUpdateDialogComponent);
+
+    ref.afterClosed().subscribe((res) => {});
+  }
 }

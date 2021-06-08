@@ -1638,22 +1638,14 @@
             <ng-container>
               <mat-menu #rawMenu="matMenu">
                 <button
-                  *ngIf="
-                    !(
-                      element.statusPresupuesto == 'PPTO. APROBADO' ||
-                      element.statusPresupuesto == 'PPTO. RECHAZADO' ||
-                      element.statusPresupuesto == 'CLIENTE INTERNO'
-                    )
-                  "
                   class="w3-small"
                   mat-menu-item
-                  (click)="sendDialog(element)"
+                  (click)="updateDialog(element)"
                 >
-                  <mat-icon>attach_email</mat-icon>
-                  Enviar PPTO
+                  <mat-icon>create</mat-icon>
+                  Actualizar PPTO
                 </button>
                 <button
-                  *ngIf="element.statusPresupuesto != 'CLIENTE INTERNO'"
                   class="w3-small"
                   mat-menu-item
                   (click)="timelineDialog(element)"
