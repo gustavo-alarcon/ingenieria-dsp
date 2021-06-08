@@ -140,7 +140,7 @@ export class SummaryComponent implements OnInit, OnDestroy {
         item.improvedPart ? item.improvedPart : '---',
         item.currentPart ? item.currentPart : '---',
         item.createdAt ? new Date(item.createdAt['seconds'] * 1000) : '---',
-        item.stock ? item.stock : parseInt('0'),
+        item.stock ? item.stock : 0,
         item.availability ? new Date(item.availability['seconds'] * 1000) : '---',
       ];
       tableXlsx.push(temp);
