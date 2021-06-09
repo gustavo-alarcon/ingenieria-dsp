@@ -333,7 +333,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
 
   saveAndSendEmail(): void {
     try {
-      if (this.analysisForm.valid && this.areas.length >= 1) {
+      if (this.analysisForm.valid && this.areas.valid) {
         const resp = this.qualityService.saveCorrectiveActions(
           this.data,
           this.analysisForm.value,
@@ -354,6 +354,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
                     duration: 6000,
                   });
                   this.dialogRef.close(false);
+                  console.log(batch);
                 })
                 .catch((err) => {
                   this.snackbar.open(
