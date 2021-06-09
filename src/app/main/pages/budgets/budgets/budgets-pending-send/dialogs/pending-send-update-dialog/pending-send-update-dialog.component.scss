@@ -16,3 +16,64 @@
     }
   }
 }
+
+.error--select__files {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  p {
+    margin: 0 !important;
+  }
+}
+
+.document--container {
+  display: flex;
+  align-items: center;
+  gap: 3em;
+  margin: 1em 0;
+
+  .circle {
+    display: flex;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    background-color: grey;
+    &__active {
+      background-color: #27ae60;
+    }
+    &__inactive {
+      background-color: #ff2d2d;
+    }
+  }
+  .conforme {
+    color: #666666;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    margin: 0 !important;
+  }
+  .type {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    text-align: center;
+    color: #2b2b2b;
+    margin: 0 !important;
+    min-width: 100px;
+  }
+
+  .observations {
+    flex-grow: 1;
+  }
+}
+
+h3 {
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  color: #000000;
+  margin: 1em 0;
+}

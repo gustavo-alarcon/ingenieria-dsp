@@ -13,20 +13,157 @@
 
   <mat-dialog-content>
     <mat-horizontal-stepper #stepper>
-      <mat-step [stepControl]="firstFormGroup" errorMessage="Name is required.">
-        <form [formGroup]="firstFormGroup">
+      <mat-step
+        [stepControl]="filesFormGroup"
+        errorMessage="Debes seleccionar por lo menos un archivo"
+      >
+        <form [formGroup]="filesFormGroup">
           <ng-template matStepLabel>Archivos</ng-template>
-          <mat-form-field>
-            <mat-label>Name</mat-label>
-            <input
-              matInput
-              placeholder="Last name, First name"
-              formControlName="firstCtrl"
-              required
-            />
-          </mat-form-field>
+
+          <mat-error
+            class="error--select__files"
+            *ngIf="
+              filesFormGroup.controls['checkboxGroup'].errors &&
+              filesFormGroup.controls['checkboxGroup'].errors
+                .requireOneCheckboxToBeChecked
+            "
+          >
+            <mat-icon>warning</mat-icon>
+            <p>Debes seleccionar por lo menos un archivo</p>
+          </mat-error>
+
+          <div class="checkboxes" formGroupName="checkboxGroup">
+            <div class="document--container">
+              <div
+                class="circle"
+                [ngClass]="{
+                  circle__active: filesFormGroup.value.checkboxGroup.afa,
+                  circle__inactive: !filesFormGroup.value.checkboxGroup.afa
+                }"
+              ></div>
+              <p class="conforme">Conforme</p>
+              <mat-checkbox
+                [color]="'primary'"
+                formControlName="afa"
+              ></mat-checkbox>
+              <p class="type">AFA</p>
+              <mat-form-field
+                formControlName="afaObs"
+                appearance="outline"
+                class="observations"
+              >
+                <mat-label>Observación</mat-label>
+                <input matInput placeholder="Observación" />
+                <mat-hint>Campo opcional</mat-hint>
+              </mat-form-field>
+            </div>
+
+            <div class="document--container">
+              <div
+                class="circle"
+                [ngClass]="{
+                  circle__active: filesFormGroup.value.checkboxGroup.summary,
+                  circle__inactive: !filesFormGroup.value.checkboxGroup.summary
+                }"
+              ></div>
+              <p class="conforme">Conforme</p>
+              <mat-checkbox
+                [color]="'primary'"
+                formControlName="summary"
+              ></mat-checkbox>
+              <p class="type">RESUMEN</p>
+              <mat-form-field
+                formControlName="summaryObs"
+                appearance="outline"
+                class="observations"
+              >
+                <mat-label>Observación</mat-label>
+                <input matInput placeholder="Observación" />
+                <mat-hint>Campo opcional</mat-hint>
+              </mat-form-field>
+            </div>
+
+            <div class="document--container">
+              <div
+                class="circle"
+                [ngClass]="{
+                  circle__active: filesFormGroup.value.checkboxGroup.fesa,
+                  circle__inactive: !filesFormGroup.value.checkboxGroup.fesa
+                }"
+              ></div>
+              <p class="conforme">Conforme</p>
+              <mat-checkbox
+                [color]="'primary'"
+                formControlName="fesa"
+              ></mat-checkbox>
+              <p class="type">FESA</p>
+              <mat-form-field
+                formControlName="fesaObs"
+                appearance="outline"
+                class="observations"
+              >
+                <mat-label>Observación</mat-label>
+                <input matInput placeholder="Observación" />
+                <mat-hint>Campo opcional</mat-hint>
+              </mat-form-field>
+            </div>
+
+            <div class="document--container">
+              <div
+                class="circle"
+                [ngClass]="{
+                  circle__active: filesFormGroup.value.checkboxGroup.text,
+                  circle__inactive: !filesFormGroup.value.checkboxGroup.text
+                }"
+              ></div>
+              <p class="conforme">Conforme</p>
+              <mat-checkbox
+                [color]="'primary'"
+                formControlName="text"
+              ></mat-checkbox>
+              <p class="type">TEXT</p>
+              <mat-form-field
+                formControlName="textObs"
+                appearance="outline"
+                class="observations"
+              >
+                <mat-label>Observación</mat-label>
+                <input matInput placeholder="Observación" />
+                <mat-hint>Campo opcional</mat-hint>
+              </mat-form-field>
+            </div>
+
+            <div class="document--container">
+              <div
+                class="circle"
+                [ngClass]="{
+                  circle__active: filesFormGroup.value.checkboxGroup.report,
+                  circle__inactive: !filesFormGroup.value.checkboxGroup.report
+                }"
+              ></div>
+              <p class="conforme">Conforme</p>
+              <mat-checkbox
+                [color]="'primary'"
+                formControlName="report"
+              ></mat-checkbox>
+              <p class="type">INFORME</p>
+              <mat-form-field
+                formControlName="reportObs"
+                appearance="outline"
+                class="observations"
+              >
+                <mat-label>Observación</mat-label>
+                <input matInput placeholder="Observación" />
+                <mat-hint>Campo opcional</mat-hint>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <h3>Adicionales</h3>
+
           <div>
-            <p>Go to a different step to see the error state</p>
             <button mat-button matStepperNext>Next</button>
           </div>
         </form>
@@ -69,6 +206,6 @@
       CERRAR
     </button>
     <button type="submit" mat-raised-button color="primary">GUARDAR</button>
-    <button type="submit" mat-raised-button color="primary">CONTINUAR</button>
+    <button mat-raised-button color="primary">CONTINUAR</button>
   </mat-dialog-actions>
 </div>

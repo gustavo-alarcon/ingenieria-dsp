@@ -1,6 +1,12 @@
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
@@ -15,8 +21,9 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
   ],
 })
 export class PendingSendUpdateDialogComponent implements OnInit {
-  firstFormGroup: FormGroup;
   secondFormGroup: FormGroup;
+
+  filesFormGroup: FormGroup;
 
   constructor(
     public dialogRef: MatDialogRef<PendingSendUpdateDialogComponent>,
@@ -25,11 +32,49 @@ export class PendingSendUpdateDialogComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.firstFormGroup = this._formBuilder.group({
-      firstCtrl: ['', Validators.required],
+    this.filesFormGroup = new FormGroup({
+      checkboxGroup: new FormGroup(
+        {
+          afa: new FormControl(false),
+          afaObs: new FormControl(''),
+          summary: new FormControl(false),
+          summaryObs: new FormControl(''),
+          fesa: new FormControl(false),
+          fesaObs: new FormControl(''),
+          text: new FormControl(false),
+          textObs: new FormControl(''),
+          report: new FormControl(false),
+          reportObs: new FormControl(''),
+        },
+        requireCheckboxesToBeCheckedValidator()
+      ),
     });
     this.secondFormGroup = this._formBuilder.group({
       secondCtrl: ['', Validators.required],
     });
+
+    this.filesFormGroup.value;
   }
+}
+
+function requireCheckboxesToBeCheckedValidator(minRequired = 1): ValidatorFn {
+  return function validate(formGroup: FormGroup) {
+    let checked = 0;
+
+    Object.keys(formGroup.controls).forEach((key) => {
+      const control = formGroup.controls[key];
+
+      if (control.value === true) {
+        checked++;
+      }
+    });
+
+    if (checked < minRequired) {
+      return {
+        requireOneCheckboxToBeChecked: true,
+      };
+    }
+
+    return null;
+  };
 }
