@@ -1,6 +1,7 @@
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { Component, Inject, OnInit } from '@angular/core';
 import {
+  FormArray,
   FormBuilder,
   FormControl,
   FormGroup,
@@ -25,6 +26,11 @@ export class PendingSendUpdateDialogComponent implements OnInit {
 
   filesFormGroup: FormGroup;
 
+  additionalsDropDownOptions = [
+    { value: 'parallel', viewValue: 'Paralelo' },
+    { value: 'budget', viewValue: 'Presupuesto' },
+  ];
+
   constructor(
     public dialogRef: MatDialogRef<PendingSendUpdateDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
@@ -36,24 +42,43 @@ export class PendingSendUpdateDialogComponent implements OnInit {
       checkboxGroup: new FormGroup(
         {
           afa: new FormControl(false),
-          afaObs: new FormControl(''),
           summary: new FormControl(false),
-          summaryObs: new FormControl(''),
           fesa: new FormControl(false),
-          fesaObs: new FormControl(''),
           text: new FormControl(false),
-          textObs: new FormControl(''),
           report: new FormControl(false),
+          afaObs: new FormControl(''),
+          summaryObs: new FormControl(''),
+          fesaObs: new FormControl(''),
+          textObs: new FormControl(''),
           reportObs: new FormControl(''),
         },
         requireCheckboxesToBeCheckedValidator()
       ),
+      additionals: this._formBuilder.array([]),
     });
+
     this.secondFormGroup = this._formBuilder.group({
       secondCtrl: ['', Validators.required],
     });
 
     this.filesFormGroup.value;
+  }
+
+  get additionalForms(): FormArray {
+    return this.filesFormGroup.get('additionals') as FormArray;
+  }
+
+  addAdditional(): void {
+    const form = this._formBuilder.group({
+      type: ['parallel', Validators.required],
+      typeObs: [''],
+    });
+
+    this.additionalForms.push(form);
+  }
+
+  deleteAdditional(i: number) {
+    this.additionalForms.removeAt(i);
   }
 }
 

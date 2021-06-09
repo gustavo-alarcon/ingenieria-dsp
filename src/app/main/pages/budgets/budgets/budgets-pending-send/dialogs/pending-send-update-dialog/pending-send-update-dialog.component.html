@@ -12,7 +12,7 @@
   <mat-divider></mat-divider>
 
   <mat-dialog-content>
-    <mat-horizontal-stepper #stepper>
+    <mat-horizontal-stepper #stepper linear>
       <mat-step
         [stepControl]="filesFormGroup"
         errorMessage="Debes seleccionar por lo menos un archivo"
@@ -47,13 +47,13 @@
                 formControlName="afa"
               ></mat-checkbox>
               <p class="type">AFA</p>
-              <mat-form-field
-                formControlName="afaObs"
-                appearance="outline"
-                class="observations"
-              >
+              <mat-form-field appearance="outline" class="observations">
                 <mat-label>Observación</mat-label>
-                <input matInput placeholder="Observación" />
+                <input
+                  formControlName="afaObs"
+                  matInput
+                  placeholder="Observación"
+                />
                 <mat-hint>Campo opcional</mat-hint>
               </mat-form-field>
             </div>
@@ -72,13 +72,13 @@
                 formControlName="summary"
               ></mat-checkbox>
               <p class="type">RESUMEN</p>
-              <mat-form-field
-                formControlName="summaryObs"
-                appearance="outline"
-                class="observations"
-              >
+              <mat-form-field appearance="outline" class="observations">
                 <mat-label>Observación</mat-label>
-                <input matInput placeholder="Observación" />
+                <input
+                  formControlName="summaryObs"
+                  matInput
+                  placeholder="Observación"
+                />
                 <mat-hint>Campo opcional</mat-hint>
               </mat-form-field>
             </div>
@@ -97,13 +97,13 @@
                 formControlName="fesa"
               ></mat-checkbox>
               <p class="type">FESA</p>
-              <mat-form-field
-                formControlName="fesaObs"
-                appearance="outline"
-                class="observations"
-              >
+              <mat-form-field appearance="outline" class="observations">
                 <mat-label>Observación</mat-label>
-                <input matInput placeholder="Observación" />
+                <input
+                  formControlName="fesaObs"
+                  matInput
+                  placeholder="Observación"
+                />
                 <mat-hint>Campo opcional</mat-hint>
               </mat-form-field>
             </div>
@@ -122,13 +122,13 @@
                 formControlName="text"
               ></mat-checkbox>
               <p class="type">TEXT</p>
-              <mat-form-field
-                formControlName="textObs"
-                appearance="outline"
-                class="observations"
-              >
+              <mat-form-field appearance="outline" class="observations">
                 <mat-label>Observación</mat-label>
-                <input matInput placeholder="Observación" />
+                <input
+                  formControlName="textObs"
+                  matInput
+                  placeholder="Observación"
+                />
                 <mat-hint>Campo opcional</mat-hint>
               </mat-form-field>
             </div>
@@ -147,13 +147,13 @@
                 formControlName="report"
               ></mat-checkbox>
               <p class="type">INFORME</p>
-              <mat-form-field
-                formControlName="reportObs"
-                appearance="outline"
-                class="observations"
-              >
+              <mat-form-field appearance="outline" class="observations">
                 <mat-label>Observación</mat-label>
-                <input matInput placeholder="Observación" />
+                <input
+                  formControlName="reportObs"
+                  matInput
+                  placeholder="Observación"
+                />
                 <mat-hint>Campo opcional</mat-hint>
               </mat-form-field>
             </div>
@@ -163,9 +163,74 @@
 
           <h3>Adicionales</h3>
 
-          <div>
-            <button mat-button matStepperNext>Next</button>
+          <div formArrayName="additionals">
+            <div
+              *ngFor="let additional of additionalForms.controls; let i = index"
+              [formGroupName]="i"
+            >
+              <div class="additional--budget__wrapper">
+                <p>PPTO</p>
+                <mat-form-field appearance="outline">
+                  <mat-label>Tipo de atención</mat-label>
+                  <mat-select formControlName="type">
+                    <mat-option
+                      *ngFor="let option of additionalsDropDownOptions"
+                      [value]="option.value"
+                    >
+                      {{ option.viewValue }}
+                    </mat-option>
+                  </mat-select>
+                  <mat-hint>Campo obligatorio</mat-hint>
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                  <mat-label>Observación</mat-label>
+                  <input
+                    formControlName="typeObs"
+                    matInput
+                    placeholder="Observación"
+                  />
+                  <mat-hint>Campo opcional</mat-hint>
+                </mat-form-field>
+                <button
+                  (click)="deleteAdditional(i)"
+                  matTooltip="Eliminar adicional"
+                  [matTooltipPosition]="above"
+                  color="warn"
+                  mat-icon-button
+                  class="delete--button"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
           </div>
+
+          <button (click)="addAdditional()" mat-button class="btn-add">
+            <mat-icon>add</mat-icon>
+            ADICIONALES
+          </button>
+
+          <mat-dialog-actions align="end">
+            <button
+              type="button"
+              mat-stroked-button
+              color="warn"
+              mat-dialog-close
+            >
+              CERRAR
+            </button>
+            <button type="submit" mat-raised-button color="primary">
+              GUARDAR
+            </button>
+            <button
+              [disabled]="filesFormGroup.invalid"
+              mat-raised-button
+              color="primary"
+              matStepperNext
+            >
+              CONTINUAR
+            </button>
+          </mat-dialog-actions>
         </form>
       </mat-step>
       <mat-step
@@ -200,12 +265,4 @@
       </mat-step> -->
     </mat-horizontal-stepper>
   </mat-dialog-content>
-
-  <mat-dialog-actions align="end">
-    <button type="button" mat-stroked-button color="warn" mat-dialog-close>
-      CERRAR
-    </button>
-    <button type="submit" mat-raised-button color="primary">GUARDAR</button>
-    <button mat-raised-button color="primary">CONTINUAR</button>
-  </mat-dialog-actions>
 </div>

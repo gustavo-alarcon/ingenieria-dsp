@@ -77,3 +77,28 @@ h3 {
   color: #000000;
   margin: 1em 0;
 }
+
+.btn-add {
+  border: 1px #6200ee solid;
+  color: #6200ee;
+  background-color: white;
+  padding: 0px 20px 0px 20px;
+}
+
+.additional--budget__wrapper {
+  display: flex;
+  align-items: center;
+  p {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    text-align: center;
+    color: #2b2b2b;
+  }
+  gap: 3em;
+  margin-bottom: 2em;
+  .delete-button {
+    margin-bottom: 12px;
+  }
+}
