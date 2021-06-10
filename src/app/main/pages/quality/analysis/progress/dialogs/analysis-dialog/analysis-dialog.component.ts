@@ -36,6 +36,9 @@ import { ProcessDialogComponent } from '../process-dialog/process-dialog.compone
 import { CostList } from '../../../../../../models/quality.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from 'src/app/auth/services/auth.service';
+import { element } from 'protractor';
+import { controllers } from 'chart.js';
+
 
 @Component({
   selector: 'app-analysis-dialog',
@@ -99,6 +102,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initForm();
+    
 
     if (this.data.evaluationAnalisis) {
       this.resultAnalysis = this.data.evaluationAnalisis;
@@ -282,6 +286,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
   }
 
   save(): void {
+    
 
     try {
       if (this.areas.valid) {
@@ -331,9 +336,40 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
     }
   }
 
+  
+  checkDuplicates() {
+    let temp ;
+    let match = false;
+    
+   
+    this.areas.value.every( element =>{
+      const a = element['corrective'].toLowerCase();
+      console.log(a);
+      if(a === temp){
+        match = true;
+       
+        
+      }else {
+        temp = a;
+      }
+
+      return !match
+    })
+    
+
+      return match;
+      
+  }
+  
+  
+
+
   saveAndSendEmail(): void {
+
+    
     try {
-      if (this.analysisForm.valid && this.areas.valid) {
+     
+      if (this.analysisForm.valid && this.areas.valid && !this.checkDuplicates() ) {
         const resp = this.qualityService.saveCorrectiveActions(
           this.data,
           this.analysisForm.value,
@@ -368,7 +404,12 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
             }
           })
         );
-      } else {
+      } if(this.checkDuplicates()) {
+        this.snackbar.open(' 🚨 Acciones Correctivas no pueden tener el mismo nombre', 'Aceptar', {
+          duration: 6000
+        });
+      }
+       else  {
         this.snackbar.open('No realizo análisis ó no agrego acciones correctivas', 'Aceptar', {
           duration: 6000
         });
@@ -380,6 +421,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
     }
 
   }
+
 
   onAddCategory(): void {
     this.dialog.open(CauseFailureDialogComponent, {
