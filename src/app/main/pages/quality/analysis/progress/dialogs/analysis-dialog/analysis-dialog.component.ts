@@ -26,11 +26,7 @@ import {
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { QualityService } from '../../../../../../services/quality.service';
-import {
-  tap,
-  startWith,
-  map
-} from 'rxjs/operators';
+import { tap, startWith, map } from 'rxjs/operators';
 import { CauseFailureDialogComponent } from '../cause-failure-dialog/cause-failure-dialog.component';
 import { ProcessDialogComponent } from '../process-dialog/process-dialog.component';
 import { CostList } from '../../../../../../models/quality.model';
@@ -38,7 +34,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { element } from 'protractor';
 import { controllers } from 'chart.js';
-
 
 @Component({
   selector: 'app-analysis-dialog',
@@ -80,13 +75,11 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
 
   date = new Date();
 
-
   resultEvaluation$: Observable<any>;
   areaResponsable$: Observable<any[]>;
 
   resultAnalysis = 0;
   evaluationName = '';
-
 
   private subscription = new Subscription();
 
@@ -98,11 +91,10 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
     private qualityService: QualityService,
     private snackbar: MatSnackBar,
     public authService: AuthService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.initForm();
-    
 
     if (this.data.evaluationAnalisis) {
       this.resultAnalysis = this.data.evaluationAnalisis;
@@ -183,7 +175,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
         areas: this.fb.array([]),
       });
 
-      this.data.correctiveActions.forEach(accion => {
+      this.data.correctiveActions.forEach((accion) => {
         this.addControl(accion);
       });
 
@@ -197,7 +189,6 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
        ); */
 
       //this.analysisForm.get('quality').setValue(this.data.analysis['quality']);
-
     } else {
       this.analysisForm = this.fb.group({
         causeFailure: ['', Validators.required],
@@ -220,7 +211,6 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
         ]),
       });
     }
-
   }
 
   ngOnDestroy(): void {
@@ -232,12 +222,14 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
   }
 
   addControl(accion?): void {
-
     let group;
 
     if (accion) {
       group = this.fb.group({
-        corrective: [accion.corrective ? accion.corrective : null, Validators.required],
+        corrective: [
+          accion.corrective ? accion.corrective : null,
+          Validators.required,
+        ],
         name: [accion.name ? accion.name : null, Validators.required],
         kit: false,
         url: null,
@@ -257,9 +249,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
         closedAt: null,
         user: null,
       });
-
     }
-
 
     this.areas.push(group);
   }
@@ -286,8 +276,6 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
   }
 
   save(): void {
-    
-
     try {
       if (this.areas.valid) {
         const resp = this.qualityService.updateQualityEvaluationAnalysis(
@@ -313,7 +301,6 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
                   this.dialog.closeAll();
                 })
                 .catch((err) => {
-
                   this.snackbar.open(
                     '🚨 Hubo un error al actualizar  !',
                     'Aceptar',
@@ -327,7 +314,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
         );
       } else {
         this.snackbar.open('Formulario análisis incompleto', 'Aceptar', {
-          duration: 6000
+          duration: 6000,
         });
       }
     } catch (error) {
@@ -336,44 +323,40 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
     }
   }
 
-  
   checkDuplicates() {
-    let temp ;
+    let temp;
     let match = false;
-    
-   
-    this.areas.value.every( element =>{
+
+    this.areas.value.every((element) => {
       const a = element['corrective'].toLowerCase();
       console.log(a);
-      if(a === temp){
+      if (a === temp) {
         match = true;
-       
-        
-      }else {
+
+        this.snackbar.open(
+          ' 🚨 Acciones Correctivas no pueden tener el mismo nombre',
+          'Aceptar',
+          {
+            duration: 6000,
+          }
+        );
+      } else {
         temp = a;
       }
 
-      return !match
-    })
-    
+      return !match;
+    });
 
-      return match;
-      
+    return match;
   }
-  
-  
-
 
   saveAndSendEmail(): void {
-
-    
     try {
-<<<<<<< HEAD
-     
-      if (this.analysisForm.valid && this.areas.valid && !this.checkDuplicates() ) {
-=======
-      if (this.analysisForm.valid && this.areas.valid) {
->>>>>>> 31--el-sistema-permite-guardar-acciones-
+      if (
+        this.analysisForm.valid &&
+        this.areas.valid &&
+        !this.checkDuplicates()
+      ) {
         const resp = this.qualityService.saveCorrectiveActions(
           this.data,
           this.analysisForm.value,
@@ -408,24 +391,20 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
             }
           })
         );
-      } if(this.checkDuplicates()) {
-        this.snackbar.open(' 🚨 Acciones Correctivas no pueden tener el mismo nombre', 'Aceptar', {
-          duration: 6000
-        });
+      } else {
+        this.snackbar.open(
+          'No realizo análisis ó no agrego acciones correctivas',
+          'Aceptar',
+          {
+            duration: 6000,
+          }
+        );
       }
-       else  {
-        this.snackbar.open('No realizo análisis ó no agrego acciones correctivas', 'Aceptar', {
-          duration: 6000
-        });
-      }
-
     } catch (error) {
       console.log(error);
       this.loading.next(false);
     }
-
   }
-
 
   onAddCategory(): void {
     this.dialog.open(CauseFailureDialogComponent, {
