@@ -368,8 +368,12 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
 
     
     try {
+<<<<<<< HEAD
      
       if (this.analysisForm.valid && this.areas.valid && !this.checkDuplicates() ) {
+=======
+      if (this.analysisForm.valid && this.areas.valid) {
+>>>>>>> 31--el-sistema-permite-guardar-acciones-
         const resp = this.qualityService.saveCorrectiveActions(
           this.data,
           this.analysisForm.value,
