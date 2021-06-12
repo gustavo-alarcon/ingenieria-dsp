@@ -332,14 +332,6 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
       console.log(a);
       if (a === temp) {
         match = true;
-
-        this.snackbar.open(
-          ' 🚨 Acciones Correctivas no pueden tener el mismo nombre',
-          'Aceptar',
-          {
-            duration: 6000,
-          }
-        );
       } else {
         temp = a;
       }
@@ -393,7 +385,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
         );
       } else {
         this.snackbar.open(
-          'No realizo análisis ó no agrego acciones correctivas',
+          '🚨No se pueden enviar acciones vacias, no se pueden enviar acciones con el mismo nombre',
           'Aceptar',
           {
             duration: 6000,
