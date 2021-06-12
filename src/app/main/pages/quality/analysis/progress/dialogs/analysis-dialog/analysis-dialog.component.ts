@@ -329,7 +329,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
 
     this.areas.value.every((element) => {
       const a = element['corrective'].toLowerCase();
-      console.log(a);
+      
       if (a === temp) {
         match = true;
       } else {
