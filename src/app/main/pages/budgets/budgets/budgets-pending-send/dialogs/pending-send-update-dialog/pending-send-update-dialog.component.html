@@ -219,7 +219,12 @@
             >
               CERRAR
             </button>
-            <button type="submit" mat-raised-button color="primary">
+            <button
+              (click)="saveChanges()"
+              type="submit"
+              mat-raised-button
+              color="primary"
+            >
               GUARDAR
             </button>
             <button
@@ -233,10 +238,8 @@
           </mat-dialog-actions>
         </form>
       </mat-step>
-      <mat-step
-        [stepControl]="secondFormGroup"
-        errorMessage="Address is required."
-      >
+      <mat-step>
+        <ng-template matStepLabel>Enviar PPTO.</ng-template>
         <div class="file--upload__wrapper">
           <!-- <mat-progress-bar
           class="loader"
@@ -414,34 +417,34 @@
             </mat-autocomplete>
             <mat-hint>Campo requerido</mat-hint>
           </mat-form-field>
+          <mat-dialog-actions align="end">
+            <button
+              type="button"
+              mat-stroked-button
+              color="warn"
+              mat-dialog-close
+            >
+              CERRAR
+            </button>
+            <button type="submit" mat-raised-button color="primary">
+              GUARDAR
+            </button>
+            <button
+              [disabled]="
+                filesFormGroup.invalid ||
+                form.invalid ||
+                emails.length === 0 ||
+                budgetFilesList.length === 0 ||
+                reportFilesList.length === 0
+              "
+              mat-raised-button
+              color="primary"
+            >
+              ENVIAR
+            </button>
+          </mat-dialog-actions>
         </div>
-
-        <form [formGroup]="secondFormGroup">
-          <ng-template matStepLabel>Enviar PPTO.</ng-template>
-          <mat-form-field>
-            <mat-label>Address</mat-label>
-            <input
-              matInput
-              placeholder="Ex. 1 Main St, New York, NY"
-              formControlName="secondCtrl"
-              required
-            />
-          </mat-form-field>
-          <div>
-            <p>Go to a different step to see the error state</p>
-            <button mat-button matStepperPrevious>Back</button>
-            <button mat-button matStepperNext>Next</button>
-          </div>
-        </form>
       </mat-step>
-      <!-- <mat-step>
-        <ng-template matStepLabel>Done</ng-template>
-        <p>You are now done.</p>
-        <div>
-          <button mat-button matStepperPrevious>Back</button>
-          <button mat-button (click)="stepper.reset()">Reset</button>
-        </div>
-      </mat-step> -->
     </mat-horizontal-stepper>
   </mat-dialog-content>
 </div>

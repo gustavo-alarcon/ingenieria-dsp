@@ -1,3 +1,4 @@
+import { Budget } from './../../../../../../models/budgets.model';
 import { BudgetsService } from './../../../../../../services/budgets.service';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import {
@@ -39,9 +40,9 @@ import { MatChipInputEvent } from '@angular/material/chips';
   ],
 })
 export class PendingSendUpdateDialogComponent implements OnInit {
-  secondFormGroup: FormGroup;
-
+  // First form
   filesFormGroup: FormGroup;
+  // Second form
   form: FormGroup;
 
   additionalsDropDownOptions = [
@@ -73,13 +74,15 @@ export class PendingSendUpdateDialogComponent implements OnInit {
 
   public emailsValidation: boolean = false;
 
+  firstCheckboxStamp: CheckboxesI;
+
   @ViewChild('emailInput') emailInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
   @ViewChild('autosize') autosize: CdkTextareaAutosize;
 
   constructor(
     public dialogRef: MatDialogRef<PendingSendUpdateDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    @Inject(MAT_DIALOG_DATA) public data: Budget,
     private _formBuilder: FormBuilder,
     private _budgetService: BudgetsService
   ) {}
@@ -104,9 +107,24 @@ export class PendingSendUpdateDialogComponent implements OnInit {
       additionals: this._formBuilder.array([]),
     });
 
-    this.secondFormGroup = this._formBuilder.group({
-      secondCtrl: ['', Validators.required],
-    });
+    if (this.data.afa) {
+      this.filesFormGroup.get('checkboxGroup').get('afa').setValue(true);
+    }
+    if (Date.parse(this.data.resumen.toString())) {
+      this.filesFormGroup.get('checkboxGroup').get('summary').setValue(true);
+    }
+    if (Date.parse(this.data.cotizacionFesa.toString())) {
+      this.filesFormGroup.get('checkboxGroup').get('fesa').setValue(true);
+    }
+    if (Date.parse(this.data.cotizacionText.toString())) {
+      this.filesFormGroup.get('checkboxGroup').get('text').setValue(true);
+    }
+    if (Date.parse(this.data.informe.toString())) {
+      this.filesFormGroup.get('checkboxGroup').get('report').setValue(true);
+    }
+
+    // Create a snapshot of the first values the checkboxes hold
+    this.firstCheckboxStamp = this.filesFormGroup.value.checkboxGroup;
 
     this.form = this._formBuilder.group({
       subject: ['', Validators.required],
@@ -129,6 +147,14 @@ export class PendingSendUpdateDialogComponent implements OnInit {
           );
         });
       });
+  }
+
+  saveChanges(): void {
+    const currentCheckboxes: CheckboxesI =
+      this.filesFormGroup.value.checkboxGroup;
+
+    // console.log(this.firstCheckboxStamp);
+    // console.log(currentCheckboxes);
   }
 
   get additionalForms(): FormArray {
@@ -260,4 +286,17 @@ function requireCheckboxesToBeCheckedValidator(minRequired = 1): ValidatorFn {
 
     return null;
   };
+}
+
+interface CheckboxesI {
+  afa: boolean;
+  afaObs: string;
+  fesa: boolean;
+  fesaObs: string;
+  report: boolean;
+  reportObs: boolean;
+  summary: boolean;
+  summaryObs: string;
+  text: boolean;
+  textObs: string;
 }
