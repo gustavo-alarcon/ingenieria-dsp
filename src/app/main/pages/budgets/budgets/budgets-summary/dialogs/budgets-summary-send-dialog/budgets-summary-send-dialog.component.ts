@@ -61,6 +61,7 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
   public budgetFilesList: Array<File> = [];
   public reportFilesList: Array<File> = [];
   public quotationFilesList: Array<File> = [];
+
   public emailsValidation: boolean = false;
 
   // Form
@@ -77,10 +78,6 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
       subject: ['', Validators.required],
       body: ['', Validators.required],
       observations: '',
-    });
-
-    from(this.emails).subscribe((valueChanges) => {
-      console.log(valueChanges);
     });
 
     this.subscriptions.add(

@@ -1,6 +1,6 @@
-import { map, shareReplay } from 'rxjs/operators';
+import { shareReplay } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 import {
   RejectionReasonsEntry,
   ModificationReasonEntry,
@@ -92,6 +92,21 @@ export class BudgetsService {
       batchArray.push(batch);
     }
     return of(batchArray);
+  }
+
+  updateBudgetDocuments(
+    id: string,
+    documents: any
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    const batch = this.afs.firestore.batch();
+
+    const docRef: DocumentReference = this.afs
+      .collection('/db/ferreyros/budgets')
+      .doc(id).ref;
+
+    batch.update(docRef, documents);
+
+    return of(batch);
   }
 
   getBudgets(): Observable<Budget[]> {
