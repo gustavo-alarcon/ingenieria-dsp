@@ -34,37 +34,26 @@ export class BudgetsPendingApproveComponent implements OnInit {
   saveChanges( ): void {
 
     // console.log(this.data.statusPresupuesto);
-    this.loading.next(true)
-    this.budgetsService.updateBudgetStatus( this.data.id, {
-      statusPresupuesto:'PPTO. APROBADO'
-    }) .subscribe((batch: firebase.default.firestore.WriteBatch) => {
+    this.loading.next(true);
+    this.budgetsService.updateBudgetStatus( this.data.id, 'PPTO. APROBADO')
+    .subscribe((batch: firebase.default.firestore.WriteBatch) => {
       batch.commit().then(()=>{
         this.loading.next(false);
+        this.matSnackBar.open(
+          '✅ Archivo se ha aprobado de forma correcta!',
+          'Aceptar',
+          {
+            duration: 6000,
+          }
+        );
+        this.dialog.closeAll();
       })
-      this.matSnackBar.open(
-        '✅ Archivo se ha aprobado de forma correcta!',
-        'Aceptar',
-        {
-          duration: 6000,
-        }
-      );
-      this.dialog.closeAll();
+    
+      
     })
    
     
-    
-    
-   
 
-  //  this.budgetsService.getBudgetsPendingApproval( this.data.id, {
-  //    status
-  //  })
-
-  
-       
-
-    // console.log(this.firstCheckboxStamp);
-    // console.log(currentCheckboxes);
   }
 
   }

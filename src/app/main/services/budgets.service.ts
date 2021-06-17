@@ -142,12 +142,16 @@ export class BudgetsService {
 
    updateBudgetStatus(
         id: string,
-        status: any
+        status: string
         ): Observable<firebase.default.firestore.WriteBatch>{
           const batch = this.afs.firestore.batch();
           const docRef: DocumentReference = this.afs.firestore.doc(`/db/ferreyros/budgets/${ id }`);
 
-          batch.update(docRef, status);
+          const data = {
+            statusPresupuesto: status
+          };
+
+          batch.update(docRef, data);
 
           return of(batch);
   }
