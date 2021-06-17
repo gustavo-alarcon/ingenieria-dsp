@@ -140,6 +140,18 @@ export class BudgetsService {
     return refSnapshot;
   }
 
+   updateBudgetStatus(
+        id: string,
+        status: any
+        ): Observable<firebase.default.firestore.WriteBatch>{
+          const batch = this.afs.firestore.batch();
+          const docRef: DocumentReference = this.afs.firestore.doc(`/db/ferreyros/budgets/${ id }`);
+
+          batch.update(docRef, status);
+
+          return of(batch);
+  }
+
   public getAllReasonsForRejectionEntries(): Observable<
     RejectionReasonsEntry[]
   > {

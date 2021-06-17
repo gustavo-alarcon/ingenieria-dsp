@@ -1,0 +1,36 @@
+<mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+
+<div class="container">
+
+
+    <h2 mat-dialog-title class="card">
+        <div class="approve-title" mat-dialog-close>
+            <mat-icon mat-list-icon>check_circle</mat-icon>
+        </div>
+        Aprobar presupuesto
+        <span class="ms-fill"></span>
+        <div mat-dialog-close class="approve-title--close">
+            <mat-icon>clear</mat-icon>
+        </div>
+    </h2>
+    <mat-divider></mat-divider>
+    <br>
+    <p *ngIf="woChild; else noWOCHILD">
+        ¿Esta seguro de aprobar el presupuesto WO CHILD: {{ woChild }}?
+    </p>
+    <ng-template #noWOCHILD>
+        <p>¿Esta seguro de aprobar el presupuesto WO CHILD: {{ woChild }}</p>
+    </ng-template>
+    <mat-dialog-actions align="end">
+        <button type="button" mat-stroked-button color="warn" mat-dialog-close [disabled]="loading$ | async">
+          CERRAR
+        </button>
+        <button (click)="saveChanges()" type="submit" mat-raised-button color="primary" [disabled]="loading$ | async">
+         SI,APROBAR
+        </button>
+        <!-- <button mat-raised-button color="primary" matStepperNext>
+          CONTINUAR
+        </button> -->
+    </mat-dialog-actions>
+</div>
+<!-- [disabled]="filesFormGroup.invalid" -->
