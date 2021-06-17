@@ -12,6 +12,8 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MatPaginator } from '@angular/material/paginator';
 import * as XLSX from 'xlsx';
+import { BudgetsPendingApproveComponent } from './dialogs/budgets-pending-approve/budgets-pending-approve.component';
+
 
 @Component({
   selector: 'app-budgets-pending-approval',
@@ -514,4 +516,10 @@ export class BudgetsPendingApprovalComponent implements OnInit {
   }
 
   public timelineDialog(i: number) {}
+
+  public sendDialog(element: Budget){
+    const a = this.MatDialog.open(BudgetsPendingApproveComponent, {
+      data: element
+    });
+  }
 }
