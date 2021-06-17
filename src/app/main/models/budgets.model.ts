@@ -99,6 +99,12 @@ export interface Budget {
   anio: number;
   fechaLPD: Date;
   id?: any;
+  afaObs?: string;
+  fesaObs?: string;
+  reportObs?: string;
+  summaryObs?: string;
+  textObs?: string;
+  additionals?: object[];
 }
 
 export interface RejectionReasonsEntry {

@@ -27,6 +27,7 @@ import {
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { COMMA, ENTER, SPACE, TAB } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
+import moment from 'moment';
 
 @Component({
   selector: 'app-pending-send-update-dialog',
@@ -75,6 +76,7 @@ export class PendingSendUpdateDialogComponent implements OnInit {
   public emailsValidation: boolean = false;
 
   firstCheckboxStamp: CheckboxesI;
+  firstAdditionalDocsStamp;
 
   @ViewChild('emailInput') emailInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
@@ -107,24 +109,78 @@ export class PendingSendUpdateDialogComponent implements OnInit {
       additionals: this._formBuilder.array([]),
     });
 
-    if (this.data.afa) {
-      this.filesFormGroup.get('checkboxGroup').get('afa').setValue(true);
-    }
-    if (Date.parse(this.data.resumen.toString())) {
+    // Populate the dialog with know information
+    (() => {
+      // AFA
+      const checkbox = this.filesFormGroup.get('checkboxGroup').get('afa');
+      switch (this.data.afa) {
+        case 'SI': {
+          checkbox.setValue(true);
+          break;
+        }
+        case 'NO': {
+          checkbox.setValue(false);
+          break;
+        }
+        default: {
+          checkbox.setValue(false);
+          break;
+        }
+      }
+    })();
+    if (moment(this.data.resumen, 'DD/MM/YYYY').isValid())
       this.filesFormGroup.get('checkboxGroup').get('summary').setValue(true);
-    }
-    if (Date.parse(this.data.cotizacionFesa.toString())) {
+    if (moment(this.data.cotizacionFesa, 'DD/MM/YYYY').isValid())
       this.filesFormGroup.get('checkboxGroup').get('fesa').setValue(true);
-    }
-    if (Date.parse(this.data.cotizacionText.toString())) {
+    if (moment(this.data.cotizacionText, 'DD/MM/YYYY').isValid())
       this.filesFormGroup.get('checkboxGroup').get('text').setValue(true);
-    }
-    if (Date.parse(this.data.informe.toString())) {
+    if (moment(this.data.informe, 'DD/MM/YYYY').isValid())
       this.filesFormGroup.get('checkboxGroup').get('report').setValue(true);
+
+    // Populate dialog with all observation fields
+    if (this.data.afaObs) {
+      this.filesFormGroup
+        .get('checkboxGroup')
+        .get('afaObs')
+        .setValue(this.data.afaObs.toString());
+    }
+    if (this.data.summaryObs) {
+      this.filesFormGroup
+        .get('checkboxGroup')
+        .get('summaryObs')
+        .setValue(this.data.summaryObs.toString());
+    }
+    if (this.data.fesaObs) {
+      this.filesFormGroup
+        .get('checkboxGroup')
+        .get('fesaObs')
+        .setValue(this.data.fesaObs.toString());
+    }
+    if (this.data.textObs) {
+      this.filesFormGroup
+        .get('checkboxGroup')
+        .get('textObs')
+        .setValue(this.data.textObs.toString());
+    }
+    if (this.data.reportObs) {
+      this.filesFormGroup
+        .get('checkboxGroup')
+        .get('reportObs')
+        .setValue(this.data.reportObs.toString());
+    }
+    // Populate the additional docs
+    if (this.data.additionals) {
+      this.data.additionals.forEach((doc: any) => {
+        this.additionalForms.push(
+          this.newAdditionalDocFormGroup(doc.type, doc.typeObs)
+        );
+      });
     }
 
     // Create a snapshot of the first values the checkboxes hold
     this.firstCheckboxStamp = this.filesFormGroup.value.checkboxGroup;
+    // Create a snapshot of the first additional docs the budget holds
+    this.firstAdditionalDocsStamp = this.filesFormGroup.value.additionals;
 
     this.form = this._formBuilder.group({
       subject: ['', Validators.required],
@@ -149,12 +205,171 @@ export class PendingSendUpdateDialogComponent implements OnInit {
       });
   }
 
+  private newAdditionalDocFormGroup(type: string, typeObs?: string): FormGroup {
+    if (!typeObs) {
+      typeObs = '';
+    }
+
+    return this._formBuilder.group({
+      type: [`${type}`, Validators.required],
+      typeObs: [`${typeObs}`],
+    });
+  }
+
   saveChanges(): void {
     const currentCheckboxes: CheckboxesI =
       this.filesFormGroup.value.checkboxGroup;
+    const currentAdditionalDocs = this.filesFormGroup.value.additionals;
 
-    // console.log(this.firstCheckboxStamp);
-    // console.log(currentCheckboxes);
+    if (this.firstAdditionalDocsStamp !== currentAdditionalDocs) {
+      // Update additionals
+      this.loading.next(true);
+      this._budgetService
+        .updateBudgetFields(this.data.id, {
+          additionals: currentAdditionalDocs,
+        })
+        .subscribe((batch: firebase.default.firestore.WriteBatch) => {
+          batch.commit().then(() => {
+            this.loading.next(false);
+          });
+        });
+    }
+
+    // Update checkboxes in the database
+    this.updateAfaState(this.firstCheckboxStamp.afa, currentCheckboxes.afa);
+    this.updateDocumentState(
+      this.firstCheckboxStamp.fesa,
+      currentCheckboxes.fesa,
+      'cotizacionFesa'
+    );
+    this.updateDocumentState(
+      this.firstCheckboxStamp.report,
+      currentCheckboxes.report,
+      'informe'
+    );
+    this.updateDocumentState(
+      this.firstCheckboxStamp.summary,
+      currentCheckboxes.summary,
+      'resumen'
+    );
+    this.updateDocumentState(
+      this.firstCheckboxStamp.text,
+      currentCheckboxes.text,
+      'cotizacionText'
+    );
+
+    // Update the observation fields
+    this.updateDocumentObservation(
+      this.firstCheckboxStamp.afaObs,
+      currentCheckboxes.afaObs,
+      'afaObs'
+    );
+    this.updateDocumentObservation(
+      this.firstCheckboxStamp.fesaObs,
+      currentCheckboxes.fesaObs,
+      'fesaObs'
+    );
+    this.updateDocumentObservation(
+      this.firstCheckboxStamp.textObs,
+      currentCheckboxes.textObs,
+      'textObs'
+    );
+    this.updateDocumentObservation(
+      this.firstCheckboxStamp.reportObs,
+      currentCheckboxes.reportObs,
+      'reportObs'
+    );
+    this.updateDocumentObservation(
+      this.firstCheckboxStamp.summaryObs,
+      currentCheckboxes.summaryObs,
+      'summaryObs'
+    );
+  }
+
+  private updateDocumentState(
+    originalState: boolean,
+    finalState: boolean,
+    fieldToUpdate: string
+  ): void {
+    if (originalState !== finalState) {
+      // The checkbox state has changed
+      if (finalState) {
+        // New date to be applied
+        this.loading.next(true);
+        this._budgetService
+          .updateBudgetFields(this.data.id, {
+            [fieldToUpdate]: moment().format('DD/MM/YYYY').toString(),
+          })
+          .subscribe((batch: firebase.default.firestore.WriteBatch) => {
+            batch.commit().then(() => {
+              this.loading.next(false);
+            });
+          });
+      } else {
+        // Mark as pending
+        this.loading.next(true);
+        this._budgetService
+          .updateBudgetFields(this.data.id, {
+            [fieldToUpdate]: 'PDTE',
+          })
+          .subscribe((batch: firebase.default.firestore.WriteBatch) => {
+            batch.commit().then(() => {
+              this.loading.next(false);
+            });
+          });
+      }
+    }
+  }
+
+  private updateDocumentObservation(
+    originalState: string,
+    finalState: string,
+    observationFieldName: string
+  ): void {
+    if (originalState !== finalState) {
+      // The observation field has changed
+      this.loading.next(true);
+      this._budgetService
+        .updateBudgetFields(this.data.id, {
+          [observationFieldName]: finalState,
+        })
+        .subscribe((batch: firebase.default.firestore.WriteBatch) => {
+          batch.commit().then(() => {
+            // The new observation has been applied
+            this.loading.next(false);
+          });
+        });
+    }
+  }
+
+  private updateAfaState(originalState: boolean, finalState: boolean): void {
+    if (originalState !== finalState) {
+      // The checkbox state has changed
+      if (finalState) {
+        this.loading.next(true);
+        this._budgetService
+          .updateBudgetFields(this.data.id, {
+            afa: 'SI',
+          })
+          .subscribe((batch: firebase.default.firestore.WriteBatch) => {
+            batch.commit().then(() => {
+              this.loading.next(false);
+            });
+          });
+      } else {
+        // Mark as "NO"
+        this.loading.next(true);
+        this._budgetService
+          .updateBudgetFields(this.data.id, {
+            afa: 'NO',
+          })
+          .subscribe((batch: firebase.default.firestore.WriteBatch) => {
+            batch.commit().then(() => {
+              this.loading.next(false);
+            });
+          });
+      }
+    }
   }
 
   get additionalForms(): FormArray {
@@ -294,7 +509,7 @@ interface CheckboxesI {
   fesa: boolean;
   fesaObs: string;
   report: boolean;
-  reportObs: boolean;
+  reportObs: string;
   summary: boolean;
   summaryObs: string;
   text: boolean;

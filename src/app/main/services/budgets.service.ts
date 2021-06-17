@@ -94,18 +94,16 @@ export class BudgetsService {
     return of(batchArray);
   }
 
-  updateBudgetDocuments(
+  updateBudgetFields(
     id: string,
-    documents: any
+    fields: object
   ): Observable<firebase.default.firestore.WriteBatch> {
     const batch = this.afs.firestore.batch();
+    const docRef: DocumentReference = this.afs.firestore.doc(
+      `/db/ferreyros/budgets/${id}`
+    );
 
-    const docRef: DocumentReference = this.afs
-      .collection('/db/ferreyros/budgets')
-      .doc(id).ref;
-
-    batch.update(docRef, documents);
-
+    batch.update(docRef, fields);
     return of(batch);
   }
 
