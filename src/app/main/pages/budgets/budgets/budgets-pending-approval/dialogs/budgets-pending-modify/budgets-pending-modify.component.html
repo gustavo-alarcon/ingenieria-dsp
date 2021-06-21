@@ -1,0 +1,38 @@
+<div class="container">
+
+
+    <h2 mat-dialog-title class="card">
+        <div class="modify-title" mat-dialog-close>
+            <mat-icon mat-list-icon>edit</mat-icon>
+        </div>
+        Modificar Presupuesto
+        <span class="ms-fill"></span>
+        <div mat-dialog-close class="modify-title--close">
+            <mat-icon>clear</mat-icon>
+        </div>
+    </h2>
+    <mat-divider></mat-divider>
+    <br>
+    <mat-dialog-content>
+        <div class="main--wrapper" [formGroup]="form">
+            <div class="main--form">
+                <mat-form-field appearance="outline">
+                    <mat-label>Motivo</mat-label>
+                    <mat-chip-list #emailChipList aria-label="Email selection">
+                        <mat-chip *ngFor="let reason of reason" [selectable]="selectable" [removable]="removable" (removed)="removeReason(reason)">
+                            {{reason}}
+                            <mat-icon matChipRemove>cancel</mat-icon>
+                        </mat-chip>
+                        <input [matAutocomplete]="auto" [matChipInputFor]="emailChipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" placeholder="Motivo de modificacion" (matChipInputTokenEnd)="addReason($event)" />
+                    </mat-chip-list>
+                    <mat-autocomplete #auto="matAutocomplete">
+
+                    </mat-autocomplete>
+                </mat-form-field>
+
+            </div>
+        </div>
+
+
+    </mat-dialog-content>
+</div>

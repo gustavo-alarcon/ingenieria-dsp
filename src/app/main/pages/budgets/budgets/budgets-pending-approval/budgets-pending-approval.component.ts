@@ -13,6 +13,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MatPaginator } from '@angular/material/paginator';
 import * as XLSX from 'xlsx';
 import { BudgetsPendingApproveComponent } from './dialogs/budgets-pending-approve/budgets-pending-approve.component';
+import { BudgetsPendingModifyComponent } from './dialogs/budgets-pending-modify/budgets-pending-modify.component';
 
 
 @Component({
@@ -519,6 +520,12 @@ export class BudgetsPendingApprovalComponent implements OnInit {
 
   public sendDialog(element: Budget){
     const a = this.MatDialog.open(BudgetsPendingApproveComponent, {
+      data: element
+    });
+  }
+
+  public modifyDialog(element: Budget){
+    const a = this.MatDialog.open(BudgetsPendingModifyComponent, {
       data: element
     });
   }

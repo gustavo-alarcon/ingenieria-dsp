@@ -9,6 +9,10 @@
       <mat-icon>clear</mat-icon>
     </div>
   </h2>
+  <mat-progress-bar
+    mode="indeterminate"
+    *ngIf="loading$ | async"
+  ></mat-progress-bar>
   <mat-divider></mat-divider>
 
   <mat-dialog-content>
