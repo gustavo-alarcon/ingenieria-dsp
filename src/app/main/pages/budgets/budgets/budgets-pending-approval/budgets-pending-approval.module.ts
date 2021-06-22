@@ -8,7 +8,11 @@ import { BudgetsPendingApproveComponent } from './dialogs/budgets-pending-approv
 import { BudgetsPendingModifyComponent } from './dialogs/budgets-pending-modify/budgets-pending-modify.component';
 
 @NgModule({
-  declarations: [BudgetsPendingApprovalComponent, BudgetsPendingApproveComponent, BudgetsPendingModifyComponent],
+  declarations: [
+    BudgetsPendingApprovalComponent,
+    BudgetsPendingApproveComponent,
+    BudgetsPendingModifyComponent,
+  ],
   exports: [BudgetsPendingApprovalComponent],
   imports: [CommonModule, BudgetsPendingApprovalRoutingModule, MaterialModule],
 })

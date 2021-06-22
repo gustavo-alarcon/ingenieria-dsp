@@ -167,10 +167,10 @@ export class BudgetsService {
   }
 
   public getAllReasonsForModificationEntries(): Observable<
-    RejectionReasonsEntry[]
+    ModificationReasonEntry[]
   > {
     return this.afs
-      .collection<RejectionReasonsEntry>(
+      .collection<ModificationReasonEntry>(
         '/db/generalConfig/budgetsListModificationReasons',
         (ref) => ref.orderBy('createdAt', 'desc')
       )
