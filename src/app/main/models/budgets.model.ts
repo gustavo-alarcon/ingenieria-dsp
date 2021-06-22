@@ -99,6 +99,12 @@ export interface Budget {
   anio: number;
   fechaLPD: Date;
   id?: any;
+  afaObs?: string;
+  fesaObs?: string;
+  reportObs?: string;
+  summaryObs?: string;
+  textObs?: string;
+  additionals?: object[];
 }
 
 export interface RejectionReasonsEntry {
@@ -112,6 +118,7 @@ export interface ModificationReasonEntry {
   id: string;
   name: string;
   createdBy: User;
+  // reasonList: Array<string>;
   createdAt: firebase.default.firestore.FieldValue;
 }
 
