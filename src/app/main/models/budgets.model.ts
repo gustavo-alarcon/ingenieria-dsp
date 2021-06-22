@@ -54,7 +54,7 @@ export interface Budget {
   reparacion60: string;
   horasSTD: number;
   horasReales: number;
-  tiempoObjetivoEnvioPPTO: number;
+  tiempoObjetivoEnvioPPTO: firebase.default.firestore.Timestamp;
   diasRestantesEnvioPPTO: string;
   NoPPTOSModificadosOAdicionales: string | number;
   observacionesEnElPresupuesto: string;
@@ -105,6 +105,7 @@ export interface Budget {
   summaryObs?: string;
   textObs?: string;
   additionals?: object[];
+  afaDate?: string;
 }
 
 export interface RejectionReasonsEntry {

@@ -1,3 +1,4 @@
+import { PendingSendTimelineDialogComponent } from './dialogs/pending-send-timeline-dialog/pending-send-timeline-dialog.component';
 import { PendingSendDeleteDialogComponent } from './dialogs/pending-send-delete-dialog/pending-send-delete-dialog.component';
 import { PendingSendUpdateDialogComponent } from './dialogs/pending-send-update-dialog/pending-send-update-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -14,6 +15,7 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MatPaginator } from '@angular/material/paginator';
 import * as XLSX from 'xlsx';
+import moment from 'moment';
 
 @Component({
   selector: 'app-budgets-pending-send',
@@ -45,6 +47,7 @@ export class BudgetsPendingSendComponent implements OnInit {
     'woChild',
     'cliente',
     'afa',
+    'afaDate',
     'resumen',
     'cotizacionFesa',
     'cotizacionText',
@@ -75,6 +78,7 @@ export class BudgetsPendingSendComponent implements OnInit {
     modalidadPresupuesto: '',
     componente: '',
     afa: '',
+    afaDate: '',
     fechaUltimoListado: '',
     fechaUltimoEnvioDocumentoADM: '',
     ultimoDocumento: '',
@@ -264,6 +268,7 @@ export class BudgetsPendingSendComponent implements OnInit {
       'MODALIDAD PRESUPUESTO',
       'COMPONENTE',
       'AFA',
+      'FECHA AFA',
       'FECHA ULTIMO LISTADO',
       'FECHA ULTIMO ENVIO DOCUMENTO ADM',
       'ULTIMO DOCUMENTO',
@@ -367,6 +372,7 @@ export class BudgetsPendingSendComponent implements OnInit {
         item.modalidadPresupuesto ? item.modalidadPresupuesto : '---',
         item.componente ? item.componente : '---',
         item.afa ? item.afa : '---',
+        item.afaDate ? item.afaDate : '---',
         item.fechaUltimoListado
           ? new Date(item.fechaUltimoListado['seconds'] * 1000)
           : '---',
@@ -417,7 +423,7 @@ export class BudgetsPendingSendComponent implements OnInit {
         item.horasSTD ? item.horasSTD : '---',
         item.horasReales ? item.horasReales : '---',
         item.tiempoObjetivoEnvioPPTO ? item.tiempoObjetivoEnvioPPTO : '---',
-        item.diasRestantesEnvioPPTO ? item.diasRestantesEnvioPPTO : '---',
+        this.daysLeft(item),
         item.NoPPTOSModificadosOAdicionales
           ? item.NoPPTOSModificadosOAdicionales
           : '---',
@@ -500,13 +506,19 @@ export class BudgetsPendingSendComponent implements OnInit {
     this.tableData.data = this.tableData.data;
   }
 
-  public updateDialog(currentBudget: Budget) {
+  public updateDialog(currentBudget: Budget): void {
     const ref = this.MatDialog.open(PendingSendUpdateDialogComponent, {
       data: currentBudget,
     });
   }
 
-  public deleteDialog(currentBudget: Budget) {
+  public timelineDialog(currentBudget: Budget): void {
+    const ref = this.MatDialog.open(PendingSendTimelineDialogComponent, {
+      data: currentBudget,
+    });
+  }
+
+  public deleteDialog(currentBudget: Budget): void {
     const ref = this.MatDialog.open(PendingSendDeleteDialogComponent, {
       data: {
         woMain: currentBudget.woMain,
@@ -537,5 +549,19 @@ export class BudgetsPendingSendComponent implements OnInit {
           );
         }
       });
+  }
+
+  daysLeft(budget: Budget): string {
+    // Get the goal Date and convert it to a moment.js object
+    const goalDate: moment.Moment = moment(
+      budget.tiempoObjetivoEnvioPPTO.toDate()
+    );
+
+    // Get the difference from the current moment() in days
+    const diff: number = goalDate.diff(moment(), 'days');
+
+    if (diff >= 0) return diff.toString();
+
+    return '---';
   }
 }
