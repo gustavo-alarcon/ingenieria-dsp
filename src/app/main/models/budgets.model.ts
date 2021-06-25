@@ -29,7 +29,7 @@ export interface Budget {
   fechaUltimoEnvioPPTO: Date;
   fechaEnvioPPTO01: Date;
   fechaEnvioPPTO02: Date;
-  motivoDeModificacion: Array<string>;
+  motivoDeModificacion: Array<ModificationReasonEntry>;
   motivoDeModificacion02: string;
   detalleDeModificacion02: string;
   fechaEnvioPPTO03: Date;
@@ -125,7 +125,7 @@ export interface ModificationReasonEntry {
   name: string;
   createdBy: User;
   additionals?: Array<Additional>;
-  createdAt: firebase.default.firestore.FieldValue;
+  createdAt: Date;
 }
 
 export interface modificationReasonForm {

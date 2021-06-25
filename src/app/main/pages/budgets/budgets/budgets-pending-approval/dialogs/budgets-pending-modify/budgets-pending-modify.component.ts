@@ -73,24 +73,15 @@ export class BudgetsPendingModifyComponent implements OnInit {
       })
     );
 
-    // this.additionalFiles = new FormGroup({
-    //   additionals: this.formBuilder.array([]),
-    // });
-
     this.modificationFormGroup = this.formBuilder.group({
       modificationReason: ['', Validators.required],
       additionals: this.formBuilder.array([]),
     });
 
-    // this.firstModificationDocsStamp = this.additionalFiles.value.modify;
-
-    // this.firstAdditionalDocsStamp = this.additionalFiles.value.additionals;
   }
 
   saveChanges(): void {
-    // const additinalDocs = this.additionalFiles.value.additionals;
-    // console.log(this.modificationFormGroup.value);
-    // return;
+  
 
     if (this.modificationFormGroup.valid) {
       this.loading.next(true);
@@ -100,44 +91,21 @@ export class BudgetsPendingModifyComponent implements OnInit {
           .subscribe((batch: firebase.default.firestore.WriteBatch) => {
             batch.commit().then(() => {
               this.loading.next(false);
+              this.matSnackBar.open(
+                ' ✅ Archivo se modifico de forma correcta',
+              'Aceptar',
+              {
+                duration: 6000,
+              }
+              );
+              this.dialog.closeAll();
             });
           });
       });
     }
 
-    // if (this.firstAdditionalDocsStamp !== additinalDocs) {
-    //   // Update additionals
-    //   this.loading.next(true);
-    //   this.budgetService
-    //     .updateBudgetFields(this.data.id, {
-    //       additionals: additinalDocs,
-    //     })
-    //     .subscribe((batch: firebase.default.firestore.WriteBatch) => {
-    //       batch.commit().then(() => {
-    //         this.loading.next(false);
-    //         this.matSnackBar.open(
-    //           ' ✅ Archivo se modifico de forma correcta',
-    //           'Aceptar',
-    //           {
-    //             duration: 6000,
-    //           }
-    //         );
-    //         this.dialog.closeAll();
-    //       });
-    //     });
-    // }
   }
 
-  // private newAdditionalDocFormGroup(type: string, typeObs?: string): FormGroup {
-  //   if (!typeObs) {
-  //     typeObs = '';
-  //   }
-
-  //   return this.formBuilder.group({
-  //     type: [`${type}`, Validators.required],
-  //     typeObs: [`${typeObs}`],
-  //   });
-  // }
 
   showModification(value: ModificationReasonEntry): string | null {
     return value ? value.name : null;

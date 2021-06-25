@@ -125,9 +125,9 @@ export class BudgetsService {
       name: reason.modificationReason.name,
       createdBy: user,
       additionals: reason.additionals,
-      createdAt: firebase.default.firestore.FieldValue.serverTimestamp(),
+      createdAt: new Date(),
     };
-
+    console.log(modificationData);
     const data: any = {
       motivoDeModificacion:
         firebase.default.firestore.FieldValue.arrayUnion(modificationData),
