@@ -29,6 +29,7 @@ export interface Budget {
   fechaUltimoEnvioPPTO: Date;
   fechaEnvioPPTO01: Date;
   fechaEnvioPPTO02: Date;
+  motivoDeModificacion: Array<string>;
   motivoDeModificacion02: string;
   detalleDeModificacion02: string;
   fechaEnvioPPTO03: Date;

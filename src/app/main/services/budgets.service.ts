@@ -11,6 +11,8 @@ import {
 import * as firebase from 'firebase/app';
 import { User } from '../models/user-model';
 import { Observable, of } from 'rxjs';
+import { BaseOverlayDispatcher } from '@angular/cdk/overlay/dispatchers/base-overlay-dispatcher';
+
 
 
 @Injectable({
@@ -105,6 +107,26 @@ export class BudgetsService {
     );
 
     batch.update(docRef, fields);
+    return of(batch);
+  }
+
+  updateModifyReason(
+    id:string,
+    reason: string
+
+    // date:firebase.default.firestore.FieldValue
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    const batch = this.afs.firestore.batch();
+    const docRef: DocumentReference = this.afs.firestore.doc(
+      `/db/ferreyros/budgets/${id}`
+    );
+
+    const data : any = {
+      motivoDeModificacion: firebase.default.firestore.FieldValue.arrayUnion(reason)
+      
+    }
+
+    batch.update(docRef, data);
     return of(batch);
   }
 
