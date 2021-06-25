@@ -9,11 +9,11 @@ import {
   modificationReasonForm,
 } from '../models/budgets.model';
 
-import * as firebase from 'firebase/app';
+
 import { User } from '../models/user-model';
 import { Observable, of } from 'rxjs';
-import { BaseOverlayDispatcher } from '@angular/cdk/overlay/dispatchers/base-overlay-dispatcher';
-import { user } from 'firebase-functions/lib/providers/auth';
+
+import * as firebase from 'firebase/app';
 
 @Injectable({
   providedIn: 'root',
