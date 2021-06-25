@@ -1,16 +1,22 @@
+import { Component, Inject, OnInit } from '@angular/core';
 import {
-  Component,
-  Inject,
-  OnInit,
-} from '@angular/core';
-import { FormGroup, FormControl, FormArray, FormBuilder, Validators } from '@angular/forms';
-import { ModificationReasonEntry, Budget } from '../../../../../../models/budgets.model';
+  FormGroup,
+  FormControl,
+  FormArray,
+  FormBuilder,
+  Validators,
+} from '@angular/forms';
+import {
+  ModificationReasonEntry,
+  Budget,
+} from '../../../../../../models/budgets.model';
 import { combineLatest, Observable, pipe, BehaviorSubject } from 'rxjs';
 import { BudgetsService } from '../../../../../../services/budgets.service';
-import { filter, map, startWith } from 'rxjs/operators';
+import { filter, map, startWith, take } from 'rxjs/operators';
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { element } from 'protractor';
+import { AuthService } from 'src/app/auth/services/auth.service';
 
 @Component({
   selector: 'app-budgets-pending-modify',
@@ -18,8 +24,7 @@ import { element } from 'protractor';
   styleUrls: ['./budgets-pending-modify.component.scss'],
 })
 export class BudgetsPendingModifyComponent implements OnInit {
-
-  additionalFiles: FormGroup;
+  modificationFormGroup: FormGroup;
 
   additionalsDropDownOptions = [
     { value: 'parallel', viewValue: 'Paralelo' },
@@ -28,11 +33,10 @@ export class BudgetsPendingModifyComponent implements OnInit {
 
   firstModificationDocsStamp;
   firstAdditionalDocsStamp;
-  
 
-   // Loaders
-   loading: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-   loading$: Observable<boolean> = this.loading.asObservable();
+  // Loaders
+  loading: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  loading$: Observable<boolean> = this.loading.asObservable();
 
   selectable: boolean = true;
   removable: boolean = true;
@@ -41,14 +45,16 @@ export class BudgetsPendingModifyComponent implements OnInit {
 
   modificationReasonList: Observable<ModificationReasonEntry[]>;
 
-  constructor(private budgetService: BudgetsService,
-              private formBuilder  : FormBuilder,
-              @Inject(MAT_DIALOG_DATA) public data: Budget,
-              private matSnackBar: MatSnackBar,
-              private dialog: MatDialog) {}
+  constructor(
+    private budgetService: BudgetsService,
+    private formBuilder: FormBuilder,
+    @Inject(MAT_DIALOG_DATA) public data: Budget,
+    private authService: AuthService,
+    private matSnackBar: MatSnackBar,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
-
     this.modificationReasonList = combineLatest(
       this.budgetService.getAllReasonsForModificationEntries(),
       this.modificationReasonControl.valueChanges.pipe(
@@ -61,73 +67,65 @@ export class BudgetsPendingModifyComponent implements OnInit {
       )
     ).pipe(
       map(([list, search]) => {
-        // console.log(search);
-        
-        return list.filter((element) => element.name.toLowerCase().includes(search));
+        return list.filter((element) =>
+          element.name.toLowerCase().includes(search)
+        );
       })
     );
 
-    this.additionalFiles = new FormGroup ({
-      additionals: this.formBuilder.array([])
+    // this.additionalFiles = new FormGroup({
+    //   additionals: this.formBuilder.array([]),
+    // });
+
+    this.modificationFormGroup = this.formBuilder.group({
+      modificationReason: ['', Validators.required],
+      additionals: this.formBuilder.array([]),
     });
 
-    this.firstModificationDocsStamp = this.additionalFiles.value.modify;
+    // this.firstModificationDocsStamp = this.additionalFiles.value.modify;
 
-    this.firstAdditionalDocsStamp = this.additionalFiles.value.additionals;
-
-    // if(this.data.additionals){
-    //   this.data.additionals.forEach((doc:any) => {
-    //     this.additionalForms.push(
-    //       this.newAdditionalDocFormGroup(doc.type, doc.typeObs)
-    //     );
-    //   }) 
-    // }
-
-  
-    
-
+    // this.firstAdditionalDocsStamp = this.additionalFiles.value.additionals;
   }
 
   saveChanges(): void {
-    
-    const additinalDocs = this.additionalFiles.value.additionals;
-    
-    if(this.firstModificationDocsStamp !== additinalDocs){
+    // const additinalDocs = this.additionalFiles.value.additionals;
+    // console.log(this.modificationFormGroup.value);
+    // return;
 
+    if (this.modificationFormGroup.valid) {
       this.loading.next(true);
-      this.budgetService
-          .updateModifyReason( this.data.id , this.modificationReasonControl.value)
-          .subscribe((batch: firebase.default.firestore.WriteBatch) =>{
-            batch.commit().then(() =>{
+      this.authService.user$.pipe(take(1)).subscribe((user) => {
+        this.budgetService
+          .updateModifyReason(this.data.id, this.modificationFormGroup.value, user)
+          .subscribe((batch: firebase.default.firestore.WriteBatch) => {
+            batch.commit().then(() => {
               this.loading.next(false);
-            })
-          })
-           
-    }
-    
-    if(this.firstAdditionalDocsStamp !== additinalDocs ){
-     // Update additionals
-     this.loading.next(true);
-     this.budgetService
-         .updateBudgetFields( this.data.id, {
-          additionals: additinalDocs,
-         })
-         .subscribe((batch: firebase.default.firestore.WriteBatch) => {
-           batch.commit().then(() => {
-             this.loading.next(false);
-             this.matSnackBar.open(
-              ' ✅ Archivo se modifico de forma correcta',
-              'Aceptar',
-              {
-                duration:6000,
-              }
-             );
-             this.dialog.closeAll();
-           })
-         });
+            });
+          });
+      });
     }
 
-    
+    // if (this.firstAdditionalDocsStamp !== additinalDocs) {
+    //   // Update additionals
+    //   this.loading.next(true);
+    //   this.budgetService
+    //     .updateBudgetFields(this.data.id, {
+    //       additionals: additinalDocs,
+    //     })
+    //     .subscribe((batch: firebase.default.firestore.WriteBatch) => {
+    //       batch.commit().then(() => {
+    //         this.loading.next(false);
+    //         this.matSnackBar.open(
+    //           ' ✅ Archivo se modifico de forma correcta',
+    //           'Aceptar',
+    //           {
+    //             duration: 6000,
+    //           }
+    //         );
+    //         this.dialog.closeAll();
+    //       });
+    //     });
+    // }
   }
 
   // private newAdditionalDocFormGroup(type: string, typeObs?: string): FormGroup {
@@ -146,14 +144,13 @@ export class BudgetsPendingModifyComponent implements OnInit {
   }
 
   get additionalForms(): FormArray {
-    return this.additionalFiles.get('additionals') as FormArray;
+    return this.modificationFormGroup.get('additionals') as FormArray;
   }
-
 
   addAdditional(): void {
     const form = this.formBuilder.group({
       type: ['parallel', Validators.required],
-      typeObs: [''],
+      observations: [''],
     });
 
     this.additionalForms.push(form);
@@ -162,5 +159,4 @@ export class BudgetsPendingModifyComponent implements OnInit {
   deleteAdditional(i: number) {
     this.additionalForms.removeAt(i);
   }
-
 }

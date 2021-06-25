@@ -108,6 +108,11 @@ export interface Budget {
   additionals?: object[];
 }
 
+export interface Additional {
+  type: string;
+  observation: string;
+}
+
 export interface RejectionReasonsEntry {
   id: string;
   name: string;
@@ -119,8 +124,13 @@ export interface ModificationReasonEntry {
   id: string;
   name: string;
   createdBy: User;
-  // reasonList: Array<string>;
+  additionals?: Array<Additional>;
   createdAt: firebase.default.firestore.FieldValue;
+}
+
+export interface modificationReasonForm {
+  additionals: Array<Additional>;
+  modificationReason: ModificationReasonEntry;
 }
 
 export interface BudgetsBroadcastList {
