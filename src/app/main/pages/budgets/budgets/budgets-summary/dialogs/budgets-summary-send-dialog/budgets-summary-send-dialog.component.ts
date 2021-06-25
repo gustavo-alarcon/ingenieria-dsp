@@ -150,10 +150,11 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
     const broadcastList: BudgetsBroadcastList = this.broadcastLists.filter(
       (list) => list.name == event.option.viewValue
     )[0];
+   
     broadcastList.emailList.forEach((email: string) => {
       this.emails.push(email);
     });
-
+    
     // check this
     this.emailInput.nativeElement.value = '';
     this.emailCtrl.setValue(null);

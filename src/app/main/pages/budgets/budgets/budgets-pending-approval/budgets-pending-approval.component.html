@@ -196,16 +196,20 @@
                       element.statusPresupuesto == 'CLIENTE INTERNO'
                     )
                   " class="w3-small" mat-menu-item (click)="sendDialog(element)">
-                  <mat-icon>check</mat-icon>
+                  <mat-icon>check_circle_outline</mat-icon>
                   Aprobar PPTO
                 </button>
-                                <button *ngIf="element.statusPresupuesto != 'CLIENTE INTERNO'" class="w3-small" mat-menu-item (click)="timelineDialog(element)">
+                                <button *ngIf="element.statusPresupuesto != 'CLIENTE INTERNO'" class="w3-small" mat-menu-item (click)="modifyDialog(element)">
                   <mat-icon>edit</mat-icon>
-                  Modificar
+                  Modificar PPTO
                 </button>
-                                <button class="w3-small" mat-menu-item (click)="deleteDialog(element)">
-                  <mat-icon>delete</mat-icon>
-                  Borrar
+                <button class="w3-small" mat-menu-item >
+                  <mat-icon>highlight_off</mat-icon>
+                 Rechazar PPTO
+                </button>
+                 <button class="w3-small" mat-menu-item >
+                  <mat-icon>timeline</mat-icon>
+                 Historial
                 </button>
                             </mat-menu>
 
