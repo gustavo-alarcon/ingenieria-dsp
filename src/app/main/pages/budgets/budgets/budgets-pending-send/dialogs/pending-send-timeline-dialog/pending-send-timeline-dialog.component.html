@@ -1,17 +1,89 @@
 <div class="container">
-  <h2 mat-dialog-title class="card">
-    <div class="card--title" mat-dialog-close>
-      <mat-icon mat-list-icon>timeline</mat-icon>
-    </div>
-    Historial
+  <div class="ms-dialog-header">
+    <mat-icon class="ms-dialog-header__icon">timeline</mat-icon>
+    <h3 class="ms-dialog-header__title">Historial</h3>
     <span class="ms-fill"></span>
-    <div mat-dialog-close class="card--title__close--button">
-      <mat-icon>clear</mat-icon>
-    </div>
-  </h2>
+    <button mat-icon-button mat-dialog-close>
+      <mat-icon>cancel</mat-icon>
+    </button>
+  </div>
   <mat-divider></mat-divider>
 
-  <mat-dialog-content>
-    <!-- code here -->
+  <mat-dialog-content class="main">
+    <div class="row">
+      <div class="col col--title">Estado</div>
+      <div class="col col--title">Fecha</div>
+      <div class="col col--title">Usuario</div>
+    </div>
+    <div class="row">
+      <div class="col col--state">Fecha último listado</div>
+      <div class="col col--date">{{ lastListDate }}</div>
+      <div class="col col--user">Juan Perez Rodriguez</div>
+    </div>
+    <div class="row">
+      <div class="col col--state">Fecha último envío dcto (ADM)</div>
+      <div class="col col--date">{{ lastADMDocumentSentDate }}</div>
+      <div class="col col--user">Juan Perez Rodriguez</div>
+    </div>
+    <div class="row">
+      <div class="col col--state">Fecha defin. cargos</div>
+      <div class="col col--date">{{ definitionOfChargesDate }}</div>
+      <div class="col col--user">Juan Perez Rodriguez</div>
+    </div>
+    <div class="row">
+      <div class="col col--state">Fecha último envío PPTO</div>
+      <div class="col col--date">{{ lastBudgetSentDate }}</div>
+      <div class="col col--user">Juan Perez Rodriguez</div>
+    </div>
+    <div class="row">
+      <div class="col col--state">PPTO Adicionales</div>
+      <div class="col col--date"></div>
+      <div class="col col--user">Juan Perez Rodriguez</div>
+    </div>
+    <div class="row">
+      <div class="col col--state">Actualizacion de presupuesto</div>
+      <div class="col col--date"></div>
+      <div class="col col--user">Juan Perez Rodriguez</div>
+    </div>
+    <div class="row">
+      <div class="col col--state">Fecha aprob. o rechazo</div>
+      <div class="col col--date">{{ approvedOrRejectedDate }}</div>
+      <div class="col col--user">Juan Perez Rodriguez</div>
+    </div>
+    <div class="row">
+      <div class="col col--state">Fecha de pase a fact.</div>
+      <div class="col col--date"></div>
+      <div class="col col--user">Juan Perez Rodriguez</div>
+    </div>
+    <div class="row">
+      <div class="col col--state">Fecha último Input</div>
+      <div class="col col--date">{{ lastInputDate }}</div>
+      <div class="col col--user">Juan Perez Rodriguez</div>
+    </div>
+    <div class="row">
+      <div class="col col--state">Fecha de fact. Taller</div>
+      <div class="col col--date">{{ workshopBillingDate }}</div>
+      <div class="col col--user">Juan Perez Rodriguez</div>
+    </div>
+    <div class="row">
+      <div class="col col--state">Fecha First Labour</div>
+      <div class="col col--date">
+        {{ fisrtLabourDate }}
+      </div>
+      <div class="col col--user">Juan Perez Rodriguez</div>
+    </div>
+    <div class="row">
+      <div class="col col--state">Fecha Last Labour</div>
+      <div class="col col--date">
+        {{ lastLabourDate }}
+      </div>
+      <div class="col col--user">Juan Perez Rodriguez</div>
+    </div>
   </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button type="button" mat-stroked-button color="warn" mat-dialog-close>
+      CERRAR
+    </button>
+  </mat-dialog-actions>
 </div>

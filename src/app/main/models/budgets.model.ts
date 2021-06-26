@@ -77,7 +77,7 @@ export interface Budget {
   mesFactVenta: Date;
   percentHorasSTDvsHorasDBS: string;
   fechaFirstLabour: Date;
-  fechaLastLabour: Date;
+  fechaLastLabour: Date | firebase.default.firestore.Timestamp;
   diasDemoraFact: number;
   diasFactLastLabour: number;
   elaborarPPTO: string;

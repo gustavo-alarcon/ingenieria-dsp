@@ -27,6 +27,18 @@
       <mat-icon aria-label="upload" class="icon-add">add</mat-icon>
       SUBIR ARCHIVO
     </button>
+    <button
+      *ngIf="budgetUploaded"
+      (click)="goToBudgets()"
+      mat-stroked-button
+      class="ms-toolbar__button"
+      [ngClass]="
+        isMobile ? 'ms-toolbar__button--mobile' : 'ms-toolbar__button--desktop'
+      "
+    >
+      <mat-icon class="icon-add">launch</mat-icon>
+      IR A PRESUPUESTOS
+    </button>
   </div>
   <mat-divider></mat-divider>
 

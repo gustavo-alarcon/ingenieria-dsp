@@ -1,16 +1,40 @@
-.card {
-  display: flex;
-  padding-bottom: 0px;
-  margin-bottom: 0px;
-}
-
-.delete-title {
-  margin-top: 5px;
-  margin-right: 15px;
-}
-
-.delete-title--close {
-  margin-top: 5px;
-  margin-left: 220px;
-  cursor: pointer;
+.main {
+  .row {
+    display: flex;
+    margin: 2.4em 0;
+    .col {
+      display: flex;
+      width: 220px;
+      &--title {
+        display: flex;
+        justify-content: center;
+        font-weight: 500;
+        font-size: 18px;
+        letter-spacing: 0.15px;
+        color: #2b2b2b;
+      }
+      &--state {
+        font-weight: bold;
+        font-size: 16px;
+        letter-spacing: 0.15px;
+        color: #2b2b2b;
+      }
+      &--date {
+        display: flex;
+        justify-content: center;
+        font-weight: normal;
+        font-size: 14px;
+        letter-spacing: 0.25px;
+        color: #2b2b2b;
+      }
+      &--user {
+        display: flex;
+        justify-content: center;
+        font-weight: normal;
+        font-size: 14px;
+        letter-spacing: 0.25px;
+        color: #828282;
+      }
+    }
+  }
 }
