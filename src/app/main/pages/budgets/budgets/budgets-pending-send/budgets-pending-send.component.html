@@ -146,6 +146,20 @@
           </td>
         </ng-container>
 
+        <ng-container matColumnDef="afaDate">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            class="table__cell"
+          >
+            FECHA AFA
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.afaDate ? element.afaDate : "---" }}
+          </td>
+        </ng-container>
+
         <ng-container matColumnDef="resumen">
           <th
             mat-header-cell
@@ -214,7 +228,8 @@
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
               element.tiempoObjetivoEnvioPPTO
-                ? element.tiempoObjetivoEnvioPPTO
+                ? (element.tiempoObjetivoEnvioPPTO.toDate()
+                  | date: "dd/MM/yyyy")
                 : "---"
             }}
           </td>
@@ -230,11 +245,7 @@
             DIAS RESTANTES ENVIO PPTO
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.diasRestantesEnvioPPTO
-                ? element.diasRestantesEnvioPPTO
-                : "---"
-            }}
+            {{ daysLeft(element) }}
           </td>
         </ng-container>
 
