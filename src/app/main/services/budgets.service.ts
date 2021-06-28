@@ -7,6 +7,7 @@ import {
   BudgetsBroadcastList,
   Budget,
   modificationReasonForm,
+  rejectionReasonForm
 } from '../models/budgets.model';
 
 
@@ -14,6 +15,7 @@ import { User } from '../models/user-model';
 import { Observable, of } from 'rxjs';
 
 import * as firebase from 'firebase/app';
+
 
 @Injectable({
   providedIn: 'root',
@@ -136,6 +138,33 @@ export class BudgetsService {
     return of(batch);
   }
 
+  updateRejectionReason(
+    id: string,
+    reason: rejectionReasonForm,
+    status:string,
+    user:User
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    const batch = this.afs.firestore.batch();
+    const docRef: DocumentReference = this.afs.firestore.doc(
+      `/db/ferreyros/budgets/${id}`
+    );
+    console.log(reason);
+    const rejectionData: RejectionReasonsEntry = {
+      id: docRef.id,
+      name: reason.rejectionReason.name,
+      detail: reason.detailReason,
+      createdBy: user,
+      createdAt: new Date(),
+    };
+    const data: any = {
+      motivoDelRechazo: rejectionData, 
+        statusPresupuesto: status
+    };
+
+    batch.update(docRef, data);
+    return of(batch);
+  }
+
   getBudgets(): Observable<Budget[]> {
     const ref = this.afs.collection<Budget>('/db/ferreyros/budgets');
     return ref.valueChanges().pipe(shareReplay(1));
@@ -169,7 +198,7 @@ export class BudgetsService {
 
   updateBudgetStatus(
     id: string,
-    status: string
+      status: string
   ): Observable<firebase.default.firestore.WriteBatch> {
     const batch = this.afs.firestore.batch();
     const docRef: DocumentReference = this.afs.firestore.doc(

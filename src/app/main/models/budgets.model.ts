@@ -1,5 +1,5 @@
 import { User } from './user-model';
-import * as firebase from 'firebase/app';
+
 
 export interface Budget {
   taller: string;
@@ -116,8 +116,9 @@ export interface Additional {
 export interface RejectionReasonsEntry {
   id: string;
   name: string;
+  detail?:string;
   createdBy: User;
-  createdAt: firebase.default.firestore.FieldValue;
+  createdAt: Date;
 }
 
 export interface ModificationReasonEntry {
@@ -131,6 +132,11 @@ export interface ModificationReasonEntry {
 export interface modificationReasonForm {
   additionals: Array<Additional>;
   modificationReason: ModificationReasonEntry;
+}
+
+export interface rejectionReasonForm {
+  rejectionReason:RejectionReasonsEntry;
+  detailReason:string;
 }
 
 export interface BudgetsBroadcastList {
