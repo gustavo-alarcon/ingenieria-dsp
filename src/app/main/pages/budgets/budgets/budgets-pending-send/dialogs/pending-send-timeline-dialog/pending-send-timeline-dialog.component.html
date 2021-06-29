@@ -15,22 +15,22 @@
       <div class="col col--title">Fecha</div>
       <div class="col col--title">Usuario</div>
     </div>
-    <div class="row">
+    <div *ngIf="lastListDate != '---'" class="row">
       <div class="col col--state">Fecha último listado</div>
       <div class="col col--date">{{ lastListDate }}</div>
       <div class="col col--user">Juan Perez Rodriguez</div>
     </div>
-    <div class="row">
+    <div *ngIf="lastADMDocumentSentDate != '---'" class="row">
       <div class="col col--state">Fecha último envío dcto (ADM)</div>
       <div class="col col--date">{{ lastADMDocumentSentDate }}</div>
       <div class="col col--user">Juan Perez Rodriguez</div>
     </div>
-    <div class="row">
+    <div *ngIf="definitionOfChargesDate != '---'" class="row">
       <div class="col col--state">Fecha defin. cargos</div>
       <div class="col col--date">{{ definitionOfChargesDate }}</div>
       <div class="col col--user">Juan Perez Rodriguez</div>
     </div>
-    <div class="row">
+    <div *ngIf="lastBudgetSentDate != '---'" class="row">
       <div class="col col--state">Fecha último envío PPTO</div>
       <div class="col col--date">{{ lastBudgetSentDate }}</div>
       <div class="col col--user">Juan Perez Rodriguez</div>
@@ -45,7 +45,7 @@
       <div class="col col--date"></div>
       <div class="col col--user">Juan Perez Rodriguez</div>
     </div>
-    <div class="row">
+    <div *ngIf="approvedOrRejectedDate != '---'" class="row">
       <div class="col col--state">Fecha aprob. o rechazo</div>
       <div class="col col--date">{{ approvedOrRejectedDate }}</div>
       <div class="col col--user">Juan Perez Rodriguez</div>
@@ -55,27 +55,77 @@
       <div class="col col--date"></div>
       <div class="col col--user">Juan Perez Rodriguez</div>
     </div>
-    <div class="row">
+    <div *ngIf="lastInputDate != '---'" class="row">
       <div class="col col--state">Fecha último Input</div>
       <div class="col col--date">{{ lastInputDate }}</div>
       <div class="col col--user">Juan Perez Rodriguez</div>
     </div>
-    <div class="row">
+    <div *ngIf="workshopBillingDate != '---'" class="row">
       <div class="col col--state">Fecha de fact. Taller</div>
       <div class="col col--date">{{ workshopBillingDate }}</div>
       <div class="col col--user">Juan Perez Rodriguez</div>
     </div>
-    <div class="row">
+    <div *ngIf="fisrtLabourDate != '---'" class="row">
       <div class="col col--state">Fecha First Labour</div>
       <div class="col col--date">
         {{ fisrtLabourDate }}
       </div>
       <div class="col col--user">Juan Perez Rodriguez</div>
     </div>
-    <div class="row">
+    <div *ngIf="lastLabourDate != '---'" class="row">
       <div class="col col--state">Fecha Last Labour</div>
       <div class="col col--date">
         {{ lastLabourDate }}
+      </div>
+      <div class="col col--user">Juan Perez Rodriguez</div>
+    </div>
+    <div
+      *ngIf="afaDocumentDate != ''"
+      class="row"
+    >
+      <div class="col col--state">Fecha AFA</div>
+      <div class="col col--date">
+        {{ afaDocumentDate }}
+      </div>
+      <div class="col col--user">Juan Perez Rodriguez</div>
+    </div>
+    <div
+      *ngIf="summaryDocumentDate != 'PDTE'"
+      class="row"
+    >
+      <div class="col col--state">Fecha Resumen</div>
+      <div class="col col--date">
+        {{ summaryDocumentDate }}
+      </div>
+      <div class="col col--user">Juan Perez Rodriguez</div>
+    </div>
+    <div
+      *ngIf="fesaDocumentDate != 'PDTE'"
+      class="row"
+    >
+      <div class="col col--state">Fecha FESA</div>
+      <div class="col col--date">
+        {{ fesaDocumentDate }}
+      </div>
+      <div class="col col--user">Juan Perez Rodriguez</div>
+    </div>
+    <div
+      *ngIf="textDocumentDate != 'PDTE'"
+      class="row"
+    >
+      <div class="col col--state">Fecha TEXT</div>
+      <div class="col col--date">
+        {{ textDocumentDate }}
+      </div>
+      <div class="col col--user">Juan Perez Rodriguez</div>
+    </div>
+    <div
+      *ngIf=" reportDocumentDate != 'PDTE'"
+      class="row"
+    >
+      <div class="col col--state">Fecha REPORTE</div>
+      <div class="col col--date">
+        {{ reportDocumentDate }}
       </div>
       <div class="col col--user">Juan Perez Rodriguez</div>
     </div>

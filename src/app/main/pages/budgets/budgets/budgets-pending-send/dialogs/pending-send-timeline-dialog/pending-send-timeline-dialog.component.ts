@@ -54,6 +54,26 @@ export class PendingSendTimelineDialogComponent implements OnInit {
     return this.getStringFromTimestamp(this.budget.fechaDeAprobacionORechazo);
   }
 
+  get afaDocumentDate(): string {
+    return this.budget.afaDate.toString();
+  }
+
+  get fesaDocumentDate(): string {
+    return this.budget.cotizacionFesa.toString();
+  }
+
+  get textDocumentDate(): string {
+    return this.budget.cotizacionText.toString();
+  }
+
+  get summaryDocumentDate(): string {
+    return this.budget.resumen.toString();
+  }
+
+  get reportDocumentDate(): string {
+    return this.budget.informe.toString();
+  }
+
   private getStringFromTimestamp(timestamp: any): string {
     const seconds: any = timestamp;
 
