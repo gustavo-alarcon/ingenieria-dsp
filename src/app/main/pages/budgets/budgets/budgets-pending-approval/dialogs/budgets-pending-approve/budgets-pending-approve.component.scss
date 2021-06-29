@@ -1,0 +1,55 @@
+.container {
+    width: 517x;
+    height: 247x;
+}
+
+h3 {
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 24px;
+    color: #000000;
+    margin: 1em 0;
+}
+
+.card {
+    display: flex;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+    &--title {
+        margin-top: 5px;
+        margin-right: 15px;
+        &__close--button {
+            margin-top: 5px;
+            margin-left: 220px;
+            cursor: pointer;
+        }
+    }
+}
+
+p {
+    font-family: Roboto;
+    font-style: normal;
+    font-size: 16px;
+    text-align: center;
+    color: #828282;
+}
+
+.btn-add {
+    border: 1px #6200ee solid;
+    color: #6200ee;
+    background-color: white;
+    padding: 0px 20px 0px 20px;
+    text-align: right;
+}
+
+.approve-title--close {
+    margin-top: 5px;
+    margin-left: 220px;
+    cursor: pointer;
+}
+
+.approve-title {
+    margin-top: 5px;
+    margin-right: 15px;
+}

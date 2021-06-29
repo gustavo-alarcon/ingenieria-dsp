@@ -1,14 +1,12 @@
 <div class="container">
-  <h2 mat-dialog-title class="card">
-    <div class="delete-title" mat-dialog-close>
-      <mat-icon mat-list-icon>delete</mat-icon>
-    </div>
-    Borrar
+  <div class="ms-dialog-header">
+    <mat-icon class="ms-dialog-header__icon">delete</mat-icon>
+    <h3 class="ms-dialog-header__title">Borrar</h3>
     <span class="ms-fill"></span>
-    <div mat-dialog-close class="delete-title--close">
+    <button mat-icon-button mat-dialog-close>
       <mat-icon>clear</mat-icon>
-    </div>
-  </h2>
+    </button>
+  </div>
   <mat-divider></mat-divider>
   <mat-dialog-content class="confirm">
     <p *ngIf="woChild; else noWOCHILD">

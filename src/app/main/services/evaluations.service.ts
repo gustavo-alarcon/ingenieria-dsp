@@ -32,6 +32,8 @@ export class EvaluationsService {
   /**
    * Get all documents from evaluations collection
    */
+
+  //where('createAt','>=',start)
   getAllEvaluations(): Observable<Evaluation[]> {
     return this.afs.collection<Evaluation>(`db/ferreyros/evaluations`, ref => ref.orderBy('createdAt', 'asc'))
       .valueChanges()
@@ -42,7 +44,28 @@ export class EvaluationsService {
         })
       )
   }
+  
+  getCurrentMonthOfViewDate(): { from: Date, to: Date } {
+    const date = new Date();
+    const fromMonth = date.getMonth();
+    const fromYear = date.getFullYear();
 
+    const actualFromDate = new Date(fromYear, fromMonth, 1);
+
+    const toMonth = (fromMonth + 1) % 12;
+    let toYear = fromYear;
+
+
+    console.log(fromMonth);
+
+    if (fromMonth + 1 >= 12) {
+      toYear++;
+    }
+
+    const toDate = new Date(toYear, toMonth, 1);
+    console.log(toMonth);
+    return { from: actualFromDate, to: toDate };
+  }
   /**
    * Creates the evaluations entry into firestore's Evaluations collection
    * @param {EvaluationRegistryForm} form - Form data passed on request creation

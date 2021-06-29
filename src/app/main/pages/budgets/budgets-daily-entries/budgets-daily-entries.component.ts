@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { take } from 'rxjs/operators';
 import { DeleteDialogComponent } from './dialogs/delete-dialog/delete-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -18,6 +19,8 @@ import moment from 'moment';
   styleUrls: ['./budgets-daily-entries.component.scss'],
 })
 export class BudgetsDailyEntriesComponent implements OnInit {
+  public budgetUploaded: boolean = false;
+
   public budgetsDailyEntriesDataSource: MatTableDataSource<Budget> =
     new MatTableDataSource<Budget>();
 
@@ -136,7 +139,8 @@ export class BudgetsDailyEntriesComponent implements OnInit {
     private breakpoint: BreakpointObserver,
     private MatSnackBar: MatSnackBar,
     private BudgetsService: BudgetsService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private router: Router
   ) {}
 
   public ngOnInit(): void {
@@ -154,6 +158,7 @@ export class BudgetsDailyEntriesComponent implements OnInit {
   }
 
   public loadFile(fileList: File[]): void {
+    this.budgetUploaded = false;
     this.loading.next(true);
     const file: File = fileList[0];
     const fileReader: FileReader = new FileReader();
@@ -311,6 +316,7 @@ export class BudgetsDailyEntriesComponent implements OnInit {
             mesTer: el[91] ? el[91] : null,
             anio: el[92] ? el[92] : null,
             fechaLPD: el[93] ? el[93] : null,
+            motivoDeModificacion:el[94] ? el[94]:null
           };
           parsedExcelData.push(data);
         }
@@ -389,6 +395,7 @@ export class BudgetsDailyEntriesComponent implements OnInit {
                       duration: 6000,
                     }
                   );
+                  this.budgetUploaded = true;
                 })
                 .catch((error) => {
                   console.error(error);
@@ -409,5 +416,9 @@ export class BudgetsDailyEntriesComponent implements OnInit {
   cancelUploadDataToFirestore(): void {
     this.budgetsDailyEntriesDataSource.data.length = 0;
     this.refresh();
+  }
+
+  public goToBudgets(): void {
+    this.router.navigate(['main/budgets/summary']);
   }
 }

@@ -29,6 +29,7 @@ export interface Budget {
   fechaUltimoEnvioPPTO: Date;
   fechaEnvioPPTO01: Date;
   fechaEnvioPPTO02: Date;
+  motivoDeModificacion: Array<ModificationReasonEntry>;
   motivoDeModificacion02: string;
   detalleDeModificacion02: string;
   fechaEnvioPPTO03: Date;
@@ -54,7 +55,7 @@ export interface Budget {
   reparacion60: string;
   horasSTD: number;
   horasReales: number;
-  tiempoObjetivoEnvioPPTO: number;
+  tiempoObjetivoEnvioPPTO: firebase.default.firestore.Timestamp;
   diasRestantesEnvioPPTO: string;
   NoPPTOSModificadosOAdicionales: string | number;
   observacionesEnElPresupuesto: string;
@@ -77,7 +78,7 @@ export interface Budget {
   mesFactVenta: Date;
   percentHorasSTDvsHorasDBS: string;
   fechaFirstLabour: Date;
-  fechaLastLabour: Date;
+  fechaLastLabour: Date | firebase.default.firestore.Timestamp;
   diasDemoraFact: number;
   diasFactLastLabour: number;
   elaborarPPTO: string;
@@ -99,6 +100,18 @@ export interface Budget {
   anio: number;
   fechaLPD: Date;
   id?: any;
+  afaObs?: string;
+  fesaObs?: string;
+  reportObs?: string;
+  summaryObs?: string;
+  textObs?: string;
+  additionals?: object[];
+  afaDate?: string;
+}
+
+export interface Additional {
+  type: string;
+  observation: string;
 }
 
 export interface RejectionReasonsEntry {
@@ -112,7 +125,13 @@ export interface ModificationReasonEntry {
   id: string;
   name: string;
   createdBy: User;
-  createdAt: firebase.default.firestore.FieldValue;
+  additionals?: Array<Additional>;
+  createdAt: Date;
+}
+
+export interface modificationReasonForm {
+  additionals: Array<Additional>;
+  modificationReason: ModificationReasonEntry;
 }
 
 export interface BudgetsBroadcastList {

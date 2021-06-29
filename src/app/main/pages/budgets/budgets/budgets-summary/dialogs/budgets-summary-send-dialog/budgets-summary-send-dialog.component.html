@@ -1,1 +1,213 @@
-<p>budgets-summary-send-dialog works!</p>
+<div class="container">
+  <div class="ms-dialog-header">
+    <mat-icon class="ms-dialog-header__icon">attach_email</mat-icon>
+    <h3 class="ms-dialog-header__title">Enviar PPTO.</h3>
+    <span class="ms-fill"></span>
+    <button mat-icon-button mat-dialog-close>
+      <mat-icon>clear</mat-icon>
+    </button>
+  </div>
+  <mat-divider></mat-divider>
+
+  <mat-dialog-content>
+    <div class="main--wrapper" [formGroup]="form">
+      <div class="file--upload__wrapper">
+        <mat-progress-bar
+          class="loader"
+          mode="indeterminate"
+          *ngIf="loading$ | async"
+        ></mat-progress-bar>
+        <div class="file--upload--card">
+          <div class="file--upload--card__title">
+            <p>PRESUPUESTO</p>
+            <p>Requerido</p>
+          </div>
+
+          <div class="file--upload--card__files">
+            <p *ngFor="let file of budgetFilesList">
+              {{ file.name }}
+            </p>
+          </div>
+
+          <input
+            style="display: none"
+            type="file"
+            (change)="loadFilesForBudget($event.target.files)"
+            #loadFilesForBudgetElement
+            multiple
+          />
+
+          <button
+            (click)="loadFilesForBudgetElement.click()"
+            aria-label="upload"
+            mat-button
+            class="btn-add"
+          >
+            <mat-icon>add</mat-icon>
+            ADJUNTAR
+          </button>
+        </div>
+
+        <div class="file--upload--card">
+          <div class="file--upload--card__title">
+            <p>INFORME</p>
+            <p>Requerido</p>
+          </div>
+
+          <div class="file--upload--card__files">
+            <p *ngFor="let file of reportFilesList">
+              {{ file.name }}
+            </p>
+          </div>
+
+          <input
+            style="display: none"
+            type="file"
+            (change)="loadFilesForReport($event.target.files)"
+            #loadFilesForReportElement
+            multiple
+          />
+
+          <button
+            (click)="loadFilesForReportElement.click()"
+            aria-label="upload"
+            mat-button
+            class="btn-add"
+          >
+            <mat-icon>add</mat-icon>
+            ADJUNTAR
+          </button>
+        </div>
+
+        <div class="file--upload--card">
+          <div class="file--upload--card__title">
+            <p>Cot. Rptos y/o trabajos</p>
+            <p>Opcional</p>
+          </div>
+
+          <div class="file--upload--card__files">
+            <p *ngFor="let file of quotationFilesList">
+              {{ file.name }}
+            </p>
+          </div>
+
+          <input
+            style="display: none"
+            type="file"
+            (change)="loadFilesForQuotation($event.target.files)"
+            #loadFilesForQuotationElement
+            multiple
+          />
+
+          <button
+            (click)="loadFilesForQuotationElement.click()"
+            aria-label="upload"
+            mat-button
+            class="btn-add"
+          >
+            <mat-icon>add</mat-icon>
+            ADJUNTAR
+          </button>
+        </div>
+      </div>
+
+      <div class="main--form">
+        <mat-form-field appearance="outline">
+          <mat-label>Asunto</mat-label>
+          <input
+            matInput
+            placeholder="Asunto (Taller - Main - Child - Cliente)"
+            formControlName="subject"
+          />
+          <mat-hint>Campo requerido</mat-hint>
+          <mat-error *ngIf="subject.invalid && subject.touched">
+            El asunto del correo es un campo requerido.
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Cuerpo de correo</mat-label>
+          <textarea
+            matInput
+            cdkTextareaAutosize
+            #autosize="cdkTextareaAutosize"
+            cdkAutosizeMinRows="5"
+            cdkAutosizeMaxRows="12"
+            placeholder="Descripción"
+            formControlName="body"
+          ></textarea>
+          <mat-hint>Campo requerido</mat-hint>
+          <mat-error *ngIf="body.invalid && body.touched">
+            El cuerpo del correo es un campo requerido.
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Observaciones</mat-label>
+          <input
+            matInput
+            placeholder="XXXXXXXXXXXXXXXXXXXX"
+            formControlName="observations"
+          />
+          <mat-hint>Campo opcional</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Enviar a:</mat-label>
+
+          <mat-chip-list #emailChipList aria-label="Email selection">
+            <mat-chip
+              *ngFor="let email of emails"
+              [selectable]="selectable"
+              [removable]="removable"
+              (removed)="removeEmail(email)"
+            >
+              {{ email }}
+              <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+            </mat-chip>
+            <input
+              placeholder="Nuevo correo..."
+              #emailInput
+              [matAutocomplete]="auto"
+              [matChipInputFor]="emailChipList"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+              (matChipInputTokenEnd)="addEmail($event)"
+            />
+          </mat-chip-list>
+
+          <mat-autocomplete
+            #auto="matAutocomplete"
+            (optionSelected)="selectedEmail($event)"
+          >
+            <mat-option
+              *ngFor="let email of filteredEmails | async"
+              [value]="email"
+            >
+              {{ email }}
+            </mat-option>
+          </mat-autocomplete>
+          <mat-hint>Campo requerido</mat-hint>
+        </mat-form-field>
+      </div>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button type="button" mat-stroked-button color="warn" mat-dialog-close>
+      CERRAR
+    </button>
+    <button
+      [disabled]="
+        form.invalid ||
+        emails.length === 0 ||
+        budgetFilesList.length === 0 ||
+        reportFilesList.length === 0
+      "
+      type="submit"
+      mat-raised-button
+      color="primary"
+    >
+      ENVIAR
+    </button>
+  </mat-dialog-actions>
+</div>

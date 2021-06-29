@@ -5,7 +5,14 @@
       <span class="quantity">{{ cantWO }}</span>
     </div>
 
-    <mat-form-field appearance="outline" [ngClass]="isMobile ? 'ms-kanban-toolbar__input--mobile' : 'ms-kanban-toolbar__input'">
+    <mat-form-field
+      appearance="outline"
+      [ngClass]="
+        isMobile
+          ? 'ms-kanban-toolbar__input--mobile'
+          : 'ms-kanban-toolbar__input'
+      "
+    >
       <mat-label>Taller</mat-label>
       <input
         type="text"
@@ -727,13 +734,13 @@
                 class="budget--status__bubble--send--pending"
                 *ngSwitchCase="'PDTE. ENVÍO PPTO.'"
               >
-                PENDIENTE DE ENVÍO
+                Pdte. ENVÍO
               </div>
               <div
                 class="budget--status__bubble--approval--pending"
                 *ngSwitchCase="'PDTE. APROB.'"
               >
-                PENDIENTE DE APROBACIÓN
+                Pdte. APROB.
               </div>
               <div
                 class="budget--status__bubble--parallel"
@@ -751,7 +758,7 @@
                 class="budget--status__bubble--customer"
                 *ngSwitchCase="'CLIENTE INTERNO'"
               >
-                CLIENTE INTERNO
+                CLIENTE INT.
               </div>
               <div *ngSwitchDefault>---</div>
             </div>

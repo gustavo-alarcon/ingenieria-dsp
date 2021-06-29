@@ -1,16 +1,19 @@
-import { map, shareReplay } from 'rxjs/operators';
+import { shareReplay } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 import {
   RejectionReasonsEntry,
   ModificationReasonEntry,
   BudgetsBroadcastList,
   Budget,
+  modificationReasonForm,
 } from '../models/budgets.model';
 
-import * as firebase from 'firebase/app';
+
 import { User } from '../models/user-model';
 import { Observable, of } from 'rxjs';
+
+import * as firebase from 'firebase/app';
 
 @Injectable({
   providedIn: 'root',
@@ -94,8 +97,63 @@ export class BudgetsService {
     return of(batchArray);
   }
 
+  updateBudgetFields(
+    id: string,
+    fields: object
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    const batch = this.afs.firestore.batch();
+    const docRef: DocumentReference = this.afs.firestore.doc(
+      `/db/ferreyros/budgets/${id}`
+    );
+
+    batch.update(docRef, fields);
+    return of(batch);
+  }
+
+  updateModifyReason(
+    id: string,
+    reason: modificationReasonForm,
+    user: User
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    const batch = this.afs.firestore.batch();
+    const docRef: DocumentReference = this.afs.firestore.doc(
+      `/db/ferreyros/budgets/${id}`
+    );
+
+    const modificationData: ModificationReasonEntry = {
+      id: docRef.id,
+      name: reason.modificationReason.name,
+      createdBy: user,
+      additionals: reason.additionals,
+      createdAt: new Date(),
+    };
+    const data: any = {
+      motivoDeModificacion:
+        firebase.default.firestore.FieldValue.arrayUnion(modificationData),
+    };
+
+    batch.update(docRef, data);
+    return of(batch);
+  }
+
   getBudgets(): Observable<Budget[]> {
     const ref = this.afs.collection<Budget>('/db/ferreyros/budgets');
+    return ref.valueChanges().pipe(shareReplay(1));
+  }
+
+  getBudgetsPendingSend(): Observable<Budget[]> {
+    const ref = this.afs.collection<Budget>('/db/ferreyros/budgets', (ref) =>
+      ref.where('statusPresupuesto', '==', 'PDTE. ENVÍO PPTO.')
+    );
+
+    return ref.valueChanges().pipe(shareReplay(1));
+  }
+
+  getBudgetsPendingApproval(): Observable<Budget[]> {
+    const ref = this.afs.collection<Budget>('/db/ferreyros/budgets', (ref) =>
+      ref.where('statusPresupuesto', '==', 'PDTE. APROB.')
+    );
+
     return ref.valueChanges().pipe(shareReplay(1));
   }
 
@@ -107,6 +165,24 @@ export class BudgetsService {
     const refSnapshot = ref.get();
 
     return refSnapshot;
+  }
+
+  updateBudgetStatus(
+    id: string,
+    status: string
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    const batch = this.afs.firestore.batch();
+    const docRef: DocumentReference = this.afs.firestore.doc(
+      `/db/ferreyros/budgets/${id}`
+    );
+
+    const data = {
+      statusPresupuesto: status,
+    };
+
+    batch.update(docRef, data);
+
+    return of(batch);
   }
 
   public getAllReasonsForRejectionEntries(): Observable<
@@ -121,10 +197,10 @@ export class BudgetsService {
   }
 
   public getAllReasonsForModificationEntries(): Observable<
-    RejectionReasonsEntry[]
+    ModificationReasonEntry[]
   > {
     return this.afs
-      .collection<RejectionReasonsEntry>(
+      .collection<ModificationReasonEntry>(
         '/db/generalConfig/budgetsListModificationReasons',
         (ref) => ref.orderBy('createdAt', 'desc')
       )
