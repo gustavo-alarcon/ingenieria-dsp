@@ -1,4 +1,3 @@
-import { PendingSendTimelineDialogComponent } from './dialogs/pending-send-timeline-dialog/pending-send-timeline-dialog.component';
 import { PendingSendDeleteDialogComponent } from './dialogs/pending-send-delete-dialog/pending-send-delete-dialog.component';
 import { PendingSendUpdateDialogComponent } from './dialogs/pending-send-update-dialog/pending-send-update-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -506,16 +505,43 @@ export class BudgetsPendingSendComponent implements OnInit {
     this.tableData.data = this.tableData.data;
   }
 
-  public updateDialog(currentBudget: Budget): void {
+  public updateDialog(currentBudget: Budget) {
     const ref = this.MatDialog.open(PendingSendUpdateDialogComponent, {
       data: currentBudget,
     });
   }
 
-  public timelineDialog(currentBudget: Budget): void {
-    const ref = this.MatDialog.open(PendingSendTimelineDialogComponent, {
-      data: currentBudget,
+  public deleteDialog(currentBudget: Budget) {
+    const ref = this.MatDialog.open(PendingSendDeleteDialogComponent, {
+      data: {
+        woMain: currentBudget.woMain,
+        woChild: currentBudget.woChild,
+      },
     });
+
+    ref
+      .afterClosed()
+      .toPromise()
+      .then((res) => {
+        if (res == 'delete') {
+          this.loading.next(true);
+          this._budgetsService.deleteBudget(currentBudget.id).subscribe(
+            () => {
+              this.MatSnackBar.open('✅ Eliminado correctamente!', 'Aceptar', {
+                duration: 6000,
+              });
+              this.refresh();
+              this.loading.next(false);
+            },
+            (error) => {
+              this.MatSnackBar.open('🚨 Ha ocurrido un error! ', 'Aceptar', {
+                duration: 6000,
+              });
+              this.loading.next(false);
+            }
+          );
+        }
+      });
   }
 
   public deleteDialog(currentBudget: Budget): void {
@@ -564,4 +590,6 @@ export class BudgetsPendingSendComponent implements OnInit {
 
     return '---';
   }
+
+  
 }

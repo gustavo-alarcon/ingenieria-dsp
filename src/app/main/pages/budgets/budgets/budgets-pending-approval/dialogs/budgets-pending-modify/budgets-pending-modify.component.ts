@@ -72,6 +72,8 @@ export class BudgetsPendingModifyComponent implements OnInit {
         );
       })
     );
+   
+    //  console.log(element.name);
 
     this.modificationFormGroup = this.formBuilder.group({
       modificationReason: ['', Validators.required],

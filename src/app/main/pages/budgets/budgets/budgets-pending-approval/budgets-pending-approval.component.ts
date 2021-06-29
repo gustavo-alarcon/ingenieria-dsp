@@ -14,6 +14,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import * as XLSX from 'xlsx';
 import { BudgetsPendingApproveComponent } from './dialogs/budgets-pending-approve/budgets-pending-approve.component';
 import { BudgetsPendingModifyComponent } from './dialogs/budgets-pending-modify/budgets-pending-modify.component';
+import { BudgetsPendingRejectionComponent } from './dialogs/budgets-pending-rejection/budgets-pending-rejection.component';
 
 
 @Component({
@@ -528,5 +529,12 @@ export class BudgetsPendingApprovalComponent implements OnInit {
     const a = this.MatDialog.open(BudgetsPendingModifyComponent, {
       data: element
     });
+  }
+
+  public rejectionDialog(element: Budget) {
+    const a = this.MatDialog.open(BudgetsPendingRejectionComponent,{
+      data: element
+    }
+      )
   }
 }

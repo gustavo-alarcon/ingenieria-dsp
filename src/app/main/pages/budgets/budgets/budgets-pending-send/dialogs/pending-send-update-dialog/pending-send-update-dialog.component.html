@@ -1,18 +1,16 @@
 <div class="container">
-  <div class="ms-dialog-header">
-    <mat-icon class="ms-dialog-header__icon">create</mat-icon>
-    <h3 class="ms-dialog-header__title">Actualizar PPTO</h3>
-    <span class="ms-fill"></span>
-    <button mat-icon-button mat-dialog-close>
-      <mat-icon>cancel</mat-icon>
-    </button>
-  </div>
-
-  <mat-progress-bar
-    mode="indeterminate"
-    *ngIf="loading$ | async"
-  ></mat-progress-bar>
-  <mat-divider></mat-divider>
+    <h2 mat-dialog-title class="card">
+        <div class="card--title" mat-dialog-close>
+            <mat-icon mat-list-icon>create</mat-icon>
+        </div>
+        Actualizar PPTO.
+        <span class="ms-fill"></span>
+        <div mat-dialog-close class="card--title__close--button">
+            <mat-icon>clear</mat-icon>
+        </div>
+    </h2>
+    <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+    <mat-divider></mat-divider>
 
     <mat-dialog-content>
         <mat-horizontal-stepper #stepper linear>

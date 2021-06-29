@@ -1,0 +1,69 @@
+.container {
+    width: 517x;
+    height: 474x;
+}
+
+.card {
+    display: flex;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+    &--title {
+        margin-top: 5px;
+        margin-right: 15px;
+        &__close--button {
+            margin-top: 5px;
+            margin-left: 220px;
+            cursor: pointer;
+        }
+    }
+}
+
+h2 {
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    color: #2B2B2BDE;
+    line-height: 27px;
+    margin: 1em 0;
+}
+
+.rejection-title {
+    margin-top: 5px;
+    margin-right: 15px;
+}
+
+.rejection-title--close {
+    margin-top: 5px;
+    margin-left: 220px;
+    cursor: pointer;
+}
+
+.rejection-title--close {
+    margin-top: 5px;
+    margin-left: 220px;
+}
+
+p {
+    font-family: Roboto;
+    font-style: normal;
+    font-size: 14px;
+    text-align: center;
+    line-height: 20px;
+    color: #828282;
+}
+
+.main--wrapper {
+    display: flex;
+    flex-direction: column;
+    padding: 0 4em;
+}
+
+.main--form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    mat-form-field {
+        margin: 0.5em 0;
+    }
+}

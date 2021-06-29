@@ -1,1737 +1,981 @@
 <div *ngIf="auth.user$ | async as user">
-  <div class="ms-kanban-toolbar">
-    <div class="quantity-wrapper">
-      Cant. W.O.
-      <span class="quantity">{{ cantWO }}</span>
-    </div>
+    <div class="ms-kanban-toolbar">
+        <div class="quantity-wrapper">
+            Cant. W.O.
+            <span class="quantity">{{ cantWO }}</span>
+        </div>
 
-    <mat-form-field
-      appearance="outline"
-      [ngClass]="
+        <mat-form-field appearance="outline" [ngClass]="
         isMobile
           ? 'ms-kanban-toolbar__input--mobile'
           : 'ms-kanban-toolbar__input'
-      "
-    >
-      <mat-label>Taller</mat-label>
-      <input
-        type="text"
-        [formControl]="tallerFormControl"
-        matInput
-        placeholder="Taller"
-        autocomplete="off"
-        [disabled]="cantWO < 1"
-      />
-      <mat-icon matPrefix>business</mat-icon>
-    </mat-form-field>
+      ">
+            <mat-label>Taller</mat-label>
+            <input type="text" [formControl]="tallerFormControl" matInput placeholder="Taller" autocomplete="off" [disabled]="cantWO < 1" />
+            <mat-icon matPrefix>business</mat-icon>
+        </mat-form-field>
 
-    <mat-form-field
-      appearance="outline"
-      [ngClass]="
+        <mat-form-field appearance="outline" [ngClass]="
         isMobile
           ? 'ms-kanban-toolbar__input--mobile'
           : 'ms-kanban-toolbar__input'
-      "
-    >
-      <mat-label>WO MAIN</mat-label>
-      <input
-        type="text"
-        [formControl]="woMainFormControl"
-        matInput
-        placeholder="WO MAIN"
-        autocomplete="off"
-        [disabled]="cantWO < 1"
-      />
-      <mat-icon matPrefix>search</mat-icon>
-    </mat-form-field>
+      ">
+            <mat-label>WO MAIN</mat-label>
+            <input type="text" [formControl]="woMainFormControl" matInput placeholder="WO MAIN" autocomplete="off" [disabled]="cantWO < 1" />
+            <mat-icon matPrefix>search</mat-icon>
+        </mat-form-field>
 
-    <mat-form-field
-      appearance="outline"
-      [ngClass]="
+        <mat-form-field appearance="outline" [ngClass]="
         isMobile
           ? 'ms-kanban-toolbar__input--mobile'
           : 'ms-kanban-toolbar__input'
-      "
-    >
-      <mat-label>WO CHILD</mat-label>
-      <input
-        type="text"
-        [formControl]="woChildFormControl"
-        matInput
-        placeholder="WO CHILD"
-        autocomplete="off"
-        [disabled]="cantWO < 1"
-      />
-      <mat-icon matPrefix>search</mat-icon>
-    </mat-form-field>
+      ">
+            <mat-label>WO CHILD</mat-label>
+            <input type="text" [formControl]="woChildFormControl" matInput placeholder="WO CHILD" autocomplete="off" [disabled]="cantWO < 1" />
+            <mat-icon matPrefix>search</mat-icon>
+        </mat-form-field>
 
-    <mat-form-field
-      appearance="outline"
-      [ngClass]="
+        <mat-form-field appearance="outline" [ngClass]="
         isMobile
           ? 'ms-kanban-toolbar__input--mobile'
           : 'ms-kanban-toolbar__input'
-      "
-    >
-      <mat-label>Cliente</mat-label>
-      <input
-        type="text"
-        [formControl]="clienteFormControl"
-        matInput
-        placeholder="Cliente"
-        autocomplete="off"
-        [disabled]="cantWO < 1"
-      />
-      <mat-icon matPrefix>search</mat-icon>
-    </mat-form-field>
+      ">
+            <mat-label>Cliente</mat-label>
+            <input type="text" [formControl]="clienteFormControl" matInput placeholder="Cliente" autocomplete="off" [disabled]="cantWO < 1" />
+            <mat-icon matPrefix>search</mat-icon>
+        </mat-form-field>
 
-    <mat-form-field
-      [ngClass]="
+        <mat-form-field [ngClass]="
         isMobile
           ? 'ms-kanban-toolbar__input--mobile'
           : 'ms-kanban-toolbar__input'
-      "
-      appearance="outline"
-    >
-      <mat-label>Status PPTO.</mat-label>
-      <input
-        type="text"
-        [formControl]="statusFormControl"
-        matInput
-        placeholder="Status PPTO."
-        autocomplete="off"
-        [disabled]="cantWO < 1"
-      />
-      <mat-icon matPrefix>search</mat-icon>
-    </mat-form-field>
+      " appearance="outline">
+            <mat-label>Status PPTO.</mat-label>
+            <input type="text" [formControl]="statusFormControl" matInput placeholder="Status PPTO." autocomplete="off" [disabled]="cantWO < 1" />
+            <mat-icon matPrefix>search</mat-icon>
+        </mat-form-field>
 
-    <button
-      [disabled]="cantWO < 1"
-      class="download"
-      mat-raised-button
-      color="primary"
-      (click)="downloadReport()"
-    >
+        <button [disabled]="cantWO < 1" class="download" mat-raised-button color="primary" (click)="downloadReport()">
       DESCARGAR
       <mat-icon aria-label="agregar" class="icon-add">download</mat-icon>
     </button>
-  </div>
-
-  <mat-progress-bar
-    mode="indeterminate"
-    *ngIf="loading$ | async"
-  ></mat-progress-bar>
-
-  <div class="body-container">
-    <div class="table-wrapper">
-      <table
-        mat-table
-        [dataSource]="tableData"
-        matSort
-        class="mat-elevation-z8"
-      >
-        <ng-container matColumnDef="taller">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            TALLER
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.taller ? element.taller : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="woMain">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            WO MAIN
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.woMain ? element.woMain : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="ioMain">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            IO MAIN
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.ioMain ? element.ioMain : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="woChild">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            WO CHILD
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.woChild ? element.woChild : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="ioChild">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            IO CHILD
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.ioChild ? element.ioChild : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="statusWoChild">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            STATUS WO CHILD
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.statusWoChild ? element.statusWoChild : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="otTaller">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            OT TALLER
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.otTaller ? element.otTaller : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="otMadre">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            OT MADRE
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.otMadre ? element.otMadre : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="fechaAperturaChild">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            FECHA APERTURA CHILD
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.fechaAperturaChild
-                ? (element.fechaAperturaChild.toDate() | date: "d/M/y")
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="fechaReleasedIoChild">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            FECHA RELEASED IO CHILD
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.fechaReleasedIoChild
-                ? (element.fechaReleasedIoChild.toDate() | date: "d/M/y")
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="cliente">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            CLIENTE
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.cliente ? element.cliente : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="gmorngm">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            GM/NGM
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.gmorngm ? element.gmorngm : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="modelo">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            MODELO
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.modelo ? element.modelo : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="tipoSS">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            TIPO SS
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.tipoSS ? element.tipoSS : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="servicio">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            SERVICIO
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.servicio ? element.servicio : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="tipoAtencion">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            TIPO ATENCION
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.tipoAtencion ? element.tipoAtencion : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="modalidadPresupuesto">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            MODALIDAD PRESUPUESTO
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.modalidadPresupuesto
-                ? element.modalidadPresupuesto
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="componente">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            COMPONENTE
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.componente ? element.componente : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="afa">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            AFA
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.afa ? element.afa : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="fechaUltimoListado">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            FECHA ULTIMO LISTADO
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.fechaUltimoListado
-                ? (element.fechaUltimoListado.toDate() | date: "d/M/y")
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="fechaUltimoEnvioDocumentoADM">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            FECHA ULTIMO ENVIO DOCUMENTO ADM
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.fechaUltimoEnvioDocumentoADM
-                ? (element.fechaUltimoEnvioDocumentoADM.toDate()
-                  | date: "d/M/y")
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="ultimoDocumento">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            ULTIMO DOCUMENTO
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.ultimoDocumento ? element.ultimoDocumento : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="fechaDefinicionDeCargos">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            FECHA DEFINICION DE CARGOS
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.fechaDefinicionDeCargos
-                ? (element.fechaDefinicionDeCargos.toDate() | date: "d/M/y")
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="definicionDeCargo">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            DEFINICION DE CARGO
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.definicionDeCargo ? element.definicionDeCargo : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="fechaUltimoEnvioPPTO">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            FECHA ULTIMO ENVIO PPTO
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.fechaUltimoEnvioPPTO
-                ? (element.fechaUltimoEnvioPPTO.toDate() | date: "d/M/y")
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="fechaEnvioPPTO01">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            FECHA ENVIO PPTO 01
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.fechaEnvioPPTO01
-                ? (element.fechaEnvioPPTO01.toDate() | date: "d/M/y")
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="fechaEnvioPPTO02">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            FECHA ENVIO PPTO 02
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.fechaEnvioPPTO02
-                ? (element.fechaEnvioPPTO02.toDate() | date: "d/M/y")
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="motivoDeModificacion02">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            MOTIVO DE MODIFICACION 02
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.motivoDeModificacion02
-                ? element.motivoDeModificacion02
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="detalleDeModificacion02">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            DETALLE DE MODIFICACION 02
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.detalleDeModificacion02
-                ? element.detalleDeModificacion02
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="fechaEnvioPPTO03">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            FECHA ENVIO PPTO 03
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.fechaEnvioPPTO03
-                ? (element.fechaEnvioPPTO03.toDate() | date: "d/M/y")
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="motivoDeModificacion03">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            MOTIVO DE MODIFICACION 03
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.motivoDeModificacion03
-                ? element.motivoDeModificacion03
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="detalleDeModificacion03">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            DETALLE DE MODIFICACION 03
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.detalleDeModificacion03
-                ? element.detalleDeModificacion03
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="fechaEnvioPPTO04">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            FECHA ENVIO PPTO 04
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.fechaEnvioPPTO04
-                ? (element.fechaEnvioPPTO04.toDate() | date: "d/M/y")
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="motivoDeModificacion04">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            MOTIVO DE MODIFICACION 04
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.motivoDeModificacion04
-                ? element.motivoDeModificacion04
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="detalleDeModificacion04">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            DETALLE DE MODIFICACION 04
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.detalleDeModificacion04
-                ? element.detalleDeModificacion04
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="fechaDeAprobacionORechazo">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            FECHA DE APROBACION/RECHAZO
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.fechaDeAprobacionORechazo
-                ? (element.fechaDeAprobacionORechazo.toDate() | date: "d/M/y")
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="statusPresupuesto">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            STATUS PRESUPUESTO
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            <div [ngSwitch]="element.statusPresupuesto">
-              <div
-                class="budget--status__bubble--approved"
-                *ngSwitchCase="'PPTO. APROBADO'"
-              >
-                APROBADO
-              </div>
-              <div
-                class="budget--status__bubble--rejected"
-                *ngSwitchCase="'PPTO. RECHAZADO'"
-              >
-                RECHAZADO
-              </div>
-              <div
-                class="budget--status__bubble--send--pending"
-                *ngSwitchCase="'PDTE. ENVÍO PPTO.'"
-              >
-                Pdte. ENVÍO
-              </div>
-              <div
-                class="budget--status__bubble--approval--pending"
-                *ngSwitchCase="'PDTE. APROB.'"
-              >
-                Pdte. APROB.
-              </div>
-              <div
-                class="budget--status__bubble--parallel"
-                *ngSwitchCase="'PPTO. PARALELO'"
-              >
-                PARALELO
-              </div>
-              <div
-                class="budget--status__bubble--modified"
-                *ngSwitchCase="'PPTO. MODIFICADO'"
-              >
-                MODIFICADO
-              </div>
-              <div
-                class="budget--status__bubble--customer"
-                *ngSwitchCase="'CLIENTE INTERNO'"
-              >
-                CLIENTE INT.
-              </div>
-              <div *ngSwitchDefault>---</div>
-            </div>
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="motivoDelRechazo">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            MOTIVO DEL RECHAZO
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.motivoDelRechazo ? element.motivoDelRechazo : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="detalleDelRechazo">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            DETALLE DEL RECHAZO
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.detalleDelRechazo ? element.detalleDelRechazo : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="vv$servicios">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            VV$ SERVICIOS
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.vv$servicios ? element.vv$servicios : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="vv$adicionalesServicios">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            VV$ ADICIONALES SERVICIOS
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.vv$adicionalesServicios
-                ? element.vv$adicionalesServicios
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="vv$descuentoServicios">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            VV$ DESCUENTO SERVICIOS
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.vv$descuentoServicios
-                ? element.vv$descuentoServicios
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="vv$repuestos">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            VV$ REPUESTOS
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.vv$repuestos ? element.vv$repuestos : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="vv$adicionalesRepuestos">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            VV$ ADICIONALES REPUESTOS
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.vv$adicionalesRepuestos
-                ? element.vv$adicionalesRepuestos
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="vv$descuentoRepuestos">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            VV$ DESCUENTO REPUESTOS
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.vv$descuentoRepuestos
-                ? element.vv$descuentoRepuestos
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="totalvvPPTOUS$">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            TOTAL VV PPTO US$
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.totalvvPPTOUS$ ? element.totalvvPPTOUS$ : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="$componenteNuevo">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            $ COMPONENTE NUEVO
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.$componenteNuevo ? element.$componenteNuevo : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="reparacion60">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            % REPARACION (60%)
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.reparacion60 ? element.reparacion60 : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="horasSTD">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            HORAS STD
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.horasSTD ? element.horasSTD : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="horasReales">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            HORAS REALES
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.horasReales ? element.horasReales : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="tiempoObjetivoEnvioPPTO">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            TIEMPO OBJETIVO ENVIO PPTO
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.tiempoObjetivoEnvioPPTO
-                ? element.tiempoObjetivoEnvioPPTO
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="diasRestantesEnvioPPTO">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            DIAS RESTANTES ENVIO PPTO
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.diasRestantesEnvioPPTO
-                ? element.diasRestantesEnvioPPTO
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="NoPPTOSModificadosOAdicionales">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            NO PPTO's MODIFICADOS/ADICIONALES
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.NoPPTOSModificadosOAdicionales
-                ? element.NoPPTOSModificadosOAdicionales
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="observacionesEnElPresupuesto">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            OBSERVACIONES EN EL PRESUPUESTO
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.observacionesEnElPresupuesto
-                ? element.observacionesEnElPresupuesto
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="fechaDeTerminoDeRep">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            FECHA DE TERMINO DE REP
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.fechaDeTerminoDeRep
-                ? (element.fechaDeTerminoDeRep.toDate() | date: "d/M/y")
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="fechaUltimoInput">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            FECHA ULTIMO INPUT
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.fechaUltimoInput
-                ? (element.fechaUltimoInput.toDate() | date: "d/M/y")
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="motivoDeInput">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            MOTIVO DE INPUT
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.motivoDeInput ? element.motivoDeInput : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="fechaDeFactDeTaller">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            FECHA DE FACT DE TALLER
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.fechaDeFactDeTaller
-                ? (element.fechaDeFactDeTaller.toDate() | date: "d/M/y")
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="costo$ServiciosCliente">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            COSTO $ SERVICIOS CLIENTE
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.costo$ServiciosCliente
-                ? element.costo$ServiciosCliente
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="costo$ServiciosDeOperacion">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            COSTO $ SERVICIOS DE OPERACION
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.costo$ServiciosDeOperacion
-                ? element.costo$ServiciosDeOperacion
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="rentabilidadServiciosPercent">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            RENTABILIDAD SERVICIOS %
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.rentabilidadServiciosPercent
-                ? element.rentabilidadServiciosPercent
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="costo$RepuestosCLIENTE">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            COSTO $ REPUESTOS CLIENTE
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.costo$RepuestosCLIENTE
-                ? element.costo$RepuestosCLIENTE
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="costo$RepuestosOperacion">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            COSTO $ REPUESTOS OPERACION
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.costo$RepuestosOperacion
-                ? element.costo$RepuestosOperacion
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="rentabilidadRepuestosPercent">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            RENTABILIDAD REPUESTOS %
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.rentabilidadRepuestosPercent
-                ? element.rentabilidadRepuestosPercent
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="observacionesTaller">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell observaciones-taller"
-          >
-            OBSERVACIONES TALLER
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.observacionesTaller ? element.observacionesTaller : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="realDevueltoAServicios">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            REAL DEVUELTO A SERVICIOS
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.realDevueltoAServicios
-                ? element.realDevueltoAServicios
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="diferenciaServicios">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            DIFERENCIAS SERVICIOS
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.diferenciaServicios ? element.diferenciaServicios : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="realDevueltoARepuestos">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            REAL DEVUELTO A REPUESTOS
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.realDevueltoARepuestos
-                ? element.realDevueltoARepuestos
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="diferenciaRepuestos">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            DIFERENCIA REPUESTOS
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.diferenciaRepuestos ? element.diferenciaRepuestos : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="totalVVFacturadoUS$">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            TOTAL VV FACTURADO US$
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.totalVVFacturadoUS$ ? element.totalVVFacturadoUS$ : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="mesFactVenta">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            MES FACT VENTA
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.mesFactVenta
-                ? (element.mesFactVenta.toDate() | date: "d/M/y")
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="percentHorasSTDvsHorasDBS">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            % HORAS STD VS HORAS DBS
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.percentHorasSTDvsHorasDBS
-                ? element.percentHorasSTDvsHorasDBS
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="fechaFirstLabour">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            FECHA FIRST LABOUR
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.fechaFirstLabour
-                ? (element.fechaFirstLabour.toDate() | date: "d/M/y")
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="fechaLastLabour">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            FECHA LAST LABOUR
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.fechaLastLabour
-                ? (element.fechaLastLabour.toDate() | date: "d/M/y")
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="diasDemoraFact">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            DIAS DEMORA FACT
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.diasDemoraFact ? element.diasDemoraFact : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="diasFactLastLabour">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            DIAS FACT LAST LABOUR
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.diasFactLastLabour ? element.diasFactLastLabour : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="elaborarPPTO">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            ELABORAR PPTO
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.elaborarPPTO ? element.elaborarPPTO : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="tipoDeComponente">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            TIPO DE COMPONENTE
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.tipoDeComponente ? element.tipoDeComponente : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="tipoAAorPandP">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            (TIPO AA//P&P)
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.tipoAAorPandP ? element.tipoAAorPandP : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="taller02">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            TALLER 02
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.taller02 ? element.taller02 : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="diasDesdeAperturaChild">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            DIAS DESDE APERTURA CHILD
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.diasDesdeAperturaChild
-                ? element.diasDesdeAperturaChild
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="resumen">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            RESUMEN
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.resumen ? element.resumen : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="definicionDeCargos">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            DEFINICION DE CARGOS
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.definicionDeCargos ? element.definicionDeCargos : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="informe">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            INFORME
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.informe ? element.informe : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="cotizacionFesa">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            COTIZACION FESA
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.cotizacionFesa ? element.cotizacionFesa : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="cotizacionText">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            COTIZACION TEXT
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.cotizacionText ? element.cotizacionText : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="statusFacturacion">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            STATUS FACTURACIÓN
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.statusFacturacion ? element.statusFacturacion : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="excelid">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            ID
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.excelid ? element.excelid : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="clave">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            CLAVE
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.clave ? element.clave : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="obj">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            OBJ
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.obj ? element.obj : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="diasPPTO">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            DIAS PPTO
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.diasPPTO ? element.diasPPTO : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="mesTer">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            MES TER
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.mesTer ? element.mesTer : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="anio">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            AÑO
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.anio ? element.anio : "---" }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="fechaLPD">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            FECHA LPD
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.fechaLPD
-                ? (element.fechaLPD.toDate() | date: "d/M/y")
-                : "---"
-            }}
-          </td>
-        </ng-container>
-
-        <ng-container matColumnDef="actions" stickyEnd>
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            Acciones
-          </th>
-          <td mat-cell *matCellDef="let element">
-            <ng-container>
-              <mat-menu #rawMenu="matMenu">
-                <button
-                  *ngIf="
+    </div>
+
+    <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+
+    <div class="body-container">
+        <div class="table-wrapper">
+            <table mat-table [dataSource]="tableData" matSort class="mat-elevation-z8">
+                <ng-container matColumnDef="taller">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        TALLER
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.taller ? element.taller : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="woMain">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        WO MAIN
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.woMain ? element.woMain : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="ioMain">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        IO MAIN
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.ioMain ? element.ioMain : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="woChild">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        WO CHILD
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.woChild ? element.woChild : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="ioChild">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        IO CHILD
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.ioChild ? element.ioChild : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="statusWoChild">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        STATUS WO CHILD
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.statusWoChild ? element.statusWoChild : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="otTaller">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        OT TALLER
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.otTaller ? element.otTaller : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="otMadre">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        OT MADRE
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.otMadre ? element.otMadre : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fechaAperturaChild">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        FECHA APERTURA CHILD
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.fechaAperturaChild ? (element.fechaAperturaChild.toDate() | date: "d/M/y") : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fechaReleasedIoChild">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        FECHA RELEASED IO CHILD
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.fechaReleasedIoChild ? (element.fechaReleasedIoChild.toDate() | date: "d/M/y") : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="cliente">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        CLIENTE
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.cliente ? element.cliente : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="gmorngm">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        GM/NGM
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.gmorngm ? element.gmorngm : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="modelo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        MODELO
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.modelo ? element.modelo : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="tipoSS">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        TIPO SS
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.tipoSS ? element.tipoSS : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="servicio">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        SERVICIO
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.servicio ? element.servicio : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="tipoAtencion">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        TIPO ATENCION
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.tipoAtencion ? element.tipoAtencion : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="modalidadPresupuesto">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        MODALIDAD PRESUPUESTO
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.modalidadPresupuesto ? element.modalidadPresupuesto : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="componente">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        COMPONENTE
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.componente ? element.componente : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="afa">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        AFA
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.afa ? element.afa : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fechaUltimoListado">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        FECHA ULTIMO LISTADO
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.fechaUltimoListado ? (element.fechaUltimoListado.toDate() | date: "d/M/y") : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fechaUltimoEnvioDocumentoADM">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        FECHA ULTIMO ENVIO DOCUMENTO ADM
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.fechaUltimoEnvioDocumentoADM ? (element.fechaUltimoEnvioDocumentoADM.toDate() | date: "d/M/y") : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="ultimoDocumento">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        ULTIMO DOCUMENTO
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.ultimoDocumento ? element.ultimoDocumento : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fechaDefinicionDeCargos">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        FECHA DEFINICION DE CARGOS
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.fechaDefinicionDeCargos ? (element.fechaDefinicionDeCargos.toDate() | date: "d/M/y") : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="definicionDeCargo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        DEFINICION DE CARGO
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.definicionDeCargo ? element.definicionDeCargo : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fechaUltimoEnvioPPTO">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        FECHA ULTIMO ENVIO PPTO
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.fechaUltimoEnvioPPTO ? (element.fechaUltimoEnvioPPTO.toDate() | date: "d/M/y") : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fechaEnvioPPTO01">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        FECHA ENVIO PPTO 01
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.fechaEnvioPPTO01 ? (element.fechaEnvioPPTO01.toDate() | date: "d/M/y") : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fechaEnvioPPTO02">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        FECHA ENVIO PPTO 02
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.fechaEnvioPPTO02 ? (element.fechaEnvioPPTO02.toDate() | date: "d/M/y") : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="motivoDeModificacion02">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        MOTIVO DE MODIFICACION 02
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.motivoDeModificacion02 ? element.motivoDeModificacion02 : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="detalleDeModificacion02">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        DETALLE DE MODIFICACION 02
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.detalleDeModificacion02 ? element.detalleDeModificacion02 : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fechaEnvioPPTO03">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        FECHA ENVIO PPTO 03
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.fechaEnvioPPTO03 ? (element.fechaEnvioPPTO03.toDate() | date: "d/M/y") : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="motivoDeModificacion03">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        MOTIVO DE MODIFICACION 03
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.motivoDeModificacion03 ? element.motivoDeModificacion03 : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="detalleDeModificacion03">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        DETALLE DE MODIFICACION 03
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.detalleDeModificacion03 ? element.detalleDeModificacion03 : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fechaEnvioPPTO04">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        FECHA ENVIO PPTO 04
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.fechaEnvioPPTO04 ? (element.fechaEnvioPPTO04.toDate() | date: "d/M/y") : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="motivoDeModificacion04">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        MOTIVO DE MODIFICACION 04
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.motivoDeModificacion04 ? element.motivoDeModificacion04 : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="detalleDeModificacion04">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        DETALLE DE MODIFICACION 04
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.detalleDeModificacion04 ? element.detalleDeModificacion04 : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fechaDeAprobacionORechazo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        FECHA DE APROBACION/RECHAZO
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.fechaDeAprobacionORechazo ? (element.fechaDeAprobacionORechazo.toDate() | date: "d/M/y") : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="statusPresupuesto">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        STATUS PRESUPUESTO
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        <div [ngSwitch]="element.statusPresupuesto">
+                            <div class="budget--status__bubble--approved" *ngSwitchCase="'PPTO. APROBADO'">
+                                APROBADO
+                            </div>
+                            <div class="budget--status__bubble--rejected" *ngSwitchCase="'PPTO. RECHAZADO'">
+                                RECHAZADO
+                            </div>
+                            <div class="budget--status__bubble--send--pending" *ngSwitchCase="'PDTE. ENVÍO PPTO.'">
+                                Pdte. ENVÍO
+                            </div>
+                            <div class="budget--status__bubble--approval--pending" *ngSwitchCase="'PDTE. APROB.'">
+                                Pdte. APROB.
+                            </div>
+                            <div class="budget--status__bubble--parallel" *ngSwitchCase="'PPTO. PARALELO'">
+                                PARALELO
+                            </div>
+                            <div class="budget--status__bubble--modified" *ngSwitchCase="'PPTO. MODIFICADO'">
+                                MODIFICADO
+                            </div>
+                            <div class="budget--status__bubble--customer" *ngSwitchCase="'CLIENTE INTERNO'">
+                                CLIENTE INT.
+                            </div>
+                            <div *ngSwitchDefault>---</div>
+                        </div>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="motivoDelRechazo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        MOTIVO DEL RECHAZO
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.motivoDelRechazo ? element.motivoDelRechazo.name : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="detalleDelRechazo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        DETALLE DEL RECHAZO
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.motivoDelRechazo ? element.motivoDelRechazo.detail : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="vv$servicios">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        VV$ SERVICIOS
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.vv$servicios ? element.vv$servicios : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="vv$adicionalesServicios">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        VV$ ADICIONALES SERVICIOS
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.vv$adicionalesServicios ? element.vv$adicionalesServicios : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="vv$descuentoServicios">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        VV$ DESCUENTO SERVICIOS
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.vv$descuentoServicios ? element.vv$descuentoServicios : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="vv$repuestos">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        VV$ REPUESTOS
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.vv$repuestos ? element.vv$repuestos : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="vv$adicionalesRepuestos">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        VV$ ADICIONALES REPUESTOS
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.vv$adicionalesRepuestos ? element.vv$adicionalesRepuestos : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="vv$descuentoRepuestos">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        VV$ DESCUENTO REPUESTOS
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.vv$descuentoRepuestos ? element.vv$descuentoRepuestos : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="totalvvPPTOUS$">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        TOTAL VV PPTO US$
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.totalvvPPTOUS$ ? element.totalvvPPTOUS$ : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="$componenteNuevo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        $ COMPONENTE NUEVO
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.$componenteNuevo ? element.$componenteNuevo : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="reparacion60">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        % REPARACION (60%)
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.reparacion60 ? element.reparacion60 : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="horasSTD">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        HORAS STD
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.horasSTD ? element.horasSTD : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="horasReales">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        HORAS REALES
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.horasReales ? element.horasReales : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="tiempoObjetivoEnvioPPTO">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        TIEMPO OBJETIVO ENVIO PPTO
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.tiempoObjetivoEnvioPPTO ? element.tiempoObjetivoEnvioPPTO : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="diasRestantesEnvioPPTO">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        DIAS RESTANTES ENVIO PPTO
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.diasRestantesEnvioPPTO ? element.diasRestantesEnvioPPTO : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="NoPPTOSModificadosOAdicionales">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        NO PPTO's MODIFICADOS/ADICIONALES
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.NoPPTOSModificadosOAdicionales ? element.NoPPTOSModificadosOAdicionales : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="observacionesEnElPresupuesto">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        OBSERVACIONES EN EL PRESUPUESTO
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.observacionesEnElPresupuesto ? element.observacionesEnElPresupuesto : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fechaDeTerminoDeRep">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        FECHA DE TERMINO DE REP
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.fechaDeTerminoDeRep ? (element.fechaDeTerminoDeRep.toDate() | date: "d/M/y") : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fechaUltimoInput">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        FECHA ULTIMO INPUT
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.fechaUltimoInput ? (element.fechaUltimoInput.toDate() | date: "d/M/y") : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="motivoDeInput">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        MOTIVO DE INPUT
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.motivoDeInput ? element.motivoDeInput : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fechaDeFactDeTaller">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        FECHA DE FACT DE TALLER
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.fechaDeFactDeTaller ? (element.fechaDeFactDeTaller.toDate() | date: "d/M/y") : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="costo$ServiciosCliente">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        COSTO $ SERVICIOS CLIENTE
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.costo$ServiciosCliente ? element.costo$ServiciosCliente : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="costo$ServiciosDeOperacion">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        COSTO $ SERVICIOS DE OPERACION
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.costo$ServiciosDeOperacion ? element.costo$ServiciosDeOperacion : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="rentabilidadServiciosPercent">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        RENTABILIDAD SERVICIOS %
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.rentabilidadServiciosPercent ? element.rentabilidadServiciosPercent : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="costo$RepuestosCLIENTE">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        COSTO $ REPUESTOS CLIENTE
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.costo$RepuestosCLIENTE ? element.costo$RepuestosCLIENTE : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="costo$RepuestosOperacion">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        COSTO $ REPUESTOS OPERACION
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.costo$RepuestosOperacion ? element.costo$RepuestosOperacion : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="rentabilidadRepuestosPercent">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        RENTABILIDAD REPUESTOS %
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.rentabilidadRepuestosPercent ? element.rentabilidadRepuestosPercent : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="observacionesTaller">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell observaciones-taller">
+                        OBSERVACIONES TALLER
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.observacionesTaller ? element.observacionesTaller : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="realDevueltoAServicios">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        REAL DEVUELTO A SERVICIOS
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.realDevueltoAServicios ? element.realDevueltoAServicios : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="diferenciaServicios">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        DIFERENCIAS SERVICIOS
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.diferenciaServicios ? element.diferenciaServicios : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="realDevueltoARepuestos">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        REAL DEVUELTO A REPUESTOS
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.realDevueltoARepuestos ? element.realDevueltoARepuestos : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="diferenciaRepuestos">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        DIFERENCIA REPUESTOS
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.diferenciaRepuestos ? element.diferenciaRepuestos : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="totalVVFacturadoUS$">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        TOTAL VV FACTURADO US$
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.totalVVFacturadoUS$ ? element.totalVVFacturadoUS$ : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="mesFactVenta">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        MES FACT VENTA
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.mesFactVenta ? (element.mesFactVenta.toDate() | date: "d/M/y") : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="percentHorasSTDvsHorasDBS">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        % HORAS STD VS HORAS DBS
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.percentHorasSTDvsHorasDBS ? element.percentHorasSTDvsHorasDBS : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fechaFirstLabour">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        FECHA FIRST LABOUR
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.fechaFirstLabour ? (element.fechaFirstLabour.toDate() | date: "d/M/y") : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fechaLastLabour">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        FECHA LAST LABOUR
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.fechaLastLabour ? (element.fechaLastLabour.toDate() | date: "d/M/y") : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="diasDemoraFact">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        DIAS DEMORA FACT
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.diasDemoraFact ? element.diasDemoraFact : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="diasFactLastLabour">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        DIAS FACT LAST LABOUR
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.diasFactLastLabour ? element.diasFactLastLabour : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="elaborarPPTO">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        ELABORAR PPTO
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.elaborarPPTO ? element.elaborarPPTO : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="tipoDeComponente">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        TIPO DE COMPONENTE
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.tipoDeComponente ? element.tipoDeComponente : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="tipoAAorPandP">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        (TIPO AA//P&P)
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.tipoAAorPandP ? element.tipoAAorPandP : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="taller02">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        TALLER 02
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.taller02 ? element.taller02 : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="diasDesdeAperturaChild">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        DIAS DESDE APERTURA CHILD
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.diasDesdeAperturaChild ? element.diasDesdeAperturaChild : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="resumen">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        RESUMEN
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.resumen ? element.resumen : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="definicionDeCargos">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        DEFINICION DE CARGOS
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.definicionDeCargos ? element.definicionDeCargos : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="informe">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        INFORME
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.informe ? element.informe : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="cotizacionFesa">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        COTIZACION FESA
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.cotizacionFesa ? element.cotizacionFesa : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="cotizacionText">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        COTIZACION TEXT
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.cotizacionText ? element.cotizacionText : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="statusFacturacion">
+                    <th mat-header-cell *matHeaderCellDef class="table__cell">
+                        STATUS FACTURACIÓN
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.statusFacturacion ? element.statusFacturacion : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="excelid">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        ID
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.excelid ? element.excelid : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="clave">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        CLAVE
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.clave ? element.clave : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="obj">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        OBJ
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.obj ? element.obj : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="diasPPTO">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        DIAS PPTO
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.diasPPTO ? element.diasPPTO : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="mesTer">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        MES TER
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.mesTer ? element.mesTer : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="anio">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        AÑO
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.anio ? element.anio : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fechaLPD">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        FECHA LPD
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.fechaLPD ? (element.fechaLPD.toDate() | date: "d/M/y") : "---" }}
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="actions" stickyEnd>
+                    <th mat-header-cell *matHeaderCellDef class="table__cell">
+                        Acciones
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <ng-container>
+                            <mat-menu #rawMenu="matMenu">
+                                <button *ngIf="
                     !(
                       element.statusPresupuesto == 'PPTO. APROBADO' ||
                       element.statusPresupuesto == 'PPTO. RECHAZADO' ||
                       element.statusPresupuesto == 'CLIENTE INTERNO'
                     )
-                  "
-                  class="w3-small"
-                  mat-menu-item
-                  (click)="sendDialog(element)"
-                >
+                  " class="w3-small" mat-menu-item (click)="sendDialog(element)">
                   <mat-icon>attach_email</mat-icon>
                   Enviar PPTO
                 </button>
-                <button
-                  *ngIf="element.statusPresupuesto != 'CLIENTE INTERNO'"
-                  class="w3-small"
-                  mat-menu-item
-                  (click)="timelineDialog(element)"
-                >
+                                <button *ngIf="element.statusPresupuesto != 'CLIENTE INTERNO'" class="w3-small" mat-menu-item (click)="timelineDialog(element)">
                   <mat-icon>timeline</mat-icon>
                   Historial
                 </button>
-                <button
-                  class="w3-small"
-                  mat-menu-item
-                  (click)="deleteDialog(element)"
-                >
+                                <button class="w3-small" mat-menu-item (click)="deleteDialog(element)">
                   <mat-icon>delete</mat-icon>
                   Borrar
                 </button>
-              </mat-menu>
+                            </mat-menu>
 
-              <button mat-icon-button [matMenuTriggerFor]="rawMenu">
+                            <button mat-icon-button [matMenuTriggerFor]="rawMenu">
                 <mat-icon>more_vert</mat-icon>
               </button>
-            </ng-container>
-          </td>
-        </ng-container>
+                        </ng-container>
+                    </td>
+                </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr
-          mat-row
-          *matRowDef="let row; columns: displayedColumns"
-          [ngClass]="{
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns" [ngClass]="{
             'modified--budget__highlight--row':
               row.statusPresupuesto == 'PPTO. MODIFICADO'
-          }"
-        ></tr>
-      </table>
+          }"></tr>
+            </table>
+        </div>
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
     </div>
-    <mat-paginator
-      [pageSizeOptions]="[5, 10, 20]"
-      showFirstLastButtons
-    ></mat-paginator>
-  </div>
 </div>

@@ -238,11 +238,6 @@ export class PendingSendUpdateDialogComponent implements OnInit {
     // Update checkboxes in the database
     this.updateAfaState(this.firstCheckboxStamp.afa, currentCheckboxes.afa);
     this.updateDocumentState(
-      this.firstCheckboxStamp.afa,
-      currentCheckboxes.afa,
-      'afaDate'
-    );
-    this.updateDocumentState(
       this.firstCheckboxStamp.fesa,
       currentCheckboxes.fesa,
       'cotizacionFesa'
@@ -311,13 +306,11 @@ export class PendingSendUpdateDialogComponent implements OnInit {
             });
           });
       } else {
-        let state: string = 'PDTE';
-        if (fieldToUpdate == 'afaDate') state = '';
         // Mark as pending
         this.loading.next(true);
         this._budgetService
           .updateBudgetFields(this.data.id, {
-            [fieldToUpdate]: `${state}`,
+            [fieldToUpdate]: 'PDTE',
           })
           .subscribe((batch: firebase.default.firestore.WriteBatch) => {
             batch.commit().then(() => {
