@@ -544,39 +544,6 @@ export class BudgetsPendingSendComponent implements OnInit {
       });
   }
 
-  public deleteDialog(currentBudget: Budget): void {
-    const ref = this.MatDialog.open(PendingSendDeleteDialogComponent, {
-      data: {
-        woMain: currentBudget.woMain,
-        woChild: currentBudget.woChild,
-      },
-    });
-
-    ref
-      .afterClosed()
-      .toPromise()
-      .then((res) => {
-        if (res == 'delete') {
-          this.loading.next(true);
-          this._budgetsService.deleteBudget(currentBudget.id).subscribe(
-            () => {
-              this.MatSnackBar.open('✅ Eliminado correctamente!', 'Aceptar', {
-                duration: 6000,
-              });
-              this.refresh();
-              this.loading.next(false);
-            },
-            (error) => {
-              this.MatSnackBar.open('🚨 Ha ocurrido un error! ', 'Aceptar', {
-                duration: 6000,
-              });
-              this.loading.next(false);
-            }
-          );
-        }
-      });
-  }
-
   daysLeft(budget: Budget): string {
     // Get the goal Date and convert it to a moment.js object
     const goalDate: moment.Moment = moment(
