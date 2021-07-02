@@ -47,18 +47,18 @@ import { USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/functions'
   entryComponents: [UpdateReadyComponent],
   providers: [
     { provide: BUCKET, useValue: environment.firebase.storageBucket },
-    {
-      provide: USE_AUTH_EMULATOR,
-      useValue: environment.useEmulators ? ['localhost', 9099] : undefined,
-    },
-    {
-      provide: USE_FIRESTORE_EMULATOR,
-      useValue: environment.useEmulators ? ['localhost', 8080] : undefined,
-    },
-    {
-      provide: USE_FUNCTIONS_EMULATOR,
-      useValue: environment.useEmulators ? ['localhost', 5001] : undefined,
-    },
+    // {
+    //   provide: USE_AUTH_EMULATOR,
+    //   useValue: environment.useEmulators ? ['localhost', 9099] : undefined,
+    // },
+    // {
+    //   provide: USE_FIRESTORE_EMULATOR,
+    //   useValue: environment.useEmulators ? ['localhost', 8080] : undefined,
+    // },
+    // {
+    //   provide: USE_FUNCTIONS_EMULATOR,
+    //   useValue: environment.useEmulators ? ['localhost', 5001] : undefined,
+    // },
     // { provide: USE_STORAGE_EMULATOR, useValue: environment.useEmulators ? ['localhost', 9199] : undefined }
   ],
   bootstrap: [AppComponent],

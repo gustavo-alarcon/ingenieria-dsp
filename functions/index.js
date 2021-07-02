@@ -282,6 +282,7 @@ exports.sendAndonToEndpoint = functions.firestore.document(`db/ferreyros/andon/{
             url = val.data()['endpoint'];
 
             const data = {
+                "id": andon.id,
                 "type": "andon",
                 "otChild": andon.otChild,
                 "bay": andon.name,
@@ -345,6 +346,7 @@ exports.sendPreevaluationToEndpoint = functions.firestore.document(`db/ferreyros
                 url = val.data()['endpoint'];
 
                 const data = {
+                    "id": eval.id,
                     "type": "preevaluation",
                     "otMain": eval.otMain ? eval.otMain : '-',
                     "otChild": eval.otChild ? eval.otChild : '-',
@@ -360,7 +362,7 @@ exports.sendPreevaluationToEndpoint = functions.firestore.document(`db/ferreyros
                     "comments": eval.comments ? eval.comments : '-',
                     "observations": eval.observations ? eval.observations : '-',
                     "extends": eval.extends ? eval.extends.join('@@') : '',
-                    "images": eval.iamges ? eval.iamges.join('@@') : '',
+                    "images": [eval.resultImage1,eval.resultImage2].join('@@'),
                     "emailList": eval.emailList ? eval.emailList.toString() : ''
                 }
 
@@ -421,6 +423,7 @@ exports.sendQualityToEndpoint = functions.firestore.document(`db/ferreyros/quali
                 }
 
                 const data = {
+                    "id": quality.id,
                     "type": "quality",
                     "otChild": quality.workOrder ? quality.workOrder : '-',
                     "partNumber": quality.partNumber ? quality.partNumber : '-',
