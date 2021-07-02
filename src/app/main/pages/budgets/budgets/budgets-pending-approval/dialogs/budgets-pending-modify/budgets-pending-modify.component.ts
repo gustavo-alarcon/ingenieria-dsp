@@ -89,7 +89,7 @@ export class BudgetsPendingModifyComponent implements OnInit {
       this.loading.next(true);
       this.authService.user$.pipe(take(1)).subscribe((user) => {
         this.budgetService
-          .updateModifyReason(this.data.id, this.modificationFormGroup.value, user)
+          .updateModifyReason(this.data.id, this.modificationFormGroup.value,this.data, user)
           .subscribe((batch: firebase.default.firestore.WriteBatch) => {
             batch.commit().then(() => {
               this.loading.next(false);

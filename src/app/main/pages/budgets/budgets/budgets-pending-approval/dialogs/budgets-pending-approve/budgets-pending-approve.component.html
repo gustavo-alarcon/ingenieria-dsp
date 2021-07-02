@@ -14,6 +14,8 @@
     <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
     <mat-divider></mat-divider>
     <br>
+
+
     <p *ngIf="woChild; else noWOCHILD">
         ¿Esta seguro de aprobar el presupuesto WO CHILD: {{ woChild }}?
     </p>

@@ -29,20 +29,20 @@ export interface Budget {
   fechaUltimoEnvioPPTO: Date;
   fechaEnvioPPTO01: Date;
   fechaEnvioPPTO02: Date;
-  motivoDeModificacion: Array<ModificationReasonEntry>;
-  motivoDeModificacion02: string;
+  // motivoDeModificacion: Array<ModificationReasonEntry>;
+  motivoDeModificacion02: ModificationReasonEntry;
   detalleDeModificacion02: string;
   fechaEnvioPPTO03: Date;
-  motivoDeModificacion03: string;
+  motivoDeModificacion03: ModificationReasonEntry;
   detalleDeModificacion03: string;
   fechaEnvioPPTO04: Date;
-  motivoDeModificacion04: string;
+  motivoDeModificacion04: ModificationReasonEntry;
   detalleDeModificacion04: string;
   // Check "statusPresupuesto" to know if it is approved or rejected
-  fechaDeAprobacionORechazo: Date;
+  fechaDeAprobacionORechazo: AproveEntry;
   // Defines the state of the budget
   statusPresupuesto: string;
-  motivoDelRechazo: string;
+  motivoDelRechazo: RejectionReasonsEntry;
   detalleDelRechazo: string;
   vv$servicios: number;
   vv$adicionalesServicios: number;
@@ -122,6 +122,13 @@ export interface RejectionReasonsEntry {
   createdAt: Date;
 }
 
+export interface AproveEntry {
+  id: string;
+  name: string;
+  createdBy: User;
+  createdAt: Date;
+}
+
 export interface ModificationReasonEntry {
   id: string;
   name: string;
@@ -146,4 +153,11 @@ export interface BudgetsBroadcastList {
   emailList: Array<string>;
   createdAt: firebase.default.firestore.FieldValue;
   createdBy: User;
+}
+
+export interface BudgetHistoryDate {
+  description?: string;
+  type: string;
+  date: string;
+  createBy: User;
 }
