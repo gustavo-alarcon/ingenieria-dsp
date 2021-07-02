@@ -39,7 +39,7 @@ export interface Budget {
   motivoDeModificacion04: ModificationReasonEntry;
   detalleDeModificacion04: string;
   // Check "statusPresupuesto" to know if it is approved or rejected
-  fechaDeAprobacionORechazo: AproveEntry;
+  fechaDeAprobacionORechazo: ApprovedEntry;
   // Defines the state of the budget
   statusPresupuesto: string;
   motivoDelRechazo: RejectionReasonsEntry;
@@ -122,11 +122,9 @@ export interface RejectionReasonsEntry {
   createdAt: Date;
 }
 
-export interface AproveEntry {
-  id: string;
-  name: string;
+export interface ApprovedEntry {
   createdBy: User;
-  createdAt: Date;
+  createdAt: firebase.default.firestore.FieldValue;
 }
 
 export interface ModificationReasonEntry {

@@ -9,7 +9,7 @@ import {
   rejectionReasonForm,
   BudgetHistoryDate,
   Budget,
-  AproveEntry,
+  ApprovedEntry,
 } from '../models/budgets.model';
 
 
@@ -17,9 +17,7 @@ import { User } from '../models/user-model';
 import { Observable, of } from 'rxjs';
 
 import * as firebase from 'firebase/app';
-import { off } from 'node:process';
 import moment from 'moment';
-import { EvaluationRegistryForm } from '../models/evaluations.model';
 
 
 
@@ -250,14 +248,13 @@ export class BudgetsService {
       `/db/ferreyros/budgets/${id}`
     );
 
-    const aproveData: AproveEntry = {
-      id: docRef.id,
+    const approvedData: ApprovedEntry = {
       createdBy: user,
-      createdAt: new Date(),
+      createdAt: firebase.default.firestore.FieldValue.serverTimestamp(),
     };
 
     const data = {
-      fechaDeAprobacionORechazo:aproveData,
+      fechaDeAprobacionORechazo: approvedData,
       statusPresupuesto: status,
     };
 
