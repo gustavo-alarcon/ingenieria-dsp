@@ -16,7 +16,6 @@ import { BudgetsPendingApproveComponent } from './dialogs/budgets-pending-approv
 import { BudgetsPendingModifyComponent } from './dialogs/budgets-pending-modify/budgets-pending-modify.component';
 import { BudgetsPendingRejectionComponent } from './dialogs/budgets-pending-rejection/budgets-pending-rejection.component';
 
-
 @Component({
   selector: 'app-budgets-pending-approval',
   templateUrl: './budgets-pending-approval.component.html',
@@ -59,6 +58,7 @@ export class BudgetsPendingApprovalComponent implements OnInit {
     'totalvvPPTOUS$',
     'reparacion60',
     'fechaReleasedIoChild',
+    'motivoDeModificacion',
     'actions',
   ];
 
@@ -213,6 +213,7 @@ export class BudgetsPendingApprovalComponent implements OnInit {
         });
 
         this.tableData.filterPredicate = this.customFilterPredicate();
+        console.log(this.tableData.data);
 
         this.loading.next(false);
       });
@@ -519,22 +520,23 @@ export class BudgetsPendingApprovalComponent implements OnInit {
 
   public timelineDialog(i: number) {}
 
-  public sendDialog(element: Budget){
+  public sendDialog(element: Budget) {
     const a = this.MatDialog.open(BudgetsPendingApproveComponent, {
-      data: element
+      data: element,
     });
   }
 
-  public modifyDialog(element: Budget){
+  public modifyDialog(element: Budget) {
     const a = this.MatDialog.open(BudgetsPendingModifyComponent, {
-      data: element
+      width: '90vw',
+      maxWidth: '700px',
+      data: element,
     });
   }
 
   public rejectionDialog(element: Budget) {
-    const a = this.MatDialog.open(BudgetsPendingRejectionComponent,{
-      data: element
-    }
-      )
+    const a = this.MatDialog.open(BudgetsPendingRejectionComponent, {
+      data: element,
+    });
   }
 }
