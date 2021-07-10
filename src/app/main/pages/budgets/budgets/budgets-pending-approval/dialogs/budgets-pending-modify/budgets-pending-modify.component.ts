@@ -5,6 +5,8 @@ import {
   FormArray,
   FormBuilder,
   Validators,
+  AbstractControl,
+  ControlContainer,
 } from '@angular/forms';
 import {
   ModificationReasonEntry,
@@ -72,42 +74,44 @@ export class BudgetsPendingModifyComponent implements OnInit {
         );
       })
     );
-   
+
     //  console.log(element.name);
 
     this.modificationFormGroup = this.formBuilder.group({
-      modificationReason: ['', Validators.required],
+      modificationReason: [
+        '',
+        [Validators.required, this.notSelectedValidator],
+      ],
       additionals: this.formBuilder.array([]),
     });
-
   }
 
   saveChanges(): void {
-  
-
     if (this.modificationFormGroup.valid) {
       this.loading.next(true);
       this.authService.user$.pipe(take(1)).subscribe((user) => {
         this.budgetService
-          .updateModifyReason(this.data.id, this.modificationFormGroup.value, user)
+          .updateModifyReason(
+            this.data.id,
+            this.modificationFormGroup.value,
+            user
+          )
           .subscribe((batch: firebase.default.firestore.WriteBatch) => {
             batch.commit().then(() => {
               this.loading.next(false);
               this.matSnackBar.open(
                 ' ✅ Archivo se modifico de forma correcta',
-              'Aceptar',
-              {
-                duration: 6000,
-              }
+                'Aceptar',
+                {
+                  duration: 6000,
+                }
               );
               this.dialog.closeAll();
             });
           });
       });
     }
-
   }
-
 
   showModification(value: ModificationReasonEntry): string | null {
     return value ? value.name : null;
@@ -128,5 +132,15 @@ export class BudgetsPendingModifyComponent implements OnInit {
 
   deleteAdditional(i: number) {
     this.additionalForms.removeAt(i);
+  }
+
+  notSelectedValidator(control: AbstractControl): { [key: string]: boolean } {
+    console.log(control.value);
+
+    if (typeof control.value === 'string' && control.value !== '') {
+      return { notSelected: true };
+    } else {
+      return null;
+    }
   }
 }

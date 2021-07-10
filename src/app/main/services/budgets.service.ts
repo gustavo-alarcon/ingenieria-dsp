@@ -132,6 +132,7 @@ export class BudgetsService {
     const data: any = {
       motivoDeModificacion:
         firebase.default.firestore.FieldValue.arrayUnion(modificationData),
+      statusPresupuesto: 'PPTO. MODIFICADO'
     };
 
     batch.update(docRef, data);
@@ -180,7 +181,8 @@ export class BudgetsService {
 
   getBudgetsPendingApproval(): Observable<Budget[]> {
     const ref = this.afs.collection<Budget>('/db/ferreyros/budgets', (ref) =>
-      ref.where('statusPresupuesto', '==', 'PDTE. APROB.')
+      ref
+        .where('statusPresupuesto', 'in', ['PDTE. APROB.', 'PPTO. MODIFICADO'])
     );
 
     return ref.valueChanges().pipe(shareReplay(1));

@@ -1,75 +1,111 @@
 <div class="container">
-    <h2 mat-dialog-title class="card">
-        <div class="modify-title" mat-dialog-close>
-            <mat-icon mat-list-icon>edit</mat-icon>
+  <div class="ms-dialog-header">
+    <mat-icon class="ms-dialog-header__icon">edit</mat-icon>
+    <h2 class="ms-dialog-header__title">Modificar presupuesto</h2>
+    <span class="ms-fill"></span>
+    <button mat-icon-button mat-dialog-close>
+      <mat-icon class="ms-dialog-header__close">cancel</mat-icon>
+    </button>
+  </div>
+  <mat-progress-bar
+    mode="indeterminate"
+    *ngIf="loading$ | async"
+  ></mat-progress-bar>
+  <mat-divider></mat-divider>
+  <br />
+
+  <mat-dialog-content>
+    <form [formGroup]="modificationFormGroup">
+      <div class="main--wrapper">
+        <div class="main--form">
+          <mat-form-field appearance="outline">
+            <mat-label>Motivo</mat-label>
+
+            <input
+              matInput
+              type="text"
+              formControlName="modificationReason"
+              [matAutocomplete]="autoModify"
+              placeholder="Escriba para filtrar y seleccione una opción"
+            />
+
+            <mat-autocomplete
+              #autoModify="matAutocomplete"
+              [displayWith]="showModification"
+            >
+              <mat-option
+                *ngFor="let option of modificationReasonList | async"
+                [value]="option"
+              >
+                {{ option.name }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
         </div>
-        Modificar Presupuesto
-        <span class="ms-fill"></span>
-        <div mat-dialog-close class="modify-title--close">
-            <mat-icon>clear</mat-icon>
-        </div>
-    </h2>
-    <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
-    <mat-divider></mat-divider>
-    <br />
+      </div>
 
-    <mat-dialog-content>
-        <form [formGroup]="modificationFormGroup">
-            <div class="main--wrapper">
-                <div class="main--form">
-                    <mat-form-field appearance="outline">
-                        <mat-label>Motivo</mat-label>
+      <h3>Modificados</h3>
 
-                        <input matInput type="text" formControlName="modificationReason" [matAutocomplete]="autoModify" />
-
-                        <mat-autocomplete #autoModify="matAutocomplete" [displayWith]="showModification">
-                            <mat-option *ngFor="let option of modificationReasonList | async" [value]="option">
-                                {{ option.name }}
-                            </mat-option>
-                        </mat-autocomplete>
-                    </mat-form-field>
-                </div>
-            </div>
-
-            <h3>Modificados</h3>
-
-            <div formArrayName="additionals">
-                <div *ngFor="let additional of additionalForms.controls; let i = index" [formGroupName]="i">
-                    <div class="additional--budget__wrapper">
-                        <p>PPTO</p>
-                        <mat-form-field appearance="outline">
-                            <mat-label>Tipo de atención</mat-label>
-                            <mat-select formControlName="type">
-                                <mat-option *ngFor="let options of additionalsDropDownOptions" [value]="options.value">
-                                    {{ options.viewValue }}
-                                </mat-option>
-                            </mat-select>
-                            <mat-hint>Campo obligatorio</mat-hint>
-                        </mat-form-field>
-                        <mat-form-field appearance="outline">
-                            <mat-label>Observación</mat-label>
-                            <input formControlName="observations" matInput placeholder="Observación" />
-                            <mat-hint>Campo Opcional</mat-hint>
-                        </mat-form-field>
-                        <button (click)="deleteAdditional(i)" matTooltip="Eliminar adicional" matTooltipPosition="right" color="warn" mat-icon-button class="delete--button">
+      <div formArrayName="additionals">
+        <div
+          *ngFor="let additional of additionalForms.controls; let i = index"
+          [formGroupName]="i"
+        >
+          <div class="additional--budget__wrapper">
+            <p>PPTO</p>
+            <mat-form-field appearance="outline">
+              <mat-label>Tipo de atención</mat-label>
+              <mat-select formControlName="type">
+                <mat-option
+                  *ngFor="let options of additionalsDropDownOptions"
+                  [value]="options.value"
+                >
+                  {{ options.viewValue }}
+                </mat-option>
+              </mat-select>
+              <mat-hint>Campo obligatorio</mat-hint>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Observación</mat-label>
+              <input
+                formControlName="observations"
+                matInput
+                placeholder="Observación"
+              />
+              <mat-hint>Campo Opcional</mat-hint>
+            </mat-form-field>
+            <button
+              (click)="deleteAdditional(i)"
+              matTooltip="Eliminar adicional"
+              matTooltipPosition="right"
+              color="warn"
+              mat-icon-button
+              class="delete--button"
+            >
               <mat-icon>delete</mat-icon>
             </button>
-                    </div>
-                </div>
-            </div>
-            <button (click)="addAdditional()" mat-button class="btn-add">
+          </div>
+        </div>
+      </div>
+      <button (click)="addAdditional()" mat-button class="btn-add">
         <mat-icon>add</mat-icon>
         ADICIONALES
       </button>
-        </form>
-    </mat-dialog-content>
+    </form>
+  </mat-dialog-content>
 
-    <mat-dialog-actions align="end">
-        <button type="button" mat-stroked-button color="warn" mat-dialog-close>
+  <mat-dialog-actions align="end">
+    <button type="button" mat-stroked-button color="warn" mat-dialog-close>
       CERRAR
     </button>
-        <button (click)="saveChanges()" type="submit" mat-raised-button color="primary" [disabled]="!modificationFormGroup.valid">
+    <button
+      (click)="saveChanges()"
+      type="submit"
+      mat-raised-button
+      color="primary"
+      [disabled]="!modificationFormGroup.valid"
+    >
       GUARDAR
     </button>
-    </mat-dialog-actions>
+  </mat-dialog-actions>
 </div>
