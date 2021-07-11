@@ -30,6 +30,7 @@
 
 .ms-kanban-toolbar__input {
   margin-right: 12px;
+  width: 150px;
 }
 
 .download {
@@ -44,13 +45,16 @@
 table {
   margin-top: 1.5em;
   border: 1px solid #f1eeee;
+
   .table__cell {
     min-width: 90px;
-    padding: 0px 8px;
+    padding: 4px 8px;
+    font-size: 14px;
     &:first-child {
       padding-left: 36px;
     }
   }
+
   .observaciones-taller {
     min-width: 500px;
   }
