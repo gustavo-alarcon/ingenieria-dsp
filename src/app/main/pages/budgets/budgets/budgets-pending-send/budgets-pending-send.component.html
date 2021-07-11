@@ -125,7 +125,7 @@
             mat-sort-header
             class="table__cell"
           >
-            CLIENTE
+            Cliente
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.cliente ? element.cliente : "---" }}
@@ -146,7 +146,7 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="afaDate">
+        <!-- <ng-container matColumnDef="afaDate">
           <th
             mat-header-cell
             *matHeaderCellDef
@@ -158,7 +158,7 @@
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.afaDate ? element.afaDate : "---" }}
           </td>
-        </ng-container>
+        </ng-container> -->
 
         <ng-container matColumnDef="resumen">
           <th
@@ -167,7 +167,7 @@
             mat-sort-header
             class="table__cell"
           >
-            RESUMEN
+            Resumen
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.resumen ? element.resumen : "---" }}
@@ -181,7 +181,7 @@
             mat-sort-header
             class="table__cell"
           >
-            COTIZACION FESA
+            Cotización FESA
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.cotizacionFesa ? element.cotizacionFesa : "---" }}
@@ -195,7 +195,7 @@
             mat-sort-header
             class="table__cell"
           >
-            COTIZACION TEXT
+            Cotización TEXT
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.cotizacionText ? element.cotizacionText : "---" }}
@@ -209,7 +209,7 @@
             mat-sort-header
             class="table__cell"
           >
-            INFORME
+            Informe
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.informe ? element.informe : "---" }}
@@ -223,7 +223,7 @@
             mat-sort-header
             class="table__cell"
           >
-            TIEMPO OBJETIVO ENVIO PPTO
+            Tiempo objetivo envío PPTO
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
@@ -242,7 +242,7 @@
             mat-sort-header
             class="table__cell"
           >
-            DIAS RESTANTES ENVIO PPTO
+            Días restantes envío PPTO
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ daysLeft(element) }}
@@ -256,7 +256,7 @@
             mat-sort-header
             class="table__cell"
           >
-            FECHA RELEASED IO CHILD
+            Fecha released
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
