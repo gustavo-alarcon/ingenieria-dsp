@@ -25,6 +25,7 @@ export class BudgetsDailyEntriesComponent implements OnInit {
     new MatTableDataSource<Budget>();
 
   public budgetsDailyEntriesDisplayedColumns: Array<string> = [
+    'checkUpgrade',
     'taller',
     'woMain',
     'ioMain',
@@ -34,8 +35,8 @@ export class BudgetsDailyEntriesComponent implements OnInit {
     'otTaller',
     'otMadre',
     'fechaAperturaChild',
-    'fechaReleasedIoChild',
     'cliente',
+    'fechaReleasedIoChild',
     'gmorngm',
     'modelo',
     'tipoSS',
@@ -44,26 +45,27 @@ export class BudgetsDailyEntriesComponent implements OnInit {
     'modalidadPresupuesto',
     'componente',
     'afa',
-    'fechaUltimoListado',
+    // 'fechaUltimoListado',
     'fechaUltimoEnvioDocumentoADM',
     'ultimoDocumento',
     'fechaDefinicionDeCargos',
-    'definicionDeCargo',
+    // 'definicionDeCargo',
     'fechaUltimoEnvioPPTO',
     'fechaEnvioPPTO01',
     'fechaEnvioPPTO02',
-    'motivoDeModificacion02',
-    'detalleDeModificacion02',
-    'fechaEnvioPPTO03',
-    'motivoDeModificacion03',
-    'detalleDeModificacion03',
-    'fechaEnvioPPTO04',
-    'motivoDeModificacion04',
-    'detalleDeModificacion04',
+    // 'motivoDeModificacion02',
+    // 'detalleDeModificacion02',
+    // 'fechaEnvioPPTO03',
+    // 'motivoDeModificacion03',
+    // 'detalleDeModificacion03',
+    // 'fechaEnvioPPTO04',
+    // 'motivoDeModificacion04',
+    // 'detalleDeModificacion04',
     'fechaDeAprobacionORechazo',
+    'fechaReleasedIoChild',
     'statusPresupuesto',
     'motivoDelRechazo',
-    'detalleDelRechazo',
+    // 'detalleDelRechazo',
     'vv$servicios',
     'vv$adicionalesServicios',
     'vv$descuentoServicios',
@@ -79,7 +81,8 @@ export class BudgetsDailyEntriesComponent implements OnInit {
     'diasRestantesEnvioPPTO',
     'NoPPTOSModificadosOAdicionales',
     'observacionesEnElPresupuesto',
-    'fechaDeTerminoDeRep',
+    // 'fechaDeTerminoDeRep',
+    // Falta -> fecha de pase a fact.
     'fechaUltimoInput',
     'motivoDeInput',
     'fechaDeFactDeTaller',
@@ -95,29 +98,31 @@ export class BudgetsDailyEntriesComponent implements OnInit {
     'realDevueltoARepuestos',
     'diferenciaRepuestos',
     'totalVVFacturadoUS$',
+    'diasDemoraFact',
     'mesFactVenta',
     'percentHorasSTDvsHorasDBS',
     'fechaFirstLabour',
     'fechaLastLabour',
-    'diasDemoraFact',
     'diasFactLastLabour',
     'elaborarPPTO',
     'tipoDeComponente',
     'tipoAAorPandP',
     'taller02',
-    'diasDesdeAperturaChild',
+    // Falta -> Supervisor
+    // 'diasDesdeAperturaChild',
     'resumen',
-    'definicionDeCargos',
+    // 'definicionDeCargos',
+    'afa',
     'informe',
     'cotizacionFesa',
     'cotizacionText',
-    'excelid',
-    'clave',
-    'obj',
-    'diasPPTO',
-    'mesTer',
-    'anio',
-    'fechaLPD',
+    // 'excelid',
+    // 'clave',
+    // 'obj',
+    // 'diasPPTO',
+    // 'mesTer',
+    // 'anio',
+    // 'fechaLPD',
     'actions',
   ];
 
@@ -134,6 +139,8 @@ export class BudgetsDailyEntriesComponent implements OnInit {
 
   public subscriptions: Subscription = new Subscription();
   public isMobile: boolean = false;
+
+  setUpgrade: boolean = false;
 
   constructor(
     private breakpoint: BreakpointObserver,
@@ -316,8 +323,10 @@ export class BudgetsDailyEntriesComponent implements OnInit {
             mesTer: el[91] ? el[91] : null,
             anio: el[92] ? el[92] : null,
             fechaLPD: el[93] ? el[93] : null,
-            motivoDeModificacion:el[94] ? el[94]:null
+            motivoDeModificacion: el[94] ? el[94] : null,
           };
+          data['checkUpgrade'] = this.BudgetsService.checkBudgetUpgrade(data);
+          data['applyUpgrade'] = false;
           parsedExcelData.push(data);
         }
       });
@@ -420,5 +429,15 @@ export class BudgetsDailyEntriesComponent implements OnInit {
 
   public goToBudgets(): void {
     this.router.navigate(['main/budgets/summary']);
+  }
+
+  applyUpgrade(diffBudget: Budget, index: number) {
+    console.log(diffBudget);
+    
+    this.budgetsDailyEntriesDataSource.data[index]['applyUpgrade'] = true;
+  }
+
+  cancelUpgrade(index: number) {
+    this.budgetsDailyEntriesDataSource.data[index]['applyUpgrade'] = false;
   }
 }

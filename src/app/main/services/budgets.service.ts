@@ -1,4 +1,4 @@
-import { shareReplay } from 'rxjs/operators';
+import { map, shareReplay } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 import {
@@ -7,21 +7,66 @@ import {
   BudgetsBroadcastList,
   Budget,
   modificationReasonForm,
-  rejectionReasonForm
+  rejectionReasonForm,
 } from '../models/budgets.model';
-
 
 import { User } from '../models/user-model';
 import { Observable, of } from 'rxjs';
 
 import * as firebase from 'firebase/app';
 
-
 @Injectable({
   providedIn: 'root',
 })
 export class BudgetsService {
   constructor(private afs: AngularFirestore) {}
+
+  checkBudgetUpgrade(entry: Budget): Observable<{
+    isDuplicated: boolean;
+    canUpgrade: boolean;
+    fields: {};
+  }> {
+    const budgetsRef = this.afs
+      .collection<Budget>(`db/ferreyros/budgets`, (ref) =>
+        ref
+          .where('woMain', '==', entry.woMain)
+          .where('woChild', '==', entry.woChild)
+      )
+      .valueChanges();
+
+    return budgetsRef.pipe(
+      map((res) => {
+        let isDuplicated = false;
+        let canUpgrade = false;
+        let fields = {};
+
+        if (res.length) {
+          // Duplicated entry
+          isDuplicated = true;
+
+          // Now check for different fields
+          Object.keys(entry).map((key) => {
+            if (res[0][key] !== entry[key]) {
+              console.log('DB: ', res[0][key]);
+              console.log('File: ', entry[key]);
+              fields[key] = res[0][key];
+            }
+          });
+
+          if (Object.keys(fields).length) {
+            canUpgrade = true;
+          }
+        }
+
+        return {
+          isDuplicated: isDuplicated,
+          canUpgrade: canUpgrade,
+          fields: fields,
+          applyUpgrade: false,
+        };
+      })
+    );
+  }
 
   uploadDailyExcelBatchArray(
     list: Array<Budget>,
@@ -132,7 +177,7 @@ export class BudgetsService {
     const data: any = {
       motivoDeModificacion:
         firebase.default.firestore.FieldValue.arrayUnion(modificationData),
-      statusPresupuesto: 'PPTO. MODIFICADO'
+      statusPresupuesto: 'PPTO. MODIFICADO',
     };
 
     batch.update(docRef, data);
@@ -142,8 +187,8 @@ export class BudgetsService {
   updateRejectionReason(
     id: string,
     reason: rejectionReasonForm,
-    status:string,
-    user:User
+    status: string,
+    user: User
   ): Observable<firebase.default.firestore.WriteBatch> {
     const batch = this.afs.firestore.batch();
     const docRef: DocumentReference = this.afs.firestore.doc(
@@ -158,8 +203,8 @@ export class BudgetsService {
       createdAt: new Date(),
     };
     const data: any = {
-      motivoDelRechazo: rejectionData, 
-        statusPresupuesto: status
+      motivoDelRechazo: rejectionData,
+      statusPresupuesto: status,
     };
 
     batch.update(docRef, data);
@@ -181,8 +226,7 @@ export class BudgetsService {
 
   getBudgetsPendingApproval(): Observable<Budget[]> {
     const ref = this.afs.collection<Budget>('/db/ferreyros/budgets', (ref) =>
-      ref
-        .where('statusPresupuesto', 'in', ['PDTE. APROB.', 'PPTO. MODIFICADO'])
+      ref.where('statusPresupuesto', 'in', ['PDTE. APROB.', 'PPTO. MODIFICADO'])
     );
 
     return ref.valueChanges().pipe(shareReplay(1));
@@ -200,7 +244,7 @@ export class BudgetsService {
 
   updateBudgetStatus(
     id: string,
-      status: string
+    status: string
   ): Observable<firebase.default.firestore.WriteBatch> {
     const batch = this.afs.firestore.batch();
     const docRef: DocumentReference = this.afs.firestore.doc(

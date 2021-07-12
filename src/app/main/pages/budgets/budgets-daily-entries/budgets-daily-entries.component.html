@@ -54,30 +54,92 @@
         [dataSource]="budgetsDailyEntriesDataSource"
         matSort
         class="mat-elevation-z8"
+        style="margin: 1em 1em"
       >
+        <ng-container matColumnDef="checkUpgrade">
+          <th mat-header-cell *matHeaderCellDef class="table__head">Monitor</th>
+          <td
+            mat-cell
+            *matCellDef="let element; let i = index"
+            class="table__cell"
+          >
+            <ng-container
+              *ngIf="element.checkUpgrade | async as upgrade; else loadingCheck"
+            >
+              <div>
+                <div
+                  *ngIf="upgrade.isDuplicated"
+                  class="entry entry--duplicated"
+                  matTooltip="Este presupuesto ya existe en la base de datos, por lo que será omitido en el proceso de carga"
+                  matTooltipPosition="right"
+                >
+                  Duplicado
+                </div>
+
+                <div *ngIf="!upgrade.isDuplicated" class="entry entry--new">
+                  Nuevo
+                </div>
+
+                <div
+                  *ngIf="
+                    upgrade.isDuplicated &&
+                    upgrade.canUpgrade &&
+                    !element.applyUpgrade
+                  "
+                  class="entry entry--upgrade"
+                  matRipple
+                  matTooltip="Hay información nueva en esta entrada. Al presionar este botón, el proceso de carga actualizará el presupuesto con esta información."
+                  matTooltipPosition="right"
+                  (click)="applyUpgrade(upgrade.fields, i)"
+                >
+                  Upgrade?
+                </div>
+
+                <div
+                  *ngIf="
+                    upgrade.isDuplicated &&
+                    upgrade.canUpgrade &&
+                    element.applyUpgrade
+                  "
+                  class="entry entry--cancel"
+                  matRipple
+                  matTooltip="Al presionar este boton, cancelará la actualización del presupuesto con la nueva entrada"
+                  matTooltipPosition="right"
+                  (click)="cancelUpgrade(i)"
+                >
+                  Cancelar
+                </div>
+              </div>
+            </ng-container>
+            <ng-template #loadingCheck>
+              <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            </ng-template>
+          </td>
+        </ng-container>
+
         <ng-container matColumnDef="taller">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">TALLER</th>
+          <th mat-header-cell *matHeaderCellDef class="table__head">Taller</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.taller ? element.taller : "---" }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="woMain">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">WO MAIN</th>
+          <th mat-header-cell *matHeaderCellDef class="table__head">WO MAIN</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.woMain ? element.woMain : "---" }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="ioMain">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">IO MAIN</th>
+          <th mat-header-cell *matHeaderCellDef class="table__head">IO MAIN</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.ioMain ? element.ioMain : "---" }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="woChild">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
+          <th mat-header-cell *matHeaderCellDef class="table__head">
             WO CHILD
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
@@ -86,7 +148,7 @@
         </ng-container>
 
         <ng-container matColumnDef="ioChild">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
+          <th mat-header-cell *matHeaderCellDef class="table__head">
             IO CHILD
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
@@ -95,8 +157,8 @@
         </ng-container>
 
         <ng-container matColumnDef="statusWoChild">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            STATUS WO CHILD
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Status WO CHILD
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.statusWoChild ? element.statusWoChild : "---" }}
@@ -104,17 +166,15 @@
         </ng-container>
 
         <ng-container matColumnDef="otTaller">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            OT TALLER
-          </th>
+          <th mat-header-cell *matHeaderCellDef class="table__head">OT</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.otTaller ? element.otTaller : "---" }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="otMadre">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            OT MADRE
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            OT Madre
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.otMadre ? element.otMadre : "---" }}
@@ -122,8 +182,8 @@
         </ng-container>
 
         <ng-container matColumnDef="fechaAperturaChild">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            FECHA APERTURA CHILD
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Fecha apertura CHILD
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
@@ -135,8 +195,8 @@
         </ng-container>
 
         <ng-container matColumnDef="fechaReleasedIoChild">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            FECHA RELEASED IO CHILD
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Fecha released CHILD
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
@@ -148,36 +208,36 @@
         </ng-container>
 
         <ng-container matColumnDef="cliente">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">CLIENTE</th>
+          <th mat-header-cell *matHeaderCellDef class="table__head">Cliente</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.cliente ? element.cliente : "---" }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="gmorngm">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">GM/NGM</th>
+          <th mat-header-cell *matHeaderCellDef class="table__head">GM/NGM</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.gmorngm ? element.gmorngm : "---" }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="modelo">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">MODELO</th>
+          <th mat-header-cell *matHeaderCellDef class="table__head">Modelo</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.modelo ? element.modelo : "---" }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="tipoSS">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">TIPO SS</th>
+          <th mat-header-cell *matHeaderCellDef class="table__head">Tipo SS</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.tipoSS ? element.tipoSS : "---" }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="servicio">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            SERVICIO
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Servicio
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.servicio ? element.servicio : "---" }}
@@ -185,8 +245,8 @@
         </ng-container>
 
         <ng-container matColumnDef="tipoAtencion">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            TIPO ATENCION
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Tipo atención
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.tipoAtencion ? element.tipoAtencion : "---" }}
@@ -194,8 +254,8 @@
         </ng-container>
 
         <ng-container matColumnDef="modalidadPresupuesto">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            MODALIDAD PRESUPUESTO
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Modalidad presupueseto
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
@@ -207,8 +267,8 @@
         </ng-container>
 
         <ng-container matColumnDef="componente">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            COMPONENTE
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Componente
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.componente ? element.componente : "---" }}
@@ -216,15 +276,15 @@
         </ng-container>
 
         <ng-container matColumnDef="afa">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">AFA</th>
+          <th mat-header-cell *matHeaderCellDef class="table__head">AFA</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.afa ? element.afa : "---" }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="fechaUltimoListado">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            FECHA ULTIMO LISTADO
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Fecha último listado
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
@@ -236,8 +296,8 @@
         </ng-container>
 
         <ng-container matColumnDef="fechaUltimoEnvioDocumentoADM">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            FECHA ULTIMO ENVIO DOCUMENTO ADM
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Fecha último envío dcto (ADM)
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
@@ -249,8 +309,8 @@
         </ng-container>
 
         <ng-container matColumnDef="ultimoDocumento">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            ULTIMO DOCUMENTO
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Último dcto.
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.ultimoDocumento ? element.ultimoDocumento : "---" }}
@@ -258,8 +318,8 @@
         </ng-container>
 
         <ng-container matColumnDef="fechaDefinicionDeCargos">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            FECHA DEFINICION DE CARGOS
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Fecha defin. cargos
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
@@ -270,18 +330,18 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="definicionDeCargo">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
+        <!-- <ng-container matColumnDef="definicionDeCargo">
+          <th mat-header-cell *matHeaderCellDef class="table__head">
             DEFINICION DE CARGO
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.definicionDeCargo ? element.definicionDeCargo : "---" }}
           </td>
-        </ng-container>
+        </ng-container> -->
 
         <ng-container matColumnDef="fechaUltimoEnvioPPTO">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            FECHA ULTIMO ENVIO PPTO
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Fecha último envío PPTO
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
@@ -293,8 +353,8 @@
         </ng-container>
 
         <ng-container matColumnDef="fechaEnvioPPTO01">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            FECHA ENVIO PPTO 01
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Fecha envío PPTO 01
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
@@ -306,8 +366,8 @@
         </ng-container>
 
         <ng-container matColumnDef="fechaEnvioPPTO02">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            FECHA ENVIO PPTO 02
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Fecha envío PPTO 02
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
@@ -318,8 +378,8 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="motivoDeModificacion02">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
+        <!-- <ng-container matColumnDef="motivoDeModificacion02">
+          <th mat-header-cell *matHeaderCellDef class="table__head">
             MOTIVO DE MODIFICACION 02
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
@@ -332,7 +392,7 @@
         </ng-container>
 
         <ng-container matColumnDef="detalleDeModificacion02">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
+          <th mat-header-cell *matHeaderCellDef class="table__head">
             DETALLE DE MODIFICACION 02
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
@@ -345,7 +405,7 @@
         </ng-container>
 
         <ng-container matColumnDef="fechaEnvioPPTO03">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
+          <th mat-header-cell *matHeaderCellDef class="table__head">
             FECHA ENVIO PPTO 03
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
@@ -358,7 +418,7 @@
         </ng-container>
 
         <ng-container matColumnDef="motivoDeModificacion03">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
+          <th mat-header-cell *matHeaderCellDef class="table__head">
             MOTIVO DE MODIFICACION 03
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
@@ -371,7 +431,7 @@
         </ng-container>
 
         <ng-container matColumnDef="detalleDeModificacion03">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
+          <th mat-header-cell *matHeaderCellDef class="table__head">
             DETALLE DE MODIFICACION 03
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
@@ -384,7 +444,7 @@
         </ng-container>
 
         <ng-container matColumnDef="fechaEnvioPPTO04">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
+          <th mat-header-cell *matHeaderCellDef class="table__head">
             FECHA ENVIO PPTO 04
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
@@ -397,7 +457,7 @@
         </ng-container>
 
         <ng-container matColumnDef="motivoDeModificacion04">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
+          <th mat-header-cell *matHeaderCellDef class="table__head">
             MOTIVO DE MODIFICACION 04
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
@@ -410,7 +470,7 @@
         </ng-container>
 
         <ng-container matColumnDef="detalleDeModificacion04">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
+          <th mat-header-cell *matHeaderCellDef class="table__head">
             DETALLE DE MODIFICACION 04
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
@@ -420,11 +480,11 @@
                 : "---"
             }}
           </td>
-        </ng-container>
+        </ng-container> -->
 
         <ng-container matColumnDef="fechaDeAprobacionORechazo">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            FECHA DE APROBACION/RECHAZO
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Fecha aprob. o rechazo
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
@@ -436,8 +496,8 @@
         </ng-container>
 
         <ng-container matColumnDef="statusPresupuesto">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            STATUS PRESUPUESTO
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Status PPTO
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.statusPresupuesto ? element.statusPresupuesto : "---" }}
@@ -445,8 +505,8 @@
         </ng-container>
 
         <ng-container matColumnDef="motivoDelRechazo">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            MOTIVO DEL RECHAZO
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Motivo de rechazo
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.motivoDelRechazo ? element.motivoDelRechazo : "---" }}
@@ -454,8 +514,8 @@
         </ng-container>
 
         <ng-container matColumnDef="detalleDelRechazo">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            DETALLE DEL RECHAZO
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Detalle de rechazo
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.detalleDelRechazo ? element.detalleDelRechazo : "---" }}
@@ -463,8 +523,8 @@
         </ng-container>
 
         <ng-container matColumnDef="vv$servicios">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            VV$ SERVICIOS
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            VV$ Servicios
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.vv$servicios ? element.vv$servicios : "---" }}
@@ -472,8 +532,8 @@
         </ng-container>
 
         <ng-container matColumnDef="vv$adicionalesServicios">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            VV$ ADICIONALES SERVICIOS
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            VV$ Adicionales Servicios
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
@@ -485,8 +545,8 @@
         </ng-container>
 
         <ng-container matColumnDef="vv$descuentoServicios">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            VV$ DESCUENTO SERVICIOS
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            VV$ Dsctos. Servicios
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
@@ -498,8 +558,8 @@
         </ng-container>
 
         <ng-container matColumnDef="vv$repuestos">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            VV$ REPUESTOS
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            VV$ Repuestos
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.vv$repuestos ? element.vv$repuestos : "---" }}
@@ -507,8 +567,8 @@
         </ng-container>
 
         <ng-container matColumnDef="vv$adicionalesRepuestos">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            VV$ ADICIONALES REPUESTOS
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            VV$ Adicional Repuestos
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
@@ -520,8 +580,8 @@
         </ng-container>
 
         <ng-container matColumnDef="vv$descuentoRepuestos">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            VV$ DESCUENTO REPUESTOS
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            VV$ Dsctos. Repuestos
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
@@ -533,8 +593,8 @@
         </ng-container>
 
         <ng-container matColumnDef="totalvvPPTOUS$">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            TOTAL VV PPTO US$
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Total VV PPTO US$
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.totalvvPPTOUS$ ? element.totalvvPPTOUS$ : "---" }}
@@ -542,8 +602,8 @@
         </ng-container>
 
         <ng-container matColumnDef="$componenteNuevo">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            $ COMPONENTE NUEVO
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            $ Componente nuevo
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.$componenteNuevo ? element.$componenteNuevo : "---" }}
@@ -551,8 +611,8 @@
         </ng-container>
 
         <ng-container matColumnDef="reparacion60">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            % REPARACION (60%)
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            % Reparación (60%)
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.reparacion60 ? element.reparacion60 : "---" }}
@@ -560,8 +620,8 @@
         </ng-container>
 
         <ng-container matColumnDef="horasSTD">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            HORAS STD
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Horas STD
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.horasSTD ? element.horasSTD : "---" }}
@@ -569,8 +629,8 @@
         </ng-container>
 
         <ng-container matColumnDef="horasReales">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            HORAS REALES
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Horas reales
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.horasReales ? element.horasReales : "---" }}
@@ -578,8 +638,8 @@
         </ng-container>
 
         <ng-container matColumnDef="tiempoObjetivoEnvioPPTO">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            TIEMPO OBJETIVO ENVIO PPTO
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Tiempo objetivo envío PPTO
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
@@ -591,8 +651,8 @@
         </ng-container>
 
         <ng-container matColumnDef="diasRestantesEnvioPPTO">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            DIAS RESTANTES ENVIO PPTO
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Días restantes envío PPTO
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
@@ -604,8 +664,8 @@
         </ng-container>
 
         <ng-container matColumnDef="NoPPTOSModificadosOAdicionales">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            NO PPTO's MODIFICADOS/ADICIONALES
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            N° PPTO's modif. o adicinales
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
@@ -617,8 +677,8 @@
         </ng-container>
 
         <ng-container matColumnDef="observacionesEnElPresupuesto">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            OBSERVACIONES EN EL PRESUPUESTO
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Obs. en el PPTO
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
@@ -629,8 +689,8 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="fechaDeTerminoDeRep">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
+        <!-- <ng-container matColumnDef="fechaDeTerminoDeRep">
+          <th mat-header-cell *matHeaderCellDef class="table__head">
             FECHA DE TERMINO DE REP
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
@@ -640,11 +700,11 @@
                 : "---"
             }}
           </td>
-        </ng-container>
+        </ng-container> -->
 
         <ng-container matColumnDef="fechaUltimoInput">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            FECHA ULTIMO INPUT
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Fecha último Input
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
@@ -656,8 +716,8 @@
         </ng-container>
 
         <ng-container matColumnDef="motivoDeInput">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            MOTIVO DE INPUT
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Motivo de Input
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.motivoDeInput ? element.motivoDeInput : "---" }}
@@ -665,8 +725,8 @@
         </ng-container>
 
         <ng-container matColumnDef="fechaDeFactDeTaller">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            FECHA DE FACT DE TALLER
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Fecha de fact. Taller
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
@@ -678,8 +738,8 @@
         </ng-container>
 
         <ng-container matColumnDef="costo$ServiciosCliente">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            COSTO $ SERVICIOS CLIENTE
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Costo $ servicios cliente
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
@@ -691,8 +751,8 @@
         </ng-container>
 
         <ng-container matColumnDef="costo$ServiciosDeOperacion">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            COSTO $ SERVICIOS DE OPERACION
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Costo $ servicios oper.
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
@@ -704,8 +764,8 @@
         </ng-container>
 
         <ng-container matColumnDef="rentabilidadServiciosPercent">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            RENTABILIDAD SERVICIOS %
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Rentabilidad servicios 100%
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
@@ -717,8 +777,8 @@
         </ng-container>
 
         <ng-container matColumnDef="costo$RepuestosCLIENTE">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            COSTO $ REPUESTOS CLIENTE
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Costo $ repuestos cliente
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
@@ -730,8 +790,8 @@
         </ng-container>
 
         <ng-container matColumnDef="costo$RepuestosOperacion">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            COSTO $ REPUESTOS OPERACION
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Costo $ repuestos oper.
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
@@ -743,8 +803,8 @@
         </ng-container>
 
         <ng-container matColumnDef="rentabilidadRepuestosPercent">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            RENTABILIDAD REPUESTOS %
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Rentabilidad repuestos 100%
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
@@ -761,7 +821,7 @@
             *matHeaderCellDef
             class="table__cell observaciones-taller"
           >
-            OBSERVACIONES TALLER
+            Observaciones taller
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
@@ -771,8 +831,8 @@
         </ng-container>
 
         <ng-container matColumnDef="realDevueltoAServicios">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            REAL DEVUELTO A SERVICIOS
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Real devuelto a servicios
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
@@ -784,8 +844,8 @@
         </ng-container>
 
         <ng-container matColumnDef="diferenciaServicios">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            DIFERENCIAS SERVICIOS
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Diferencia servicios
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
@@ -795,8 +855,8 @@
         </ng-container>
 
         <ng-container matColumnDef="realDevueltoARepuestos">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            REAL DEVUELTO A REPUESTOS
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Real devuelto a repuestos
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
@@ -808,8 +868,8 @@
         </ng-container>
 
         <ng-container matColumnDef="diferenciaRepuestos">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            DIFERENCIA REPUESTOS
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Diferencia repuestos
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
@@ -819,8 +879,8 @@
         </ng-container>
 
         <ng-container matColumnDef="totalVVFacturadoUS$">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            TOTAL VV FACTURADO US$
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Total facturado US$
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
@@ -830,8 +890,8 @@
         </ng-container>
 
         <ng-container matColumnDef="mesFactVenta">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            MES FACT VENTA
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Mes Fact. Venta
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
@@ -843,8 +903,8 @@
         </ng-container>
 
         <ng-container matColumnDef="percentHorasSTDvsHorasDBS">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            % HORAS STD VS HORAS DBS
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            % Horas STD VS Horas DBS
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
@@ -856,8 +916,8 @@
         </ng-container>
 
         <ng-container matColumnDef="fechaFirstLabour">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            FECHA FIRST LABOUR
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Fecha First Labor
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
@@ -869,8 +929,8 @@
         </ng-container>
 
         <ng-container matColumnDef="fechaLastLabour">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            FECHA LAST LABOUR
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Fecha Last Labor
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
@@ -882,8 +942,8 @@
         </ng-container>
 
         <ng-container matColumnDef="diasDemoraFact">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            DIAS DEMORA FACT
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Días demora Fact.
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.diasDemoraFact ? element.diasDemoraFact : "---" }}
@@ -891,8 +951,8 @@
         </ng-container>
 
         <ng-container matColumnDef="diasFactLastLabour">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            DIAS FACT LAST LABOUR
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Días Fact. Last Labor
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
@@ -902,8 +962,8 @@
         </ng-container>
 
         <ng-container matColumnDef="elaborarPPTO">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            ELABORAR PPTO
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Elaborar PPTO
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.elaborarPPTO ? element.elaborarPPTO : "---" }}
@@ -911,8 +971,8 @@
         </ng-container>
 
         <ng-container matColumnDef="tipoDeComponente">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            TIPO DE COMPONENTE
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Tipo de componente
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.tipoDeComponente ? element.tipoDeComponente : "---" }}
@@ -920,8 +980,8 @@
         </ng-container>
 
         <ng-container matColumnDef="tipoAAorPandP">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            (TIPO AA//P&P)
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Tipo (AA//P&P)
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.tipoAAorPandP ? element.tipoAAorPandP : "---" }}
@@ -929,16 +989,16 @@
         </ng-container>
 
         <ng-container matColumnDef="taller02">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            TALLER 02
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Taller 02
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.taller02 ? element.taller02 : "---" }}
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="diasDesdeAperturaChild">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
+        <!-- <ng-container matColumnDef="diasDesdeAperturaChild">
+          <th mat-header-cell *matHeaderCellDef class="table__head">
             DIAS DESDE APERTURA CHILD
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
@@ -948,17 +1008,17 @@
                 : "---"
             }}
           </td>
-        </ng-container>
+        </ng-container> -->
 
         <ng-container matColumnDef="resumen">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">RESUMEN</th>
+          <th mat-header-cell *matHeaderCellDef class="table__head">Resumen</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.resumen ? element.resumen : "---" }}
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="definicionDeCargos">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
+        <!-- <ng-container matColumnDef="definicionDeCargos">
+          <th mat-header-cell *matHeaderCellDef class="table__head">
             DEFINICION DE CARGOS
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
@@ -966,18 +1026,18 @@
               element.definicionDeCargos ? element.definicionDeCargos : "---"
             }}
           </td>
-        </ng-container>
+        </ng-container> -->
 
         <ng-container matColumnDef="informe">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">INFORME</th>
+          <th mat-header-cell *matHeaderCellDef class="table__head">Informe</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.informe ? element.informe : "---" }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="cotizacionFesa">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            COTIZACION FESA
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Cotización FESA
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.cotizacionFesa ? element.cotizacionFesa : "---" }}
@@ -985,16 +1045,16 @@
         </ng-container>
 
         <ng-container matColumnDef="cotizacionText">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            COTIZACION TEXT
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Cotización TEXT
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.cotizacionText ? element.cotizacionText : "---" }}
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="statusFacturacion">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
+        <!-- <ng-container matColumnDef="statusFacturacion">
+          <th mat-header-cell *matHeaderCellDef class="table__head">
             STATUS FACTURACIÓN
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
@@ -1003,28 +1063,28 @@
         </ng-container>
 
         <ng-container matColumnDef="excelid">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">ID</th>
+          <th mat-header-cell *matHeaderCellDef class="table__head">ID</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.excelid ? element.excelid : "---" }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="clave">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">CLAVE</th>
+          <th mat-header-cell *matHeaderCellDef class="table__head">CLAVE</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.clave ? element.clave : "---" }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="obj">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">OBJ</th>
+          <th mat-header-cell *matHeaderCellDef class="table__head">OBJ</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.obj ? element.obj : "---" }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="diasPPTO">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
+          <th mat-header-cell *matHeaderCellDef class="table__head">
             DIAS PPTO
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
@@ -1033,30 +1093,30 @@
         </ng-container>
 
         <ng-container matColumnDef="mesTer">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">MES TER</th>
+          <th mat-header-cell *matHeaderCellDef class="table__head">MES TER</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.mesTer ? element.mesTer : "---" }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="anio">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">AÑO</th>
+          <th mat-header-cell *matHeaderCellDef class="table__head">AÑO</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.anio ? element.anio : "---" }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="fechaLPD">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
+          <th mat-header-cell *matHeaderCellDef class="table__head">
             FECHA LPD
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.fechaLPD ? (element.fechaLPD | date: "d/M/y") : "---" }}
           </td>
-        </ng-container>
+        </ng-container> -->
 
         <ng-container matColumnDef="actions" stickyEnd>
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
+          <th mat-header-cell *matHeaderCellDef class="table__head">
             Acciones
           </th>
           <td mat-cell *matCellDef="let element; let i = index">
@@ -1089,13 +1149,13 @@
         ></tr>
       </table>
     </div>
-    <mat-paginator
+    <!-- <mat-paginator
       #budgetsDailyEntriesPaginator
       class="ms-paginator"
       [pageSizeOptions]="[5, 10, 20]"
       showFirstLastButtons
     >
-    </mat-paginator>
+    </mat-paginator> -->
   </div>
 
   <div class="footer">
