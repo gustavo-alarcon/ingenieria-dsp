@@ -314,7 +314,7 @@
                         MOTIVO DE MODIFICACION 02
                     </th>
                     <td mat-cell *matCellDef="let element" class="table__cell">
-                        {{ element.motivoDeModificacion02 ? element.motivoDeModificacion02.name : "---" }}
+                        {{ element.motivoDeModificacion02 ? element.motivoDeModificacion02 : "---" }}
                     </td>
                 </ng-container>
 
@@ -323,7 +323,7 @@
                         DETALLE DE MODIFICACION 02
                     </th>
                     <td mat-cell *matCellDef="let element" class="table__cell">
-                        {{ element.detalleDeModificacion02 ? element.detalleDeModificacion02.description : "---" }}
+                        {{ element.detalleDeModificacion02 ? element.detalleDeModificacion02 : "---" }}
                     </td>
                 </ng-container>
 
@@ -341,7 +341,7 @@
                         MOTIVO DE MODIFICACION 03
                     </th>
                     <td mat-cell *matCellDef="let element" class="table__cell">
-                        {{ element.motivoDeModificacion03 ? element.motivoDeModificacion03.name : "---" }}
+                        {{ element.motivoDeModificacion03 ? element.motivoDeModificacion03 : "---" }}
                     </td>
                 </ng-container>
 
@@ -350,7 +350,7 @@
                         DETALLE DE MODIFICACION 03
                     </th>
                     <td mat-cell *matCellDef="let element" class="table__cell">
-                        {{ element.detalleDeModificacion03 ? element.detalleDeModificacion03.description : "---" }}
+                        {{ element.detalleDeModificacion03 ? element.detalleDeModificacion03 : "---" }}
                     </td>
                 </ng-container>
 
@@ -368,7 +368,7 @@
                         MOTIVO DE MODIFICACION 04
                     </th>
                     <td mat-cell *matCellDef="let element" class="table__cell">
-                        {{ element.motivoDeModificacion04 ? element.motivoDeModificacion04.name : "---" }}
+                        {{ element.motivoDeModificacion04 ? element.motivoDeModificacion04 : "---" }}
                     </td>
                 </ng-container>
 
@@ -377,7 +377,7 @@
                         DETALLE DE MODIFICACION 04
                     </th>
                     <td mat-cell *matCellDef="let element" class="table__cell">
-                        {{ element.detalleDeModificacion04 ? element.detalleDeModificacion04.description : "---" }}
+                        {{ element.detalleDeModificacion04 ? element.detalleDeModificacion04 : "---" }}
                     </td>
                 </ng-container>
 
@@ -386,7 +386,7 @@
                         FECHA DE APROBACION/RECHAZO
                     </th>
                     <td mat-cell *matCellDef="let element" class="table__cell">
-                        {{ element.fechaDeAprobacionORechazo ? (element.fechaDeAprobacionORechazo.seconds*1000 | date : 'dd/MM/yy hh:mm:ss') : "---" }}
+                        {{ element.fechaDeAprobacionORechazo ? (element.fechaDeAprobacionORechazo.toDate() | date: "d/M/y") : "---" }}
                     </td>
                 </ng-container>
 
@@ -553,7 +553,7 @@
                         DIAS RESTANTES ENVIO PPTO
                     </th>
                     <td mat-cell *matCellDef="let element" class="table__cell">
-                        {{daysLeft(element)}}
+                        {{ element.diasRestantesEnvioPPTO ? element.diasRestantesEnvioPPTO : "---" }}
                     </td>
                 </ng-container>
 

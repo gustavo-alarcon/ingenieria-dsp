@@ -13,9 +13,6 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MatPaginator } from '@angular/material/paginator';
 import * as XLSX from 'xlsx';
-import { BudgetsPendingHistoryComponent } from '../budgets-pending-approval/dialogs/budgets-pending-history/budgets-pending-history.component';
-import { element } from 'protractor';
-import moment from 'moment';
 
 @Component({
   selector: 'app-budgets-summary',
@@ -259,9 +256,6 @@ export class BudgetsSummaryComponent implements OnInit {
         })
     );
     this.loading.next(true);
-
-    console.log(this.daysLeft);
-
   }
 
   public ngAfterViewInit(): void {
@@ -271,7 +265,6 @@ export class BudgetsSummaryComponent implements OnInit {
       .getBudgets()
       .pipe()
       .subscribe((res) => {
-        console.log(res);
         this.tableData.data = res;
         this.cantWO = this.tableData.data.length;
 
@@ -646,35 +639,5 @@ export class BudgetsSummaryComponent implements OnInit {
     this.MatDialog.open(BudgetsSummarySendDialogComponent);
   }
 
-  public timelineDialog(element) {
-    this.MatDialog.open(BudgetsPendingHistoryComponent,{
-      data:element
-    })
-  }
-
-  
-  daysLeft(budget: Budget): string {
-
- 
-    const openDate = moment('budget.fechaAperturaChild');
-    // console.log(openDate.format());
-
-  
-
-    const goalDate = openDate.add(budget.tiempoObjetivoEnvioPPTO,'days'); 
-    // console.log(goalDate);
-
-    // Get the goal Date and convert it to a moment.js object
-    // const goalDate: moment.Moment = moment(
-    //   budget.tiempoObjetivoEnvioPPTO.toDate()
-    // );
-    // Get the difference from the current moment() in days
-    const diff: number = goalDate.diff(moment(), 'days');
-    if (diff >= 0)
-    //  return diff.toString();
-     
-    return '---';
-    
-  }
-  
+  public timelineDialog(i: number) {}
 }

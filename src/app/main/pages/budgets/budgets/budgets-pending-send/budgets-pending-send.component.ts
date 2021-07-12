@@ -15,8 +15,6 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MatPaginator } from '@angular/material/paginator';
 import * as XLSX from 'xlsx';
 import moment from 'moment';
-import { BudgetsPendingHistoryComponent } from '../budgets-pending-approval/dialogs/budgets-pending-history/budgets-pending-history.component';
-import { PendingSendTimelineDialogComponent } from './dialogs/pending-send-timeline-dialog/pending-send-timeline-dialog.component';
 
 @Component({
   selector: 'app-budgets-pending-send',
@@ -178,7 +176,6 @@ export class BudgetsPendingSendComponent implements OnInit {
         })
     );
     this.loading.next(true);
-  
   }
 
   public ngAfterViewInit(): void {
@@ -188,7 +185,6 @@ export class BudgetsPendingSendComponent implements OnInit {
       .getBudgetsPendingSend()
       .pipe()
       .subscribe((res) => {
-        console.log(res);
         this.tableData.data = res;
         this.cantWO = this.tableData.data.length;
 
@@ -425,7 +421,7 @@ export class BudgetsPendingSendComponent implements OnInit {
         item.reparacion60 ? item.reparacion60 : '---',
         item.horasSTD ? item.horasSTD : '---',
         item.horasReales ? item.horasReales : '---',
-        item.tiempoObjetivoEnvioPPTO ? new Date(item.tiempoObjetivoEnvioPPTO['seconds'] * 1000) : '---',
+        item.tiempoObjetivoEnvioPPTO ? item.tiempoObjetivoEnvioPPTO : '---',
         this.daysLeft(item),
         item.NoPPTOSModificadosOAdicionales
           ? item.NoPPTOSModificadosOAdicionales
@@ -504,7 +500,6 @@ export class BudgetsPendingSendComponent implements OnInit {
     XLSX.writeFile(wb, name);
   }
 
-
   // Function to refresh the mat-table data source
   refresh(): void {
     this.tableData.data = this.tableData.data;
@@ -549,30 +544,18 @@ export class BudgetsPendingSendComponent implements OnInit {
       });
   }
 
-  public timelineDialog(element) {
-    const a = this.MatDialog.open(PendingSendTimelineDialogComponent,{
-      data: element
-    }
-      )
-  }
-
   daysLeft(budget: Budget): string {
-
-    const openDate = moment(budget.fechaAperturaChild);
-    // console.log(openDate);
-
-    const goalDate = openDate.add(budget.tiempoObjetivoEnvioPPTO,'days'); 
-
     // Get the goal Date and convert it to a moment.js object
-    // const goalDate: moment.Moment = moment(
-    //   budget.tiempoObjetivoEnvioPPTO.toDate()
-    // );
+    const goalDate: moment.Moment = moment(
+      budget.tiempoObjetivoEnvioPPTO.toDate()
+    );
+
     // Get the difference from the current moment() in days
     const diff: number = goalDate.diff(moment(), 'days');
+
     if (diff >= 0) return diff.toString();
-     
+
     return '---';
-    
   }
 
   

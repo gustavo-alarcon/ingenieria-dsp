@@ -2,8 +2,6 @@ import { Budget } from './../../../../../../models/budgets.model';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import moment from 'moment';
-import { BudgetHistoryDate } from '../../../../../../models/budgets.model';
-import { BudgetsService } from 'src/app/main/services/budgets.service';
 
 @Component({
   selector: 'app-pending-send-timeline-dialog',
@@ -11,30 +9,81 @@ import { BudgetsService } from 'src/app/main/services/budgets.service';
   styleUrls: ['./pending-send-timeline-dialog.component.scss'],
 })
 export class PendingSendTimelineDialogComponent implements OnInit {
-  dateArray: BudgetHistoryDate[] = []
-
-  constructor( private budgetsService: BudgetsService,
-               public dialogRef: MatDialogRef<PendingSendTimelineDialogComponent>,
-               @Inject(MAT_DIALOG_DATA) public budget: Budget
+  constructor(
+    public dialogRef: MatDialogRef<PendingSendTimelineDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public budget: Budget
   ) {}
 
-  public ngOnInit(): void {
-    
-    this.dateArray = this.budgetsService.getDateHistory(this.budget);
+  public ngOnInit(): void {}
+
+  get lastListDate(): string {
+    return this.getStringFromTimestamp(this.budget.fechaUltimoListado);
   }
 
+  get lastADMDocumentSentDate(): string {
+    return this.getStringFromTimestamp(
+      this.budget.fechaUltimoEnvioDocumentoADM
+    );
+  }
 
+  get lastBudgetSentDate(): string {
+    return this.getStringFromTimestamp(this.budget.fechaUltimoEnvioPPTO);
+  }
 
-  // private getStringFromTimestamp(timestamp: any): string {
-  //   const seconds: any = timestamp;
+  get lastInputDate(): string {
+    return this.getStringFromTimestamp(this.budget.fechaUltimoInput);
+  }
 
-  //   // If date is unvalid or doesn't exist
-  //   if (seconds == null || seconds.seconds <= 0) return '---';
+  get fisrtLabourDate(): string {
+    return this.getStringFromTimestamp(this.budget.fechaFirstLabour);
+  }
 
-  //   const date: string = moment
-  //     .utc(seconds.seconds * 1000)
-  //     .format('DD/MM/YYYY');
+  get lastLabourDate(): string {
+    return this.getStringFromTimestamp(this.budget.fechaLastLabour);
+  }
 
-  //   return date;
-  // }
+  get workshopBillingDate(): string {
+    return this.getStringFromTimestamp(this.budget.fechaDeFactDeTaller);
+  }
+
+  get definitionOfChargesDate(): string {
+    return this.getStringFromTimestamp(this.budget.fechaDefinicionDeCargos);
+  }
+
+  get approvedOrRejectedDate(): string {
+    return this.getStringFromTimestamp(this.budget.fechaDeAprobacionORechazo);
+  }
+
+  get afaDocumentDate(): string {
+    return this.budget.afaDate.toString();
+  }
+
+  get fesaDocumentDate(): string {
+    return this.budget.cotizacionFesa.toString();
+  }
+
+  get textDocumentDate(): string {
+    return this.budget.cotizacionText.toString();
+  }
+
+  get summaryDocumentDate(): string {
+    return this.budget.resumen.toString();
+  }
+
+  get reportDocumentDate(): string {
+    return this.budget.informe.toString();
+  }
+
+  private getStringFromTimestamp(timestamp: any): string {
+    const seconds: any = timestamp;
+
+    // If date is unvalid or doesn't exist
+    if (seconds == null || seconds.seconds <= 0) return '---';
+
+    const date: string = moment
+      .utc(seconds.seconds * 1000)
+      .format('DD/MM/YYYY');
+
+    return date;
+  }
 }
