@@ -45,17 +45,15 @@ export class BudgetsService {
           isDuplicated = true;
 
           // Now check for different fields
-          Object.keys(entry).map((key) => {
-            if (res[0][key] !== entry[key]) {
-              console.log('DB: ', res[0][key]);
-              console.log('File: ', entry[key]);
-              fields[key] = res[0][key];
-            }
-          });
+          // Object.keys(entry).map((key) => {
+          //   if (res[0][key] !== entry[key]) {
+          //     fields[key] = res[0][key];
+          //   }
+          // });
 
-          if (Object.keys(fields).length) {
-            canUpgrade = true;
-          }
+          // if (Object.keys(fields).length) {
+          //   canUpgrade = true;
+          // }
         }
 
         return {
@@ -136,6 +134,37 @@ export class BudgetsService {
 
           if (!(repeatedWOMainList.length > 0))
             batch.set(budgetsDocRef, currentBudget);
+        }
+      }
+
+      batchArray.push(batch);
+    }
+    return of(batchArray);
+  }
+
+  uploadDailyEntries(
+    list: Array<Budget>
+  ): Observable<firebase.default.firestore.WriteBatch[]> {
+    let batchCount = Math.ceil(list.length / 500);
+    let batchArray = [];
+
+    for (let index = 0; index < batchCount; index++) {
+      const batch = this.afs.firestore.batch();
+      let limit =
+        500 * (index + 1) > list.length ? list.length : 500 * (index + 1);
+
+      for (let j = 500 * index; j < limit; j++) {
+        const budgetsDocRef = this.afs.firestore
+          .collection(`/db/ferreyros/budgets`)
+          .doc();
+
+        const currentBudget = list[j];
+
+        // Assign an id to the current row budget document
+        currentBudget.id = budgetsDocRef.id;
+
+        if (!currentBudget['duplicated']) {
+          batch.set(budgetsDocRef, currentBudget);
         }
       }
 

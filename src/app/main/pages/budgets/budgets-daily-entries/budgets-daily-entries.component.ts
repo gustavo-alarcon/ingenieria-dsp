@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { BudgetsService } from './../../../services/budgets.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Budget } from './../../../models/budgets.model';
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, ChangeDetectionStrategy } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
@@ -17,6 +17,7 @@ import moment from 'moment';
   selector: 'app-budgets-daily-entries',
   templateUrl: './budgets-daily-entries.component.html',
   styleUrls: ['./budgets-daily-entries.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BudgetsDailyEntriesComponent implements OnInit {
   public budgetUploaded: boolean = false;
@@ -327,6 +328,8 @@ export class BudgetsDailyEntriesComponent implements OnInit {
           };
           data['checkUpgrade'] = this.BudgetsService.checkBudgetUpgrade(data);
           data['applyUpgrade'] = false;
+          data['duplicated'] = false;
+
           parsedExcelData.push(data);
         }
       });
@@ -381,45 +384,79 @@ export class BudgetsDailyEntriesComponent implements OnInit {
   uploadDataToFirestore(): void {
     this.loading.next(true);
 
-    this.BudgetsService.getBudgetsSnapshot()
+    this.BudgetsService.uploadDailyEntries(
+      this.budgetsDailyEntriesDataSource.data
+    )
       .pipe(take(1))
-      .subscribe((firestoreBudgetsSnapshot) => {
-        this.BudgetsService.uploadDailyExcelBatchArray(
-          this.budgetsDailyEntriesDataSource.data,
-          firestoreBudgetsSnapshot
-        )
-          .pipe(take(1))
-          .subscribe((batchArray) => {
-            batchArray.forEach((batch) => {
-              batch
-                .commit()
-                .then(() => {
-                  this.budgetsDailyEntriesDataSource.data.length = 0;
-                  this.refresh();
-                  this.loading.next(false);
-                  this.MatSnackBar.open(
-                    '✅ Archivo subido correctamente!',
-                    'Aceptar',
-                    {
-                      duration: 6000,
-                    }
-                  );
-                  this.budgetUploaded = true;
-                })
-                .catch((error) => {
-                  console.error(error);
-                  this.loading.next(false);
-                  this.MatSnackBar.open(
-                    '🚨 Hubo un error subiendo el archivo.',
-                    'Aceptar',
-                    {
-                      duration: 6000,
-                    }
-                  );
-                });
+      .subscribe((batchList) => {
+        batchList.forEach((batch, index) => {
+          batch
+            .commit()
+            .then(() => {
+              this.budgetsDailyEntriesDataSource.data.length = 0;
+              this.refresh();
+              this.loading.next(false);
+              this.MatSnackBar.open(
+                '✅ Archivo subido correctamente!',
+                'Aceptar',
+                {
+                  duration: 6000,
+                }
+              );
+              this.budgetUploaded = true;
+            })
+            .catch((error) => {
+              console.error(error);
+              this.loading.next(false);
+              this.MatSnackBar.open(
+                '🚨 Hubo un error subiendo el archivo.',
+                'Aceptar',
+                {
+                  duration: 6000,
+                }
+              );
             });
-          });
+        });
       });
+    // this.BudgetsService.getBudgetsSnapshot()
+    //   .pipe(take(1))
+    //   .subscribe((firestoreBudgetsSnapshot) => {
+    //     this.BudgetsService.uploadDailyExcelBatchArray(
+    //       this.budgetsDailyEntriesDataSource.data,
+    //       firestoreBudgetsSnapshot
+    //     )
+    //       .pipe(take(1))
+    //       .subscribe((batchArray) => {
+    //         batchArray.forEach((batch) => {
+    //           batch
+    //             .commit()
+    //             .then(() => {
+    //               this.budgetsDailyEntriesDataSource.data.length = 0;
+    //               this.refresh();
+    //               this.loading.next(false);
+    //               this.MatSnackBar.open(
+    //                 '✅ Archivo subido correctamente!',
+    //                 'Aceptar',
+    //                 {
+    //                   duration: 6000,
+    //                 }
+    //               );
+    //               this.budgetUploaded = true;
+    //             })
+    //             .catch((error) => {
+    //               console.error(error);
+    //               this.loading.next(false);
+    //               this.MatSnackBar.open(
+    //                 '🚨 Hubo un error subiendo el archivo.',
+    //                 'Aceptar',
+    //                 {
+    //                   duration: 6000,
+    //                 }
+    //               );
+    //             });
+    //         });
+    //       });
+    //   });
   }
 
   cancelUploadDataToFirestore(): void {
@@ -431,9 +468,11 @@ export class BudgetsDailyEntriesComponent implements OnInit {
     this.router.navigate(['main/budgets/summary']);
   }
 
+  markAsDuplicated(index: number): void {
+    this.budgetsDailyEntriesDataSource.data[index]['duplicated'] = true;
+  }
+
   applyUpgrade(diffBudget: Budget, index: number) {
-    console.log(diffBudget);
-    
     this.budgetsDailyEntriesDataSource.data[index]['applyUpgrade'] = true;
   }
 

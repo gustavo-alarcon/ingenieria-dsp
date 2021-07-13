@@ -73,7 +73,7 @@
                   matTooltip="Este presupuesto ya existe en la base de datos, por lo que será omitido en el proceso de carga"
                   matTooltipPosition="right"
                 >
-                  Duplicado
+                  Duplicado {{ markAsDuplicated(i) }}
                 </div>
 
                 <div *ngIf="!upgrade.isDuplicated" class="entry entry--new">
@@ -188,7 +188,7 @@
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
               element.fechaAperturaChild
-                ? (element.fechaAperturaChild | date: "d/M/y")
+                ? (element.fechaAperturaChild | date: "dd/MM/yyyy")
                 : "---"
             }}
           </td>
@@ -201,7 +201,7 @@
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
               element.fechaReleasedIoChild
-                ? (element.fechaReleasedIoChild | date: "d/M/y")
+                ? (element.fechaReleasedIoChild | date: "dd/MM/yyyy")
                 : "---"
             }}
           </td>
@@ -289,7 +289,7 @@
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
               element.fechaUltimoListado
-                ? (element.fechaUltimoListado | date: "d/M/y")
+                ? (element.fechaUltimoListado | date: "dd/MM/yyyy")
                 : "---"
             }}
           </td>
@@ -302,7 +302,7 @@
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
               element.fechaUltimoEnvioDocumentoADM
-                ? (element.fechaUltimoEnvioDocumentoADM | date: "d/M/y")
+                ? (element.fechaUltimoEnvioDocumentoADM | date: "dd/MM/yyyy")
                 : "---"
             }}
           </td>
@@ -324,7 +324,7 @@
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
               element.fechaDefinicionDeCargos
-                ? (element.fechaDefinicionDeCargos | date: "d/M/y")
+                ? (element.fechaDefinicionDeCargos | date: "dd/MM/yyyy")
                 : "---"
             }}
           </td>
@@ -346,7 +346,7 @@
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
               element.fechaUltimoEnvioPPTO
-                ? (element.fechaUltimoEnvioPPTO | date: "d/M/y")
+                ? (element.fechaUltimoEnvioPPTO | date: "dd/MM/yyyy")
                 : "---"
             }}
           </td>
@@ -359,7 +359,7 @@
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
               element.fechaEnvioPPTO01
-                ? (element.fechaEnvioPPTO01 | date: "d/M/y")
+                ? (element.fechaEnvioPPTO01 | date: "dd/MM/yyyy")
                 : "---"
             }}
           </td>
@@ -372,7 +372,7 @@
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
               element.fechaEnvioPPTO02
-                ? (element.fechaEnvioPPTO02 | date: "d/M/y")
+                ? (element.fechaEnvioPPTO02 | date: "dd/MM/yyyy")
                 : "---"
             }}
           </td>
@@ -411,7 +411,7 @@
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
               element.fechaEnvioPPTO03
-                ? (element.fechaEnvioPPTO03 | date: "d/M/y")
+                ? (element.fechaEnvioPPTO03 | date: "dd/MM/yyyy")
                 : "---"
             }}
           </td>
@@ -450,7 +450,7 @@
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
               element.fechaEnvioPPTO04
-                ? (element.fechaEnvioPPTO04 | date: "d/M/y")
+                ? (element.fechaEnvioPPTO04 | date: "dd/MM/yyyy")
                 : "---"
             }}
           </td>
@@ -489,7 +489,7 @@
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
               element.fechaDeAprobacionORechazo
-                ? (element.fechaDeAprobacionORechazo | date: "d/M/y")
+                ? (element.fechaDeAprobacionORechazo | date: "dd/MM/yyyy")
                 : "---"
             }}
           </td>
@@ -696,7 +696,7 @@
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
               element.fechaDeTerminoDeRep
-                ? (element.fechaDeTerminoDeRep | date: "d/M/y")
+                ? (element.fechaDeTerminoDeRep | date: "dd/MM/yyyy")
                 : "---"
             }}
           </td>
@@ -709,7 +709,7 @@
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
               element.fechaUltimoInput
-                ? (element.fechaUltimoInput | date: "d/M/y")
+                ? (element.fechaUltimoInput | date: "dd/MM/yyyy")
                 : "---"
             }}
           </td>
@@ -731,7 +731,7 @@
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
               element.fechaDeFactDeTaller
-                ? (element.fechaDeFactDeTaller | date: "d/M/y")
+                ? (element.fechaDeFactDeTaller | date: "dd/MM/yyyy")
                 : "---"
             }}
           </td>
@@ -896,7 +896,7 @@
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
               element.mesFactVenta
-                ? (element.mesFactVenta | date: "d/M/y")
+                ? (element.mesFactVenta | date: "dd/MM/yyyy")
                 : "---"
             }}
           </td>
@@ -922,7 +922,7 @@
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
               element.fechaFirstLabour
-                ? (element.fechaFirstLabour | date: "d/M/y")
+                ? (element.fechaFirstLabour | date: "dd/MM/yyyy")
                 : "---"
             }}
           </td>
@@ -935,7 +935,7 @@
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{
               element.fechaLastLabour
-                ? (element.fechaLastLabour | date: "d/M/y")
+                ? (element.fechaLastLabour | date: "dd/MM/yyyy")
                 : "---"
             }}
           </td>
@@ -1111,7 +1111,7 @@
             FECHA LPD
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.fechaLPD ? (element.fechaLPD | date: "d/M/y") : "---" }}
+            {{ element.fechaLPD ? (element.fechaLPD | date: "dd/MM/yyyy") : "---" }}
           </td>
         </ng-container> -->
 
