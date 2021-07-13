@@ -10,7 +10,7 @@ export interface Budget {
   statusWoChild: string;
   otTaller: string;
   otMadre: string;
-  fechaAperturaChild: Date;
+  fechaAperturaChild: Date & firebase.default.firestore.Timestamp;
   fechaReleasedIoChild: Date;
   cliente: string;
   gmorngm: string;
@@ -55,7 +55,7 @@ export interface Budget {
   reparacion60: string;
   horasSTD: number;
   horasReales: number;
-  tiempoObjetivoEnvioPPTO: firebase.default.firestore.Timestamp;
+  tiempoObjetivoEnvioPPTO: Date & firebase.default.firestore.Timestamp;
   diasRestantesEnvioPPTO: string;
   NoPPTOSModificadosOAdicionales: string | number;
   observacionesEnElPresupuesto: string;

@@ -394,7 +394,7 @@ export class BudgetsService {
   }
 
  public getDateHistory( budget: Budget): Array<BudgetHistoryDate> {
-     console.log(budget);
+    
     let tempArray = [];
     //Verificar fecha
     if ( budget.fechaAperturaChild ){
@@ -601,7 +601,7 @@ export class BudgetsService {
        }
       }
 
-    console.log(tempArray);
+   
     return tempArray;
  }
 
