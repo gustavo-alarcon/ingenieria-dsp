@@ -27,15 +27,61 @@
 
 table {
   border: 1px solid #f1eeee;
-  .table__cell {
-    min-width: 90px;
+  .table__head {
+    min-width: 100px;
     padding: 0px 8px;
+    font-size: 14px;
     &:first-child {
       padding-left: 36px;
     }
   }
+
+  .table__cell {
+    min-width: 100px;
+    padding: 0px 8px;
+    font-size: 12px;
+    &:first-child {
+      padding-left: 36px;
+    }
+  }
+
   .observaciones-taller {
     min-width: 500px;
+  }
+
+  .entry {
+    padding: 4px 8px;
+    margin: 4px 0px;
+    border-radius: 4px;
+    border: 1px solid lightgray;
+    width: 80%;
+    text-align: center;
+
+    &--duplicated {
+      border-color: #ff2d2d;
+      color: #ff2d2d;
+      font-weight: bold;
+    }
+
+    &--new {
+      border-color: #34a853;
+      color: #34a853;
+      font-weight: bold;
+    }
+
+    &--upgrade {
+      background-color: #6200ee;
+      color: white;
+      font-weight: normal;
+      cursor: pointer;
+    }
+
+    &--cancel {
+      border-color: #6200ee;
+      color: #6200ee;
+      font-weight: bold;
+      cursor: pointer;
+    }
   }
 }
 
