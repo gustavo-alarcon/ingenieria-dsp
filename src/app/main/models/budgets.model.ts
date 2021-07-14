@@ -10,7 +10,7 @@ export interface Budget {
   statusWoChild: string;
   otTaller: string;
   otMadre: string;
-  fechaAperturaChild: Date;
+  fechaAperturaChild: Date & firebase.default.firestore.Timestamp;
   fechaReleasedIoChild: Date;
   cliente: string;
   gmorngm: string;

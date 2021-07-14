@@ -68,9 +68,9 @@
             >
               <div>
                 <div
-                  *ngIf="upgrade.isDuplicated"
+                  *ngIf="upgrade.isDuplicated && !element.applyUpgrade"
                   class="entry entry--duplicated"
-                  matTooltip="Este presupuesto ya existe en la base de datos, por lo que será omitido en el proceso de carga"
+                  matTooltip="La información de este presupuesto ya existe en la base de datos, por lo que será omitida en el proceso de carga"
                   matTooltipPosition="right"
                 >
                   Duplicado {{ markAsDuplicated(i) }}
@@ -120,21 +120,69 @@
         <ng-container matColumnDef="taller">
           <th mat-header-cell *matHeaderCellDef class="table__head">Taller</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.taller ? element.taller : "---" }}
+            <div *ngIf="element.budgetDifferences?.taller; else defaultTaller">
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.taller
+                    ? element.budgetDifferences.taller
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{ element.taller ? element.taller : "---" }}</span
+              >
+            </div>
+            <ng-template #defaultTaller>
+              {{ element.taller ? element.taller : "---" }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="woMain">
           <th mat-header-cell *matHeaderCellDef class="table__head">WO MAIN</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.woMain ? element.woMain : "---" }}
+            <div *ngIf="element.budgetDifferences?.woMain; else defaultWoMain">
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.woMain
+                    ? element.budgetDifferences.woMain
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{ element.woMain ? element.woMain : "---" }}</span
+              >
+            </div>
+            <ng-template #defaultWoMain>
+              {{ element.woMain ? element.woMain : "---" }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="ioMain">
           <th mat-header-cell *matHeaderCellDef class="table__head">IO MAIN</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.ioMain ? element.ioMain : "---" }}
+            <div *ngIf="element.budgetDifferences?.ioMain; else defaultIoMain">
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.ioMain
+                    ? element.budgetDifferences.ioMain
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{ element.ioMain ? element.ioMain : "---" }}</span
+              >
+            </div>
+            <ng-template #defaultIoMain>
+              {{ element.ioMain ? element.ioMain : "---" }}
+            </ng-template>
           </td>
         </ng-container>
 
@@ -143,7 +191,25 @@
             WO CHILD
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.woChild ? element.woChild : "---" }}
+            <div
+              *ngIf="element.budgetDifferences?.woChild; else defaultWoChild"
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.woChild
+                    ? element.budgetDifferences.woChild
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{ element.woChild ? element.woChild : "---" }}</span
+              >
+            </div>
+            <ng-template #defaultWoChild>
+              {{ element.woChild ? element.woChild : "---" }}
+            </ng-template>
           </td>
         </ng-container>
 
@@ -152,7 +218,25 @@
             IO CHILD
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.ioChild ? element.ioChild : "---" }}
+            <div
+              *ngIf="element.budgetDifferences?.ioChild; else defaultIoChild"
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.ioChild
+                    ? element.budgetDifferences.ioChild
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{ element.ioChild ? element.ioChild : "---" }}</span
+              >
+            </div>
+            <ng-template #defaultIoChild>
+              {{ element.ioChild ? element.ioChild : "---" }}
+            </ng-template>
           </td>
         </ng-container>
 
@@ -161,14 +245,57 @@
             Status WO CHILD
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.statusWoChild ? element.statusWoChild : "---" }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.statusWoChild;
+                else defaultStatusWoChild
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.statusWoChild
+                    ? element.budgetDifferences.statusWoChild
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.statusWoChild ? element.statusWoChild : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultStatusWoChild>
+              {{ element.statusWoChild ? element.statusWoChild : "---" }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="otTaller">
-          <th mat-header-cell *matHeaderCellDef class="table__head">OT</th>
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            OT Taller
+          </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.otTaller ? element.otTaller : "---" }}
+            <div
+              *ngIf="element.budgetDifferences?.otTaller; else defaultOtTaller"
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.otTaller
+                    ? element.budgetDifferences.otTaller
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{ element.otTaller ? element.otTaller : "---" }}</span
+              >
+            </div>
+            <ng-template #defaultOtTaller>
+              {{ element.otTaller ? element.otTaller : "---" }}
+            </ng-template>
           </td>
         </ng-container>
 
@@ -177,7 +304,25 @@
             OT Madre
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.otMadre ? element.otMadre : "---" }}
+            <div
+              *ngIf="element.budgetDifferences?.otMadre; else defaultOtMadre"
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.otMadre
+                    ? element.budgetDifferences.otMadre
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{ element.otMadre ? element.otMadre : "---" }}</span
+              >
+            </div>
+            <ng-template #defaultOtMadre>
+              {{ element.otMadre ? element.otMadre : "---" }}
+            </ng-template>
           </td>
         </ng-container>
 
@@ -186,11 +331,37 @@
             Fecha apertura CHILD
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.fechaAperturaChild
-                ? (element.fechaAperturaChild | date: "dd/MM/yyyy")
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.fechaAperturaChild;
+                else defaultFechaAperturaChild
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.fechaAperturaChild
+                    ? (element.budgetDifferences.fechaAperturaChild.toMillis()
+                      | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.fechaAperturaChild
+                    ? (element.fechaAperturaChild | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultFechaAperturaChild>
+              {{
+                element.fechaAperturaChild
+                  ? (element.fechaAperturaChild | date: "dd/MM/yyyy")
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 

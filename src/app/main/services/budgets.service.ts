@@ -21,7 +21,7 @@ import * as firebase from 'firebase/app';
 export class BudgetsService {
   constructor(private afs: AngularFirestore) {}
 
-  checkBudgetUpgrade(entry: Budget): Observable<{
+  checkBudgetConflicts(entry: Budget): Observable<{
     isDuplicated: boolean;
     canUpgrade: boolean;
     fields: {};
@@ -38,22 +38,16 @@ export class BudgetsService {
       map((res) => {
         let isDuplicated = false;
         let canUpgrade = false;
-        let fields = {};
+        let fields: Partial<Budget>;
 
         if (res.length) {
           // Duplicated entry
           isDuplicated = true;
 
           // Now check for different fields
-          // Object.keys(entry).map((key) => {
-          //   if (res[0][key] !== entry[key]) {
-          //     fields[key] = res[0][key];
-          //   }
-          // });
+          fields = this.checkBudgetUpgrades(entry, res[0]);
 
-          // if (Object.keys(fields).length) {
-          //   canUpgrade = true;
-          // }
+          if (Object.entries(fields).length) canUpgrade = true;
         }
 
         return {
@@ -64,6 +58,47 @@ export class BudgetsService {
         };
       })
     );
+  }
+
+  checkBudgetUpgrades(
+    newBudget: Budget,
+    actualBudget: Budget
+  ): Partial<Budget> {
+    let budgetDifferences: Partial<Budget> = {};
+
+    if (newBudget.taller !== actualBudget.taller) {
+      budgetDifferences.taller = actualBudget.taller;
+    }
+
+    if (newBudget.woMain !== actualBudget.woMain) {
+      budgetDifferences.woMain = actualBudget.woMain;
+    }
+
+    if (newBudget.ioMain !== actualBudget.ioMain) {
+      budgetDifferences.ioMain = actualBudget.ioMain;
+    }
+
+    if (newBudget.woChild !== actualBudget.woChild) {
+      budgetDifferences.woChild = actualBudget.woChild;
+    }
+
+    if (newBudget.statusWoChild !== actualBudget.statusWoChild) {
+      budgetDifferences.statusWoChild = actualBudget.statusWoChild;
+    }
+
+    if (newBudget.otTaller !== actualBudget.otTaller) {
+      budgetDifferences.otTaller = actualBudget.otTaller;
+    }
+
+    if (newBudget.otMadre !== actualBudget.otMadre) {
+      budgetDifferences.otMadre = actualBudget.otMadre;
+    }
+
+    if (newBudget.fechaAperturaChild.getTime() > actualBudget.fechaAperturaChild.toMillis()) {
+      budgetDifferences.fechaAperturaChild = actualBudget.fechaAperturaChild;
+    }
+
+    return budgetDifferences;
   }
 
   uploadDailyExcelBatchArray(

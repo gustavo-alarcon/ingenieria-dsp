@@ -61,6 +61,7 @@ table {
       border-color: #ff2d2d;
       color: #ff2d2d;
       font-weight: bold;
+      font-size: 10px;
     }
 
     &--new {
@@ -81,6 +82,40 @@ table {
       color: #6200ee;
       font-weight: bold;
       cursor: pointer;
+    }
+  }
+
+  @mixin upgrade-icons {
+    font-size: 16px;
+    line-height: 16px;
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+    margin-right: 4px;
+  }
+
+  .upgrade {
+    &--replaced {
+      text-decoration: line-through;
+      color: #ff2d2d;
+      font-weight: normal;
+      font-size: 12px;
+      white-space:nowrap;
+
+      .mat-icon {
+        @include upgrade-icons;
+      }
+    }
+
+    &--replacement {
+      color: #6200ee;
+      font-weight: normal;
+      font-size: 12px;
+      white-space:nowrap;
+
+      .mat-icon {
+        @include upgrade-icons;
+      }
     }
   }
 }
