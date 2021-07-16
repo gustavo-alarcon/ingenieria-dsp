@@ -476,7 +476,10 @@ export class BudgetsService {
       budgetDifferences.totalVVFacturadoUS$ = actualBudget.totalVVFacturadoUS$;
     }
 
-    if (newBudget.mesFactVenta !== actualBudget.mesFactVenta) {
+    if (
+      this.parseDateIntegrity(newBudget.mesFactVenta) >
+      this.parseTimestampIntegrity(actualBudget.mesFactVenta)
+    ) {
       budgetDifferences.mesFactVenta = actualBudget.mesFactVenta;
     }
 
