@@ -544,7 +544,7 @@
                         TIEMPO OBJETIVO ENVIO PPTO
                     </th>
                     <td mat-cell *matCellDef="let element" class="table__cell">
-                        {{ element.tiempoObjetivoEnvioPPTO ? element.tiempoObjetivoEnvioPPTO : "---" }}
+                        {{ element.tiempoObjetivoEnvioPPTO.seconds ? (element.tiempoObjetivoEnvioPPTO.toDate() | date: "dd/MM/yyyy") : element.tiempoObjetivoEnvioPPTO }}
                     </td>
                 </ng-container>
 
@@ -553,7 +553,7 @@
                         DIAS RESTANTES ENVIO PPTO
                     </th>
                     <td mat-cell *matCellDef="let element" class="table__cell">
-                        {{ element.diasRestantesEnvioPPTO ? element.diasRestantesEnvioPPTO : "---" }}
+                        {{ daysLeft(element) }}
                     </td>
                 </ng-container>
 

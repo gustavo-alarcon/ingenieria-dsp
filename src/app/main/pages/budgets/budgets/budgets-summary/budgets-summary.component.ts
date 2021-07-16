@@ -13,6 +13,7 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MatPaginator } from '@angular/material/paginator';
 import * as XLSX from 'xlsx';
+import moment from 'moment';
 
 @Component({
   selector: 'app-budgets-summary',
@@ -640,4 +641,47 @@ export class BudgetsSummaryComponent implements OnInit {
   }
 
   public timelineDialog(i: number) {}
+
+  daysLeft(budget: Budget): string {
+    // Get the goal Date and convert it to a moment.js object
+
+    if(typeof budget.tiempoObjetivoEnvioPPTO === 'number'){
+        // convertir fechaApert. en milisegundos
+       
+        const openDate = budget.fechaAperturaChild['seconds'] * 1000;
+        
+        // convertir los dias del tiempoOb. en mili segundos
+        const timeDate = budget.tiempoObjetivoEnvioPPTO * 8.64e+7;
+      
+
+       const goalDate = openDate + timeDate;
+
+
+       const leftDate = goalDate -  Date.now();
+
+       const date = (leftDate / 8.64e+7).toFixed(2);
+
+       return date;
+
+    }else{
+    
+    
+  
+    const goalDate: moment.Moment = moment(
+      budget.tiempoObjetivoEnvioPPTO.toDate()
+    ) 
+
+    
+
+
+    // Get the difference from the current moment() in days
+    const diff: number = goalDate.diff(moment(), 'days');
+
+
+    if (diff >= 0) return diff.toString();
+
+    return '---';
+    }
+    
+  }
 }

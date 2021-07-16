@@ -57,7 +57,7 @@ export interface Budget {
   horasReales: number;
   tiempoObjetivoEnvioPPTO: Date & firebase.default.firestore.Timestamp;
   diasRestantesEnvioPPTO: string;
-  NoPPTOSModificadosOAdicionales: string | number;
+  NoPPTOSModificadosOAdicionales: number;
   observacionesEnElPresupuesto: string;
   fechaDeTerminoDeRep: Date;
   fechaUltimoInput: Date;
