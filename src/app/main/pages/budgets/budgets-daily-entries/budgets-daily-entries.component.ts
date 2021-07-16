@@ -5,7 +5,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { BudgetsService } from './../../../services/budgets.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Budget } from './../../../models/budgets.model';
-import { Component, OnInit, ViewChild, ElementRef, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
@@ -17,7 +23,7 @@ import moment from 'moment';
   selector: 'app-budgets-daily-entries',
   templateUrl: './budgets-daily-entries.component.html',
   styleUrls: ['./budgets-daily-entries.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BudgetsDailyEntriesComponent implements OnInit {
   public budgetUploaded: boolean = false;
@@ -36,8 +42,8 @@ export class BudgetsDailyEntriesComponent implements OnInit {
     'otTaller',
     'otMadre',
     'fechaAperturaChild',
-    'cliente',
     'fechaReleasedIoChild',
+    'cliente',
     'gmorngm',
     'modelo',
     'tipoSS',
@@ -46,27 +52,27 @@ export class BudgetsDailyEntriesComponent implements OnInit {
     'modalidadPresupuesto',
     'componente',
     'afa',
-    // 'fechaUltimoListado',
+    'fechaUltimoListado',
     'fechaUltimoEnvioDocumentoADM',
     'ultimoDocumento',
     'fechaDefinicionDeCargos',
-    // 'definicionDeCargo',
+    'definicionDeCargo',
     'fechaUltimoEnvioPPTO',
     'fechaEnvioPPTO01',
     'fechaEnvioPPTO02',
-    // 'motivoDeModificacion02',
-    // 'detalleDeModificacion02',
-    // 'fechaEnvioPPTO03',
-    // 'motivoDeModificacion03',
-    // 'detalleDeModificacion03',
-    // 'fechaEnvioPPTO04',
-    // 'motivoDeModificacion04',
-    // 'detalleDeModificacion04',
+    'motivoDeModificacion02',
+    'detalleDeModificacion02',
+    'fechaEnvioPPTO03',
+    'motivoDeModificacion03',
+    'detalleDeModificacion03',
+    'fechaEnvioPPTO04',
+    'motivoDeModificacion04',
+    'detalleDeModificacion04',
     'fechaDeAprobacionORechazo',
     'fechaReleasedIoChild',
     'statusPresupuesto',
     'motivoDelRechazo',
-    // 'detalleDelRechazo',
+    'detalleDelRechazo',
     'vv$servicios',
     'vv$adicionalesServicios',
     'vv$descuentoServicios',
@@ -82,8 +88,7 @@ export class BudgetsDailyEntriesComponent implements OnInit {
     'diasRestantesEnvioPPTO',
     'NoPPTOSModificadosOAdicionales',
     'observacionesEnElPresupuesto',
-    // 'fechaDeTerminoDeRep',
-    // Falta -> fecha de pase a fact.
+    'fechaDeTerminoDeRep',
     'fechaUltimoInput',
     'motivoDeInput',
     'fechaDeFactDeTaller',
@@ -93,30 +98,31 @@ export class BudgetsDailyEntriesComponent implements OnInit {
     'costo$RepuestosCLIENTE',
     'costo$RepuestosOperacion',
     'rentabilidadRepuestosPercent',
+
     'observacionesTaller',
     'realDevueltoAServicios',
     'diferenciaServicios',
     'realDevueltoARepuestos',
     'diferenciaRepuestos',
     'totalVVFacturadoUS$',
-    'diasDemoraFact',
     'mesFactVenta',
     'percentHorasSTDvsHorasDBS',
     'fechaFirstLabour',
     'fechaLastLabour',
+    'diasDemoraFact',
     'diasFactLastLabour',
     'elaborarPPTO',
     'tipoDeComponente',
     'tipoAAorPandP',
     'taller02',
-    // Falta -> Supervisor
-    // 'diasDesdeAperturaChild',
+    'diasDesdeAperturaChild',
     'resumen',
-    // 'definicionDeCargos',
+    'definicionDeCargos',
     'afa',
     'informe',
     'cotizacionFesa',
     'cotizacionText',
+    'statusFacturacion',
     // 'excelid',
     // 'clave',
     // 'obj',
@@ -326,9 +332,10 @@ export class BudgetsDailyEntriesComponent implements OnInit {
             fechaLPD: el[93] ? el[93] : null,
             motivoDeModificacion: el[94] ? el[94] : null,
           };
-          data['checkUpgrade'] = this.BudgetsService.checkBudgetUpgrade(data);
+          data['checkUpgrade'] = this.BudgetsService.checkBudgetConflicts(data);
           data['applyUpgrade'] = false;
           data['duplicated'] = false;
+          data['budgetId'] = null;
 
           parsedExcelData.push(data);
         }
@@ -472,11 +479,16 @@ export class BudgetsDailyEntriesComponent implements OnInit {
     this.budgetsDailyEntriesDataSource.data[index]['duplicated'] = true;
   }
 
-  applyUpgrade(diffBudget: Budget, index: number) {
+  applyUpgrade(budgetDifferences: Budget, index: number, id: string) {
     this.budgetsDailyEntriesDataSource.data[index]['applyUpgrade'] = true;
+    this.budgetsDailyEntriesDataSource.data[index]['budgetDifferences'] =
+      budgetDifferences;
+    this.budgetsDailyEntriesDataSource.data[index]['budgetId'] = id;
+    console.log(id);
   }
 
   cancelUpgrade(index: number) {
     this.budgetsDailyEntriesDataSource.data[index]['applyUpgrade'] = false;
+    this.budgetsDailyEntriesDataSource.data[index]['budgetDifferences'] = {};
   }
 }
