@@ -131,7 +131,7 @@ export interface ModificationReasonEntry {
   id: string;
   name: string;
   createdBy: User;
-  additionals?: Array<Additional>;
+  additionals: Array<Additional>;
   createdAt: Date;
 }
 

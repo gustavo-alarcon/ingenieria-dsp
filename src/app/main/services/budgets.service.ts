@@ -17,6 +17,7 @@ import { Observable, of } from 'rxjs';
 
 import * as firebase from 'firebase/app';
 import moment from 'moment';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root',
@@ -139,7 +140,7 @@ export class BudgetsService {
     if (!budget.motivoDeModificacion02) {
       data = {
         motivoDeModificacion02: modificationData,
-        statusPresupuesto: 'PPTO. MODIFICADO',
+        // statusPresupuesto: 'PPTO. MODIFICADO',
         NoPPTOSModificadosOAdicionales:
           budget.NoPPTOSModificadosOAdicionales + reason.additionals.length,
       };
@@ -150,7 +151,7 @@ export class BudgetsService {
     if (!budget.motivoDeModificacion03) {
       data = {
         motivoDeModificacion03: modificationData,
-        statusPresupuesto: 'PPTO. MODIFICADO',
+        // statusPresupuesto: 'PPTO. MODIFICADO',
         NoPPTOSModificadosOAdicionales:
           budget.NoPPTOSModificadosOAdicionales + reason.additionals.length,
       };
@@ -161,13 +162,16 @@ export class BudgetsService {
     if (!budget.motivoDeModificacion04) {
       data = {
         motivoDeModificacion04: modificationData,
-        statusPresupuesto: 'PPTO. MODIFICADO',
+        // statusPresupuesto: 'PPTO. MODIFICADO',
         NoPPTOSModificadosOAdicionales:
           budget.NoPPTOSModificadosOAdicionales + reason.additionals.length,
       };
+
+     
       batch.update(docRef, data);
       return of(batch);
     }
+
 
     // const data: any = {
     //   motivoDeModificacion:
