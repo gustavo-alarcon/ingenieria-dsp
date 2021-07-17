@@ -30,13 +30,13 @@ export interface Budget {
   fechaEnvioPPTO01: Date & firebase.default.firestore.Timestamp;
   fechaEnvioPPTO02: Date & firebase.default.firestore.Timestamp;
   motivoDeModificacion: Array<ModificationReasonEntry>;
-  motivoDeModificacion02: string;
+  motivoDeModificacion02: ModificationReasonEntry;
   detalleDeModificacion02: string;
   fechaEnvioPPTO03: Date & firebase.default.firestore.Timestamp;
-  motivoDeModificacion03: string;
+  motivoDeModificacion03: ModificationReasonEntry;
   detalleDeModificacion03: string;
   fechaEnvioPPTO04: Date & firebase.default.firestore.Timestamp;
-  motivoDeModificacion04: string;
+  motivoDeModificacion04: ModificationReasonEntry;
   detalleDeModificacion04: string;
   // Check "statusPresupuesto" to know if it is approved or rejected
   fechaDeAprobacionORechazo: Date & firebase.default.firestore.Timestamp;
