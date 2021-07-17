@@ -72,21 +72,21 @@ export class BudgetsPendingModifyComponent implements OnInit {
         );
       })
     );
-   
+
     //  console.log(element.name);
 
     this.modificationFormGroup = this.formBuilder.group({
       modificationReason: ['', Validators.required],
-      additionals: this.formBuilder.array([],Validators.required), 
+      additionals: this.formBuilder.array([], Validators.required),
     });
-
-
-
   }
 
   saveChanges(): void {
-  
-    if(this.data.motivoDeModificacion02 != undefined && this.data.motivoDeModificacion03  != undefined && this.data.motivoDeModificacion04 != undefined){
+    if (
+      this.data.motivoDeModificacion02 != undefined &&
+      this.data.motivoDeModificacion03 != undefined &&
+      this.data.motivoDeModificacion04 != undefined
+    ) {
       this.matSnackBar.open(
         ' 🚨 No puede superar las 3 modificaciones',
         'Aceptar',
@@ -97,42 +97,36 @@ export class BudgetsPendingModifyComponent implements OnInit {
       this.dialog.closeAll();
       return;
     }
-  
-    // if(!this.data.motivoDeModificacion02 && !this.data.motivoDeModificacion03 && !this.data.motivoDeModificacion04 ){
-
-   
-    // }
 
     if (this.modificationFormGroup.valid) {
       this.loading.next(true);
 
-      if(this.budgetService.updateModifyReason)
-      this.authService.user$.pipe(take(1)).subscribe((user) => {
-        this.budgetService
-          .updateModifyReason(this.data.id, this.modificationFormGroup.value,this.data, user)
-          .subscribe((batch: firebase.default.firestore.WriteBatch) => {
-            batch.commit().then(() => {
+      if (this.budgetService.updateModifyReason)
+        this.authService.user$.pipe(take(1)).subscribe((user) => {
+          this.budgetService
+            .updateModifyReason(
+              this.data.id,
+              this.modificationFormGroup.value,
+              this.data,
+              user
+            )
+            .subscribe((batch: firebase.default.firestore.WriteBatch) => {
+              batch.commit().then(() => {
+                this.loading.next(false);
 
-              this.loading.next(false);
-           
-              
-              this.matSnackBar.open(
-                ' ✅ Archivo se modifico de forma correcta',
-              'Aceptar',
-              {
-                duration: 6000,
-              }
-              );
-              this.dialog.closeAll();
-
-           
+                this.matSnackBar.open(
+                  ' ✅ Archivo se modifico de forma correcta',
+                  'Aceptar',
+                  {
+                    duration: 6000,
+                  }
+                );
+                this.dialog.closeAll();
+              });
             });
-          });
-      });
+        });
     }
-
   }
-
 
   showModification(value: ModificationReasonEntry): string | null {
     return value ? value.name : null;

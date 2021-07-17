@@ -167,16 +167,9 @@ export class BudgetsService {
           budget.NoPPTOSModificadosOAdicionales + reason.additionals.length,
       };
 
-     
       batch.update(docRef, data);
       return of(batch);
     }
-
-
-    // const data: any = {
-    //   motivoDeModificacion:
-    //     firebase.default.firestore.FieldValue.arrayUnion(modificationData),
-    // };
   }
 
   updateRejectionReason(
