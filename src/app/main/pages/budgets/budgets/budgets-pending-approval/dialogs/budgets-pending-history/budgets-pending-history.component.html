@@ -1,0 +1,40 @@
+<div class="ms-dialog-header">
+  <mat-icon class="ms-dialog-header__icon">timeline</mat-icon>
+  <h3 class="ms-dialog-header__title">Historial</h3>
+  <span class="ms-fill"></span>
+  <button mat-icon-button mat-dialog-close>
+    <mat-icon>cancel</mat-icon>
+  </button>
+</div>
+<mat-divider></mat-divider>
+
+<mat-dialog-content class="main">
+  <div class="row">
+    <div class="col col--title">Estado</div>
+    <div class="col col--title">Fecha</div>
+    <div class="col col--title">Usuario</div>
+  </div>
+
+  <div *ngFor="let item of dateArray">
+    <div class="row">
+      <div class="col col--state">{{ item.type }}</div>
+      <div class="col col--date">{{ item.date }}</div>
+      <div class="col col--user">
+        {{ item.createBy ? item.createBy.name : "---" }}
+      </div>
+    </div>
+    <div *ngIf="item.description">
+      <div class="row">
+        <div class="col col--date">
+          <img
+            class="flecha"
+            src="../../../../../../../../assets/img/flecha.png"
+            alt=""
+          />
+          Motivo de modificación
+        </div>
+        <div class="col col--date">{{ item.description }}</div>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>

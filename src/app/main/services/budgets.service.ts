@@ -5,16 +5,19 @@ import {
   RejectionReasonsEntry,
   ModificationReasonEntry,
   BudgetsBroadcastList,
-  Budget,
   modificationReasonForm,
   rejectionReasonForm,
+  BudgetHistoryDate,
+  Budget,
+  ApprovedEntry,
 } from '../models/budgets.model';
 
 import { User } from '../models/user-model';
 import { Observable, of } from 'rxjs';
 
 import * as firebase from 'firebase/app';
-import { Timestamp } from 'rxjs/internal/operators/timestamp';
+import moment from 'moment';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable({
   providedIn: 'root',
@@ -753,6 +756,7 @@ export class BudgetsService {
   updateModifyReason(
     id: string,
     reason: modificationReasonForm,
+    budget: Budget,
     user: User
   ): Observable<firebase.default.firestore.WriteBatch> {
     const batch = this.afs.firestore.batch();
@@ -767,14 +771,44 @@ export class BudgetsService {
       additionals: reason.additionals,
       createdAt: new Date(),
     };
-    const data: any = {
-      motivoDeModificacion:
-        firebase.default.firestore.FieldValue.arrayUnion(modificationData),
-      statusPresupuesto: 'PPTO. MODIFICADO',
-    };
 
-    batch.update(docRef, data);
-    return of(batch);
+    let data;
+
+    // Evaluar slots disponibles
+
+    if (!budget.motivoDeModificacion02) {
+      data = {
+        motivoDeModificacion02: modificationData,
+        statusPresupuesto: 'PPTO. MODIFICADO',
+        NoPPTOSModificadosOAdicionales:
+          budget.NoPPTOSModificadosOAdicionales + reason.additionals.length,
+      };
+      batch.update(docRef, data);
+      return of(batch);
+    }
+
+    if (!budget.motivoDeModificacion03) {
+      data = {
+        motivoDeModificacion03: modificationData,
+        statusPresupuesto: 'PPTO. MODIFICADO',
+        NoPPTOSModificadosOAdicionales:
+          budget.NoPPTOSModificadosOAdicionales + reason.additionals.length,
+      };
+      batch.update(docRef, data);
+      return of(batch);
+    }
+
+    if (!budget.motivoDeModificacion04) {
+      data = {
+        motivoDeModificacion04: modificationData,
+        statusPresupuesto: 'PPTO. MODIFICADO',
+        NoPPTOSModificadosOAdicionales:
+          budget.NoPPTOSModificadosOAdicionales + reason.additionals.length,
+      };
+
+      batch.update(docRef, data);
+      return of(batch);
+    }
   }
 
   updateRejectionReason(
@@ -787,7 +821,9 @@ export class BudgetsService {
     const docRef: DocumentReference = this.afs.firestore.doc(
       `/db/ferreyros/budgets/${id}`
     );
-    console.log(reason);
+
+    let data;
+
     const rejectionData: RejectionReasonsEntry = {
       id: docRef.id,
       name: reason.rejectionReason.name,
@@ -795,7 +831,8 @@ export class BudgetsService {
       createdBy: user,
       createdAt: new Date(),
     };
-    const data: any = {
+      
+    data = {
       motivoDelRechazo: rejectionData,
       statusPresupuesto: status,
     };
@@ -835,16 +872,23 @@ export class BudgetsService {
     return refSnapshot;
   }
 
-  updateBudgetStatus(
+  updateBudgetAprove(
     id: string,
-    status: string
+    status: string,
+    user: User
   ): Observable<firebase.default.firestore.WriteBatch> {
     const batch = this.afs.firestore.batch();
     const docRef: DocumentReference = this.afs.firestore.doc(
       `/db/ferreyros/budgets/${id}`
     );
 
+    const approvedData: ApprovedEntry = {
+      createdBy: user,
+      createdAt: firebase.default.firestore.FieldValue.serverTimestamp(),
+    };
+
     const data = {
+      fechaDeAprobacionORechazo: approvedData,
       statusPresupuesto: status,
     };
 
@@ -981,6 +1025,251 @@ export class BudgetsService {
         (ref) => ref.orderBy('createdAt', 'asc')
       )
       .valueChanges();
+  }
+
+  public getDateHistory(budget: Budget): Array<BudgetHistoryDate> {
+    let tempArray = [];
+    //Verificar fecha
+    if (budget.fechaAperturaChild) {
+      const fecha = this.getStringFromTimestamp(budget.fechaAperturaChild);
+      if (fecha !== '---') {
+        const data: BudgetHistoryDate = {
+          type: 'Fecha apertura child',
+          date: fecha,
+          createBy: null,
+        };
+        tempArray.push(data);
+      }
+    }
+    if (budget.fechaDeAprobacionORechazo) {
+      const fecha = this.getStringFromTimestamp(budget.fechaAperturaChild);
+      if (fecha !== '---') {
+        const data: BudgetHistoryDate = {
+          type: 'Fecha apertura child',
+          date: fecha,
+          createBy: null,
+        };
+        tempArray.push(data);
+      }
+    }
+    if (budget.fechaDeFactDeTaller) {
+      const fecha = this.getStringFromTimestamp(budget.fechaDeFactDeTaller);
+      if (fecha !== '---') {
+        const data: BudgetHistoryDate = {
+          type: 'Fecha de facturación de taller',
+          date: fecha,
+          createBy: null,
+        };
+        tempArray.push(data);
+      }
+    }
+    if (budget.fechaDeTerminoDeRep) {
+      const fecha = this.getStringFromTimestamp(budget.fechaDeTerminoDeRep);
+      if (fecha !== '---') {
+        const data: BudgetHistoryDate = {
+          type: 'Fecha de Termino de resp',
+          date: fecha,
+          createBy: null,
+        };
+        tempArray.push(data);
+      }
+    }
+    if (budget.fechaDefinicionDeCargos) {
+      const fecha = this.getStringFromTimestamp(budget.fechaDefinicionDeCargos);
+      if (fecha !== '---') {
+        const data: BudgetHistoryDate = {
+          type: 'Fecha definición de cargos',
+          date: fecha,
+          createBy: null,
+        };
+        tempArray.push(data);
+      }
+    }
+
+    if (budget.fechaFirstLabour) {
+      const fecha = this.getStringFromTimestamp(budget.fechaFirstLabour);
+      if (fecha !== '---') {
+        const data: BudgetHistoryDate = {
+          type: 'Fecha first labour',
+          date: fecha,
+          createBy: null,
+        };
+        tempArray.push(data);
+      }
+    }
+
+    if (budget.fechaLPD) {
+      const fecha = this.getStringFromTimestamp(budget.fechaLPD);
+      if (fecha !== '---') {
+        const data: BudgetHistoryDate = {
+          type: 'Fecha LPD',
+          date: fecha,
+          createBy: null,
+        };
+        tempArray.push(data);
+      }
+    }
+
+    if (budget.fechaLastLabour) {
+      const fecha = this.getStringFromTimestamp(budget.fechaLastLabour);
+      if (fecha !== '---') {
+        const data: BudgetHistoryDate = {
+          type: 'Fecha last labour',
+          date: fecha,
+          createBy: null,
+        };
+        tempArray.push(data);
+      }
+    }
+    if (budget.fechaReleasedIoChild) {
+      const fecha = this.getStringFromTimestamp(budget.fechaReleasedIoChild);
+      if (fecha !== '---') {
+        const data: BudgetHistoryDate = {
+          type: 'Fecha released io child',
+          date: fecha,
+          createBy: null,
+        };
+        tempArray.push(data);
+      }
+    }
+    if (budget.fechaUltimoEnvioDocumentoADM) {
+      const fecha = this.getStringFromTimestamp(
+        budget.fechaUltimoEnvioDocumentoADM
+      );
+      if (fecha !== '---') {
+        const data: BudgetHistoryDate = {
+          type: 'Fecha último envío dcto (ADM)',
+          date: fecha,
+          createBy: null,
+        };
+        tempArray.push(data);
+      }
+    }
+    if (budget.fechaUltimoEnvioPPTO) {
+      const fecha = this.getStringFromTimestamp(budget.fechaUltimoEnvioPPTO);
+      if (fecha !== '---') {
+        const data: BudgetHistoryDate = {
+          type: 'Fecha último envío PPTO',
+          date: fecha,
+          createBy: null,
+        };
+        tempArray.push(data);
+      }
+    }
+
+    if (budget.fechaUltimoInput) {
+      const fecha = this.getStringFromTimestamp(budget.fechaUltimoInput);
+      if (fecha !== '---') {
+        const data: BudgetHistoryDate = {
+          type: 'Fecha último input',
+          date: fecha,
+          createBy: null,
+        };
+        tempArray.push(data);
+      }
+    }
+
+    if (budget.fechaUltimoListado) {
+      const fecha = this.getStringFromTimestamp(budget.fechaUltimoListado);
+      if (fecha !== '---') {
+        const data: BudgetHistoryDate = {
+          type: 'Fecha último listado',
+          date: fecha,
+          createBy: null,
+        };
+        tempArray.push(data);
+      }
+    }
+
+    if (budget.motivoDeModificacion02) {
+      const fecha = this.getStringFromTimestamp(
+        budget.motivoDeModificacion02.createdAt
+      );
+      const usuario = budget.motivoDeModificacion02.createdBy;
+      if (fecha !== '---') {
+        const data: BudgetHistoryDate = {
+          type: 'Fecha última modificación 1',
+          date: fecha,
+          createBy: usuario,
+          description: budget.motivoDeModificacion02.name,
+        };
+        tempArray.push(data);
+      }
+    }
+
+    if (budget.motivoDeModificacion03) {
+      const fecha = this.getStringFromTimestamp(
+        budget.motivoDeModificacion03.createdAt
+      );
+      const usuario = budget.motivoDeModificacion03.createdBy;
+      if (fecha !== '---') {
+        const data: BudgetHistoryDate = {
+          type: 'Fecha última modificación 2',
+          date: fecha,
+          createBy: usuario,
+          description: budget.motivoDeModificacion03.name,
+        };
+        tempArray.push(data);
+      }
+    }
+
+    if (budget.motivoDeModificacion04) {
+      const fecha = this.getStringFromTimestamp(
+        budget.motivoDeModificacion04.createdAt
+      );
+      const usuario = budget.motivoDeModificacion04.createdBy;
+      if (fecha !== '---') {
+        const data: BudgetHistoryDate = {
+          type: 'Fecha última modificación 3',
+          date: fecha,
+          createBy: usuario,
+          description: budget.motivoDeModificacion04.name,
+        };
+        tempArray.push(data);
+      }
+    }
+
+    if (budget.motivoDelRechazo) {
+      const fecha = this.getStringFromTimestamp(
+        budget.motivoDelRechazo.createdAt
+      );
+      const usuario = budget.motivoDelRechazo.createdBy;
+      if (fecha !== '---') {
+        const data: BudgetHistoryDate = {
+          type: 'Fecha de rechazo',
+          date: fecha,
+          createBy: usuario,
+          description: budget.motivoDelRechazo.detail,
+        };
+        tempArray.push(data);
+      }
+    }
+
+    return tempArray;
+  }
+
+  public getStringFromTimestamp(timestamp: any): string {
+    const seconds: any = timestamp;
+
+    // If date is unvalid or doesn't exist
+    if (seconds == null || seconds.seconds <= 0) return '---';
+
+    const date: string = moment
+      .utc(seconds.seconds * 1000)
+      .format('DD/MM/YYYY HH:mm');
+    // HH:mm:ss
+
+    return date;
+  }
+
+  public getStringFromDate(date: Date): string {
+    if (!date) {
+      return '---';
+    }
+
+    const dateString: string = moment.utc(date).format('DD/MM/YYYY');
+
+    return dateString;
   }
 
   public updateBroadcastEmailList(

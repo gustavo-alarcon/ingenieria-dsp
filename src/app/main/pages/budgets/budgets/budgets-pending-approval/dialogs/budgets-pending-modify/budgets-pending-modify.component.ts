@@ -78,38 +78,55 @@ export class BudgetsPendingModifyComponent implements OnInit {
     //  console.log(element.name);
 
     this.modificationFormGroup = this.formBuilder.group({
-      modificationReason: [
-        '',
-        [Validators.required, this.notSelectedValidator],
-      ],
-      additionals: this.formBuilder.array([]),
+      modificationReason: ['', Validators.required],
+      additionals: this.formBuilder.array([], Validators.required),
     });
   }
 
   saveChanges(): void {
+    if (
+      this.data.motivoDeModificacion02 != undefined &&
+      this.data.motivoDeModificacion03 != undefined &&
+      this.data.motivoDeModificacion04 != undefined
+    ) {
+      this.matSnackBar.open(
+        ' 🚨 No puede superar las 3 modificaciones',
+        'Aceptar',
+        {
+          duration: 6000,
+        }
+      );
+      this.dialog.closeAll();
+      return;
+    }
+
     if (this.modificationFormGroup.valid) {
       this.loading.next(true);
-      this.authService.user$.pipe(take(1)).subscribe((user) => {
-        this.budgetService
-          .updateModifyReason(
-            this.data.id,
-            this.modificationFormGroup.value,
-            user
-          )
-          .subscribe((batch: firebase.default.firestore.WriteBatch) => {
-            batch.commit().then(() => {
-              this.loading.next(false);
-              this.matSnackBar.open(
-                ' ✅ Archivo se modifico de forma correcta',
-                'Aceptar',
-                {
-                  duration: 6000,
-                }
-              );
-              this.dialog.closeAll();
+
+      if (this.budgetService.updateModifyReason)
+        this.authService.user$.pipe(take(1)).subscribe((user) => {
+          this.budgetService
+            .updateModifyReason(
+              this.data.id,
+              this.modificationFormGroup.value,
+              this.data,
+              user
+            )
+            .subscribe((batch: firebase.default.firestore.WriteBatch) => {
+              batch.commit().then(() => {
+                this.loading.next(false);
+
+                this.matSnackBar.open(
+                  ' ✅ Archivo se modifico de forma correcta',
+                  'Aceptar',
+                  {
+                    duration: 6000,
+                  }
+                );
+                this.dialog.closeAll();
+              });
             });
-          });
-      });
+        });
     }
   }
 

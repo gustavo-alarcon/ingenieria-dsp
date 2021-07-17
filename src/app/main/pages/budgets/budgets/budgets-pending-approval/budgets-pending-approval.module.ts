@@ -7,6 +7,7 @@ import { MaterialModule } from 'src/app/material/material.module';
 import { BudgetsPendingApproveComponent } from './dialogs/budgets-pending-approve/budgets-pending-approve.component';
 import { BudgetsPendingModifyComponent } from './dialogs/budgets-pending-modify/budgets-pending-modify.component';
 import { BudgetsPendingRejectionComponent } from './dialogs/budgets-pending-rejection/budgets-pending-rejection.component';
+import { BudgetsPendingHistoryComponent } from './dialogs/budgets-pending-history/budgets-pending-history.component';
 
 @NgModule({
   declarations: [
@@ -14,6 +15,7 @@ import { BudgetsPendingRejectionComponent } from './dialogs/budgets-pending-reje
     BudgetsPendingApproveComponent,
     BudgetsPendingModifyComponent,
     BudgetsPendingRejectionComponent,
+    BudgetsPendingHistoryComponent,
   ],
   exports: [BudgetsPendingApprovalComponent],
   imports: [CommonModule, BudgetsPendingApprovalRoutingModule, MaterialModule],

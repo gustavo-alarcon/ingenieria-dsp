@@ -42,7 +42,7 @@ export interface Budget {
   fechaDeAprobacionORechazo: Date & firebase.default.firestore.Timestamp;
   // Defines the state of the budget
   statusPresupuesto: string;
-  motivoDelRechazo: string;
+  motivoDelRechazo: RejectionReasonsEntry;
   detalleDelRechazo: string;
   vv$servicios: number;
   vv$adicionalesServicios: number;
@@ -57,7 +57,7 @@ export interface Budget {
   horasReales: number;
   tiempoObjetivoEnvioPPTO: Date & firebase.default.firestore.Timestamp;
   diasRestantesEnvioPPTO: string;
-  NoPPTOSModificadosOAdicionales: string | number;
+  NoPPTOSModificadosOAdicionales: number;
   observacionesEnElPresupuesto: string;
   fechaDeTerminoDeRep: Date & firebase.default.firestore.Timestamp;
   fechaUltimoInput: Date & firebase.default.firestore.Timestamp;
@@ -122,11 +122,16 @@ export interface RejectionReasonsEntry {
   createdAt: Date;
 }
 
+export interface ApprovedEntry {
+  createdBy: User;
+  createdAt: firebase.default.firestore.FieldValue;
+}
+
 export interface ModificationReasonEntry {
   id: string;
   name: string;
   createdBy: User;
-  additionals?: Array<Additional>;
+  additionals: Array<Additional>;
   createdAt: Date;
 }
 
@@ -146,4 +151,11 @@ export interface BudgetsBroadcastList {
   emailList: Array<string>;
   createdAt: firebase.default.firestore.FieldValue;
   createdBy: User;
+}
+
+export interface BudgetHistoryDate {
+  description?: string;
+  type: string;
+  date: string;
+  createBy: User;
 }

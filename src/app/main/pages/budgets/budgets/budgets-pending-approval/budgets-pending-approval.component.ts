@@ -15,6 +15,7 @@ import * as XLSX from 'xlsx';
 import { BudgetsPendingApproveComponent } from './dialogs/budgets-pending-approve/budgets-pending-approve.component';
 import { BudgetsPendingModifyComponent } from './dialogs/budgets-pending-modify/budgets-pending-modify.component';
 import { BudgetsPendingRejectionComponent } from './dialogs/budgets-pending-rejection/budgets-pending-rejection.component';
+import { BudgetsPendingHistoryComponent } from './dialogs/budgets-pending-history/budgets-pending-history.component';
 
 @Component({
   selector: 'app-budgets-pending-approval',
@@ -522,6 +523,8 @@ export class BudgetsPendingApprovalComponent implements OnInit {
 
   public sendDialog(element: Budget) {
     const a = this.MatDialog.open(BudgetsPendingApproveComponent, {
+      width: '90vw',
+      maxWidth: '500px',
       data: element,
     });
   }
@@ -536,6 +539,16 @@ export class BudgetsPendingApprovalComponent implements OnInit {
 
   public rejectionDialog(element: Budget) {
     const a = this.MatDialog.open(BudgetsPendingRejectionComponent, {
+      width: '90vw',
+      maxWidth: '500px',
+      data: element,
+    });
+  }
+
+  public historyDialog(element: Budget) {
+    const a = this.MatDialog.open(BudgetsPendingHistoryComponent, {
+      width: '90vw',
+      maxWidth: '700px',
       data: element,
     });
   }
