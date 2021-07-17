@@ -54,452 +54,1455 @@
         [dataSource]="budgetsDailyEntriesDataSource"
         matSort
         class="mat-elevation-z8"
+        style="margin: 1em 1em"
       >
+        <ng-container matColumnDef="checkUpgrade">
+          <th mat-header-cell *matHeaderCellDef class="table__head">Monitor</th>
+          <td
+            mat-cell
+            *matCellDef="let element; let i = index"
+            class="table__cell"
+          >
+            <ng-container
+              *ngIf="element.checkUpgrade | async as upgrade; else loadingCheck"
+            >
+              <div>
+                <div
+                  *ngIf="upgrade.isDuplicated && !element.applyUpgrade"
+                  class="entry entry--duplicated"
+                  matTooltip="La información de este presupuesto ya existe en la base de datos, por lo que será omitida en el proceso de carga"
+                  matTooltipPosition="right"
+                >
+                  Duplicado {{ markAsDuplicated(i) }}
+                </div>
+
+                <div *ngIf="!upgrade.isDuplicated" class="entry entry--new">
+                  Nuevo
+                </div>
+
+                <div
+                  *ngIf="
+                    upgrade.isDuplicated &&
+                    upgrade.canUpgrade &&
+                    !element.applyUpgrade
+                  "
+                  class="entry entry--upgrade"
+                  matRipple
+                  matTooltip="Hay información nueva en esta entrada. Al presionar este botón, el proceso de carga actualizará el presupuesto con esta información."
+                  matTooltipPosition="right"
+                  (click)="applyUpgrade(upgrade.fields, i, upgrade.budgetId)"
+                >
+                  Upgrade?
+                </div>
+
+                <div
+                  *ngIf="
+                    upgrade.isDuplicated &&
+                    upgrade.canUpgrade &&
+                    element.applyUpgrade
+                  "
+                  class="entry entry--cancel"
+                  matRipple
+                  matTooltip="Al presionar este boton, cancelará la actualización del presupuesto con la nueva entrada"
+                  matTooltipPosition="right"
+                  (click)="cancelUpgrade(i)"
+                >
+                  Cancelar
+                </div>
+              </div>
+            </ng-container>
+            <ng-template #loadingCheck>
+              <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            </ng-template>
+          </td>
+        </ng-container>
+
         <ng-container matColumnDef="taller">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">TALLER</th>
+          <th mat-header-cell *matHeaderCellDef class="table__head">Taller</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.taller ? element.taller : "---" }}
+            <div *ngIf="element.budgetDifferences?.taller; else defaultTaller">
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.taller
+                    ? element.budgetDifferences.taller
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{ element.taller ? element.taller : "---" }}</span
+              >
+            </div>
+            <ng-template #defaultTaller>
+              {{ element.taller ? element.taller : "---" }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="woMain">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">WO MAIN</th>
+          <th mat-header-cell *matHeaderCellDef class="table__head">WO MAIN</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.woMain ? element.woMain : "---" }}
+            <div *ngIf="element.budgetDifferences?.woMain; else defaultWoMain">
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.woMain
+                    ? element.budgetDifferences.woMain
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{ element.woMain ? element.woMain : "---" }}</span
+              >
+            </div>
+            <ng-template #defaultWoMain>
+              {{ element.woMain ? element.woMain : "---" }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="ioMain">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">IO MAIN</th>
+          <th mat-header-cell *matHeaderCellDef class="table__head">IO MAIN</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.ioMain ? element.ioMain : "---" }}
+            <div *ngIf="element.budgetDifferences?.ioMain; else defaultIoMain">
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.ioMain
+                    ? element.budgetDifferences.ioMain
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{ element.ioMain ? element.ioMain : "---" }}</span
+              >
+            </div>
+            <ng-template #defaultIoMain>
+              {{ element.ioMain ? element.ioMain : "---" }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="woChild">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
+          <th mat-header-cell *matHeaderCellDef class="table__head">
             WO CHILD
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.woChild ? element.woChild : "---" }}
+            <div
+              *ngIf="element.budgetDifferences?.woChild; else defaultWoChild"
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.woChild
+                    ? element.budgetDifferences.woChild
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{ element.woChild ? element.woChild : "---" }}</span
+              >
+            </div>
+            <ng-template #defaultWoChild>
+              {{ element.woChild ? element.woChild : "---" }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="ioChild">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
+          <th mat-header-cell *matHeaderCellDef class="table__head">
             IO CHILD
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.ioChild ? element.ioChild : "---" }}
+            <div
+              *ngIf="element.budgetDifferences?.ioChild; else defaultIoChild"
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.ioChild
+                    ? element.budgetDifferences.ioChild
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{ element.ioChild ? element.ioChild : "---" }}</span
+              >
+            </div>
+            <ng-template #defaultIoChild>
+              {{ element.ioChild ? element.ioChild : "---" }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="statusWoChild">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            STATUS WO CHILD
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Status WO CHILD
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.statusWoChild ? element.statusWoChild : "---" }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.statusWoChild;
+                else defaultStatusWoChild
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.statusWoChild
+                    ? element.budgetDifferences.statusWoChild
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.statusWoChild ? element.statusWoChild : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultStatusWoChild>
+              {{ element.statusWoChild ? element.statusWoChild : "---" }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="otTaller">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            OT TALLER
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            OT Taller
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.otTaller ? element.otTaller : "---" }}
+            <div
+              *ngIf="element.budgetDifferences?.otTaller; else defaultOtTaller"
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.otTaller
+                    ? element.budgetDifferences.otTaller
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{ element.otTaller ? element.otTaller : "---" }}</span
+              >
+            </div>
+            <ng-template #defaultOtTaller>
+              {{ element.otTaller ? element.otTaller : "---" }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="otMadre">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            OT MADRE
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            OT Madre
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.otMadre ? element.otMadre : "---" }}
+            <div
+              *ngIf="element.budgetDifferences?.otMadre; else defaultOtMadre"
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.otMadre
+                    ? element.budgetDifferences.otMadre
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{ element.otMadre ? element.otMadre : "---" }}</span
+              >
+            </div>
+            <ng-template #defaultOtMadre>
+              {{ element.otMadre ? element.otMadre : "---" }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="fechaAperturaChild">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            FECHA APERTURA CHILD
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Fecha apertura CHILD
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.fechaAperturaChild
-                ? (element.fechaAperturaChild | date: "d/M/y")
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.fechaAperturaChild;
+                else defaultFechaAperturaChild
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.fechaAperturaChild
+                    ? (element.budgetDifferences.fechaAperturaChild.toMillis()
+                      | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.fechaAperturaChild
+                    ? (element.fechaAperturaChild | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultFechaAperturaChild>
+              {{
+                element.fechaAperturaChild
+                  ? (element.fechaAperturaChild | date: "dd/MM/yyyy")
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="fechaReleasedIoChild">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            FECHA RELEASED IO CHILD
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Fecha released CHILD
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.fechaReleasedIoChild
-                ? (element.fechaReleasedIoChild | date: "d/M/y")
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.fechaReleasedIoChild;
+                else defaultFechaReleasedIoChild
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.fechaReleasedIoChild
+                    ? (element.budgetDifferences.fechaReleasedIoChild.toMillis()
+                      | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.fechaReleasedIoChild
+                    ? (element.fechaReleasedIoChild | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultFechaReleasedIoChild>
+              {{
+                element.fechaReleasedIoChild
+                  ? (element.fechaReleasedIoChild | date: "dd/MM/yyyy")
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="cliente">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">CLIENTE</th>
+          <th mat-header-cell *matHeaderCellDef class="table__head">Cliente</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.cliente ? element.cliente : "---" }}
+            <div
+              *ngIf="element.budgetDifferences?.cliente; else defaultCliente"
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.cliente
+                    ? element.budgetDifferences.cliente
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{ element.cliente ? element.cliente : "---" }}</span
+              >
+            </div>
+            <ng-template #defaultCliente>
+              {{ element.cliente ? element.cliente : "---" }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="gmorngm">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">GM/NGM</th>
+          <th mat-header-cell *matHeaderCellDef class="table__head">GM/NGM</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.gmorngm ? element.gmorngm : "---" }}
+            <div
+              *ngIf="element.budgetDifferences?.gmorngm; else defaultGmorngm"
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.gmorngm
+                    ? element.budgetDifferences.gmorngm
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{ element.gmorngm ? element.gmorngm : "---" }}</span
+              >
+            </div>
+            <ng-template #defaultGmorngm>
+              {{ element.gmorngm ? element.gmorngm : "---" }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="modelo">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">MODELO</th>
+          <th mat-header-cell *matHeaderCellDef class="table__head">Modelo</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.modelo ? element.modelo : "---" }}
+            <div *ngIf="element.budgetDifferences?.modelo; else defaultModelo">
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.modelo
+                    ? element.budgetDifferences.modelo
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{ element.modelo ? element.modelo : "---" }}</span
+              >
+            </div>
+            <ng-template #defaultModelo>
+              {{ element.modelo ? element.modelo : "---" }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="tipoSS">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">TIPO SS</th>
+          <th mat-header-cell *matHeaderCellDef class="table__head">Tipo SS</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.tipoSS ? element.tipoSS : "---" }}
+            <div *ngIf="element.budgetDifferences?.tipoSS; else defaultTipoSS">
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.tipoSS
+                    ? element.budgetDifferences.tipoSS
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{ element.tipoSS ? element.tipoSS : "---" }}</span
+              >
+            </div>
+            <ng-template #defaultTipoSS>
+              {{ element.tipoSS ? element.tipoSS : "---" }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="servicio">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            SERVICIO
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Servicio
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.servicio ? element.servicio : "---" }}
+            <div
+              *ngIf="element.budgetDifferences?.servicio; else defaultServicio"
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.servicio
+                    ? element.budgetDifferences.servicio
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{ element.servicio ? element.servicio : "---" }}</span
+              >
+            </div>
+            <ng-template #defaultServicio>
+              {{ element.servicio ? element.servicio : "---" }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="tipoAtencion">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            TIPO ATENCION
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Tipo atención
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.tipoAtencion ? element.tipoAtencion : "---" }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.tipoAtencion;
+                else defaultTipoAtencion
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.tipoAtencion
+                    ? element.budgetDifferences.tipoAtencion
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{ element.tipoAtencion ? element.tipoAtencion : "---" }}</span
+              >
+            </div>
+            <ng-template #defaultTipoAtencion>
+              {{ element.tipoAtencion ? element.tipoAtencion : "---" }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="modalidadPresupuesto">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            MODALIDAD PRESUPUESTO
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Modalidad presupuesto
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.modalidadPresupuesto
-                ? element.modalidadPresupuesto
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.modalidadPresupuesto;
+                else defaultModalidadPresupuesto
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.modalidadPresupuesto
+                    ? element.budgetDifferences.modalidadPresupuesto
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.modalidadPresupuesto
+                    ? element.modalidadPresupuesto
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultModalidadPresupuesto>
+              {{
+                element.modalidadPresupuesto
+                  ? element.modalidadPresupuesto
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="componente">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            COMPONENTE
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Componente
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.componente ? element.componente : "---" }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.componente;
+                else defaultComponente
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.componente
+                    ? element.budgetDifferences.componente
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{ element.componente ? element.componente : "---" }}</span
+              >
+            </div>
+            <ng-template #defaultComponente>
+              {{ element.componente ? element.componente : "---" }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="afa">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">AFA</th>
+          <th mat-header-cell *matHeaderCellDef class="table__head">AFA</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.afa ? element.afa : "---" }}
+            <div *ngIf="element.budgetDifferences?.afa; else defaultAfa">
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.afa
+                    ? element.budgetDifferences.afa
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{ element.afa ? element.afa : "---" }}</span
+              >
+            </div>
+            <ng-template #defaultAfa>
+              {{ element.afa ? element.afa : "---" }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="fechaUltimoListado">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            FECHA ULTIMO LISTADO
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Fecha último listado
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.fechaUltimoListado
-                ? (element.fechaUltimoListado | date: "d/M/y")
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.fechaUltimoListado;
+                else defaultFechaUltimoListado
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.fechaUltimoListado
+                    ? (element.budgetDifferences.fechaUltimoListado.toMillis()
+                      | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.fechaUltimoListado
+                    ? (element.fechaUltimoListado | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultFechaUltimoListado>
+              {{
+                element.fechaUltimoListado
+                  ? (element.fechaUltimoListado | date: "dd/MM/yyyy")
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="fechaUltimoEnvioDocumentoADM">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            FECHA ULTIMO ENVIO DOCUMENTO ADM
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Fecha último envío dcto (ADM)
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.fechaUltimoEnvioDocumentoADM
-                ? (element.fechaUltimoEnvioDocumentoADM | date: "d/M/y")
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.fechaUltimoEnvioDocumentoADM;
+                else defaultFechaUltimoEnvioDocumentoADM
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.fechaUltimoEnvioDocumentoADM
+                    ? (element.budgetDifferences.fechaUltimoEnvioDocumentoADM.toMillis()
+                      | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.fechaUltimoEnvioDocumentoADM
+                    ? (element.fechaUltimoEnvioDocumentoADM
+                      | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultFechaUltimoEnvioDocumentoADM>
+              {{
+                element.fechaUltimoEnvioDocumentoADM
+                  ? (element.fechaUltimoEnvioDocumentoADM | date: "dd/MM/yyyy")
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="ultimoDocumento">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            ULTIMO DOCUMENTO
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Último dcto.
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.ultimoDocumento ? element.ultimoDocumento : "---" }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.ultimoDocumento;
+                else defaultUltimoDocumento
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.ultimoDocumento
+                    ? element.budgetDifferences.ultimoDocumento
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.ultimoDocumento ? element.ultimoDocumento : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultUltimoDocumento>
+              {{ element.ultimoDocumento ? element.ultimoDocumento : "---" }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="fechaDefinicionDeCargos">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            FECHA DEFINICION DE CARGOS
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Fecha defin. cargos
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.fechaDefinicionDeCargos
-                ? (element.fechaDefinicionDeCargos | date: "d/M/y")
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.fechaDefinicionDeCargos;
+                else defaultFechaDefinicionDeCargos
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.fechaDefinicionDeCargos
+                    ? (element.budgetDifferences.fechaDefinicionDeCargos.toMillis()
+                      | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.fechaDefinicionDeCargos
+                    ? (element.fechaDefinicionDeCargos | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultFechaDefinicionDeCargos>
+              {{
+                element.fechaDefinicionDeCargos
+                  ? (element.fechaDefinicionDeCargos | date: "dd/MM/yyyy")
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="definicionDeCargo">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            DEFINICION DE CARGO
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Definición de cargo
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.definicionDeCargo ? element.definicionDeCargo : "---" }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.definicionDeCargo;
+                else defaultDefinicionDeCargo
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.definicionDeCargo
+                    ? element.budgetDifferences.definicionDeCargo
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.definicionDeCargo ? element.definicionDeCargo : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultDefinicionDeCargo>
+              {{
+                element.definicionDeCargo ? element.definicionDeCargo : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="fechaUltimoEnvioPPTO">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            FECHA ULTIMO ENVIO PPTO
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Fecha último envío PPTO
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.fechaUltimoEnvioPPTO
-                ? (element.fechaUltimoEnvioPPTO | date: "d/M/y")
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.fechaUltimoEnvioPPTO;
+                else defaultFechaUltimoEnvioPPTO
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.fechaUltimoEnvioPPTO
+                    ? (element.budgetDifferences.fechaUltimoEnvioPPTO.toMillis()
+                      | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.fechaUltimoEnvioPPTO
+                    ? (element.fechaUltimoEnvioPPTO | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultFechaUltimoEnvioPPTO>
+              {{
+                element.fechaUltimoEnvioPPTO
+                  ? (element.fechaUltimoEnvioPPTO | date: "dd/MM/yyyy")
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="fechaEnvioPPTO01">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            FECHA ENVIO PPTO 01
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Fecha envío PPTO 01
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.fechaEnvioPPTO01
-                ? (element.fechaEnvioPPTO01 | date: "d/M/y")
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.fechaEnvioPPTO01;
+                else defaultFechaEnvioPPTO01
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.fechaEnvioPPTO01
+                    ? (element.budgetDifferences.fechaEnvioPPTO01.toMillis()
+                      | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.fechaEnvioPPTO01
+                    ? (element.fechaEnvioPPTO01 | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultFechaEnvioPPTO01>
+              {{
+                element.fechaEnvioPPTO01
+                  ? (element.fechaEnvioPPTO01 | date: "dd/MM/yyyy")
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="fechaEnvioPPTO02">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            FECHA ENVIO PPTO 02
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Fecha envío PPTO 02
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.fechaEnvioPPTO02
-                ? (element.fechaEnvioPPTO02 | date: "d/M/y")
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.fechaEnvioPPTO02;
+                else defaultFechaEnvioPPTO02
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.fechaEnvioPPTO02
+                    ? (element.budgetDifferences.fechaEnvioPPTO02.toMillis()
+                      | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.fechaEnvioPPTO02
+                    ? (element.fechaEnvioPPTO02 | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultFechaEnvioPPTO02>
+              {{
+                element.fechaEnvioPPTO02
+                  ? (element.fechaEnvioPPTO02 | date: "dd/MM/yyyy")
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="motivoDeModificacion02">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            MOTIVO DE MODIFICACION 02
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Motivo de modificación 02
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.motivoDeModificacion02
-                ? element.motivoDeModificacion02
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.motivoDeModificacion02;
+                else defaultMotivoDeModificacion02
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.motivoDeModificacion02
+                    ? element.budgetDifferences.motivoDeModificacion02
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.motivoDeModificacion02
+                    ? element.motivoDeModificacion02
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultMotivoDeModificacion02>
+              {{
+                element.motivoDeModificacion02
+                  ? element.motivoDeModificacion02
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="detalleDeModificacion02">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            DETALLE DE MODIFICACION 02
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Detalle de modificación 02
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.detalleDeModificacion02
-                ? element.detalleDeModificacion02
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.detalleDeModificacion02;
+                else defaultDetalleDeModificacion02
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.detalleDeModificacion02
+                    ? element.budgetDifferences.detalleDeModificacion02
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.detalleDeModificacion02
+                    ? element.detalleDeModificacion02
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultDetalleDeModificacion02>
+              {{
+                element.detalleDeModificacion02
+                  ? element.detalleDeModificacion02
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="fechaEnvioPPTO03">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            FECHA ENVIO PPTO 03
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Fecha envío PPTO 03
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.fechaEnvioPPTO03
-                ? (element.fechaEnvioPPTO03 | date: "d/M/y")
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.fechaEnvioPPTO03;
+                else defaultFechaEnvioPPTO03
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.fechaEnvioPPTO03
+                    ? (element.budgetDifferences.fechaEnvioPPTO03.toMillis()
+                      | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.fechaEnvioPPTO03
+                    ? (element.fechaEnvioPPTO03 | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultFechaEnvioPPTO03>
+              {{
+                element.fechaEnvioPPTO03
+                  ? (element.fechaEnvioPPTO03 | date: "dd/MM/yyyy")
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="motivoDeModificacion03">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            MOTIVO DE MODIFICACION 03
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Motivo de modificación 03
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.motivoDeModificacion03
-                ? element.motivoDeModificacion03
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.motivoDeModificacion03;
+                else defaultMotivoDeModificacion03
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.motivoDeModificacion03
+                    ? element.budgetDifferences.motivoDeModificacion03
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.motivoDeModificacion03
+                    ? element.motivoDeModificacion03
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultMotivoDeModificacion03>
+              {{
+                element.motivoDeModificacion03
+                  ? element.motivoDeModificacion03
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="detalleDeModificacion03">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
+          <th mat-header-cell *matHeaderCellDef class="table__head">
             DETALLE DE MODIFICACION 03
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.detalleDeModificacion03
-                ? element.detalleDeModificacion03
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.detalleDeModificacion03;
+                else defaultDetalleDeModificacion03
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.detalleDeModificacion03
+                    ? element.budgetDifferences.detalleDeModificacion03
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.detalleDeModificacion03
+                    ? element.detalleDeModificacion03
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultDetalleDeModificacion03>
+              {{
+                element.detalleDeModificacion03
+                  ? element.detalleDeModificacion03
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="fechaEnvioPPTO04">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            FECHA ENVIO PPTO 04
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Fecha envío PPTO 04
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.fechaEnvioPPTO04
-                ? (element.fechaEnvioPPTO04 | date: "d/M/y")
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.fechaEnvioPPTO04;
+                else defaultFechaEnvioPPTO04
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.fechaEnvioPPTO04
+                    ? (element.budgetDifferences.fechaEnvioPPTO04.toMillis()
+                      | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.fechaEnvioPPTO04
+                    ? (element.fechaEnvioPPTO04 | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultFechaEnvioPPTO04>
+              {{
+                element.fechaEnvioPPTO04
+                  ? (element.fechaEnvioPPTO04 | date: "dd/MM/yyyy")
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="motivoDeModificacion04">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            MOTIVO DE MODIFICACION 04
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Motivo de modificación 04
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.motivoDeModificacion04
-                ? element.motivoDeModificacion04
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.motivoDeModificacion04;
+                else defaultMotivoDeModificacion04
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.motivoDeModificacion04
+                    ? element.budgetDifferences.motivoDeModificacion04
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.motivoDeModificacion04
+                    ? element.motivoDeModificacion04
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultMotivoDeModificacion04>
+              {{
+                element.motivoDeModificacion04
+                  ? element.motivoDeModificacion04
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="detalleDeModificacion04">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            DETALLE DE MODIFICACION 04
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Detalle de modificación 04
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.detalleDeModificacion04
-                ? element.detalleDeModificacion04
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.detalleDeModificacion04;
+                else defaultDetalleDeModificacion04
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.detalleDeModificacion04
+                    ? element.budgetDifferences.detalleDeModificacion04
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.detalleDeModificacion04
+                    ? element.detalleDeModificacion04
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultDetalleDeModificacion04>
+              {{
+                element.detalleDeModificacion04
+                  ? element.detalleDeModificacion04
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="fechaDeAprobacionORechazo">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            FECHA DE APROBACION/RECHAZO
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Fecha aprob. o rechazo
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.fechaDeAprobacionORechazo
-                ? (element.fechaDeAprobacionORechazo | date: "d/M/y")
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.fechaDeAprobacionORechazo;
+                else defaultFechaDeAprobacionORechazo
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.fechaDeAprobacionORechazo
+                    ? (element.budgetDifferences.fechaDeAprobacionORechazo.toMillis()
+                      | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.fechaDeAprobacionORechazo
+                    ? (element.fechaDeAprobacionORechazo | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultFechaDeAprobacionORechazo>
+              {{
+                element.fechaDeAprobacionORechazo
+                  ? (element.fechaDeAprobacionORechazo | date: "dd/MM/yyyy")
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="statusPresupuesto">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            STATUS PRESUPUESTO
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Status PPTO
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.statusPresupuesto ? element.statusPresupuesto : "---" }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.statusPresupuesto;
+                else defaultStatusPresupuesto
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.statusPresupuesto
+                    ? element.budgetDifferences.statusPresupuesto
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.statusPresupuesto ? element.statusPresupuesto : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultStatusPresupuesto>
+              {{
+                element.statusPresupuesto ? element.statusPresupuesto : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="motivoDelRechazo">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            MOTIVO DEL RECHAZO
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Motivo de rechazo
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.motivoDelRechazo ? element.motivoDelRechazo : "---" }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.motivoDelRechazo;
+                else defaultMotivoDelRechazo
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.motivoDelRechazo
+                    ? element.budgetDifferences.motivoDelRechazo
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.motivoDelRechazo ? element.motivoDelRechazo : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultMotivoDelRechazo>
+              {{ element.motivoDelRechazo ? element.motivoDelRechazo : "---" }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="detalleDelRechazo">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            DETALLE DEL RECHAZO
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Detalle de rechazo
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.detalleDelRechazo ? element.detalleDelRechazo : "---" }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.detalleDelRechazo;
+                else defaultDetalleDelRechazo
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.detalleDelRechazo
+                    ? element.budgetDifferences.detalleDelRechazo
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.detalleDelRechazo ? element.detalleDelRechazo : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultDetalleDelRechazo>
+              {{
+                element.detalleDelRechazo ? element.detalleDelRechazo : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="vv$servicios">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            VV$ SERVICIOS
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            VV$ Servicios
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.vv$servicios ? element.vv$servicios : "---" }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.vv$servicios;
+                else defaultVv$servicios
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.vv$servicios
+                    ? element.budgetDifferences.vv$servicios
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{ element.vv$servicios ? element.vv$servicios : "---" }}</span
+              >
+            </div>
+            <ng-template #defaultVv$servicios>
+              {{ element.vv$servicios ? element.vv$servicios : "---" }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="vv$adicionalesServicios">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            VV$ ADICIONALES SERVICIOS
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            VV$ Adicionales Servicios
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.vv$adicionalesServicios
-                ? element.vv$adicionalesServicios
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.vv$adicionalesServicios;
+                else defaultVv$adicionalesServicios
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.vv$adicionalesServicios
+                    ? element.budgetDifferences.vv$adicionalesServicios
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.vv$adicionalesServicios
+                    ? element.vv$adicionalesServicios
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultVv$adicionalesServicios>
+              {{
+                element.vv$adicionalesServicios
+                  ? element.vv$adicionalesServicios
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="vv$descuentoServicios">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            VV$ DESCUENTO SERVICIOS
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            VV$ Dsctos. Servicios
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.vv$descuentoServicios
-                ? element.vv$descuentoServicios
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.vv$descuentoServicios;
+                else defaultVv$descuentoServicios
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.vv$descuentoServicios
+                    ? element.budgetDifferences.vv$descuentoServicios
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.vv$descuentoServicios
+                    ? element.vv$descuentoServicios
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultVv$descuentoServicios>
+              {{
+                element.vv$descuentoServicios
+                  ? element.vv$descuentoServicios
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="vv$repuestos">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            VV$ REPUESTOS
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            VV$ Repuestos
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.vv$repuestos ? element.vv$repuestos : "---" }}
@@ -507,251 +1510,759 @@
         </ng-container>
 
         <ng-container matColumnDef="vv$adicionalesRepuestos">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            VV$ ADICIONALES REPUESTOS
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            VV$ Adicional Repuestos
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.vv$adicionalesRepuestos
-                ? element.vv$adicionalesRepuestos
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.vv$adicionalesRepuestos;
+                else defaultVv$adicionalesRepuestos
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.vv$adicionalesRepuestos
+                    ? element.budgetDifferences.vv$adicionalesRepuestos
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.vv$adicionalesRepuestos
+                    ? element.vv$adicionalesRepuestos
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultVv$adicionalesRepuestos>
+              {{
+                element.vv$adicionalesRepuestos
+                  ? element.vv$adicionalesRepuestos
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="vv$descuentoRepuestos">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            VV$ DESCUENTO REPUESTOS
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            VV$ Dsctos. Repuestos
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.vv$descuentoRepuestos
-                ? element.vv$descuentoRepuestos
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.vv$descuentoRepuestos;
+                else defaultVv$descuentoRepuestos
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.vv$descuentoRepuestos
+                    ? element.budgetDifferences.vv$descuentoRepuestos
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.vv$descuentoRepuestos
+                    ? element.vv$descuentoRepuestos
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultVv$descuentoRepuestos>
+              {{
+                element.vv$descuentoRepuestos
+                  ? element.vv$descuentoRepuestos
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="totalvvPPTOUS$">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            TOTAL VV PPTO US$
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Total VV PPTO US$
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.totalvvPPTOUS$ ? element.totalvvPPTOUS$ : "---" }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.totalvvPPTOUS$;
+                else defaultTotalvvPPTOUS$
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.totalvvPPTOUS$
+                    ? element.budgetDifferences.totalvvPPTOUS$
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.totalvvPPTOUS$ ? element.totalvvPPTOUS$ : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultTotalvvPPTOUS$>
+              {{ element.totalvvPPTOUS$ ? element.totalvvPPTOUS$ : "---" }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="$componenteNuevo">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            $ COMPONENTE NUEVO
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            $ Componente nuevo
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.$componenteNuevo ? element.$componenteNuevo : "---" }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.$componenteNuevo;
+                else default$componenteNuevo
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.$componenteNuevo
+                    ? element.budgetDifferences.$componenteNuevo
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.$componenteNuevo ? element.$componenteNuevo : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #default$componenteNuevo>
+              {{ element.$componenteNuevo ? element.$componenteNuevo : "---" }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="reparacion60">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            % REPARACION (60%)
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            % Reparación (60%)
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.reparacion60 ? element.reparacion60 : "---" }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.reparacion60;
+                else defaultReparacion60
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.reparacion60
+                    ? element.budgetDifferences.reparacion60
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{ element.reparacion60 ? element.reparacion60 : "---" }}</span
+              >
+            </div>
+            <ng-template #defaultReparacion60>
+              {{ element.reparacion60 ? element.reparacion60 : "---" }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="horasSTD">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            HORAS STD
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Horas STD
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.horasSTD ? element.horasSTD : "---" }}
+            <div
+              *ngIf="element.budgetDifferences?.horasSTD; else defaultHorasSTD"
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.horasSTD
+                    ? element.budgetDifferences.horasSTD
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{ element.horasSTD ? element.horasSTD : "---" }}</span
+              >
+            </div>
+            <ng-template #defaultHorasSTD>
+              {{ element.horasSTD ? element.horasSTD : "---" }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="horasReales">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            HORAS REALES
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Horas reales
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.horasReales ? element.horasReales : "---" }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.horasReales;
+                else defaultHorasReales
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.horasReales
+                    ? element.budgetDifferences.horasReales
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{ element.horasReales ? element.horasReales : "---" }}</span
+              >
+            </div>
+            <ng-template #defaultHorasReales>
+              {{ element.horasReales ? element.horasReales : "---" }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="tiempoObjetivoEnvioPPTO">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            TIEMPO OBJETIVO ENVIO PPTO
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Tiempo objetivo envío PPTO
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.tiempoObjetivoEnvioPPTO
-                ? element.tiempoObjetivoEnvioPPTO
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.tiempoObjetivoEnvioPPTO;
+                else defaultTiempoObjetivoEnvioPPTO
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.tiempoObjetivoEnvioPPTO
+                    ? (element.budgetDifferences.tiempoObjetivoEnvioPPTO.toMillis()
+                      | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.tiempoObjetivoEnvioPPTO
+                    ? (element.tiempoObjetivoEnvioPPTO | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultTiempoObjetivoEnvioPPTO>
+              {{
+                element.tiempoObjetivoEnvioPPTO
+                  ? (element.tiempoObjetivoEnvioPPTO | date: "dd/MM/yyyy")
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="diasRestantesEnvioPPTO">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            DIAS RESTANTES ENVIO PPTO
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Días restantes envío PPTO
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.diasRestantesEnvioPPTO
-                ? element.diasRestantesEnvioPPTO
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.diasRestantesEnvioPPTO;
+                else defaultDiasRestantesEnvioPPTO
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.diasRestantesEnvioPPTO
+                    ? element.budgetDifferences.diasRestantesEnvioPPTO
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.diasRestantesEnvioPPTO
+                    ? element.diasRestantesEnvioPPTO
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultDiasRestantesEnvioPPTO>
+              {{
+                element.diasRestantesEnvioPPTO
+                  ? element.diasRestantesEnvioPPTO
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="NoPPTOSModificadosOAdicionales">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            NO PPTO's MODIFICADOS/ADICIONALES
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            N° PPTO's modif. o adicinales
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.NoPPTOSModificadosOAdicionales
-                ? element.NoPPTOSModificadosOAdicionales
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.NoPPTOSModificadosOAdicionales;
+                else defaultNoPPTOSModificadosOAdicionales
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.NoPPTOSModificadosOAdicionales
+                    ? element.budgetDifferences.NoPPTOSModificadosOAdicionales
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.NoPPTOSModificadosOAdicionales
+                    ? element.NoPPTOSModificadosOAdicionales
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultNoPPTOSModificadosOAdicionales>
+              {{
+                element.NoPPTOSModificadosOAdicionales
+                  ? element.NoPPTOSModificadosOAdicionales
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="observacionesEnElPresupuesto">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            OBSERVACIONES EN EL PRESUPUESTO
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Obs. en el PPTO
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.observacionesEnElPresupuesto
-                ? element.observacionesEnElPresupuesto
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.observacionesEnElPresupuesto;
+                else defaultObservacionesEnElPresupuesto
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.observacionesEnElPresupuesto
+                    ? element.budgetDifferences.observacionesEnElPresupuesto
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.observacionesEnElPresupuesto
+                    ? element.observacionesEnElPresupuesto
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultObservacionesEnElPresupuesto>
+              {{
+                element.observacionesEnElPresupuesto
+                  ? element.observacionesEnElPresupuesto
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="fechaDeTerminoDeRep">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            FECHA DE TERMINO DE REP
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Fecha de término de rep.
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.fechaDeTerminoDeRep
-                ? (element.fechaDeTerminoDeRep | date: "d/M/y")
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.fechaDeTerminoDeRep;
+                else defaultFechaDeTerminoDeRep
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.fechaDeTerminoDeRep
+                    ? (element.budgetDifferences.fechaDeTerminoDeRep.toMillis()
+                      | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.fechaDeTerminoDeRep
+                    ? (element.fechaDeTerminoDeRep | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultFechaDeTerminoDeRep>
+              {{
+                element.fechaDeTerminoDeRep
+                  ? (element.fechaDeTerminoDeRep | date: "dd/MM/yyyy")
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="fechaUltimoInput">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            FECHA ULTIMO INPUT
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Fecha último Input
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.fechaUltimoInput
-                ? (element.fechaUltimoInput | date: "d/M/y")
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.fechaUltimoInput;
+                else defaultFechaUltimoInput
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.fechaUltimoInput
+                    ? (element.budgetDifferences.fechaUltimoInput.toMillis()
+                      | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.fechaUltimoInput
+                    ? (element.fechaUltimoInput | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultFechaUltimoInput>
+              {{
+                element.fechaUltimoInput
+                  ? (element.fechaUltimoInput | date: "dd/MM/yyyy")
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="motivoDeInput">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            MOTIVO DE INPUT
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Motivo de Input
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.motivoDeInput ? element.motivoDeInput : "---" }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.motivoDeInput;
+                else defaultMotivoDeInput
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.motivoDeInput
+                    ? element.budgetDifferences.motivoDeInput
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.motivoDeInput ? element.motivoDeInput : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultMotivoDeInput>
+              {{ element.motivoDeInput ? element.motivoDeInput : "---" }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="fechaDeFactDeTaller">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            FECHA DE FACT DE TALLER
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Fecha de fact. Taller
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.fechaDeFactDeTaller
-                ? (element.fechaDeFactDeTaller | date: "d/M/y")
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.fechaDeFactDeTaller;
+                else defaultFechaDeFactDeTaller
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.fechaDeFactDeTaller
+                    ? (element.budgetDifferences.fechaDeFactDeTaller.toMillis()
+                      | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.fechaDeFactDeTaller
+                    ? (element.fechaDeFactDeTaller | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultFechaDeFactDeTaller>
+              {{
+                element.fechaDeFactDeTaller
+                  ? (element.fechaDeFactDeTaller | date: "dd/MM/yyyy")
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="costo$ServiciosCliente">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            COSTO $ SERVICIOS CLIENTE
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Costo $ servicios cliente
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.costo$ServiciosCliente
-                ? element.costo$ServiciosCliente
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.costo$ServiciosCliente;
+                else defaultCosto$ServiciosCliente
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.costo$ServiciosCliente
+                    ? element.budgetDifferences.costo$ServiciosCliente
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.costo$ServiciosCliente
+                    ? element.costo$ServiciosCliente
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultCosto$ServiciosCliente>
+              {{
+                element.costo$ServiciosCliente
+                  ? element.costo$ServiciosCliente
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="costo$ServiciosDeOperacion">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            COSTO $ SERVICIOS DE OPERACION
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Costo $ servicios opereración
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.costo$ServiciosDeOperacion
-                ? element.costo$ServiciosDeOperacion
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.costo$ServiciosDeOperacion;
+                else defaultCosto$ServiciosDeOperacion
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.costo$ServiciosDeOperacion
+                    ? element.budgetDifferences.costo$ServiciosDeOperacion
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.costo$ServiciosDeOperacion
+                    ? element.costo$ServiciosDeOperacion
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultCosto$ServiciosDeOperacion>
+              {{
+                element.costo$ServiciosDeOperacion
+                  ? element.costo$ServiciosDeOperacion
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="rentabilidadServiciosPercent">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            RENTABILIDAD SERVICIOS %
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Rentabilidad servicios 100%
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.rentabilidadServiciosPercent
-                ? element.rentabilidadServiciosPercent
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.rentabilidadServiciosPercent;
+                else defaultRentabilidadServiciosPercent
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.rentabilidadServiciosPercent
+                    ? element.budgetDifferences.rentabilidadServiciosPercent
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.rentabilidadServiciosPercent
+                    ? element.rentabilidadServiciosPercent
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultRentabilidadServiciosPercent>
+              {{
+                element.rentabilidadServiciosPercent
+                  ? element.rentabilidadServiciosPercent
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="costo$RepuestosCLIENTE">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            COSTO $ REPUESTOS CLIENTE
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Costo $ repuestos cliente
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.costo$RepuestosCLIENTE
-                ? element.costo$RepuestosCLIENTE
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.costo$RepuestosCLIENTE;
+                else defaultCosto$RepuestosCLIENTE
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.costo$RepuestosCLIENTE
+                    ? element.budgetDifferences.costo$RepuestosCLIENTE
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.costo$RepuestosCLIENTE
+                    ? element.costo$RepuestosCLIENTE
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultCosto$RepuestosCLIENTE>
+              {{
+                element.costo$RepuestosCLIENTE
+                  ? element.costo$RepuestosCLIENTE
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="costo$RepuestosOperacion">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            COSTO $ REPUESTOS OPERACION
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Costo $ repuestos oper.
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.costo$RepuestosOperacion
-                ? element.costo$RepuestosOperacion
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.costo$RepuestosOperacion;
+                else defaultCosto$RepuestosOperacion
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.costo$RepuestosOperacion
+                    ? element.budgetDifferences.costo$RepuestosOperacion
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.costo$RepuestosOperacion
+                    ? element.costo$RepuestosOperacion
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultCosto$RepuestosOperacion>
+              {{
+                element.costo$RepuestosOperacion
+                  ? element.costo$RepuestosOperacion
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="rentabilidadRepuestosPercent">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            RENTABILIDAD REPUESTOS %
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Rentabilidad repuestos 100%
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.rentabilidadRepuestosPercent
-                ? element.rentabilidadRepuestosPercent
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.rentabilidadRepuestosPercent;
+                else defaultRentabilidadRepuestosPercent
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.rentabilidadRepuestosPercent
+                    ? element.budgetDifferences.rentabilidadRepuestosPercent
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.rentabilidadRepuestosPercent
+                    ? element.rentabilidadRepuestosPercent
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultRentabilidadRepuestosPercent>
+              {{
+                element.rentabilidadRepuestosPercent
+                  ? element.rentabilidadRepuestosPercent
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
@@ -761,204 +2272,650 @@
             *matHeaderCellDef
             class="table__cell observaciones-taller"
           >
-            OBSERVACIONES TALLER
+            Observaciones taller
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.observacionesTaller ? element.observacionesTaller : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.observacionesTaller;
+                else defaultObservacionesTaller
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.observacionesTaller
+                    ? element.budgetDifferences.observacionesTaller
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.observacionesTaller
+                    ? element.observacionesTaller
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultObservacionesTaller>
+              {{
+                element.observacionesTaller
+                  ? element.observacionesTaller
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="realDevueltoAServicios">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            REAL DEVUELTO A SERVICIOS
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Real devuelto a servicios
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.realDevueltoAServicios
-                ? element.realDevueltoAServicios
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.realDevueltoAServicios;
+                else defaultRealDevueltoAServicios
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.realDevueltoAServicios
+                    ? element.budgetDifferences.realDevueltoAServicios
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.realDevueltoAServicios
+                    ? element.realDevueltoAServicios
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultRealDevueltoAServicios>
+              {{
+                element.realDevueltoAServicios
+                  ? element.realDevueltoAServicios
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="diferenciaServicios">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            DIFERENCIAS SERVICIOS
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Diferencia servicios
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.diferenciaServicios ? element.diferenciaServicios : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.diferenciaServicios;
+                else defaultDiferenciaServicios
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.diferenciaServicios
+                    ? element.budgetDifferences.diferenciaServicios
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.diferenciaServicios
+                    ? element.diferenciaServicios
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultDiferenciaServicios>
+              {{
+                element.diferenciaServicios
+                  ? element.diferenciaServicios
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="realDevueltoARepuestos">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            REAL DEVUELTO A REPUESTOS
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Real devuelto a repuestos
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.realDevueltoARepuestos
-                ? element.realDevueltoARepuestos
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.realDevueltoARepuestos;
+                else defaultRealDevueltoARepuestos
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.realDevueltoARepuestos
+                    ? element.budgetDifferences.realDevueltoARepuestos
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.realDevueltoARepuestos
+                    ? element.realDevueltoARepuestos
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultRealDevueltoARepuestos>
+              {{
+                element.realDevueltoARepuestos
+                  ? element.realDevueltoARepuestos
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="diferenciaRepuestos">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            DIFERENCIA REPUESTOS
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Diferencia repuestos
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.diferenciaRepuestos ? element.diferenciaRepuestos : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.diferenciaRepuestos;
+                else defaultDiferenciaRepuestos
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.diferenciaRepuestos
+                    ? element.budgetDifferences.diferenciaRepuestos
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.diferenciaRepuestos
+                    ? element.diferenciaRepuestos
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultDiferenciaRepuestos>
+              {{
+                element.diferenciaRepuestos
+                  ? element.diferenciaRepuestos
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="totalVVFacturadoUS$">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            TOTAL VV FACTURADO US$
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Total facturado US$
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.totalVVFacturadoUS$ ? element.totalVVFacturadoUS$ : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.totalVVFacturadoUS$;
+                else defaultTotalVVFacturadoUS$
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.totalVVFacturadoUS$
+                    ? element.budgetDifferences.totalVVFacturadoUS$
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.totalVVFacturadoUS$
+                    ? element.totalVVFacturadoUS$
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultTotalVVFacturadoUS$>
+              {{
+                element.totalVVFacturadoUS$
+                  ? element.totalVVFacturadoUS$
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="mesFactVenta">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            MES FACT VENTA
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Mes Fact. Venta
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.mesFactVenta
-                ? (element.mesFactVenta | date: "d/M/y")
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.mesFactVenta;
+                else defaultMesFactVenta
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.mesFactVenta
+                    ? (element.budgetDifferences.mesFactVenta.toMillis()
+                      | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.mesFactVenta
+                    ? (element.mesFactVenta | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultMesFactVenta>
+              {{
+                element.mesFactVenta
+                  ? (element.mesFactVenta | date: "dd/MM/yyyy")
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="percentHorasSTDvsHorasDBS">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            % HORAS STD VS HORAS DBS
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            % Horas STD VS Horas DBS
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.percentHorasSTDvsHorasDBS
-                ? element.percentHorasSTDvsHorasDBS
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.percentHorasSTDvsHorasDBS;
+                else defaultPercentHorasSTDvsHorasDBS
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.percentHorasSTDvsHorasDBS
+                    ? element.budgetDifferences.percentHorasSTDvsHorasDBS
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.percentHorasSTDvsHorasDBS
+                    ? element.percentHorasSTDvsHorasDBS
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultPercentHorasSTDvsHorasDBS>
+              {{
+                element.percentHorasSTDvsHorasDBS
+                  ? element.percentHorasSTDvsHorasDBS
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="fechaFirstLabour">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            FECHA FIRST LABOUR
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Fecha First Labor
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.fechaFirstLabour
-                ? (element.fechaFirstLabour | date: "d/M/y")
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.fechaFirstLabour;
+                else defaultFechaFirstLabour
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.fechaFirstLabour
+                    ? (element.budgetDifferences.fechaFirstLabour.toMillis()
+                      | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.fechaFirstLabour
+                    ? (element.fechaFirstLabour | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultFechaFirstLabour>
+              {{
+                element.fechaFirstLabour
+                  ? (element.fechaFirstLabour | date: "dd/MM/yyyy")
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="fechaLastLabour">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            FECHA LAST LABOUR
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Fecha Last Labor
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.fechaLastLabour
-                ? (element.fechaLastLabour | date: "d/M/y")
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.fechaLastLabour;
+                else defaultFechaLastLabour
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.fechaLastLabour
+                    ? (element.budgetDifferences.fechaLastLabour.toMillis()
+                      | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.fechaLastLabour
+                    ? (element.fechaLastLabour | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultFechaLastLabour>
+              {{
+                element.fechaLastLabour
+                  ? (element.fechaLastLabour | date: "dd/MM/yyyy")
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="diasDemoraFact">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            DIAS DEMORA FACT
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Días demora Fact.
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.diasDemoraFact ? element.diasDemoraFact : "---" }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.diasDemoraFact;
+                else defaultDiasDemoraFact
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.diasDemoraFact
+                    ? element.budgetDifferences.diasDemoraFact
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.diasDemoraFact ? element.diasDemoraFact : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultDiasDemoraFact>
+              {{ element.diasDemoraFact ? element.diasDemoraFact : "---" }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="diasFactLastLabour">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            DIAS FACT LAST LABOUR
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Días Fact. Last Labor
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.diasFactLastLabour ? element.diasFactLastLabour : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.diasFactLastLabour;
+                else defaultDiasFactLastLabour
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.diasFactLastLabour
+                    ? element.budgetDifferences.diasFactLastLabour
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.diasFactLastLabour
+                    ? element.diasFactLastLabour
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultDiasFactLastLabour>
+              {{
+                element.diasFactLastLabour ? element.diasFactLastLabour : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="elaborarPPTO">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            ELABORAR PPTO
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Elaborar PPTO
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.elaborarPPTO ? element.elaborarPPTO : "---" }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.elaborarPPTO;
+                else defaultElaborarPPTO
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.elaborarPPTO
+                    ? element.budgetDifferences.elaborarPPTO
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{ element.elaborarPPTO ? element.elaborarPPTO : "---" }}</span
+              >
+            </div>
+            <ng-template #defaultElaborarPPTO>
+              {{ element.elaborarPPTO ? element.elaborarPPTO : "---" }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="tipoDeComponente">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            TIPO DE COMPONENTE
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Tipo de componente
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.tipoDeComponente ? element.tipoDeComponente : "---" }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.tipoDeComponente;
+                else defaultTipoDeComponente
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.tipoDeComponente
+                    ? element.budgetDifferences.tipoDeComponente
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.tipoDeComponente ? element.tipoDeComponente : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultTipoDeComponente>
+              {{ element.tipoDeComponente ? element.tipoDeComponente : "---" }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="tipoAAorPandP">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            (TIPO AA//P&P)
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Tipo (AA//P&P)
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.tipoAAorPandP ? element.tipoAAorPandP : "---" }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.tipoAAorPandP;
+                else defaultTipoAAorPandP
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.tipoAAorPandP
+                    ? element.budgetDifferences.tipoAAorPandP
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.tipoAAorPandP ? element.tipoAAorPandP : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultTipoAAorPandP>
+              {{ element.tipoAAorPandP ? element.tipoAAorPandP : "---" }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="taller02">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            TALLER 02
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Taller 02
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.taller02 ? element.taller02 : "---" }}
+            <div
+              *ngIf="element.budgetDifferences?.taller02; else defaultTaller02"
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.taller02
+                    ? element.budgetDifferences.taller02
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{ element.taller02 ? element.taller02 : "---" }}</span
+              >
+            </div>
+            <ng-template #defaultTaller02>
+              {{ element.taller02 ? element.taller02 : "---" }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="diasDesdeAperturaChild">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            DIAS DESDE APERTURA CHILD
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Días desde apertura CHILD
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.diasDesdeAperturaChild
-                ? element.diasDesdeAperturaChild
-                : "---"
-            }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.diasDesdeAperturaChild;
+                else defaultDiasDesdeAperturaChild
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.diasDesdeAperturaChild
+                    ? element.budgetDifferences.diasDesdeAperturaChild
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.diasDesdeAperturaChild
+                    ? element.diasDesdeAperturaChild
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultDiasDesdeAperturaChild>
+              {{
+                element.diasDesdeAperturaChild
+                  ? element.diasDesdeAperturaChild
+                  : "---"
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="resumen">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">RESUMEN</th>
+          <th mat-header-cell *matHeaderCellDef class="table__head">Resumen</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.resumen ? element.resumen : "---" }}
+            <div
+              *ngIf="element.budgetDifferences?.resumen; else defaultResumen"
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.resumen
+                    ? (element.budgetDifferences.resumen.toMillis()
+                      | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.resumen
+                    ? (element.resumen | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultResumen>
+              {{
+                element.resumen === "PDTE"
+                  ? element.resumen
+                  : (element.resumen | date: "dd/MM/yyyy")
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="definicionDeCargos">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
+          <th mat-header-cell *matHeaderCellDef class="table__head">
             DEFINICION DE CARGOS
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
@@ -969,32 +2926,119 @@
         </ng-container>
 
         <ng-container matColumnDef="informe">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">INFORME</th>
+          <th mat-header-cell *matHeaderCellDef class="table__head">Informe</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.informe ? element.informe : "---" }}
+            <div
+              *ngIf="element.budgetDifferences?.informe; else defaultInforme"
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.informe
+                    ? (element.budgetDifferences.informe.toMillis()
+                      | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.informe
+                    ? (element.informe | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultInforme>
+              {{
+                element.informe === "PDTE"
+                  ? element.informe
+                  : (element.informe | date: "dd/MM/yyyy")
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="cotizacionFesa">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            COTIZACION FESA
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Cotización FESA
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.cotizacionFesa ? element.cotizacionFesa : "---" }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.cotizacionFesa;
+                else defaultCotizacionFesa
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.cotizacionFesa
+                    ? (element.budgetDifferences.cotizacionFesa.toMillis()
+                      | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.cotizacionFesa
+                    ? (element.cotizacionFesa | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultCotizacionFesa>
+              {{
+                element.cotizacionFesa === "PDTE"
+                  ? element.cotizacionFesa
+                  : (element.cotizacionFesa | date: "dd/MM/yyyy")
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="cotizacionText">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
-            COTIZACION TEXT
+          <th mat-header-cell *matHeaderCellDef class="table__head">
+            Cotización TEXT
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.cotizacionText ? element.cotizacionText : "---" }}
+            <div
+              *ngIf="
+                element.budgetDifferences?.cotizacionText;
+                else defaultCotizacionText
+              "
+            >
+              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
+                ><mat-icon>dns</mat-icon
+                >{{
+                  element.budgetDifferences.cotizacionText
+                    ? (element.budgetDifferences.cotizacionText.toMillis()
+                      | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              ><br />
+              <span class="upgrade upgrade--replacement" matTooltip="Excel"
+                ><mat-icon>post_add</mat-icon
+                >{{
+                  element.cotizacionText
+                    ? (element.cotizacionText | date: "dd/MM/yyyy")
+                    : "---"
+                }}</span
+              >
+            </div>
+            <ng-template #defaultCotizacionText>
+              {{
+                element.cotizacionText === "PDTE"
+                  ? element.cotizacionText
+                  : (element.cotizacionText | date: "dd/MM/yyyy")
+              }}
+            </ng-template>
           </td>
         </ng-container>
 
         <ng-container matColumnDef="statusFacturacion">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
+          <th mat-header-cell *matHeaderCellDef class="table__head">
             STATUS FACTURACIÓN
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
@@ -1002,29 +3046,29 @@
           </td>
         </ng-container>
 
-        <ng-container matColumnDef="excelid">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">ID</th>
+        <!-- <ng-container matColumnDef="excelid">
+          <th mat-header-cell *matHeaderCellDef class="table__head">ID</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.excelid ? element.excelid : "---" }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="clave">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">CLAVE</th>
+          <th mat-header-cell *matHeaderCellDef class="table__head">CLAVE</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.clave ? element.clave : "---" }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="obj">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">OBJ</th>
+          <th mat-header-cell *matHeaderCellDef class="table__head">OBJ</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.obj ? element.obj : "---" }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="diasPPTO">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
+          <th mat-header-cell *matHeaderCellDef class="table__head">
             DIAS PPTO
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
@@ -1033,30 +3077,30 @@
         </ng-container>
 
         <ng-container matColumnDef="mesTer">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">MES TER</th>
+          <th mat-header-cell *matHeaderCellDef class="table__head">MES TER</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.mesTer ? element.mesTer : "---" }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="anio">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">AÑO</th>
+          <th mat-header-cell *matHeaderCellDef class="table__head">AÑO</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
             {{ element.anio ? element.anio : "---" }}
           </td>
         </ng-container>
 
         <ng-container matColumnDef="fechaLPD">
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
+          <th mat-header-cell *matHeaderCellDef class="table__head">
             FECHA LPD
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.fechaLPD ? (element.fechaLPD | date: "d/M/y") : "---" }}
+            {{ element.fechaLPD ? (element.fechaLPD | date: "dd/MM/yyyy") : "---" }}
           </td>
-        </ng-container>
+        </ng-container> -->
 
         <ng-container matColumnDef="actions" stickyEnd>
-          <th mat-header-cell *matHeaderCellDef class="table__cell">
+          <th mat-header-cell *matHeaderCellDef class="table__head">
             Acciones
           </th>
           <td mat-cell *matCellDef="let element; let i = index">
@@ -1089,13 +3133,13 @@
         ></tr>
       </table>
     </div>
-    <mat-paginator
+    <!-- <mat-paginator
       #budgetsDailyEntriesPaginator
       class="ms-paginator"
       [pageSizeOptions]="[5, 10, 20]"
       showFirstLastButtons
     >
-    </mat-paginator>
+    </mat-paginator> -->
   </div>
 
   <div class="footer">

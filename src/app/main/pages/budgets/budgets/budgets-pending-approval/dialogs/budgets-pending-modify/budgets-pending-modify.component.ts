@@ -5,6 +5,8 @@ import {
   FormArray,
   FormBuilder,
   Validators,
+  AbstractControl,
+  ControlContainer,
 } from '@angular/forms';
 import {
   ModificationReasonEntry,
@@ -147,5 +149,15 @@ export class BudgetsPendingModifyComponent implements OnInit {
 
   deleteAdditional(i: number) {
     this.additionalForms.removeAt(i);
+  }
+
+  notSelectedValidator(control: AbstractControl): { [key: string]: boolean } {
+    console.log(control.value);
+
+    if (typeof control.value === 'string' && control.value !== '') {
+      return { notSelected: true };
+    } else {
+      return null;
+    }
   }
 }

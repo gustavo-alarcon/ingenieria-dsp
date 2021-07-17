@@ -59,6 +59,7 @@ export class BudgetsPendingApprovalComponent implements OnInit {
     'totalvvPPTOUS$',
     'reparacion60',
     'fechaReleasedIoChild',
+    'motivoDeModificacion',
     'actions',
   ];
 
@@ -213,6 +214,7 @@ export class BudgetsPendingApprovalComponent implements OnInit {
         });
 
         this.tableData.filterPredicate = this.customFilterPredicate();
+        console.log(this.tableData.data);
 
         this.loading.next(false);
       });
