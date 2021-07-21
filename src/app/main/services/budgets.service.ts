@@ -42,7 +42,7 @@ export class BudgetsService {
       map((res) => {
         let isDuplicated = false;
         let canUpgrade = false;
-        let fields: Partial<Budget>;
+        let fields: Partial<Budget> = {};
 
         if (res.length) {
           // Duplicated entry
@@ -57,7 +57,7 @@ export class BudgetsService {
         return {
           isDuplicated: isDuplicated,
           canUpgrade: canUpgrade,
-          budgetId: res[0].id,
+          budgetId: res[0] ? res[0].id : null,
           fields: fields,
           applyUpgrade: false,
         };
@@ -714,6 +714,12 @@ export class BudgetsService {
         currentBudget.id = budgetsDocRef.id;
 
         if (!currentBudget['duplicated']) {
+          delete currentBudget['checkUpgrade'];
+          delete currentBudget['applyUpgrade'];
+          delete currentBudget['duplicated'];
+          delete currentBudget['budgetId'];
+          delete currentBudget['budgetDifferences'];
+
           batch.set(budgetsDocRef, currentBudget);
         } else if (currentBudget['applyUpgrade']) {
           const diffKeys = Object.keys(currentBudget['budgetDifferences']);
