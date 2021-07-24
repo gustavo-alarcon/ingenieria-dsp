@@ -817,7 +817,7 @@ export class BudgetsService {
     }
   }
 
-  updateRejectionReason(
+updateRejectionReason(
     id: string,
     reason: rejectionReasonForm,
     status: string,
@@ -838,8 +838,15 @@ export class BudgetsService {
       createdAt: new Date(),
     };
       
+    // data = {
+    //   motivoDelRechazo: rejectionData,
+    //   statusPresupuesto: status,
+    // };
+
     data = {
-      motivoDelRechazo: rejectionData,
+      fechaDeAprobacionORechazo: firebase.default.firestore.FieldValue.serverTimestamp(),
+      motivoDelRechazo: reason.rejectionReason.name,
+      rechazadoPor: user,
       statusPresupuesto: status,
     };
 
@@ -888,14 +895,15 @@ export class BudgetsService {
       `/db/ferreyros/budgets/${id}`
     );
 
-    const approvedData: ApprovedEntry = {
-      createdBy: user,
-      createdAt: firebase.default.firestore.FieldValue.serverTimestamp(),
-    };
+    // const approvedData: ApprovedEntry = {
+    //   createdBy: user,
+    //   createdAt: firebase.default.firestore.FieldValue.serverTimestamp(),
+    // };
 
     const data = {
-      fechaDeAprobacionORechazo: approvedData,
+      fechaDeAprobacionORechazo:  firebase.default.firestore.FieldValue.serverTimestamp(),
       statusPresupuesto: status,
+      aprobadoPor: user
     };
 
     batch.update(docRef, data);
@@ -1047,17 +1055,20 @@ export class BudgetsService {
         tempArray.push(data);
       }
     }
+
     if (budget.fechaDeAprobacionORechazo) {
-      const fecha = this.getStringFromTimestamp(budget.fechaAperturaChild);
+      const fecha = this.getStringFromTimestamp(budget.fechaDeAprobacionORechazo);
       if (fecha !== '---') {
         const data: BudgetHistoryDate = {
           type: 'Fecha apertura child',
           date: fecha,
-          createBy: null,
+          createBy: budget.aprobadoPor ? budget.aprobadoPor : budget.rechazadoPor,
+          description: budget.rechazadoPor ? budget.motivoDelRechazo : null
         };
         tempArray.push(data);
       }
     }
+
     if (budget.fechaDeFactDeTaller) {
       const fecha = this.getStringFromTimestamp(budget.fechaDeFactDeTaller);
       if (fecha !== '---') {
@@ -1230,22 +1241,6 @@ export class BudgetsService {
           date: fecha,
           createBy: usuario,
           description: budget.motivoDeModificacion04.name,
-        };
-        tempArray.push(data);
-      }
-    }
-
-    if (budget.motivoDelRechazo) {
-      const fecha = this.getStringFromTimestamp(
-        budget.motivoDelRechazo.createdAt
-      );
-      const usuario = budget.motivoDelRechazo.createdBy;
-      if (fecha !== '---') {
-        const data: BudgetHistoryDate = {
-          type: 'Fecha de rechazo',
-          date: fecha,
-          createBy: usuario,
-          description: budget.motivoDelRechazo.detail,
         };
         tempArray.push(data);
       }
