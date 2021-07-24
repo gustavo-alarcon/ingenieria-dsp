@@ -40,9 +40,11 @@ export interface Budget {
   detalleDeModificacion04: string;
   // Check "statusPresupuesto" to know if it is approved or rejected
   fechaDeAprobacionORechazo: Date & firebase.default.firestore.Timestamp;
+  aprobadoPor?: User,
+  rechazadoPor?: User,
   // Defines the state of the budget
   statusPresupuesto: string;
-  motivoDelRechazo: RejectionReasonsEntry;
+  motivoDelRechazo: string;
   detalleDelRechazo: string;
   vv$servicios: number;
   vv$adicionalesServicios: number;
