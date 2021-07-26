@@ -1060,7 +1060,7 @@ updateRejectionReason(
       const fecha = this.getStringFromTimestamp(budget.fechaDeAprobacionORechazo);
       if (fecha !== '---') {
         const data: BudgetHistoryDate = {
-          type: 'Fecha apertura child',
+          type: 'Fecha Aprobación/Rechazo',
           date: fecha,
           createBy: budget.aprobadoPor ? budget.aprobadoPor : budget.rechazadoPor,
           description: budget.rechazadoPor ? budget.motivoDelRechazo : null
