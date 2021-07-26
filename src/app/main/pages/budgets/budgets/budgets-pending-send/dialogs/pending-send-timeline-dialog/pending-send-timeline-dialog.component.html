@@ -23,12 +23,20 @@
                 {{ item.createBy ? item.createBy.name : "---" }}
             </div>
         </div>
-        <div *ngIf="item.description">
+        <div *ngIf="item.type === 'Fecha última modificación 1' || item.type === 'Fecha última modificación 2' || item.type === 'Fecha última modificación 3'">
             <div class="row">
                 <div class="col col--date">
                     <img class="flecha" src="../../../../../../../../assets/img/flecha.png" alt="" /> Motivo de modificación
                 </div>
                 <div class="col col--date">{{ item.description }}</div>
+            </div>
+        </div>
+        <div *ngIf="item.type === 'Fecha Aprobación/Rechazo'">
+            <div class="row">
+                <div class="col col--date" *ngIf="item.description != null">
+                    <img class="flecha" src="../../../../../../../../assets/img/flecha.png" alt="" /> Motivo del rechazo
+                </div>
+                <div class="col col--date" *ngIf="item.description != null">{{ item.description }}</div>
             </div>
         </div>
     </div>
