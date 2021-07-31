@@ -18,6 +18,11 @@ import { Observable, of } from 'rxjs';
 import * as firebase from 'firebase/app';
 import moment from 'moment';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { element } from 'protractor';
+import { TestBed } from '@angular/core/testing';
+import { B } from '@angular/cdk/keycodes';
+
+
 
 @Injectable({
   providedIn: 'root',
@@ -775,7 +780,7 @@ export class BudgetsService {
       name: reason.modificationReason.name,
       createdBy: user,
       additionals: reason.additionals,
-      createdAt: new Date(),
+      createdAt: firebase.default.firestore.FieldValue.serverTimestamp(),
     };
 
     let data;
@@ -1046,10 +1051,13 @@ updateRejectionReason(
     //Verificar fecha
     if (budget.fechaAperturaChild) {
       const fecha = this.getStringFromTimestamp(budget.fechaAperturaChild);
+      const milliSeconds = budget.fechaAperturaChild.seconds * 1000;
+      
       if (fecha !== '---') {
         const data: BudgetHistoryDate = {
           type: 'Fecha apertura child',
           date: fecha,
+          milli: milliSeconds,
           createBy: null,
         };
         tempArray.push(data);
@@ -1058,23 +1066,45 @@ updateRejectionReason(
 
     if (budget.fechaDeAprobacionORechazo) {
       const fecha = this.getStringFromTimestamp(budget.fechaDeAprobacionORechazo);
+      const milliSeconds = budget.fechaDeAprobacionORechazo.seconds * 1000;
+      
+
+      
+    
       if (fecha !== '---') {
-        const data: BudgetHistoryDate = {
-          type: 'Fecha Aprobación/Rechazo',
-          date: fecha,
-          createBy: budget.aprobadoPor ? budget.aprobadoPor : budget.rechazadoPor,
-          description: budget.rechazadoPor ? budget.motivoDelRechazo : null
-        };
-        tempArray.push(data);
+      
+        
+        if( budget.rechazadoPor){
+          const data: BudgetHistoryDate = {
+            type:'Fecha Rechazo',
+            date: fecha,
+            milli: milliSeconds,
+            createBy: budget.rechazadoPor,
+            description: budget.motivoDelRechazo
+          };
+          tempArray.push(data);
+        }
+        if( budget.aprobadoPor){
+          const data: BudgetHistoryDate = {
+            type:'Fecha Aprobación',
+            date: fecha,
+            milli: milliSeconds,
+            createBy: budget.aprobadoPor,
+          };
+          tempArray.push(data);
+        }
+       
       }
     }
 
     if (budget.fechaDeFactDeTaller) {
       const fecha = this.getStringFromTimestamp(budget.fechaDeFactDeTaller);
+      const milliSeconds = budget.fechaDeFactDeTaller.seconds * 1000;
       if (fecha !== '---') {
         const data: BudgetHistoryDate = {
           type: 'Fecha de facturación de taller',
           date: fecha,
+          milli: milliSeconds,
           createBy: null,
         };
         tempArray.push(data);
@@ -1082,10 +1112,12 @@ updateRejectionReason(
     }
     if (budget.fechaDeTerminoDeRep) {
       const fecha = this.getStringFromTimestamp(budget.fechaDeTerminoDeRep);
+      const milliSeconds = budget.fechaDeTerminoDeRep.seconds * 1000;
       if (fecha !== '---') {
         const data: BudgetHistoryDate = {
           type: 'Fecha de Termino de resp',
           date: fecha,
+          milli: milliSeconds,
           createBy: null,
         };
         tempArray.push(data);
@@ -1093,10 +1125,12 @@ updateRejectionReason(
     }
     if (budget.fechaDefinicionDeCargos) {
       const fecha = this.getStringFromTimestamp(budget.fechaDefinicionDeCargos);
+      const milliSeconds = budget.fechaDefinicionDeCargos.seconds * 1000;
       if (fecha !== '---') {
         const data: BudgetHistoryDate = {
           type: 'Fecha definición de cargos',
           date: fecha,
+          milli: milliSeconds,
           createBy: null,
         };
         tempArray.push(data);
@@ -1105,10 +1139,12 @@ updateRejectionReason(
 
     if (budget.fechaFirstLabour) {
       const fecha = this.getStringFromTimestamp(budget.fechaFirstLabour);
+      const milliSeconds = budget.fechaFirstLabour.seconds * 1000;
       if (fecha !== '---') {
         const data: BudgetHistoryDate = {
           type: 'Fecha first labour',
           date: fecha,
+          milli:milliSeconds,
           createBy: null,
         };
         tempArray.push(data);
@@ -1117,10 +1153,12 @@ updateRejectionReason(
 
     if (budget.fechaLPD) {
       const fecha = this.getStringFromTimestamp(budget.fechaLPD);
+      const milliSeconds = budget.fechaLPD.seconds * 1000;
       if (fecha !== '---') {
         const data: BudgetHistoryDate = {
           type: 'Fecha LPD',
           date: fecha,
+          milli:milliSeconds,
           createBy: null,
         };
         tempArray.push(data);
@@ -1129,10 +1167,12 @@ updateRejectionReason(
 
     if (budget.fechaLastLabour) {
       const fecha = this.getStringFromTimestamp(budget.fechaLastLabour);
+      const milliSeconds = budget.fechaLastLabour.seconds * 1000;
       if (fecha !== '---') {
         const data: BudgetHistoryDate = {
           type: 'Fecha last labour',
           date: fecha,
+          milli:milliSeconds,
           createBy: null,
         };
         tempArray.push(data);
@@ -1140,10 +1180,12 @@ updateRejectionReason(
     }
     if (budget.fechaReleasedIoChild) {
       const fecha = this.getStringFromTimestamp(budget.fechaReleasedIoChild);
+      const milliSeconds = budget.fechaReleasedIoChild.seconds * 1000;
       if (fecha !== '---') {
         const data: BudgetHistoryDate = {
           type: 'Fecha released io child',
           date: fecha,
+          milli:milliSeconds,
           createBy: null,
         };
         tempArray.push(data);
@@ -1153,10 +1195,12 @@ updateRejectionReason(
       const fecha = this.getStringFromTimestamp(
         budget.fechaUltimoEnvioDocumentoADM
       );
+      const milliSeconds = budget.fechaUltimoEnvioDocumentoADM.seconds * 1000;
       if (fecha !== '---') {
         const data: BudgetHistoryDate = {
           type: 'Fecha último envío dcto (ADM)',
           date: fecha,
+          milli:milliSeconds,
           createBy: null,
         };
         tempArray.push(data);
@@ -1164,10 +1208,12 @@ updateRejectionReason(
     }
     if (budget.fechaUltimoEnvioPPTO) {
       const fecha = this.getStringFromTimestamp(budget.fechaUltimoEnvioPPTO);
+      const milliSeconds = budget.fechaUltimoEnvioPPTO.seconds * 1000;
       if (fecha !== '---') {
         const data: BudgetHistoryDate = {
           type: 'Fecha último envío PPTO',
           date: fecha,
+          milli:milliSeconds,
           createBy: null,
         };
         tempArray.push(data);
@@ -1176,10 +1222,12 @@ updateRejectionReason(
 
     if (budget.fechaUltimoInput) {
       const fecha = this.getStringFromTimestamp(budget.fechaUltimoInput);
+      const milliSeconds = budget.fechaUltimoInput.seconds * 1000;
       if (fecha !== '---') {
         const data: BudgetHistoryDate = {
           type: 'Fecha último input',
           date: fecha,
+          milli:milliSeconds,
           createBy: null,
         };
         tempArray.push(data);
@@ -1188,10 +1236,12 @@ updateRejectionReason(
 
     if (budget.fechaUltimoListado) {
       const fecha = this.getStringFromTimestamp(budget.fechaUltimoListado);
+      const milliSeconds = budget.fechaUltimoListado.seconds * 1000;
       if (fecha !== '---') {
         const data: BudgetHistoryDate = {
           type: 'Fecha último listado',
           date: fecha,
+          milli:milliSeconds,
           createBy: null,
         };
         tempArray.push(data);
@@ -1202,11 +1252,14 @@ updateRejectionReason(
       const fecha = this.getStringFromTimestamp(
         budget.motivoDeModificacion02.createdAt
       );
+      const milliSeconds = budget.motivoDeModificacion02.createdAt['seconds'] * 1000;
+    
       const usuario = budget.motivoDeModificacion02.createdBy;
       if (fecha !== '---') {
         const data: BudgetHistoryDate = {
           type: 'Fecha última modificación 1',
           date: fecha,
+          milli: milliSeconds,
           createBy: usuario,
           description: budget.motivoDeModificacion02.name,
         };
@@ -1218,11 +1271,14 @@ updateRejectionReason(
       const fecha = this.getStringFromTimestamp(
         budget.motivoDeModificacion03.createdAt
       );
+      const milliSeconds = budget.motivoDeModificacion03.createdAt['seconds'] * 1000;
+      
       const usuario = budget.motivoDeModificacion03.createdBy;
       if (fecha !== '---') {
         const data: BudgetHistoryDate = {
           type: 'Fecha última modificación 2',
           date: fecha,
+          milli: milliSeconds,
           createBy: usuario,
           description: budget.motivoDeModificacion03.name,
         };
@@ -1234,27 +1290,51 @@ updateRejectionReason(
       const fecha = this.getStringFromTimestamp(
         budget.motivoDeModificacion04.createdAt
       );
+      const milliSeconds = budget.motivoDeModificacion04.createdAt['seconds'] * 1000;
+
+
       const usuario = budget.motivoDeModificacion04.createdBy;
       if (fecha !== '---') {
         const data: BudgetHistoryDate = {
           type: 'Fecha última modificación 3',
           date: fecha,
+          milli: milliSeconds,
           createBy: usuario,
           description: budget.motivoDeModificacion04.name,
         };
         tempArray.push(data);
+       
       }
     }
 
-    return tempArray;
+    tempArray.sort( (a: any , b: any) => b.milli - a.milli)
+   
+  
+    return tempArray.sort();
   }
+
+  public compareNumbers(a, b) {
+    return a - b;
+  }
+
+
+  public TimestampDate( timestamp: any){
+       const seconds: any = timestamp;
+
+      //  if(seconds == null  || seconds.seconds <= 0) return '---'
+
+       const date = moment.utc(seconds.seconds * 1000);
+
+       return date;
+  }
+
 
   public getStringFromTimestamp(timestamp: any): string {
     const seconds: any = timestamp;
 
     // If date is unvalid or doesn't exist
     if (seconds == null || seconds.seconds <= 0) return '---';
-
+     
     const date: string = moment
       .utc(seconds.seconds * 1000)
       .format('DD/MM/YYYY HH:mm');

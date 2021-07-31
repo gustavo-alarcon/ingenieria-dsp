@@ -22,7 +22,12 @@
             <div class="col col--user">
                 {{ item.createBy ? item.createBy.name : "---" }}
             </div>
+            <div class="col col--user" *ngIf="item.description">
+                {{ item.description ? item.description : "---" }}
+            </div>
         </div>
+
+
         <div *ngIf="item.type === 'Fecha última modificación 1' || item.type === 'Fecha última modificación 2' || item.type === 'Fecha última modificación 3'">
             <div class="row">
                 <div class="col col--date">
@@ -31,12 +36,12 @@
                 <div class="col col--date">{{ item.description }}</div>
             </div>
         </div>
-        <div *ngIf="item.type === 'Fecha Aprobación/Rechazo'">
+        <div *ngIf="item.type === 'Fecha Rechazo'">
             <div class="row">
-                <div class="col col--date" *ngIf="item.description != null">
-                    <img class="flecha" src="../../../../../../../../assets/img/flecha.png" alt="" /> Motivo del rechazo
+                <div class="col col--date">
+                    <img class="flecha1" src="../../../../../../../../assets/img/flecha.png" alt="" /> Motivo del rechazo
                 </div>
-                <div class="col col--date" *ngIf="item.description != null">{{ item.description }}</div>
+                <div class="col col--date">{{ item.description }}</div>
             </div>
         </div>
     </div>

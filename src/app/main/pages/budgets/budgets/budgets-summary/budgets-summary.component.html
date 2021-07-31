@@ -239,10 +239,10 @@
 
                 <ng-container matColumnDef="tiempoObjetivoEnvioPPTO">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
-                        Tiempo objetivo envío PPTO.
+                        Tiempo objetivo envío PPTO
                     </th>
                     <td mat-cell *matCellDef="let element" class="table__cell">
-                        {{ element.tiempoObjetivoEnvioPPTO ? element.tiempoObjetivoEnvioPPTO : "---" }}
+                        {{ element.tiempoObjetivoEnvioPPTO ? (element.tiempoObjetivoEnvioPPTO.toDate() | date: "dd/MM/yyyy") : "---" }}
                     </td>
                 </ng-container>
 
