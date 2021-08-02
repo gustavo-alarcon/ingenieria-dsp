@@ -100,7 +100,7 @@ export interface Budget {
   diasPPTO: number;
   mesTer: number;
   anio: number;
-  fechaLPD: Date;
+  fechaLPD: Date & firebase.default.firestore.Timestamp;
   id?: any;
   afaObs?: string;
   fesaObs?: string;
@@ -134,7 +134,7 @@ export interface ModificationReasonEntry {
   name: string;
   createdBy: User;
   additionals: Array<Additional>;
-  createdAt: Date;
+  createdAt: firebase.default.firestore.FieldValue;
 }
 
 export interface modificationReasonForm {
@@ -159,5 +159,6 @@ export interface BudgetHistoryDate {
   description?: string;
   type: string;
   date: string;
+  milli: number;
   createBy: User;
 }

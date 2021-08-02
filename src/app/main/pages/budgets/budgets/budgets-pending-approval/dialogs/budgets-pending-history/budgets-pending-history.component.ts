@@ -24,8 +24,9 @@ export class BudgetsPendingHistoryComponent implements OnInit {
 
   ngOnInit(): void {
 
-
+    
     this.dateArray = this.budgetsService.getDateHistory(this.budget);
+  
   
     
     

@@ -59,7 +59,6 @@ export class BudgetsPendingApprovalComponent implements OnInit {
     'totalvvPPTOUS$',
     'reparacion60',
     'fechaReleasedIoChild',
-    'motivoDeModificacion',
     'actions',
   ];
 
@@ -315,7 +314,7 @@ export class BudgetsPendingApprovalComponent implements OnInit {
       'HORAS REALES',
       'TIEMPO OBJETIVO ENVIO PPTO',
       'DIAS RESTANTES ENVIO PPTO',
-      'NO. PPTOS MODIFICADOS O ADICIONALES',
+      'N°. PPTOS MODIFICADOS O ADICIONALES',
       'OBSERVACIONES EN EL PRESUPUESTO',
       'FECHA DE TERMINO DE REP',
       'FECHA ULTIMO INPUT',

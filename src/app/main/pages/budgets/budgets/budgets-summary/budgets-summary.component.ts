@@ -14,6 +14,8 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MatPaginator } from '@angular/material/paginator';
 import * as XLSX from 'xlsx';
 import moment from 'moment';
+import { BudgetsPendingHistoryComponent } from '../budgets-pending-approval/dialogs/budgets-pending-history/budgets-pending-history.component';
+
 
 @Component({
   selector: 'app-budgets-summary',
@@ -642,7 +644,13 @@ export class BudgetsSummaryComponent implements OnInit {
     this.MatDialog.open(BudgetsSummarySendDialogComponent);
   }
 
-  public timelineDialog(i: number) {}
+  public timelineDialog(element: Budget) {
+    const a = this.MatDialog.open(BudgetsPendingHistoryComponent, {
+      width: '90vw',
+      maxWidth: '700px',
+      data: element,
+    });
+  }
 
   daysLeft(budget: Budget): string {
     // Get the goal Date and convert it to a moment.js object
