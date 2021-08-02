@@ -15,6 +15,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MatPaginator } from '@angular/material/paginator';
 import * as XLSX from 'xlsx';
 import moment from 'moment';
+import { BudgetsPendingHistoryComponent } from '../budgets-pending-approval/dialogs/budgets-pending-history/budgets-pending-history.component';
 
 @Component({
   selector: 'app-budgets-pending-send',
@@ -585,6 +586,14 @@ export class BudgetsPendingSendComponent implements OnInit {
     return '---';
     }
     
+  }
+
+  public timelineDialog (element: Budget){
+    const a = this.MatDialog.open(BudgetsPendingHistoryComponent, {
+      width: '90vw',
+      maxWidth: '700px',
+      data: element,
+    });
   }
 
   
