@@ -9,11 +9,11 @@
     </div>
     <mat-divider></mat-divider>
     <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
-    
+
     <mat-dialog-content>
         <div class="main--wrapper" [formGroup]="form">
             <div class="file--upload__wrapper">
-                <mat-progress-bar class="loader" mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+                <!-- <mat-progress-bar class="loader" mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar> -->
                 <div class="file--upload--card">
                     <div class="file--upload--card__title">
                         <p>PRESUPUESTO</p>
