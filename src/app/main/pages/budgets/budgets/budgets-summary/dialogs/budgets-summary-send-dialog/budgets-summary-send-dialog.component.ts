@@ -215,6 +215,8 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
   }
 
   startUpload() {
+    this.loading.next(true);
+    
     // Calcular cantidad de archivos
     this.cantidadDeArchivos =
       this.budgetFilesList.length +
@@ -286,7 +288,7 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
     ).pipe(
       // takeUntil(this.stopReading$),
       map(([list]) => {
-        console.log(list);
+        this.loading.next(false);
       })
     ).subscribe()
 
