@@ -22,13 +22,12 @@ import {
   MatAutocompleteSelectedEvent,
 } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { BehaviorSubject, from, Observable, of, Subscription } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, from, Observable, of, Subscription } from 'rxjs';
+import { map, startWith, takeUntil } from 'rxjs/operators';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { finalize } from 'rxjs/operators';
 import { AngularFireStorage } from '@angular/fire/storage';
-
 
 @Component({
   selector: 'app-budgets-summary-send-dialog',
@@ -42,7 +41,6 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
 
   percentage: Observable<number>;
   downloadURL: Observable<string>;
-
 
   public emailCtrl: FormControl = new FormControl();
   public filteredEmails: Observable<string[]>;
@@ -73,6 +71,11 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
 
   // Form
   form: FormGroup;
+
+  cantidadDeArchivos: number = 0;
+  arrayObservablesArchivos: Array<
+    Observable<firebase.default.storage.UploadTaskSnapshot>
+  > = [];
 
   constructor(
     private _budgetService: BudgetsService,
@@ -116,7 +119,7 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
         });
       });
 
-      console.log(this.startUpload());
+    console.log(this.startUpload());
   }
 
   get subject() {
@@ -160,11 +163,11 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
     const broadcastList: BudgetsBroadcastList = this.broadcastLists.filter(
       (list) => list.name == event.option.viewValue
     )[0];
-   
+
     broadcastList.emailList.forEach((email: string) => {
       this.emails.push(email);
     });
-    
+
     // check this
     this.emailInput.nativeElement.value = '';
     this.emailCtrl.setValue(null);
@@ -211,72 +214,82 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
     this.loading.next(false);
   }
 
-  startUpload(){
+  startUpload() {
+    // Calcular cantidad de archivos
+    this.cantidadDeArchivos =
+      this.budgetFilesList.length +
+      this.reportFilesList.length +
+      this.quotationFilesList.length;
 
-  
+    this.budgetFilesList.forEach((doc: any) => {
+      const id = Math.random().toString(36).substring(2);
+      const file = doc;
+      const filePath = `/assets/PRESUPUESTO_${id}`;
+      const fileRef = this.storage.ref(filePath);
+      const task = this.storage.upload(filePath, file);
 
-  this.budgetFilesList.forEach( (doc:any) => {
-   console.log(doc)
-    
-    const id = Math.random().toString(36).substring(2)
-    const file = doc;
-    const filePath = `/assets/PRESUPUESTO_${id}`;
-    const fileRef = this.storage.ref(filePath);
-    const task = this.storage.upload(filePath, file);
+      // observe percentage changes
+      this.percentage = task.percentageChanges();
 
-    // observe percentage changes
-    this.percentage = task.percentageChanges();
+      // get notified when the download URL is available
 
-    // get notified when the download URL is available
+      this.arrayObservablesArchivos.push(
+        task
+          .snapshotChanges()
+          .pipe(finalize(() => (this.downloadURL = fileRef.getDownloadURL())))
+      );
+    });
 
-     task.snapshotChanges().pipe(
-      finalize(() => this.downloadURL = fileRef.getDownloadURL() )
-   )
-  .subscribe()
+    this.reportFilesList.forEach((doc: any) => {
+      console.log(doc);
+      const id = Math.random().toString(36).substring(2);
+      const file = doc;
+      const filePath = `/assets/INFORME_${id}`;
+      const fileRef = this.storage.ref(filePath);
+      const task = this.storage.upload(filePath, file);
 
-  })
+      // observe percentage changes
+      this.percentage = task.percentageChanges();
 
-  this.reportFilesList.forEach( (doc:any) => {
-    console.log(doc)
-    const id = Math.random().toString(36).substring(2)
-    const file = doc;
-    const filePath = `/assets/INFORME_${id}`;
-    const fileRef = this.storage.ref(filePath);
-    const task = this.storage.upload(filePath, file);
+      // get notified when the download URL is available
 
-    // observe percentage changes
-    this.percentage = task.percentageChanges();
+      this.arrayObservablesArchivos.push(
+        task
+          .snapshotChanges()
+          .pipe(finalize(() => (this.downloadURL = fileRef.getDownloadURL())))
+      );
+    });
 
-    // get notified when the download URL is available
+    this.quotationFilesList.forEach((doc: any) => {
+      console.log(doc);
+      const id = Math.random().toString(36).substring(2);
+      const file = doc;
+      const filePath = `/assets/COT_${id}`;
+      const fileRef = this.storage.ref(filePath);
+      const task = this.storage.upload(filePath, file);
 
-     task.snapshotChanges().pipe(
-      finalize(() => this.downloadURL = fileRef.getDownloadURL() )
-   )
-  .subscribe()
+      // observe percentage changes
+      this.percentage = task.percentageChanges();
 
-  })
+      // get notified when the download URL is available
 
-  this.quotationFilesList.forEach( (doc:any) => {
+      this.arrayObservablesArchivos.push(
+        task
+          .snapshotChanges()
+          .pipe(finalize(() => (this.downloadURL = fileRef.getDownloadURL())))
+      );
 
-    console.log(doc)
-    const id = Math.random().toString(36).substring(2)
-    const file = doc;
-    const filePath = `/assets/COT_${id}`;
-    const fileRef = this.storage.ref(filePath);
-    const task = this.storage.upload(filePath, file);
+    });
 
-    // observe percentage changes
-    this.percentage = task.percentageChanges();
-
-    // get notified when the download URL is available
-
-     task.snapshotChanges().pipe(
-      finalize(() => this.downloadURL = fileRef.getDownloadURL() )
-   )
-  .subscribe()
-
-  })
+    combineLatest(
+      this.arrayObservablesArchivos
+    ).pipe(
+      // takeUntil(this.stopReading$),
+      map(([list]) => {
+        console.log(list);
+      })
+    ).subscribe()
 
 
-}
+  }
 }
