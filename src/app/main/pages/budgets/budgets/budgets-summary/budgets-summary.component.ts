@@ -641,7 +641,9 @@ export class BudgetsSummaryComponent implements OnInit {
   }
 
   public sendDialog(element: any) {
-    this.MatDialog.open(BudgetsSummarySendDialogComponent);
+    this.MatDialog.open(BudgetsSummarySendDialogComponent, {
+      disableClose: true
+    });
   }
 
   public timelineDialog(element: Budget) {

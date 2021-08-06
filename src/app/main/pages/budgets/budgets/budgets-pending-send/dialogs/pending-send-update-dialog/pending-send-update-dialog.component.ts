@@ -16,7 +16,7 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { BudgetsBroadcastList } from 'src/app/main/models/budgets.model';
 import { map, startWith } from 'rxjs/operators';
@@ -28,6 +28,7 @@ import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { COMMA, ENTER, SPACE, TAB } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import moment from 'moment';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-pending-send-update-dialog',
@@ -86,7 +87,9 @@ export class PendingSendUpdateDialogComponent implements OnInit {
     public dialogRef: MatDialogRef<PendingSendUpdateDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Budget,
     private _formBuilder: FormBuilder,
-    private _budgetService: BudgetsService
+    private _budgetService: BudgetsService,
+    private matSnackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -231,6 +234,14 @@ export class PendingSendUpdateDialogComponent implements OnInit {
         .subscribe((batch: firebase.default.firestore.WriteBatch) => {
           batch.commit().then(() => {
             this.loading.next(false);
+            this.matSnackBar.open(
+              ' ✅ Archivo se modifico de forma correcta',
+              'Aceptar',
+              {
+                duration: 6000,
+              }
+            );
+            this.dialog.closeAll();
           });
         });
     }

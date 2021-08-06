@@ -26,6 +26,9 @@ import { BehaviorSubject, from, Observable, of, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { finalize } from 'rxjs/operators';
+import { AngularFireStorage } from '@angular/fire/storage';
+
 
 @Component({
   selector: 'app-budgets-summary-send-dialog',
@@ -36,6 +39,10 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
   public selectable: boolean = true;
   public removable: boolean = true;
   public separatorKeysCodes: number[] = [ENTER, COMMA, SPACE, TAB];
+
+  percentage: Observable<number>;
+  downloadURL: Observable<string>;
+
 
   public emailCtrl: FormControl = new FormControl();
   public filteredEmails: Observable<string[]>;
@@ -70,7 +77,8 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
   constructor(
     private _budgetService: BudgetsService,
     private breakpoint: BreakpointObserver,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private storage: AngularFireStorage
   ) {}
 
   public ngOnInit(): void {
@@ -107,6 +115,8 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
           );
         });
       });
+
+      console.log(this.startUpload());
   }
 
   get subject() {
@@ -200,4 +210,73 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
     });
     this.loading.next(false);
   }
+
+  startUpload(){
+
+  
+
+  this.budgetFilesList.forEach( (doc:any) => {
+   console.log(doc)
+    
+    const id = Math.random().toString(36).substring(2)
+    const file = doc;
+    const filePath = `/assets/PRESUPUESTO_${id}`;
+    const fileRef = this.storage.ref(filePath);
+    const task = this.storage.upload(filePath, file);
+
+    // observe percentage changes
+    this.percentage = task.percentageChanges();
+
+    // get notified when the download URL is available
+
+     task.snapshotChanges().pipe(
+      finalize(() => this.downloadURL = fileRef.getDownloadURL() )
+   )
+  .subscribe()
+
+  })
+
+  this.reportFilesList.forEach( (doc:any) => {
+    console.log(doc)
+    const id = Math.random().toString(36).substring(2)
+    const file = doc;
+    const filePath = `/assets/INFORME_${id}`;
+    const fileRef = this.storage.ref(filePath);
+    const task = this.storage.upload(filePath, file);
+
+    // observe percentage changes
+    this.percentage = task.percentageChanges();
+
+    // get notified when the download URL is available
+
+     task.snapshotChanges().pipe(
+      finalize(() => this.downloadURL = fileRef.getDownloadURL() )
+   )
+  .subscribe()
+
+  })
+
+  this.quotationFilesList.forEach( (doc:any) => {
+
+    console.log(doc)
+    const id = Math.random().toString(36).substring(2)
+    const file = doc;
+    const filePath = `/assets/COT_${id}`;
+    const fileRef = this.storage.ref(filePath);
+    const task = this.storage.upload(filePath, file);
+
+    // observe percentage changes
+    this.percentage = task.percentageChanges();
+
+    // get notified when the download URL is available
+
+     task.snapshotChanges().pipe(
+      finalize(() => this.downloadURL = fileRef.getDownloadURL() )
+   )
+  .subscribe()
+
+  })
+
+
+}
 }
