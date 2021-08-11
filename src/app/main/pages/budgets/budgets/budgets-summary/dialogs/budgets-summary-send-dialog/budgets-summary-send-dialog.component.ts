@@ -1,9 +1,10 @@
-import { BudgetsBroadcastList } from './../../../../../../models/budgets.model';
+import { BudgetsBroadcastList,Budget } from './../../../../../../models/budgets.model';
 import { BudgetsService } from 'src/app/main/services/budgets.service';
 import { COMMA, ENTER, SPACE, TAB } from '@angular/cdk/keycodes';
 import {
   Component,
   ElementRef,
+  Inject,
   IterableDiffers,
   OnInit,
   ViewChild,
@@ -13,9 +14,7 @@ import {
   FormGroup,
   FormControl,
   Validators,
-  ValidatorFn,
-  AbstractControl,
-  ValidationErrors,
+ 
 } from '@angular/forms';
 import {
   MatAutocomplete,
@@ -28,6 +27,9 @@ import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { finalize } from 'rxjs/operators';
 import { AngularFireStorage } from '@angular/fire/storage';
+import { UploadTaskComponent } from '../../../../../../../shared/components/upload-task/upload-task.component';
+// import { Budget } from '../../../../../../models/budgets.model';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-budgets-summary-send-dialog',
@@ -81,7 +83,9 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
     private _budgetService: BudgetsService,
     private breakpoint: BreakpointObserver,
     private fb: FormBuilder,
-    private storage: AngularFireStorage
+    @Inject(MAT_DIALOG_DATA) public data: Budget,
+    private storage: AngularFireStorage,
+    
   ) {}
 
   public ngOnInit(): void {
@@ -109,7 +113,6 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
         broadcastLists.forEach((broadcastList: BudgetsBroadcastList) => {
           this.broadcastLists.push(broadcastList);
           this.broadcastListsNames.push(broadcastList.name);
-
           this.filteredEmails = this.emailCtrl.valueChanges.pipe(
             startWith(null),
             map((email: string | null) =>
@@ -119,7 +122,7 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
         });
       });
 
-    console.log(this.startUpload());
+    console.log(this.data)
   }
 
   get subject() {
@@ -190,7 +193,12 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
       this.budgetFilesList.push(file);
     });
     this.loading.next(false);
+    console.log(fileList);
+   
   }
+
+
+ 
 
   public loadFilesForReport(fileList: FileList): void {
     this.loading.next(true);
@@ -215,7 +223,8 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
   }
 
   startUpload() {
-    this.loading.next(true);
+    
+
 
     // Calcular cantidad de archivos
     this.cantidadDeArchivos =
@@ -226,7 +235,7 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
     this.budgetFilesList.forEach((doc: any) => {
       const id = Math.random().toString(36).substring(2);
       const file = doc;
-      const filePath = `/assets/PRESUPUESTO_${id}`;
+      const filePath = `/budgets/v${this.data.versionCount}/${id}/PRESUPUESTO_${id}`;
       const fileRef = this.storage.ref(filePath);
       const task = this.storage.upload(filePath, file);
 
@@ -241,12 +250,12 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
           .pipe(finalize(() => (this.downloadURL = fileRef.getDownloadURL())))
       );
     });
-
+  
+    
     this.reportFilesList.forEach((doc: any) => {
-      console.log(doc);
       const id = Math.random().toString(36).substring(2);
       const file = doc;
-      const filePath = `/assets/INFORME_${id}`;
+      const filePath = `/budgets/v${this.data.versionCount}/${id}/INFORME_${id}`;
       const fileRef = this.storage.ref(filePath);
       const task = this.storage.upload(filePath, file);
 
@@ -254,19 +263,20 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
       this.percentage = task.percentageChanges();
 
       // get notified when the download URL is available
-
+      
       this.arrayObservablesArchivos.push(
         task
           .snapshotChanges()
           .pipe(finalize(() => (this.downloadURL = fileRef.getDownloadURL())))
       );
+
     });
 
     this.quotationFilesList.forEach((doc: any) => {
-      console.log(doc);
       const id = Math.random().toString(36).substring(2);
       const file = doc;
-      const filePath = `/assets/COT_${id}`;
+      const v = this.arrayObservablesArchivos[file];
+      const filePath = `/budgets/v${this.data.versionCount}/${id}/COT_${id}`;
       const fileRef = this.storage.ref(filePath);
       const task = this.storage.upload(filePath, file);
 
@@ -283,14 +293,22 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
 
     });
 
+    this.loading.next(false);
     combineLatest(
+     
       this.arrayObservablesArchivos
     ).pipe(
       // takeUntil(this.stopReading$),
       map(([list]) => {
-        console.log(list);
         
-        this.loading.next(false);
+        console.log(list.state);
+        
+        
+        this.loading.next(true);
+        if( list.state === 'success'){
+          this.loading.next(false);
+          this.data.versionCount ++
+        }
       })
     ).subscribe()
 

@@ -109,6 +109,8 @@ export interface Budget {
   textObs?: string;
   additionals?: object[];
   afaDate?: string;
+  versionCount: number;
+  
 }
 
 export interface Additional {

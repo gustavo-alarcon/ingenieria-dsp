@@ -3,7 +3,7 @@
         <mat-icon class="ms-dialog-header__icon">attach_email</mat-icon>
         <h3 class="ms-dialog-header__title">Enviar PPTO.</h3>
         <span class="ms-fill"></span>
-        <button mat-icon-button mat-dialog-close>
+        <button mat-icon-button mat-dialog-close [disabled]="loading$ | async">
       <mat-icon>clear</mat-icon>
     </button>
     </div>
@@ -34,10 +34,10 @@
           </button>
 
                     <!-- Url del archivo -->
-                    <div>
+                    <!-- <div>
                         <br>
                         <input #archiveUrl type="text" [value]="downloadURL | async">
-                    </div>
+                    </div> -->
                 </div>
 
 
@@ -130,7 +130,7 @@
     </mat-dialog-content>
 
     <mat-dialog-actions align="end">
-        <button type="button" mat-stroked-button color="warn" mat-dialog-close>
+        <button type="button" mat-stroked-button color="warn" [disabled]="loading$ | async" mat-dialog-close>
       CERRAR
     </button>
         <!-- 

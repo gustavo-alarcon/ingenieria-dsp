@@ -640,9 +640,10 @@ export class BudgetsSummaryComponent implements OnInit {
     this.tableData.data = this.tableData.data;
   }
 
-  public sendDialog(element: any) {
+  public sendDialog(element: Budget) {
     this.MatDialog.open(BudgetsSummarySendDialogComponent, {
-      disableClose: true
+      disableClose: true,
+      data: element
     });
   }
 
