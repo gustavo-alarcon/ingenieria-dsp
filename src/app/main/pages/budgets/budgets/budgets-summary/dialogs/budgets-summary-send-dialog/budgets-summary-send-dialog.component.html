@@ -34,10 +34,10 @@
           </button>
 
                     <!-- Url del archivo -->
-                    <!-- <div>
+                    <div>
                         <br>
-                        <input #archiveUrl type="text" [value]="downloadURL | async">
-                    </div> -->
+                        <input #archiveUrl type="text" [value]="downloadURL1 | async">
+                    </div>
                 </div>
 
 
@@ -140,7 +140,7 @@
     budgetFilesList.length === 0 ||
     reportFilesList.length === 0
   "  -->
-        <button type="submit" mat-raised-button color="primary" (click)="startUpload( )">
+        <button type="submit" mat-raised-button color="primary" (click)="startUpload()">
       ENVIAR
     </button>
 
