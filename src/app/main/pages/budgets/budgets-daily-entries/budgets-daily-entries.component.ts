@@ -18,6 +18,8 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { BehaviorSubject, Subscription, Observable } from 'rxjs';
 import * as XLSX from 'xlsx';
 import moment from 'moment';
+import { documentVersion } from '../../../models/budgets.model';
+import { object } from 'firebase-functions/lib/providers/storage';
 
 @Component({
   selector: 'app-budgets-daily-entries',
@@ -330,7 +332,7 @@ export class BudgetsDailyEntriesComponent implements OnInit {
             mesTer: el[91] ? el[91] : null,
             anio: el[92] ? el[92] : null,
             fechaLPD: el[93] ? el[93] : null,
-            motivoDeModificacion: el[94] ? el[94] : null,
+            motivoDeModificacion: el[94] ? el[94] : null
           };
           data['checkUpgrade'] = this.BudgetsService.checkBudgetConflicts(data);
           data['applyUpgrade'] = false;

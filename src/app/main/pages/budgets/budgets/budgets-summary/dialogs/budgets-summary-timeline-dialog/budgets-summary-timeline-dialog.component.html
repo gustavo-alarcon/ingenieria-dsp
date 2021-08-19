@@ -3,8 +3,8 @@
     <h3 class="ms-dialog-header__title">Historial</h3>
     <span class="ms-fill"></span>
     <button mat-icon-button mat-dialog-close>
-      <mat-icon>cancel</mat-icon>
-    </button>
+    <mat-icon>cancel</mat-icon>
+  </button>
 </div>
 <mat-divider></mat-divider>
 
@@ -18,12 +18,9 @@
     <div *ngFor="let item of dateArray">
         <div class="row">
             <div class="col col--state">{{ item.type }}</div>
-            <div class="col col--date">{{ item.date }}</div>
+            <div class="col col--date">{{ item.date}}</div>
             <div class="col col--user">
                 {{ item.createBy ? item.createBy.name : "---" }}
-            </div>
-            <div class="col col--user" *ngIf="item.description">
-                {{ item.description ? item.description : "---" }}
             </div>
         </div>
 
@@ -39,7 +36,7 @@
         <div *ngIf="item.type === 'Fecha Rechazo'">
             <div class="row">
                 <div class="col col--date">
-                    <img class="flecha1" src="../../../../../../../../assets/img/flecha.png" alt="" /> Motivo del rechazo
+                    <img class="flecha1" src="../../../../../../../../assets/img/flecha.png" alt="" /> Motivo de rechazo
                 </div>
                 <div class="col col--date">{{ item.description }}</div>
             </div>

@@ -109,8 +109,21 @@ export interface Budget {
   textObs?: string;
   additionals?: object[];
   afaDate?: string;
+  versionCount?: number;
+  documentVersions?: {
+    version: number,
+    budgets: Array<string>,
+    reports: Array<string>,
+    quotations: Array<string>
+  } []
 }
 
+export interface documentVersion {
+  version: number,
+  budgets: Array<any>,
+  reports: Array<string>,
+  quotations: Array<string>
+}
 export interface Additional {
   type: string;
   observation: string;
@@ -123,6 +136,7 @@ export interface RejectionReasonsEntry {
   createdBy: User;
   createdAt: Date;
 }
+
 
 export interface ApprovedEntry {
   createdBy: User;

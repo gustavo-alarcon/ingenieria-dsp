@@ -509,6 +509,7 @@ export class BudgetsPendingSendComponent implements OnInit {
   public updateDialog(currentBudget: Budget) {
     const ref = this.MatDialog.open(PendingSendUpdateDialogComponent, {
       data: currentBudget,
+      disableClose: true
     });
   }
 

@@ -640,8 +640,11 @@ export class BudgetsSummaryComponent implements OnInit {
     this.tableData.data = this.tableData.data;
   }
 
-  public sendDialog(element: any) {
-    this.MatDialog.open(BudgetsSummarySendDialogComponent);
+  public sendDialog(element: Budget) {
+    this.MatDialog.open(BudgetsSummarySendDialogComponent, {
+      disableClose: true,
+      data: element
+    });
   }
 
   public timelineDialog(element: Budget) {

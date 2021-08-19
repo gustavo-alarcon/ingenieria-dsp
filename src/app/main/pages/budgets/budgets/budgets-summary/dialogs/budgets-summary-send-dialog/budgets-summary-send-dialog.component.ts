@@ -1,9 +1,13 @@
-import { BudgetsBroadcastList } from './../../../../../../models/budgets.model';
+import {
+  BudgetsBroadcastList,
+  Budget,
+} from './../../../../../../models/budgets.model';
 import { BudgetsService } from 'src/app/main/services/budgets.service';
 import { COMMA, ENTER, SPACE, TAB } from '@angular/cdk/keycodes';
 import {
   Component,
   ElementRef,
+  Inject,
   IterableDiffers,
   OnInit,
   ViewChild,
@@ -13,19 +17,30 @@ import {
   FormGroup,
   FormControl,
   Validators,
-  ValidatorFn,
-  AbstractControl,
-  ValidationErrors,
 } from '@angular/forms';
 import {
   MatAutocomplete,
   MatAutocompleteSelectedEvent,
 } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { BehaviorSubject, from, Observable, of, Subscription } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import {
+  BehaviorSubject,
+  combineLatest,
+  from,
+  Observable,
+  of,
+  Subscription,
+} from 'rxjs';
+import { map, startWith, takeUntil, tap } from 'rxjs/operators';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { finalize } from 'rxjs/operators';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { UploadTaskComponent } from '../../../../../../../shared/components/upload-task/upload-task.component';
+// import { Budget, documentVersion } from '../../../../../../models/budgets.model';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { version } from 'xlsx/types';
+import { element } from 'protractor';
 
 @Component({
   selector: 'app-budgets-summary-send-dialog',
@@ -36,6 +51,15 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
   public selectable: boolean = true;
   public removable: boolean = true;
   public separatorKeysCodes: number[] = [ENTER, COMMA, SPACE, TAB];
+
+  percentage: Observable<number>;
+  downloadURL1: Observable<string>;
+  downloadURL2: Observable<string>;
+  downloadURL3: Observable<string>;
+
+  doc$: Observable<string>;
+
+  arrayDownload: string[] = [];
 
   public emailCtrl: FormControl = new FormControl();
   public filteredEmails: Observable<string[]>;
@@ -61,16 +85,23 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
   public budgetFilesList: Array<File> = [];
   public reportFilesList: Array<File> = [];
   public quotationFilesList: Array<File> = [];
-
+  public urls: Array<File> = [];
   public emailsValidation: boolean = false;
 
   // Form
   form: FormGroup;
 
+  cantidadDeArchivos: number = 0;
+  arrayObservablesArchivos: Array<
+    Observable<firebase.default.storage.UploadTaskSnapshot>
+  > = [];
+
   constructor(
     private _budgetService: BudgetsService,
     private breakpoint: BreakpointObserver,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    @Inject(MAT_DIALOG_DATA) public data: Budget,
+    private storage: AngularFireStorage
   ) {}
 
   public ngOnInit(): void {
@@ -98,7 +129,6 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
         broadcastLists.forEach((broadcastList: BudgetsBroadcastList) => {
           this.broadcastLists.push(broadcastList);
           this.broadcastListsNames.push(broadcastList.name);
-
           this.filteredEmails = this.emailCtrl.valueChanges.pipe(
             startWith(null),
             map((email: string | null) =>
@@ -150,11 +180,11 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
     const broadcastList: BudgetsBroadcastList = this.broadcastLists.filter(
       (list) => list.name == event.option.viewValue
     )[0];
-   
+
     broadcastList.emailList.forEach((email: string) => {
       this.emails.push(email);
     });
-    
+
     // check this
     this.emailInput.nativeElement.value = '';
     this.emailCtrl.setValue(null);
@@ -199,5 +229,9 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
       this.quotationFilesList.push(file);
     });
     this.loading.next(false);
+  }
+
+  startUpload() {
+    // TODO
   }
 }
