@@ -724,19 +724,17 @@ export class BudgetsService {
           delete currentBudget['duplicated'];
           delete currentBudget['budgetId'];
           delete currentBudget['budgetDifferences'];
+          currentBudget['versionCount'] = 0;
 
           batch.set(budgetsDocRef, currentBudget);
         } else if (currentBudget['applyUpgrade']) {
           const diffKeys = Object.keys(currentBudget['budgetDifferences']);
-          console.log(diffKeys);
           
           let budgetUpgrade: Partial<Budget> = {};
 
           diffKeys.forEach((key) => {
             budgetUpgrade[key] = currentBudget[key];
           });
-
-          console.log(budgetUpgrade);
           
           const actualBudgetRef = this.afs.firestore.doc(
             `/db/ferreyros/budgets/${currentBudget['budgetId']}`

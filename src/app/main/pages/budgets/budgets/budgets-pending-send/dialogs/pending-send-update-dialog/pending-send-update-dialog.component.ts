@@ -35,6 +35,8 @@ import moment from 'moment';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { AngularFirestore } from '@angular/fire/firestore';
+
+import * as firebase from 'firebase/app';
 @Component({
   selector: 'app-pending-send-update-dialog',
   templateUrl: './pending-send-update-dialog.component.html',
@@ -509,6 +511,10 @@ export class PendingSendUpdateDialogComponent implements OnInit {
   public send(): void {
     if (this.budgetFilesList.length === 0 || !this.filesFormGroup.valid) return;
 
+    // first, save form changes
+    this.saveChanges();
+
+    // then, initialize the variables for document uploads
     this.loading.next(true);
     const now = Date.now();
     let counter = 0;
@@ -516,12 +522,12 @@ export class PendingSendUpdateDialogComponent implements OnInit {
       this.budgetFilesList.length +
       this.reportFilesList.length +
       this.quotationFilesList.length;
-
+    const currentVersionCount = this.data.versionCount + 1;
     // for every file in budgetFilesList, we will push a path reference to a budgetPathReferences
     let budgetPathReferences: Array<string> = [];
 
     this.budgetFilesList.forEach((file) => {
-      const filePath = `budgets/${this.data.id}/v${this.data.versionCount}/budgets/${now}_${file.name}`;
+      const filePath = `budgets/${this.data.id}/v${currentVersionCount}/budgets/${now}_${file.name}`;
       const task = this.storage.upload(filePath, file);
       budgetPathReferences.push(filePath);
 
@@ -541,7 +547,7 @@ export class PendingSendUpdateDialogComponent implements OnInit {
     let reportPathReferences: Array<string> = [];
 
     this.reportFilesList.forEach((file) => {
-      const filePath = `budgets/${this.data.id}/v${this.data.versionCount}/reports/${now}_${file.name}`;
+      const filePath = `budgets/${this.data.id}/v${currentVersionCount}/reports/${now}_${file.name}`;
       const task = this.storage.upload(filePath, file);
       reportPathReferences.push(filePath);
 
@@ -561,7 +567,7 @@ export class PendingSendUpdateDialogComponent implements OnInit {
     let quotationPathReferences: Array<string> = [];
 
     this.quotationFilesList.forEach((file) => {
-      const filePath = `budgets/${this.data.id}/v${this.data.versionCount}/quotations/${now}_${file.name}`;
+      const filePath = `budgets/${this.data.id}/v${currentVersionCount}/quotations/${now}_${file.name}`;
       const task = this.storage.upload(filePath, file);
       quotationPathReferences.push(filePath);
 
@@ -585,14 +591,45 @@ export class PendingSendUpdateDialogComponent implements OnInit {
 
           if (counter === totalFiles) {
             this.fileSubscriptions.unsubscribe();
-            
+
             const batch = this.af.firestore.batch();
             const budgetRef = this.af.doc(
               `db/ferreyros/budgets/${this.data.id}`
             ).ref;
 
             // TODO: Update budget info
-            this.loading.next(false);
+            batch.update(budgetRef, {
+              statusPresupuesto: 'PDTE. APROB.',
+              versionCount: currentVersionCount,
+              documentVersions:
+                firebase.default.firestore.FieldValue.arrayUnion({
+                  version: this.data.versionCount,
+                  budgets: budgetPathReferences,
+                  reports: reportPathReferences,
+                  quotations: quotationPathReferences,
+                }),
+              fechaUltimoEnvioPPTO: new Date()
+            });
+
+            batch
+              .commit()
+              .then(() => {
+                this.matSnackBar.open('✅ PTTO. enviado con éxito', 'Aceptar', {
+                  duration: 6000,
+                });
+                this.loading.next(false);
+                this.dialogRef.close(true);
+                // TODO: Send email notifications
+              })
+              .catch((err) => {
+                this.matSnackBar.open(
+                  '🚨 Hubo un error guardando los archivos. Por favor, vuelva a intentarlo',
+                  'Aceptar',
+                  {
+                    duration: 6000,
+                  }
+                );
+              });
           }
         } catch (error) {
           console.log(error);

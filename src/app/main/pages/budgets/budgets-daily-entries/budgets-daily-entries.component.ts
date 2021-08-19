@@ -332,10 +332,7 @@ export class BudgetsDailyEntriesComponent implements OnInit {
             mesTer: el[91] ? el[91] : null,
             anio: el[92] ? el[92] : null,
             fechaLPD: el[93] ? el[93] : null,
-            motivoDeModificacion: el[94] ? el[94] : null,
-            versionCount: el[95] ? el[95]: 1,
-            documentVersion: el[95] ? el [96]: null
-           
+            motivoDeModificacion: el[94] ? el[94] : null
           };
           data['checkUpgrade'] = this.BudgetsService.checkBudgetConflicts(data);
           data['applyUpgrade'] = false;

@@ -109,13 +109,13 @@ export interface Budget {
   textObs?: string;
   additionals?: object[];
   afaDate?: string;
-  versionCount: number;
-  documentVersion: {
+  versionCount?: number;
+  documentVersions?: {
     version: number,
-    budgets: Array<any>,
-    reports: Array<any>,
-    quotations: Array<any>
-  }
+    budgets: Array<string>,
+    reports: Array<string>,
+    quotations: Array<string>
+  } []
 }
 
 export interface documentVersion {

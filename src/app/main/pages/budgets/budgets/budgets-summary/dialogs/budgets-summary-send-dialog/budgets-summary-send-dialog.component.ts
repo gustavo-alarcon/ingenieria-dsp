@@ -1,4 +1,7 @@
-import { BudgetsBroadcastList,Budget } from './../../../../../../models/budgets.model';
+import {
+  BudgetsBroadcastList,
+  Budget,
+} from './../../../../../../models/budgets.model';
 import { BudgetsService } from 'src/app/main/services/budgets.service';
 import { COMMA, ENTER, SPACE, TAB } from '@angular/cdk/keycodes';
 import {
@@ -14,14 +17,20 @@ import {
   FormGroup,
   FormControl,
   Validators,
- 
 } from '@angular/forms';
 import {
   MatAutocomplete,
   MatAutocompleteSelectedEvent,
 } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { BehaviorSubject, combineLatest, from, Observable, of, Subscription } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  from,
+  Observable,
+  of,
+  Subscription,
+} from 'rxjs';
 import { map, startWith, takeUntil, tap } from 'rxjs/operators';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
@@ -48,9 +57,9 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
   downloadURL2: Observable<string>;
   downloadURL3: Observable<string>;
 
-  doc$:Observable<string>;
+  doc$: Observable<string>;
 
-  arrayDownload : string[] = [];
+  arrayDownload: string[] = [];
 
   public emailCtrl: FormControl = new FormControl();
   public filteredEmails: Observable<string[]>;
@@ -92,22 +101,10 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
     private breakpoint: BreakpointObserver,
     private fb: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: Budget,
-    private storage: AngularFireStorage,
-    
-  ) {
-    this.data.documentVersion = { 
-      version : 0,
-      budgets : [],
-      reports : [],
-      quotations : []
-    }
-    
-  }
+    private storage: AngularFireStorage
+  ) {}
 
   public ngOnInit(): void {
-     
-    
-    
     this.form = this.fb.group({
       subject: ['', Validators.required],
       body: ['', Validators.required],
@@ -140,8 +137,6 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
           );
         });
       });
-
-    
   }
 
   get subject() {
@@ -212,12 +207,7 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
       this.budgetFilesList.push(file);
     });
     this.loading.next(false);
-   
-   
   }
-
-
- 
 
   public loadFilesForReport(fileList: FileList): void {
     this.loading.next(true);
@@ -228,7 +218,6 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
       this.reportFilesList.push(file);
     });
     this.loading.next(false);
-  
   }
 
   public loadFilesForQuotation(fileList: FileList): void {
@@ -242,206 +231,7 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
     this.loading.next(false);
   }
 
-  // saveUrl (){
-  
-  //   this.data.budgetUrl.forEach( (url:File) =>{
-  //     this.urls.push(url)
-  //   })
-  // }
-  
-   startUpload() {
-    
-    // Calcular cantidad de archivos
-    // this.cantidadDeArchivos =
-    //   this.budgetFilesList.length +
-    //   this.reportFilesList.length +
-    //   this.quotationFilesList.length;
-
-    this.budgetFilesList.forEach( (doc: any) => {
-      this.doc$ = of(doc);
-
-      this.doc$.subscribe(data => console.log(data))
-      const id = Math.random().toString(36).substring(2);
-      const file = this.doc$.subscribe();
-      const filePath = `/budgets/v${this.data.versionCount}/${id}/PRESUPUESTO_${id}`;
-      const fileRef = this.storage.ref(filePath);
-      const task =  this.storage.upload(filePath, file);
-
-      // observe percentage changes
-      this.percentage = task.percentageChanges();
-      
-      // fileRef.getDownloadURL().subscribe( async (url) => {
-      //     const urlPath = await url;
-      //     this.data.documentVersion.budgets.push(
-      //     urlPath
-      //   )
-      // })
-      // get notified when the download URL is available
-
-     
-      this.arrayObservablesArchivos.push(
-        task
-          .snapshotChanges()
-          .pipe(finalize(() => (this.downloadURL1 = fileRef.getDownloadURL())))
-         
-      );
-       
-      setTimeout(() => {
-
-      
-
-         this.downloadURL1.subscribe( budgetValor => {
-             
-            this.data.documentVersion.version = this.data.versionCount;
-             this.data.documentVersion.budgets.push(budgetValor)
-          })
-      }, 1500);
-     
-
-
-      
-      
-     
-    });
-  
-    
-    this.reportFilesList.forEach((doc: any) => {
-      const id = Math.random().toString(36).substring(2);
-      const file = doc;
-      const filePath = `/budgets/v${this.data.versionCount}/${id}/INFORME_${id}`;
-      const fileRef = this.storage.ref(filePath);
-      const task = this.storage.upload(filePath, file);
-
-      // observe percentage changes
-      this.percentage = task.percentageChanges();
-      
-      // get notified when the download URL is available
-      // fileRef.getDownloadURL().subscribe( url => {
-      //   this.data.documentVersion.reports.push(
-      //     url
-      //   )
-      // })
-
-      this.arrayObservablesArchivos.push(
-        task
-          .snapshotChanges()
-          .pipe(finalize(() => (this.downloadURL2 = fileRef.getDownloadURL())))
-      );
-
-           
-      setTimeout(() => {
-
-        //  console.log(this.downloadURL2)
-
-        this.downloadURL2.subscribe( valor1 => {
-            
-           this.data.documentVersion.version = this.data.versionCount;
-            this.data.documentVersion.reports.push(valor1)
-         })
-     }, 1500);
-      
-
-    });
-
-    this.quotationFilesList.forEach((doc: any) => {
-      const id = Math.random().toString(36).substring(2);
-      const file = doc;
-      const filePath = `/budgets/v${this.data.versionCount}/${id}/COT_${id}`;
-      const fileRef = this.storage.ref(filePath);
-      const task = this.storage.upload(filePath, file);
-      
-
-      // observe percentage changes
-      this.percentage = task.percentageChanges();
-
-      // get notified when the download URL is available
-      // fileRef.getDownloadURL().subscribe( url => {
-      //   this.data.documentVersion.quotations.push(
-      //     url
-      //   )
-      // })
-      this.arrayObservablesArchivos.push(
-        task
-          .snapshotChanges()
-          .pipe(finalize(() => (this.downloadURL3 = fileRef.getDownloadURL())))
-      );
-
-           
-      setTimeout(() => {
-
-      
-
-        this.downloadURL3.subscribe( valor2 => {
-            
-           this.data.documentVersion.version = this.data.versionCount --;
-            this.data.documentVersion.quotations.push(valor2)
-         })
-     }, 1500);
-      
-     
-
-      
-    });
- 
-    this.loading.next(false);
-  
-    combineLatest(
-     
-      this.arrayObservablesArchivos
-    ).pipe(
-      // takeUntil(this.stopReading$),
-      map(([list], index) => {
-    
-        this.loading.next(true);
-        if( list.state === 'success' ){
-          this.loading.next(false);
-          
-          // this.arrayObservablesArchivos[0].subscribe( valor => {
-          //   console.log(valor);
-          // })
-          
-          setTimeout(() => {
-
-            console.log(this.data.documentVersion);
-            // this.downloadURL1.forEach( docUrl => {
-            //     console.log(docUrl);
-            // })
-          
-          // this.downloadURL1.subscribe( valor => {
-
-          //   console.log(valor);
-             
-          //   // this.data.documentVersion.version = this.data.versionCount;
-          //   //  this.data.documentVersion.budgets.push(valor)
-          // })
-         
-          //  this.data.documentVersion.reports.push(
-          //   this.downloadURL2
-          // )
-
-          // console.log(this.data.documentVersion)
-         
-          //   this.downloadURL1.forEach( v =>{
-          //     console.log(v);
-          //   })
-          //   console.log(this.data.documentVersion.budgets)
-
-          }, 1500)
-          
-        //  this.data.budgetsUrl.push(
-        //    this.downloadURL1
-        //  )
-    
-          this.data.versionCount ++
-          
-        }
-      })
-     
-
-    ).subscribe()
-   
-   
+  startUpload() {
+    // TODO
   }
-   
-
 }
