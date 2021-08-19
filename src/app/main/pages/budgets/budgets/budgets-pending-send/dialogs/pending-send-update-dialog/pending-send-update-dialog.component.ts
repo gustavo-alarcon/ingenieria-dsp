@@ -16,10 +16,14 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
-import { BehaviorSubject, Observable } from 'rxjs';
+import {
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatDialog,
+} from '@angular/material/dialog';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { BudgetsBroadcastList } from 'src/app/main/models/budgets.model';
-import { map, startWith } from 'rxjs/operators';
+import { finalize, map, startWith } from 'rxjs/operators';
 import {
   MatAutocomplete,
   MatAutocompleteSelectedEvent,
@@ -29,7 +33,8 @@ import { COMMA, ENTER, SPACE, TAB } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import moment from 'moment';
 import { MatSnackBar } from '@angular/material/snack-bar';
-
+import { AngularFireStorage } from '@angular/fire/storage';
+import { AngularFirestore } from '@angular/fire/firestore';
 @Component({
   selector: 'app-pending-send-update-dialog',
   templateUrl: './pending-send-update-dialog.component.html',
@@ -83,13 +88,22 @@ export class PendingSendUpdateDialogComponent implements OnInit {
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
   @ViewChild('autosize') autosize: CdkTextareaAutosize;
 
+  fileUploadCount = new BehaviorSubject<boolean>(false);
+  fileUploadCount$ = this.fileUploadCount.asObservable();
+
+  fileSubscriptions = new Subscription();
+
+  // filesUploadPercentageArray: Array<Observable<number>> = [];
+
   constructor(
     public dialogRef: MatDialogRef<PendingSendUpdateDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Budget,
     private _formBuilder: FormBuilder,
     private _budgetService: BudgetsService,
     private matSnackBar: MatSnackBar,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private storage: AngularFireStorage,
+    private af: AngularFirestore
   ) {}
 
   ngOnInit(): void {
@@ -131,6 +145,7 @@ export class PendingSendUpdateDialogComponent implements OnInit {
         }
       }
     })();
+
     if (moment(this.data.resumen, 'DD/MM/YYYY').isValid())
       this.filesFormGroup.get('checkboxGroup').get('summary').setValue(true);
     if (moment(this.data.cotizacionFesa, 'DD/MM/YYYY').isValid())
@@ -489,6 +504,101 @@ export class PendingSendUpdateDialogComponent implements OnInit {
       this.quotationFilesList.push(file);
     });
     this.loading.next(false);
+  }
+
+  public send(): void {
+    if (this.budgetFilesList.length === 0 || !this.filesFormGroup.valid) return;
+
+    this.loading.next(true);
+    const now = Date.now();
+    let counter = 0;
+    const totalFiles =
+      this.budgetFilesList.length +
+      this.reportFilesList.length +
+      this.quotationFilesList.length;
+
+    // for every file in budgetFilesList, we will push a path reference to a budgetPathReferences
+    let budgetPathReferences: Array<string> = [];
+
+    this.budgetFilesList.forEach((file) => {
+      const filePath = `budgets/${this.data.id}/v${this.data.versionCount}/budgets/${now}_${file.name}`;
+      const task = this.storage.upload(filePath, file);
+      budgetPathReferences.push(filePath);
+
+      this.fileSubscriptions.add(
+        task
+          .snapshotChanges()
+          .pipe(
+            finalize(() => {
+              this.fileUploadCount.next(true);
+            })
+          )
+          .subscribe()
+      );
+    });
+
+    // for every file in reportFilesList, we will push  a path reference to reportPathReferences
+    let reportPathReferences: Array<string> = [];
+
+    this.reportFilesList.forEach((file) => {
+      const filePath = `budgets/${this.data.id}/v${this.data.versionCount}/reports/${now}_${file.name}`;
+      const task = this.storage.upload(filePath, file);
+      reportPathReferences.push(filePath);
+
+      this.fileSubscriptions.add(
+        task
+          .snapshotChanges()
+          .pipe(
+            finalize(() => {
+              this.fileUploadCount.next(true);
+            })
+          )
+          .subscribe()
+      );
+    });
+
+    // for every file in reportFilesList, we will push  a path reference to reportPathReferences
+    let quotationPathReferences: Array<string> = [];
+
+    this.quotationFilesList.forEach((file) => {
+      const filePath = `budgets/${this.data.id}/v${this.data.versionCount}/quotations/${now}_${file.name}`;
+      const task = this.storage.upload(filePath, file);
+      quotationPathReferences.push(filePath);
+
+      this.fileSubscriptions.add(
+        task
+          .snapshotChanges()
+          .pipe(
+            finalize(() => {
+              this.fileUploadCount.next(true);
+            })
+          )
+          .subscribe()
+      );
+    });
+
+    // Now, we will keep track of the number of uploads done to unsubscribe and finilize the loaders
+    this.fileSubscriptions.add(
+      this.fileUploadCount$.subscribe((res) => {
+        try {
+          if (res) counter++;
+
+          if (counter === totalFiles) {
+            this.fileSubscriptions.unsubscribe();
+            
+            const batch = this.af.firestore.batch();
+            const budgetRef = this.af.doc(
+              `db/ferreyros/budgets/${this.data.id}`
+            ).ref;
+
+            // TODO: Update budget info
+            this.loading.next(false);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      })
+    );
   }
 }
 

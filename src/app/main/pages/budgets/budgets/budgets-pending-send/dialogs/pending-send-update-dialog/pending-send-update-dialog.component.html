@@ -1,295 +1,466 @@
-<!-- <h2 mat-dialog-title class="card">
-        <div class="card--title" mat-dialog-close>
-            <mat-icon mat-list-icon>create</mat-icon>
-        </div>
-        Actualizar PPTO.
-        <span class="ms-fill"></span>
-        <div mat-dialog-close class="card--title__close--button">
-            <mat-icon>clear</mat-icon>
-        </div>
-    </h2>
-    <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
-    <mat-divider></mat-divider> -->
-
 <div class="ms-dialog-header">
-    <mat-icon class="ms-dialog-header__icon">create</mat-icon>
-    <h3 class="ms-dialog-header__title">Actualizar PPTO.</h3>
-    <span class="ms-fill"></span>
-    <button mat-icon-button mat-dialog-close>
-        <mat-icon>cancel</mat-icon>
-      </button>
+  <mat-icon class="ms-dialog-header__icon">create</mat-icon>
+  <h3 class="ms-dialog-header__title">Actualizar PPTO.</h3>
+  <span class="ms-fill"></span>
+  <button mat-icon-button mat-dialog-close [disabled]="loading$ | async">
+    <mat-icon>cancel</mat-icon>
+  </button>
 </div>
 <mat-divider></mat-divider>
+<mat-progress-bar
+  mode="indeterminate"
+  *ngIf="loading$ | async"
+></mat-progress-bar>
 
 <mat-dialog-content>
-    <mat-horizontal-stepper #stepper linear>
-        <mat-step [stepControl]="filesFormGroup" errorMessage="Debes seleccionar por lo menos un archivo">
-            <form [formGroup]="filesFormGroup">
-                <ng-template matStepLabel>Archivos</ng-template>
+  <mat-horizontal-stepper #stepper linear>
+    <mat-step
+      [stepControl]="filesFormGroup"
+      errorMessage="Debes seleccionar por lo menos un archivo"
+    >
+      <form [formGroup]="filesFormGroup">
+        <ng-template matStepLabel>Archivos</ng-template>
 
-                <mat-error class="error--select__files" *ngIf="
-              filesFormGroup.controls['checkboxGroup'].errors &&
-              filesFormGroup.controls['checkboxGroup'].errors
-                .requireOneCheckboxToBeChecked
-            ">
-                    <mat-icon>warning</mat-icon>
-                    <p>Debes seleccionar por lo menos un archivo</p>
-                </mat-error>
+        <mat-error
+          class="error--select__files"
+          *ngIf="
+            filesFormGroup.controls['checkboxGroup'].errors &&
+            filesFormGroup.controls['checkboxGroup'].errors
+              .requireOneCheckboxToBeChecked
+          "
+        >
+          <mat-icon>warning</mat-icon>
+          <p>Debes seleccionar por lo menos un archivo</p>
+        </mat-error>
 
-                <div class="checkboxes" formGroupName="checkboxGroup">
-                    <div class="document--container">
-                        <div class="circle" [ngClass]="{
-                  circle__active: filesFormGroup.value.checkboxGroup.afa,
-                  circle__inactive: !filesFormGroup.value.checkboxGroup.afa
-                }"></div>
-                        <p class="conforme">Conforme</p>
-                        <mat-checkbox [color]="'primary'" formControlName="afa"></mat-checkbox>
-                        <p class="type">AFA</p>
-                        <mat-form-field appearance="outline" class="observations">
-                            <mat-label>Observación</mat-label>
-                            <input formControlName="afaObs" matInput placeholder="Observación" />
-                            <mat-hint>Campo opcional</mat-hint>
-                        </mat-form-field>
-                    </div>
+        <div class="checkboxes" formGroupName="checkboxGroup">
+          <div class="document--container">
+            <div
+              class="circle"
+              [ngClass]="{
+                circle__active: filesFormGroup.value.checkboxGroup.afa,
+                circle__inactive: !filesFormGroup.value.checkboxGroup.afa
+              }"
+            ></div>
+            <p class="conforme">Conforme</p>
+            <mat-checkbox
+              [color]="'primary'"
+              formControlName="afa"
+            ></mat-checkbox>
+            <p class="type">AFA</p>
+            <mat-form-field appearance="outline" class="observations">
+              <mat-label>Observación</mat-label>
+              <input
+                formControlName="afaObs"
+                matInput
+                placeholder="Observación"
+              />
+              <mat-hint>Campo opcional</mat-hint>
+            </mat-form-field>
+          </div>
 
-                    <div class="document--container">
-                        <div class="circle" [ngClass]="{
-                  circle__active: filesFormGroup.value.checkboxGroup.summary,
-                  circle__inactive: !filesFormGroup.value.checkboxGroup.summary
-                }"></div>
-                        <p class="conforme">Conforme</p>
-                        <mat-checkbox [color]="'primary'" formControlName="summary"></mat-checkbox>
-                        <p class="type">RESUMEN</p>
-                        <mat-form-field appearance="outline" class="observations">
-                            <mat-label>Observación</mat-label>
-                            <input formControlName="summaryObs" matInput placeholder="Observación" />
-                            <mat-hint>Campo opcional</mat-hint>
-                        </mat-form-field>
-                    </div>
+          <div class="document--container">
+            <div
+              class="circle"
+              [ngClass]="{
+                circle__active: filesFormGroup.value.checkboxGroup.summary,
+                circle__inactive: !filesFormGroup.value.checkboxGroup.summary
+              }"
+            ></div>
+            <p class="conforme">Conforme</p>
+            <mat-checkbox
+              [color]="'primary'"
+              formControlName="summary"
+            ></mat-checkbox>
+            <p class="type">RESUMEN</p>
+            <mat-form-field appearance="outline" class="observations">
+              <mat-label>Observación</mat-label>
+              <input
+                formControlName="summaryObs"
+                matInput
+                placeholder="Observación"
+              />
+              <mat-hint>Campo opcional</mat-hint>
+            </mat-form-field>
+          </div>
 
-                    <div class="document--container">
-                        <div class="circle" [ngClass]="{
-                  circle__active: filesFormGroup.value.checkboxGroup.fesa,
-                  circle__inactive: !filesFormGroup.value.checkboxGroup.fesa
-                }"></div>
-                        <p class="conforme">Conforme</p>
-                        <mat-checkbox [color]="'primary'" formControlName="fesa"></mat-checkbox>
-                        <p class="type">FESA</p>
-                        <mat-form-field appearance="outline" class="observations">
-                            <mat-label>Observación</mat-label>
-                            <input formControlName="fesaObs" matInput placeholder="Observación" />
-                            <mat-hint>Campo opcional</mat-hint>
-                        </mat-form-field>
-                    </div>
+          <div class="document--container">
+            <div
+              class="circle"
+              [ngClass]="{
+                circle__active: filesFormGroup.value.checkboxGroup.fesa,
+                circle__inactive: !filesFormGroup.value.checkboxGroup.fesa
+              }"
+            ></div>
+            <p class="conforme">Conforme</p>
+            <mat-checkbox
+              [color]="'primary'"
+              formControlName="fesa"
+            ></mat-checkbox>
+            <p class="type">FESA</p>
+            <mat-form-field appearance="outline" class="observations">
+              <mat-label>Observación</mat-label>
+              <input
+                formControlName="fesaObs"
+                matInput
+                placeholder="Observación"
+              />
+              <mat-hint>Campo opcional</mat-hint>
+            </mat-form-field>
+          </div>
 
-                    <div class="document--container">
-                        <div class="circle" [ngClass]="{
-                  circle__active: filesFormGroup.value.checkboxGroup.text,
-                  circle__inactive: !filesFormGroup.value.checkboxGroup.text
-                }"></div>
-                        <p class="conforme">Conforme</p>
-                        <mat-checkbox [color]="'primary'" formControlName="text"></mat-checkbox>
-                        <p class="type">TEXT</p>
-                        <mat-form-field appearance="outline" class="observations">
-                            <mat-label>Observación</mat-label>
-                            <input formControlName="textObs" matInput placeholder="Observación" />
-                            <mat-hint>Campo opcional</mat-hint>
-                        </mat-form-field>
-                    </div>
+          <div class="document--container">
+            <div
+              class="circle"
+              [ngClass]="{
+                circle__active: filesFormGroup.value.checkboxGroup.text,
+                circle__inactive: !filesFormGroup.value.checkboxGroup.text
+              }"
+            ></div>
+            <p class="conforme">Conforme</p>
+            <mat-checkbox
+              [color]="'primary'"
+              formControlName="text"
+            ></mat-checkbox>
+            <p class="type">TEXT</p>
+            <mat-form-field appearance="outline" class="observations">
+              <mat-label>Observación</mat-label>
+              <input
+                formControlName="textObs"
+                matInput
+                placeholder="Observación"
+              />
+              <mat-hint>Campo opcional</mat-hint>
+            </mat-form-field>
+          </div>
 
-                    <div class="document--container">
-                        <div class="circle" [ngClass]="{
-                  circle__active: filesFormGroup.value.checkboxGroup.report,
-                  circle__inactive: !filesFormGroup.value.checkboxGroup.report
-                }"></div>
-                        <p class="conforme">Conforme</p>
-                        <mat-checkbox [color]="'primary'" formControlName="report"></mat-checkbox>
-                        <p class="type">INFORME</p>
-                        <mat-form-field appearance="outline" class="observations">
-                            <mat-label>Observación</mat-label>
-                            <input formControlName="reportObs" matInput placeholder="Observación" />
-                            <mat-hint>Campo opcional</mat-hint>
-                        </mat-form-field>
-                    </div>
-                </div>
+          <div class="document--container">
+            <div
+              class="circle"
+              [ngClass]="{
+                circle__active: filesFormGroup.value.checkboxGroup.report,
+                circle__inactive: !filesFormGroup.value.checkboxGroup.report
+              }"
+            ></div>
+            <p class="conforme">Conforme</p>
+            <mat-checkbox
+              [color]="'primary'"
+              formControlName="report"
+            ></mat-checkbox>
+            <p class="type">INFORME</p>
+            <mat-form-field appearance="outline" class="observations">
+              <mat-label>Observación</mat-label>
+              <input
+                formControlName="reportObs"
+                matInput
+                placeholder="Observación"
+              />
+              <mat-hint>Campo opcional</mat-hint>
+            </mat-form-field>
+          </div>
+        </div>
 
-                <mat-divider></mat-divider>
+        <mat-divider></mat-divider>
 
-                <h3>Adicionales</h3>
+        <h3>Adicionales</h3>
 
-                <div formArrayName="additionals">
-                    <div *ngFor="let additional of additionalForms.controls; let i = index" [formGroupName]="i">
-                        <div class="additional--budget__wrapper">
-                            <p>PPTO</p>
-                            <mat-form-field appearance="outline">
-                                <mat-label>Tipo de atención</mat-label>
-                                <mat-select formControlName="type">
-                                    <mat-option *ngFor="let option of additionalsDropDownOptions" [value]="option.value">
-                                        {{ option.viewValue }}
-                                    </mat-option>
-                                </mat-select>
-                                <mat-hint>Campo obligatorio</mat-hint>
-                            </mat-form-field>
-                            <mat-form-field appearance="outline">
-                                <mat-label>Observación</mat-label>
-                                <input formControlName="typeObs" matInput placeholder="Observación" />
-                                <mat-hint>Campo opcional</mat-hint>
-                            </mat-form-field>
-                            <button (click)="deleteAdditional(i)" matTooltip="Eliminar adicional" matTooltipPosition="right" color="warn" mat-icon-button class="delete--button">
-                  <mat-icon>delete</mat-icon>
-                </button>
-                        </div>
-                    </div>
-                </div>
+        <div formArrayName="additionals">
+          <div
+            *ngFor="let additional of additionalForms.controls; let i = index"
+            [formGroupName]="i"
+          >
+            <div class="additional--budget__wrapper">
+              <p>PPTO</p>
+              <mat-form-field appearance="outline">
+                <mat-label>Tipo de atención</mat-label>
+                <mat-select formControlName="type">
+                  <mat-option
+                    *ngFor="let option of additionalsDropDownOptions"
+                    [value]="option.value"
+                  >
+                    {{ option.viewValue }}
+                  </mat-option>
+                </mat-select>
+                <mat-hint>Campo obligatorio</mat-hint>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Observación</mat-label>
+                <input
+                  formControlName="typeObs"
+                  matInput
+                  placeholder="Observación"
+                />
+                <mat-hint>Campo opcional</mat-hint>
+              </mat-form-field>
+              <button
+                (click)="deleteAdditional(i)"
+                matTooltip="Eliminar adicional"
+                matTooltipPosition="right"
+                color="warn"
+                mat-icon-button
+                class="delete--button"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
 
-                <button (click)="addAdditional()" mat-button class="btn-add">
-            <mat-icon>add</mat-icon>
-            ADICIONALES
+        <button (click)="addAdditional()" mat-button class="btn-add">
+          <mat-icon>add</mat-icon>
+          ADICIONALES
+        </button>
+
+        <mat-dialog-actions align="end">
+          <button
+            type="button"
+            mat-stroked-button
+            color="warn"
+            mat-dialog-close
+            [disabled]="loading$ | async"
+          >
+            CERRAR
           </button>
-
-                <mat-dialog-actions align="end">
-                    <button type="button" mat-stroked-button color="warn" mat-dialog-close>
-              CERRAR
-            </button>
-                    <button (click)="saveChanges()" type="submit" mat-raised-button color="primary">
-              GUARDAR
-            </button>
-                    <button [disabled]="filesFormGroup.invalid" mat-raised-button color="primary" matStepperNext>
-              CONTINUAR
-            </button>
-                </mat-dialog-actions>
-            </form>
-        </mat-step>
-        <mat-step>
-            <ng-template matStepLabel>Enviar PPTO.</ng-template>
-            <div class="file--upload__wrapper">
-                <!-- <mat-progress-bar
+          <button
+            (click)="saveChanges()"
+            type="submit"
+            mat-raised-button
+            color="primary"
+          >
+            GUARDAR
+          </button>
+          <button
+            [disabled]="filesFormGroup.invalid"
+            mat-raised-button
+            color="primary"
+            matStepperNext
+          >
+            CONTINUAR
+          </button>
+        </mat-dialog-actions>
+      </form>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Enviar PPTO.</ng-template>
+      <div class="file--upload__wrapper">
+        <!-- <mat-progress-bar
           class="loader"
           mode="indeterminate"
           *ngIf="loading$ | async"
         ></mat-progress-bar> -->
-                <div class="file--upload--card">
-                    <div class="file--upload--card__title">
-                        <p>PRESUPUESTO</p>
-                        <p>Requerido</p>
-                    </div>
+        <div class="file--upload--card">
+          <div class="file--upload--card__title">
+            <p>PRESUPUESTO</p>
+            <p>Requerido</p>
+          </div>
 
-                    <div class="file--upload--card__files">
-                        <p *ngFor="let file of budgetFilesList">
-                            {{ file.name }}
-                        </p>
-                    </div>
+          <div class="file--upload--card__files">
+            <p *ngFor="let file of budgetFilesList">
+              {{ file.name }}
+            </p>
+          </div>
 
-                    <input style="display: none" type="file" (change)="loadFilesForBudget($event.target.files)" #loadFilesForBudgetElement multiple />
+          <input
+            style="display: none"
+            type="file"
+            (change)="loadFilesForBudget($event.target.files)"
+            #loadFilesForBudgetElement
+            multiple
+          />
 
-                    <button (click)="loadFilesForBudgetElement.click()" aria-label="upload" mat-button class="btn-add">
-              <mat-icon>add</mat-icon>
-              ADJUNTAR
-            </button>
-                </div>
+          <button
+            (click)="loadFilesForBudgetElement.click()"
+            aria-label="upload"
+            mat-button
+            class="btn-add"
+          >
+            <mat-icon>add</mat-icon>
+            ADJUNTAR
+          </button>
+        </div>
 
-                <div class="file--upload--card">
-                    <div class="file--upload--card__title">
-                        <p>INFORME</p>
-                        <p>Requerido</p>
-                    </div>
+        <div class="file--upload--card">
+          <div class="file--upload--card__title">
+            <p>INFORME</p>
+            <p>Requerido</p>
+          </div>
 
-                    <div class="file--upload--card__files">
-                        <p *ngFor="let file of reportFilesList">
-                            {{ file.name }}
-                        </p>
-                    </div>
+          <div class="file--upload--card__files">
+            <p *ngFor="let file of reportFilesList">
+              {{ file.name }}
+            </p>
+          </div>
 
-                    <input style="display: none" type="file" (change)="loadFilesForReport($event.target.files)" #loadFilesForReportElement multiple />
+          <input
+            style="display: none"
+            type="file"
+            (change)="loadFilesForReport($event.target.files)"
+            #loadFilesForReportElement
+            multiple
+          />
 
-                    <button (click)="loadFilesForReportElement.click()" aria-label="upload" mat-button class="btn-add">
-              <mat-icon>add</mat-icon>
-              ADJUNTAR
-            </button>
-                </div>
+          <button
+            (click)="loadFilesForReportElement.click()"
+            aria-label="upload"
+            mat-button
+            class="btn-add"
+          >
+            <mat-icon>add</mat-icon>
+            ADJUNTAR
+          </button>
+        </div>
 
-                <div class="file--upload--card">
-                    <div class="file--upload--card__title">
-                        <p>Cot. Rptos y/o trabajos</p>
-                        <p>Opcional</p>
-                    </div>
+        <div class="file--upload--card">
+          <div class="file--upload--card__title">
+            <p>Cot. Rptos y/o trabajos</p>
+            <p>Opcional</p>
+          </div>
 
-                    <div class="file--upload--card__files">
-                        <p *ngFor="let file of quotationFilesList">
-                            {{ file.name }}
-                        </p>
-                    </div>
+          <div class="file--upload--card__files">
+            <p *ngFor="let file of quotationFilesList">
+              {{ file.name }}
+            </p>
+          </div>
 
-                    <input style="display: none" type="file" (change)="loadFilesForQuotation($event.target.files)" #loadFilesForQuotationElement multiple />
+          <input
+            style="display: none"
+            type="file"
+            (change)="loadFilesForQuotation($event.target.files)"
+            #loadFilesForQuotationElement
+            multiple
+          />
 
-                    <button (click)="loadFilesForQuotationElement.click()" aria-label="upload" mat-button class="btn-add">
-              <mat-icon>add</mat-icon>
-              ADJUNTAR
-            </button>
-                </div>
-            </div>
+          <button
+            (click)="loadFilesForQuotationElement.click()"
+            aria-label="upload"
+            mat-button
+            class="btn-add"
+          >
+            <mat-icon>add</mat-icon>
+            ADJUNTAR
+          </button>
+        </div>
+      </div>
 
-            <div class="main--form" [formGroup]="form">
-                <mat-form-field appearance="outline">
-                    <mat-label>Asunto</mat-label>
-                    <input matInput placeholder="Asunto (Taller - Main - Child - Cliente)" formControlName="subject" />
-                    <mat-hint>Campo requerido</mat-hint>
-                    <mat-error *ngIf="subject.invalid && subject.touched">
-                        El asunto del correo es un campo requerido.
-                    </mat-error>
-                </mat-form-field>
+      <div class="main--form" [formGroup]="form">
+        <mat-form-field appearance="outline">
+          <mat-label>Asunto</mat-label>
+          <input
+            matInput
+            placeholder="Asunto (Taller - Main - Child - Cliente)"
+            formControlName="subject"
+          />
+          <mat-hint>Campo requerido</mat-hint>
+          <mat-error *ngIf="subject.invalid && subject.touched">
+            El asunto del correo es un campo requerido.
+          </mat-error>
+        </mat-form-field>
 
-                <mat-form-field appearance="outline">
-                    <mat-label>Cuerpo de correo</mat-label>
-                    <textarea matInput cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="5" cdkAutosizeMaxRows="12" placeholder="Descripción" formControlName="body"></textarea>
-                    <mat-hint>Campo requerido</mat-hint>
-                    <mat-error *ngIf="body.invalid && body.touched">
-                        El cuerpo del correo es un campo requerido.
-                    </mat-error>
-                </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Cuerpo de correo</mat-label>
+          <textarea
+            matInput
+            cdkTextareaAutosize
+            #autosize="cdkTextareaAutosize"
+            cdkAutosizeMinRows="5"
+            cdkAutosizeMaxRows="12"
+            placeholder="Descripción"
+            formControlName="body"
+          ></textarea>
+          <mat-hint>Campo requerido</mat-hint>
+          <mat-error *ngIf="body.invalid && body.touched">
+            El cuerpo del correo es un campo requerido.
+          </mat-error>
+        </mat-form-field>
 
-                <mat-form-field appearance="outline">
-                    <mat-label>Observaciones</mat-label>
-                    <input matInput placeholder="XXXXXXXXXXXXXXXXXXXX" formControlName="observations" />
-                    <mat-hint>Campo opcional</mat-hint>
-                </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Observaciones</mat-label>
+          <input
+            matInput
+            placeholder="XXXXXXXXXXXXXXXXXXXX"
+            formControlName="observations"
+          />
+          <mat-hint>Campo opcional</mat-hint>
+        </mat-form-field>
 
-                <mat-form-field appearance="outline">
-                    <mat-label>Enviar a:</mat-label>
+        <mat-form-field appearance="outline">
+          <mat-label>Enviar a:</mat-label>
 
-                    <mat-chip-list #emailChipList aria-label="Email selection">
-                        <mat-chip *ngFor="let email of emails" [selectable]="selectable" [removable]="removable" (removed)="removeEmail(email)">
-                            {{ email }}
-                            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                        </mat-chip>
-                        <input placeholder="Nuevo correo..." #emailInput [matAutocomplete]="auto" [matChipInputFor]="emailChipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="addEmail($event)" />
-                    </mat-chip-list>
+          <mat-chip-list #emailChipList aria-label="Email selection">
+            <mat-chip
+              *ngFor="let email of emails"
+              [selectable]="selectable"
+              [removable]="removable"
+              (removed)="removeEmail(email)"
+            >
+              {{ email }}
+              <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+            </mat-chip>
+            <input
+              placeholder="Nuevo correo..."
+              #emailInput
+              [matAutocomplete]="auto"
+              [matChipInputFor]="emailChipList"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+              (matChipInputTokenEnd)="addEmail($event)"
+            />
+          </mat-chip-list>
 
-                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedEmail($event)">
-                        <mat-option *ngFor="let email of filteredEmails | async" [value]="email">
-                            {{ email }}
-                        </mat-option>
-                    </mat-autocomplete>
-                    <mat-hint>Campo requerido</mat-hint>
-                </mat-form-field>
-                <mat-dialog-actions align="end">
-                    <button type="button" mat-stroked-button color="warn" mat-dialog-close>
-              CERRAR
-            </button>
-                    <button type="submit" mat-raised-button color="primary">
-              GUARDAR
-            </button>
-                    <button [disabled]="
-                filesFormGroup.invalid ||
-                form.invalid ||
-                emails.length === 0 ||
-                budgetFilesList.length === 0 ||
-                reportFilesList.length === 0
-              " mat-raised-button color="primary">
-              ENVIAR
-            </button>
-                </mat-dialog-actions>
-            </div>
-        </mat-step>
-    </mat-horizontal-stepper>
+          <mat-autocomplete
+            #auto="matAutocomplete"
+            (optionSelected)="selectedEmail($event)"
+          >
+            <mat-option
+              *ngFor="let email of filteredEmails | async"
+              [value]="email"
+            >
+              {{ email }}
+            </mat-option>
+          </mat-autocomplete>
+          <mat-hint>Campo requerido</mat-hint>
+        </mat-form-field>
+        <mat-dialog-actions align="end">
+          <button
+            type="button"
+            mat-stroked-button
+            color="warn"
+            mat-dialog-close
+            [disabled]="loading$ | async"
+          >
+            CERRAR
+          </button>
+          <button
+            type="submit"
+            mat-raised-button
+            color="primary"
+            [disabled]="loading$ | async"
+          >
+            GUARDAR
+          </button>
+          <!-- <button
+            [disabled]="
+              filesFormGroup.invalid ||
+              form.invalid ||
+              emails.length === 0 ||
+              budgetFilesList.length === 0 ||
+              reportFilesList.length === 0
+            "
+            mat-raised-button
+            color="primary"
+            (click)="send()"
+          >
+            ENVIAR
+          </button> -->
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="send()"
+            [disabled]="loading$ | async"
+          >
+            ENVIAR
+          </button>
+        </mat-dialog-actions>
+      </div>
+    </mat-step>
+  </mat-horizontal-stepper>
 </mat-dialog-content>
