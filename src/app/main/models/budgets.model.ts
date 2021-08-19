@@ -110,9 +110,20 @@ export interface Budget {
   additionals?: object[];
   afaDate?: string;
   versionCount: number;
-  
+  documentVersion: {
+    version: number,
+    budgets: Array<any>,
+    reports: Array<any>,
+    quotations: Array<any>
+  }
 }
 
+export interface documentVersion {
+  version: number,
+  budgets: Array<any>,
+  reports: Array<string>,
+  quotations: Array<string>
+}
 export interface Additional {
   type: string;
   observation: string;
@@ -125,6 +136,7 @@ export interface RejectionReasonsEntry {
   createdBy: User;
   createdAt: Date;
 }
+
 
 export interface ApprovedEntry {
   createdBy: User;
