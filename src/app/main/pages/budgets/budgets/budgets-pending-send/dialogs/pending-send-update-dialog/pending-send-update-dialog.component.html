@@ -282,7 +282,7 @@
         <div class="file--upload--card">
           <div class="file--upload--card__title">
             <p>INFORME</p>
-            <p>Requerido</p>
+            <p>Opcional</p>
           </div>
 
           <div class="file--upload--card__files">
@@ -437,25 +437,17 @@
           >
             GUARDAR
           </button>
-          <!-- <button
+          <button
             [disabled]="
               filesFormGroup.invalid ||
               form.invalid ||
               emails.length === 0 ||
               budgetFilesList.length === 0 ||
-              reportFilesList.length === 0
+              (loading$ | async)
             "
             mat-raised-button
             color="primary"
             (click)="send()"
-          >
-            ENVIAR
-          </button> -->
-          <button
-            mat-raised-button
-            color="primary"
-            (click)="send()"
-            [disabled]="loading$ | async"
           >
             ENVIAR
           </button>
