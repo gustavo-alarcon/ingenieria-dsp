@@ -1,0 +1,74 @@
+<div class="ms-dialog-header">
+  <mat-icon class="ms-dialog-header__icon">highlight_off</mat-icon>
+  <h2 class="ms-dialog-header__title">Rechazar Presupuesto</h2>
+  <span class="ms-fill"></span>
+  <button mat-icon-button mat-dialog-close>
+    <mat-icon class="ms-dialog-header__close">cancel</mat-icon>
+  </button>
+</div>
+
+<mat-divider></mat-divider>
+
+<mat-dialog-content>
+  <p *ngIf="woChild; else noWOCHILD">
+    ¿Esta seguro de aprobar el presupuesto WO CHILD: {{ woChild }}?
+  </p>
+  <ng-template #noWOCHILD>
+    <p>¿Esta seguro de aprobar el presupuesto WO MAIN: {{ woMain }}</p>
+  </ng-template>
+
+  <form [formGroup]="rejectionFormGroup">
+    <div class="main--wrapper">
+      <div class="main--form">
+        <mat-form-field appearance="outline">
+          <mat-label>Motivo de rechazo</mat-label>
+          <input
+            type="text"
+            matInput
+            formControlName="rejectionReason"
+            [matAutocomplete]="autoRejection"
+            placeholder="Motivo del rechazo"
+          />
+          <mat-autocomplete
+            #autoRejection="matAutocomplete"
+            [displayWith]="showRejection"
+          >
+            <mat-option
+              *ngFor="let option of rejectionReasonList$ | async"
+              [value]="option"
+            >
+              {{ option.name }}
+            </mat-option>
+          </mat-autocomplete>
+          <mat-hint>Campo Obligatorio</mat-hint>
+        </mat-form-field>
+      </div>
+
+      <div class="main--form">
+        <mat-form-field appearance="outline">
+          <mat-label>Detalle de rechazo</mat-label>
+          <textarea
+            matInput
+            placeholder="Detalle del rechazo"
+            formControlName="detailReason"
+          ></textarea>
+          <mat-hint>Campo Opcional</mat-hint>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button type="button" mat-stroked-button color="warn" mat-dialog-close>
+    CERRAR
+  </button>
+  <button
+    (click)="saveRejection()"
+    type="submit"
+    mat-raised-button
+    color="primary"
+    [disabled]="!rejectionFormGroup.valid"
+  >
+    GUARDAR
+  </button>
+</mat-dialog-actions>

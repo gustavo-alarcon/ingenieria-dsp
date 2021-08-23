@@ -73,7 +73,7 @@ export class ReturnDialogComponent implements OnInit {
       if (this.returnForm.invalid) {
         this.returnForm.markAllAsTouched();
         this.loading.next(false);
-        this.snackbar.open('Complete lso comentarios', 'Aceptar', {
+        this.snackbar.open('Agregue un comentario', 'Aceptar', {
           duration: 6000
         });
         return;

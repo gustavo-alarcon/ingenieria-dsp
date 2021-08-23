@@ -7,6 +7,7 @@ import { combineLatest, Observable, Subscription } from 'rxjs';
 import { SparePart } from '../../../models/improvenents.model';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { FormControl } from '@angular/forms';
+import { AuthService } from 'src/app/auth/services/auth.service';
 
 @Component({
   selector: 'app-spare-parts',
@@ -36,6 +37,7 @@ export class SparePartsComponent implements OnInit, OnDestroy {
     private breakpoint: BreakpointObserver,
     private snackBar: MatSnackBar,
     private impServices: ImprovementsService,
+    public authService: AuthService
   ) { }
 
   ngOnInit(): void {

@@ -6,6 +6,7 @@ import { MainRoutingModule } from './main-routing.module';
 
 import { MainComponent } from './main/main.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { AngularFireFunctionsModule } from '@angular/fire/functions';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     MainRoutingModule,
     MaterialModule,
     ReactiveFormsModule,
+    AngularFireFunctionsModule
   ]
 })
 export class MainModule { }

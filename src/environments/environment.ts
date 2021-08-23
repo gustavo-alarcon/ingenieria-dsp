@@ -6,15 +6,15 @@ export const environment = {
   production: false,
   version: 'V0.0.0',
   firebase: {
-    apiKey: 'AIzaSyACukIAnjc_oDwpWpaeYEDNhd-mzw-uH1M',
-    authDomain: 'ferreyros-mvp.firebaseapp.com',
-    projectId: 'ferreyros-mvp',
-    storageBucket: 'ferreyros-mvp.appspot.com',
-    messagingSenderId: '139653549940',
-    appId: '1:139653549940:web:d8627ab4a24bd12369a621',
-    measurementId: 'G-6L4F70RLP7'
+    apiKey: 'AIzaSyDOJpfD_vBakgb1iJVHQwcMNm6c5ussd3g',
+    authDomain: 'ferreyros-mvp-staging.firebaseapp.com',
+    projectId: 'ferreyros-mvp-staging',
+    storageBucket: 'ferreyros-mvp-staging.appspot.com',
+    messagingSenderId: '30178828979',
+    appId: '1:30178828979:web:e14b0ea612200c136886c6',
+    measurementId: 'G-M0KTD1C0YV',
   },
-  useEmulators: true
+  useEmulators: true,
 };
 
 /*

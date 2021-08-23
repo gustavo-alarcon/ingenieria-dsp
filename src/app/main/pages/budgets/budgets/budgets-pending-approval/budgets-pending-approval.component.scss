@@ -1,0 +1,115 @@
+.quantity-wrapper {
+  cursor: default;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 1em;
+  height: 45px;
+  background: #27ae60;
+  border: 1px solid #d8d8d8;
+  border-radius: 5px;
+  color: white;
+  font-family: Roboto;
+  font-weight: 500;
+  font-size: 16px;
+  margin-right: 0.4em;
+  .quantity {
+    font-family: Poppins;
+    font-weight: 600;
+    font-size: 30px;
+    letter-spacing: 0.15px;
+    margin-left: 10px;
+  }
+}
+
+.ms-kanban-toolbar__input {
+  margin-right: 12px;
+  width: 150px;
+}
+
+.download {
+  margin-left: 5px;
+  height: 45px !important;
+}
+
+.table-wrapper {
+  overflow: auto;
+}
+
+table {
+  margin-top: 1.5em;
+  border: 1px solid #f1eeee;
+  .table__cell {
+    min-width: 100px;
+    padding: 0px 8px;
+    font-size: 14px;
+    &:first-child {
+      padding-left: 36px;
+    }
+  }
+  .observaciones-taller {
+    min-width: 500px;
+  }
+}
+
+th {
+  background-color: #f0eefc;
+  font-weight: bold;
+  font-size: 16px;
+  letter-spacing: 0.15px;
+  color: #2b2b2b;
+}
+
+td {
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  color: #000000;
+}
+
+.budget--status__bubble {
+  @mixin statusBubble {
+    margin: 0.5em 0;
+    box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.25);
+    border-radius: 5px;
+    padding: 1em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: 400;
+    text-align: center;
+    cursor: default;
+  }
+  &--approved {
+    background: #27ae60;
+    @include statusBubble();
+  }
+  &--rejected {
+    background: #b00020;
+    @include statusBubble();
+  }
+  &--send--pending {
+    background: #2f80ed;
+    @include statusBubble();
+  }
+  &--approval--pending {
+    background: rgba(98, 0, 238, 0.38);
+    @include statusBubble();
+  }
+  &--parallel {
+    background: #f2994a;
+    @include statusBubble();
+  }
+  &--modified {
+    background: #f0d801;
+    @include statusBubble();
+  }
+  &--customer {
+    background: #3b3b3b;
+    @include statusBubble();
+  }
+}
+
+.modified--budget__highlight--row {
+  background: #fcf1d2;
+}

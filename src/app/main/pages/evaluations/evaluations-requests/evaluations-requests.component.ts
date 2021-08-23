@@ -80,7 +80,7 @@ export class EvaluationsRequestsComponent implements OnInit, OnDestroy {
     private breakpoint: BreakpointObserver,
     public dialog: MatDialog,
     private evaltService: EvaluationsService,
-    private auth: AuthService
+    public authService: AuthService
   ) { }
 
   ngOnInit(): void {
@@ -101,7 +101,7 @@ export class EvaluationsRequestsComponent implements OnInit, OnDestroy {
         filter(input => input !== null),
         startWith<any>('')),
       this.workshopControl.valueChanges.pipe(startWith('')),
-      this.auth.getGeneralConfig()
+      this.authService.getGeneralConfig()
     ).pipe(
       map(([evaluations, search, workshopCodes, generalConfig]) => {
         const searchTerm = search.toLowerCase().trim();
@@ -179,12 +179,8 @@ export class EvaluationsRequestsComponent implements OnInit, OnDestroy {
 
             return evalInterval
 
-          }(), 5000);
+          }(), 120000);
         });
-
-        setInterval(function hello() {
-          return hello;
-        }(), 5000);
 
         preFilterSearch.map(evaluation => {
           let match = false;

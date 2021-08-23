@@ -10,6 +10,10 @@
       {
         "source": "**",
         "destination": "/index.html"
+      },
+      {
+        "source": "/setClaimsAsTechnician",
+        "function": "setClaimsAsTechnician"
       }
     ]
   },
@@ -19,9 +23,6 @@
   "firestore": {
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
-  },
-  "storage": {
-    "rules": "storage.rules"
   },
   "emulators": {
     "auth": {

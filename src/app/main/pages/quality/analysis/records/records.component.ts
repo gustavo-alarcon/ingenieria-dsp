@@ -47,7 +47,7 @@ export class RecordsComponent implements OnInit {
     private breakpoint: BreakpointObserver,
     public dialog: MatDialog,
     private qualityService: QualityService,
-    private auth: AuthService
+    public authService: AuthService
   ) { }
 
   ngOnInit(): void {
@@ -68,7 +68,7 @@ export class RecordsComponent implements OnInit {
         filter(input => input !== null),
         startWith<any>('')),
       this.eventTypeControl.valueChanges.pipe(startWith('')),
-      this.auth.getGeneralConfigQuality()
+      this.authService.getGeneralConfigQuality()
     ).pipe(
       map(([qualities, search, codeEventType, generalConfig]) => {
 
@@ -82,9 +82,9 @@ export class RecordsComponent implements OnInit {
           preFilterSearch = preFilterEventType.filter(quality => {
             return String(quality.workOrder).toLowerCase().includes(searchTerm) ||
               String(quality.component).toLowerCase().includes(searchTerm) ||
-              String(quality.workShop).toLowerCase().includes(searchTerm)  ||
+              String(quality.workShop).toLowerCase().includes(searchTerm) ||
               String(quality.partNumber).toLowerCase().includes(searchTerm) ||
-              String(quality.enventDetail).toLowerCase().includes(searchTerm)  ||
+              String(quality.enventDetail).toLowerCase().includes(searchTerm) ||
               String(quality.packageNumber).toLowerCase().includes(searchTerm) ||
               String(quality.miningOperation).toLowerCase().includes(searchTerm) ||
               String(quality.componentHourMeter).toLowerCase().includes(searchTerm);
@@ -96,7 +96,7 @@ export class RecordsComponent implements OnInit {
               String(quality.component).toLowerCase().includes(searchTerm) ||
               String(quality.workShop).toLowerCase().includes(searchTerm) ||
               String(quality.partNumber).toLowerCase().includes(searchTerm) ||
-              String(quality.enventDetail).toLowerCase().includes(searchTerm)  ||
+              String(quality.enventDetail).toLowerCase().includes(searchTerm) ||
               String(quality.packageNumber).toLowerCase().includes(searchTerm) ||
               String(quality.miningOperation).toLowerCase().includes(searchTerm) ||
               String(quality.componentHourMeter).toLowerCase().includes(searchTerm);
@@ -108,7 +108,7 @@ export class RecordsComponent implements OnInit {
             clearInterval(quality.registryTimer);
           }
 
-          quality.registryTimer = setInterval(() => {
+          quality.registryTimer = setInterval(function recordsInterval() {
             // Get today's date and time
             const now = new Date().getTime();
             const registry = quality.createdAt['seconds'] * 1000;
@@ -145,7 +145,9 @@ export class RecordsComponent implements OnInit {
               seconds: seconds
             };
 
-          }, 5000);
+            return recordsInterval
+
+          }(), 120000);
         });
 
         return preFilterSearch;

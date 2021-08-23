@@ -15,6 +15,7 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { ReplacementDialogImprovementsComponent } from './dialogs/replacement-dialog-improvements/replacement-dialog-improvements.component';
 import { FormControl } from '@angular/forms';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { AuthService } from 'src/app/auth/services/auth.service';
 
 @Component({
   selector: 'app-improvements',
@@ -50,6 +51,7 @@ export class ImprovementsComponent implements OnInit, OnDestroy {
   constructor(
     private breakpoint: BreakpointObserver,
     private impvServices: ImprovementsService,
+    public authService: AuthService,
     public dialog: MatDialog,
   ) { }
 

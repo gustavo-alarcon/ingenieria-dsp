@@ -10,7 +10,7 @@
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-date-range-picker #picker></mat-date-range-picker>
         </mat-form-field>
-        
+
         <mat-form-field appearance="outline" class="ms-kanban-toolbar__input"
             [ngClass]="isMobile ? 'ms-kanban-toolbar__input--mobile' : 'ms-kanban-toolbar__input--desktop'">
             <mat-icon matPrefix>location_on</mat-icon>
@@ -21,7 +21,7 @@
                 </mat-option>
             </mat-select>
         </mat-form-field>
-    
+
         <mat-form-field appearance="outline" class="ms-kanban-toolbar__input"
             [ngClass]="isMobile ? 'ms-kanban-toolbar__input--mobile' : 'ms-kanban-toolbar__input--desktop'">
             <mat-icon matPrefix>location_on</mat-icon>
@@ -32,7 +32,7 @@
                 </mat-option>
             </mat-select>
         </mat-form-field>
-    
+
         <mat-form-field appearance="outline" class="ms-kanban-toolbar__input"
             [ngClass]="isMobile ? 'ms-kanban-toolbar__input--mobile' : 'ms-kanban-toolbar__input--desktop'">
             <mat-label>Taller</mat-label>
@@ -47,6 +47,7 @@
         </mat-form-field>
         <span class="ms-fill"></span>
         <button mat-button class="ms-kanban-toolbar__button"
+            *ngIf="authService.uiConfig.quality.analysis.tabs.results.toolbar.download"
             [ngClass]="isMobile ? 'ms-kanban-toolbar__button--mobile' : 'ms-kanban-toolbar__button--desktop'"
             (click)="download()">
             <mat-icon matPrefix>download</mat-icon>
@@ -164,19 +165,34 @@
                     <td mat-cell *matCellDef="let element; let i = index" class="table__cell">
                         <ng-container>
                             <mat-menu #rawMenu="matMenu">
-                                <button mat-menu-item (click)="accCorrective(element)">
+                                <button mat-menu-item
+                                    *ngIf="authService.uiConfig.quality.analysis.tabs.results.actions.correctiveActions"
+                                    (click)="accCorrective(element)">
                                     <mat-icon>fact_check</mat-icon> Acc Correctivas
                                 </button>
-                                <button mat-menu-item (click)="detailDialog(element, element.eventType)">
+                                <button mat-menu-item
+                                    *ngIf="authService.uiConfig.quality.analysis.tabs.results.actions.details"
+                                    (click)="detailDialog(element, element.eventType)">
                                     <mat-icon>visibility</mat-icon> Detalle
                                 </button>
-                                <button mat-menu-item (click)="timeline(element)">
+                                <button mat-menu-item
+                                    *ngIf="authService.uiConfig.quality.analysis.tabs.results.actions.report"
+                                    (click)="printPdf(element)">
+                                    <mat-icon>picture_as_pdf</mat-icon> Reporte
+                                </button>
+                                <button mat-menu-item
+                                    *ngIf="authService.uiConfig.quality.analysis.tabs.results.actions.timeLine"
+                                    (click)="timeline(element)">
                                     <mat-icon>timeline</mat-icon> Línea de tiempo
                                 </button>
-                                <button mat-menu-item (click)="edit(element, element.eventType)">
+                                <button mat-menu-item
+                                    *ngIf="authService.uiConfig.quality.analysis.tabs.results.actions.edit"
+                                    (click)="edit(element, element.eventType)">
                                     <mat-icon>edit</mat-icon>Editar
                                 </button>
-                                <button mat-menu-item (click)="deleteQuality(element)">
+                                <button mat-menu-item
+                                    *ngIf="authService.uiConfig.quality.analysis.tabs.results.actions.delete"
+                                    (click)="deleteQuality(element)">
                                     <mat-icon>delete</mat-icon>Borrar
                                 </button>
 

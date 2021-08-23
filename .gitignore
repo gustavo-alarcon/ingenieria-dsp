@@ -1,9 +1,10 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
-
+firestore-debug.log
 # compiled output
 /dist
 /tmp
 /out-tsc
+/functions/backup
 # Only exists if Bazel was run
 /bazel-out
 
@@ -46,3 +47,44 @@ testem.log
 Thumbs.db
 .firebase/hosting.ZGlzdC9pbmdlbmllcmlhLWRzcA.cache
 firebase-debug.log
+ui-debug.log
+firestore-debug.log
+pubsub-debug.log
+backup/
+*.log
+
+firebase-export-1625732300231hH97XM/firestore_export/all_namespaces/all_kinds/all_namespaces_all_kinds.export_metadata
+
+firebase-export-1625732300231hH97XM/firestore_export/all_namespaces/all_kinds/output-0
+
+firebase-export-1625732300231hH97XM/firestore_export/all_namespaces/all_kinds/output-1
+
+firebase-export-1625732300231hH97XM/firestore_export/all_namespaces/all_kinds/output-2
+
+firebase-export-1625732300231hH97XM/firestore_export/all_namespaces/all_kinds/output-3
+
+firebase-export-1625732300231hH97XM/firestore_export/firestore_export.overall_export_metadata
+firebase-export-1625732300231hH97XM/firestore_export/firestore_export.overall_export_metadata
+firebase-export-1625732300231hH97XM/firestore_export/all_namespaces/all_kinds/all_namespaces_all_kinds.export_metadata
+firebase-export-1625732300231hH97XM/firestore_export/all_namespaces/all_kinds/output-0
+firebase-export-1625732300231hH97XM/firestore_export/all_namespaces/all_kinds/output-1
+firebase-export-1625732300231hH97XM/firestore_export/all_namespaces/all_kinds/output-2
+firebase-export-1625732300231hH97XM/firestore_export/all_namespaces/all_kinds/output-3
+
+firebase-export-16262315556853IZeby/firestore_export/all_namespaces/all_kinds/all_namespaces_all_kinds.export_metadata
+
+firebase-export-16262315556853IZeby/firestore_export/all_namespaces/all_kinds/output-0
+
+firebase-export-16262315556853IZeby/firestore_export/all_namespaces/all_kinds/output-1
+
+firebase-export-16262315556853IZeby/firestore_export/all_namespaces/all_kinds/output-2
+
+firebase-export-16262315556853IZeby/firestore_export/all_namespaces/all_kinds/output-3
+
+firebase-export-16262315556853IZeby/firestore_export/firestore_export.overall_export_metadata
+
+report.20210713.194454.22040.0.001.json
+
+.firebase/hosting.ZGlzdFxpbmdlbmllcmlhLWRzcA.cache
+
+.firebase/

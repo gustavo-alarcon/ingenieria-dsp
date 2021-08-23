@@ -1,0 +1,271 @@
+<div *ngIf="auth.user$ | async as user">
+    <div class="ms-kanban-toolbar">
+        <div class="quantity-wrapper">
+            Cant. W.O.
+            <span class="quantity">{{ cantWO }}</span>
+        </div>
+
+        <mat-form-field appearance="fill" [ngClass]="
+        isMobile
+          ? 'ms-kanban-toolbar__input--mobile'
+          : 'ms-kanban-toolbar__input'
+      ">
+            <mat-label>WO MAIN</mat-label>
+            <input type="text" [formControl]="woMainFormControl" matInput placeholder="WO MAIN" autocomplete="off" [disabled]="cantWO < 1" />
+            <mat-icon matPrefix>search</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" [ngClass]="
+        isMobile
+          ? 'ms-kanban-toolbar__input--mobile'
+          : 'ms-kanban-toolbar__input'
+      ">
+            <mat-label>WO CHILD</mat-label>
+            <input type="text" [formControl]="woChildFormControl" matInput placeholder="WO CHILD" autocomplete="off" [disabled]="cantWO < 1" />
+            <mat-icon matPrefix>search</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" [ngClass]="
+        isMobile
+          ? 'ms-kanban-toolbar__input--mobile'
+          : 'ms-kanban-toolbar__input'
+      ">
+            <mat-label>Cliente</mat-label>
+            <input type="text" [formControl]="clienteFormControl" matInput placeholder="Cliente" autocomplete="off" [disabled]="cantWO < 1" />
+            <mat-icon matPrefix>search</mat-icon>
+        </mat-form-field>
+
+        <button [disabled]="cantWO < 1" class="download" mat-raised-button color="primary" (click)="downloadReport()">
+      DESCARGAR
+      <mat-icon aria-label="agregar" class="icon-add">download</mat-icon>
+    </button>
+  </div>
+
+  <mat-progress-bar
+    mode="indeterminate"
+    *ngIf="loading$ | async"
+  ></mat-progress-bar>
+
+  <div class="body-container">
+    <div class="table-wrapper">
+      <table
+        mat-table
+        [dataSource]="tableData"
+        matSort
+        class="mat-elevation-z8"
+      >
+        <ng-container matColumnDef="woMain">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            class="table__cell"
+          >
+            WO MAIN
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.woMain ? element.woMain : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="woChild">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            class="table__cell"
+          >
+            WO CHILD
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.woChild ? element.woChild : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="cliente">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            class="table__cell"
+          >
+            Cliente
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.cliente ? element.cliente : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="afa">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            class="table__cell"
+          >
+            AFA
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.afa ? element.afa : "---" }}
+          </td>
+        </ng-container>
+
+        <!-- <ng-container matColumnDef="afaDate">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            class="table__cell"
+          >
+            FECHA AFA
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.afaDate ? element.afaDate : "---" }}
+          </td>
+        </ng-container> -->
+
+        <ng-container matColumnDef="resumen">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            class="table__cell"
+          >
+            Resumen
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.resumen ? element.resumen : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="cotizacionFesa">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            class="table__cell"
+          >
+            Cotización FESA
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.cotizacionFesa ? element.cotizacionFesa : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="cotizacionText">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            class="table__cell"
+          >
+            Cotización TEXT
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.cotizacionText ? element.cotizacionText : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="informe">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            class="table__cell"
+          >
+            Informe
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ element.informe ? element.informe : "---" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="tiempoObjetivoEnvioPPTO">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            class="table__cell"
+          >
+            Tiempo objetivo envío PPTO
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{
+              element.tiempoObjetivoEnvioPPTO
+                ? (element.tiempoObjetivoEnvioPPTO.toDate()
+                  | date: "dd/MM/yyyy")
+                : "---"
+            }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="diasRestantesEnvioPPTO">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            class="table__cell"
+          >
+            Días restantes envío PPTO
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{ daysLeft(element) }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="fechaReleasedIoChild">
+          <th
+            mat-header-cell
+            *matHeaderCellDef
+            mat-sort-header
+            class="table__cell"
+          >
+            Fecha released
+          </th>
+          <td mat-cell *matCellDef="let element" class="table__cell">
+            {{
+              element.fechaReleasedIoChild
+                ? (element.fechaReleasedIoChild.toDate() | date: "d/M/y")
+                : "---"
+            }}
+          </td>
+        </ng-container>
+
+                <ng-container matColumnDef="actions" stickyEnd>
+                    <th mat-header-cell *matHeaderCellDef class="table__cell">
+                        Acciones
+                    </th>
+                    <td mat-cell *matCellDef="let element">
+                        <ng-container>
+                            <mat-menu #rawMenu="matMenu">
+                                <button class="w3-small" mat-menu-item (click)="updateDialog(element)">
+                  <mat-icon>create</mat-icon>
+                  Actualizar PPTO
+                </button>
+                                <button class="w3-small" mat-menu-item (click)="timelineDialog(element)">
+                  <mat-icon>timeline</mat-icon>
+                  Historial
+                </button>
+                                <button class="w3-small" mat-menu-item (click)="deleteDialog(element)">
+                  <mat-icon>delete</mat-icon>
+                  Borrar
+                </button>
+                            </mat-menu>
+
+                            <button mat-icon-button [matMenuTriggerFor]="rawMenu">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+                        </ng-container>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns" [ngClass]="{
+            'modified--budget__highlight--row':
+              row.statusPresupuesto == 'PPTO. MODIFICADO'
+          }"></tr>
+            </table>
+        </div>
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </div>
+</div>

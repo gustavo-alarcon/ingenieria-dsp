@@ -1,6 +1,7 @@
 <div class="container">
   <div class="ms-kanban-toolbar mat-elevation-z4">
     <button mat-stroked-button class="ms-kanban-toolbar__button"
+      *ngIf="authService.uiConfig.preEvaluations.tabs.requests.toolbar.create"
       [ngClass]="isMobile ? 'ms-kanban-toolbar__button--mobile' : 'ms-kanban-toolbar__button--desktop'"
       (click)="create()">
       <mat-icon>add</mat-icon>
@@ -25,7 +26,9 @@
     <div class="ms-kanban-toolbar__counter">
       {{counter | number : '2.'}}
     </div>
-    <button mat-icon-button class="ms-kanban-toolbar__button--icon" (click)="settingDialog()">
+    <button mat-icon-button class="ms-kanban-toolbar__button--icon"
+      *ngIf="authService.uiConfig.preEvaluations.tabs.requests.toolbar.configuration"
+      (click)="settingDialog()">
       <mat-icon>settings</mat-icon>
     </button>
   </div>
@@ -39,13 +42,19 @@
           <span class="ms-fill"></span>
           <div>
             <mat-menu #requestsMenu="matMenu">
-              <button mat-menu-item (click)="initDialog(item)">
+              <button mat-menu-item
+                *ngIf="authService.uiConfig.preEvaluations.tabs.requests.actions.init"  
+                (click)="initDialog(item)">
                 <mat-icon>play_circle_outline</mat-icon> Iniciar
               </button>
-              <button mat-menu-item (click)="obsDialog(item)">
+              <button mat-menu-item
+                *ngIf="authService.uiConfig.preEvaluations.tabs.requests.actions.observations"  
+                (click)="obsDialog(item)">
                 <mat-icon>visibility</mat-icon> Observacion
               </button>
-              <button mat-menu-item (click)="timeline(item)">
+              <button mat-menu-item
+                *ngIf="authService.uiConfig.preEvaluations.tabs.requests.actions.timeLine"  
+                (click)="timeline(item)">
                 <mat-icon>timeline</mat-icon> Línea de tiempo
               </button>
             </mat-menu>

@@ -1,0 +1,45 @@
+<div class="container">
+  <h2 mat-dialog-title class="card">
+    <div class="delete-title" mat-dialog-close>
+      <mat-icon mat-list-icon>delete</mat-icon>
+    </div>
+    Borrar
+    <div mat-dialog-close class="delete-title--close">
+      <mat-icon>clear</mat-icon>
+    </div>
+  </h2>
+  <mat-divider></mat-divider>
+  <mat-progress-bar
+    mode="indeterminate"
+    *ngIf="loading$ | async"
+  ></mat-progress-bar>
+  <mat-dialog-content class="confirm">
+    <p *ngIf="id; else noWOCHILD">
+      ¿Estas seguro de borrar la entrada con WO CHILD: {{ id }}?
+    </p>
+
+    <ng-template #noWOCHILD>
+      <p>¿Estas seguro de borrar esta entrada?</p>
+    </ng-template>
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button
+      type="button"
+      mat-stroked-button
+      color="warn"
+      class="footer__btn-close"
+      mat-dialog-close
+    >
+      CERRAR
+    </button>
+    <button
+      type="button"
+      mat-raised-button
+      color="primary"
+      class="footer__btn-save"
+      (click)="confirmDelete()"
+    >
+      SI, BORRAR
+    </button>
+  </mat-dialog-actions>
+</div>

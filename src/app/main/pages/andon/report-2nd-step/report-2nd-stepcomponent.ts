@@ -54,7 +54,7 @@ export class report2ndStepComponent
 
   nameBahia: string;
   workShop: string;
-  otChild: number;
+  otChild: string;
   typeProblem$: Observable<AndonProblemType[]>;
   andOn$: Observable<Andon>;
   user: User;
@@ -94,14 +94,12 @@ export class report2ndStepComponent
     public authService: AuthService
   ) {
     const info = this.route.snapshot.paramMap.get('id');
-    let parts = [];
-    parts = info.split('-');
 
-    this.workShop = parts['0'];
-    this.nameBahia = parts['1'];
-    this.otChild = parts['2'];
+    [this.workShop, this.nameBahia, this.otChild] = info.split('@');
 
     this.currentId = this.otChild.toString();
+    console.log([this.workShop, this.nameBahia, this.otChild]);
+
   }
 
   ngOnInit(): void {
@@ -153,7 +151,7 @@ export class report2ndStepComponent
     this.loading.next(false);
   }
 
-  ngAfterViewInit(): void {}
+  ngAfterViewInit(): void { }
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
@@ -182,7 +180,7 @@ export class report2ndStepComponent
             this.otChild,
             this.user,
             imagesObj,
-            this.emailArray          )
+            this.emailArray)
           .pipe(take(1))
           .subscribe((res) => {
             res

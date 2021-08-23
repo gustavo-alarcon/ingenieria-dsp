@@ -22,36 +22,45 @@ import { MaterialModule } from './material/material.module';
 import { USE_EMULATOR as USE_AUTH_EMULATOR } from '@angular/fire/auth';
 import { USE_EMULATOR as USE_FIRESTORE_EMULATOR } from '@angular/fire/firestore';
 import { USE_EMULATOR as USE_FUNCTIONS_EMULATOR } from '@angular/fire/functions';
+// import { USE_EMULATOR as USE_STORAGE_EMULATOR } from '@angular/fire/storage';
 
 @NgModule({
   declarations: [
     AppComponent,
     NotFoundComponent,
     LandingComponent,
-    UpdateReadyComponent
+    UpdateReadyComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     AngularFireModule.initializeApp(environment.firebase),
-    AngularFirestoreModule,
+    // AngularFirestoreModule.enablePersistence(),
     AngularFireAuthModule,
     AngularFireStorageModule,
     HttpClientModule,
     NgxMaskModule.forRoot(),
     LazyLoadImageModule,
-    MaterialModule
+    MaterialModule,
   ],
-  entryComponents: [
-    UpdateReadyComponent
-  ],
+  entryComponents: [UpdateReadyComponent],
   providers: [
-   /*  { provide: BUCKET, useValue: environment.firebase.storageBucket },
-    { provide: USE_AUTH_EMULATOR, useValue: environment.useEmulators ? ['localhost', 9099] : undefined },
-    { provide: USE_FIRESTORE_EMULATOR, useValue: environment.useEmulators ? ['localhost', 8083] : undefined },
-    { provide: USE_FUNCTIONS_EMULATOR, useValue: environment.useEmulators ? ['localhost', 5001] : undefined } */
+    { provide: BUCKET, useValue: environment.firebase.storageBucket },
+    // {
+    //   provide: USE_AUTH_EMULATOR,
+    //   useValue: environment.useEmulators ? ['localhost', 9099] : undefined,
+    // },
+    {
+      provide: USE_FIRESTORE_EMULATOR,
+      useValue: environment.useEmulators ? ['localhost', 8080] : undefined,
+    },
+    {
+      provide: USE_FUNCTIONS_EMULATOR,
+      useValue: environment.useEmulators ? ['localhost', 5001] : undefined,
+    },
+    // { provide: USE_STORAGE_EMULATOR, useValue: environment.useEmulators ? ['localhost', 9199] : undefined }
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

@@ -4,6 +4,7 @@
         <h1 class="ms-toolbar__title" [ngClass]="isMobile ? 'ms-toolbar__title--mobile' : 'ms-toolbar__title--desktop'">
             Resumen</h1>
         <button mat-stroked-button class="ms-toolbar__button" (click)="downloadXlsx(summaryDataSource.data)"
+            *ngIf="authService.uiConfig.spareParts.summary.toolbar.download"
             [disabled]="summaryDataSource.data.length < 1"
             [ngClass]="isMobile ? 'ms-toolbar__button--mobile' : 'ms-toolbar__button--desktop'">
             <mat-icon>download</mat-icon>
@@ -131,7 +132,7 @@
                     Acciones
                 </th>
                 <td mat-cell *matCellDef="let raw" class="ms-table__header">
-                    <button mat-icon-button class="w3-small" (click)="remove(raw.id)">
+                    <button mat-icon-button class="w3-small" (click)="remove(raw.id)" *ngIf="authService.uiConfig.spareParts.summary.actions.delete">
                         <mat-icon>remove_circle</mat-icon>
                     </button>
                 </td>

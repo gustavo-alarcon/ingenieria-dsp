@@ -23,7 +23,8 @@
     <div class="ms-kanban-toolbar__counter">
       {{counter | number : '2.'}}
     </div>
-    <button mat-icon-button class="ms-kanban-toolbar__button--icon" (click)="settingDialog()">
+    <button mat-icon-button class="ms-kanban-toolbar__button--icon" (click)="settingDialog()"
+      *ngIf="authService.uiConfig.quality.analysis.tabs.tracing.toolbar.configuration">
       <mat-icon>settings</mat-icon>
     </button>
   </div>
@@ -46,17 +47,21 @@
           </span>
           <div>
             <mat-menu #requestsMenu="matMenu">
-              <button mat-menu-item (click)="detailDialog(item, item.eventType)">
+              <button mat-menu-item *ngIf="authService.uiConfig.quality.analysis.tabs.tracing.actions.details"
+                (click)="detailDialog(item, item.eventType)">
                 <mat-icon>visibility</mat-icon> Detalle
               </button>
-              <button mat-menu-item (click)="accCorrective(item)">
+              <button mat-menu-item *ngIf="authService.uiConfig.quality.analysis.tabs.tracing.actions.correctiveActions"
+                (click)="accCorrective(item)">
                 <mat-icon>fact_check</mat-icon> Acc Correctivas
               </button>
-              <button mat-menu-item (click)="timeline(item)">
-                <mat-icon>timeline</mat-icon> Línea de tiempo
+              <button mat-menu-item *ngIf="authService.uiConfig.quality.analysis.tabs.tracing.actions.report"
+                (click)="printPdf(item)">
+                <mat-icon>picture_as_pdf</mat-icon> Reporte
               </button>
-              <button mat-menu-item (click)="reports(item)">
-                <mat-icon>description</mat-icon>Ver reportes
+              <button mat-menu-item *ngIf="authService.uiConfig.quality.analysis.tabs.tracing.actions.timeLine"
+                (click)="timeline(item)">
+                <mat-icon>timeline</mat-icon> Línea de tiempo
               </button>
             </mat-menu>
             <button mat-icon-button [matMenuTriggerFor]="requestsMenu">
@@ -67,10 +72,13 @@
         <div class="info-box">
           <div class="lj" matTooltip="WOF" matTooltipPosition="above"><span>OT {{item.workOrder}}</span> </div>
           <div class="info-row"> Componente: <span> {{item.component}}</span> </div>
-          <div *ngIf="item.workShop" class="info-row"> Taller: <span> {{item.workShop? item.workShop : '-'}}</span></div>
-          <div *ngIf="item.miningOperation" class="info-row"> Operación minera: <span> {{item.miningOperation? item.miningOperation : '-'}}</span></div>
+          <div *ngIf="item.workShop" class="info-row"> Taller: <span> {{item.workShop? item.workShop : '-'}}</span>
+          </div>
+          <div *ngIf="item.miningOperation" class="info-row"> Operación minera: <span> {{item.miningOperation?
+              item.miningOperation : '-'}}</span></div>
           <div class="info-row"> Especialista: <span> {{item.specialist['name']}}</span></div>
-          <div class="info-row"> Fecha: <span> {{(item.createdAt['seconds'] * 1000) | date : 'dd/MM/yy - hh:mm:ss'}} </span></div>
+          <div class="info-row"> Fecha: <span> {{(item.createdAt['seconds'] * 1000) | date : 'dd/MM/yy - hh:mm:ss'}}
+            </span></div>
         </div>
         <div class="ms-fill"></div>
       </div>

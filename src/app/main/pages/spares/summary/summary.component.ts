@@ -12,6 +12,7 @@ import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteSparePartDialogComponent } from './dialogs/delete-spare-part-dialog/delete-spare-part-dialog.component';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { AuthService } from 'src/app/auth/services/auth.service';
 
 @Component({
   selector: 'app-summary',
@@ -45,6 +46,7 @@ export class SummaryComponent implements OnInit, OnDestroy {
   constructor(
     private breakpoint: BreakpointObserver,
     private impService: ImprovementsService,
+    public authService: AuthService,
     private dialog: MatDialog
   ) { }
 
@@ -138,7 +140,7 @@ export class SummaryComponent implements OnInit, OnDestroy {
         item.improvedPart ? item.improvedPart : '---',
         item.currentPart ? item.currentPart : '---',
         item.createdAt ? new Date(item.createdAt['seconds'] * 1000) : '---',
-        item.stock ? item.stock : '---',
+        item.stock ? item.stock : 0,
         item.availability ? new Date(item.availability['seconds'] * 1000) : '---',
       ];
       tableXlsx.push(temp);

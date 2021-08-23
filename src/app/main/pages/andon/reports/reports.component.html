@@ -47,8 +47,9 @@
             {{item.atentionTime?.minutes | number : '2.'}} :
             {{item.atentionTime?.seconds | number : '2.'}}
           </h3>
+          <div class="cards__body--ot">{{item.otChild}}</div>
           <div class="cards__body--supplies">{{item.problemType | slice : 0:9}}</div>
-          <button mat-raised-button class="cards__body--return" (click)="returnDialog(item)">RETOMAR</button>
+          <button mat-raised-button class="cards__body--return mat-elevation-z8" (click)="returnDialog(item)">RETOMAR</button>
         </div>
       </div>
     </div>

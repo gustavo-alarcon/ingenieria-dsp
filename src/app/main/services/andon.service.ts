@@ -51,7 +51,7 @@ export class AndonService {
     form,
     workshop: string,
     nameBahia: string,
-    otchild: number,
+    otchild: string,
     user: User,
     imagesObj,
     emailArray
