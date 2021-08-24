@@ -5,6 +5,8 @@ firestore-debug.log
 /tmp
 /out-tsc
 /functions/backup
+/backup
+/ferreyros-mvp-staging
 # Only exists if Bazel was run
 /bazel-out
 

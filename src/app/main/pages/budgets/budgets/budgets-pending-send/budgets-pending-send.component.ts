@@ -548,48 +548,37 @@ export class BudgetsPendingSendComponent implements OnInit {
 
   daysLeft(budget: Budget): string {
     // Get the goal Date and convert it to a moment.js object
+    console.log('budget ', budget);
+    if (typeof budget.tiempoObjetivoEnvioPPTO === 'number'){
 
-    if(typeof budget.tiempoObjetivoEnvioPPTO === 'number'){
-        // convertir fechaApert. en milisegundos
-       
-        const openDate = budget.fechaAperturaChild['seconds'] * 1000;
-        
-        // convertir los dias del tiempoOb. en mili segundos
-        const timeDate = budget.tiempoObjetivoEnvioPPTO * 8.64e+7;
-      
+      // convertir fechaApert. en milisegundos
+      const openDate = budget.fechaAperturaChild['seconds'] * 1000;
+      // convertir los dias del tiempoOb. en mili segundos
+      const timeDate = budget.tiempoObjetivoEnvioPPTO * 8.64e+7;
+      const goalDate = openDate + timeDate;
 
-       const goalDate = openDate + timeDate;
+      const leftDate = goalDate -  Date.now();
 
+      const date = (leftDate / 8.64e+7).toFixed(2);
 
-       const leftDate = goalDate -  Date.now();
-
-       const date = (leftDate / 8.64e+7).toFixed(2);
-
-       return date;
+      return date;
 
     }else{
-    
-    
-  
+
     const goalDate: moment.Moment = moment(
       budget.tiempoObjetivoEnvioPPTO.toDate()
-    ) 
-
-    
-
+    );
 
     // Get the difference from the current moment() in days
     const diff: number = goalDate.diff(moment(), 'days');
 
 
-    if (diff >= 0) return diff.toString();
+    return diff.toString();
 
-    return '---';
     }
-    
   }
 
-  public timelineDialog (element: Budget){
+  public timelineDialog(element: Budget): void {
     const a = this.MatDialog.open(BudgetsPendingHistoryComponent, {
       width: '90vw',
       maxWidth: '700px',
