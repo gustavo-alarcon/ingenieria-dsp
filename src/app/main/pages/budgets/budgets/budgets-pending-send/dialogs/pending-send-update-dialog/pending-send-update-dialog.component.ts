@@ -245,9 +245,9 @@ export class PendingSendUpdateDialogComponent implements OnInit {
       // Update additionals
       this.loading.next(true);
       this._budgetService
-        .updateBudgetFields(this.data.id, {
+        .updateBudgetFields(this.data.id, this.data,{
           additionals: currentAdditionalDocs,
-        })
+        }, this.filesFormGroup.value)
         .subscribe((batch: firebase.default.firestore.WriteBatch) => {
           batch.commit().then(() => {
             this.loading.next(false);
@@ -325,9 +325,9 @@ export class PendingSendUpdateDialogComponent implements OnInit {
         // New date to be applied
         this.loading.next(true);
         this._budgetService
-          .updateBudgetFields(this.data.id, {
+          .updateBudgetFields(this.data.id, this.data, {
             [fieldToUpdate]: moment().format('DD/MM/YYYY').toString(),
-          })
+          }, this.filesFormGroup.value)
           .subscribe((batch: firebase.default.firestore.WriteBatch) => {
             batch.commit().then(() => {
               this.loading.next(false);
@@ -337,9 +337,9 @@ export class PendingSendUpdateDialogComponent implements OnInit {
         // Mark as pending
         this.loading.next(true);
         this._budgetService
-          .updateBudgetFields(this.data.id, {
+          .updateBudgetFields(this.data.id, this.data, {
             [fieldToUpdate]: 'PDTE',
-          })
+          }, this.filesFormGroup.value)
           .subscribe((batch: firebase.default.firestore.WriteBatch) => {
             batch.commit().then(() => {
               this.loading.next(false);
@@ -358,9 +358,9 @@ export class PendingSendUpdateDialogComponent implements OnInit {
       // The observation field has changed
       this.loading.next(true);
       this._budgetService
-        .updateBudgetFields(this.data.id, {
+        .updateBudgetFields(this.data.id, this.data ,{
           [observationFieldName]: finalState,
-        })
+        }, this.filesFormGroup.value )
         .subscribe((batch: firebase.default.firestore.WriteBatch) => {
           batch.commit().then(() => {
             // The new observation has been applied
@@ -376,9 +376,9 @@ export class PendingSendUpdateDialogComponent implements OnInit {
       if (finalState) {
         this.loading.next(true);
         this._budgetService
-          .updateBudgetFields(this.data.id, {
+          .updateBudgetFields(this.data.id, this.data ,{
             afa: 'SI',
-          })
+          } , this.filesFormGroup.value)
           .subscribe((batch: firebase.default.firestore.WriteBatch) => {
             batch.commit().then(() => {
               this.loading.next(false);
@@ -388,9 +388,9 @@ export class PendingSendUpdateDialogComponent implements OnInit {
         // Mark as "NO"
         this.loading.next(true);
         this._budgetService
-          .updateBudgetFields(this.data.id, {
+          .updateBudgetFields(this.data.id, this.data,{
             afa: 'NO',
-          })
+          }, this.filesFormGroup.value)
           .subscribe((batch: firebase.default.firestore.WriteBatch) => {
             batch.commit().then(() => {
               this.loading.next(false);

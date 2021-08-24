@@ -21,6 +21,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { element } from 'protractor';
 import { TestBed } from '@angular/core/testing';
 import { B } from '@angular/cdk/keycodes';
+import { additionalsForms } from '../models/budgets.model';
 
 
 
@@ -751,12 +752,25 @@ export class BudgetsService {
 
   updateBudgetFields(
     id: string,
-    fields: object
+    budget: Budget,
+    fields: object,
+    additionals: additionalsForms
+   
   ): Observable<firebase.default.firestore.WriteBatch> {
     const batch = this.afs.firestore.batch();
     const docRef: DocumentReference = this.afs.firestore.doc(
       `/db/ferreyros/budgets/${id}`
     );
+
+    
+
+   fields = {
+    NoPPTOSModificadosOAdicionales: budget.NoPPTOSModificadosOAdicionales + additionals.additionals.length,
+    cotizacionFesa: budget.cotizacionFesa,
+    cotizacionText: budget.cotizacionText,
+    informe:budget.informe
+
+   }
 
     batch.update(docRef, fields);
     return of(batch);
@@ -788,6 +802,7 @@ export class BudgetsService {
     if (!budget.motivoDeModificacion02) {
       data = {
         motivoDeModificacion02: modificationData,
+        detalleDeModificacion02: reason.modificationReason.name,
         statusPresupuesto: 'PPTO. MODIFICADO',
         NoPPTOSModificadosOAdicionales:
           budget.NoPPTOSModificadosOAdicionales + reason.additionals.length,
@@ -799,6 +814,7 @@ export class BudgetsService {
     if (!budget.motivoDeModificacion03) {
       data = {
         motivoDeModificacion03: modificationData,
+        detalleDeModificacion03: reason.modificationReason.name,
         statusPresupuesto: 'PPTO. MODIFICADO',
         NoPPTOSModificadosOAdicionales:
           budget.NoPPTOSModificadosOAdicionales + reason.additionals.length,
@@ -810,6 +826,7 @@ export class BudgetsService {
     if (!budget.motivoDeModificacion04) {
       data = {
         motivoDeModificacion04: modificationData,
+        detalleDeModificacion04: reason.modificationReason.name,
         statusPresupuesto: 'PPTO. MODIFICADO',
         NoPPTOSModificadosOAdicionales:
           budget.NoPPTOSModificadosOAdicionales + reason.additionals.length,
@@ -850,6 +867,7 @@ updateRejectionReason(
       fechaDeAprobacionORechazo: firebase.default.firestore.FieldValue.serverTimestamp(),
       motivoDelRechazo: reason.rejectionReason.name,
       rechazadoPor: user,
+      detalleDelRechazo: reason.detailReason,
       statusPresupuesto: status,
     };
 

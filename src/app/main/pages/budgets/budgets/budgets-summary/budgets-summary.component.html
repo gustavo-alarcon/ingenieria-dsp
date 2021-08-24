@@ -59,6 +59,7 @@
       DESCARGAR
       <mat-icon aria-label="agregar" class="icon-add">download</mat-icon>
     </button>
+
     </div>
 
     <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
@@ -266,7 +267,7 @@
 
                 <ng-container matColumnDef="NoPPTOSModificadosOAdicionales">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
-                        PPTOs adicionales
+                        N° PPTOS modificado o adicionales
                     </th>
                     <td mat-cell *matCellDef="let element" class="table__cell">
                         {{ element.NoPPTOSModificadosOAdicionales ? element.NoPPTOSModificadosOAdicionales : "---" }}
@@ -322,6 +323,23 @@
                         {{ element.motivoDelRechazo ? element.motivoDelRechazo : "---" }}
                     </td>
                 </ng-container>
+                <ng-container matColumnDef="detalleDelRechazo">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        Detalle del rechazo
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.detalleDelRechazo ? element.detalleDelRechazo : "---" }}
+                    </td>
+                </ng-container>
+                <!-- <ng-container matColumnDef="detalleDeModificacion02">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        Motivo de la modificacion 02
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.detalleDeModificacion02 ? element.detalleDeModificacion02 : "---" }}
+                    </td>
+                </ng-container> -->
+
 
                 <ng-container matColumnDef="actions" stickyEnd>
                     <th mat-header-cell *matHeaderCellDef class="table__cell">
