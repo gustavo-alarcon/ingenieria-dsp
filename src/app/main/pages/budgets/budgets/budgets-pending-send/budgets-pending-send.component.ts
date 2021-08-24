@@ -548,7 +548,6 @@ export class BudgetsPendingSendComponent implements OnInit {
 
   daysLeft(budget: Budget): string {
     // Get the goal Date and convert it to a moment.js object
-    console.log('budget ', budget);
     if (typeof budget.tiempoObjetivoEnvioPPTO === 'number'){
 
       // convertir fechaApert. en milisegundos
