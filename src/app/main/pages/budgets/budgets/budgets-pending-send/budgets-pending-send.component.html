@@ -5,7 +5,7 @@
             <span class="quantity">{{ cantWO }}</span>
         </div>
 
-        <mat-form-field appearance="fill" [ngClass]="
+        <mat-form-field appearance="outline" [ngClass]="
         isMobile
           ? 'ms-kanban-toolbar__input--mobile'
           : 'ms-kanban-toolbar__input'
@@ -39,78 +39,50 @@
       DESCARGAR
       <mat-icon aria-label="agregar" class="icon-add">download</mat-icon>
     </button>
-  </div>
+    </div>
 
-  <mat-progress-bar
-    mode="indeterminate"
-    *ngIf="loading$ | async"
-  ></mat-progress-bar>
+    <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
 
-  <div class="body-container">
-    <div class="table-wrapper">
-      <table
-        mat-table
-        [dataSource]="tableData"
-        matSort
-        class="mat-elevation-z8"
-      >
-        <ng-container matColumnDef="woMain">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            WO MAIN
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.woMain ? element.woMain : "---" }}
-          </td>
-        </ng-container>
+    <div class="body-container">
+        <div class="table-wrapper">
+            <table mat-table [dataSource]="tableData" matSort class="mat-elevation-z8">
+                <ng-container matColumnDef="woMain">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        WO MAIN
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.woMain ? element.woMain : "---" }}
+                    </td>
+                </ng-container>
 
-        <ng-container matColumnDef="woChild">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            WO CHILD
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.woChild ? element.woChild : "---" }}
-          </td>
-        </ng-container>
+                <ng-container matColumnDef="woChild">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        WO CHILD
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.woChild ? element.woChild : "---" }}
+                    </td>
+                </ng-container>
 
-        <ng-container matColumnDef="cliente">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            Cliente
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.cliente ? element.cliente : "---" }}
-          </td>
-        </ng-container>
+                <ng-container matColumnDef="cliente">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        Cliente
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.cliente ? element.cliente : "---" }}
+                    </td>
+                </ng-container>
 
-        <ng-container matColumnDef="afa">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            AFA
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.afa ? element.afa : "---" }}
-          </td>
-        </ng-container>
+                <ng-container matColumnDef="afa">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        AFA
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.afa ? element.afa : "---" }}
+                    </td>
+                </ng-container>
 
-        <!-- <ng-container matColumnDef="afaDate">
+                <!-- <ng-container matColumnDef="afaDate">
           <th
             mat-header-cell
             *matHeaderCellDef
@@ -124,120 +96,81 @@
           </td>
         </ng-container> -->
 
-        <ng-container matColumnDef="resumen">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            Resumen
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.resumen ? element.resumen : "---" }}
-          </td>
-        </ng-container>
+                <ng-container matColumnDef="resumen">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        Resumen
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.resumen ? element.resumen : "---" }}
+                    </td>
+                </ng-container>
 
-        <ng-container matColumnDef="cotizacionFesa">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            Cotización FESA
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.cotizacionFesa ? element.cotizacionFesa : "---" }}
-          </td>
-        </ng-container>
+                <ng-container matColumnDef="cotizacionFesa">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        Cotización FESA
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.cotizacionFesa ? element.cotizacionFesa : "---" }}
+                    </td>
+                </ng-container>
 
-        <ng-container matColumnDef="cotizacionText">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            Cotización TEXT
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.cotizacionText ? element.cotizacionText : "---" }}
-          </td>
-        </ng-container>
+                <ng-container matColumnDef="cotizacionText">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        Cotización TEXT
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.cotizacionText ? element.cotizacionText : "---" }}
+                    </td>
+                </ng-container>
 
-        <ng-container matColumnDef="informe">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            Informe
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{ element.informe ? element.informe : "---" }}
-          </td>
-        </ng-container>
+                <ng-container matColumnDef="informe">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        Informe
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.informe ? element.informe : "---" }}
+                    </td>
+                </ng-container>
 
-        <ng-container matColumnDef="tiempoObjetivoEnvioPPTO">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            Tiempo objetivo envío PPTO
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.tiempoObjetivoEnvioPPTO
-                ? (element.tiempoObjetivoEnvioPPTO.toDate()
-                  | date: "dd/MM/yyyy")
-                : "---"
-            }}
-          </td>
-        </ng-container>
+                <ng-container matColumnDef="tiempoObjetivoEnvioPPTO">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        Tiempo objetivo envío PPTO
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.tiempoObjetivoEnvioPPTO ? (element.tiempoObjetivoEnvioPPTO.toDate() | date: "dd/MM/yyyy") : "---" }}
+                    </td>
+                </ng-container>
+              
+                <ng-container matColumnDef="diasRestantesEnvioPPTO">
+                  <th
+                    mat-header-cell
+                    *matHeaderCellDef
+                    mat-sort-header
+                    class="table__cell"
+                  >
+                    Días restantes envío PPTO
+                  </th>
+                  <td mat-cell *matCellDef="let element" class="table__cell"
 
-        <ng-container matColumnDef="diasRestantesEnvioPPTO">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            Días restantes envío PPTO
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell"
-         
-          >
-            <div *ngIf="daysLeft(element) >= 0" class="positive-day">
-            {{ daysLeft(element) }}
-            </div>
+                  >
+                    <div *ngIf="daysLeft(element) >= 0" class="positive-day">
+                    {{ daysLeft(element) }}
+                    </div>
 
-            <div *ngIf="daysLeft(element) < 0" class="negative-day">
-            {{ daysLeft(element) }}
-            </div>
-          </td>
-        </ng-container>
+                    <div *ngIf="daysLeft(element) < 0" class="negative-day">
+                    {{ daysLeft(element) }}
+                    </div>
+                  </td>
+                </ng-container>
 
-        <ng-container matColumnDef="fechaReleasedIoChild">
-          <th
-            mat-header-cell
-            *matHeaderCellDef
-            mat-sort-header
-            class="table__cell"
-          >
-            Fecha released
-          </th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            {{
-              element.fechaReleasedIoChild
-                ? (element.fechaReleasedIoChild.toDate() | date: "d/M/y")
-                : "---"
-            }}
-          </td>
-        </ng-container>
+                <ng-container matColumnDef="fechaReleasedIoChild">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        Fecha released
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.fechaReleasedIoChild ? (element.fechaReleasedIoChild.toDate() | date: "d/M/y") : "---" }}
+                    </td>
+                </ng-container>
 
                 <ng-container matColumnDef="actions" stickyEnd>
                     <th mat-header-cell *matHeaderCellDef class="table__cell">

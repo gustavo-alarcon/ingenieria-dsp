@@ -245,7 +245,7 @@ export class BudgetsPendingSendComponent implements OnInit {
   }
 
   public downloadReport(): void {
-    const dataSource: Array<Budget> = this.tableData.data;
+    const dataSource: Array<Budget> = this.tableData.filteredData;
 
     const tableXlsx: any[] = [];
     const headersXlsx = [

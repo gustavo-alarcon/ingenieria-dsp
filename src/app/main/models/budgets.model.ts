@@ -151,6 +151,10 @@ export interface ModificationReasonEntry {
   createdAt: firebase.default.firestore.FieldValue;
 }
 
+export interface additionalsForms {
+  additionals:Array<Additional>
+}
+
 export interface modificationReasonForm {
   additionals: Array<Additional>;
   modificationReason: ModificationReasonEntry;

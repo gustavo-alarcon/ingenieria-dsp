@@ -16,6 +16,9 @@ import * as XLSX from 'xlsx';
 import moment from 'moment';
 import { BudgetsPendingHistoryComponent } from '../budgets-pending-approval/dialogs/budgets-pending-history/budgets-pending-history.component';
 
+import * as FileSaver from 'file-saver';
+const EXCEL_EXT = '.xlsx';
+
 
 @Component({
   selector: 'app-budgets-summary',
@@ -26,12 +29,14 @@ export class BudgetsSummaryComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
+
   constructor(
     public auth: AuthService,
     private breakpoint: BreakpointObserver,
     private _budgetsService: BudgetsService,
     public MatDialog: MatDialog,
-    public MatSnackBar: MatSnackBar
+    public MatSnackBar: MatSnackBar,
+    
   ) {}
 
   // Form controllers
@@ -76,7 +81,7 @@ export class BudgetsSummaryComponent implements OnInit {
     // 'fechaEnvioPPTO02',
     // 'motivoDeModificacion02',
     // 'detalleDeModificacion02',
-    // 'fechaEnvioPPTO03',
+    // // 'fechaEnvioPPTO03',
     // 'motivoDeModificacion03',
     // 'detalleDeModificacion03',
     // 'fechaEnvioPPTO04',
@@ -237,6 +242,7 @@ export class BudgetsSummaryComponent implements OnInit {
     anio: '',
     fechaLPD: '',
   };
+  
 
   public subscriptions: Subscription = new Subscription();
 
@@ -260,9 +266,16 @@ export class BudgetsSummaryComponent implements OnInit {
         })
     );
     this.loading.next(true);
+    console.log(this.ngAfterViewInit)
   }
 
+  
+   
+
+
+
   public ngAfterViewInit(): void {
+    const tableFilter: any[] = [];
     this.tableData.sort = this.sort;
     this.tableData.paginator = this.paginator;
     this._budgetsService
@@ -271,11 +284,17 @@ export class BudgetsSummaryComponent implements OnInit {
       .subscribe((res) => {
         this.tableData.data = res;
         this.cantWO = this.tableData.data.length;
+       
 
         this.tallerFormControl.valueChanges.subscribe((val) => {
+          console.log('val',val);
           this.filteredValues['taller'] = val;
           this.tableData.filter = JSON.stringify(this.filteredValues);
+          
+     
+   
         });
+      
 
         this.woMainFormControl.valueChanges.subscribe((val) => {
           this.filteredValues['woMain'] = val;
@@ -295,13 +314,18 @@ export class BudgetsSummaryComponent implements OnInit {
         this.statusFormControl.valueChanges.subscribe((val) => {
           this.filteredValues['statusPresupuesto'] = val;
           this.tableData.filter = JSON.stringify(this.filteredValues);
+        
         });
 
         this.tableData.filterPredicate = this.customFilterPredicate();
 
         this.loading.next(false);
       });
+
+    
   }
+
+ 
 
   customFilterPredicate() {
     const myFilterPredicate = (data: Budget, filter: string): boolean => {
@@ -346,38 +370,44 @@ export class BudgetsSummaryComponent implements OnInit {
     this.subscriptions.unsubscribe();
   }
 
-  public downloadReport(): void {
-    const dataSource: Array<Budget> = this.tableData.data;
+
+
+  public downloadReport(json: any[], excelFileName: string): void {
+    const dataSource: Array<Budget> = this.tableData.filteredData;
 
     const tableXlsx: any[] = [];
     const headersXlsx = [
       'TALLER',
       'WO MAIN',
-      'IO MAIN',
       'WO CHILD',
-      'IO CHILD',
-      'STATUS WO CHILD',
-      'OT TALLER',
-      'OT MADRE',
       'CLIENTE',
-      'GM / NGM',
       'MODELO',
-      'TIPO SS',
-      'SERVICIO',
-      'TIPO ATENCIÓN',
-      'MODALIDAD PRESUPUESTO',
       'COMPONENTE',
       'FECHA APERTURA CHILD',
       'FECHA RELEASED IO CHILD',
       'FECHA REGISTRO',
+      'FECHA ENVIO PPTO 01',
+      'FECHA ULTIMO ENVIO PPTO',
+      'NO. PPTOS MODIFICADOS O ADICIONALES',
+      'FECHA DE APROBACIÓN O RECHAZO',
+      'STATUS PRESUPUESTO',
+      'MOTIVO DEL RECHAZO',
+      
+      'IO CHILD',
+      'STATUS WO CHILD',
+      'OT TALLER',
+      'OT MADRE',
+      'GM / NGM',
+      'TIPO SS',
+      'SERVICIO',
+      'TIPO ATENCIÓN',
+      'MODALIDAD PRESUPUESTO',
       'AFA',
       'FECHA ULTIMO LISTADO',
       'FECHA ULTIMO ENVIO DOCUMENTO ADM',
       'ULTIMO DOCUMENTO',
       'FECHA DEFINICIÓN CARGOS',
       'DEFINICIÓN DE CARGO',
-      'FECHA ULTIMO ENVIO PPTO',
-      'FECHA ENVIO PPTO 01',
       'FECHA ENVIO PPTO 02',
       'MOTIVO DE MODIFICACIÓN 02',
       'DETALLE DE MODIFICACIÓN 02',
@@ -387,9 +417,6 @@ export class BudgetsSummaryComponent implements OnInit {
       'FECHA ENVIO PPTO 04',
       'MOTIVO DE MODIFICACIÓN 04',
       'DETALLE DE MODIFICACIÓN 04',
-      'FECHA DE APROBACIÓN O RECHAZO',
-      'STATUS PRESUPUESTO',
-      'MOTIVO DEL RECHAZO',
       'DETALLE DEL RECHAZO',
       'VV$ SERVICIOS',
       'VV$ ADICIONALES SERVICIOS',
@@ -404,7 +431,6 @@ export class BudgetsSummaryComponent implements OnInit {
       'HORAS REALES',
       'TIEMPO OBJETIVO ENVIO PPTO',
       'DIAS RESTANTES ENVIO PPTO',
-      'NO. PPTOS MODIFICADOS O ADICIONALES',
       'OBSERVACIONES EN EL PRESUPUESTO',
       'FECHA DE TERMINO DE REP',
       'FECHA ULTIMO INPUT',
@@ -445,6 +471,7 @@ export class BudgetsSummaryComponent implements OnInit {
       'MES TER',
       'AÑO',
       'FECHA LPD',
+      'IO MAIN',
     ];
 
     tableXlsx.push(headersXlsx);
@@ -453,26 +480,40 @@ export class BudgetsSummaryComponent implements OnInit {
       const temp = [
         item.taller ? item.taller : '---',
         item.woMain ? item.woMain : '---',
-        item.ioMain ? item.ioMain : '---',
         item.woChild ? item.woChild : '---',
+        item.cliente ? item.cliente : '---',
+        item.modelo ? item.modelo : '---',
+        item.componente ? item.componente : '---',
+        item.fechaAperturaChild
+        ? new Date(item.fechaAperturaChild['seconds'] * 1000)
+        : '---',
+        item.fechaReleasedIoChild
+        ? new Date(item.fechaReleasedIoChild['seconds'] * 1000)
+        : '---',
+        '---',
+        item.fechaEnvioPPTO01
+        ? new Date(item.fechaEnvioPPTO01['seconds'] * 1000)
+        : '---',
+        item.fechaUltimoEnvioPPTO
+        ? new Date(item.fechaUltimoEnvioPPTO['seconds'] * 1000)
+        : '---',
+        item.NoPPTOSModificadosOAdicionales
+        ? item.NoPPTOSModificadosOAdicionales
+        : '---',
+        item.fechaDeAprobacionORechazo
+          ? new Date(item.fechaDeAprobacionORechazo['seconds'] * 1000)
+          : '---',
+        item.statusPresupuesto ? item.statusPresupuesto : '---',
+        item.motivoDelRechazo ? item.motivoDelRechazo : '---',
         item.ioChild ? item.ioChild : '---',
-        item.statusWoChild ? item.statusWoChild : '---',
+        item.statusWoChild ? item.statusWoChild:'---',
         item.otTaller ? item.otTaller : '---',
         item.otMadre ? item.otMadre : '---',
-        item.fechaAperturaChild
-          ? new Date(item.fechaAperturaChild['seconds'] * 1000)
-          : '---',
-        item.fechaReleasedIoChild
-          ? new Date(item.fechaReleasedIoChild['seconds'] * 1000)
-          : '---',
-        item.cliente ? item.cliente : '---',
         item.gmorngm ? item.gmorngm : '---',
-        item.modelo ? item.modelo : '---',
         item.tipoSS ? item.tipoSS : '---',
         item.servicio ? item.servicio : '---',
         item.tipoAtencion ? item.tipoAtencion : '---',
         item.modalidadPresupuesto ? item.modalidadPresupuesto : '---',
-        item.componente ? item.componente : '---',
         item.afa ? item.afa : '---',
         item.fechaUltimoListado
           ? new Date(item.fechaUltimoListado['seconds'] * 1000)
@@ -485,12 +526,6 @@ export class BudgetsSummaryComponent implements OnInit {
           ? new Date(item.fechaDefinicionDeCargos['seconds'] * 1000)
           : '---',
         item.definicionDeCargo ? item.definicionDeCargo : '---',
-        item.fechaUltimoEnvioPPTO
-          ? new Date(item.fechaUltimoEnvioPPTO['seconds'] * 1000)
-          : '---',
-        item.fechaEnvioPPTO01
-          ? new Date(item.fechaEnvioPPTO01['seconds'] * 1000)
-          : '---',
         item.fechaEnvioPPTO02
           ? new Date(item.fechaEnvioPPTO02['seconds'] * 1000)
           : '---',
@@ -506,11 +541,6 @@ export class BudgetsSummaryComponent implements OnInit {
           : '---',
         item.motivoDeModificacion04 ? item.motivoDeModificacion04 : '---',
         item.detalleDeModificacion04 ? item.detalleDeModificacion04 : '---',
-        item.fechaDeAprobacionORechazo
-          ? new Date(item.fechaDeAprobacionORechazo['seconds'] * 1000)
-          : '---',
-        item.statusPresupuesto ? item.statusPresupuesto : '---',
-        item.motivoDelRechazo ? item.motivoDelRechazo : '---',
         item.detalleDelRechazo ? item.detalleDelRechazo : '---',
         item.vv$servicios ? item.vv$servicios : '---',
         item.vv$adicionalesServicios ? item.vv$adicionalesServicios : '---',
@@ -524,10 +554,7 @@ export class BudgetsSummaryComponent implements OnInit {
         item.horasSTD ? item.horasSTD : '---',
         item.horasReales ? item.horasReales : '---',
         item.tiempoObjetivoEnvioPPTO ? item.tiempoObjetivoEnvioPPTO : '---',
-        item.diasRestantesEnvioPPTO ? item.diasRestantesEnvioPPTO : '---',
-        item.NoPPTOSModificadosOAdicionales
-          ? item.NoPPTOSModificadosOAdicionales
-          : '---',
+        this.daysLeft(item),
         item.observacionesEnElPresupuesto
           ? item.observacionesEnElPresupuesto
           : '---',
@@ -586,21 +613,23 @@ export class BudgetsSummaryComponent implements OnInit {
         item.mesTer ? item.mesTer : '---',
         item.anio ? item.anio : '---',
         item.fechaLPD ? new Date(item.fechaLPD['seconds'] * 1000) : '---',
+           item.ioMain ? item.ioMain : '---',
       ];
       tableXlsx.push(temp);
     });
 
-    // generate worksheet
+       // generate worksheet
     const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(tableXlsx);
 
-    // generate workbook and add the worksheet
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Tabla_Resumen');
 
-    // save to file
     const name = `Tabla_Resumen.xlsx`;
     XLSX.writeFile(wb, name);
+  
+
   }
+
 
   public deleteDialog(element: Budget) {
     const dialogRef = this.MatDialog.open(BudgetsSummaryDeleteDialogComponent, {
@@ -655,46 +684,88 @@ export class BudgetsSummaryComponent implements OnInit {
     });
   }
 
-  daysLeft(budget: Budget): string {
-    // Get the goal Date and convert it to a moment.js object
+  daysLeft(budget: Budget) {
+        // Get the goal Date and convert it to a moment.js object
 
-    if(typeof budget.tiempoObjetivoEnvioPPTO === 'number'){
-        // convertir fechaApert. en milisegundos
-       
-        const openDate = budget.fechaAperturaChild['seconds'] * 1000;
+        if(typeof budget.tiempoObjetivoEnvioPPTO === 'number'){
+          // convertir fechaApert. en milisegundos
+         
+          const openDate = budget.fechaAperturaChild['seconds'] * 1000;
+          
+          // convertir los dias del tiempoOb. en mili segundos
+          const timeDate = budget.tiempoObjetivoEnvioPPTO * 8.64e+7;
         
-        // convertir los dias del tiempoOb. en mili segundos
-        const timeDate = budget.tiempoObjetivoEnvioPPTO * 8.64e+7;
+  
+         const goalDate = openDate + timeDate;
+  
+  
+         const leftDate = goalDate -  Date.now();
+  
+         const date = (leftDate / 8.64e+7).toFixed(2);
+  
+         return date;
+  
+      }else{
+      
+      
+    
+      const goalDate: moment.Moment = moment(
+        budget.tiempoObjetivoEnvioPPTO.toDate()
+      ) 
+  
+      
+  
+  
+      // Get the difference from the current moment() in days
+      const diff: number = goalDate.diff(moment(), 'days');
+  
+  
+      if (diff >= 0) return diff.toString();
       
 
-       const goalDate = openDate + timeDate;
+    
+  
+      return diff ;
+      }
+    // // Get the goal Date and convert it to a moment.js object
+
+    // if(typeof budget.tiempoObjetivoEnvioPPTO === 'number'){
+    //     // convertir fechaApert. en milisegundos
+       
+    //     const openDate = budget.fechaAperturaChild['seconds'] * 1000;
+        
+    //     // convertir los dias del tiempoOb. en mili segundos
+    //     const timeDate = budget.tiempoObjetivoEnvioPPTO * 8.64e+7;
+      
+
+    //    const goalDate = openDate + timeDate;
 
 
-       const leftDate = goalDate -  Date.now();
+    //    const leftDate = goalDate -  Date.now();
 
-       const date = (leftDate / 8.64e+7).toFixed(2);
+    //    const date = (leftDate / 8.64e+7).toFixed(2);
 
-       return date;
+    //    return date;
 
-    }else{
+    // }else{
     
     
   
-    const goalDate: moment.Moment = moment(
-      budget.tiempoObjetivoEnvioPPTO.toDate()
-    ) 
+    // const goalDate: moment.Moment = moment(
+    //   budget.tiempoObjetivoEnvioPPTO.toDate()
+    // ) 
 
     
 
 
-    // Get the difference from the current moment() in days
-    const diff: number = goalDate.diff(moment(), 'days');
+    // // Get the difference from the current moment() in days
+    // const diff: number = goalDate.diff(moment(), 'days');
 
 
-    if (diff >= 0) return diff.toString();
+    // if (diff >= 0) return diff.toString();
 
-    return '---';
-    }
+    // return '---';
+    // }
     
   }
 }
