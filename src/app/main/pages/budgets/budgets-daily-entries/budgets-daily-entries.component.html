@@ -2883,34 +2883,19 @@
         <ng-container matColumnDef="resumen">
           <th mat-header-cell *matHeaderCellDef class="table__head">Resumen</th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            <div
-              *ngIf="element.budgetDifferences?.resumen; else defaultResumen"
-            >
-              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
-                ><mat-icon>dns</mat-icon
-                >{{
-                  element.budgetDifferences.resumen
-                    ? (element.budgetDifferences.resumen.toMillis()
-                      | date: "dd/MM/yyyy")
-                    : "---"
-                }}</span
-              ><br />
-              <span class="upgrade upgrade--replacement" matTooltip="Excel"
-                ><mat-icon>post_add</mat-icon
-                >{{
-                  element.resumen
-                    ? (element.resumen | date: "dd/MM/yyyy")
-                    : "---"
-                }}</span
-              >
+            
+            <div *ngIf="isString(element.resumen)">
+              {{element.resumen}}
             </div>
-            <ng-template #defaultResumen>
-              {{
-                element.resumen === "PDTE"
-                  ? element.resumen
-                  : (element.resumen | date: "dd/MM/yyyy")
-              }}
-            </ng-template>
+
+            <div *ngIf="element.resumen === null">
+                  ---
+            </div>
+
+            <div *ngIf="isNumber(element.resumen)">
+                  {{element.resumen.toMillis() | date: "dd/MM/yyyy"}}
+            </div>
+
           </td>
         </ng-container>
 
@@ -2927,35 +2912,20 @@
 
         <ng-container matColumnDef="informe">
           <th mat-header-cell *matHeaderCellDef class="table__head">Informe</th>
-          <td mat-cell *matCellDef="let element" class="table__cell">
-            <div
-              *ngIf="element.budgetDifferences?.informe; else defaultInforme"
-            >
-              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
-                ><mat-icon>dns</mat-icon
-                >{{
-                  element.budgetDifferences.informe
-                    ? (element.budgetDifferences.informe.toMillis()
-                      | date: "dd/MM/yyyy")
-                    : "---"
-                }}</span
-              ><br />
-              <span class="upgrade upgrade--replacement" matTooltip="Excel"
-                ><mat-icon>post_add</mat-icon
-                >{{
-                  element.informe
-                    ? (element.informe | date: "dd/MM/yyyy")
-                    : "---"
-                }}</span
-              >
+          <td mat-cell *matCellDef="let element" class="table__cell">          
+               
+            <div *ngIf="isString(element.informe)">
+              {{element.informe}}
             </div>
-            <ng-template #defaultInforme>
-              {{
-                element.informe === "PDTE"
-                  ? element.informe
-                  : (element.informe | date: "dd/MM/yyyy")
-              }}
-            </ng-template>
+
+            <div *ngIf="element.informe === null">
+                  ---
+            </div>
+
+            <div *ngIf="isNumber(element.informe)">
+                  {{element.informe.toMillis() | date: "dd/MM/yyyy"}}
+            </div>
+
           </td>
         </ng-container>
 
@@ -2964,37 +2934,19 @@
             Cotización FESA
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            <div
-              *ngIf="
-                element.budgetDifferences?.cotizacionFesa;
-                else defaultCotizacionFesa
-              "
-            >
-              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
-                ><mat-icon>dns</mat-icon
-                >{{
-                  element.budgetDifferences.cotizacionFesa
-                    ? (element.budgetDifferences.cotizacionFesa.toMillis()
-                      | date: "dd/MM/yyyy")
-                    : "---"
-                }}</span
-              ><br />
-              <span class="upgrade upgrade--replacement" matTooltip="Excel"
-                ><mat-icon>post_add</mat-icon
-                >{{
-                  element.cotizacionFesa
-                    ? (element.cotizacionFesa | date: "dd/MM/yyyy")
-                    : "---"
-                }}</span
-              >
+
+            <div *ngIf="isString(element.cotizacionFesa)">
+                 {{element.cotizacionFesa}}
             </div>
-            <ng-template #defaultCotizacionFesa>
-              {{
-                element.cotizacionFesa === "PDTE"
-                  ? element.cotizacionFesa
-                  : (element.cotizacionFesa | date: "dd/MM/yyyy")
-              }}
-            </ng-template>
+
+            <div *ngIf="element.cotizacionFesa === null">
+                 ---
+            </div>
+
+            <div *ngIf="isNumber(element.cotizacionFesa)">
+                 {{element.cotizacionFesa.toMillis() | date: "dd/MM/yyyy"}}
+            </div>
+          
           </td>
         </ng-container>
 
@@ -3003,37 +2955,19 @@
             Cotización TEXT
           </th>
           <td mat-cell *matCellDef="let element" class="table__cell">
-            <div
-              *ngIf="
-                element.budgetDifferences?.cotizacionText;
-                else defaultCotizacionText
-              "
-            >
-              <span class="upgrade upgrade--replaced" matTooltip="Base de datos"
-                ><mat-icon>dns</mat-icon
-                >{{
-                  element.budgetDifferences.cotizacionText
-                    ? (element.budgetDifferences.cotizacionText.toMillis()
-                      | date: "dd/MM/yyyy")
-                    : "---"
-                }}</span
-              ><br />
-              <span class="upgrade upgrade--replacement" matTooltip="Excel"
-                ><mat-icon>post_add</mat-icon
-                >{{
-                  element.cotizacionText
-                    ? (element.cotizacionText | date: "dd/MM/yyyy")
-                    : "---"
-                }}</span
-              >
+              
+            <div *ngIf="isString(element.cotizacionText)">
+              {{element.cotizacionText}}
             </div>
-            <ng-template #defaultCotizacionText>
-              {{
-                element.cotizacionText === "PDTE"
-                  ? element.cotizacionText
-                  : (element.cotizacionText | date: "dd/MM/yyyy")
-              }}
-            </ng-template>
+
+            <div *ngIf="element.cotizacionText === null">
+                  ---
+            </div>
+
+            <div *ngIf="isNumber(element.cotizacionText)">
+                  {{element.cotizacionText.toMillis() | date: "dd/MM/yyyy"}}
+            </div>
+
           </td>
         </ng-container>
 
