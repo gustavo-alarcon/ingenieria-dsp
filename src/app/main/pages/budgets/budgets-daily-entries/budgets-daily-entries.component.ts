@@ -179,12 +179,14 @@ export class BudgetsDailyEntriesComponent implements OnInit {
     const file: File = fileList[0];
     const fileReader: FileReader = new FileReader();
 
-    fileReader.onload = () => {
-      const data: Uint8Array = new Uint8Array(
+    fileReader.onload = (e) => {
+      /*  const data: Uint8Array = new Uint8Array(
         fileReader.result as ArrayBufferLike
-      );
+        ); */
+      const data =  e.target.result;
+
       const workbook: XLSX.WorkBook = XLSX.read(data, {
-        type: 'array',
+        type: 'binary', // string  binary  array
         cellDates: true,
       });
       const sheet: XLSX.WorkSheet = workbook.Sheets[workbook.SheetNames[0]];
@@ -196,7 +198,7 @@ export class BudgetsDailyEntriesComponent implements OnInit {
       this.parseExcelData(rawData);
     };
 
-    fileReader.readAsArrayBuffer(file);
+    fileReader.readAsBinaryString(file);
   }
 
   public parseExcelData(rawData: any): void {
@@ -342,7 +344,6 @@ export class BudgetsDailyEntriesComponent implements OnInit {
           parsedExcelData.push(data);
         }
       });
-
       this.budgetsDailyEntriesDataSource.data = parsedExcelData;
       this.loadFileInputElementRef.nativeElement.value = null;
       this.loading.next(false);
@@ -493,4 +494,11 @@ export class BudgetsDailyEntriesComponent implements OnInit {
     this.budgetsDailyEntriesDataSource.data[index]['applyUpgrade'] = false;
     this.budgetsDailyEntriesDataSource.data[index]['budgetDifferences'] = {};
   }
+
+  isNumber(val): boolean { return typeof val === 'number'; }
+
+  isString(val): boolean { return typeof val === 'string'; }
+
+  isboolean(val): boolean { return typeof val === 'boolean'; }
+  
 }
