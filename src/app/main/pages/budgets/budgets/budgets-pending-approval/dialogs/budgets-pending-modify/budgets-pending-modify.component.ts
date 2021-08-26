@@ -81,6 +81,7 @@ export class BudgetsPendingModifyComponent implements OnInit {
 
     this.modificationFormGroup = this.formBuilder.group({
       modificationReason: ['', Validators.required],
+      detailModify: [''],
       additionals: this.formBuilder.array([], Validators.required),
     });
   }

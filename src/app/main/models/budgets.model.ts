@@ -31,12 +31,15 @@ export interface Budget {
   fechaEnvioPPTO02: Date & firebase.default.firestore.Timestamp;
   motivoDeModificacion: Array<ModificationReasonEntry>;
   motivoDeModificacion02: ModificationReasonEntry;
+  motivoDeModificacionName02:string,
   detalleDeModificacion02: string;
   fechaEnvioPPTO03: Date & firebase.default.firestore.Timestamp;
   motivoDeModificacion03: ModificationReasonEntry;
+  motivoDeModificacionName03:string;
   detalleDeModificacion03: string;
   fechaEnvioPPTO04: Date & firebase.default.firestore.Timestamp;
   motivoDeModificacion04: ModificationReasonEntry;
+  motivoDeModificacionName04:string,
   detalleDeModificacion04: string;
   // Check "statusPresupuesto" to know if it is approved or rejected
   fechaDeAprobacionORechazo: Date & firebase.default.firestore.Timestamp;
@@ -158,6 +161,7 @@ export interface additionalsForms {
 export interface modificationReasonForm {
   additionals: Array<Additional>;
   modificationReason: ModificationReasonEntry;
+  detailModify: string,
 }
 
 

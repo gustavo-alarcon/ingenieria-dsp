@@ -181,6 +181,54 @@
                         {{ element.fechaReleasedIoChild ? (element.fechaReleasedIoChild.toDate() | date: "d/M/y") : "---" }}
                     </td>
                 </ng-container>
+                <ng-container matColumnDef="motivoDeModificacionName02">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        Motivo de modificación 02
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.motivoDeModificacionName02 ? element.motivoDeModificacionName02: "---" }}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="detalleDeModificacion02">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        Detalle de modificación 02
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.detalleDeModificacion02 ? element.detalleDeModificacion02: "---" }}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="motivoDeModificacionName03">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        Motivo de modificación 03
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.motivoDeModificacionName03 ? element.motivoDeModificacionName03: "---" }}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="detalleDeModificacion03">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        Detalle de modificación 03
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.detalleDeModificacion03 ? element.detalleDeModificacion03: "---" }}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="motivoDeModificacionName04">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        Motivo de modificación 04
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.motivoDeModificacionName04 ? element.motivoDeModificacionName04: "---" }}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="detalleDeModificacion04">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        Detalle de modificación 04
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.detalleDeModificacion04 ? element.detalleDeModificacion04: "---" }}
+                    </td>
+                </ng-container>
 
 
                 <ng-container matColumnDef="actions" stickyEnd>

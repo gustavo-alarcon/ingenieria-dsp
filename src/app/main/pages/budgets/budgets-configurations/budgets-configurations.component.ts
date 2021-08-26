@@ -218,7 +218,7 @@ export class BudgetsConfigurationsComponent implements OnInit {
             id: null,
             name: this.listReasonsForRejectionFormControl.value.trim(),
             createdBy: null,
-            createdAt: null,
+            createdAt: null,    
           };
 
           // Searching for repeated values

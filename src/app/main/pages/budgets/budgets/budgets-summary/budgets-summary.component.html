@@ -246,6 +246,20 @@
                         {{ element.tiempoObjetivoEnvioPPTO ? (element.tiempoObjetivoEnvioPPTO.toDate() | date: "dd/MM/yyyy") : "---" }}
                     </td>
                 </ng-container>
+                <ng-container matColumnDef="diasRestantesEnvioPPTO">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        Días restantes envío PPTO
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        <div *ngIf="daysLeft(element) >= 0" class="positive-day">
+                            {{ daysLeft(element) }}
+                        </div>
+
+                        <div *ngIf="daysLeft(element) < 0" class="negative-day">
+                            {{ daysLeft(element) }}
+                        </div>
+                    </td>
+                </ng-container>
 
                 <ng-container matColumnDef="fechaEnvioPPTO01">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
@@ -331,14 +345,54 @@
                         {{ element.detalleDelRechazo ? element.detalleDelRechazo : "---" }}
                     </td>
                 </ng-container>
-                <!-- <ng-container matColumnDef="detalleDeModificacion02">
+                <ng-container matColumnDef="motivoDeModificacionName02">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
                         Motivo de la modificacion 02
                     </th>
                     <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.motivoDeModificacionName02 ? element.motivoDeModificacionName02 : "---" }}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="detalleDeModificacion02">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        Detalle de la modificacion 02
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
                         {{ element.detalleDeModificacion02 ? element.detalleDeModificacion02 : "---" }}
                     </td>
-                </ng-container> -->
+                </ng-container>
+                <ng-container matColumnDef="motivoDeModificacionName03">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        Motivo de modificación 03
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.motivoDeModificacionName03 ? element.motivoDeModificacionName03: "---" }}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="detalleDeModificacion03">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        Detalle de modificación 03
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.detalleDeModificacion03 ? element.detalleDeModificacion03: "---" }}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="motivoDeModificacionName04">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        Motivo de modificación 04
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.motivoDeModificacionName04 ? element.motivoDeModificacionName04: "---" }}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="detalleDeModificacion04">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">
+                        Detalle de modificación 04
+                    </th>
+                    <td mat-cell *matCellDef="let element" class="table__cell">
+                        {{ element.detalleDeModificacion04 ? element.detalleDeModificacion04: "---" }}
+                    </td>
+                </ng-container>
 
 
                 <ng-container matColumnDef="actions" stickyEnd>

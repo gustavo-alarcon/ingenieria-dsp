@@ -802,7 +802,8 @@ export class BudgetsService {
     if (!budget.motivoDeModificacion02) {
       data = {
         motivoDeModificacion02: modificationData,
-        detalleDeModificacion02: reason.modificationReason.name,
+        motivoDeModificacionName02:modificationData.name,
+        detalleDeModificacion02: reason.detailModify,
         statusPresupuesto: 'PPTO. MODIFICADO',
         NoPPTOSModificadosOAdicionales:
           budget.NoPPTOSModificadosOAdicionales + reason.additionals.length,
@@ -814,7 +815,8 @@ export class BudgetsService {
     if (!budget.motivoDeModificacion03) {
       data = {
         motivoDeModificacion03: modificationData,
-        detalleDeModificacion03: reason.modificationReason.name,
+        motivoDeModificacionName03:modificationData.name,
+        detalleDeModificacion03: reason.detailModify,
         statusPresupuesto: 'PPTO. MODIFICADO',
         NoPPTOSModificadosOAdicionales:
           budget.NoPPTOSModificadosOAdicionales + reason.additionals.length,
@@ -826,7 +828,8 @@ export class BudgetsService {
     if (!budget.motivoDeModificacion04) {
       data = {
         motivoDeModificacion04: modificationData,
-        detalleDeModificacion04: reason.modificationReason.name,
+        motivoDeModificacionName04:modificationData.name,
+        detalleDeModificacion04: reason.detailModify,
         statusPresupuesto: 'PPTO. MODIFICADO',
         NoPPTOSModificadosOAdicionales:
           budget.NoPPTOSModificadosOAdicionales + reason.additionals.length,

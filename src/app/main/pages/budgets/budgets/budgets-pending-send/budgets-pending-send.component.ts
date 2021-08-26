@@ -251,43 +251,46 @@ export class BudgetsPendingSendComponent implements OnInit {
     const headersXlsx = [
       'TALLER',
       'WO MAIN',
-      'IO MAIN',
       'WO CHILD',
+      'CLIENTE',
+      'MODELO',
+      'COMPONENTE',
+      'FECHA APERTURA CHILD',
+      'FECHA RELEASED IO CHILD',
+      'FECHA REGISTRO',
+      'FECHA ENVIO PPTO 01',
+      'FECHA ULTIMO ENVIO PPTO',
+      'NO. PPTOS MODIFICADOS O ADICIONALES',
+      'FECHA DE APROBACIÓN O RECHAZO',
+      'STATUS PRESUPUESTO',
+      'MOTIVO DEL RECHAZO',
       'IO CHILD',
       'STATUS WO CHILD',
       'OT TALLER',
       'OT MADRE',
-      'FECHA APERTURA CHILD',
-      'FECHA RELEASED IO CHILD',
-      'CLIENTE',
       'GM / NGM',
-      'MODELO',
       'TIPO SS',
       'SERVICIO',
       'TIPO ATENCIÓN',
       'MODALIDAD PRESUPUESTO',
-      'COMPONENTE',
       'AFA',
-      'FECHA AFA',
       'FECHA ULTIMO LISTADO',
       'FECHA ULTIMO ENVIO DOCUMENTO ADM',
       'ULTIMO DOCUMENTO',
       'FECHA DEFINICIÓN CARGOS',
       'DEFINICIÓN DE CARGO',
-      'FECHA ULTIMO ENVIO PPTO',
-      'FECHA ENVIO PPTO 01',
       'FECHA ENVIO PPTO 02',
+      // 'MOTIVO DE MODIFICACIÓN 02',
       'MOTIVO DE MODIFICACIÓN 02',
       'DETALLE DE MODIFICACIÓN 02',
       'FECHA ENVIO PPTO 03',
-      'MOTIVO DE MODIFICACION 03',
+      // 'MOTIVO DE MODIFICACION 03',
+      'MOTIVO DE MODIFICACIÓN 03',
       'DETALLE DE MODIFICACION 03',
       'FECHA ENVIO PPTO 04',
+      // 'MOTIVO DE MODIFICACIÓN 04',
       'MOTIVO DE MODIFICACIÓN 04',
       'DETALLE DE MODIFICACIÓN 04',
-      'FECHA DE APROBACIÓN O RECHAZO',
-      'STATUS PRESUPUESTO',
-      'MOTIVO DEL RECHAZO',
       'DETALLE DEL RECHAZO',
       'VV$ SERVICIOS',
       'VV$ ADICIONALES SERVICIOS',
@@ -302,7 +305,6 @@ export class BudgetsPendingSendComponent implements OnInit {
       'HORAS REALES',
       'TIEMPO OBJETIVO ENVIO PPTO',
       'DIAS RESTANTES ENVIO PPTO',
-      'NO. PPTOS MODIFICADOS O ADICIONALES',
       'OBSERVACIONES EN EL PRESUPUESTO',
       'FECHA DE TERMINO DE REP',
       'FECHA ULTIMO INPUT',
@@ -343,6 +345,7 @@ export class BudgetsPendingSendComponent implements OnInit {
       'MES TER',
       'AÑO',
       'FECHA LPD',
+      'IO MAIN',
     ];
 
     tableXlsx.push(headersXlsx);
@@ -351,28 +354,41 @@ export class BudgetsPendingSendComponent implements OnInit {
       const temp = [
         item.taller ? item.taller : '---',
         item.woMain ? item.woMain : '---',
-        item.ioMain ? item.ioMain : '---',
         item.woChild ? item.woChild : '---',
+        item.cliente ? item.cliente : '---',
+        item.modelo ? item.modelo : '---',
+        item.componente ? item.componente : '---',
+        item.fechaAperturaChild
+        ? new Date(item.fechaAperturaChild['seconds'] * 1000)
+        : '---',
+        item.fechaReleasedIoChild
+        ? new Date(item.fechaReleasedIoChild['seconds'] * 1000)
+        : '---',
+        '---',
+        item.fechaEnvioPPTO01
+        ? new Date(item.fechaEnvioPPTO01['seconds'] * 1000)
+        : '---',
+        item.fechaUltimoEnvioPPTO
+        ? new Date(item.fechaUltimoEnvioPPTO['seconds'] * 1000)
+        : '---',
+        item.NoPPTOSModificadosOAdicionales
+        ? item.NoPPTOSModificadosOAdicionales
+        : '---',
+        item.fechaDeAprobacionORechazo
+          ? new Date(item.fechaDeAprobacionORechazo['seconds'] * 1000)
+          : '---',
+        item.statusPresupuesto ? item.statusPresupuesto : '---',
+        item.motivoDelRechazo ? item.motivoDelRechazo : '---',
         item.ioChild ? item.ioChild : '---',
-        item.statusWoChild ? item.statusWoChild : '---',
+        item.statusWoChild ? item.statusWoChild:'---',
         item.otTaller ? item.otTaller : '---',
         item.otMadre ? item.otMadre : '---',
-        item.fechaAperturaChild
-          ? new Date(item.fechaAperturaChild['seconds'] * 1000)
-          : '---',
-        item.fechaReleasedIoChild
-          ? new Date(item.fechaReleasedIoChild['seconds'] * 1000)
-          : '---',
-        item.cliente ? item.cliente : '---',
         item.gmorngm ? item.gmorngm : '---',
-        item.modelo ? item.modelo : '---',
         item.tipoSS ? item.tipoSS : '---',
         item.servicio ? item.servicio : '---',
         item.tipoAtencion ? item.tipoAtencion : '---',
         item.modalidadPresupuesto ? item.modalidadPresupuesto : '---',
-        item.componente ? item.componente : '---',
         item.afa ? item.afa : '---',
-        item.afaDate ? item.afaDate : '---',
         item.fechaUltimoListado
           ? new Date(item.fechaUltimoListado['seconds'] * 1000)
           : '---',
@@ -384,32 +400,24 @@ export class BudgetsPendingSendComponent implements OnInit {
           ? new Date(item.fechaDefinicionDeCargos['seconds'] * 1000)
           : '---',
         item.definicionDeCargo ? item.definicionDeCargo : '---',
-        item.fechaUltimoEnvioPPTO
-          ? new Date(item.fechaUltimoEnvioPPTO['seconds'] * 1000)
-          : '---',
-        item.fechaEnvioPPTO01
-          ? new Date(item.fechaEnvioPPTO01['seconds'] * 1000)
-          : '---',
         item.fechaEnvioPPTO02
           ? new Date(item.fechaEnvioPPTO02['seconds'] * 1000)
           : '---',
-        item.motivoDeModificacion02 ? item.motivoDeModificacion02 : '---',
+        // item.motivoDeModificacion02 ? item.motivoDeModificacion02 : '---',
+        item.motivoDeModificacionName02 ? item.motivoDeModificacionName02 : '---',
         item.detalleDeModificacion02 ? item.detalleDeModificacion02 : '---',
         item.fechaEnvioPPTO03
           ? new Date(item.fechaEnvioPPTO03['seconds'] * 1000)
           : '---',
-        item.motivoDeModificacion03 ? item.motivoDeModificacion03 : '---',
+        // item.motivoDeModificacion03 ? item.motivoDeModificacion03 : '---',
+        item.motivoDeModificacionName03 ? item.motivoDeModificacionName03 : '---',
         item.detalleDeModificacion03 ? item.detalleDeModificacion03 : '---',
         item.fechaEnvioPPTO04
           ? new Date(item.fechaEnvioPPTO04['seconds'] * 1000)
           : '---',
-        item.motivoDeModificacion04 ? item.motivoDeModificacion04 : '---',
+        // item.motivoDeModificacion04 ? item.motivoDeModificacion04 : '---',
+        item.motivoDeModificacionName04 ? item.motivoDeModificacionName04 : '---',
         item.detalleDeModificacion04 ? item.detalleDeModificacion04 : '---',
-        item.fechaDeAprobacionORechazo
-          ? new Date(item.fechaDeAprobacionORechazo['seconds'] * 1000)
-          : '---',
-        item.statusPresupuesto ? item.statusPresupuesto : '---',
-        item.motivoDelRechazo ? item.motivoDelRechazo : '---',
         item.detalleDelRechazo ? item.detalleDelRechazo : '---',
         item.vv$servicios ? item.vv$servicios : '---',
         item.vv$adicionalesServicios ? item.vv$adicionalesServicios : '---',
@@ -424,9 +432,6 @@ export class BudgetsPendingSendComponent implements OnInit {
         item.horasReales ? item.horasReales : '---',
         item.tiempoObjetivoEnvioPPTO ? item.tiempoObjetivoEnvioPPTO : '---',
         this.daysLeft(item),
-        item.NoPPTOSModificadosOAdicionales
-          ? item.NoPPTOSModificadosOAdicionales
-          : '---',
         item.observacionesEnElPresupuesto
           ? item.observacionesEnElPresupuesto
           : '---',
@@ -485,6 +490,7 @@ export class BudgetsPendingSendComponent implements OnInit {
         item.mesTer ? item.mesTer : '---',
         item.anio ? item.anio : '---',
         item.fechaLPD ? new Date(item.fechaLPD['seconds'] * 1000) : '---',
+           item.ioMain ? item.ioMain : '---',
       ];
       tableXlsx.push(temp);
     });
@@ -546,44 +552,51 @@ export class BudgetsPendingSendComponent implements OnInit {
       });
   }
 
-  daysLeft(budget: Budget): string {
+  daysLeft(budget: Budget) {
     // Get the goal Date and convert it to a moment.js object
-    if (typeof budget.tiempoObjetivoEnvioPPTO === 'number'){
 
+    if(typeof budget.tiempoObjetivoEnvioPPTO === 'number'){
       // convertir fechaApert. en milisegundos
+     
       const openDate = budget.fechaAperturaChild['seconds'] * 1000;
+      
       // convertir los dias del tiempoOb. en mili segundos
       const timeDate = budget.tiempoObjetivoEnvioPPTO * 8.64e+7;
-      const goalDate = openDate + timeDate;
+    
 
-      const leftDate = goalDate -  Date.now();
-
-      const date = (leftDate / 8.64e+7).toFixed(2);
-
-      return date;
-
-    }else{
-
-    const goalDate: moment.Moment = moment(
-      budget.tiempoObjetivoEnvioPPTO.toDate()
-    );
-
-    // Get the difference from the current moment() in days
-    const diff: number = goalDate.diff(moment(), 'days');
+     const goalDate = openDate + timeDate;
 
 
-    return diff.toString();
+     const leftDate = goalDate -  Date.now();
 
-    }
+     const date = (leftDate / 8.64e+7).toFixed(2);
+
+     return date;
+
+  }else{
+  
+  
+
+  const goalDate: moment.Moment = moment(
+    budget.tiempoObjetivoEnvioPPTO.toDate()
+  ) 
+
+  
+
+
+  // Get the difference from the current moment() in days
+  const diff: number = goalDate.diff(moment(), 'days');
+
+
+  if (diff >= 0) return diff.toString();
+  
+
+
+
+  return diff ;
   }
 
-  public timelineDialog(element: Budget): void {
-    const a = this.MatDialog.open(BudgetsPendingHistoryComponent, {
-      width: '90vw',
-      maxWidth: '700px',
-      data: element,
-    });
-  }
+}
 
   
 }
