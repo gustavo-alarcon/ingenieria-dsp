@@ -313,7 +313,7 @@
           </td>
         </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
         <tr
           mat-row
           *matRowDef="let row; columns: displayedColumns"
@@ -325,7 +325,7 @@
       </table>
     </div>
     <mat-paginator
-      [pageSizeOptions]="[5, 10, 20]"
+      [pageSizeOptions]="[5, 25, 50]"
       showFirstLastButtons
     ></mat-paginator>
   </div>

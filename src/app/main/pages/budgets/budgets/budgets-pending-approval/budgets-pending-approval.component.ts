@@ -213,7 +213,7 @@ export class BudgetsPendingApprovalComponent implements OnInit {
         });
 
         this.tableData.filterPredicate = this.customFilterPredicate();
-       
+
         this.loading.next(false);
       });
   }
@@ -435,9 +435,7 @@ export class BudgetsPendingApprovalComponent implements OnInit {
         item.horasReales ? item.horasReales : '---',
         item.tiempoObjetivoEnvioPPTO ? item.tiempoObjetivoEnvioPPTO : '---',
         item.diasRestantesEnvioPPTO ? item.diasRestantesEnvioPPTO : '---',
-        item.NoPPTOSModificadosOAdicionales
-          ? item.NoPPTOSModificadosOAdicionales
-          : '---',
+        this.getAdditionalsAndModified(item),
         item.observacionesEnElPresupuesto
           ? item.observacionesEnElPresupuesto
           : '---',
@@ -549,5 +547,12 @@ export class BudgetsPendingApprovalComponent implements OnInit {
       maxWidth: '700px',
       data: element,
     });
+  }
+
+  public getAdditionalsAndModified(budget: Budget): number | string {
+    const additional = budget.additionals ? budget.additionals.length : 0;
+    const modified = budget.NoPPTOSModificadosOAdicionales ? budget.NoPPTOSModificadosOAdicionales : 0;
+    const sum = additional + modified;
+    return sum ? sum : '---';
   }
 }

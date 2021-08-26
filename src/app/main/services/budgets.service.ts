@@ -762,13 +762,6 @@ export class BudgetsService {
       `/db/ferreyros/budgets/${id}`
     );
 
-  //  fields = {
-  //   NoPPTOSModificadosOAdicionales: budget.NoPPTOSModificadosOAdicionales + additionals.additionals.length,
-  //   cotizacionFesa: budget.cotizacionFesa,
-  //   cotizacionText: budget.cotizacionText,
-  //   informe: budget.informe
-  //  }
-
     batch.update(docRef, fields);
     return of(batch);
   }

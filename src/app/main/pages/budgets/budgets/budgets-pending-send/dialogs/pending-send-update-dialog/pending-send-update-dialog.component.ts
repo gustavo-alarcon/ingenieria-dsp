@@ -261,7 +261,7 @@ export class PendingSendUpdateDialogComponent implements OnInit {
           this.data.id,
           this.data,
           {
-            additionals: currentAdditionalDocs,
+            additionals: currentAdditionalDocs
           },
           this.filesFormGroup.value
         )
