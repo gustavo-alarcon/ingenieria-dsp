@@ -38,17 +38,64 @@
             <div
               class="circle"
               [ngClass]="{
-                circle__active: filesFormGroup.value.checkboxGroup.afa,
-                circle__inactive: !filesFormGroup.value.checkboxGroup.afa
+                'circle--required':
+                  filesFormGroup.value.checkboxGroup.afa === 'required',
+                'circle--compliant':
+                  filesFormGroup.value.checkboxGroup.afa === 'compliant',
+                'circle--not-required':
+                  filesFormGroup.value.checkboxGroup.afa === 'notRequired'
               }"
             ></div>
-            <p class="conforme">Conforme</p>
-            <mat-checkbox
-              [color]="'primary'"
-              formControlName="afa"
-            ></mat-checkbox>
+            <p
+              class="conforme"
+              [ngSwitch]="filesFormGroup.value.checkboxGroup.afa"
+            >
+              <span *ngSwitchCase="'required'">Requerido</span>
+              <span *ngSwitchCase="'compliant'">Conforme</span>
+              <span *ngSwitchCase="'notRequired'">No Requerido</span>
+            </p>
             <p class="type">AFA</p>
-            <mat-form-field appearance="outline" class="observations">
+            <div class="buttons-container">
+              <button
+                mat-icon-button
+                [ngClass]="{
+                  required:
+                    filesFormGroup.value.checkboxGroup.afa === 'required'
+                }"
+                (click)="setAfa('required')"
+                matTooltip="Marcar como requerido"
+              >
+                <mat-icon>note_add</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                [ngClass]="{
+                  compliant:
+                    filesFormGroup.value.checkboxGroup.afa === 'compliant'
+                }"
+                (click)="setAfa('compliant')"
+                matTooltip="Marcar como conforme"
+              >
+                <mat-icon>task</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                [ngClass]="{
+                  'not-required':
+                    filesFormGroup.value.checkboxGroup.afa === 'notRequired'
+                }"
+                (click)="setAfa('notRequired')"
+                matTooltip="Marcar como NO requerido"
+              >
+                <mat-icon>content_paste_off</mat-icon>
+              </button>
+            </div>
+
+            <mat-form-field
+              appearance="outline"
+              class="observations"
+              autocomplete="off"
+            >
               <mat-label>Observación</mat-label>
               <input
                 formControlName="afaObs"
@@ -63,16 +110,59 @@
             <div
               class="circle"
               [ngClass]="{
-                circle__active: filesFormGroup.value.checkboxGroup.summary,
-                circle__inactive: !filesFormGroup.value.checkboxGroup.summary
+                'circle--required':
+                  filesFormGroup.value.checkboxGroup.summary === 'required',
+                'circle--compliant':
+                  filesFormGroup.value.checkboxGroup.summary === 'compliant',
+                'circle--not-required':
+                  filesFormGroup.value.checkboxGroup.summary === 'notRequired'
               }"
             ></div>
-            <p class="conforme">Conforme</p>
-            <mat-checkbox
-              [color]="'primary'"
-              formControlName="summary"
-            ></mat-checkbox>
+            <p
+              class="conforme"
+              [ngSwitch]="filesFormGroup.value.checkboxGroup.summary"
+            >
+              <span *ngSwitchCase="'required'">Requerido</span>
+              <span *ngSwitchCase="'compliant'">Conforme</span>
+              <span *ngSwitchCase="'notRequired'">No Requerido</span>
+            </p>
             <p class="type">RESUMEN</p>
+            <div class="buttons-container">
+              <button
+                mat-icon-button
+                [ngClass]="{
+                  required:
+                    filesFormGroup.value.checkboxGroup.summary === 'required'
+                }"
+                (click)="setSummary('required')"
+                matTooltip="Marcar como requerido"
+              >
+                <mat-icon>note_add</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                [ngClass]="{
+                  compliant:
+                    filesFormGroup.value.checkboxGroup.summary === 'compliant'
+                }"
+                (click)="setSummary('compliant')"
+                matTooltip="Marcar como conforme"
+              >
+                <mat-icon>task</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                [ngClass]="{
+                  'not-required':
+                    filesFormGroup.value.checkboxGroup.summary === 'notRequired'
+                }"
+                (click)="setSummary('notRequired')"
+                matTooltip="Marcar como NO requerido"
+              >
+                <mat-icon>content_paste_off</mat-icon>
+              </button>
+            </div>
+
             <mat-form-field appearance="outline" class="observations">
               <mat-label>Observación</mat-label>
               <input
@@ -88,16 +178,59 @@
             <div
               class="circle"
               [ngClass]="{
-                circle__active: filesFormGroup.value.checkboxGroup.fesa,
-                circle__inactive: !filesFormGroup.value.checkboxGroup.fesa
+                'circle--required':
+                  filesFormGroup.value.checkboxGroup.fesa === 'required',
+                'circle--compliant':
+                  filesFormGroup.value.checkboxGroup.fesa === 'compliant',
+                'circle--not-required':
+                  filesFormGroup.value.checkboxGroup.fesa === 'notRequired'
               }"
             ></div>
-            <p class="conforme">Conforme</p>
-            <mat-checkbox
-              [color]="'primary'"
-              formControlName="fesa"
-            ></mat-checkbox>
+            <p
+              class="conforme"
+              [ngSwitch]="filesFormGroup.value.checkboxGroup.fesa"
+            >
+              <span *ngSwitchCase="'required'">Requerido</span>
+              <span *ngSwitchCase="'compliant'">Conforme</span>
+              <span *ngSwitchCase="'notRequired'">No Requerido</span>
+            </p>
             <p class="type">FESA</p>
+            <div class="buttons-container">
+              <button
+                mat-icon-button
+                [ngClass]="{
+                  required:
+                    filesFormGroup.value.checkboxGroup.fesa === 'required'
+                }"
+                (click)="setFesa('required')"
+                matTooltip="Marcar como requerido"
+              >
+                <mat-icon>note_add</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                [ngClass]="{
+                  compliant:
+                    filesFormGroup.value.checkboxGroup.fesa === 'compliant'
+                }"
+                (click)="setFesa('compliant')"
+                matTooltip="Marcar como conforme"
+              >
+                <mat-icon>task</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                [ngClass]="{
+                  'not-required':
+                    filesFormGroup.value.checkboxGroup.fesa === 'notRequired'
+                }"
+                (click)="setFesa('notRequired')"
+                matTooltip="Marcar como NO requerido"
+              >
+                <mat-icon>content_paste_off</mat-icon>
+              </button>
+            </div>
+
             <mat-form-field appearance="outline" class="observations">
               <mat-label>Observación</mat-label>
               <input
@@ -113,16 +246,59 @@
             <div
               class="circle"
               [ngClass]="{
-                circle__active: filesFormGroup.value.checkboxGroup.text,
-                circle__inactive: !filesFormGroup.value.checkboxGroup.text
+                'circle--required':
+                  filesFormGroup.value.checkboxGroup.text === 'required',
+                'circle--compliant':
+                  filesFormGroup.value.checkboxGroup.text === 'compliant',
+                'circle--not-required':
+                  filesFormGroup.value.checkboxGroup.text === 'notRequired'
               }"
             ></div>
-            <p class="conforme">Conforme</p>
-            <mat-checkbox
-              [color]="'primary'"
-              formControlName="text"
-            ></mat-checkbox>
+            <p
+              class="conforme"
+              [ngSwitch]="filesFormGroup.value.checkboxGroup.text"
+            >
+              <span *ngSwitchCase="'required'">Requerido</span>
+              <span *ngSwitchCase="'compliant'">Conforme</span>
+              <span *ngSwitchCase="'notRequired'">No Requerido</span>
+            </p>
             <p class="type">TEXT</p>
+            <div class="buttons-container">
+              <button
+                mat-icon-button
+                [ngClass]="{
+                  required:
+                    filesFormGroup.value.checkboxGroup.text === 'required'
+                }"
+                (click)="setText('required')"
+                matTooltip="Marcar como requerido"
+              >
+                <mat-icon>note_add</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                [ngClass]="{
+                  compliant:
+                    filesFormGroup.value.checkboxGroup.text === 'compliant'
+                }"
+                (click)="setText('compliant')"
+                matTooltip="Marcar como conforme"
+              >
+                <mat-icon>task</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                [ngClass]="{
+                  'not-required':
+                    filesFormGroup.value.checkboxGroup.text === 'notRequired'
+                }"
+                (click)="setText('notRequired')"
+                matTooltip="Marcar como NO requerido"
+              >
+                <mat-icon>content_paste_off</mat-icon>
+              </button>
+            </div>
+
             <mat-form-field appearance="outline" class="observations">
               <mat-label>Observación</mat-label>
               <input
@@ -138,16 +314,59 @@
             <div
               class="circle"
               [ngClass]="{
-                circle__active: filesFormGroup.value.checkboxGroup.report,
-                circle__inactive: !filesFormGroup.value.checkboxGroup.report
+                'circle--required':
+                  filesFormGroup.value.checkboxGroup.report === 'required',
+                'circle--compliant':
+                  filesFormGroup.value.checkboxGroup.report === 'compliant',
+                'circle--not-required':
+                  filesFormGroup.value.checkboxGroup.report === 'notRequired'
               }"
             ></div>
-            <p class="conforme">Conforme</p>
-            <mat-checkbox
-              [color]="'primary'"
-              formControlName="report"
-            ></mat-checkbox>
+            <p
+              class="conforme"
+              [ngSwitch]="filesFormGroup.value.checkboxGroup.report"
+            >
+              <span *ngSwitchCase="'required'">Requerido</span>
+              <span *ngSwitchCase="'compliant'">Conforme</span>
+              <span *ngSwitchCase="'notRequired'">No Requerido</span>
+            </p>
             <p class="type">INFORME</p>
+            <div class="buttons-container">
+              <button
+                mat-icon-button
+                [ngClass]="{
+                  required:
+                    filesFormGroup.value.checkboxGroup.report === 'required'
+                }"
+                (click)="setReport('required')"
+                matTooltip="Marcar como requerido"
+              >
+                <mat-icon>note_add</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                [ngClass]="{
+                  compliant:
+                    filesFormGroup.value.checkboxGroup.report === 'compliant'
+                }"
+                (click)="setReport('compliant')"
+                matTooltip="Marcar como conforme"
+              >
+                <mat-icon>task</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                [ngClass]="{
+                  'not-required':
+                    filesFormGroup.value.checkboxGroup.report === 'notRequired'
+                }"
+                (click)="setReport('notRequired')"
+                matTooltip="Marcar como NO requerido"
+              >
+                <mat-icon>content_paste_off</mat-icon>
+              </button>
+            </div>
+
             <mat-form-field appearance="outline" class="observations">
               <mat-label>Observación</mat-label>
               <input

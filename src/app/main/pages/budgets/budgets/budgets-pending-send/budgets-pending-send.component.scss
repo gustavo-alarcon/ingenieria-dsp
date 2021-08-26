@@ -50,6 +50,14 @@ table {
   .observaciones-taller {
     min-width: 500px;
   }
+
+  .cell-sticky-right-limit {
+    border-right: 2px solid lightgrey;
+  }
+
+  .cell-sticky-left-limit {
+    border-left: 2px solid lightgrey;
+  }
 }
 
 th {

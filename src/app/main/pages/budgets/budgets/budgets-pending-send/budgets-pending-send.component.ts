@@ -47,7 +47,7 @@ export class BudgetsPendingSendComponent implements OnInit {
     'woChild',
     'cliente',
     'afa',
-    // 'afaDate',
+    'afaDate',
     'resumen',
     'cotizacionFesa',
     'cotizacionText',
