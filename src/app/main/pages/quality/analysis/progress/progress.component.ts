@@ -239,7 +239,8 @@ export class ProgressComponent implements OnInit {
     this.dialog.open(AnalysisDialogComponent, {
       maxWidth: 620,
       width: '90vw',
-      data: item
+      data: item,
+      disableClose: true
     });
   }
 
