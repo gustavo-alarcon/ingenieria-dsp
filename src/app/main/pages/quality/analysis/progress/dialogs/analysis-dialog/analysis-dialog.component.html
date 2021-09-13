@@ -124,7 +124,7 @@
 
                                     <mat-form-field appearance="outline" class="form-corrective__input1">
                                         <mat-label>Acción correctiva {{i+1}}</mat-label>
-                                        <textarea matInput placeholder="Escribe..." formControlName="corrective"></textarea>
+                                        <textarea matInput placeholder="Escribe..." rows="3" formControlName="corrective"></textarea>
                                         <mat-error *ngIf="areas.controls[i].get('corrective').errors">
                                             Campo <strong>requerido.</strong>
                                         </mat-error>
