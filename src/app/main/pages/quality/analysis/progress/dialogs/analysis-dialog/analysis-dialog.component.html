@@ -16,10 +16,9 @@
         <div class="details">
             <p><span style="font-weight: bold;"> OT Actual :</span> {{data.workOrder ? data.workOrder : ''}}</p>
             <p><span style="font-weight: bold;"> Componente :</span> {{data.component ? data.component : ''}}</p>
-            <p><span style="font-weight: bold;"> Número de paqueteo :</span> {{data.packageNumber ? data.packageNumber :
-                ''}}</p>
-            <p><span style="font-weight: bold;"> Horómetro de componente :</span> {{data.componentHourMeter ?
-                data.componentHourMeter : ''}}</p>
+            <p><span style="font-weight: bold;"> Número de paqueteo :</span> {{data.packageNumber ? data.packageNumber : ''}}
+            </p>
+            <p><span style="font-weight: bold;"> Horómetro de componente :</span> {{data.componentHourMeter ? data.componentHourMeter : ''}}</p>
             <p><span style="font-weight: bold;"> Número de parte :</span> {{data.partNumber ? data.partNumber : ''}}</p>
             <p><span style="font-weight: bold;"> Tipo de evento :</span> {{data.eventType ? data.eventType : ''}} </p>
         </div>
@@ -53,14 +52,11 @@
                             </div>
                         </ng-template>
 
-                        <mat-form-field *ngIf="causeFailure$ | async as causeFailuries" class="container__form--input"
-                            appearance="outline">
+                        <mat-form-field *ngIf="causeFailure$ | async as causeFailuries" class="container__form--input" appearance="outline">
                             <mat-label>Causante de falla</mat-label>
-                            <input autocomplete="off" formControlName="causeFailure"
-                                [matAutocomplete]="causeFailureAutocomplete" type="text" matInput />
+                            <input autocomplete="off" formControlName="causeFailure" [matAutocomplete]="causeFailureAutocomplete" type="text" matInput />
                             <mat-autocomplete autoActiveFirstOption #causeFailureAutocomplete="matAutocomplete">
-                                <mat-option *ngIf="authService.uiConfig.quality.analysis.tabs.process.forms.failRoot"
-                                    (click)="onAddCauseFailure()" [value]="">
+                                <mat-option *ngIf="authService.uiConfig.quality.analysis.tabs.process.forms.failRoot" (click)="onAddCauseFailure()" [value]="">
                                     <mat-icon>add_circle_outline</mat-icon>Añadir/Eliminar
                                 </mat-option>
                                 <mat-option *ngFor="let causeFailure of causeFailuries" [value]="causeFailure.name">
@@ -80,14 +76,11 @@
                             </mat-error>
                         </mat-form-field>
                         <br>
-                        <mat-form-field *ngIf="process$ | async as process" class="container__form--input"
-                            appearance="outline">
+                        <mat-form-field *ngIf="process$ | async as process" class="container__form--input" appearance="outline">
                             <mat-label>Proceso</mat-label>
-                            <input autocomplete="off" formControlName="process" [matAutocomplete]="processAutocomplete"
-                                type="text" matInput />
+                            <input autocomplete="off" formControlName="process" [matAutocomplete]="processAutocomplete" type="text" matInput />
                             <mat-autocomplete autoActiveFirstOption #processAutocomplete="matAutocomplete">
-                                <mat-option *ngIf="authService.uiConfig.quality.analysis.tabs.process.forms.process"
-                                    (click)="onAddProcess()" [value]="">
+                                <mat-option *ngIf="authService.uiConfig.quality.analysis.tabs.process.forms.process" (click)="onAddProcess()" [value]="">
                                     <mat-icon>add_circle_outline</mat-icon>Añadir/Eliminar
                                 </mat-option>
                                 <mat-option *ngFor="let item of process" [value]="item.name">
@@ -109,8 +102,7 @@
 
                         <mat-form-field appearance="outline" class="container__form--input">
                             <mat-label>Observaciones</mat-label>
-                            <textarea matInput type="text" placeholder="Observaciones" formControlName="observation"
-                                rows="2">
+                            <textarea matInput type="text" placeholder="Observaciones" formControlName="observation" rows="2">
                         </textarea>
                         </mat-form-field>
 
@@ -132,18 +124,16 @@
 
                                     <mat-form-field appearance="outline" class="form-corrective__input1">
                                         <mat-label>Acción correctiva {{i+1}}</mat-label>
-                                        <input matInput placeholder="Escribe..." formControlName="corrective">
+                                        <textarea matInput placeholder="Escribe..." rows="3" formControlName="corrective"></textarea>
                                         <mat-error *ngIf="areas.controls[i].get('corrective').errors">
                                             Campo <strong>requerido.</strong>
                                         </mat-error>
                                     </mat-form-field>
 
-                                    <mat-form-field *ngIf=" areaResponsable$ | async as areaResponsable"
-                                        appearance="outline" id="result" class="form-corrective__input2">
+                                    <mat-form-field *ngIf=" areaResponsable$ | async as areaResponsable" appearance="outline" id="result" class="form-corrective__input2">
                                         <mat-label>Area responsable</mat-label>
                                         <mat-select formControlName="name">
-                                            <mat-option *ngFor="let item of areaResponsable" [value]="item.name"
-                                                (click)="onclickArea(item, i)">
+                                            <mat-option *ngFor="let item of areaResponsable" [value]="item.name" (click)="onclickArea(item, i)">
                                                 {{item.name}}
                                             </mat-option>
                                         </mat-select>
@@ -156,15 +146,13 @@
                                         </mat-error>
                                     </mat-form-field>
 
-                                    <button mat-icon-button type="button" style="margin-top: 8px;"
-                                        class="form-corrective__btn-delete">
+                                    <button mat-icon-button type="button" style="margin-top: 8px;" class="form-corrective__btn-delete">
                                         <mat-icon color="warn" (click)="deleteControl(i)">delete</mat-icon>
                                     </button>
                                 </div>
                             </div>
                         </div>
-                        <button type="button" mat-stroked-button color="primary" class="form-corrective__btn-add"
-                            (click)="addControl()">
+                        <button type="button" mat-stroked-button color="primary" class="form-corrective__btn-add" (click)="addControl()">
                             <mat-icon color="primary">add</mat-icon>
                             AGREGAR
                         </button>
@@ -187,19 +175,14 @@
             </mat-vertical-stepper>
 
             <h3>Lista de difusion</h3>
-            <mat-form-field *ngIf="filteredBroadcast$ | async as broadcasts" appearance="outline" id="result"
-                class="chip-form-input">
+            <mat-form-field *ngIf="filteredBroadcast$ | async as broadcasts" appearance="outline" id="result" class="chip-form-input">
                 <mat-label>Enviar a</mat-label>
                 <mat-chip-list #chipList aria-label="Fruit selection">
-                    <mat-chip *ngFor="let email of emailArray" [selectable]="selectable" [removable]="removable"
-                        (removed)="removeEmail(email)">
+                    <mat-chip *ngFor="let email of emailArray" [selectable]="selectable" [removable]="removable" (removed)="removeEmail(email)">
                         {{email}}
                         <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
                     </mat-chip>
-                    <input placeholder="agregar nueva lista de difusion..." #fruitInput [formControl]="broadcastControl"
-                        [matAutocomplete]="auto" [matChipInputFor]="chipList"
-                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                        (matChipInputTokenEnd)="addBroadcast($event)">
+                    <input placeholder="agregar nueva lista de difusion..." #fruitInput [formControl]="broadcastControl" [matAutocomplete]="auto" [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" (matChipInputTokenEnd)="addBroadcast($event)">
                 </mat-chip-list>
                 <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedBroadcast($event)">
                     <mat-option *ngFor="let broadcast of broadcasts" [value]="broadcast">
@@ -214,8 +197,7 @@
     <mat-dialog-actions align="end">
         <button mat-stroked-button color="warn" mat-dialog-close [disabled]="loading$ | async">CANCELAR</button>
         <button mat-stroked-button color="primary" (click)="save()" [disabled]="loading$ | async">GUARDAR</button>
-        <button mat-stroked-button color="primary" (click)="saveAndSendEmail()"
-            [disabled]="loading$ | async">ENVIAR</button>
+        <button mat-stroked-button color="primary" (click)="saveAndSendEmail()" [disabled]="loading$ | async">ENVIAR</button>
     </mat-dialog-actions>
 
 </div>
