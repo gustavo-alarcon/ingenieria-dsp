@@ -54,7 +54,7 @@ export class AuthService {
 
   async loginGoogle(): Promise<firebase.auth.UserCredential> {
     try {
-      await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+      // await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
       return await this.afAuth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
     } catch (error) {
       return error;

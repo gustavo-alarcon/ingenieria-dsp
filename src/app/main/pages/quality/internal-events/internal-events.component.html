@@ -98,8 +98,11 @@
                         Campo <strong>requerido.</strong>
                     </mat-error>
                 </mat-form-field>
-
-                <h3 class="container-form__title">Imagen general</h3>
+                <div class="div-margin">
+                    <h3 class="container-form__title">¿Esta pararalizando el trabajo?</h3>
+                    <mat-checkbox class="div-margin__margin-space">
+                    </mat-checkbox>
+                </div>
 
                 <div class="dropzone" appDropzone (hovered)="toggleHoverGeneral($event)"
                     (dropped)="onDropGeneral($event)" [class.hovering]="isHoveringGeneral">

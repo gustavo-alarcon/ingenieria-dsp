@@ -98,3 +98,7 @@ firebase-export-1629746903091DepIco/firestore_export/all_namespaces/all_kinds/ou
 firebase-export-1629746903091DepIco/firestore_export/all_namespaces/all_kinds/output-1
 
 firebase-export-1629746903091DepIco/firestore_export/firestore_export.overall_export_metadata
+/firebase-export-*
+firebase-debug.log
+firestore-debug.log
+ui-debug.log

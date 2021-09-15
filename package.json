@@ -9,7 +9,12 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "meraki": "firebase emulators:start --import functions/backup --export-on-exit ./functions/backup"
+    "meraki": "firebase emulators:start --import functions/backup --export-on-exit ./functions/backup",
+    "firebase": "firebase",
+    "local-dev": "firebase emulators:start --only firestore,auth,functions --import functions/backup --export-on-exit ./functions/backup",
+    "empty-emulator": "firebase emulators:start",
+    "emulator": "firebase emulators:start --import functions/backup",
+    "export": "firebase emulators:export functions/backup"
   },
   "private": true,
   "dependencies": {
