@@ -19,6 +19,7 @@ import { EditExternalDialogComponent } from './dialogs/edit-external-dialog/edit
 import { EditInternalDialogComponent } from './dialogs/edit-internal-dialog/edit-internal-dialog.component';
 import * as XLSX from 'xlsx';
 import { DatePipe } from '@angular/common';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-results',
@@ -48,6 +49,7 @@ export class ResultsComponent implements OnInit {
     'state',
     'actions',
   ];
+  @ViewChild(MatSort) sort: MatSort;
   @ViewChild('settingsPaginator', { static: false }) set content(
     paginator: MatPaginator
   ) {
@@ -430,6 +432,10 @@ export class ResultsComponent implements OnInit {
         });
         break;
     }
+  }
+
+  ngAfterViewInit() {
+    this.settingsDataSource.sort = this.sort;
   }
 
 }
