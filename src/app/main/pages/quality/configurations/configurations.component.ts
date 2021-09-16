@@ -23,6 +23,7 @@ import { DeleteBroadcastDialogComponent } from './dialogs/delete-broadcast-dialo
 import { AddBroadcastDialogComponent } from './dialogs/add-broadcast-dialog/add-broadcast-dialog.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
+import { WorkShopModel } from 'src/app/main/models/workshop.model';
 
 @Component({
   selector: 'app-configurations',
@@ -82,7 +83,21 @@ export class ConfigurationsComponent implements OnInit {
     this.historyMobilDataSource.paginator = paginator;
   }
 
+  workShopDataSource = new MatTableDataSource<any[]>();
+  workShopDisplayedColumns: string[] = [
+    'No',
+    'workShopNameProgress',
+    'actions'
+  ];
+
+  @ViewChild('workShopPaginator', { static: false }) set content2(
+    paginator: MatPaginator
+  ) {
+    this.workShopDataSource.paginator = paginator;
+  }
+
   areaResponsable$: Observable<any[]>;
+  workShopProgress$: Observable<any[]>;
   workShopProgressArray: string[] = [];
 
 
@@ -133,23 +148,24 @@ export class ConfigurationsComponent implements OnInit {
       })
     );
 
-    /* this.subscription.add(
-      this.qualityService.getAllQualityListResponsibleAreas()
-        .subscribe((resp) => {
-          if (resp) {
-            this.historyMobilDataSource.data = resp;
-          } else {
-            this.historyMobilDataSource.data = [];
-          }
-        })
-    ); */
-
     this.areaResponsable$ = this.qualityService.getAllQualityListResponsibleAreas().pipe(
       tap((resp) => {
         if (resp) {
           this.historyMobilDataSource.data = resp;
         } else {
           this.historyMobilDataSource.data = [];
+        }
+      }
+      )
+    );
+
+
+    this.workShopProgress$ = this.qualityService.getAllQualityInternalWorkShop().pipe(
+      tap((resp) => {
+        if (resp) {
+          this.workShopDataSource.data = resp;
+        } else {
+          this.workShopDataSource.data = [];
         }
       }
       )
@@ -193,7 +209,7 @@ export class ConfigurationsComponent implements OnInit {
 
     this.workShopForm = this.fb.group({
       workShopName: ['', [Validators.required]],
-      workShopProgress: ['',[Validators.required]]
+      workShopProgress: ['']
     })
   }
 

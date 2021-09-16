@@ -1297,6 +1297,15 @@ export class QualityService {
     return { year, month, day, hours, minutes }
   }
 
+  getAllQualityInternalWorkShop(): Observable<WorkShopModel[]> {
+
+    return this.afs
+      .collection<WorkShopModel>(
+        `db/generalConfigQuality/qualityWorkShop`,
+        (ref) => ref.orderBy('createdAt', 'asc')
+      )
+      .valueChanges();
+  }
 
   addQualityInternalWorkShop(
     form: FormGroup,

@@ -200,7 +200,7 @@
                                     <mat-form-field class="container-expansion2__form--input" appearance="outline">
                                         <mat-label>Taller</mat-label>
                                         <input type="text" formControlName="workShopName" placeholder="Escribe..."
-                                            matInput  onkeypress="return event.charCode !== 13"/>
+                                            matInput onkeypress="return event.charCode !== 13" />
                                         <mat-error *ngIf="workShopForm.controls['workShopName'].errors">
                                             Campo <strong>requerido.</strong>
                                         </mat-error>
@@ -219,9 +219,9 @@
                                                     <mat-icon (click)="resetworkShopProgress()">close</mat-icon>
                                                 </button>
                                                 <mat-hint>Presione ENTER para agregar</mat-hint>
-                                                <mat-error *ngIf="workShopForm.get('workShopProgress').errors">
+                                                <!-- <mat-error *ngIf="workShopForm.get('workShopProgress').errors">
                                                     El campo es <strong>Requerido</strong>
-                                                </mat-error>
+                                                </mat-error> -->
                                             </mat-form-field>
                                             <div>
                                                 <mat-card-content class="container-expansion1__content-card-content">
@@ -252,23 +252,31 @@
                                 </form>
                             </div>
 
-                            <!-- <div>
+                            <div>
 
-                                <div class="container-table" *ngIf="areaResponsable$ | async ">
-                                    <table mat-table [dataSource]="historyMobilDataSource" class="mat-elevation-z8">
+                                <div class="container-table" *ngIf="workShopProgress$ | async ">
+                                    <table mat-table [dataSource]="workShopDataSource" class="mat-elevation-z8">
 
-                                        <ng-container matColumnDef="name">
-                                            <th mat-header-cell *matHeaderCellDef class="table__cell theader">Area
-                                                responsable</th>
-                                            <td mat-cell *matCellDef="let element" class="table__cell"> {{element.name ?
-                                                element.name : '---'}}
+                                        <ng-container matColumnDef="No">
+                                            <th mat-header-cell *matHeaderCellDef class="table__cell theader">Nro</th>
+                                            <td mat-cell *matCellDef="let element;let i=index" class="table__cell">
+                                                {{i+1}}
                                             </td>
                                         </ng-container>
 
-                                        <ng-container matColumnDef="email">
-                                            <th mat-header-cell *matHeaderCellDef class="table__cell theader">Email</th>
-                                            <td mat-cell *matCellDef="let element" class="table__cell"> {{element.email
-                                                ? element.email : '---'}}
+                                        <ng-container matColumnDef="workShopNameProgress">
+                                            <th mat-header-cell *matHeaderCellDef class="table__cell theader">
+                                                Talleres
+                                            </th>
+                                            <td mat-cell *matCellDef="let element" class="table__cell">
+                                                <div>
+                                                    {{element.workShopName ? element.workShopName : '---'}}
+                                                </div>
+                                                <ul>
+                                                    <li *ngFor="let item of element.workShopProgressName">
+                                                        {{item}}
+                                                    </li>
+                                                </ul>
                                             </td>
                                         </ng-container>
 
@@ -277,22 +285,24 @@
                                                 Accion
                                             </th>
                                             <td mat-cell *matCellDef="let element" class="table__cell">
-                                                <button mat-icon-button aria-label="deletelistResult"
-                                                    (click)="deleteListResponsibleArea(element)">
+                                                <button mat-icon-button>
+                                                    <mat-icon style="color: #828282">edit</mat-icon>
+                                                </button>
+                                                <button mat-icon-button>
                                                     <mat-icon style="color: #828282">delete</mat-icon>
                                                 </button>
                                             </td>
                                         </ng-container>
 
-                                        <tr mat-header-row *matHeaderRowDef="historyMobilDisplayedColumns"></tr>
-                                        <tr mat-row *matRowDef="let row; columns: historyMobilDisplayedColumns;"></tr>
+                                        <tr mat-header-row *matHeaderRowDef="workShopDisplayedColumns"></tr>
+                                        <tr mat-row *matRowDef="let row; columns: workShopDisplayedColumns;"></tr>
                                     </table>
 
                                 </div>
-                                <mat-paginator #historyMobilPaginator class="ms-paginator"
-                                    [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+                                <mat-paginator #workShopPaginator class="ms-paginator" [pageSizeOptions]="[5, 10, 20]"
+                                    showFirstLastButtons>
                                 </mat-paginator>
-                            </div> -->
+                            </div>
 
                         </mat-card-content>
                     </div>
