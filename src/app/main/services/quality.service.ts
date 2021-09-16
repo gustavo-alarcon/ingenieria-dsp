@@ -18,6 +18,8 @@ import { logging } from 'protractor';
 import { Quality, MiningOperation } from '../models/quality.model';
 import jsPDF from 'jspdf';
 import { saveAs } from 'file-saver';
+import { WorkShopModel } from '../models/workshop.model';
+import { FormGroup } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root',
@@ -1022,7 +1024,7 @@ export class QualityService {
     //Nivel de riesgo
     const riskName = data.evaluationAnalysisName ? data.evaluationAnalysisName : '---';
     const riskNumber = data.evaluationAnalisis ? data.evaluationAnalisis : '---';
-    doc.text(riskName + ' (' + riskNumber +')', 155, 48, { align: "center" })
+    doc.text(riskName + ' (' + riskNumber + ')', 155, 48, { align: "center" })
 
     //OT que reporta
     doc.text(data.workOrder ? ('' + data.workOrder) : '---', 155, 57, { align: "center" })
@@ -1293,6 +1295,51 @@ export class QualityService {
       day = '0' + day;
 
     return { year, month, day, hours, minutes }
+  }
+
+  getAllQualityInternalWorkShop(): Observable<WorkShopModel[]> {
+
+    return this.afs
+      .collection<WorkShopModel>(
+        `db/generalConfigQuality/qualityWorkShop`,
+        (ref) => ref.orderBy('createdAt', 'asc')
+      )
+      .valueChanges();
+  }
+
+  addQualityInternalWorkShop(
+    form: FormGroup,
+    user: User,
+    arrayWorkShopProgressName: string[],
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    // create reference for document in evaluation entries collection
+    const qualityWorkShopDocRef = this.afs.firestore
+      .collection(`db/generalConfigQuality/qualityWorkShop`)
+      .doc();
+
+    // Structuring the data model
+    const data: WorkShopModel = {
+      id: qualityWorkShopDocRef.id,
+      createdBy: user,
+      editedAt: null,
+      createdAt: new Date(),
+      workShopName: form.get('workShopName').value,
+      workShopProgressName: [],
+
+    };
+    batch.set(qualityWorkShopDocRef, data);
+
+    arrayWorkShopProgressName.forEach(el => {
+      const workShopProgressNameDocRef = this.afs.firestore.doc(`db/generalConfigQuality/qualityWorkShop/${qualityWorkShopDocRef.id}`);
+      const data1 = {
+        workShopProgressName: firebase.default.firestore.FieldValue.arrayUnion(el)
+      };
+      batch.update(workShopProgressNameDocRef, data1);
+    });
+
+    return of(batch);
   }
 
 }
