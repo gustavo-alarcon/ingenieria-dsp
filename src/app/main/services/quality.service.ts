@@ -43,7 +43,9 @@ export class QualityService {
     user: User,
     imagesGeneral,
     imagesDetail,
-    dataFile
+    dataFile,
+    workShopName?,
+    workShopProgressName?
   ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
@@ -90,6 +92,8 @@ export class QualityService {
       question2: null,
       question3: null,
       question4: null,
+      workShopName: workShopName ? workShopName : null,
+      workShopProgressName: workShopProgressName ? workShopProgressName : null
     };
     batch.set(qualityDocRef, data);
     /* 
@@ -1341,5 +1345,7 @@ export class QualityService {
 
     return of(batch);
   }
+
+
 
 }

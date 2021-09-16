@@ -1,7 +1,8 @@
 import {
   FormGroup,
   Validators,
-  FormBuilder
+  FormBuilder,
+  FormControl
 } from '@angular/forms';
 import { Component, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
 import { BehaviorSubject, Subscription, Observable, combineLatest } from 'rxjs';
@@ -9,7 +10,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { QualityService } from 'src/app/main/services/quality.service';
 import { User } from '../../../models/user-model';
-import { finalize, take, startWith, map } from 'rxjs/operators';
+import { finalize, take, startWith, map, tap, pluck } from 'rxjs/operators';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { ComponentList, WorkShopList, FileAdditional } from '../../../models/quality.model';
@@ -17,6 +18,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddWorkshopComponent } from './dialogs/add-workshop/add-workshop.component';
 import { AddComponentComponent } from './dialogs/add-component/add-component.component';
 import { Router } from '@angular/router';
+import { WorkShopModel } from '../../../../main/models/workshop.model';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-internal-events',
@@ -68,6 +71,23 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
 
   dataFiles: FileAdditional[] = [];
 
+  allCompleteField: boolean = false;
+
+  // optionsWorkShop: string[] = [];
+  // optionsWorkShopProgress: string[] = [];
+  // filteredOptionsWorkShop$: Observable<string[]>;
+  // filteredOptionsWorkShopProgress$: Observable<string[]>;
+
+  workShopName = new FormControl(null);
+  workShopProgress = new FormControl(null);
+
+
+  filteredOptionsWorkShopName$: Observable<WorkShopModel[]>;
+  optionsWorkShopName: WorkShopModel[] = [];
+
+  filteredOptionsWorkShopProgress$: Observable<string[]>;
+  optionsWorkShopProgress: string[] = [];
+
   constructor(
     private breakpoint: BreakpointObserver,
     private fb: FormBuilder,
@@ -80,8 +100,24 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
   ) { }
 
 
+
+
   ngOnInit(): void {
     this.initFormInternal();
+    this.subscription.add(
+      this.qualityService.getAllQualityInternalWorkShop().pipe(
+      ).subscribe(resp => {
+        this.optionsWorkShopName = resp;
+        console.log(resp)
+        this.filteredOptionsWorkShopName$ = this.workShopName.valueChanges
+          .pipe(
+            startWith(''),
+            map(value => typeof value === 'string' ? value : value.name),
+            map(name => name ? this._filterWorkShopName(name) : this.optionsWorkShopName.slice())
+          );
+      })
+    );
+
     this.subscription.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
       .subscribe(res => {
         if (res.matches) {
@@ -143,6 +179,50 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
       })
     );
   }
+
+  setFields(event: boolean): void {
+    this.allCompleteField = !this.allCompleteField;
+    if (event) {
+      this.workShopName = new FormControl(null, Validators.required);
+      this.workShopProgress = new FormControl(null, Validators.required);
+      this.workShopName.markAllAsTouched();
+      this.workShopProgress.markAllAsTouched();
+    } else {
+      this.workShopName = new FormControl(null);
+      this.workShopProgress = new FormControl(null);
+    }
+  }
+
+  
+
+  private _filterWorkShopName(workShopName: string): WorkShopModel[] {
+    const filterValue = workShopName.toLowerCase();
+    return this.optionsWorkShopName.filter(option => option.workShopName.toLowerCase().indexOf(filterValue) === 0);
+  }
+
+  private _filterWorkShopProgress(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.optionsWorkShopProgress.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
+  }
+
+  displayFn(workShop: WorkShopModel): string {
+    return workShop && workShop.workShopName ? workShop.workShopName : '';
+  }
+
+  setSelectedArea(event: MatAutocompleteSelectedEvent): void {
+    const { workShopProgressName } = event.option.value;
+    this.optionsWorkShopProgress = [...workShopProgressName];
+
+    this.filteredOptionsWorkShopProgress$ = this.workShopProgress.valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filterWorkShopProgress(value))
+      );
+  }
+
+
+
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
@@ -200,8 +280,11 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
 
   }
 
+
+
   save(): void {
     try {
+    
 
       this.internalForm.markAsPristine();
       this.internalForm.markAsUntouched();
@@ -212,7 +295,6 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
         this.loading.next(false);
         return;
       } else {
-
         this.imagesGeneral = [];
         this.imagesGeneral = [...this.imagesUploadGeneral];
 
@@ -225,7 +307,9 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
             this.user,
             this.imagesGeneral,
             this.imagesDetail,
-            this.dataFiles
+            this.dataFiles,
+            this.workShopName.value,
+            this.workShopProgress.value
           )
           .pipe(take(1))
           .subscribe((res) => {
