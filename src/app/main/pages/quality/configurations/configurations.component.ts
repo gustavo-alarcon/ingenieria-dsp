@@ -49,6 +49,7 @@ export class ConfigurationsComponent implements OnInit {
 
   broadcast$: Observable<QualityBroadcastList[]>;
 
+
   private subscription = new Subscription();
   user: User;
 
@@ -57,6 +58,7 @@ export class ConfigurationsComponent implements OnInit {
   step = 0;
 
   areaForm: FormGroup;
+  workShopForm: FormGroup;
 
   //Autocomplete
   entrySpecialistControl: FormControl;
@@ -81,7 +83,7 @@ export class ConfigurationsComponent implements OnInit {
   }
 
   areaResponsable$: Observable<any[]>;
-
+  workShopProgressArray: string[] = [];
 
 
   constructor(
@@ -92,7 +94,7 @@ export class ConfigurationsComponent implements OnInit {
     private breakpoint: BreakpointObserver,
     public dialog: MatDialog,
 
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.entrySpecialistControl = this.fb.control('', Validators.required);
@@ -144,14 +146,14 @@ export class ConfigurationsComponent implements OnInit {
 
     this.areaResponsable$ = this.qualityService.getAllQualityListResponsibleAreas().pipe(
       tap((resp) => {
-          if (resp) {
-            this.historyMobilDataSource.data = resp;
-          } else {
-            this.historyMobilDataSource.data = [];
-          }
+        if (resp) {
+          this.historyMobilDataSource.data = resp;
+        } else {
+          this.historyMobilDataSource.data = [];
         }
+      }
       )
-      );
+    );
 
 
     this.entrySpecialist$ = combineLatest(
@@ -165,7 +167,7 @@ export class ConfigurationsComponent implements OnInit {
         )
     ).pipe(
       map(([specialists, entrySpecialist]) => {
-          return specialists.filter(specialist => {
+        return specialists.filter(specialist => {
           return specialist.name.toLowerCase().includes(entrySpecialist.toLowerCase());
         });
       })
@@ -179,21 +181,27 @@ export class ConfigurationsComponent implements OnInit {
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
-  initForm(){
+
+  initForm() {
     this.areaForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [
         Validators.required,
         Validators.pattern(/^[\w]{1,}[\w.+-]{0,}@[\w-]{1,}([.][a-zA-Z]{2,}|[.][\w-]{2,}[.][a-zA-Z]{2,})$/)
-        ]],
+      ]],
     });
+
+    this.workShopForm = this.fb.group({
+      workShopName: ['', [Validators.required]],
+      workShopProgress: ['',[Validators.required]]
+    })
   }
 
   setStep(index: number): void {
     this.step = index;
   }
 
-  addBroadcast(): void{
+  addBroadcast(): void {
     this.dialog.open(AddBroadcastDialogComponent, {
       maxWidth: 500,
       width: '90vw',
@@ -202,37 +210,95 @@ export class ConfigurationsComponent implements OnInit {
     this.broadcastFormArray.push(new FormControl(null, Validators.required));
   }
 
-  addListDiffusion(broadcast: QualityBroadcastList, index: number): void {
+  addWorkShopProgress(): void {
+    if (this.workShopForm.get('workShopName').invalid && this.broadcastFormArray.length === 0) {
+      this.workShopForm.markAllAsTouched();
+      return;
+    }
+    const value = { ...this.workShopForm.value }
+    this.workShopProgressArray.push(value.workShopProgress);
+    this.resetworkShopProgress();
+  }
+
+  resetworkShopProgress(): void {
+    this.workShopForm.get('workShopProgress').reset();
+  }
+
+  deleteTorkShopProgressArray(index: number): void {
+    this.workShopProgressArray.splice(index, 1);
+  }
+
+  saveSubmitWorkShopForm(): void {
     try {
-      const name = broadcast.name;
-      const newBroadcast = this.broadcastFormArray.controls[index].value.trim().toLowerCase();
-
-      if ( broadcast.id){
-        const entryId = broadcast.id;
-
-        const resp = this.qualityService.updateBrodcastList(entryId, newBroadcast, this.user);
-        //this.loading.next(true);
-        this.subscription.add(resp.subscribe(
+      this.loading.next(true);
+      if (this.workShopForm.invalid) {
+        this.workShopForm.markAllAsTouched();
+        this.loading.next(false);
+        return;
+      }
+      const resp = this.qualityService.addQualityInternalWorkShop(this.workShopForm, this.user, this.workShopProgressArray);
+      this.subscription.add(
+        resp.subscribe(
           batch => {
             if (batch) {
               batch.commit()
                 .then(() => {
-                  //this.loading.next(false);
                   this.snackbar.open('✅ Se guardo correctamente!', 'Aceptar', {
                     duration: 6000
                   });
-                  this.broadcastFormArray.removeAt(index);
+                  this.workShopProgressArray = [];
+                  this.workShopForm.reset();
 
+                  this.loading.next(false);
                 })
                 .catch(err => {
-                  //this.loading.next(false);
-                  this.snackbar.open('🚨 Hubo un error al actualizar  !', 'Aceptar', {
+                  this.loading.next(false);
+                  this.snackbar.open('🚨 Hubo un error al guardar  !', 'Aceptar', {
                     duration: 6000
                   });
                 });
             }
           }
         ));
+
+    } catch (error) {
+      console.log(error);
+      this.loading.next(false);
+    }
+  }
+
+  addListDiffusion(broadcast: QualityBroadcastList, index: number): void {
+    try {
+      const name = broadcast.name;
+      const newBroadcast = this.broadcastFormArray.controls[index].value.trim().toLowerCase();
+
+      if (broadcast.id) {
+        const entryId = broadcast.id;
+
+        const resp = this.qualityService.updateBrodcastList(entryId, newBroadcast, this.user);
+        //this.loading.next(true);
+        this.subscription.add(
+          resp.subscribe(
+            batch => {
+              if (batch) {
+                batch.commit()
+                  .then(() => {
+                    //this.loading.next(false);
+                    this.snackbar.open('✅ Se guardo correctamente!', 'Aceptar', {
+                      duration: 6000
+                    });
+                    this.broadcastFormArray.removeAt(index);
+
+                  })
+                  .catch(err => {
+                    //this.loading.next(false);
+                    this.snackbar.open('🚨 Hubo un error al actualizar  !', 'Aceptar', {
+                      duration: 6000
+                    });
+                  });
+              }
+            }
+          ));
       }
 
     } catch (error) {
@@ -359,30 +425,30 @@ export class ConfigurationsComponent implements OnInit {
     }
   }
 
-  deleteListResponsibleArea(item: any){
+  deleteListResponsibleArea(item: any) {
     const index = item.id;
     try {
-        const resp = this.qualityService.deleteQualityListResponsibleAreas(
+      const resp = this.qualityService.deleteQualityListResponsibleAreas(
         index
-        );
-        this.subscription.add(
-          resp.subscribe((batch) => {
-            if (batch) {
-              batch
-                .commit()
-                .then(() => {
-                  this.snackbar.open('✅ Se borrado correctamente!', 'Aceptar', {
-                    duration: 6000,
-                  });
-                })
-                .catch((err) => {
-                  this.snackbar.open('🚨 Hubo un error al crear!', 'Aceptar', {
-                    duration: 6000,
-                  });
+      );
+      this.subscription.add(
+        resp.subscribe((batch) => {
+          if (batch) {
+            batch
+              .commit()
+              .then(() => {
+                this.snackbar.open('✅ Se borrado correctamente!', 'Aceptar', {
+                  duration: 6000,
                 });
-            }
-          })
-        );
+              })
+              .catch((err) => {
+                this.snackbar.open('🚨 Hubo un error al crear!', 'Aceptar', {
+                  duration: 6000,
+                });
+              });
+          }
+        })
+      );
 
     } catch (error) {
       console.log(error);
@@ -390,7 +456,7 @@ export class ConfigurationsComponent implements OnInit {
     }
   }
 
-  saveResponsibleArea(){
+  saveResponsibleArea() {
     try {
 
       if (this.areaForm.valid) {
@@ -410,7 +476,7 @@ export class ConfigurationsComponent implements OnInit {
                     duration: 6000,
                   });
                   this.areaForm.reset();
-                  
+
                 })
                 .catch((err) => {
                   this.loading.next(false);
@@ -429,8 +495,8 @@ export class ConfigurationsComponent implements OnInit {
     }
   }
   showEntrySpecialist(specialist: QualityListSpecialist): string | null {
-   console.log('showEntrySpecialist : ', specialist)
-   return specialist.name ? specialist.name : null;
+    console.log('showEntrySpecialist : ', specialist)
+    return specialist.name ? specialist.name : null;
   }
 
   selectedEntrySpecialist(event: any): void {
