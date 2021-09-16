@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { Quality } from 'src/app/main/models/quality.model';
+import { Quality} from 'src/app/main/models/quality.model';
 import { BehaviorSubject, Observable, Subscription, combineLatest } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
@@ -19,7 +19,7 @@ import { EditExternalDialogComponent } from './dialogs/edit-external-dialog/edit
 import { EditInternalDialogComponent } from './dialogs/edit-internal-dialog/edit-internal-dialog.component';
 import * as XLSX from 'xlsx';
 import { DatePipe } from '@angular/common';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, Sort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-results',
@@ -49,7 +49,9 @@ export class ResultsComponent implements OnInit {
     'state',
     'actions',
   ];
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatSort, { static: false }) set sortContent(sort: MatSort) {
+    this.settingsDataSource.sort = sort
+  }
   @ViewChild('settingsPaginator', { static: false }) set content(
     paginator: MatPaginator
   ) {
@@ -57,6 +59,7 @@ export class ResultsComponent implements OnInit {
   }
 
   quality$: Observable<Quality[]>;
+  quality: Quality[];
 
   subscriptions = new Subscription();
   isMobile = false;
@@ -251,6 +254,7 @@ export class ResultsComponent implements OnInit {
 
       }),
       tap(res => {
+        this.quality = res;
         this.settingsDataSource.data = res;
       })
     );
@@ -434,8 +438,35 @@ export class ResultsComponent implements OnInit {
     }
   }
 
-  ngAfterViewInit() {
-    this.settingsDataSource.sort = this.sort;
+  
+
+  sortData( sort: Sort) {
+    const data = this.quality.slice();
+
+    if(!sort.active || sort.direction === ''){
+      this.settingsDataSource.data = data;
+
+      return
+    }
+
+    this.settingsDataSource.data = data.sort((a , b ) => {
+      const isAsc = sort.direction === 'asc';
+     
+      switch(sort.active){
+        case 'user': return compare(a.createdBy.name, b.createdBy.name, isAsc);
+        case 'specialist' : return compare(a.specialist, b.specialist, isAsc);
+        case 'date': return compare(a.createdAt['seconds'], b.createdAt['seconds'], isAsc);
+        case 'process': return compare(a.analysis ? a.analysis['process']  : 0, b.analysis ? b.analysis['process'] : 0, isAsc);
+        case 'causeFailure': return compare(a.analysis ? a.analysis['causeFailure']  : 0, b.analysis ? b.analysis['causeFailure'] : 0, isAsc);
+        case 'accCorrective': return compare(a.taskDone, b.taskDone,isAsc);
+        case 'riskLevel': return compare(a.evaluationAnalysisName ? a.evaluationAnalysisName : 0, b.evaluationAnalysisName ? b.evaluationAnalysisName : 0 , isAsc);
+        case 'numberPart': return compare(a.packageNumber ? a.partNumber: 0, b.partNumber ? b.partNumber: 0, isAsc);
+        default: return 0;
+      }
+    })
   }
 
+}
+function compare(a: number | string, b: number | string, isAsc: boolean ) {
+  return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }
