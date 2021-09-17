@@ -51,6 +51,8 @@ export interface Quality {
   specialist?: string;
   partNumber?: number;
   workShop?: string;
+  responsibleWorkshop?: WorkshopModel;
+  responsibleWorkshopProcess?: string;
   enventDetail?: string;
   packageNumber?: string;
   componentHourMeter?: string;
@@ -65,8 +67,6 @@ export interface Quality {
   question3?: string;
   question4?: string;
   file?: string;
-  workShopName?: WorkshopModel;
-  workShopProgressName?: string;
 }
 
 export interface QualityTimer {
