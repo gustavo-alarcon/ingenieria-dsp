@@ -24,6 +24,8 @@ import { AddBroadcastDialogComponent } from './dialogs/add-broadcast-dialog/add-
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { WorkShopModel } from 'src/app/main/models/workshop.model';
+import { DeleteWorkshopDialogComponent } from './dialogs/delete-workshop-dialog/delete-workshop-dialog.component';
+import { EditWorkShopComponent } from './dialogs/edit-work-shop/edit-work-shop.component';
 
 @Component({
   selector: 'app-configurations',
@@ -338,6 +340,30 @@ export class ConfigurationsComponent implements OnInit {
     } else {
       this.broadcastListArray.splice(index, 1);
     }
+  }
+
+  deleteWorkshop(
+    workShop : WorkShopModel
+  ){
+    this.dialog.open(DeleteWorkshopDialogComponent, {
+      maxWidth: 500,
+      width:'90vw',
+      data:workShop
+    })
+  }
+
+  editWorkShop(
+    workShop : WorkShopModel
+   ): void {
+
+
+      this.dialog.open(EditWorkShopComponent,{
+        maxWidth: 500,
+        width:'90vw',
+        data:workShop
+      })
+     
+  
   }
 
   updateBrocastListEmail(

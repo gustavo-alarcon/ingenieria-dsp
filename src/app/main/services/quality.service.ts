@@ -447,6 +447,19 @@ export class QualityService {
     return of(batch);
   }
 
+  deleteWorkshop(
+   id:string,
+  ):Observable<firebase.default.firestore.WriteBatch> {
+   
+     const batch = this.afs.firestore.batch();
+     const workShopDoc = this.afs.firestore.doc(
+      `db/generalConfigQuality/qualityWorkShop/${id}`
+     )
+     
+     batch.delete(workShopDoc);
+    return of(batch);
+  }
+
   saveQualitySpecialist(
     quality: Quality,
     form,
@@ -1340,6 +1353,30 @@ export class QualityService {
     });
 
     return of(batch);
+  }
+
+  updateWorkShop(
+    form: FormGroup,
+    // user:User,
+    taller: WorkShopModel
+
+  ):Observable<firebase.default.firestore.WriteBatch> {
+    const batch = this.afs.firestore.batch();
+    const qualityWorkShopDocRef = this.afs.firestore
+    .collection(`db/generalConfigQuality/qualityWorkShop`)
+    .doc();
+    const editData: WorkShopModel = {
+      id: qualityWorkShopDocRef.id,
+      createdBy: taller.createdBy,
+      editedAt: new Date,
+      createdAt: taller.createdAt,
+      workShopName: form.get('workShopName').value,
+      workShopProgressName: [],
+
+    };
+
+    batch.update(qualityWorkShopDocRef, editData)
+    return of(batch)
   }
 
 }
