@@ -1,4 +1,5 @@
 import { User } from './user-model';
+import { WorkshopModel } from './workshop.model';
 
 export interface Quality {
   id?: string;
@@ -50,6 +51,8 @@ export interface Quality {
   specialist?: string;
   partNumber?: number;
   workShop?: string;
+  responsibleWorkshop?: WorkshopModel;
+  responsibleWorkshopProcess?: string;
   enventDetail?: string;
   packageNumber?: string;
   componentHourMeter?: string;
