@@ -647,10 +647,20 @@ export class BudgetsSummaryComponent implements OnInit {
   }
 
   public sendDialog(element: Budget) {
-    this.MatDialog.open(BudgetsSummarySendDialogComponent, {
-      disableClose: true,
-      data: element,
-    });
+    if (this.checkIfHaveDocuments(element)) {
+      this.MatDialog.open(BudgetsSummarySendDialogComponent, {
+        disableClose: true,
+        data: element,
+      });
+    } else {
+      this.MatSnackBar.open(
+        'El PPTO no cuenta con información sobre los archivos enviados',
+        'Aceptar',
+        {
+          duration: 6000,
+        }
+      );
+    }
   }
 
   public timelineDialog(element: Budget) {
@@ -700,5 +710,11 @@ export class BudgetsSummaryComponent implements OnInit {
       : 0;
     const sum = additional + modified;
     return sum ? sum : '---';
+  }
+
+  private checkIfHaveDocuments(data: Budget): boolean {
+    if (!data.documentVersions) return false;
+
+    return !!data.documentVersions.length;
   }
 }

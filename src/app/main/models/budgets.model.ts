@@ -1,5 +1,5 @@
+import { Observable } from 'rxjs';
 import { User } from './user-model';
-
 
 export interface Budget {
   taller: string;
@@ -40,8 +40,8 @@ export interface Budget {
   detalleDeModificacion04: string;
   // Check "statusPresupuesto" to know if it is approved or rejected
   fechaDeAprobacionORechazo: Date & firebase.default.firestore.Timestamp;
-  aprobadoPor?: User,
-  rechazadoPor?: User,
+  aprobadoPor?: User;
+  rechazadoPor?: User;
   // Defines the state of the budget
   statusPresupuesto: string;
   motivoDelRechazo: string;
@@ -110,19 +110,23 @@ export interface Budget {
   additionals?: object[];
   afaDate?: string;
   versionCount?: number;
-  documentVersions?: {
-    version: number,
-    budgets: Array<string>,
-    reports: Array<string>,
-    quotations: Array<string>
-  } []
+  documentVersions?: Array<DocumentVersion>;
+  lastSendBy?: User;
+}
+export interface DocumentVersion {
+  version: number;
+  budgets: Array<DocumentSent>;
+  reports: Array<DocumentSent>;
+  quotations: Array<DocumentSent>;
+  subject: string;
+  body: string;
+  observations: string;
+  to: Array<string>;
 }
 
-export interface documentVersion {
-  version: number,
-  budgets: Array<any>,
-  reports: Array<string>,
-  quotations: Array<string>
+export interface DocumentSent {
+  name: string;
+  url: string;
 }
 export interface Additional {
   type: string;
@@ -132,11 +136,10 @@ export interface Additional {
 export interface RejectionReasonsEntry {
   id: string;
   name: string;
-  detail?:string;
+  detail?: string;
   createdBy: User;
   createdAt: Date;
 }
-
 
 export interface ApprovedEntry {
   createdBy: User;
@@ -152,7 +155,7 @@ export interface ModificationReasonEntry {
 }
 
 export interface additionalsForms {
-  additionals:Array<Additional>
+  additionals: Array<Additional>;
 }
 
 export interface modificationReasonForm {
@@ -160,10 +163,9 @@ export interface modificationReasonForm {
   modificationReason: ModificationReasonEntry;
 }
 
-
 export interface rejectionReasonForm {
-  rejectionReason:RejectionReasonsEntry;
-  detailReason:string;
+  rejectionReason: RejectionReasonsEntry;
+  detailReason: string;
 }
 export interface BudgetsBroadcastList {
   id?: string;

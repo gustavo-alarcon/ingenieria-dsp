@@ -44,8 +44,8 @@ export class QualityService {
     imagesGeneral,
     imagesDetail,
     dataFile,
-    workShopName?,
-    workShopProgressName?
+    workshop?: WorkshopModel,
+    workshopProcessName?: string
   ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
@@ -55,7 +55,7 @@ export class QualityService {
       .doc();
 
     // Structuring the data model
-    const data: any = {
+    const data: Quality = {
       id: qualityDocRef.id,
       createdBy: user,
       editedAt: null,
@@ -92,9 +92,10 @@ export class QualityService {
       question2: null,
       question3: null,
       question4: null,
-      workShopName: workShopName ? workShopName : null,
-      workShopProgressName: workShopProgressName ? workShopProgressName : null,
+      responsibleWorkshop: workshop ? workshop : null,
+      responsibleWorkshopProcess: workshopProcessName ? workshopProcessName : null,
     };
+    
     batch.set(qualityDocRef, data);
     /* 
         emailList.forEach(el => {
@@ -153,6 +154,7 @@ export class QualityService {
       specialist: null,
       partNumber: form.nPart,
       workShop: null,
+      responsibleWorkshop: form.workshopName,
       enventDetail: null,
       packageNumber: form.nPackage,
       componentHourMeter: form.componentHourMeter,
@@ -167,7 +169,7 @@ export class QualityService {
       question1: form.question1,
       question2: form.question2,
       question3: form.question3,
-      question4: form.question4,
+      question4: form.question4
     };
     batch.set(qualityDocRef, data);
 

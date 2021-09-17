@@ -554,11 +554,9 @@
               <mat-menu #rawMenu="matMenu">
                 <button
                   *ngIf="
-                    !(
-                      element.statusPresupuesto == 'PPTO. APROBADO' ||
-                      element.statusPresupuesto == 'PPTO. RECHAZADO' ||
-                      element.statusPresupuesto == 'CLIENTE INTERNO'
-                    )
+                    element.statusPresupuesto === 'PDTE. APROB.' ||
+                    element.statusPresupuesto === 'PPTO. PARALELO' ||
+                    element.statusPresupuesto === 'PPTO. MODIFICADO'
                   "
                   class="w3-small"
                   mat-menu-item

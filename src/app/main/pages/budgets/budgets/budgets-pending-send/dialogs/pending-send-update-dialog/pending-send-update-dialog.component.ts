@@ -1,4 +1,4 @@
-import { Budget } from './../../../../../../models/budgets.model';
+import { Budget, DocumentSent } from './../../../../../../models/budgets.model';
 import { BudgetsService } from './../../../../../../services/budgets.service';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import {
@@ -37,6 +37,8 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { AngularFirestore } from '@angular/fire/firestore';
 
 import * as firebase from 'firebase/app';
+import { AuthService } from 'src/app/auth/services/auth.service';
+import { threadId } from 'worker_threads';
 @Component({
   selector: 'app-pending-send-update-dialog',
   templateUrl: './pending-send-update-dialog.component.html',
@@ -102,6 +104,7 @@ export class PendingSendUpdateDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: Budget,
     private _formBuilder: FormBuilder,
     private _budgetService: BudgetsService,
+    private authService: AuthService,
     private matSnackBar: MatSnackBar,
     private dialog: MatDialog,
     private storage: AngularFireStorage,
@@ -261,7 +264,7 @@ export class PendingSendUpdateDialogComponent implements OnInit {
           this.data.id,
           this.data,
           {
-            additionals: currentAdditionalDocs
+            additionals: currentAdditionalDocs,
           },
           this.filesFormGroup.value
         )
@@ -349,7 +352,7 @@ export class PendingSendUpdateDialogComponent implements OnInit {
         case 'compliant':
           // New date to be applied
           this.loading.next(true);
-          
+
           this._budgetService
             .updateBudgetFields(
               this.data.id,
@@ -603,19 +606,31 @@ export class PendingSendUpdateDialogComponent implements OnInit {
       this.quotationFilesList.length;
     const currentVersionCount = this.data.versionCount + 1;
     // for every file in budgetFilesList, we will push a path reference to a budgetPathReferences
-    let budgetPathReferences: Array<string> = [];
+    let budgetFiles: Array<DocumentSent> = [];
 
     this.budgetFilesList.forEach((file) => {
       const filePath = `budgets/${this.data.id}/v${currentVersionCount}/budgets/${now}_${file.name}`;
       const task = this.storage.upload(filePath, file);
-      budgetPathReferences.push(filePath);
 
       this.fileSubscriptions.add(
         task
           .snapshotChanges()
           .pipe(
             finalize(() => {
-              this.fileUploadCount.next(true);
+              this.storage
+                .ref(filePath)
+                .getDownloadURL()
+                .pipe(take(1))
+                .subscribe((url) => {
+                  if (url) {
+                    budgetFiles.push({
+                      name: file.name,
+                      url: url,
+                    });
+
+                    this.fileUploadCount.next(true);
+                  }
+                });
             })
           )
           .subscribe()
@@ -623,19 +638,31 @@ export class PendingSendUpdateDialogComponent implements OnInit {
     });
 
     // for every file in reportFilesList, we will push  a path reference to reportPathReferences
-    let reportPathReferences: Array<string> = [];
+    let reportFiles: Array<DocumentSent> = [];
 
     this.reportFilesList.forEach((file) => {
       const filePath = `budgets/${this.data.id}/v${currentVersionCount}/reports/${now}_${file.name}`;
       const task = this.storage.upload(filePath, file);
-      reportPathReferences.push(filePath);
 
       this.fileSubscriptions.add(
         task
           .snapshotChanges()
           .pipe(
             finalize(() => {
-              this.fileUploadCount.next(true);
+              this.storage
+                .ref(filePath)
+                .getDownloadURL()
+                .pipe(take(1))
+                .subscribe((url) => {
+                  if (url) {
+                    reportFiles.push({
+                      name: file.name,
+                      url: url,
+                    });
+
+                    this.fileUploadCount.next(true);
+                  }
+                });
             })
           )
           .subscribe()
@@ -643,19 +670,31 @@ export class PendingSendUpdateDialogComponent implements OnInit {
     });
 
     // for every file in reportFilesList, we will push  a path reference to reportPathReferences
-    let quotationPathReferences: Array<string> = [];
+    let quotationFiles: Array<DocumentSent> = [];
 
     this.quotationFilesList.forEach((file) => {
       const filePath = `budgets/${this.data.id}/v${currentVersionCount}/quotations/${now}_${file.name}`;
       const task = this.storage.upload(filePath, file);
-      quotationPathReferences.push(filePath);
 
       this.fileSubscriptions.add(
         task
           .snapshotChanges()
           .pipe(
             finalize(() => {
-              this.fileUploadCount.next(true);
+              this.storage
+                .ref(filePath)
+                .getDownloadURL()
+                .pipe(take(1))
+                .subscribe((url) => {
+                  if (url) {
+                    quotationFiles.push({
+                      name: file.name,
+                      url: url,
+                    });
+
+                    this.fileUploadCount.next(true);
+                  }
+                });
             })
           )
           .subscribe()
@@ -669,46 +708,55 @@ export class PendingSendUpdateDialogComponent implements OnInit {
           if (res) counter++;
 
           if (counter === totalFiles) {
-            this.fileSubscriptions.unsubscribe();
+            this.authService.user$.pipe(take(1)).subscribe((user) => {
+              const batch = this.af.firestore.batch();
+              const budgetRef = this.af.doc(
+                `db/ferreyros/budgets/${this.data.id}`
+              ).ref;
 
-            const batch = this.af.firestore.batch();
-            const budgetRef = this.af.doc(
-              `db/ferreyros/budgets/${this.data.id}`
-            ).ref;
-
-            // TODO: Update budget info
-            batch.update(budgetRef, {
-              statusPresupuesto: 'PDTE. APROB.',
-              versionCount: currentVersionCount,
-              documentVersions:
-                firebase.default.firestore.FieldValue.arrayUnion({
-                  version: this.data.versionCount,
-                  budgets: budgetPathReferences,
-                  reports: reportPathReferences,
-                  quotations: quotationPathReferences,
-                }),
-              fechaUltimoEnvioPPTO: new Date(),
-            });
-
-            batch
-              .commit()
-              .then(() => {
-                this.matSnackBar.open('✅ PTTO. enviado con éxito', 'Aceptar', {
-                  duration: 6000,
-                });
-                this.loading.next(false);
-                this.dialogRef.close(true);
-                // TODO: Send email notifications
-              })
-              .catch((err) => {
-                this.matSnackBar.open(
-                  '🚨 Hubo un error guardando los archivos. Por favor, vuelva a intentarlo',
-                  'Aceptar',
-                  {
-                    duration: 6000,
-                  }
-                );
+              batch.update(budgetRef, {
+                statusPresupuesto: 'PDTE. APROB.',
+                versionCount: currentVersionCount,
+                documentVersions:
+                  firebase.default.firestore.FieldValue.arrayUnion({
+                    version: currentVersionCount,
+                    budgets: budgetFiles,
+                    reports: reportFiles,
+                    quotations: quotationFiles,
+                    subject: this.form.value['subject'],
+                    body: this.form.value['body'],
+                    observations: this.form.value['observations'],
+                    to: this.emails,
+                  }),
+                fechaUltimoEnvioPPTO: new Date(),
+                lastSendBy: user,
               });
+
+              batch
+                .commit()
+                .then(() => {
+                  this.matSnackBar.open(
+                    '✅ PTTO. enviado con éxito',
+                    'Aceptar',
+                    {
+                      duration: 6000,
+                    }
+                  );
+                  this.fileSubscriptions.unsubscribe();
+                  this.loading.next(false);
+                  this.dialogRef.close(true);
+                  // TODO: Send email notifications
+                })
+                .catch((err) => {
+                  this.matSnackBar.open(
+                    '🚨 Hubo un error guardando los archivos. Por favor, vuelva a intentarlo',
+                    'Aceptar',
+                    {
+                      duration: 6000,
+                    }
+                  );
+                });
+            });
           }
         } catch (error) {
           console.log(error);
