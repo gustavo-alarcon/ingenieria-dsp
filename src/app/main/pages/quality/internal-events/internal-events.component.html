@@ -20,10 +20,6 @@
                         <input autocomplete="off" formControlName="workShop" [matAutocomplete]="autocomplete"
                             type="text" matInput />
                         <mat-autocomplete multiple autoActiveFirstOption #autocomplete="matAutocomplete">
-                            <mat-option *ngIf="authService.uiConfig.quality.internalEvents.forms.workshop"
-                                (click)="onAddWorkshop()" [value]="">
-                                <mat-icon>add_circle_outline</mat-icon>Añadir/Eliminar
-                            </mat-option>
                             <mat-option *ngFor="let item of workshops" [value]="item.name">
                                 {{ item.name }}
                             </mat-option>
@@ -57,10 +53,7 @@
                         <input autocomplete="off" formControlName="component" [matAutocomplete]="autocomplete"
                             type="text" matInput />
                         <mat-autocomplete multiple autoActiveFirstOption #autocomplete="matAutocomplete">
-                            <mat-option *ngIf="authService.uiConfig.quality.internalEvents.forms.component"
-                                (click)="onAddComponent()" [value]="">
-                                <mat-icon>add_circle_outline</mat-icon>Añadir/Eliminar
-                            </mat-option>
+                         
                             <mat-option *ngFor="let item of components" [value]="item.name">
                                 {{ item.name }}
                             </mat-option>

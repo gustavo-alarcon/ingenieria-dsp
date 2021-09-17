@@ -11,8 +11,6 @@ import { finalize, take, startWith, map } from 'rxjs/operators';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { ComponentList, MiningOperation, FileAdditional } from '../../../models/quality.model';
 import { MatDialog } from '@angular/material/dialog';
-import { AddMiningOperationDialogComponent } from './dialogs/add-mining-operation-dialog/add-mining-operation-dialog.component';
-import { AddComponentComponent } from './dialogs/add-component/add-component.component';
 import { Router } from '@angular/router';
 
 @Component({
@@ -305,12 +303,6 @@ export class ExternalEventsComponent implements OnInit {
       this.filesDetail.push(files.item(i));
     }
   }
-  onAddminingOperation(): void {
-    this.dialog.open(AddMiningOperationDialogComponent, {
-      maxWidth: 500,
-      width: '90vw',
-    });
-  }
 
   async deleteImageGeneral(event): Promise<void> {
     try {
@@ -360,13 +352,6 @@ export class ExternalEventsComponent implements OnInit {
       this.loading.next(false);
     }
 
-  }
-
-  onAddComponent(): void {
-    this.dialog.open(AddComponentComponent, {
-      maxWidth: 500,
-      width: '90vw',
-    });
   }
 
 

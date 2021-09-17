@@ -17,6 +17,9 @@ import { QualityService } from 'src/app/main/services/quality.service';
 import {
   QualityListSpecialist,
   QualityBroadcastList,
+  WorkShopList,
+  ComponentList,
+  MiningOperation,
 } from '../../../models/quality.model';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteBroadcastDialogComponent } from './dialogs/delete-broadcast-dialog/delete-broadcast-dialog.component';
@@ -32,7 +35,17 @@ import { WorkshopModel } from 'src/app/main/models/workshop.model';
 })
 export class ConfigurationsComponent implements OnInit {
   loading = new BehaviorSubject<boolean>(false);
+  loading1 = new BehaviorSubject<boolean>(false);
+  loading2 = new BehaviorSubject<boolean>(false);
+  loading3 = new BehaviorSubject<boolean>(false);
+  loading4 = new BehaviorSubject<boolean>(false);
+
   loading$ = this.loading.asObservable();
+  loading1$ = this.loading1.asObservable();
+  loading2$ = this.loading2.asObservable();
+  loading3$ = this.loading3.asObservable();
+  loading4$ = this.loading4.asObservable();
+
   panelOpenState = false;
 
   broadcastFormArray = new FormArray([]);
@@ -101,6 +114,29 @@ export class ConfigurationsComponent implements OnInit {
   workshopProcessArray: string[] = [];
 
 
+  public entryWorkshopControl: FormControl = new FormControl(
+    null,
+    Validators.required
+  );
+  public entryComponentInternalControl: FormControl = new FormControl(
+    null,
+    Validators.required
+  );
+  public entryComponentExternalControl: FormControl = new FormControl(
+    null,
+    Validators.required
+  );
+  public entryMiningOperationControl: FormControl = new FormControl(
+    null,
+    Validators.required
+  );
+
+  public listWorkshopArray: Array<WorkShopList> = [];
+  public listComponentInternalArray: Array<ComponentList> = [];
+  public listComponentExternalArray: Array<ComponentList> = [];
+  public listMiningOperationArray: Array<MiningOperation> = [];
+
+
   constructor(
     private fb: FormBuilder,
     public authService: AuthService,
@@ -112,8 +148,55 @@ export class ConfigurationsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+
+    this.subscription.add(
+      this.qualityService.getAllWorkshopList()
+        .subscribe((resp) => {
+          if (resp) {
+            this.listWorkshopArray = resp;
+          } else {
+            this.listWorkshopArray = [];
+          }
+        })
+    );
+
+    this.subscription.add(
+      this.qualityService.getAllComponentsListInternal()
+        .subscribe((resp) => {
+          if (resp) {
+            this.listComponentInternalArray = resp;
+          } else {
+            this.listComponentInternalArray = [];
+          }
+        })
+    );
+
+    this.subscription.add(
+      this.qualityService.getAllComponentsListExternal()
+        .subscribe((resp) => {
+          if (resp) {
+            this.listComponentExternalArray = resp;
+          } else {
+            this.listComponentExternalArray = [];
+          }
+        })
+    );
+
+    this.subscription.add(
+      this.qualityService.getAllMiningOperationList()
+        .subscribe((resp) => {
+          if (resp) {
+            this.listMiningOperationArray = resp;
+          } else {
+            this.listMiningOperationArray = [];
+          }
+        })
+    );
+
     this.entrySpecialistControl = this.fb.control('', Validators.required);
+
     this.initForm();
+
     this.subscription.add(
       this.breakpoint
         .observe([Breakpoints.HandsetPortrait])
@@ -552,4 +635,419 @@ export class ConfigurationsComponent implements OnInit {
       margin: '30px 80px 30px 80px',
     };
   }
+
+  public saveWorkshop(): void {
+    try {
+      const resp = this.qualityService.addWorkshopList(this.listWorkshopArray, this.user);
+
+      this.loading1.next(true);
+      this.subscription.add(
+        resp.subscribe((batch) => {
+          if (batch) {
+            batch
+              .commit()
+              .then(() => {
+                this.loading1.next(false);
+                this.snackbar.open(
+                  '✅ Lista taller creada!',
+                  'Aceptar',
+                  {
+                    duration: 6000,
+                  }
+                );
+              })
+              .catch((error: any) => {
+                this.loading1.next(false);
+                this.snackbar.open(
+                  '🚨 Hubo un error creando la lista taller!',
+                  'Aceptar',
+                  {
+                    duration: 6000,
+                  }
+                );
+              });
+          }
+        })
+      );
+    } catch (error: any) {
+      console.error(error);
+    }
+  }
+
+  public async addOrDeleteEntryWorkshopList(
+    action: string,
+    index?: number
+  ): Promise<void> {
+    switch (action) {
+      case 'add': {
+        // Add an item to the local ReasonsForRejection array
+        if (this.entryWorkshopControl.valid) {
+          const temp: WorkShopList = {
+            id: null,
+            name: this.entryWorkshopControl.value.trim(),
+            createdBy: null,
+            createdAt: null,
+          };
+
+          // Searching for repeated values
+          const equal = (currentItem: WorkShopList) =>
+            currentItem.name !== temp.name;
+          if (this.listWorkshopArray.every(equal)) {
+            this.listWorkshopArray.unshift(temp);
+          }
+          // Reset the text in the form control
+          this.entryWorkshopControl.reset();
+        }
+
+        break;
+      }
+      case 'delete': {
+        // Check if the item exists in the db
+        if (this.listWorkshopArray[index].id) {
+          this.loading1.next(true);
+          const resp = this.qualityService.deleteWorshop(
+            this.listWorkshopArray[index].id
+          );
+          this.subscription.add(
+            resp.subscribe((batch) => {
+              if (batch) {
+                batch
+                  .commit()
+                  .then(() => {
+                    this.loading1.next(false);
+                    this.snackbar.open('✅ Elemento borrado correctamente', 'Aceptar', {
+                      duration: 6000,
+                    });
+                  })
+                  .catch((error: any) => {
+                    this.loading1.next(false);
+                    this.snackbar.open(
+                      '🚨 Hubo un error al eliminar la lista taller!',
+                      'Aceptar',
+                      {
+                        duration: 6000,
+                      }
+                    );
+                  });
+              }
+            })
+          );
+        }
+        /// Delete an item from the local ReasonsForRejection array
+        this.listWorkshopArray.splice(index, 1);
+        break;
+      }
+    }
+  }
+
+  public saveComponentInternal(): void {
+    try {
+      const resp = this.qualityService.addComponentListInternal(this.listComponentInternalArray, this.user);
+
+      this.loading2.next(true);
+      this.subscription.add(
+        resp.subscribe((batch) => {
+          if (batch) {
+            batch
+              .commit()
+              .then(() => {
+                this.loading2.next(false);
+                this.snackbar.open(
+                  '✅ Lista componente interno creada!',
+                  'Aceptar',
+                  {
+                    duration: 6000,
+                  }
+                );
+              })
+              .catch((error: any) => {
+                this.loading2.next(false);
+                this.snackbar.open(
+                  '🚨 Hubo un error creando la lista componente internos !',
+                  'Aceptar',
+                  {
+                    duration: 6000,
+                  }
+                );
+              });
+          }
+        })
+      );
+    } catch (error: any) {
+      console.error(error);
+    }
+  }
+
+  public async addOrDeleteEntryComponentInternal(
+    action: string,
+    index?: number
+  ): Promise<void> {
+    switch (action) {
+      case 'add': {
+        // Add an item to the local ReasonsForRejection array
+        if (this.entryComponentInternalControl.valid) {
+          const temp: WorkShopList = {
+            id: null,
+            name: this.entryComponentInternalControl.value.trim(),
+            createdBy: null,
+            createdAt: null,
+          };
+          // Searching for repeated values
+          const equal = (currentItem: WorkShopList) =>
+            currentItem.name !== temp.name;
+          if (this.listComponentInternalArray.every(equal)) {
+            this.listComponentInternalArray.unshift(temp);
+          }
+          // Reset the text in the form control
+          this.entryComponentInternalControl.reset();
+        }
+
+        break;
+      }
+      case 'delete': {
+        // Check if the item exists in the db
+        if (this.listComponentInternalArray[index].id) {
+          this.loading2.next(true);
+          const resp = this.qualityService.deleteComponentInternal(
+            this.listComponentInternalArray[index].id
+          );
+          this.subscription.add(
+            resp.subscribe((batch) => {
+              if (batch) {
+                batch
+                  .commit()
+                  .then(() => {
+                    this.loading2.next(false);
+                    this.snackbar.open('✅ Elemento borrado correctamente', 'Aceptar', {
+                      duration: 6000,
+                    });
+                  })
+                  .catch((error: any) => {
+                    this.loading2.next(false);
+                    this.snackbar.open(
+                      '🚨 Hubo un error al eliminar!',
+                      'Aceptar',
+                      {
+                        duration: 6000,
+                      }
+                    );
+                  });
+              }
+            })
+          );
+        }
+        /// Delete an item from the local ReasonsForRejection array
+        this.listComponentInternalArray.splice(index, 1);
+        break;
+      }
+    }
+  }
+
+  public saveComponentExternal(): void {
+    try {
+      const resp = this.qualityService.addComponentListExternal(this.listComponentExternalArray, this.user);
+
+      this.loading3.next(true);
+      this.subscription.add(
+        resp.subscribe((batch) => {
+          if (batch) {
+            batch
+              .commit()
+              .then(() => {
+                this.loading3.next(false);
+                this.snackbar.open(
+                  '✅ Lista componente externo creada!',
+                  'Aceptar',
+                  {
+                    duration: 6000,
+                  }
+                );
+              })
+              .catch((error: any) => {
+                this.loading3.next(false);
+                this.snackbar.open(
+                  '🚨 Hubo un error creando la lista componente internos !',
+                  'Aceptar',
+                  {
+                    duration: 6000,
+                  }
+                );
+              });
+          }
+        })
+      );
+    } catch (error: any) {
+      console.error(error);
+    }
+  }
+
+  public async addOrDeleteEntryComponentExternalList(
+    action: string,
+    index?: number
+  ): Promise<void> {
+    switch (action) {
+      case 'add': {
+        // Add an item to the local ReasonsForRejection array
+        if (this.entryComponentExternalControl.valid) {
+          const temp: WorkShopList = {
+            id: null,
+            name: this.entryComponentExternalControl.value.trim(),
+            createdBy: null,
+            createdAt: null,
+          };
+          // Searching for repeated values
+          const equal = (currentItem: WorkShopList) =>
+            currentItem.name !== temp.name;
+          if (this.listComponentExternalArray.every(equal)) {
+            this.listComponentExternalArray.unshift(temp);
+          }
+          // Reset the text in the form control
+          this.entryComponentExternalControl.reset();
+        }
+
+        break;
+      }
+      case 'delete': {
+        // Check if the item exists in the db
+        if (this.listComponentExternalArray[index].id) {
+          this.loading3.next(true);
+          const resp = this.qualityService.deleteComponentExternal(
+            this.listComponentExternalArray[index].id
+          );
+          this.subscription.add(
+            resp.subscribe((batch) => {
+              if (batch) {
+                batch
+                  .commit()
+                  .then(() => {
+                    this.loading3.next(false);
+                    this.snackbar.open('✅ Elemento borrado correctamente', 'Aceptar', {
+                      duration: 6000,
+                    });
+                  })
+                  .catch((error: any) => {
+                    this.loading3.next(false);
+                    this.snackbar.open(
+                      '🚨 Hubo un error al eliminar!',
+                      'Aceptar',
+                      {
+                        duration: 6000,
+                      }
+                    );
+                  });
+              }
+            })
+          );
+        }
+        /// Delete an item from the local ReasonsForRejection array
+        this.listComponentExternalArray.splice(index, 1);
+        break;
+      }
+    }
+  }
+
+  public saveMiningOperation(): void {
+    try {
+      const resp = this.qualityService.addMiningOperationList(this.listMiningOperationArray, this.user);
+
+      this.loading4.next(true);
+      this.subscription.add(
+        resp.subscribe((batch) => {
+          if (batch) {
+            batch
+              .commit()
+              .then(() => {
+                this.loading4.next(false);
+                this.snackbar.open(
+                  '✅ Lista componente externo creada!',
+                  'Aceptar',
+                  {
+                    duration: 6000,
+                  }
+                );
+              })
+              .catch((error: any) => {
+                this.loading4.next(false);
+                this.snackbar.open(
+                  '🚨 Hubo un error creando la lista componente internos !',
+                  'Aceptar',
+                  {
+                    duration: 6000,
+                  }
+                );
+              });
+          }
+        })
+      );
+    } catch (error: any) {
+      console.error(error);
+    }
+  }
+
+  public async addOrDeleteEntryMiningOperation(
+    action: string,
+    index?: number
+  ): Promise<void> {
+    switch (action) {
+      case 'add': {
+        // Add an item to the local ReasonsForRejection array
+        if (this.entryMiningOperationControl.valid) {
+          const temp: WorkShopList = {
+            id: null,
+            name: this.entryMiningOperationControl.value.trim(),
+            createdBy: null,
+            createdAt: null,
+          };
+          // Searching for repeated values
+          const equal = (currentItem: WorkShopList) =>
+            currentItem.name !== temp.name;
+          if (this.listMiningOperationArray.every(equal)) {
+            this.listMiningOperationArray.unshift(temp);
+          }
+          // Reset the text in the form control
+          this.entryMiningOperationControl.reset();
+        }
+
+        break;
+      }
+      case 'delete': {
+        // Check if the item exists in the db
+        if (this.listMiningOperationArray[index].id) {
+          this.loading4.next(true);
+          const resp = this.qualityService.deleteMiningOperation(
+            this.listMiningOperationArray[index].id
+          );
+          this.subscription.add(
+            resp.subscribe((batch) => {
+              if (batch) {
+                batch
+                  .commit()
+                  .then(() => {
+                    this.loading4.next(false);
+                    this.snackbar.open('✅ Elemento borrado correctamente', 'Aceptar', {
+                      duration: 6000,
+                    });
+                  })
+                  .catch((error: any) => {
+                    this.loading4.next(false);
+                    this.snackbar.open(
+                      '🚨 Hubo un error al eliminar!',
+                      'Aceptar',
+                      {
+                        duration: 6000,
+                      }
+                    );
+                  });
+              }
+            })
+          );
+        }
+        /// Delete an item from the local ReasonsForRejection array
+        this.listMiningOperationArray.splice(index, 1);
+        break;
+      }
+    }
+  }
+
+
 }

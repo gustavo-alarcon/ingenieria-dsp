@@ -15,8 +15,6 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { ComponentList, WorkShopList, FileAdditional } from '../../../models/quality.model';
 import { MatDialog } from '@angular/material/dialog';
-import { AddWorkshopComponent } from './dialogs/add-workshop/add-workshop.component';
-import { AddComponentComponent } from './dialogs/add-component/add-component.component';
 import { Router } from '@angular/router';
 import { WorkshopModel } from '../../../../main/models/workshop.model';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
@@ -430,18 +428,6 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
       this.loading.next(false);
     }
   }
-  onAddWorkshop(): void {
-    this.dialog.open(AddWorkshopComponent, {
-      maxWidth: 500,
-      width: '90vw',
-    });
-  }
-
-  onAddComponent(): void {
-    this.dialog.open(AddComponentComponent, {
-      maxWidth: 500,
-      width: '90vw',
-    });
-  }
+ 
 
 }

@@ -99,6 +99,404 @@
             </mat-expansion-panel-header>
             <div style="border: 10px;"></div>
             <mat-card class="mat-elevation-z0">
+
+                <div class="container-diffusion">
+                    <mat-card class="mat-elevation-z0">
+                        <mat-card-content>
+                          <mat-card class="mat-elevation-z0">
+                            <mat-card-header class="header-list">
+                                <mat-card-title class="header-list__title">
+                                <span class="mini-title">Taller</span>
+                                <button
+                                  type="button"
+                                  aria-label="saveDataDifusion"
+                                  mat-button
+                                  class="container-settings__btn-save"
+                                  (click)="saveWorkshop()"
+                                >
+                                  GUARDAR
+                                </button>
+                              </mat-card-title>
+                            </mat-card-header>
+                          </mat-card>
+          
+                          <mat-card
+                            class="mat-elevation-z0 container-expansion1__content-card"
+                          >
+                            <mat-progress-bar
+                              mode="indeterminate"
+                              *ngIf="loading1$ | async"
+                            ></mat-progress-bar>
+                            <mat-card-header
+                              class="container-expansion1__content-card--header"
+                            >
+                              <mat-form-field>
+                                <mat-label>Escribir</mat-label>
+                                <input
+                                  type="text"
+                                  matInput
+                                  placeholder="Escribir"
+                                  [formControl]="entryWorkshopControl"
+                                  (keyup.enter)="
+                                  addOrDeleteEntryWorkshopList('add')
+                                  "
+                                  [errorStateMatcher]="matcher"
+                                  autocomplete="off"
+                                />
+                                <button
+                                  mat-button
+                                  *ngIf="entryWorkshopControl.value"
+                                  matSuffix
+                                  mat-icon-button
+                                  aria-label="clearResult"
+                                  (click)="entryWorkshopControl.reset()"
+                                >
+                                  <mat-icon>close</mat-icon>
+                                </button>
+                                <mat-hint>Presione ENTER para agregar</mat-hint>
+                                <mat-error
+                                  *ngIf="
+                                  entryWorkshopControl.hasError(
+                                      'required'
+                                    )
+                                  "
+                                >
+                                  El campo es <strong>Requerido</strong>
+                                </mat-error>
+                              </mat-form-field>
+                            </mat-card-header>
+                            <mat-card-content
+                              class="container-expansion1__content-card-content"
+                            >
+                              <div
+                                role="list"
+                                *ngFor="
+                                  let workshop of listWorkshopArray;
+                                  let i = index
+                                "
+                              >
+                                <div class="item-list">
+                                  <span>{{ workshop.name }}</span>
+          
+                                  <span>
+                                    <button
+                                      mat-icon-button
+                                      aria-label="deletelistWarehouse"
+                                      (click)="
+                                      addOrDeleteEntryWorkshopList(
+                                          'delete',
+                                          i
+                                        )
+                                      "
+                                    >
+                                      <mat-icon class="delete-color">delete</mat-icon>
+                                    </button>
+                                  </span>
+                                </div>
+                              </div>
+                            </mat-card-content>
+                          </mat-card>
+                        </mat-card-content>
+                    </mat-card>
+
+                    <mat-card class="mat-elevation-z0">
+                        <mat-card-content>
+                          <mat-card class="mat-elevation-z0">
+                            <mat-card-header class="header-list">
+                                <mat-card-title class="header-list__title">
+                                <span class="mini-title">Componente Interno</span>
+                                <button
+                                  type="button"
+                                  aria-label="saveDataDifusion"
+                                  mat-button
+                                  class="container-settings__btn-save"
+                                  (click)="saveComponentInternal()"
+                                >
+                                  GUARDAR
+                                </button>
+                              </mat-card-title>
+                            </mat-card-header>
+                          </mat-card>
+          
+                          <mat-card
+                            class="mat-elevation-z0 container-expansion1__content-card"
+                          >
+                            <mat-progress-bar
+                              mode="indeterminate"
+                              *ngIf="loading2$ | async"
+                            ></mat-progress-bar>
+                            <mat-card-header
+                              class="container-expansion1__content-card--header"
+                            >
+                              <mat-form-field>
+                                <mat-label>Escribir</mat-label>
+                                <input
+                                  type="text"
+                                  matInput
+                                  placeholder="Escribir"
+                                  [formControl]="entryComponentInternalControl"
+                                  (keyup.enter)="
+                                  addOrDeleteEntryComponentInternal('add')
+                                  "
+                                  [errorStateMatcher]="matcher"
+                                  autocomplete="off"
+                                />
+                                <button
+                                  mat-button
+                                  *ngIf="entryComponentInternalControl.value"
+                                  matSuffix
+                                  mat-icon-button
+                                  aria-label="clearResult"
+                                  (click)="entryComponentInternalControl.reset()"
+                                >
+                                  <mat-icon>close</mat-icon>
+                                </button>
+                                <mat-hint>Presione ENTER para agregar</mat-hint>
+                                <mat-error
+                                  *ngIf="
+                                  entryComponentInternalControl.hasError(
+                                      'required'
+                                    )
+                                  "
+                                >
+                                  El campo es <strong>Requerido</strong>
+                                </mat-error>
+                              </mat-form-field>
+                            </mat-card-header>
+                            <mat-card-content
+                              class="container-expansion1__content-card-content"
+                            >
+                              <div
+                                role="list"
+                                *ngFor="
+                                  let compInternal of listComponentInternalArray;
+                                  let i = index
+                                "
+                              >
+                                <div class="item-list">
+                                  <span>{{ compInternal.name }}</span>
+          
+                                  <span>
+                                    <button
+                                      mat-icon-button
+                                      aria-label="deletelistWarehouse"
+                                      (click)="
+                                      addOrDeleteEntryComponentInternal(
+                                          'delete',
+                                          i
+                                        )
+                                      "
+                                    >
+                                      <mat-icon class="delete-color">delete</mat-icon>
+                                    </button>
+                                  </span>
+                                </div>
+                              </div>
+                            </mat-card-content>
+                          </mat-card>
+                        </mat-card-content>
+                    </mat-card>
+                    
+
+                    <mat-card class="mat-elevation-z0">
+                        <mat-card-content>
+                          <mat-card class="mat-elevation-z0">
+                            <mat-card-header class="header-list">
+                                <mat-card-title class="header-list__title">
+                                <span class="mini-title">Componente Externo</span>
+                                <button
+                                  type="button"
+                                  aria-label="saveDataDifusion"
+                                  mat-button
+                                  class="container-settings__btn-save"
+                                  (click)="saveComponentExternal()"
+                                >
+                                  GUARDAR
+                                </button>
+                              </mat-card-title>
+                            </mat-card-header>
+                          </mat-card>
+          
+                          <mat-card
+                            class="mat-elevation-z0 container-expansion1__content-card"
+                          >
+                            <mat-progress-bar
+                              mode="indeterminate"
+                              *ngIf="loading3$ | async"
+                            ></mat-progress-bar>
+                            <mat-card-header
+                              class="container-expansion1__content-card--header"
+                            >
+                              <mat-form-field>
+                                <mat-label>Escribir</mat-label>
+                                <input
+                                  type="text"
+                                  matInput
+                                  placeholder="Escribir"
+                                  [formControl]="entryComponentExternalControl"
+                                  (keyup.enter)="
+                                  addOrDeleteEntryComponentExternalList('add')
+                                  "
+                                  [errorStateMatcher]="matcher"
+                                  autocomplete="off"
+                                />
+                                <button
+                                  mat-button
+                                  *ngIf="entryComponentExternalControl.value"
+                                  matSuffix
+                                  mat-icon-button
+                                  aria-label="clearResult"
+                                  (click)="entryComponentExternalControl.reset()"
+                                >
+                                  <mat-icon>close</mat-icon>
+                                </button>
+                                <mat-hint>Presione ENTER para agregar</mat-hint>
+                                <mat-error
+                                  *ngIf="
+                                  entryComponentExternalControl.hasError(
+                                      'required'
+                                    )
+                                  "
+                                >
+                                  El campo es <strong>Requerido</strong>
+                                </mat-error>
+                              </mat-form-field>
+                            </mat-card-header>
+                            <mat-card-content
+                              class="container-expansion1__content-card-content"
+                            >
+                              <div
+                                role="list"
+                                *ngFor="
+                                  let compExternal of listComponentExternalArray;
+                                  let i = index
+                                "
+                              >
+                                <div class="item-list">
+                                  <span>{{ compExternal.name }}</span>
+          
+                                  <span>
+                                    <button
+                                      mat-icon-button
+                                      aria-label="deletelistWarehouse"
+                                      (click)="
+                                      addOrDeleteEntryComponentExternalList(
+                                          'delete',
+                                          i
+                                        )
+                                      "
+                                    >
+                                      <mat-icon class="delete-color">delete</mat-icon>
+                                    </button>
+                                  </span>
+                                </div>
+                              </div>
+                            </mat-card-content>
+                          </mat-card>
+                        </mat-card-content>
+                    </mat-card>
+                    
+
+                    <mat-card class="mat-elevation-z0">
+                        <mat-card-content>
+                          <mat-card class="mat-elevation-z0">
+                            <mat-card-header class="header-list">
+                                <mat-card-title class="header-list__title">
+                                <span class="mini-title">Operacion Minera</span>
+                                <button
+                                  type="button"
+                                  aria-label="saveDataDifusion"
+                                  mat-button
+                                  class="container-settings__btn-save"
+                                  (click)="saveMiningOperation()"
+                                >
+                                  GUARDAR
+                                </button>
+                              </mat-card-title>
+                            </mat-card-header>
+                          </mat-card>
+          
+                          <mat-card
+                            class="mat-elevation-z0 container-expansion1__content-card"
+                          >
+                            <mat-progress-bar
+                              mode="indeterminate"
+                              *ngIf="loading4$ | async"
+                            ></mat-progress-bar>
+                            <mat-card-header
+                              class="container-expansion1__content-card--header"
+                            >
+                              <mat-form-field>
+                                <mat-label>Escribir</mat-label>
+                                <input
+                                  type="text"
+                                  matInput
+                                  placeholder="Escribir"
+                                  [formControl]="entryMiningOperationControl"
+                                  (keyup.enter)="
+                                  addOrDeleteEntryMiningOperation('add')
+                                  "
+                                  [errorStateMatcher]="matcher"
+                                  autocomplete="off"
+                                />
+                                <button
+                                  mat-button
+                                  *ngIf="entryMiningOperationControl.value"
+                                  matSuffix
+                                  mat-icon-button
+                                  aria-label="clearResult"
+                                  (click)="entryMiningOperationControl.reset()"
+                                >
+                                  <mat-icon>close</mat-icon>
+                                </button>
+                                <mat-hint>Presione ENTER para agregar</mat-hint>
+                                <mat-error
+                                  *ngIf="
+                                  entryMiningOperationControl.hasError(
+                                      'required'
+                                    )
+                                  "
+                                >
+                                  El campo es <strong>Requerido</strong>
+                                </mat-error>
+                              </mat-form-field>
+                            </mat-card-header>
+                            <mat-card-content
+                              class="container-expansion1__content-card-content"
+                            >
+                              <div
+                                role="list"
+                                *ngFor="
+                                  let mining of listMiningOperationArray;
+                                  let i = index
+                                "
+                              >
+                                <div class="item-list">
+                                  <span>{{ mining.name }}</span>
+          
+                                  <span>
+                                    <button
+                                      mat-icon-button
+                                      aria-label="deletelistWarehouse"
+                                      (click)="
+                                      addOrDeleteEntryMiningOperation(
+                                          'delete',
+                                          i
+                                        )
+                                      "
+                                    >
+                                      <mat-icon class="delete-color">delete</mat-icon>
+                                    </button>
+                                  </span>
+                                </div>
+                              </div>
+                            </mat-card-content>
+                          </mat-card>
+                        </mat-card-content>
+                    </mat-card>
+                    
+                </div>
+
                 <div class="container-diffusion">
                     <div>
                         <mat-card-content class="container-expansion2">
