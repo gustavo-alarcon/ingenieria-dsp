@@ -18,8 +18,6 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { BehaviorSubject, Subscription, Observable } from 'rxjs';
 import * as XLSX from 'xlsx';
 import moment from 'moment';
-import { documentVersion } from '../../../models/budgets.model';
-import { object } from 'firebase-functions/lib/providers/storage';
 
 @Component({
   selector: 'app-budgets-daily-entries',

@@ -1,6 +1,8 @@
 import {
   BudgetsBroadcastList,
   Budget,
+  DocumentVersion,
+  DocumentSent,
 } from './../../../../../../models/budgets.model';
 import { BudgetsService } from 'src/app/main/services/budgets.service';
 import { COMMA, ENTER, SPACE, TAB } from '@angular/cdk/keycodes';
@@ -8,7 +10,6 @@ import {
   Component,
   ElementRef,
   Inject,
-  IterableDiffers,
   OnInit,
   ViewChild,
 } from '@angular/core';
@@ -23,25 +24,16 @@ import {
   MatAutocompleteSelectedEvent,
 } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
-import {
-  BehaviorSubject,
-  combineLatest,
-  from,
-  Observable,
-  of,
-  Subscription,
-} from 'rxjs';
-import { map, startWith, takeUntil, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { finalize, map, startWith, take } from 'rxjs/operators';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { finalize } from 'rxjs/operators';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { UploadTaskComponent } from '../../../../../../../shared/components/upload-task/upload-task.component';
-// import { Budget, documentVersion } from '../../../../../../models/budgets.model';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { version } from 'xlsx/types';
-import { element } from 'protractor';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthService } from 'src/app/auth/services/auth.service';
 
+import * as firebase from 'firebase/app';
 @Component({
   selector: 'app-budgets-summary-send-dialog',
   templateUrl: './budgets-summary-send-dialog.component.html',
@@ -96,19 +88,54 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
     Observable<firebase.default.storage.UploadTaskSnapshot>
   > = [];
 
+  lastDocumentsSent: DocumentVersion;
+  budgetsSent: Array<DocumentSent> = [];
+  reportsSent: Array<DocumentSent> = [];
+  quotationsSent: Array<DocumentSent> = [];
+
+  // new variables
+  fileUploadCount = new BehaviorSubject<boolean>(false);
+  fileUploadCount$ = this.fileUploadCount.asObservable();
+
+  fileSubscriptions = new Subscription();
+
+  budgetEdited = false;
+  reportEdited = false;
+  quotationEdited = false;
+
   constructor(
     private _budgetService: BudgetsService,
     private breakpoint: BreakpointObserver,
     private fb: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: Budget,
-    private storage: AngularFireStorage
+    private storage: AngularFireStorage,
+    private dialogRef: MatDialogRef<BudgetsSummarySendDialogComponent>,
+    private snackbar: MatSnackBar,
+    private authService: AuthService
   ) {}
 
   public ngOnInit(): void {
+    this.lastDocumentsSent = this.getLastDocumentVersion(this.data);
+    this.emails = this.lastDocumentsSent.to;
+
+    this.budgetsSent = [...this.lastDocumentsSent.budgets];
+
+    this.reportsSent = [...this.lastDocumentsSent.reports];
+
+    this.quotationsSent = [...this.lastDocumentsSent.quotations];
+
     this.form = this.fb.group({
-      subject: ['', Validators.required],
-      body: ['', Validators.required],
-      observations: '',
+      subject: [
+        this.lastDocumentsSent.subject ? this.lastDocumentsSent.subject : '',
+        Validators.required,
+      ],
+      body: [
+        this.lastDocumentsSent.body ? this.lastDocumentsSent.body : '',
+        Validators.required,
+      ],
+      observations: this.lastDocumentsSent.observations
+        ? this.lastDocumentsSent.observations
+        : '',
     });
 
     this.subscriptions.add(
@@ -123,20 +150,38 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
         })
     );
 
-    this._budgetService
-      .getAllBroadcastList()
-      .subscribe((broadcastLists: BudgetsBroadcastList[]) => {
-        broadcastLists.forEach((broadcastList: BudgetsBroadcastList) => {
-          this.broadcastLists.push(broadcastList);
-          this.broadcastListsNames.push(broadcastList.name);
-          this.filteredEmails = this.emailCtrl.valueChanges.pipe(
-            startWith(null),
-            map((email: string | null) =>
-              email ? this._filter(email) : this.broadcastListsNames.slice()
-            )
-          );
-        });
-      });
+    this.subscriptions.add(
+      this._budgetService
+        .getAllBroadcastList()
+        .subscribe((broadcastLists: BudgetsBroadcastList[]) => {
+          broadcastLists.forEach((broadcastList: BudgetsBroadcastList) => {
+            this.broadcastLists.push(broadcastList);
+            this.broadcastListsNames.push(broadcastList.name);
+            this.filteredEmails = this.emailCtrl.valueChanges.pipe(
+              startWith(null),
+              map((email: string | null) =>
+                email ? this._filter(email) : this.broadcastListsNames.slice()
+              )
+            );
+          });
+        })
+    );
+  }
+
+  checkIfHaveDocuments(data: Budget): boolean {
+    if (!this.data.documentVersions) return false;
+
+    return !!data.documentVersions.length;
+  }
+
+  getLastDocumentVersion(data: Budget): DocumentVersion {
+    return {...data.documentVersions[data.versionCount - 1]};
+  }
+
+  getDownloadFile(path: string): Observable<any> {
+    const ref = this.storage.ref(path);
+
+    return ref.getDownloadURL();
   }
 
   get subject() {
@@ -233,5 +278,213 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
 
   startUpload() {
     // TODO
+  }
+
+  public deleteFile(kind: string, index: number): void {
+    if (!kind || index < 0) return;
+    
+    switch (kind) {
+      case 'budget':
+        this.budgetsSent.splice(index, 1);
+        this.budgetEdited = true;
+        break;
+
+      case 'report':
+        this.reportsSent.splice(index, 1);
+        this.reportEdited = true;
+        break;
+
+      case 'quotation':
+        this.quotationsSent.splice(index, 1);
+        this.quotationEdited = true;
+        break;
+
+      default:
+        this.snackbar.open('Error en tipo de archivo', 'Aceptar', {
+          duration: 6000,
+        });
+        break;
+    }
+  }
+
+  public send(): void {
+    // check if there is new files
+    if (
+      this.budgetFilesList.length > 0 ||
+      this.reportFilesList.length > 0 ||
+      this.quotationFilesList.length > 0
+    ) {
+      // increase version and send budget
+    }
+    if (this.budgetFilesList.length === 0 && this.budgetsSent.length === 0)
+      return;
+
+    // first, initialize the variables for document uploads
+    this.loading.next(true);
+    const now = Date.now();
+    let counter = 0;
+    const totalFiles =
+      this.budgetFilesList.length +
+      this.reportFilesList.length +
+      this.quotationFilesList.length;
+    const currentVersionCount = this.data.versionCount + 1;
+    // for every file in budgetFilesList, we will push a path reference to a budgetPathReferences
+    let budgetFiles: Array<{ name: string; url: string }> = [];
+
+    this.budgetFilesList.forEach((file) => {
+      const filePath = `budgets/${this.data.id}/v${currentVersionCount}/budgets/${now}_${file.name}`;
+      const task = this.storage.upload(filePath, file);
+
+      this.fileSubscriptions.add(
+        task
+          .snapshotChanges()
+          .pipe(
+            finalize(() => {
+              this.storage
+                .ref(filePath)
+                .getDownloadURL()
+                .pipe(take(1))
+                .subscribe((url) => {
+                  if (url) {
+                    budgetFiles.push({
+                      name: file.name,
+                      url: url,
+                    });
+
+                    this.fileUploadCount.next(true);
+                  }
+                });
+            })
+          )
+          .subscribe()
+      );
+    });
+
+    // for every file in reportFilesList, we will push  a path reference to reportPathReferences
+    let reportFiles: Array<{ name: string; url: string }> = [];
+
+    this.reportFilesList.forEach((file) => {
+      const filePath = `budgets/${this.data.id}/v${currentVersionCount}/reports/${now}_${file.name}`;
+      const task = this.storage.upload(filePath, file);
+
+      this.fileSubscriptions.add(
+        task
+          .snapshotChanges()
+          .pipe(
+            finalize(() => {
+              this.storage
+                .ref(filePath)
+                .getDownloadURL()
+                .pipe(take(1))
+                .subscribe((url) => {
+                  if (url) {
+                    reportFiles.push({
+                      name: file.name,
+                      url: url,
+                    });
+
+                    this.fileUploadCount.next(true);
+                  }
+                });
+            })
+          )
+          .subscribe()
+      );
+    });
+
+    // for every file in reportFilesList, we will push  a path reference to reportPathReferences
+    let quotationFiles: Array<{ name: string; url: string }> = [];
+
+    this.quotationFilesList.forEach((file) => {
+      const filePath = `budgets/${this.data.id}/v${currentVersionCount}/quotations/${now}_${file.name}`;
+      const task = this.storage.upload(filePath, file);
+
+      this.fileSubscriptions.add(
+        task
+          .snapshotChanges()
+          .pipe(
+            finalize(() => {
+              this.storage
+                .ref(filePath)
+                .getDownloadURL()
+                .pipe(take(1))
+                .subscribe((url) => {
+                  if (url) {
+                    quotationFiles.push({
+                      name: file.name,
+                      url: url,
+                    });
+
+                    this.fileUploadCount.next(true);
+                  }
+                });
+            })
+          )
+          .subscribe()
+      );
+    });
+
+    // Now, we will keep track of the number of uploads done to unsubscribe and finilize the loaders
+    this.fileSubscriptions.add(
+      this.fileUploadCount$.subscribe((res) => {
+        try {
+          if (res) counter++;
+
+          if (counter === totalFiles) {
+            this.authService.user$.pipe(take(1)).subscribe((user) => {
+              const batch = firebase.default.firestore().batch();
+              const budgetRef = firebase.default
+                .firestore()
+                .doc(`db/ferreyros/budgets/${this.data.id}`);
+
+              batch.update(budgetRef, {
+                statusPresupuesto: 'PDTE. APROB.',
+                versionCount: currentVersionCount,
+                documentVersions:
+                  firebase.default.firestore.FieldValue.arrayUnion({
+                    version: currentVersionCount,
+                    budgets: budgetFiles,
+                    reports: reportFiles,
+                    quotations: quotationFiles,
+                    subject: this.form.value['subject'],
+                    body: this.form.value['body'],
+                    observations: this.form.value['observations'],
+                    to: this.emails,
+                  }),
+                fechaUltimoEnvioPPTO: new Date(),
+                lastSendBy: user,
+              });
+
+              batch
+                .commit()
+                .then(() => {
+                  this.snackbar.open('✅ PTTO. enviado con éxito', 'Aceptar', {
+                    duration: 6000,
+                  });
+                  this.fileSubscriptions.unsubscribe();
+                  this.loading.next(false);
+                  this.dialogRef.close(true);
+                  // TODO: Send email notifications
+                })
+                .catch((err) => {
+                  this.snackbar.open(
+                    '🚨 Hubo un error guardando los archivos. Por favor, vuelva a intentarlo',
+                    'Aceptar',
+                    {
+                      duration: 6000,
+                    }
+                  );
+                });
+            });
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      })
+    );
+  }
+
+  private sendEmail(): void {
+    //
   }
 }
