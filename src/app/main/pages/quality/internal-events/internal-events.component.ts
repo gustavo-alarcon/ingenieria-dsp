@@ -13,7 +13,7 @@ import { User } from '../../../models/user-model';
 import { finalize, take, startWith, map, tap, pluck } from 'rxjs/operators';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { ComponentList, WorkShopList, FileAdditional } from '../../../models/quality.model';
+import { ComponentList, WorkshopList, FileAdditional } from '../../../models/quality.model';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { WorkshopModel } from '../../../../main/models/workshop.model';
@@ -61,7 +61,7 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
 
   isMobile = false;
 
-  workshop$: Observable<WorkShopList[]>;
+  workshop$: Observable<WorkshopList[]>;
   component$: Observable<ComponentList[]>;
 
 

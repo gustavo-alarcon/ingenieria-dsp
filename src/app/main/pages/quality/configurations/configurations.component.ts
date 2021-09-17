@@ -17,7 +17,7 @@ import { QualityService } from 'src/app/main/services/quality.service';
 import {
   QualityListSpecialist,
   QualityBroadcastList,
-  WorkShopList,
+  WorkshopList,
   ComponentList,
   MiningOperation,
 } from '../../../models/quality.model';
@@ -131,7 +131,7 @@ export class ConfigurationsComponent implements OnInit {
     Validators.required
   );
 
-  public listWorkshopArray: Array<WorkShopList> = [];
+  public listWorkshopArray: Array<WorkshopList> = [];
   public listComponentInternalArray: Array<ComponentList> = [];
   public listComponentExternalArray: Array<ComponentList> = [];
   public listMiningOperationArray: Array<MiningOperation> = [];
@@ -682,7 +682,7 @@ export class ConfigurationsComponent implements OnInit {
       case 'add': {
         // Add an item to the local ReasonsForRejection array
         if (this.entryWorkshopControl.valid) {
-          const temp: WorkShopList = {
+          const temp: WorkshopList = {
             id: null,
             name: this.entryWorkshopControl.value.trim(),
             createdBy: null,
@@ -690,7 +690,7 @@ export class ConfigurationsComponent implements OnInit {
           };
 
           // Searching for repeated values
-          const equal = (currentItem: WorkShopList) =>
+          const equal = (currentItem: WorkshopList) =>
             currentItem.name !== temp.name;
           if (this.listWorkshopArray.every(equal)) {
             this.listWorkshopArray.unshift(temp);
@@ -786,14 +786,14 @@ export class ConfigurationsComponent implements OnInit {
       case 'add': {
         // Add an item to the local ReasonsForRejection array
         if (this.entryComponentInternalControl.valid) {
-          const temp: WorkShopList = {
+          const temp: WorkshopList = {
             id: null,
             name: this.entryComponentInternalControl.value.trim(),
             createdBy: null,
             createdAt: null,
           };
           // Searching for repeated values
-          const equal = (currentItem: WorkShopList) =>
+          const equal = (currentItem: WorkshopList) =>
             currentItem.name !== temp.name;
           if (this.listComponentInternalArray.every(equal)) {
             this.listComponentInternalArray.unshift(temp);
@@ -889,14 +889,14 @@ export class ConfigurationsComponent implements OnInit {
       case 'add': {
         // Add an item to the local ReasonsForRejection array
         if (this.entryComponentExternalControl.valid) {
-          const temp: WorkShopList = {
+          const temp: WorkshopList = {
             id: null,
             name: this.entryComponentExternalControl.value.trim(),
             createdBy: null,
             createdAt: null,
           };
           // Searching for repeated values
-          const equal = (currentItem: WorkShopList) =>
+          const equal = (currentItem: WorkshopList) =>
             currentItem.name !== temp.name;
           if (this.listComponentExternalArray.every(equal)) {
             this.listComponentExternalArray.unshift(temp);
@@ -992,14 +992,14 @@ export class ConfigurationsComponent implements OnInit {
       case 'add': {
         // Add an item to the local ReasonsForRejection array
         if (this.entryMiningOperationControl.valid) {
-          const temp: WorkShopList = {
+          const temp: WorkshopList = {
             id: null,
             name: this.entryMiningOperationControl.value.trim(),
             createdBy: null,
             createdAt: null,
           };
           // Searching for repeated values
-          const equal = (currentItem: WorkShopList) =>
+          const equal = (currentItem: WorkshopList) =>
             currentItem.name !== temp.name;
           if (this.listMiningOperationArray.every(equal)) {
             this.listMiningOperationArray.unshift(temp);

@@ -9,7 +9,7 @@ import {
   QualityListResponsibleArea,
   QualityBroadcastList,
   CauseFailureList,
-  WorkShopList,
+  WorkshopList,
   ComponentList,
 } from '../models/quality.model';
 import { User } from '../models/user-model';
@@ -563,7 +563,7 @@ export class QualityService {
     const batch: firebase.default.firestore.WriteBatch = this.afs.firestore.batch();
 
     listMining.forEach(
-      (mining: WorkShopList) => {
+      (mining: WorkshopList) => {
         const miningDocumentRef = this.afs.firestore
         .collection(`/db/generalConfigQuality/miningOperationList`)
         .doc();
@@ -608,14 +608,14 @@ export class QualityService {
   }
 
   addWorkshopList(
-    listWorkshop: Array<WorkShopList>,
+    listWorkshop: Array<WorkshopList>,
     user: User
   ): Observable<firebase.default.firestore.WriteBatch> {
     const date = firebase.default.firestore.FieldValue.serverTimestamp();
     const batch: firebase.default.firestore.WriteBatch = this.afs.firestore.batch();
 
     listWorkshop.forEach(
-      (workshop: WorkShopList) => {
+      (workshop: WorkshopList) => {
         const listWorkshopDocumentRef = this.afs.firestore
         .collection(`/db/generalConfigQuality/workshopList`)
           .doc();
@@ -635,9 +635,9 @@ export class QualityService {
   }
 
   // get all CauseFailureList
-  getAllWorkshopList(): Observable<WorkShopList[]> {
+  getAllWorkshopList(): Observable<WorkshopList[]> {
     return this.afs
-      .collection<WorkShopList>(
+      .collection<WorkshopList>(
         `/db/generalConfigQuality/workshopList`,
         (ref) => ref.orderBy('createdAt', 'asc')
       )
@@ -665,7 +665,7 @@ export class QualityService {
     const batch: firebase.default.firestore.WriteBatch = this.afs.firestore.batch();
 
     listCompInternal.forEach(
-      (compInternal: WorkShopList) => {
+      (compInternal: WorkshopList) => {
         const compInternalDocumentRef = this.afs.firestore
         .collection(`/db/generalConfigQuality/componentListInternal`)
           .doc();
@@ -684,9 +684,9 @@ export class QualityService {
     return of(batch);
   }
 
-  getAllComponentsListInternal(): Observable<WorkShopList[]> {
+  getAllComponentsListInternal(): Observable<WorkshopList[]> {
     return this.afs
-      .collection<WorkShopList>(
+      .collection<WorkshopList>(
         `/db/generalConfigQuality/componentListInternal`,
         (ref) => ref.orderBy('createdAt', 'asc')
       )
@@ -715,7 +715,7 @@ export class QualityService {
     const batch: firebase.default.firestore.WriteBatch = this.afs.firestore.batch();
 
     listCompExternal.forEach(
-      (compExternal: WorkShopList) => {
+      (compExternal: WorkshopList) => {
         const compExtermalDocumentRef = this.afs.firestore
         .collection(`/db/generalConfigQuality/componentListExternal`)
         .doc();
@@ -734,9 +734,9 @@ export class QualityService {
     return of(batch);
   }
 
-  getAllComponentsListExternal(): Observable<WorkShopList[]> {
+  getAllComponentsListExternal(): Observable<WorkshopList[]> {
     return this.afs
-      .collection<WorkShopList>(
+      .collection<WorkshopList>(
         `/db/generalConfigQuality/componentListExternal`,
         (ref) => ref.orderBy('createdAt', 'asc')
       )
