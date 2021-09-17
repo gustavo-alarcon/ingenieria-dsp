@@ -372,12 +372,12 @@ export class ExternalEventsComponent implements OnInit {
 
   }
   
-  onAddComponent(): void {
-    this.dialog.open(AddComponentComponent, {
-      maxWidth: 500,
-      width: '90vw',
-    });
-  }
+  // onAddComponent(): void {
+  //   this.dialog.open(AddComponentComponent, {
+  //     maxWidth: 500,
+  //     width: '90vw',
+  //   });
+  // }
 
   displayFn(workshop: WorkshopModel): string {
     return workshop && workshop.workshopName ? workshop.workshopName : '';
