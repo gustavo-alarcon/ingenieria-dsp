@@ -99,7 +99,50 @@
                     </mat-error>
                 </mat-form-field>
 
-                <h3 class="container-form__title">Imagen general</h3>
+                <div class="div-margin" autocomplete="off">
+                    <h3 class="container-form__title">¿Esta pararalizando el trabajo?</h3>
+                    <mat-checkbox class="div-margin__margin-space" [checked]="allCompleteField"
+                        (change)="setFields($event.checked)"></mat-checkbox>
+                </div>
+
+                <div *ngIf="allCompleteField">
+                    <mat-form-field class="container-form__work__input"
+                        [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'"
+                        appearance="outline">
+                        <mat-label>¿En que taller se detecto el problema?</mat-label>
+                        <input autocomplete="off" type="text" matInput [formControl]="workshopName"
+                            [matAutocomplete]="auto1">
+                        <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayFn" autoActiveFirstOption
+                            (optionSelected)="setSelectedWorkshop($event)">
+                            <mat-option *ngFor="let option of filteredOptionsWorkshopName$ | async" [value]="option">
+                                {{option.workshopName}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <mat-error *ngIf="workshopName.hasError('required') && workshopName.touched">
+                            Campo <strong>requerido.</strong>
+                        </mat-error>
+
+                    </mat-form-field>
+
+                    <mat-form-field class="container-form__work__input"
+                        [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'"
+                        appearance="outline">
+                        <mat-label>¿En que proceso se detecto este evento?</mat-label>
+                        <input autocomplete="off" type="text" matInput [formControl]="workshopProcess"
+                            [matAutocomplete]="auto2">
+                        <mat-autocomplete #auto2="matAutocomplete" autoActiveFirstOption>
+                            <mat-option *ngFor="let option of  filteredOptionsWorkshopProcess$ | async"
+                                [value]="option">
+                                {{option}}
+                            </mat-option>
+                        </mat-autocomplete>
+                        <mat-error *ngIf="workshopProcess.hasError('required') && workshopProcess.touched">
+                            Campo <strong>requerido.</strong>
+                        </mat-error>
+
+                    </mat-form-field>
+
+                </div>
 
                 <div class="dropzone" appDropzone (hovered)="toggleHoverGeneral($event)"
                     (dropped)="onDropGeneral($event)" [class.hovering]="isHoveringGeneral">
@@ -164,12 +207,10 @@
                         ADJUNTAR
                     </button>
                 </div>
-
-                <button aria-label="add" mat-button class="container-form__btn-save" [disabled]='internalForm.invalid'
+                <button aria-label="add" mat-button class="container-form__btn-save" [disabled]='internalForm.invalid || workshopName.invalid || workshopProcess.invalid'
                     (click)="save()">
                     GUARDAR
                 </button>
-
             </form>
         </mat-card>
     </div>

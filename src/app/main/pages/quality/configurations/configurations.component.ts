@@ -23,7 +23,7 @@ import { DeleteBroadcastDialogComponent } from './dialogs/delete-broadcast-dialo
 import { AddBroadcastDialogComponent } from './dialogs/add-broadcast-dialog/add-broadcast-dialog.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { WorkShopModel } from 'src/app/main/models/workshop.model';
+import { WorkshopModel } from 'src/app/main/models/workshop.model';
 
 @Component({
   selector: 'app-configurations',
@@ -59,7 +59,7 @@ export class ConfigurationsComponent implements OnInit {
   step = 0;
 
   areaForm: FormGroup;
-  workShopForm: FormGroup;
+  workshopForm: FormGroup;
 
   //Autocomplete
   entrySpecialistControl: FormControl;
@@ -83,22 +83,22 @@ export class ConfigurationsComponent implements OnInit {
     this.historyMobilDataSource.paginator = paginator;
   }
 
-  workShopDataSource = new MatTableDataSource<any[]>();
-  workShopDisplayedColumns: string[] = [
+  workshopDataSource = new MatTableDataSource<any[]>();
+  workshopDisplayedColumns: string[] = [
     'No',
-    'workShopNameProgress',
+    'workshopNameProcess',
     'actions'
   ];
 
-  @ViewChild('workShopPaginator', { static: false }) set content2(
+  @ViewChild('workshopPaginator', { static: false }) set content2(
     paginator: MatPaginator
   ) {
-    this.workShopDataSource.paginator = paginator;
+    this.workshopDataSource.paginator = paginator;
   }
 
   areaResponsable$: Observable<any[]>;
-  workShopProgress$: Observable<any[]>;
-  workShopProgressArray: string[] = [];
+  workshopProcess$: Observable<any[]>;
+  workshopProcessArray: string[] = [];
 
 
   constructor(
@@ -160,12 +160,12 @@ export class ConfigurationsComponent implements OnInit {
     );
 
 
-    this.workShopProgress$ = this.qualityService.getAllQualityInternalWorkShop().pipe(
+    this.workshopProcess$ = this.qualityService.getAllQualityInternalWorkshop().pipe(
       tap((resp) => {
         if (resp) {
-          this.workShopDataSource.data = resp;
+          this.workshopDataSource.data = resp;
         } else {
-          this.workShopDataSource.data = [];
+          this.workshopDataSource.data = [];
         }
       }
       )
@@ -207,9 +207,9 @@ export class ConfigurationsComponent implements OnInit {
       ]],
     });
 
-    this.workShopForm = this.fb.group({
-      workShopName: ['', [Validators.required]],
-      workShopProgress: ['']
+    this.workshopForm = this.fb.group({
+      workshopName: ['', [Validators.required]],
+      workshopProcess: ['']
     })
   }
 
@@ -226,33 +226,34 @@ export class ConfigurationsComponent implements OnInit {
     this.broadcastFormArray.push(new FormControl(null, Validators.required));
   }
 
-  addWorkShopProgress(): void {
-    if (this.workShopForm.get('workShopName').invalid && this.broadcastFormArray.length === 0) {
-      this.workShopForm.markAllAsTouched();
+  addWorkshopProcess(): void {
+    if (this.workshopForm.get('workshopName').invalid && this.broadcastFormArray.length === 0) {
+      this.workshopForm.markAllAsTouched();
       return;
     }
-    const value = { ...this.workShopForm.value }
-    this.workShopProgressArray.push(value.workShopProgress);
-    this.resetworkShopProgress();
+    const value = { ...this.workshopForm.value }
+    
+    this.workshopProcessArray.push(value.workshopProcess);
+    this.resetWorkshopProcess();
   }
 
-  resetworkShopProgress(): void {
-    this.workShopForm.get('workShopProgress').reset();
+  resetWorkshopProcess(): void {
+    this.workshopForm.get('workshopProcess').reset();
   }
 
-  deleteTorkShopProgressArray(index: number): void {
-    this.workShopProgressArray.splice(index, 1);
+  deleteWorkshopProcessArray(index: number): void {
+    this.workshopProcessArray.splice(index, 1);
   }
 
-  saveSubmitWorkShopForm(): void {
+  saveSubmitWorkshopForm(): void {
     try {
       this.loading.next(true);
-      if (this.workShopForm.invalid) {
-        this.workShopForm.markAllAsTouched();
+      if (this.workshopForm.invalid) {
+        this.workshopForm.markAllAsTouched();
         this.loading.next(false);
         return;
       }
-      const resp = this.qualityService.addQualityInternalWorkShop(this.workShopForm, this.user, this.workShopProgressArray);
+      const resp = this.qualityService.addQualityInternalWorkshop(this.workshopForm, this.user, this.workshopProcessArray);
       this.subscription.add(
         resp.subscribe(
           batch => {
@@ -262,8 +263,8 @@ export class ConfigurationsComponent implements OnInit {
                   this.snackbar.open('✅ Se guardo correctamente!', 'Aceptar', {
                     duration: 6000
                   });
-                  this.workShopProgressArray = [];
-                  this.workShopForm.reset();
+                  this.workshopProcessArray = [];
+                  this.workshopForm.reset();
 
                   this.loading.next(false);
                 })
