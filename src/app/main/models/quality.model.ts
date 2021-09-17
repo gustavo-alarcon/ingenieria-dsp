@@ -1,4 +1,5 @@
 import { User } from './user-model';
+import { WorkshopModel } from './workshop.model';
 
 export interface Quality {
   id?: string;
@@ -26,23 +27,23 @@ export interface Quality {
   finalizedTimeElapsed?: QualityTimer;
   finalizedPercentageElapsed?: number;
 
-  fileName: string;
+  fileName?: string;
   inquiryAt?: Date;
   attentionTimeElapsed?: QualityTimer;
   //finalizedAt?: Date;
   //finalizedBy: User;
-  analysisQuality: string;
-  analysisCost: string;
-  analysisFrequency: string;
+  analysisQuality?: string;
+  analysisCost?: string;
+  analysisFrequency?: string;
   //analysisCauseFailure: string;
   //analysisProcess: string;
   //analysisObservation: string;
   evaluationAnalysisName?: string;
   fileAdditional?: FileAdditional;
   taskDone?: number;
-  causeFailureList: Array<string>;
-  analysis: Array<string>;
-  evaluationAnalisis: number;
+  causeFailureList?: Array<string>;
+  analysis?: Array<string>;
+  evaluationAnalisis?: number;
   eventType: string; //Interno- Externo
   emailList?: Array<string>;
   workOrder?: number;
@@ -50,6 +51,8 @@ export interface Quality {
   specialist?: string;
   partNumber?: number;
   workShop?: string;
+  responsibleWorkshop?: WorkshopModel;
+  responsibleWorkshopProcess?: string;
   enventDetail?: string;
   packageNumber?: string;
   componentHourMeter?: string;
