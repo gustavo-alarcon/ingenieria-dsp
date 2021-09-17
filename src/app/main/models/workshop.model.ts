@@ -11,9 +11,6 @@ export interface WorkShopModel {
 
 }
 
-export interface workShoForm {
-    id:string,
-    taller: string,
-    createdBy: User,
-    createdAt: Date
+export interface workShopForm {
+    workShopName: WorkShopModel
 }

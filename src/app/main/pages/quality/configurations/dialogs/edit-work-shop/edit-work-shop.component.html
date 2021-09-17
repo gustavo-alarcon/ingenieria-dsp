@@ -17,11 +17,20 @@
     <form [formGroup]="editFormGroup">
         <mat-form-field>
             <mat-label>Taller</mat-label>
-            <input matInput type="text" formControlName="taller" />
+            <input matInput type="text" formControlName="workShopName" />
 
         </mat-form-field>
+
+        <mat-card-content>
+            <mat-label></mat-label>
+            <div class="item-list">
+                <span formControlName="workShopSub"></span>
+            </div>
+        </mat-card-content>
     </form>
 </mat-dialog-content>
+
+
 
 <button (click)="saveChanges()" type="submit" mat-raised-button color="primary">
 GUARDAR

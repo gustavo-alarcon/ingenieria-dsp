@@ -24,19 +24,21 @@ export class EditWorkShopComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-
+    this.initForm();
+    console.log(this.data)
   }
 
   initForm(){
     this.editFormGroup = this.fb.group({
-      taller:['']
+      workShopName:[this.data.workShopName ? this.data.workShopName:''],
+      workShopSub:[this.data.workShopProgressName ? this.data.workShopProgressName:'']
     })
   }
 
   saveChanges(){
      
     this.qualityService.updateWorkShop(
-     this.editFormGroup,
+     this.data.id,
      this.data
     ).subscribe((batch: firebase.default.firestore.WriteBatch)=>{
       batch.commit().then(() => {
