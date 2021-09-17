@@ -1,4 +1,5 @@
 import { User } from './user-model';
+import { WorkshopModel } from './workshop.model';
 
 export interface Quality {
   id?: string;
@@ -64,6 +65,8 @@ export interface Quality {
   question3?: string;
   question4?: string;
   file?: string;
+  workShopName?: WorkshopModel;
+  workShopProgressName?: string;
 }
 
 export interface QualityTimer {
