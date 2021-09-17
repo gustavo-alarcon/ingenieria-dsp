@@ -175,7 +175,7 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
   }
 
   getLastDocumentVersion(data: Budget): DocumentVersion {
-    return {...data.documentVersions[data.versionCount - 1]};
+    return { ...data.documentVersions[data.versionCount - 1] };
   }
 
   getDownloadFile(path: string): Observable<any> {
@@ -276,13 +276,9 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
     this.loading.next(false);
   }
 
-  startUpload() {
-    // TODO
-  }
-
   public deleteFile(kind: string, index: number): void {
     if (!kind || index < 0) return;
-    
+
     switch (kind) {
       case 'budget':
         this.budgetsSent.splice(index, 1);
@@ -308,183 +304,220 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
   }
 
   public send(): void {
-    // check if there is new files
-    if (
-      this.budgetFilesList.length > 0 ||
-      this.reportFilesList.length > 0 ||
-      this.quotationFilesList.length > 0
-    ) {
-      // increase version and send budget
-    }
-    if (this.budgetFilesList.length === 0 && this.budgetsSent.length === 0)
-      return;
+    // check if there is changes or new files
+    if (this.generateNewVersion()) {
+      // increase version with new files
+      if (this.budgetFilesList.length === 0 && this.budgetsSent.length === 0)
+        return;
 
-    // first, initialize the variables for document uploads
-    this.loading.next(true);
-    const now = Date.now();
-    let counter = 0;
-    const totalFiles =
-      this.budgetFilesList.length +
-      this.reportFilesList.length +
-      this.quotationFilesList.length;
-    const currentVersionCount = this.data.versionCount + 1;
-    // for every file in budgetFilesList, we will push a path reference to a budgetPathReferences
-    let budgetFiles: Array<{ name: string; url: string }> = [];
+      // first, initialize the variables for document uploads
+      this.loading.next(true);
+      const now = Date.now();
+      let counter = 0;
+      const totalFiles =
+        this.budgetFilesList.length +
+        this.reportFilesList.length +
+        this.quotationFilesList.length;
+      const currentVersionCount = this.data.versionCount + 1;
+      // for every file in budgetFilesList, we will push a path reference to a budgetPathReferences
+      let budgetFiles: Array<{ name: string; url: string }> = [];
 
-    this.budgetFilesList.forEach((file) => {
-      const filePath = `budgets/${this.data.id}/v${currentVersionCount}/budgets/${now}_${file.name}`;
-      const task = this.storage.upload(filePath, file);
+      this.budgetFilesList.forEach((file) => {
+        const filePath = `budgets/${this.data.id}/v${currentVersionCount}/budgets/${now}_${file.name}`;
+        const task = this.storage.upload(filePath, file);
 
-      this.fileSubscriptions.add(
-        task
-          .snapshotChanges()
-          .pipe(
-            finalize(() => {
-              this.storage
-                .ref(filePath)
-                .getDownloadURL()
-                .pipe(take(1))
-                .subscribe((url) => {
-                  if (url) {
-                    budgetFiles.push({
-                      name: file.name,
-                      url: url,
-                    });
+        this.fileSubscriptions.add(
+          task
+            .snapshotChanges()
+            .pipe(
+              finalize(() => {
+                this.storage
+                  .ref(filePath)
+                  .getDownloadURL()
+                  .pipe(take(1))
+                  .subscribe((url) => {
+                    if (url) {
+                      budgetFiles.push({
+                        name: file.name,
+                        url: url,
+                      });
 
-                    this.fileUploadCount.next(true);
-                  }
-                });
-            })
-          )
-          .subscribe()
-      );
-    });
-
-    // for every file in reportFilesList, we will push  a path reference to reportPathReferences
-    let reportFiles: Array<{ name: string; url: string }> = [];
-
-    this.reportFilesList.forEach((file) => {
-      const filePath = `budgets/${this.data.id}/v${currentVersionCount}/reports/${now}_${file.name}`;
-      const task = this.storage.upload(filePath, file);
-
-      this.fileSubscriptions.add(
-        task
-          .snapshotChanges()
-          .pipe(
-            finalize(() => {
-              this.storage
-                .ref(filePath)
-                .getDownloadURL()
-                .pipe(take(1))
-                .subscribe((url) => {
-                  if (url) {
-                    reportFiles.push({
-                      name: file.name,
-                      url: url,
-                    });
-
-                    this.fileUploadCount.next(true);
-                  }
-                });
-            })
-          )
-          .subscribe()
-      );
-    });
-
-    // for every file in reportFilesList, we will push  a path reference to reportPathReferences
-    let quotationFiles: Array<{ name: string; url: string }> = [];
-
-    this.quotationFilesList.forEach((file) => {
-      const filePath = `budgets/${this.data.id}/v${currentVersionCount}/quotations/${now}_${file.name}`;
-      const task = this.storage.upload(filePath, file);
-
-      this.fileSubscriptions.add(
-        task
-          .snapshotChanges()
-          .pipe(
-            finalize(() => {
-              this.storage
-                .ref(filePath)
-                .getDownloadURL()
-                .pipe(take(1))
-                .subscribe((url) => {
-                  if (url) {
-                    quotationFiles.push({
-                      name: file.name,
-                      url: url,
-                    });
-
-                    this.fileUploadCount.next(true);
-                  }
-                });
-            })
-          )
-          .subscribe()
-      );
-    });
-
-    // Now, we will keep track of the number of uploads done to unsubscribe and finilize the loaders
-    this.fileSubscriptions.add(
-      this.fileUploadCount$.subscribe((res) => {
-        try {
-          if (res) counter++;
-
-          if (counter === totalFiles) {
-            this.authService.user$.pipe(take(1)).subscribe((user) => {
-              const batch = firebase.default.firestore().batch();
-              const budgetRef = firebase.default
-                .firestore()
-                .doc(`db/ferreyros/budgets/${this.data.id}`);
-
-              batch.update(budgetRef, {
-                statusPresupuesto: 'PDTE. APROB.',
-                versionCount: currentVersionCount,
-                documentVersions:
-                  firebase.default.firestore.FieldValue.arrayUnion({
-                    version: currentVersionCount,
-                    budgets: budgetFiles,
-                    reports: reportFiles,
-                    quotations: quotationFiles,
-                    subject: this.form.value['subject'],
-                    body: this.form.value['body'],
-                    observations: this.form.value['observations'],
-                    to: this.emails,
-                  }),
-                fechaUltimoEnvioPPTO: new Date(),
-                lastSendBy: user,
-              });
-
-              batch
-                .commit()
-                .then(() => {
-                  this.snackbar.open('✅ PTTO. enviado con éxito', 'Aceptar', {
-                    duration: 6000,
-                  });
-                  this.fileSubscriptions.unsubscribe();
-                  this.loading.next(false);
-                  this.dialogRef.close(true);
-                  // TODO: Send email notifications
-                })
-                .catch((err) => {
-                  this.snackbar.open(
-                    '🚨 Hubo un error guardando los archivos. Por favor, vuelva a intentarlo',
-                    'Aceptar',
-                    {
-                      duration: 6000,
+                      this.fileUploadCount.next(true);
                     }
-                  );
-                });
-            });
+                  });
+              })
+            )
+            .subscribe()
+        );
+      });
+
+      // for every file in reportFilesList, we will push  a path reference to reportPathReferences
+      let reportFiles: Array<{ name: string; url: string }> = [];
+
+      this.reportFilesList.forEach((file) => {
+        const filePath = `budgets/${this.data.id}/v${currentVersionCount}/reports/${now}_${file.name}`;
+        const task = this.storage.upload(filePath, file);
+
+        this.fileSubscriptions.add(
+          task
+            .snapshotChanges()
+            .pipe(
+              finalize(() => {
+                this.storage
+                  .ref(filePath)
+                  .getDownloadURL()
+                  .pipe(take(1))
+                  .subscribe((url) => {
+                    if (url) {
+                      reportFiles.push({
+                        name: file.name,
+                        url: url,
+                      });
+
+                      this.fileUploadCount.next(true);
+                    }
+                  });
+              })
+            )
+            .subscribe()
+        );
+      });
+
+      // for every file in reportFilesList, we will push  a path reference to reportPathReferences
+      let quotationFiles: Array<{ name: string; url: string }> = [];
+
+      this.quotationFilesList.forEach((file) => {
+        const filePath = `budgets/${this.data.id}/v${currentVersionCount}/quotations/${now}_${file.name}`;
+        const task = this.storage.upload(filePath, file);
+
+        this.fileSubscriptions.add(
+          task
+            .snapshotChanges()
+            .pipe(
+              finalize(() => {
+                this.storage
+                  .ref(filePath)
+                  .getDownloadURL()
+                  .pipe(take(1))
+                  .subscribe((url) => {
+                    if (url) {
+                      quotationFiles.push({
+                        name: file.name,
+                        url: url,
+                      });
+
+                      this.fileUploadCount.next(true);
+                    }
+                  });
+              })
+            )
+            .subscribe()
+        );
+      });
+
+      // Now, we will keep track of the number of uploads done to unsubscribe and finilize the loaders
+      this.fileSubscriptions.add(
+        this.fileUploadCount$.subscribe((res) => {
+          try {
+            if (res) counter++;
+
+            if (counter === totalFiles) {
+              this.authService.user$.pipe(take(1)).subscribe((user) => {
+                const batch = firebase.default.firestore().batch();
+                const budgetRef = firebase.default
+                  .firestore()
+                  .doc(`db/ferreyros/budgets/${this.data.id}`);
+
+                const emailData = {
+                  version: currentVersionCount,
+                  budgets: [...this.budgetsSent, ...budgetFiles],
+                  reports: [...this.reportsSent, ...reportFiles],
+                  quotations: [...this.quotationsSent, ...quotationFiles],
+                  subject: this.form.value['subject'],
+                  body: this.form.value['body'],
+                  observations: this.form.value['observations'],
+                  to: this.emails,
+                };
+
+                const data = {
+                  versionCount: currentVersionCount,
+                  documentVersions:
+                    firebase.default.firestore.FieldValue.arrayUnion(emailData),
+                  fechaUltimoEnvioPPTO: new Date(),
+                  lastSendBy: user,
+                };
+
+                batch.update(budgetRef, data);
+
+                batch
+                  .commit()
+                  .then(() => {
+                    this.snackbar.open(
+                      '✅ PTTO. enviado con éxito',
+                      'Aceptar',
+                      {
+                        duration: 6000,
+                      }
+                    );
+                    this.fileSubscriptions.unsubscribe();
+                    this.loading.next(false);
+                    this.dialogRef.close(true);
+                    this.sendBudgetToEndpoint(emailData);
+                  })
+                  .catch((err) => {
+                    this.snackbar.open(
+                      '🚨 Hubo un error guardando los archivos. Por favor, vuelva a intentarlo',
+                      'Aceptar',
+                      {
+                        duration: 6000,
+                      }
+                    );
+                  });
+              });
+            }
+          } catch (error) {
+            console.log(error);
           }
-        } catch (error) {
-          console.log(error);
-        }
-      })
-    );
+        })
+      );
+    } else {
+      // just re-send the budget
+      const emailData = {
+        version: this.data.versionCount,
+        budgets: this.budgetsSent,
+        reports: this.reportsSent,
+        quotations: this.quotationsSent,
+        subject: this.form.value['subject'],
+        body: this.form.value['body'],
+        observations: this.form.value['observations'],
+        to: this.emails,
+      };
+
+      this.snackbar.open('✅ PTTO. enviado con éxito', 'Aceptar', {
+        duration: 6000,
+      });
+      this.fileSubscriptions.unsubscribe();
+      this.loading.next(false);
+      this.dialogRef.close(true);
+
+      this.sendBudgetToEndpoint(emailData);
+    }
   }
 
-  private sendEmail(): void {
-    //
+  private generateNewVersion(): boolean {
+    // first, check if  there is any edition
+    const editions =
+      this.budgetEdited || this.reportEdited || this.quotationEdited;
+    // second, check if there is any new file
+    const newFiles =
+      !!this.budgetFilesList.length ||
+      !!this.reportFilesList.length ||
+      !!this.quotationFilesList.length;
+
+    return editions || newFiles;
+  }
+
+  private sendBudgetToEndpoint(data: any): void {
+    console.log(data);
   }
 }

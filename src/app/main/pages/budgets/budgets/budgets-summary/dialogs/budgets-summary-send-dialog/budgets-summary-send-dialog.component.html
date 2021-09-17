@@ -257,9 +257,11 @@
       type="submit"
       mat-raised-button
       color="primary"
-      (click)="startUpload()"
+      (click)="send()"
       [disabled]="
-        form.invalid || emails.length === 0 || budgetsSent.length === 0
+        form.invalid ||
+        emails.length === 0 ||
+        (budgetsSent.length === 0 && budgetFilesList.length === 0)
       "
     >
       ENVIAR
