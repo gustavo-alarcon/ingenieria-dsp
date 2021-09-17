@@ -18,6 +18,8 @@
                 </p>
                 <p><span style="font-weight: bold;"> Taller:</span> {{data.workShop ? data.workShop : ''}}</p>
                 <p><span style="font-weight: bold;"> Tipo de evento :</span> {{data.eventType? data.eventType : ''}}</p>
+                <p><span style="font-weight: bold;"> Taller responsable :</span> {{data.responsibleWorkshop? data.responsibleWorkshop.workshopName : ''}}</p>
+                <p><span style="font-weight: bold;"> Proceso :</span> {{data.responsibleWorkshopProcess? data.responsibleWorkshopProcess : ''}}</p>
                 <p><span style="font-weight: bold;"> Fecha :</span> {{data.createdAt ? ((data.createdAt['seconds'] * 1000) | date : 'dd/MM/yy - hh:mm:ss'): ''}}
                 </p>
 

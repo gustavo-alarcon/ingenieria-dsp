@@ -92,6 +92,22 @@
                                 válida.</span>
                         </mat-error>
                     </mat-form-field>
+                    <mat-form-field class="container-form__work__input"
+                    [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'"
+                    appearance="outline">
+                    <mat-label>¿De que taller viene este trabajo?</mat-label>
+                    <input autocomplete="off" type="text" matInput formControlName="workshopName"
+                        [matAutocomplete]="auto1">
+                    <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayFn" autoActiveFirstOption>
+                        <mat-option *ngFor="let option of filteredOptionsWorkshopName$ | async" [value]="option">
+                            {{option.workshopName}}
+                        </mat-option>
+                    </mat-autocomplete>
+                    <mat-error *ngIf="externalForm.get('workshopName').errors?.required">
+                        Campo <strong>requerido.</strong>
+                    </mat-error>
+
+                </mat-form-field>
                 </div>
                 <br />
                 <mat-form-field appearance="outline" class="container-form__area" [ngClass]="isMobile ? 'container-form__area--mobile' : 'container-form__area--desktop'">

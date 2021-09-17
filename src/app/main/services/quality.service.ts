@@ -153,6 +153,7 @@ export class QualityService {
       specialist: null,
       partNumber: form.nPart,
       workShop: null,
+      responsibleWorkshop: form.workshopName,
       enventDetail: null,
       packageNumber: form.nPackage,
       componentHourMeter: form.componentHourMeter,
@@ -167,7 +168,7 @@ export class QualityService {
       question1: form.question1,
       question2: form.question2,
       question3: form.question3,
-      question4: form.question4,
+      question4: form.question4
     };
     batch.set(qualityDocRef, data);
 

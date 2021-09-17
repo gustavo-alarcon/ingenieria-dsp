@@ -14,6 +14,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddMiningOperationDialogComponent } from './dialogs/add-mining-operation-dialog/add-mining-operation-dialog.component';
 import { AddComponentComponent } from './dialogs/add-component/add-component.component';
 import { Router } from '@angular/router';
+import { WorkshopModel } from 'src/app/main/models/workshop.model';
 
 @Component({
   selector: 'app-external-events',
@@ -65,6 +66,9 @@ export class ExternalEventsComponent implements OnInit {
 
   dataFiles: FileAdditional[] = [];
 
+  filteredOptionsWorkshopName$: Observable<WorkshopModel[]>;
+  optionsWorkshopName: WorkshopModel[] = [];
+
   constructor(
     public dialog: MatDialog,
     private breakpoint: BreakpointObserver,
@@ -89,6 +93,19 @@ export class ExternalEventsComponent implements OnInit {
     )
 
     this.initFormInternal();
+
+    this.subscription.add(
+      this.qualityService.getAllQualityInternalWorkshop().pipe(
+      ).subscribe(resp => {
+        this.optionsWorkshopName = resp;
+        this.filteredOptionsWorkshopName$ = this.externalForm.get('workshopName').valueChanges
+          .pipe(
+            startWith(''),
+            map(value => typeof value === 'string' ? value : value.name),
+            map(name => name ? this._filterWorkshopName(name) : this.optionsWorkshopName.slice())
+          );
+      })
+    );
 
     this.miningOperation$ = combineLatest(
       this.externalForm.get('miningOperation').valueChanges.pipe(
@@ -160,6 +177,7 @@ export class ExternalEventsComponent implements OnInit {
       question2: ['', Validators.required],
       question3: ['', Validators.required],
       question4: ['', Validators.required],
+      workshopName: ['', Validators.required]
     });
 
   }
@@ -369,5 +387,13 @@ export class ExternalEventsComponent implements OnInit {
     });
   }
 
+  displayFn(workshop: WorkshopModel): string {
+    return workshop && workshop.workshopName ? workshop.workshopName : '';
+  }
+
+  private _filterWorkshopName(workshopName: string): WorkshopModel[] {
+    const filterValue = workshopName.toLowerCase();
+    return this.optionsWorkshopName.filter(option => option.workshopName.toLowerCase().indexOf(filterValue) === 0);
+  }
 
 }
