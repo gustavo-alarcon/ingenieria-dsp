@@ -9,7 +9,8 @@ import {
   QualityListResponsibleArea,
   QualityBroadcastList,
   CauseFailureList,
-  WorkShopList,
+  WorkshopList,
+  ComponentList,
 } from '../models/quality.model';
 import { User } from '../models/user-model';
 import * as firebase from 'firebase/app';
@@ -556,24 +557,29 @@ export class QualityService {
    * @param {User} user - User's data in actual session
    */
   addMiningOperationList(
-    form,
+    listMining: Array<ComponentList>,
     user: User
   ): Observable<firebase.default.firestore.WriteBatch> {
-    // create batch
-    const batch = this.afs.firestore.batch();
-    // create reference for document in evaluation entries collection
-    const qualityDocRef = this.afs.firestore
-      .collection(`/db/generalConfigQuality/miningOperationList`)
-      .doc();
 
-    // Structuring the data model
-    const data: any = {
-      id: qualityDocRef.id,
-      name: form.name,
-      createdAt: new Date(),
-      createdBy: user,
-    };
-    batch.set(qualityDocRef, data);
+    const date = firebase.default.firestore.FieldValue.serverTimestamp();
+    const batch: firebase.default.firestore.WriteBatch = this.afs.firestore.batch();
+
+    listMining.forEach(
+      (mining: WorkshopList) => {
+        const miningDocumentRef = this.afs.firestore
+        .collection(`/db/generalConfigQuality/miningOperationList`)
+        .doc();
+
+        if (!mining.id) {
+          batch.set(miningDocumentRef, {
+            id: miningDocumentRef.id,
+            name: mining.name,
+            createdAt: date,
+            createdBy: user,
+          });
+        }
+      }
+    );
 
     return of(batch);
   }
@@ -604,32 +610,36 @@ export class QualityService {
   }
 
   addWorkshopList(
-    form,
+    listWorkshop: Array<WorkshopList>,
     user: User
   ): Observable<firebase.default.firestore.WriteBatch> {
-    // create batch
-    const batch = this.afs.firestore.batch();
-    // create reference for document in evaluation entries collection
-    const qualityDocRef = this.afs.firestore
-      .collection(`/db/generalConfigQuality/workshopList`)
-      .doc();
+    const date = firebase.default.firestore.FieldValue.serverTimestamp();
+    const batch: firebase.default.firestore.WriteBatch = this.afs.firestore.batch();
 
-    // Structuring the data model
-    const data: any = {
-      id: qualityDocRef.id,
-      name: form.name,
-      createdAt: new Date(),
-      createdBy: user,
-    };
-    batch.set(qualityDocRef, data);
+    listWorkshop.forEach(
+      (workshop: WorkshopList) => {
+        const listWorkshopDocumentRef = this.afs.firestore
+        .collection(`/db/generalConfigQuality/workshopList`)
+          .doc();
+
+        if (!workshop.id) {
+          batch.set(listWorkshopDocumentRef, {
+            id: listWorkshopDocumentRef.id,
+            name: workshop.name,
+            createdAt: date,
+            createdBy: user,
+          });
+        }
+      }
+    );
 
     return of(batch);
   }
 
   // get all CauseFailureList
-  getAllWorkshopList(): Observable<WorkShopList[]> {
+  getAllWorkshopList(): Observable<WorkshopList[]> {
     return this.afs
-      .collection<WorkShopList>(
+      .collection<WorkshopList>(
         `/db/generalConfigQuality/workshopList`,
         (ref) => ref.orderBy('createdAt', 'asc')
       )
@@ -650,31 +660,35 @@ export class QualityService {
   }
 
   addComponentListInternal(
-    form,
+    listCompInternal: Array<ComponentList>,
     user: User
   ): Observable<firebase.default.firestore.WriteBatch> {
-    // create batch
-    const batch = this.afs.firestore.batch();
-    // create reference for document in evaluation entries collection
-    const qualityDocRef = this.afs.firestore
-      .collection(`/db/generalConfigQuality/componentListInternal`)
-      .doc();
+    const date = firebase.default.firestore.FieldValue.serverTimestamp();
+    const batch: firebase.default.firestore.WriteBatch = this.afs.firestore.batch();
 
-    // Structuring the data model
-    const data: any = {
-      id: qualityDocRef.id,
-      name: form.name,
-      createdAt: new Date(),
-      createdBy: user,
-    };
-    batch.set(qualityDocRef, data);
+    listCompInternal.forEach(
+      (compInternal: WorkshopList) => {
+        const compInternalDocumentRef = this.afs.firestore
+        .collection(`/db/generalConfigQuality/componentListInternal`)
+          .doc();
+
+        if (!compInternal.id) {
+          batch.set(compInternalDocumentRef, {
+            id: compInternalDocumentRef.id,
+            name: compInternal.name,
+            createdAt: date,
+            createdBy: user,
+          });
+        }
+      }
+    );
 
     return of(batch);
   }
 
-  getAllComponentsListInternal(): Observable<WorkShopList[]> {
+  getAllComponentsListInternal(): Observable<WorkshopList[]> {
     return this.afs
-      .collection<WorkShopList>(
+      .collection<WorkshopList>(
         `/db/generalConfigQuality/componentListInternal`,
         (ref) => ref.orderBy('createdAt', 'asc')
       )
@@ -696,31 +710,35 @@ export class QualityService {
     return of(batch);
   }
   addComponentListExternal(
-    form,
+    listCompExternal: Array<ComponentList>,
     user: User
   ): Observable<firebase.default.firestore.WriteBatch> {
-    // create batch
-    const batch = this.afs.firestore.batch();
-    // create reference for document in evaluation entries collection
-    const qualityDocRef = this.afs.firestore
-      .collection(`/db/generalConfigQuality/componentListExternal`)
-      .doc();
+    const date = firebase.default.firestore.FieldValue.serverTimestamp();
+    const batch: firebase.default.firestore.WriteBatch = this.afs.firestore.batch();
 
-    // Structuring the data model
-    const data: any = {
-      id: qualityDocRef.id,
-      name: form.name,
-      createdAt: new Date(),
-      createdBy: user,
-    };
-    batch.set(qualityDocRef, data);
+    listCompExternal.forEach(
+      (compExternal: WorkshopList) => {
+        const compExtermalDocumentRef = this.afs.firestore
+        .collection(`/db/generalConfigQuality/componentListExternal`)
+        .doc();
+
+        if (!compExternal.id) {
+          batch.set(compExtermalDocumentRef, {
+            id: compExtermalDocumentRef.id,
+            name: compExternal.name,
+            createdAt: date,
+            createdBy: user,
+          });
+        }
+      }
+    );
 
     return of(batch);
   }
 
-  getAllComponentsListExternal(): Observable<WorkShopList[]> {
+  getAllComponentsListExternal(): Observable<WorkshopList[]> {
     return this.afs
-      .collection<WorkShopList>(
+      .collection<WorkshopList>(
         `/db/generalConfigQuality/componentListExternal`,
         (ref) => ref.orderBy('createdAt', 'asc')
       )

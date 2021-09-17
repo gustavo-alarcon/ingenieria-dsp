@@ -132,9 +132,10 @@ export interface ComponentList {
   name: string;
   createdAt: Date;
 }
-export interface WorkShopList {
+export interface WorkshopList {
   id: number;
   name: string;
+  createdBy: User;
   createdAt: Date;
 }
 

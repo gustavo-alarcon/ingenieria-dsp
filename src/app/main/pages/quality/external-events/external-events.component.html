@@ -25,9 +25,7 @@
                         <mat-label>Componente</mat-label>
                         <input autocomplete="off" formControlName="component" [matAutocomplete]="autocomplete" type="text" matInput />
                         <mat-autocomplete multiple autoActiveFirstOption #autocomplete="matAutocomplete">
-                            <mat-option *ngIf="authService.uiConfig.quality.externalEvents.forms.component" (click)="onAddComponent()" [value]="">
-                                <mat-icon>add_circle_outline</mat-icon>Añadir/Eliminar
-                            </mat-option>
+                           
                             <mat-option *ngFor="let item of components" [value]="item.name">
                                 {{ item.name }}
                             </mat-option>
@@ -73,9 +71,7 @@
                         <mat-label>Operación minera</mat-label>
                         <input autocomplete="off" formControlName="miningOperation" [matAutocomplete]="miningOperationAutocomplete" type="text" matInput />
                         <mat-autocomplete autoActiveFirstOption #miningOperationAutocomplete="matAutocomplete">
-                            <mat-option *ngIf="authService.uiConfig.quality.externalEvents.forms.miningOperation" (click)="onAddminingOperation()" [value]="">
-                                <mat-icon>add_circle_outline</mat-icon>Añadir/Eliminar
-                            </mat-option>
+                            
                             <mat-option *ngFor="let item of miningOperations" [value]="item.name">
                                 {{ item.name }}
                             </mat-option>
