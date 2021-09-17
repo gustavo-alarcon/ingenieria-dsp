@@ -167,6 +167,7 @@ export class QualityService {
       question2: form.question2,
       question3: form.question3,
       question4: form.question4,
+      workshopName: form.workshopName,
     };
     batch.set(qualityDocRef, data);
 

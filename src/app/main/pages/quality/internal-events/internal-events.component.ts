@@ -108,7 +108,6 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
       this.qualityService.getAllQualityInternalWorkshop().pipe(
       ).subscribe(resp => {
         this.optionsWorkshopName = resp;
-        console.log(resp)
         this.filteredOptionsWorkshopName$ = this.workshopName.valueChanges
           .pipe(
             startWith(''),

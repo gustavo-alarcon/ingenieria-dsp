@@ -20,6 +20,7 @@
                 <p><span style="font-weight: bold;"> Número de parte :</span> {{data.partNumber ? data.partNumber : '-'}}</p>
                 <p><span style="font-weight: bold;"> Tipo de evento :</span> {{data.eventType? data.eventType : '-'}}</p>
                 <p><span style="font-weight: bold;"> Operación minera :</span> {{data.miningOperation ? data.miningOperation : '-'}} </p>
+                <p><span style="font-weight: bold;"> Taller responsable :</span> {{data.workShopName? data.workShopName.workshopName : ''}}</p>
                 <p><span style="font-weight: bold;"> Fecha :</span> {{data.createdAt ? ((data.createdAt['seconds'] * 1000) | date : 'dd/MM/yy - hh:mm:ss'): ''}}
                 </p>
 
