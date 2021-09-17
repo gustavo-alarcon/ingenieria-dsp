@@ -242,7 +242,7 @@
 
 
                                     <button type="submit" mat-button class="container-expansion2__form--btn"
-                                        (click)="saveSubmitWorkshopForm()">
+                                        (click)="saveSubmitWorkshopForm()" [disabled]="workshopProcessArray.length < 1 || !workshopForm.valid">
                                         GUARDAR
                                     </button>
 
@@ -296,7 +296,7 @@
                                     </table>
 
                                 </div>
-                                <mat-paginator #workShopPaginator class="ms-paginator" [pageSizeOptions]="[5, 10, 20]"
+                                <mat-paginator #workshopPaginator class="ms-paginator" [pageSizeOptions]="[5, 10, 20]"
                                     showFirstLastButtons>
                                 </mat-paginator>
                             </div>

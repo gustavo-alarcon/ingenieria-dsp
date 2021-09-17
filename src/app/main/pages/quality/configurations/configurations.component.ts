@@ -86,11 +86,11 @@ export class ConfigurationsComponent implements OnInit {
   workshopDataSource = new MatTableDataSource<any[]>();
   workshopDisplayedColumns: string[] = [
     'No',
-    'workshopNameProgress',
+    'workshopNameProcess',
     'actions'
   ];
 
-  @ViewChild('workShopPaginator', { static: false }) set content2(
+  @ViewChild('workshopPaginator', { static: false }) set content2(
     paginator: MatPaginator
   ) {
     this.workshopDataSource.paginator = paginator;
@@ -232,19 +232,20 @@ export class ConfigurationsComponent implements OnInit {
       return;
     }
     const value = { ...this.workshopForm.value }
-    this.workshopProcessArray.push(value.workShopProgress);
+    
+    this.workshopProcessArray.push(value.workshopProcess);
     this.resetWorkshopProcess();
   }
 
   resetWorkshopProcess(): void {
-    this.workshopForm.get('workShopProgress').reset();
+    this.workshopForm.get('workshopProcess').reset();
   }
 
   deleteWorkshopProcessArray(index: number): void {
     this.workshopProcessArray.splice(index, 1);
   }
 
-  saveSubmitWorkShopForm(): void {
+  saveSubmitWorkshopForm(): void {
     try {
       this.loading.next(true);
       if (this.workshopForm.invalid) {

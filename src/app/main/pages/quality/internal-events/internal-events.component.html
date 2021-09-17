@@ -113,7 +113,7 @@
                         <input autocomplete="off" type="text" matInput [formControl]="workshopName"
                             [matAutocomplete]="auto1">
                         <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayFn" autoActiveFirstOption
-                            (optionSelected)="setSelectedArea($event)">
+                            (optionSelected)="setSelectedWorkshop($event)">
                             <mat-option *ngFor="let option of filteredOptionsWorkshopName$ | async" [value]="option">
                                 {{option.workshopName}}
                             </mat-option>
