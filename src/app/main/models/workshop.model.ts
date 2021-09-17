@@ -10,3 +10,10 @@ export interface WorkShopModel {
     updatedBy?: User;
 
 }
+
+export interface workShoForm {
+    id:string,
+    taller: string,
+    createdBy: User,
+    createdAt: Date
+}

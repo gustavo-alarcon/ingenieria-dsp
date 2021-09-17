@@ -18,7 +18,7 @@ import { logging } from 'protractor';
 import { Quality, MiningOperation } from '../models/quality.model';
 import jsPDF from 'jspdf';
 import { saveAs } from 'file-saver';
-import { WorkShopModel } from '../models/workshop.model';
+import { workShoForm, WorkShopModel } from '../models/workshop.model';
 import { FormGroup } from '@angular/forms';
 
 @Injectable({
@@ -1356,22 +1356,19 @@ export class QualityService {
   }
 
   updateWorkShop(
-    form: FormGroup,
-    // user:User,
+    id:string,
     taller: WorkShopModel
 
   ):Observable<firebase.default.firestore.WriteBatch> {
     const batch = this.afs.firestore.batch();
     const qualityWorkShopDocRef = this.afs.firestore
-    .collection(`db/generalConfigQuality/qualityWorkShop`)
+    .collection(`db/generalConfigQuality/qualityWorkShop${id}`)
     .doc();
-    const editData: WorkShopModel = {
+    const editData: workShoForm = {
       id: qualityWorkShopDocRef.id,
-      createdBy: taller.createdBy,
-      editedAt: new Date,
-      createdAt: taller.createdAt,
-      workShopName: form.get('workShopName').value,
-      workShopProgressName: [],
+      taller:taller.workShopName,
+      createdBy: null,
+      createdAt: taller.createdAt
 
     };
 
