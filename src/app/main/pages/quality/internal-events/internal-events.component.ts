@@ -18,7 +18,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddWorkshopComponent } from './dialogs/add-workshop/add-workshop.component';
 import { AddComponentComponent } from './dialogs/add-component/add-component.component';
 import { Router } from '@angular/router';
-import { WorkShopModel } from '../../../../main/models/workshop.model';
+import { WorkshopModel } from '../../../../main/models/workshop.model';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 @Component({
@@ -78,15 +78,15 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
   // filteredOptionsWorkShop$: Observable<string[]>;
   // filteredOptionsWorkShopProgress$: Observable<string[]>;
 
-  workShopName = new FormControl(null);
-  workShopProgress = new FormControl(null);
+  workshopName = new FormControl(null);
+  workshopProcess = new FormControl(null);
 
 
-  filteredOptionsWorkShopName$: Observable<WorkShopModel[]>;
-  optionsWorkShopName: WorkShopModel[] = [];
+  filteredOptionsWorkshopName$: Observable<WorkshopModel[]>;
+  optionsWorkshopName: WorkshopModel[] = [];
 
-  filteredOptionsWorkShopProgress$: Observable<string[]>;
-  optionsWorkShopProgress: string[] = [];
+  filteredOptionsWorkshopProcess$: Observable<string[]>;
+  optionsWorkshopProcess: string[] = [];
 
   constructor(
     private breakpoint: BreakpointObserver,
@@ -105,15 +105,15 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initFormInternal();
     this.subscription.add(
-      this.qualityService.getAllQualityInternalWorkShop().pipe(
+      this.qualityService.getAllQualityInternalWorkshop().pipe(
       ).subscribe(resp => {
-        this.optionsWorkShopName = resp;
+        this.optionsWorkshopName = resp;
         console.log(resp)
-        this.filteredOptionsWorkShopName$ = this.workShopName.valueChanges
+        this.filteredOptionsWorkshopName$ = this.workshopName.valueChanges
           .pipe(
             startWith(''),
             map(value => typeof value === 'string' ? value : value.name),
-            map(name => name ? this._filterWorkShopName(name) : this.optionsWorkShopName.slice())
+            map(name => name ? this._filterWorkshopName(name) : this.optionsWorkshopName.slice())
           );
       })
     );
@@ -183,41 +183,41 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
   setFields(event: boolean): void {
     this.allCompleteField = !this.allCompleteField;
     if (event) {
-      this.workShopName = new FormControl(null, Validators.required);
-      this.workShopProgress = new FormControl(null, Validators.required);
-      this.workShopName.markAllAsTouched();
-      this.workShopProgress.markAllAsTouched();
+      this.workshopName = new FormControl(null, Validators.required);
+      this.workshopProcess = new FormControl(null, Validators.required);
+      this.workshopName.markAllAsTouched();
+      this.workshopProcess.markAllAsTouched();
     } else {
-      this.workShopName = new FormControl(null);
-      this.workShopProgress = new FormControl(null);
+      this.workshopName = new FormControl(null);
+      this.workshopProcess = new FormControl(null);
     }
   }
 
   
 
-  private _filterWorkShopName(workShopName: string): WorkShopModel[] {
-    const filterValue = workShopName.toLowerCase();
-    return this.optionsWorkShopName.filter(option => option.workShopName.toLowerCase().indexOf(filterValue) === 0);
+  private _filterWorkshopName(workshopName: string): WorkshopModel[] {
+    const filterValue = workshopName.toLowerCase();
+    return this.optionsWorkshopName.filter(option => option.workshopName.toLowerCase().indexOf(filterValue) === 0);
   }
 
-  private _filterWorkShopProgress(value: string): string[] {
+  private _filterWorkshopProcess(value: string): string[] {
     const filterValue = value.toLowerCase();
 
-    return this.optionsWorkShopProgress.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
+    return this.optionsWorkshopProcess.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
   }
 
-  displayFn(workShop: WorkShopModel): string {
-    return workShop && workShop.workShopName ? workShop.workShopName : '';
+  displayFn(workshop: WorkshopModel): string {
+    return workshop && workshop.workshopName ? workshop.workshopName : '';
   }
 
-  setSelectedArea(event: MatAutocompleteSelectedEvent): void {
-    const { workShopProgressName } = event.option.value;
-    this.optionsWorkShopProgress = [...workShopProgressName];
+  setSelectedWorkshop(event: MatAutocompleteSelectedEvent): void {
+    const { workshopProcessName } = event.option.value;
+    this.optionsWorkshopProcess = [...workshopProcessName];
 
-    this.filteredOptionsWorkShopProgress$ = this.workShopProgress.valueChanges
+    this.filteredOptionsWorkshopProcess$ = this.workshopProcess.valueChanges
       .pipe(
         startWith(''),
-        map(value => this._filterWorkShopProgress(value))
+        map(value => this._filterWorkshopProcess(value))
       );
   }
 
@@ -308,8 +308,8 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
             this.imagesGeneral,
             this.imagesDetail,
             this.dataFiles,
-            this.workShopName.value,
-            this.workShopProgress.value
+            this.workshopName.value,
+            this.workshopProcess.value
           )
           .pipe(take(1))
           .subscribe((res) => {

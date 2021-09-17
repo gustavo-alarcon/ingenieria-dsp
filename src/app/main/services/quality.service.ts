@@ -1,8 +1,8 @@
-import { Injectable, Component } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { from, Observable, of } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 import {
   QualityTimer,
   QualityListSpecialist,
@@ -14,11 +14,10 @@ import {
 import { User } from '../models/user-model';
 import * as firebase from 'firebase/app';
 import { EvaluationsUser } from '../models/evaluations.model';
-import { logging } from 'protractor';
 import { Quality, MiningOperation } from '../models/quality.model';
 import jsPDF from 'jspdf';
 import { saveAs } from 'file-saver';
-import { WorkShopModel } from '../models/workshop.model';
+import { WorkshopModel } from '../models/workshop.model';
 import { FormGroup } from '@angular/forms';
 
 @Injectable({
@@ -1301,46 +1300,46 @@ export class QualityService {
     return { year, month, day, hours, minutes }
   }
 
-  getAllQualityInternalWorkShop(): Observable<WorkShopModel[]> {
+  getAllQualityInternalWorkshop(): Observable<WorkshopModel[]> {
 
     return this.afs
-      .collection<WorkShopModel>(
-        `db/generalConfigQuality/qualityWorkShop`,
+      .collection<WorkshopModel>(
+        `db/generalConfigQuality/qualityWorkshop`,
         (ref) => ref.orderBy('createdAt', 'asc')
       )
       .valueChanges();
   }
 
-  addQualityInternalWorkShop(
+  addQualityInternalWorkshop(
     form: FormGroup,
     user: User,
-    arrayWorkShopProgressName: string[],
+    arrayWorkshopProcessName: string[],
   ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
     // create reference for document in evaluation entries collection
-    const qualityWorkShopDocRef = this.afs.firestore
-      .collection(`db/generalConfigQuality/qualityWorkShop`)
+    const qualityWorkshopDocRef = this.afs.firestore
+      .collection(`db/generalConfigQuality/qualityWorkshop`)
       .doc();
 
     // Structuring the data model
-    const data: WorkShopModel = {
-      id: qualityWorkShopDocRef.id,
+    const data: WorkshopModel = {
+      id: qualityWorkshopDocRef.id,
       createdBy: user,
       editedAt: null,
       createdAt: new Date(),
-      workShopName: form.get('workShopName').value,
-      workShopProgressName: [],
+      workshopName: form.get('workshopName').value,
+      workshopProcessName: [],
 
     };
-    batch.set(qualityWorkShopDocRef, data);
+    batch.set(qualityWorkshopDocRef, data);
 
-    arrayWorkShopProgressName.forEach(el => {
-      const workShopProgressNameDocRef = this.afs.firestore.doc(`db/generalConfigQuality/qualityWorkShop/${qualityWorkShopDocRef.id}`);
+    arrayWorkshopProcessName.forEach(el => {
+      const workshopProcessNameDocRef = this.afs.firestore.doc(`db/generalConfigQuality/qualityWorkshop/${qualityWorkshopDocRef.id}`);
       const data1 = {
-        workShopProgressName: firebase.default.firestore.FieldValue.arrayUnion(el)
+        workShopProcessName: firebase.default.firestore.FieldValue.arrayUnion(el)
       };
-      batch.update(workShopProgressNameDocRef, data1);
+      batch.update(workshopProcessNameDocRef, data1);
     });
 
     return of(batch);

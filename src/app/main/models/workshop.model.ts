@@ -1,11 +1,11 @@
 import { User } from "./user-model";
 
-export interface WorkShopModel {
-    workShopName: string;
+export interface WorkshopModel {
+    workshopName: string;
     createdAt: Date;
     editedAt: Date;
     id: string;
-    workShopProgressName: string[];
+    workshopProcessName: string[];
     createdBy?: User;
     updatedBy?: User;
 

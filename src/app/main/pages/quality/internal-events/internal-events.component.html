@@ -110,15 +110,15 @@
                         [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'"
                         appearance="outline">
                         <mat-label>¿En que taller se detecto el problema?</mat-label>
-                        <input autocomplete="off" type="text" matInput [formControl]="workShopName"
+                        <input autocomplete="off" type="text" matInput [formControl]="workshopName"
                             [matAutocomplete]="auto1">
                         <mat-autocomplete #auto1="matAutocomplete" [displayWith]="displayFn" autoActiveFirstOption
                             (optionSelected)="setSelectedArea($event)">
-                            <mat-option *ngFor="let option of filteredOptionsWorkShopName$ | async" [value]="option">
-                                {{option.workShopName}}
+                            <mat-option *ngFor="let option of filteredOptionsWorkshopName$ | async" [value]="option">
+                                {{option.workshopName}}
                             </mat-option>
                         </mat-autocomplete>
-                        <mat-error *ngIf="workShopName.hasError('required') && workShopName.touched">
+                        <mat-error *ngIf="workshopName.hasError('required') && workshopName.touched">
                             Campo <strong>requerido.</strong>
                         </mat-error>
 
@@ -128,15 +128,15 @@
                         [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'"
                         appearance="outline">
                         <mat-label>¿En que proceso se detecto este evento?</mat-label>
-                        <input autocomplete="off" type="text" matInput [formControl]="workShopProgress"
+                        <input autocomplete="off" type="text" matInput [formControl]="workshopProcess"
                             [matAutocomplete]="auto2">
                         <mat-autocomplete #auto2="matAutocomplete" autoActiveFirstOption>
-                            <mat-option *ngFor="let option of  filteredOptionsWorkShopProgress$ | async"
+                            <mat-option *ngFor="let option of  filteredOptionsWorkshopProcess$ | async"
                                 [value]="option">
                                 {{option}}
                             </mat-option>
                         </mat-autocomplete>
-                        <mat-error *ngIf="workShopProgress.hasError('required') && workShopProgress.touched">
+                        <mat-error *ngIf="workshopProcess.hasError('required') && workshopProcess.touched">
                             Campo <strong>requerido.</strong>
                         </mat-error>
 
@@ -207,7 +207,7 @@
                         ADJUNTAR
                     </button>
                 </div>
-                <button aria-label="add" mat-button class="container-form__btn-save" [disabled]='internalForm.invalid || workShopName.invalid || workShopProgress.invalid'
+                <button aria-label="add" mat-button class="container-form__btn-save" [disabled]='internalForm.invalid || workshopName.invalid || workshopProcess.invalid'
                     (click)="save()">
                     GUARDAR
                 </button>
