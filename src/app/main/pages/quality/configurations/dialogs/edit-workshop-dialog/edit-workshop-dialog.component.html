@@ -1,0 +1,40 @@
+<h2 mat-dialog-title>
+    <div class="container-header">
+        <div class="container-title">
+            <mat-icon class="icon">edit</mat-icon>
+            <h3 class="title">
+                Editar
+            </h3>
+        </div>
+        <button mat-icon-button mat-dialog-close>
+            <mat-icon style="color: gray;">close</mat-icon>
+        </button>
+    </div>
+    <mat-divider></mat-divider>
+</h2>
+
+<mat-dialog-content>
+    <form [formGroup]="editFormGroup">
+        <mat-form-field>
+            <mat-label>Taller</mat-label>
+            <input matInput type="text" formControlName="workshopName" />
+
+        </mat-form-field>
+
+        <mat-card-content>
+            <mat-label></mat-label>
+            <div class="item-list" *ngFor="let item of process">
+                <ul>
+                    <li>
+                        <span formControlName="workshopProcessName">{{item}}</span>
+                    </li>
+                </ul>
+
+            </div>
+        </mat-card-content>
+    </form>
+</mat-dialog-content>
+
+<button (click)="saveChanges()" type="submit" mat-raised-button color="primary">
+GUARDAR
+</button>

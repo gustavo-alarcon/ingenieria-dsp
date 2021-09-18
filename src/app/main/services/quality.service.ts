@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -18,7 +18,7 @@ import { EvaluationsUser } from '../models/evaluations.model';
 import { Quality, MiningOperation } from '../models/quality.model';
 import jsPDF from 'jspdf';
 import { saveAs } from 'file-saver';
-import { WorkshopModel } from '../models/workshop.model';
+import { workshopForm, WorkshopModel } from '../models/workshop.model';
 import { FormGroup } from '@angular/forms';
 
 @Injectable({
@@ -296,6 +296,38 @@ export class QualityService {
         console.log(error);
       });
   }
+
+  deleteWorkshop(
+    id:string,
+   ):Observable<firebase.default.firestore.WriteBatch> {
+    
+      const batch = this.afs.firestore.batch();
+      const workshopDoc = this.afs.firestore.doc(
+       `db/generalConfigQuality/qualityWorkshop/${id}`
+      )
+      
+      batch.delete(workshopDoc);
+     return of(batch);
+   }
+
+   updateWorkShop(
+    id:string,
+    form: workshopForm,
+   ):Observable<firebase.default.firestore.WriteBatch>{
+    const batch = this.afs.firestore.batch();
+    const docRef: DocumentReference = this.afs.firestore
+    .doc(`db/generalConfigQuality/qualityWorkshop/${id}`);
+      
+    const data: any = {
+      id: docRef.id,
+      workshopName:form.workshopName,
+      workshopProcessName:form.workshopProcessName
+
+    
+    };
+    batch.update(docRef, data)
+    return of(batch)
+   }
 
   // get all QualityListResponsibleArea
   getAllQualityListResponsibleAreas(): Observable<
