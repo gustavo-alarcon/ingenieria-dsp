@@ -40,7 +40,7 @@ export class EditWorkshopDialogComponent implements OnInit {
   initForm(){
     this.editFormGroup = this.fb.group({
       workshopName:[this.data.workshopName ? this.data.workshopName:''],
-      workshopProcessName: [this.data.workshopProcessName ? this.data.workshopProcessName:'']
+      workshopProcessName: [this.data.workshopProcessName ? this.data.workshopProcessName  :'']
     })
     
   
@@ -49,7 +49,7 @@ export class EditWorkshopDialogComponent implements OnInit {
   deleteProcess(index:number): void{
     // this.loading.next(false)
 
-    this.data.workshopProcessName.splice(1, index)
+    this.data.workshopProcessName.splice(index,1)
   }
 
   saveChanges(){
