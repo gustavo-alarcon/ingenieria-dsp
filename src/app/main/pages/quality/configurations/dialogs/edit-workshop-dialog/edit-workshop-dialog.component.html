@@ -22,11 +22,14 @@
         </mat-form-field>
 
         <mat-card-content>
-            <mat-label></mat-label>
-            <div class="item-list" *ngFor="let item of process">
+
+            <div class="item-list" *ngFor="let item of process; let i = index" formControlName="workshopProcessName">
                 <ul>
                     <li>
-                        <span formControlName="workshopProcessName">{{item}}</span>
+                        <span>{{item}}</span>
+                        <button mat-icon-button aria-label="deletelistResult" class="container-diffusion__btn" (click)="deleteProcess (i)">
+                            <mat-icon style="color: #ff2d2d">delete</mat-icon>
+                          </button>
                     </li>
                 </ul>
 

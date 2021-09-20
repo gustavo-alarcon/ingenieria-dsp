@@ -12,6 +12,6 @@ export interface WorkshopModel {
 }
 
 export interface workshopForm {
-    workshopName: WorkshopModel,
+    workshopName: string,
     workshopProcessName: string[]
 }

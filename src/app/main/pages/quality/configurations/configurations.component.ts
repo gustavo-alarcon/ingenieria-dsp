@@ -30,6 +30,7 @@ import { WorkshopModel } from 'src/app/main/models/workshop.model';
 import { DeleteWorkshopDialogComponent } from './dialogs/delete-workshop-dialog/delete-workshop-dialog.component';
 import { EditDialogComponent } from '../analysis/results/dialogs/edit-dialog/edit-dialog.component';
 import { EditWorkshopDialogComponent } from './dialogs/edit-workshop-dialog/edit-workshop-dialog.component';
+import { workshopForm } from '../../../models/workshop.model';
 
 @Component({
   selector: 'app-configurations',
@@ -1063,7 +1064,7 @@ export class ConfigurationsComponent implements OnInit {
   }
 
   editWorkshop(
-    workshop : WorkshopModel
+    workshop : workshopForm
    ): void {
 
 

@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject } from 'rxjs';
-import { WorkshopModel } from 'src/app/main/models/workshop.model';
+import { workshopForm, WorkshopModel } from 'src/app/main/models/workshop.model';
 import { QualityService } from 'src/app/main/services/quality.service';
 
 @Component({
@@ -21,6 +21,7 @@ export class EditWorkshopDialogComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: WorkshopModel,
+    @Inject(MAT_DIALOG_DATA) public data1: workshopForm,
     private qualityService: QualityService,
     private snackbar: MatSnackBar,
     private dialog: MatDialog
@@ -31,14 +32,24 @@ export class EditWorkshopDialogComponent implements OnInit {
   ngOnInit(): void {
     this.initForm();
     console.log(this.data)
+    this.process = this.data.workshopProcessName
+    
+
   }
 
   initForm(){
     this.editFormGroup = this.fb.group({
       workshopName:[this.data.workshopName ? this.data.workshopName:''],
-      workshopProcessName: this.fb.array([])
+      workshopProcessName: [this.data.workshopProcessName ? this.data.workshopProcessName:'']
     })
-    this.process = this.data.workshopProcessName
+    
+  
+  }
+
+  deleteProcess(index:number): void{
+    // this.loading.next(false)
+
+    this.data.workshopProcessName.splice(1, index)
   }
 
   saveChanges(){
