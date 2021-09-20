@@ -95,7 +95,6 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initForm();
-
     if (this.data.evaluationAnalisis) {
       this.resultAnalysis = this.data.evaluationAnalisis;
     }
