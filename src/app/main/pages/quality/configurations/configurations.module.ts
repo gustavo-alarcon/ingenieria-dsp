@@ -8,10 +8,11 @@ import { DeleteBroadcastDialogComponent } from './dialogs/delete-broadcast-dialo
 import { AddBroadcastDialogComponent } from './dialogs/add-broadcast-dialog/add-broadcast-dialog.component';
 import { DeleteWorkshopDialogComponent } from './dialogs/delete-workshop-dialog/delete-workshop-dialog.component';
 import { EditWorkshopDialogComponent } from './dialogs/edit-workshop-dialog/edit-workshop-dialog.component';
+import { DeleteProcessDialogComponent } from './dialogs/edit-workshop-dialog/delete-process-dialog/delete-process-dialog.component';
 
 
 @NgModule({
-  declarations: [ConfigurationsComponent, DeleteBroadcastDialogComponent, AddBroadcastDialogComponent, DeleteWorkshopDialogComponent, EditWorkshopDialogComponent],
+  declarations: [ConfigurationsComponent, DeleteBroadcastDialogComponent, AddBroadcastDialogComponent, DeleteWorkshopDialogComponent, EditWorkshopDialogComponent, DeleteProcessDialogComponent],
   imports: [
     CommonModule,
     ConfigurationsRoutingModule,

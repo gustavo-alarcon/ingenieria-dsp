@@ -6,35 +6,56 @@
     display: inline-flex;
 }
 
-.container-title{
+.container-title {
     display: flex;
     flex-direction: row;
     align-content: space-between;
 }
 
-.container-diffusion{
+.container-diffusion {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
-
-    &__title{
+    &__title {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        &--name{
-            font-size: 18px; 
-            margin-top: 10px; 
+        &--name {
+            font-size: 18px;
+            margin-top: 10px;
             margin-left: 0;
             padding-left: 0;
             margin-right: 30px;
         }
-        .mat-icon{
+        .mat-icon {
             width: 30px;
             height: 30px;
             font-size: 30px;
         }
     }
-    
 }
+
+.container-diffusion {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    &__title {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        &--name {
+            font-size: 18px;
+            margin-top: 10px;
+            margin-left: 0;
+            padding-left: 0;
+            margin-right: 30px;
+        }
+        .mat-icon {
+            width: 30px;
+            height: 30px;
+            font-size: 30px;
+        }
+    }
+}
+
 .container-settings {
     margin-top: 20px;
     &__header-title {
@@ -50,11 +71,8 @@
         color: #000000;
         margin-left: 3.8%;
     }
-
-
-    &__body{
+    &__body {
         display: flex;
-        
     }
     &__color-expantion {
         background: #ffffff;
@@ -112,10 +130,10 @@
     }
 }
 
-.header-list{
+.header-list {
     display: block;
-    &__title{
-        display: flex; 
+    &__title {
+        display: flex;
         justify-content: space-between;
     }
 }
@@ -124,6 +142,12 @@
     margin-top: 30px;
     overflow: auto;
     margin-left: 80px;
+}
+
+.table__taller {
+    margin-top: 30px;
+    overflow: auto;
+    margin-left: 40px;
 }
 
 table {
@@ -146,18 +170,17 @@ table {
 .container-expansion2 {
     display: flex;
     flex-direction: row;
-   
-    &__form{
-       display: flex;
+    &__form {
+        display: flex;
         flex-direction: column;
         justify-content: center;
         margin-bottom: 30px;
-        &--input{
+        &--input {
             width: 300px;
             margin-left: 20px;
             margin-bottom: 10px;
         }
-        &--btn{
+        &--btn {
             max-width: 150px;
             margin-left: 90px;
             background: #6200ee;
@@ -165,7 +188,6 @@ table {
             margin-top: 20px;
         }
     }
-
     &__content-card {
         margin-right: 20px;
         width: 400px;
@@ -193,6 +215,7 @@ table {
     box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
 }
+
 .item-list {
     width: 100%;
     display: flex;
@@ -206,29 +229,26 @@ table {
     font-size: 12px;
     line-height: 15px;
     /* or 200% */
-
     letter-spacing: 0.5px;
-
     color: #828282;
 }
 
-.container-form{
-    &__form-array{
-        &--inputs
-        {
-        width: 200px;
-        margin-left: 20px;
-        margin-right: 25px;
+.container-form {
+    &__form-array {
+        &--inputs {
+            width: 200px;
+            margin-left: 20px;
+            margin-right: 25px;
         }
     }
-    &__btn-add{
+    &__btn-add {
         margin: 20px;
         border: 1px #6200ee solid;
         background: white;
         color: #6200ee;
         padding: 0px 30px 0px 30px;
     }
-    &__btn-save{
+    &__btn-save {
         margin-left: 400px;
         margin-top: 10px;
         border: 1px #6200ee solid;
@@ -236,21 +256,22 @@ table {
         color: white;
         padding: 0px 30px 0px 30px;
     }
-
 }
+
 mat-accordion .mat-expansion-panel {
     border-top-right-radius: 10px;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
 }
-    
+
 .mat-expansion-panel-header:not([aria-disabled="true"]) {
     margin-bottom: 4px;
     box-sizing: border-box;
     box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
 }
+
 
 /* 
 ##Dispositivo = Tablets de baja resolucion y telefnos Mobiles (horizontal)
@@ -259,20 +280,18 @@ mat-accordion .mat-expansion-panel {
 
 @media (min-width: 481px) and (max-width: 767px) {
     .container-settings {
-        margin-top: 20px;       
-    
-        &__body{
-            display: flex;    
-            flex-direction: column;                    
+        margin-top: 20px;
+        &__body {
+            display: flex;
+            flex-direction: column;
         }
-        &__btn-save{
+        &__btn-save {
             margin-top: 20px;
         }
     }
-    .expansion1{
+    .expansion1 {
         width: 50%;
-
-        &__content-card{
+        &__content-card {
             margin-top: 10px;
         }
         &__content-card {
@@ -294,7 +313,7 @@ mat-accordion .mat-expansion-panel {
             margin-bottom: 20px;
         }
     }
-    .form-bahia{
+    .form-bahia {
         margin-top: 30px;
     }
     .item-list {
@@ -310,51 +329,43 @@ mat-accordion .mat-expansion-panel {
         font-size: 12px;
         line-height: 15px;
         /* or 200% */
-    
         letter-spacing: 0.5px;
-    
         color: #828282;
     }
-    .container-form{
-        &__form-array{
-            &--inputs
-            {
-            width: 200px;
-            margin-left: 20px;
-            margin-right: 25px;
+    .container-form {
+        &__form-array {
+            &--inputs {
+                width: 200px;
+                margin-left: 20px;
+                margin-right: 25px;
             }
         }
-        &__btn-add{
-         margin: 20px;
+        &__btn-add {
+            margin: 20px;
         }
-        &__btn-save{
+        &__btn-save {
             margin-left: 400px;
             margin-top: 10px;
-    
         }
-    
     }
-
-    .container-form{
-        &__form-array{
-            &--inputs
-            {
-            width: 200px;
-            margin-left: 20px;
-            margin-right: 25px;
+    .container-form {
+        &__form-array {
+            &--inputs {
+                width: 200px;
+                margin-left: 20px;
+                margin-right: 25px;
             }
         }
-        &__btn-add{
-         margin: 20px;
+        &__btn-add {
+            margin: 20px;
         }
-        &__btn-save{
+        &__btn-save {
             margin-left: 200px;
             margin-top: 10px;
-    
         }
-    
     }
 }
+
 
 /* 
     ##Dispositivo = Mayoria de telefonos moviles (vertical)
@@ -362,15 +373,13 @@ mat-accordion .mat-expansion-panel {
   */
 
 @media (min-width: 320px) and (max-width: 480px) {
-    
     .container-settings {
-        margin-top: 20px;       
-    
-        &__body{
-            display: flex;    
-            flex-direction: column;                    
+        margin-top: 20px;
+        &__body {
+            display: flex;
+            flex-direction: column;
         }
-        &__btn-save{
+        &__btn-save {
             margin-top: 20px;
         }
     }
@@ -403,8 +412,7 @@ mat-accordion .mat-expansion-panel {
             margin-bottom: 20px;
         }
     }
-
-    .form-bahia{
+    .form-bahia {
         margin-top: 30px;
     }
     .item-list {
@@ -420,40 +428,29 @@ mat-accordion .mat-expansion-panel {
         font-size: 12px;
         line-height: 15px;
         /* or 200% */
-    
         letter-spacing: 0.5px;
-    
         color: #828282;
     }
-
-    .btn-delete{
+    .btn-delete {
         margin-top: 0px;
         margin-left: 30px;
         margin-bottom: 50px;
         padding-top: 0px;
     }
-
-    .container-form{
-        &__form-array{
-            &--inputs
-            {
-            width: 200px;
-            margin-left: 20px;
-            margin-right: 25px;
+    .container-form {
+        &__form-array {
+            &--inputs {
+                width: 200px;
+                margin-left: 20px;
+                margin-right: 25px;
             }
         }
-        &__btn-add{
-         margin: 20px;
+        &__btn-add {
+            margin: 20px;
         }
-        &__btn-save{
+        &__btn-save {
             margin-left: 100px;
             margin-top: 10px;
-    
         }
-    
     }
-
-    
 }
-
-

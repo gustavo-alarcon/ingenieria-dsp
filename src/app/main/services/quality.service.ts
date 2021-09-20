@@ -20,6 +20,7 @@ import jsPDF from 'jspdf';
 import { saveAs } from 'file-saver';
 import { workshopForm, WorkshopModel } from '../models/workshop.model';
 import { FormGroup } from '@angular/forms';
+import { off } from 'process';
 
 @Injectable({
   providedIn: 'root',
@@ -313,17 +314,31 @@ export class QualityService {
    updateWorkShop(
     id:string,
     form: workshopForm,
+    arrayProcess: string[]
    ):Observable<firebase.default.firestore.WriteBatch>{
     const batch = this.afs.firestore.batch();
     const docRef: DocumentReference = this.afs.firestore
     .doc(`db/generalConfigQuality/qualityWorkshop/${id}`);
-      
+    
+   
     const data: any = {
       id: docRef.id,
       workshopName:form.workshopName,
-      workshopProcessName:form.workshopProcessName
-
+      workshopProcessName:arrayProcess,
     
+    };
+    batch.update(docRef, data)
+    return of(batch)
+   }
+
+   updateWorkshopProcess( workshop: WorkshopModel):Observable<firebase.default.firestore.WriteBatch>{
+    const batch = this.afs.firestore.batch();
+    const docRef: DocumentReference = this.afs.firestore
+    .doc(`db/generalConfigQuality/qualityWorkshop/${workshop.id}`);
+    
+   
+    const data: any = {
+      workshopProcessName:workshop.workshopProcessName,
     };
     batch.update(docRef, data)
     return of(batch)
