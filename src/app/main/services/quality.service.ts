@@ -92,20 +92,12 @@ export class QualityService {
       question2: null,
       question3: null,
       question4: null,
-      responsibleWorkshop: workshop ? workshop : null,
-      responsibleWorkshopProcess: workshopProcessName ? workshopProcessName : null,
+      reportingWorkshop: workshop ? workshop : null,
+      reportingWorkshopProcess: workshopProcessName ? workshopProcessName : null,
     };
     
     batch.set(qualityDocRef, data);
-    /* 
-        emailList.forEach(el => {
-          const qualityEmailDocRef = this.afs.firestore.doc(`db/ferreyros/quality/${quality.id}`);
-          const data1: any = {
-            emailList: firebase.default.firestore.FieldValue.arrayUnion(el)
-          };
-          batch.update(qualityEmailDocRef, data1);
-        });
-     */
+
     return of(batch);
   }
 
@@ -154,7 +146,7 @@ export class QualityService {
       specialist: null,
       partNumber: form.nPart,
       workShop: null,
-      responsibleWorkshop: form.workshopName,
+      reportingWorkshop: form.workshopName,
       enventDetail: null,
       packageNumber: form.nPackage,
       componentHourMeter: form.componentHourMeter,

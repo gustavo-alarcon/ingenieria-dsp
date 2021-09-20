@@ -50,9 +50,9 @@ export interface Quality {
   component?: string;
   specialist?: string;
   partNumber?: number;
-  workShop?: string;
-  responsibleWorkshop?: WorkshopModel;
-  responsibleWorkshopProcess?: string;
+  workShop?: string; //responsible workshop
+  reportingWorkshop?: WorkshopModel;
+  reportingWorkshopProcess?: string;
   enventDetail?: string;
   packageNumber?: string;
   componentHourMeter?: string;

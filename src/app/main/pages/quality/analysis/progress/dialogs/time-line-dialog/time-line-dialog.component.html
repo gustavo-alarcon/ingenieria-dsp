@@ -16,14 +16,14 @@
     <mat-dialog-content class="timer" >       
         
         <div class="timer__details">
-            <p><span style="font-weight: bold;"> OT Actual :</span> {{data.workOrder ? data.workOrder : ''}}</p>
-            <p><span style="font-weight: bold;"> Componente :</span> {{data.component ? data.component : ''}}</p>
-            <p><span style="font-weight: bold;"> Número de paqueteo :</span> {{data.packageNumber ? data.packageNumber : ''}}</p>
-            <p><span style="font-weight: bold;"> Horómetro de componente :</span> {{data.componentHourMeter ? data.componentHourMeter : ''}}</p>
-            <p><span style="font-weight: bold;"> Número de parte :</span> {{data.partNumber ? data.partNumber : ''}}</p>
-            <p><span style="font-weight: bold;"> Tipo de evento :</span> {{data.eventType ? data.eventType : ''}} </p>
-            <p><span style="font-weight: bold;"> Taller que reporta :</span> {{data.responsibleWorkshop? data.responsibleWorkshop.workshopName : ''}}</p>
-            <p *ngIf="data.eventType==='Interno'"><span style="font-weight: bold;"> Proceso :</span> {{data.responsibleWorkshopProcess? data.responsibleWorkshopProcess : ''}}</p>
+            <p><span style="font-weight: bold;"> OT Actual :</span> {{data.workOrder ? data.workOrder : '---'}}</p>
+            <p><span style="font-weight: bold;"> Componente :</span> {{data.component ? data.component : '---'}}</p>
+            <p><span style="font-weight: bold;"> Número de paqueteo :</span> {{data.packageNumber ? data.packageNumber : '---'}}</p>
+            <p><span style="font-weight: bold;"> Horómetro de componente :</span> {{data.componentHourMeter ? data.componentHourMeter : '---'}}</p>
+            <p><span style="font-weight: bold;"> Número de parte :</span> {{data.partNumber ? data.partNumber : '---'}}</p>
+            <p><span style="font-weight: bold;"> Tipo de evento :</span> {{data.eventType ? data.eventType : '---'}} </p>
+            <p><span style="font-weight: bold;"> Taller que reporta :</span> {{data.reportingWorkshop? data.reportingWorkshop.workshopName : '---'}}</p>
+            <p *ngIf="data.eventType==='Interno'"><span style="font-weight: bold;"> Proceso :</span> {{data.reportingWorkshopProcess? data.reportingWorkshopProcess : '---'}}</p>
         </div>
 
         <div class="timer__time-line">

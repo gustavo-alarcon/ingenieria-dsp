@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject, Observable, combineLatest, Subscription } from 'rxjs';
-import { Quality } from '../../../../models/quality.model';
+import { Quality, WorkshopList } from '../../../../models/quality.model';
 import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { QualityService } from '../../../../services/quality.service';
@@ -26,11 +26,13 @@ export class ProgressComponent implements OnInit {
   loading$ = this.loading.asObservable();
 
   quality$: Observable<Quality[]>;
-  responsibleWorkshopList$: Observable<WorkshopModel[]>;
+  responsibleWorkshopList$: Observable<WorkshopList[]>;
+  reportingWorkshopList$: Observable<WorkshopModel[]>;
   dataQuality: Quality[] = [];
   counter: number;
   searchControl = new FormControl('');
   responsibleWorkshopControl = new FormControl('');
+  reportingWorkshopControl = new FormControl('');
   state = 'process';
 
   eventTypeControl = new FormControl('');
@@ -70,8 +72,10 @@ export class ProgressComponent implements OnInit {
         })
     );
 
-    this.responsibleWorkshopList$ =
+    this.reportingWorkshopList$ =
       this.qualityService.getAllQualityInternalWorkshop();
+
+    this.responsibleWorkshopList$ = this.qualityService.getAllWorkshopList();
 
     this.quality$ = combineLatest(
       this.qualityService.getAllQualityByState(this.state),
@@ -80,6 +84,7 @@ export class ProgressComponent implements OnInit {
         filter((input) => input !== null),
         startWith('')
       ),
+      this.reportingWorkshopControl.valueChanges.pipe(startWith('')),
       this.responsibleWorkshopControl.valueChanges.pipe(startWith('')),
       this.eventTypeControl.valueChanges.pipe(startWith('')),
       this.authService.getGeneralConfigQuality()
@@ -88,12 +93,14 @@ export class ProgressComponent implements OnInit {
         ([
           qualities,
           search,
+          reportingWorkshop,
           responsibleWorkshop,
           codeEventType,
           generalConfig,
         ]) => {
           const searchTerm = search.toLowerCase().trim();
           let preFilterEventType: Quality[] = [];
+          let preFilterReportingWorkshop: Quality[] = [];
           let preFilterResponsibleWorkshop: Quality[] = [];
           let preFilterSearch: Quality[] = [...qualities];
 
@@ -102,16 +109,22 @@ export class ProgressComponent implements OnInit {
             return quality.eventType === codeEventType;
           });
 
-          preFilterResponsibleWorkshop = preFilterEventType.filter(
+          preFilterReportingWorkshop = preFilterEventType.filter((quality) => {
+            if (reportingWorkshop === '') return true;
+            return quality.reportingWorkshop
+              ? quality.reportingWorkshop.workshopName ===
+                  reportingWorkshop['workshopName']
+              : false;
+          });
+
+          preFilterResponsibleWorkshop = preFilterReportingWorkshop.filter(
             (quality) => {
               if (responsibleWorkshop === '') return true;
-              return quality.responsibleWorkshop
-                ? quality.responsibleWorkshop.workshopName ===
-                    responsibleWorkshop['workshopName']
+              return quality.workShop
+                ? quality.workShop === responsibleWorkshop['name']
                 : false;
             }
           );
-
           preFilterSearch = preFilterResponsibleWorkshop.filter((quality) => {
             return (
               String(quality.workOrder).toLowerCase().includes(searchTerm) ||

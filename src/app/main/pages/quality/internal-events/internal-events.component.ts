@@ -71,11 +71,6 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
 
   allCompleteField: boolean = false;
 
-  // optionsWorkShop: string[] = [];
-  // optionsWorkShopProgress: string[] = [];
-  // filteredOptionsWorkShop$: Observable<string[]>;
-  // filteredOptionsWorkShopProgress$: Observable<string[]>;
-
   workshopName = new FormControl(null);
   workshopProcess = new FormControl(null);
 

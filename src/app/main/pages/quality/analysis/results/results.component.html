@@ -59,7 +59,7 @@
       matTooltip="Estados del evento"
       matTooltipPosition="above"
     >
-      <mat-icon matPrefix>location_on</mat-icon>
+      <mat-icon matPrefix>fact_check</mat-icon>
       <mat-select [formControl]="statusControl">
         <mat-option value="">Todos</mat-option>
         <mat-option *ngFor="let item of status" [value]="item.code">
@@ -79,15 +79,14 @@
       matTooltip="Taller que reporta"
       matTooltipPosition="above"
     >
-      <mat-label>Taller</mat-label>
-      <mat-icon matPrefix>home_repair_service</mat-icon>
-      <mat-select [formControl]="workShopControl">
+      <mat-icon matPrefix>report</mat-icon>
+      <mat-select [formControl]="reportingWorkshopControl">
         <mat-option value="">Todos</mat-option>
         <mat-option
-          *ngFor="let workshop of workshopList$ | async"
+          *ngFor="let workshop of reportingWorkshopList$ | async"
           [value]="workshop"
         >
-          {{ workshop.name }}
+          {{ workshop.workshopName }}
         </mat-option>
       </mat-select>
     </mat-form-field>
@@ -110,7 +109,7 @@
           *ngFor="let workshop of responsibleWorkshopList$ | async"
           [value]="workshop"
         >
-          {{ workshop.workshopName }}
+          {{ workshop.name }}
         </mat-option>
       </mat-select>
     </mat-form-field>

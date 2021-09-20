@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { Quality } from 'src/app/main/models/quality.model';
+import { Quality, WorkshopList } from 'src/app/main/models/quality.model';
 import { BehaviorSubject, Observable, Subscription, combineLatest } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
@@ -62,8 +62,9 @@ export class ResultsComponent implements OnInit {
   quality$: Observable<Quality[]>;
   quality: Quality[];
 
-  responsibleWorkshopList$: Observable<WorkshopModel[]>;
-  workshopList$: Observable<any[]>;
+  responsibleWorkshopList$: Observable<WorkshopList[]>;
+  reportingWorkshopList$: Observable<WorkshopModel[]>;
+  // workshopList$: Observable<any[]>;
 
   subscriptions = new Subscription();
   isMobile = false;
@@ -75,6 +76,7 @@ export class ResultsComponent implements OnInit {
   statusControl = new FormControl('');
   searchControl = new FormControl('');
   responsibleWorkshopControl = new FormControl('');
+  reportingWorkshopControl = new FormControl('');
 
   eventType = [
     {
@@ -152,14 +154,14 @@ export class ResultsComponent implements OnInit {
         })
     );
 
-    this.responsibleWorkshopList$ =
+    this.reportingWorkshopList$ =
       this.qualityService.getAllQualityInternalWorkshop();
 
-    this.workshopList$ = this.qualityService.getAllWorkshopList();
+    this.responsibleWorkshopList$ = this.qualityService.getAllWorkshopList();
 
     this.quality$ = combineLatest(
       this.qualityService.getAllQuality(),
-      this.workShopControl.valueChanges.pipe(startWith('')),
+      this.reportingWorkshopControl.valueChanges.pipe(startWith('')),
       this.responsibleWorkshopControl.valueChanges.pipe(startWith('')),
       this.statusControl.valueChanges.pipe(
         debounceTime(300),
@@ -188,7 +190,7 @@ export class ResultsComponent implements OnInit {
       map(
         ([
           qualities,
-          workshop,
+          reportingWorkshop,
           responsibleWorkshop,
           status,
           codeEventType,
@@ -202,6 +204,7 @@ export class ResultsComponent implements OnInit {
           let preFilterSearch: Quality[] = [...qualities];
           let preFilterEventType: Quality[] = [];
           let preFilterWorkShop: Quality[] = [];
+          let preFilterReportingWorkshop: Quality[] = [];
           let preFilterResponsibleWorkshop: Quality[] = [];
           let preFilterStatus: Quality[] = [];
 
@@ -215,18 +218,22 @@ export class ResultsComponent implements OnInit {
             return quality.state === status;
           });
 
-          preFilterWorkShop = preFilterStatus.filter((quality) => {
-            if (workshop === '') return true;
-            return quality.workShop === workshop['name'];
-          });
-
-          preFilterResponsibleWorkshop = preFilterWorkShop.filter((quality) => {
-            if (responsibleWorkshop === '') return true;
-            return quality.responsibleWorkshop
-              ? quality.responsibleWorkshop.workshopName ===
-                  responsibleWorkshop['workshopName']
+          preFilterReportingWorkshop = preFilterStatus.filter((quality) => {
+            if (reportingWorkshop === '') return true;
+            return quality.reportingWorkshop
+              ? quality.reportingWorkshop.workshopName ===
+                  reportingWorkshop['workshopName']
               : false;
           });
+
+          preFilterResponsibleWorkshop = preFilterReportingWorkshop.filter(
+            (quality) => {
+              if (responsibleWorkshop === '') return true;
+              return quality.workShop
+                ? quality.workShop === responsibleWorkshop['name']
+                : false;
+            }
+          );
 
           preFilterSearch = preFilterResponsibleWorkshop
             .filter((quality) => {
