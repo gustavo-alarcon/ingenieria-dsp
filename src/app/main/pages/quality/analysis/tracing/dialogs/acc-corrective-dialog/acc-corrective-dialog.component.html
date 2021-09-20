@@ -18,6 +18,8 @@
                 <p *ngIf="data.componentHourMeter"><span style="font-weight: bold;"> Horómetro de componente :</span> {{data.componentHourMeter ? data.componentHourMeter : ''}}</p>
                 <p><span style="font-weight: bold;"> Número de parte :</span> {{data.partNumber ? data.partNumber : ''}}</p>
                 <p><span style="font-weight: bold;"> Tipo de evento :</span> {{data.eventType ? data.eventType : ''}} </p>
+                <p><span style="font-weight: bold;"> Taller que reporta :</span> {{data.responsibleWorkshop? data.responsibleWorkshop.workshopName : ''}}</p>
+            <p *ngIf="data.eventType==='Interno'"><span style="font-weight: bold;"> Proceso :</span> {{data.responsibleWorkshopProcess? data.responsibleWorkshopProcess : ''}}</p>
                 <p *ngIf="data.miningOperation"><span style="font-weight: bold;"> Operacion minera :</span> {{data.miningOperation ? data.miningOperation : ''}} </p>
                 <p><span style="font-weight: bold;"> Fecha :</span> {{data.createdAt ? ((data.createdAt['seconds'] * 1000) | date : 'dd/MM/yy - hh:mm:ss'): ''}}
                 </p>
