@@ -21,6 +21,8 @@
             <p><span style="font-weight: bold;"> Horómetro de componente :</span> {{data.componentHourMeter ? data.componentHourMeter : ''}}</p>
             <p><span style="font-weight: bold;"> Número de parte :</span> {{data.partNumber ? data.partNumber : ''}}</p>
             <p><span style="font-weight: bold;"> Tipo de evento :</span> {{data.eventType ? data.eventType : ''}} </p>
+            <p><span style="font-weight: bold;"> Taller que reporta :</span> {{data.responsibleWorkshop? data.responsibleWorkshop.workshopName : ''}}</p>
+            <p *ngIf="data.eventType==='Interno'"><span style="font-weight: bold;"> Proceso :</span> {{data.responsibleWorkshopProcess? data.responsibleWorkshopProcess : ''}}</p>
         </div>
 
         <div class="timer__time-line">
