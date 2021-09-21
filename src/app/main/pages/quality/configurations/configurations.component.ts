@@ -320,7 +320,7 @@ export class ConfigurationsComponent implements OnInit {
     }
     const value = { ...this.workshopForm.value }
     
-    this.workshopProcessArray.push(value.workshopProcess);
+    this.workshopProcessArray.unshift(value.workshopProcess);
     this.resetWorkshopProcess();
   }
 
