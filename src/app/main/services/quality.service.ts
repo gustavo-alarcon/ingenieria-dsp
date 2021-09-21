@@ -11,6 +11,7 @@ import {
   CauseFailureList,
   WorkshopList,
   ComponentList,
+  ProcessList,
 } from '../models/quality.model';
 import { User } from '../models/user-model';
 import * as firebase from 'firebase/app';
@@ -28,7 +29,7 @@ export class QualityService {
   constructor(
     private afs: AngularFirestore,
     private storage: AngularFireStorage
-  ) {}
+  ) { }
 
   /**
    * add internal events entry
@@ -95,7 +96,7 @@ export class QualityService {
       responsibleWorkshop: workshop ? workshop : null,
       responsibleWorkshopProcess: workshopProcessName ? workshopProcessName : null,
     };
-    
+
     batch.set(qualityDocRef, data);
     /* 
         emailList.forEach(el => {
@@ -299,7 +300,7 @@ export class QualityService {
       .collection(`/db/generalConfig/qualityListSpecialist`)
       .doc(id)
       .delete()
-      .then(() => {})
+      .then(() => { })
       .catch((error) => {
         console.log(error);
       });
@@ -526,6 +527,60 @@ export class QualityService {
 
     return of(batch);
   }
+
+  addComponentListCauseFailureList(
+    listCompCauseFailed: Array<CauseFailureList>,
+    user: User
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    const date = firebase.default.firestore.FieldValue.serverTimestamp();
+    const batch: firebase.default.firestore.WriteBatch = this.afs.firestore.batch();
+
+    listCompCauseFailed.forEach(
+      (compCauseFailed: CauseFailureList) => {
+        const compCauseFailedRef = this.afs.firestore
+          .collection(`/db/generalConfigQuality/causeFailureList`)
+          .doc();
+
+        if (!compCauseFailed.id) {
+          batch.set(compCauseFailedRef, {
+            id: compCauseFailedRef.id,
+            name: compCauseFailed.name,
+            createdAt: date,
+            createdBy: user,
+          });
+        }
+      }
+    );
+
+    return of(batch);
+  }
+
+  addComponentListProcessList(
+    listCompProcess: Array<ProcessList>,
+    user: User
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    const date = firebase.default.firestore.FieldValue.serverTimestamp();
+    const batch: firebase.default.firestore.WriteBatch = this.afs.firestore.batch();
+
+    listCompProcess.forEach(
+      (compProcess: ProcessList) => {
+        const compProcessRef = this.afs.firestore
+          .collection(`/db/generalConfigQuality/processList`)
+          .doc();
+
+        if (!compProcess.id) {
+          batch.set(compProcessRef, {
+            id: compProcessRef.id,
+            name: compProcess.name,
+            createdAt: date,
+            createdBy: user,
+          });
+        }
+      }
+    );
+
+    return of(batch);
+  }
   // get all CauseFailureList
   getAllCauseFailureList(): Observable<CauseFailureList[]> {
     return this.afs
@@ -567,8 +622,8 @@ export class QualityService {
     listMining.forEach(
       (mining: WorkshopList) => {
         const miningDocumentRef = this.afs.firestore
-        .collection(`/db/generalConfigQuality/miningOperationList`)
-        .doc();
+          .collection(`/db/generalConfigQuality/miningOperationList`)
+          .doc();
 
         if (!mining.id) {
           batch.set(miningDocumentRef, {
@@ -619,7 +674,7 @@ export class QualityService {
     listWorkshop.forEach(
       (workshop: WorkshopList) => {
         const listWorkshopDocumentRef = this.afs.firestore
-        .collection(`/db/generalConfigQuality/workshopList`)
+          .collection(`/db/generalConfigQuality/workshopList`)
           .doc();
 
         if (!workshop.id) {
@@ -669,7 +724,7 @@ export class QualityService {
     listCompInternal.forEach(
       (compInternal: WorkshopList) => {
         const compInternalDocumentRef = this.afs.firestore
-        .collection(`/db/generalConfigQuality/componentListInternal`)
+          .collection(`/db/generalConfigQuality/componentListInternal`)
           .doc();
 
         if (!compInternal.id) {
@@ -719,8 +774,8 @@ export class QualityService {
     listCompExternal.forEach(
       (compExternal: WorkshopList) => {
         const compExtermalDocumentRef = this.afs.firestore
-        .collection(`/db/generalConfigQuality/componentListExternal`)
-        .doc();
+          .collection(`/db/generalConfigQuality/componentListExternal`)
+          .doc();
 
         if (!compExternal.id) {
           batch.set(compExtermalDocumentRef, {
@@ -1435,9 +1490,9 @@ export class QualityService {
     saveAs(
       blob,
       'Reporte_de_calidad_' +
-        data.workOrder +
-        '_' +
-        new Date().toLocaleDateString()
+      data.workOrder +
+      '_' +
+      new Date().toLocaleDateString()
     );
   }
 
