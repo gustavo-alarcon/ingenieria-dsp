@@ -4,7 +4,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
 import { debounceTime, filter, map, startWith, tap } from 'rxjs/operators';
-import { Quality } from 'src/app/main/models/quality.model';
+import { Quality, WorkshopList } from 'src/app/main/models/quality.model';
 import { QualityService } from 'src/app/main/services/quality.service';
 import { AuthService } from '../../../../../auth/services/auth.service';
 import { AccCorrectiveDialogComponent } from './dialogs/acc-corrective-dialog/acc-corrective-dialog.component';
@@ -26,12 +26,14 @@ export class TracingComponent implements OnInit, OnDestroy {
   loading$ = this.loading.asObservable();
 
   quality$: Observable<Quality[]>;
-  responsibleWorkshopList$: Observable<WorkshopModel[]>;
+  responsibleWorkshopList$: Observable<WorkshopList[]>;
+  reportingWorkshopList$: Observable<WorkshopModel[]>;
   responsibleAreaList$: Observable<any[]>;
   dataQuality: Quality[] = [];
   counter: number;
   searchControl = new FormControl('');
   responsibleWorkshopControl = new FormControl('');
+  reportingWorkshopControl = new FormControl('');
   responsibleAreaControl = new FormControl('');
   state = 'tracing';
 
@@ -74,8 +76,10 @@ export class TracingComponent implements OnInit, OnDestroy {
         })
     );
 
-    this.responsibleWorkshopList$ =
+    this.reportingWorkshopList$ =
       this.qualityService.getAllQualityInternalWorkshop();
+
+    this.responsibleWorkshopList$ = this.qualityService.getAllWorkshopList();
 
     this.responsibleAreaList$ =
       this.qualityService.getAllQualityListResponsibleAreas();
@@ -87,6 +91,7 @@ export class TracingComponent implements OnInit, OnDestroy {
         filter((input) => input !== null),
         startWith<any>('')
       ),
+      this.reportingWorkshopControl.valueChanges.pipe(startWith('')),
       this.responsibleWorkshopControl.valueChanges.pipe(startWith('')),
       this.responsibleAreaControl.valueChanges.pipe(startWith('')),
       this.eventTypeControl.valueChanges.pipe(startWith('')),
@@ -96,6 +101,7 @@ export class TracingComponent implements OnInit, OnDestroy {
         ([
           qualities,
           search,
+          reportingWorkshop,
           responsibleWorkshop,
           responsibleArea,
           codeEventType,
@@ -103,6 +109,7 @@ export class TracingComponent implements OnInit, OnDestroy {
         ]) => {
           const searchTerm = search.toLowerCase().trim();
           let preFilterEventType: Quality[] = [];
+          let preFilterReportingWorkshop: Quality[] = [];
           let preFilterResponsibleWorkshop: Quality[] = [];
           let preFilterResponsibleArea: Quality[] = [];
           let preFilterSearch: Quality[] = [...qualities];
@@ -112,12 +119,19 @@ export class TracingComponent implements OnInit, OnDestroy {
             return quality.eventType === codeEventType;
           });
 
-          preFilterResponsibleWorkshop = preFilterEventType.filter(
+          preFilterReportingWorkshop = preFilterEventType.filter((quality) => {
+            if (reportingWorkshop === '') return true;
+            return quality.reportingWorkshop
+              ? quality.reportingWorkshop.workshopName ===
+                  reportingWorkshop['workshopName']
+              : false;
+          });
+
+          preFilterResponsibleWorkshop = preFilterReportingWorkshop.filter(
             (quality) => {
               if (responsibleWorkshop === '') return true;
-              return quality.responsibleWorkshop
-                ? quality.responsibleWorkshop.workshopName ===
-                    responsibleWorkshop['workshopName']
+              return quality.workShop
+                ? quality.workShop === responsibleWorkshop['name']
                 : false;
             }
           );

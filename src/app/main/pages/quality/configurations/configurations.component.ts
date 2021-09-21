@@ -29,6 +29,10 @@ import { AddBroadcastDialogComponent } from './dialogs/add-broadcast-dialog/add-
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { WorkshopModel } from 'src/app/main/models/workshop.model';
+import { DeleteWorkshopDialogComponent } from './dialogs/delete-workshop-dialog/delete-workshop-dialog.component';
+import { EditDialogComponent } from '../analysis/results/dialogs/edit-dialog/edit-dialog.component';
+import { EditWorkshopDialogComponent } from './dialogs/edit-workshop-dialog/edit-workshop-dialog.component';
+import { workshopForm } from '../../../models/workshop.model';
 
 @Component({
   selector: 'app-configurations',
@@ -358,8 +362,8 @@ export class ConfigurationsComponent implements OnInit {
       return;
     }
     const value = { ...this.workshopForm.value }
-
-    this.workshopProcessArray.push(value.workshopProcess);
+    
+    this.workshopProcessArray.unshift(value.workshopProcess);
     this.resetWorkshopProcess();
   }
 
@@ -1299,6 +1303,30 @@ export class ConfigurationsComponent implements OnInit {
         break;
       }
     }
+  }
+
+  deleteWorkshop(
+    workshop : WorkshopModel
+  ){
+    this.dialog.open(DeleteWorkshopDialogComponent, {
+      maxWidth: 500,
+      width:'90vw',
+      data:workshop
+    })
+  }
+
+  editWorkshop(
+    workshop : workshopForm
+   ): void {
+
+
+      this.dialog.open(EditWorkshopDialogComponent,{
+        maxWidth: 500,
+        width:'90vw',
+        data:workshop
+      })
+     
+  
   }
 
 

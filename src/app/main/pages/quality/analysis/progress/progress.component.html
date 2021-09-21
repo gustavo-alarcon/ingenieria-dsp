@@ -28,6 +28,29 @@
           ? 'ms-kanban-toolbar__input--mobile'
           : 'ms-kanban-toolbar__input--desktop'
       "
+      matTooltip="Taller que reporta"
+      matTooltipPosition="above"
+    >
+      <mat-icon matPrefix>report</mat-icon>
+      <mat-select [formControl]="reportingWorkshopControl">
+        <mat-option value="">Todos</mat-option>
+        <mat-option
+          *ngFor="let workshop of reportingWorkshopList$ | async"
+          [value]="workshop"
+        >
+          {{ workshop.workshopName }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field
+      appearance="outline"
+      class="ms-kanban-toolbar__input"
+      [ngClass]="
+        isMobile
+          ? 'ms-kanban-toolbar__input--mobile'
+          : 'ms-kanban-toolbar__input--desktop'
+      "
       matTooltip="Taller responsable"
       matTooltipPosition="above"
     >
@@ -38,7 +61,7 @@
           *ngFor="let workshop of responsibleWorkshopList$ | async"
           [value]="workshop"
         >
-          {{ workshop.workshopName }}
+          {{ workshop.name }}
         </mat-option>
       </mat-select>
     </mat-form-field>

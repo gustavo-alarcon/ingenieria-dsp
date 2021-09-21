@@ -10,3 +10,8 @@ export interface WorkshopModel {
     updatedBy?: User;
 
 }
+
+export interface workshopForm {
+    workshopName: string,
+    workshopProcessName: string[]
+}

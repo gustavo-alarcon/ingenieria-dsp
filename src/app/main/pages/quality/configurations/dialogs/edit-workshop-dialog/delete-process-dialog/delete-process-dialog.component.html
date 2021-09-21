@@ -1,0 +1,25 @@
+<h2 mat-dialog-title>
+    <div class="container-header">
+        <div class="container-title">
+            <mat-icon class="icon">delete</mat-icon>
+            <h3 class="title">
+                Borrar
+            </h3>
+        </div>
+        <button mat-icon-button mat-dialog-close>
+            <mat-icon style="color: gray;">close</mat-icon>
+        </button>
+    </div>
+    <mat-divider></mat-divider>
+</h2>
+
+
+<mat-dialog-content class="mat-typography" style="color: gray; margin: 24px 0px 16px 0px">
+    <p>¿Esta seguro de borrar el proceso?</p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close>CERRAR</button>
+    <button type="button" mat-raised-button color="primary" class="footer__btn-save" (click)="deleteProcess()">SI,
+        BORRAR</button>
+</mat-dialog-actions>

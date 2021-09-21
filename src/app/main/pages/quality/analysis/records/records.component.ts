@@ -7,7 +7,7 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 import { QualityService } from 'src/app/main/services/quality.service';
 import { debounceTime, filter, map, startWith, tap } from 'rxjs/operators';
 import { ConfigurationsComponent } from './dialogs/configurations/configurations.component';
-import { Quality } from '../../../../models/quality.model';
+import { Quality, WorkshopList } from '../../../../models/quality.model';
 import { AssignSpecialistDialogComponent } from './dialogs/assign-specialist-dialog/assign-specialist-dialog.component';
 import { DetailExternalDialogComponent } from './dialogs/detail-external-dialog/detail-external-dialog.component';
 import { TimeLineDialogComponent } from './dialogs/time-line-dialog/time-line-dialog.component';
@@ -25,11 +25,13 @@ export class RecordsComponent implements OnInit {
   loading$ = this.loading.asObservable();
 
   quality$: Observable<Quality[]>;
-  responsibleWorkshopList$: Observable<WorkshopModel[]>;
+  responsibleWorkshopList$: Observable<WorkshopList[]>;
+  reportingWorkshopList$: Observable<WorkshopModel[]>;
   dataQuality: Quality[] = [];
   counter: number;
   searchControl = new FormControl('');
   responsibleWorkshopControl = new FormControl('');
+  reportingWorkshopControl = new FormControl('');
   state = 'registered';
 
   eventTypeControl = new FormControl('');
@@ -68,8 +70,10 @@ export class RecordsComponent implements OnInit {
         })
     );
 
-    this.responsibleWorkshopList$ =
+    this.reportingWorkshopList$ =
       this.qualityService.getAllQualityInternalWorkshop();
+
+    this.responsibleWorkshopList$ = this.qualityService.getAllWorkshopList();
 
     this.quality$ = combineLatest(
       this.qualityService.getAllQualityByState(this.state),
@@ -78,6 +82,7 @@ export class RecordsComponent implements OnInit {
         filter((input) => input !== null),
         startWith('')
       ),
+      this.reportingWorkshopControl.valueChanges.pipe(startWith('')),
       this.responsibleWorkshopControl.valueChanges.pipe(startWith('')),
       this.eventTypeControl.valueChanges.pipe(startWith('')),
       this.authService.getGeneralConfigQuality()
@@ -86,12 +91,14 @@ export class RecordsComponent implements OnInit {
         ([
           qualities,
           search,
+          reportingWorkshop,
           responsibleWorkshop,
           codeEventType,
           generalConfig,
         ]) => {
           const searchTerm = search.toLowerCase().trim();
           let preFilterEventType: Quality[] = [];
+          let preFilterReportingWorkshop: Quality[] = [];
           let preFilterResponsibleWorkshop: Quality[] = [];
           let preFilterSearch: Quality[] = [...qualities];
 
@@ -100,12 +107,19 @@ export class RecordsComponent implements OnInit {
             return quality.eventType === codeEventType;
           });
 
-          preFilterResponsibleWorkshop = preFilterEventType.filter(
+          preFilterReportingWorkshop = preFilterEventType.filter((quality) => {
+            if (reportingWorkshop === '') return true;
+            return quality.reportingWorkshop
+              ? quality.reportingWorkshop.workshopName ===
+                  reportingWorkshop['workshopName']
+              : false;
+          });
+
+          preFilterResponsibleWorkshop = preFilterReportingWorkshop.filter(
             (quality) => {
               if (responsibleWorkshop === '') return true;
-              return quality.responsibleWorkshop
-                ? quality.responsibleWorkshop.workshopName ===
-                    responsibleWorkshop['workshopName']
+              return quality.workShop
+                ? quality.workShop === responsibleWorkshop['name']
                 : false;
             }
           );

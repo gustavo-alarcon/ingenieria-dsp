@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -19,8 +19,9 @@ import { EvaluationsUser } from '../models/evaluations.model';
 import { Quality, MiningOperation } from '../models/quality.model';
 import jsPDF from 'jspdf';
 import { saveAs } from 'file-saver';
-import { WorkshopModel } from '../models/workshop.model';
+import { workshopForm, WorkshopModel } from '../models/workshop.model';
 import { FormGroup } from '@angular/forms';
+import { off } from 'process';
 
 @Injectable({
   providedIn: 'root',
@@ -93,20 +94,12 @@ export class QualityService {
       question2: null,
       question3: null,
       question4: null,
-      responsibleWorkshop: workshop ? workshop : null,
-      responsibleWorkshopProcess: workshopProcessName ? workshopProcessName : null,
+      reportingWorkshop: workshop ? workshop : null,
+      reportingWorkshopProcess: workshopProcessName ? workshopProcessName : null,
     };
 
     batch.set(qualityDocRef, data);
-    /* 
-        emailList.forEach(el => {
-          const qualityEmailDocRef = this.afs.firestore.doc(`db/ferreyros/quality/${quality.id}`);
-          const data1: any = {
-            emailList: firebase.default.firestore.FieldValue.arrayUnion(el)
-          };
-          batch.update(qualityEmailDocRef, data1);
-        });
-     */
+
     return of(batch);
   }
 
@@ -155,7 +148,7 @@ export class QualityService {
       specialist: null,
       partNumber: form.nPart,
       workShop: null,
-      responsibleWorkshop: form.workshopName,
+      reportingWorkshop: form.workshopName,
       enventDetail: null,
       packageNumber: form.nPackage,
       componentHourMeter: form.componentHourMeter,
@@ -305,6 +298,52 @@ export class QualityService {
         console.log(error);
       });
   }
+
+  deleteWorkshop(
+    id:string,
+   ):Observable<firebase.default.firestore.WriteBatch> {
+    
+      const batch = this.afs.firestore.batch();
+      const workshopDoc = this.afs.firestore.doc(
+       `db/generalConfigQuality/qualityWorkshop/${id}`
+      )
+      
+      batch.delete(workshopDoc);
+     return of(batch);
+   }
+
+   updateWorkShop(
+    id:string,
+    form: workshopForm,
+    arrayProcess: string[]
+   ):Observable<firebase.default.firestore.WriteBatch>{
+    const batch = this.afs.firestore.batch();
+    const docRef: DocumentReference = this.afs.firestore
+    .doc(`db/generalConfigQuality/qualityWorkshop/${id}`);
+    
+   
+    const data: any = {
+      id: docRef.id,
+      workshopName:form.workshopName,
+      workshopProcessName:arrayProcess,
+    
+    };
+    batch.update(docRef, data)
+    return of(batch)
+   }
+
+   updateWorkshopProcess( workshop: WorkshopModel):Observable<firebase.default.firestore.WriteBatch>{
+    const batch = this.afs.firestore.batch();
+    const docRef: DocumentReference = this.afs.firestore
+    .doc(`db/generalConfigQuality/qualityWorkshop/${workshop.id}`);
+    
+   
+    const data: any = {
+      workshopProcessName:workshop.workshopProcessName,
+    };
+    batch.update(docRef, data)
+    return of(batch)
+   }
 
   // get all QualityListResponsibleArea
   getAllQualityListResponsibleAreas(): Observable<
