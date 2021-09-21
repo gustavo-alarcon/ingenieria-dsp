@@ -44,7 +44,14 @@
         </div>
     </form>
 </mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close>CERRAR</button>
+    <button (click)="saveChanges()" type="submit" mat-raised-button color="primary" [disabled]=" process.length < 1 || !editFormGroup.valid ">
+        GUARDAR
+    </button>>
+</mat-dialog-actions>
 
-<button (click)="saveChanges()" type="submit" mat-raised-button color="primary" [disabled]=" process.length < 1 || !editFormGroup.valid ">
+<!-- <button (click)="saveChanges()" type="submit" mat-raised-button color="primary" [disabled]=" process.length < 1 || !editFormGroup.valid ">
     GUARDAR
 </button>
+<button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close>CERRAR</button> -->

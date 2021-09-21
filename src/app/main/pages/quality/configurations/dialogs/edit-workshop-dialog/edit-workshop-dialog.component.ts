@@ -1,11 +1,12 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject } from 'rxjs';
 import {WorkshopModel} from 'src/app/main/models/workshop.model';
 import { QualityService } from 'src/app/main/services/quality.service';
 import { DeleteProcessDialogComponent } from './delete-process-dialog/delete-process-dialog.component';
+import { workshopForm } from '../../../../../models/workshop.model';
 
 @Component({
   selector: 'app-edit-workshop-dialog',
@@ -16,6 +17,7 @@ export class EditWorkshopDialogComponent implements OnInit {
   editFormGroup: FormGroup;
   loading = new BehaviorSubject<boolean>(false);
   loading$ = this.loading.asObservable();
+  processFormArray = new FormArray([]);
 
   constructor(
     private fb: FormBuilder,
@@ -30,6 +32,7 @@ export class EditWorkshopDialogComponent implements OnInit {
   ngOnInit(): void {
     this.initForm();
     this.process = [...this.data.workshopProcessName];
+  
   }
 
   initForm() {
@@ -43,11 +46,19 @@ export class EditWorkshopDialogComponent implements OnInit {
   }
 
   addWorkshopProcess(): void {
-    if (this.editFormGroup.get('workshopName').invalid) {
+    if (this.editFormGroup.get('workshopName').invalid ) {
       this.editFormGroup.markAllAsTouched();
       return;
     }
     const value = { ...this.editFormGroup.value };
+    
+
+    if(value.workshopProcessName === ''){
+      this.snackbar.open('🚨 No se pueden guardar procesos vacios  !', 'Aceptar', {
+        duration: 6000
+      });
+      return
+    }
 
     this.process.push(value.workshopProcessName);
     this.resetWorkshopProcess();
@@ -58,13 +69,15 @@ export class EditWorkshopDialogComponent implements OnInit {
   }
 
   deleteProcess(index: number) {
-    this.process.splice(index, 1);
+    
     this.data.workshopProcessName = [...this.process];
+   
     this.dialog.open(DeleteProcessDialogComponent, {
       maxWidth: 500,
       width: '90vw',
       data: this.data,
     });
+    this.process.splice(index, 1);
   }
 
   saveChanges() {
