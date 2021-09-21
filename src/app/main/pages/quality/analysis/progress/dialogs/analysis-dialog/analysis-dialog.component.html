@@ -55,7 +55,7 @@
                         </ng-template>
 
                         <mat-form-field *ngIf="causeFailure$ | async as causeFailuries" class="container__form--input" appearance="outline">
-                            <mat-label>Causante de falla</mat-label>
+                            <mat-label>Causa inmediata</mat-label>
                             <input autocomplete="off" formControlName="causeFailure" [matAutocomplete]="causeFailureAutocomplete" type="text" matInput />
                             <mat-autocomplete autoActiveFirstOption #causeFailureAutocomplete="matAutocomplete">
                                 <mat-option *ngIf="authService.uiConfig.quality.analysis.tabs.process.forms.failRoot" (click)="onAddCauseFailure()" [value]="">
@@ -78,6 +78,15 @@
                             </mat-error>
                         </mat-form-field>
                         <br>
+                        <mat-form-field appearance="outline" class="container__form--input">
+                            <mat-label>Causa básica</mat-label>
+                            <input autocomplete="off" placeholder="Escribe..." formControlName="causeBasic" type="text" matInput />
+                            <mat-error *ngIf="analysisForm.get('causeBasic').errors">
+                                Campo <strong>requerido.</strong>
+                            </mat-error>
+                        </mat-form-field>
+                        <br>
+
                         <mat-form-field *ngIf="process$ | async as process" class="container__form--input" appearance="outline">
                             <mat-label>Proceso</mat-label>
                             <input autocomplete="off" formControlName="process" [matAutocomplete]="processAutocomplete" type="text" matInput />
@@ -107,7 +116,30 @@
                             <textarea matInput type="text" placeholder="Observaciones" formControlName="observation" rows="2">
                         </textarea>
                         </mat-form-field>
-
+                        <br>
+                        <mat-form-field appearance="outline" class="container__form--input">
+                            <mat-label>Responsable</mat-label>
+                            <input autocomplete="off" placeholder="Escribe..." formControlName="responsable" type="text" matInput />
+                            <mat-error *ngIf="analysisForm.get('responsable').errors">
+                                Campo <strong>requerido.</strong>
+                            </mat-error>
+                        </mat-form-field>
+                        <br>
+                        <mat-form-field appearance="outline" class="container__form--input">
+                            <mat-label>Bahia</mat-label>
+                            <input autocomplete="off" placeholder="Escribe..." formControlName="bahia" type="text" matInput />
+                            <mat-error *ngIf="analysisForm.get('bahia').errors">
+                                Campo <strong>requerido.</strong>
+                            </mat-error>
+                        </mat-form-field>
+                        <br>
+                        <mat-form-field appearance="outline" class="container__form--input">
+                            <mat-label>URL Imágenes</mat-label>
+                            <input autocomplete="off" placeholder="http://url-image" formControlName="URLimage" type="text" matInput />
+                            <mat-error *ngIf="analysisForm.get('URLimage').errors">
+                                Campo <strong>requerido.</strong>
+                            </mat-error>
+                        </mat-form-field>
                         <br>
 
                     </form>
