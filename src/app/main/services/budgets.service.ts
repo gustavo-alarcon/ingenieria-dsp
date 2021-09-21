@@ -1250,11 +1250,14 @@ export class BudgetsService {
     }
 
     if (budget.motivoDeModificacion02) {
+
       const fecha = this.getStringFromTimestamp(
         budget.motivoDeModificacion02.createdAt
       );
+
+        
       const milliSeconds =
-        budget.motivoDeModificacion02.createdAt['seconds'] * 1000;
+      budget.motivoDeModificacion02.createdAt ? budget.motivoDeModificacion02.createdAt['seconds'] * 1000 : null;
 
       const usuario = budget.motivoDeModificacion02.createdBy;
       if (fecha !== '---') {
@@ -1274,7 +1277,7 @@ export class BudgetsService {
         budget.motivoDeModificacion03.createdAt
       );
       const milliSeconds =
-        budget.motivoDeModificacion03.createdAt['seconds'] * 1000;
+      budget.motivoDeModificacion03.createdAt ? budget.motivoDeModificacion03.createdAt['seconds'] * 1000 : null;
 
       const usuario = budget.motivoDeModificacion03.createdBy;
       if (fecha !== '---') {
@@ -1294,7 +1297,7 @@ export class BudgetsService {
         budget.motivoDeModificacion04.createdAt
       );
       const milliSeconds =
-        budget.motivoDeModificacion04.createdAt['seconds'] * 1000;
+      budget.motivoDeModificacion04.createdAt ? budget.motivoDeModificacion04.createdAt['seconds'] * 1000 : null;
 
       const usuario = budget.motivoDeModificacion04.createdBy;
       if (fecha !== '---') {

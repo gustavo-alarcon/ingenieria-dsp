@@ -6,18 +6,16 @@ import {
   FormBuilder,
   Validators,
   AbstractControl,
-  ControlContainer,
 } from '@angular/forms';
 import {
   ModificationReasonEntry,
   Budget,
 } from '../../../../../../models/budgets.model';
-import { combineLatest, Observable, pipe, BehaviorSubject } from 'rxjs';
+import { combineLatest, Observable, BehaviorSubject } from 'rxjs';
 import { BudgetsService } from '../../../../../../services/budgets.service';
-import { filter, map, startWith, take } from 'rxjs/operators';
+import { map, startWith, take } from 'rxjs/operators';
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { element } from 'protractor';
 import { AuthService } from 'src/app/auth/services/auth.service';
 
 @Component({
@@ -57,8 +55,6 @@ export class BudgetsPendingModifyComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-
-   
     this.modificationReasonList = combineLatest(
       this.budgetService.getAllReasonsForModificationEntries(),
       this.modificationReasonControl.valueChanges.pipe(
@@ -77,7 +73,7 @@ export class BudgetsPendingModifyComponent implements OnInit {
       })
     );
 
-    //  console.log(element.name);
+    
 
     this.modificationFormGroup = this.formBuilder.group({
       modificationReason: ['', Validators.required],
@@ -154,7 +150,7 @@ export class BudgetsPendingModifyComponent implements OnInit {
   }
 
   notSelectedValidator(control: AbstractControl): { [key: string]: boolean } {
-    console.log(control.value);
+    
 
     if (typeof control.value === 'string' && control.value !== '') {
       return { notSelected: true };
