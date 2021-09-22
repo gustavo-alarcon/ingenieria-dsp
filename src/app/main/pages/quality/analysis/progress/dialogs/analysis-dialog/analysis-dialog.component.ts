@@ -202,12 +202,13 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
         bahia: ['', Validators.required],
         URLimage: ['', Validators.required],
       });
+
       if (this.data.evaluationAnalisis <= 5) {
         this.listAreaForm = this.fb.group({
           areas: this.fb.array([
             this.fb.group({
-              corrective: [''],
-              name: [''],
+              corrective: [null],
+              name: [null],
               kit: false,
               url: null,
               nameFile: null,
@@ -221,8 +222,8 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
         this.listAreaForm = this.fb.group({
           areas: this.fb.array([
             this.fb.group({
-              corrective: ['', Validators.required],
-              name: ['', Validators.required],
+              corrective: [null, Validators.required],
+              name: [null, Validators.required],
               kit: false,
               url: null,
               nameFile: null,
@@ -264,8 +265,8 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
     } else {
       if (this.data.evaluationAnalisis <= 5) {
         group = this.fb.group({
-          corrective: [''],
-          name: [''],
+          corrective: [null],
+          name: [null],
           kit: false,
           url: null,
           nameFile: null,
@@ -321,6 +322,9 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
           this.analysisForm.value,
           this.listAreaForm.value
         );
+        if (this.data.evaluationAnalisis <= 5) {
+          this.validatePurgeAreasFormArray();
+        }
         this.subscription.add(
           resp.subscribe((batch) => {
             if (batch) {
@@ -394,7 +398,9 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
           this.evaluationName,
           this.state
         );
-
+        if (this.data.evaluationAnalisis <= 5) {
+          this.validatePurgeAreasFormArray();
+        }
         this.subscription.add(
           resp.subscribe((batch) => {
             if (batch) {
@@ -487,4 +493,19 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
 
     this.broadcastControl.setValue(null);
   }
+
+  private validatePurgeAreasFormArray() {
+    let index = 0;
+    while (index < this.areas.length) {
+      const corrective = this.areas.controls[index].value['corrective'];
+      const name = this.areas.controls[index].value['name'];
+      if (corrective === null || name === null || corrective.length === 0 || name.length === 0) {
+        this.areas.removeAt(index);
+        index = 0;
+      } else {
+        index++;
+      }
+    }
+  }
 }
+
