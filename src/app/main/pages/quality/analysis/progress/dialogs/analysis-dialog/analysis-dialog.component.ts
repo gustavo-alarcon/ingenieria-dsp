@@ -91,7 +91,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
     private qualityService: QualityService,
     private snackbar: MatSnackBar,
     public authService: AuthService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.initForm();
@@ -202,21 +202,37 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
         bahia: ['', Validators.required],
         URLimage: ['', Validators.required],
       });
-
-      this.listAreaForm = this.fb.group({
-        areas: this.fb.array([
-          this.fb.group({
-            corrective: ['', Validators.required],
-            name: ['', Validators.required],
-            kit: false,
-            url: null,
-            nameFile: null,
-            createdAt: this.date,
-            closedAt: null,
-            user: null,
-          }),
-        ]),
-      });
+      if (this.data.evaluationAnalisis <= 5) {
+        this.listAreaForm = this.fb.group({
+          areas: this.fb.array([
+            this.fb.group({
+              corrective: [''],
+              name: [''],
+              kit: false,
+              url: null,
+              nameFile: null,
+              createdAt: this.date,
+              closedAt: null,
+              user: null,
+            }),
+          ]),
+        });
+      } else {
+        this.listAreaForm = this.fb.group({
+          areas: this.fb.array([
+            this.fb.group({
+              corrective: ['', Validators.required],
+              name: ['', Validators.required],
+              kit: false,
+              url: null,
+              nameFile: null,
+              createdAt: this.date,
+              closedAt: null,
+              user: null,
+            }),
+          ]),
+        });
+      }
     }
   }
 
@@ -246,16 +262,29 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
         user: null,
       });
     } else {
-      group = this.fb.group({
-        corrective: ['', Validators.required],
-        name: ['', Validators.required],
-        kit: false,
-        url: null,
-        nameFile: null,
-        createdAt: this.date,
-        closedAt: null,
-        user: null,
-      });
+      if (this.data.evaluationAnalisis <= 5) {
+        group = this.fb.group({
+          corrective: [''],
+          name: [''],
+          kit: false,
+          url: null,
+          nameFile: null,
+          createdAt: this.date,
+          closedAt: null,
+          user: null,
+        });
+      } else {
+        group = this.fb.group({
+          corrective: ['', Validators.required],
+          name: ['', Validators.required],
+          kit: false,
+          url: null,
+          nameFile: null,
+          createdAt: this.date,
+          closedAt: null,
+          user: null,
+        });
+      }
     }
 
     this.areas.push(group);
@@ -336,7 +365,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
 
     this.areas.value.every((element) => {
       const a = element['corrective'].toLowerCase();
-      
+
       if (a === temp) {
         match = true;
       } else {
