@@ -2,6 +2,7 @@ import {
   FrequencyList,
   Quality,
   QualityList,
+  WorkshopList,
 } from './../../../../../../models/quality.model';
 import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable, combineLatest, Subscription } from 'rxjs';
@@ -49,6 +50,9 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
   category$: Observable<Quality[]>;
   causeFailure$: Observable<CauseFailureList[]>;
   process$: Observable<ProcessList[]>;
+  responsibleWorkshopList$: Observable<WorkshopList[]>;
+
+  workshopProcessList: Array<string>;
 
   // step 1
   isLinear = false;
@@ -151,6 +155,27 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
       })
     );
 
+    this.responsibleWorkshopList$ = this.qualityService.getAllWorkshopList();
+
+    this.subscription.add(
+      this.qualityService
+        .getAllQualityInternalWorkshop()
+        .subscribe((workshops) => {
+          if (!workshops) return;
+
+          if (!this.data.reportingWorkshop) {
+            this.workshopProcessList = [];
+            return;
+          }
+
+          const actualResposible = workshops.filter(
+            (workshop) =>
+              workshop.workshopName === this.data.reportingWorkshop.workshopName
+          );
+          this.workshopProcessList = actualResposible[0].workshopProcessName;
+        })
+    );
+
     this.areaResponsable$ = this.qualityService
       .getAllQualityListResponsibleAreas()
       .pipe(
@@ -168,6 +193,10 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
         causeFailure: this.data.analysis['causeFailure'],
         causeBasic: this.data.analysis['causeBasic'],
         process: this.data.analysis['process'],
+        responsibleWorkshop: this.data.workShop ? this.data.workShop : null,
+        workshopProcess: this.data.reportingWorkshopProcess
+          ? this.data.reportingWorkshopProcess
+          : null,
         observation: this.data.analysis['observation'],
         responsable: this.data.analysis['responsable'],
         bahia: this.data.analysis['bahia'],
@@ -197,6 +226,8 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
         causeFailure: ['', Validators.required],
         causeBasic: ['', Validators.required],
         process: ['', Validators.required],
+        responsibleWorkshop: [''],
+        workshopProcess: [''],
         observation: [null],
         responsable: ['', Validators.required],
         bahia: ['', Validators.required],
@@ -282,6 +313,10 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
     }
   }
 
+  showSelectedWorkshop(value: WorkshopList): string | null {
+    return value ? value.name : null
+  }
+
   save(): void {
     try {
       if (this.areas.valid) {
@@ -336,7 +371,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
 
     this.areas.value.every((element) => {
       const a = element['corrective'].toLowerCase();
-      
+
       if (a === temp) {
         match = true;
       } else {
