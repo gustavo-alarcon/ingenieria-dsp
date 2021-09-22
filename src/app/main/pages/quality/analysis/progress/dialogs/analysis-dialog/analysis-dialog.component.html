@@ -80,7 +80,7 @@
                         <br>
                         <mat-form-field appearance="outline" class="container__form--input">
                             <mat-label>Causa básica</mat-label>
-                            <input autocomplete="off" placeholder="Escribe..." formControlName="causeBasic" type="text" matInput />
+                            <input autocomplete="off" placeholder="Escribir..." formControlName="causeBasic" type="text" matInput />
                             <mat-error *ngIf="analysisForm.get('causeBasic').errors">
                                 Campo <strong>requerido.</strong>
                             </mat-error>
@@ -119,7 +119,7 @@
                         <br>
                         <mat-form-field appearance="outline" class="container__form--input">
                             <mat-label>Responsable</mat-label>
-                            <input autocomplete="off" placeholder="Escribe..." formControlName="responsable" type="text" matInput />
+                            <input autocomplete="off" placeholder="Escribir..." formControlName="responsable" type="text" matInput />
                             <mat-error *ngIf="analysisForm.get('responsable').errors">
                                 Campo <strong>requerido.</strong>
                             </mat-error>
@@ -127,7 +127,7 @@
                         <br>
                         <mat-form-field appearance="outline" class="container__form--input">
                             <mat-label>Bahia</mat-label>
-                            <input autocomplete="off" placeholder="Escribe..." formControlName="bahia" type="text" matInput />
+                            <input autocomplete="off" placeholder="Escribir..." formControlName="bahia" type="text" matInput />
                             <mat-error *ngIf="analysisForm.get('bahia').errors">
                                 Campo <strong>requerido.</strong>
                             </mat-error>
@@ -158,7 +158,7 @@
 
                                     <mat-form-field appearance="outline" class="form-corrective__input1">
                                         <mat-label>Acción correctiva {{i+1}}</mat-label>
-                                        <textarea matInput placeholder="Escribe..." rows="3" formControlName="corrective"></textarea>
+                                        <textarea matInput placeholder="Escribir..." rows="3" formControlName="corrective"></textarea>
                                         <mat-error *ngIf="areas.controls[i].get('corrective').errors">
                                             Campo <strong>requerido.</strong>
                                         </mat-error>
