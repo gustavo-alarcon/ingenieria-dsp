@@ -166,8 +166,12 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
     if (this.data.analysis) {
       this.analysisForm = this.fb.group({
         causeFailure: this.data.analysis['causeFailure'],
+        causeBasic: this.data.analysis['causeBasic'],
         process: this.data.analysis['process'],
         observation: this.data.analysis['observation'],
+        responsable: this.data.analysis['responsable'],
+        bahia: this.data.analysis['bahia'],
+        URLimage: this.data.analysis['URLimage'],
       });
 
       this.listAreaForm = this.fb.group({
@@ -191,8 +195,12 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
     } else {
       this.analysisForm = this.fb.group({
         causeFailure: ['', Validators.required],
+        causeBasic: ['', Validators.required],
         process: ['', Validators.required],
         observation: [null],
+        responsable: ['', Validators.required],
+        bahia: ['', Validators.required],
+        URLimage: ['', Validators.required],
       });
 
       this.listAreaForm = this.fb.group({
