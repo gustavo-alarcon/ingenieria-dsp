@@ -315,16 +315,16 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
   save(): void {
     try {
       if (this.areas.valid) {
+        if (this.data.evaluationAnalisis <= 5) {
+          this.validatePurgeAreasFormArray();
+        }
         const resp = this.qualityService.updateQualityEvaluationAnalysis(
           this.data,
           this.resultAnalysis,
           this.evaluationName,
           this.analysisForm.value,
           this.listAreaForm.value
-        );
-        if (this.data.evaluationAnalisis <= 5) {
-          this.validatePurgeAreasFormArray();
-        }
+          );
         this.subscription.add(
           resp.subscribe((batch) => {
             if (batch) {
@@ -389,6 +389,9 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
         this.areas.valid &&
         !this.checkDuplicates()
       ) {
+        if (this.data.evaluationAnalisis <= 5) {
+          this.validatePurgeAreasFormArray();
+        }
         const resp = this.qualityService.saveCorrectiveActions(
           this.data,
           this.analysisForm.value,
@@ -398,9 +401,6 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
           this.evaluationName,
           this.state
         );
-        if (this.data.evaluationAnalisis <= 5) {
-          this.validatePurgeAreasFormArray();
-        }
         this.subscription.add(
           resp.subscribe((batch) => {
             if (batch) {
