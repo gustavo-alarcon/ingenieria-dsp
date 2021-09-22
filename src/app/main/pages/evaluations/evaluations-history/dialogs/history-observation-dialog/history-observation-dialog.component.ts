@@ -25,7 +25,6 @@ export class HistoryObservationDialogComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log(this.data.createdBy)
     this.inquiries$ = this.evalService.getEvaluationInquiriesById(this.data.id);
     this.images$ = this.evalService.getEvaluationById(this.data.id)
       .pipe(
