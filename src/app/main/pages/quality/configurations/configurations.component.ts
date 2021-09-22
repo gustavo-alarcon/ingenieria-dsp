@@ -10,7 +10,7 @@ import {
 } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject, Subscription, Observable, combineLatest } from 'rxjs';
-import { tap, startWith, debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import { tap, startWith, debounceTime, distinctUntilChanged, map, take } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { User } from 'src/app/main/models/user-model';
 import { QualityService } from 'src/app/main/services/quality.service';
@@ -20,6 +20,8 @@ import {
   WorkshopList,
   ComponentList,
   MiningOperation,
+  CauseFailureList,
+  ProcessList,
 } from '../../../models/quality.model';
 import { MatDialog } from '@angular/material/dialog';
 import { DeleteBroadcastDialogComponent } from './dialogs/delete-broadcast-dialog/delete-broadcast-dialog.component';
@@ -43,12 +45,16 @@ export class ConfigurationsComponent implements OnInit {
   loading2 = new BehaviorSubject<boolean>(false);
   loading3 = new BehaviorSubject<boolean>(false);
   loading4 = new BehaviorSubject<boolean>(false);
+  loading5 = new BehaviorSubject<boolean>(false);
+  loading6 = new BehaviorSubject<boolean>(false);
 
   loading$ = this.loading.asObservable();
   loading1$ = this.loading1.asObservable();
   loading2$ = this.loading2.asObservable();
   loading3$ = this.loading3.asObservable();
   loading4$ = this.loading4.asObservable();
+  loading5$ = this.loading5.asObservable();
+  loading6$ = this.loading6.asObservable();
 
   panelOpenState = false;
 
@@ -60,6 +66,9 @@ export class ConfigurationsComponent implements OnInit {
 
   listResponsibleAreasControl = new FormControl(null, [Validators.required]);
   listResponsibleAreasArray = [];
+
+  listCauseFailedControl = new FormControl(null, [Validators.required]);
+  listProcessControl = new FormControl(null, [Validators.required]);
 
   matcher = new MyErrorStateMatcher();
   listProblemTypeArray = [];
@@ -135,10 +144,22 @@ export class ConfigurationsComponent implements OnInit {
     Validators.required
   );
 
+  public entryCauseFailedControl: FormControl = new FormControl(
+    null,
+    Validators.required
+  );
+  public entryProcessControl: FormControl = new FormControl(
+    null,
+    Validators.required
+  );
+
   public listWorkshopArray: Array<WorkshopList> = [];
   public listComponentInternalArray: Array<ComponentList> = [];
   public listComponentExternalArray: Array<ComponentList> = [];
   public listMiningOperationArray: Array<MiningOperation> = [];
+
+  public listCauseFailureArray: Array<CauseFailureList> = [];
+  public listProcessArray: Array<ProcessList> = [];
 
 
   constructor(
@@ -196,6 +217,28 @@ export class ConfigurationsComponent implements OnInit {
           }
         })
     );
+    this.subscription.add(
+      this.qualityService.getAllCauseFailureList()
+        .subscribe((resp) => {
+          if (resp) {
+            this.listCauseFailureArray = resp;
+          } else {
+            this.listCauseFailureArray = [];
+          }
+        })
+    );
+
+    this.subscription.add(
+      this.qualityService.getAllProcessList()
+        .subscribe((resp) => {
+          if (resp) {
+            this.listProcessArray = resp;
+          } else {
+            this.listProcessArray = [];
+          }
+        })
+    );
+
 
     this.entrySpecialistControl = this.fb.control('', Validators.required);
 
@@ -985,6 +1028,215 @@ export class ConfigurationsComponent implements OnInit {
       );
     } catch (error: any) {
       console.error(error);
+    }
+  }
+
+
+  public saveCauseFailed(): void {
+    try {
+      const resp = this.qualityService.addComponentListCauseFailureList(this.listCauseFailureArray, this.user);
+
+      this.loading5.next(true);
+      this.subscription.add(
+        resp.subscribe((batch) => {
+          if (batch) {
+            batch
+              .commit()
+              .then(() => {
+                this.loading5.next(false);
+                this.snackbar.open(
+                  '✅ Lista componente interno creada!',
+                  'Aceptar',
+                  {
+                    duration: 6000,
+                  }
+                );
+              })
+              .catch((error: any) => {
+                this.loading5.next(false);
+                this.snackbar.open(
+                  '🚨 Hubo un error creando la lista componente internos !',
+                  'Aceptar',
+                  {
+                    duration: 6000,
+                  }
+                );
+              });
+          }
+        })
+      );
+    } catch (error: any) {
+      console.error(error);
+    }
+  }
+
+  public async addOrDeleteEntryComponentCauseFailure(
+    action: string,
+    index?: number
+  ): Promise<void> {
+    switch (action) {
+      case 'add': {
+        // Add an item to the local ReasonsForRejection array
+        if (this.entryCauseFailedControl.valid) {
+          const temp: CauseFailureList = {
+            id: null,
+            name: this.entryCauseFailedControl.value.trim(),
+            createdBy: null,
+            createdAt: null,
+          };
+          // Searching for repeated values
+          const equal = (currentItem: CauseFailureList) =>
+            currentItem.name !== temp.name;
+          if (this.listCauseFailureArray.every(equal)) {
+            this.listCauseFailureArray.unshift(temp);
+          }
+          // Reset the text in the form control
+          this.entryCauseFailedControl.reset();
+        }
+
+        break;
+      }
+      case 'delete': {
+        console.log(this.listCauseFailureArray[index].id)
+        // Check if the item exists in the db
+        if (this.listCauseFailureArray[index].id) {
+          this.loading5.next(true);
+          const resp = this.qualityService.deleteCauseFailure(
+            this.listCauseFailureArray[index].id
+          );
+          this.subscription.add(
+            resp.subscribe((batch) => {
+              if (batch) {
+                batch
+                  .commit()
+                  .then(() => {
+                    this.loading5.next(false);
+                    this.snackbar.open('✅ Elemento borrado correctamente', 'Aceptar', {
+                      duration: 6000,
+                    });
+                  })
+                  .catch((error: any) => {
+                    this.loading5.next(false);
+                    this.snackbar.open(
+                      '🚨 Hubo un error al eliminar!',
+                      'Aceptar',
+                      {
+                        duration: 6000,
+                      }
+                    );
+                  });
+              }
+            })
+          );
+        }
+        /// Delete an item from the local ReasonsForRejection array
+        this.listCauseFailureArray.splice(index, 1);
+        break;
+      }
+    }
+  }
+
+  public saveProcess(): void {
+    try {
+      const resp = this.qualityService.addComponentListProcessList(this.listProcessArray, this.user);
+
+      this.loading6.next(true);
+      this.subscription.add(
+        resp.subscribe((batch) => {
+          if (batch) {
+            batch
+              .commit()
+              .then(() => {
+                this.loading6.next(false);
+                this.snackbar.open(
+                  '✅ Lista de proceso creada!',
+                  'Aceptar',
+                  {
+                    duration: 6000,
+                  }
+                );
+              })
+              .catch((error: any) => {
+                this.loading6.next(false);
+                this.snackbar.open(
+                  '🚨 Hubo un error creando el proceso !',
+                  'Aceptar',
+                  {
+                    duration: 6000,
+                  }
+                );
+              });
+          }
+        })
+      );
+    } catch (error: any) {
+      console.error(error);
+    }
+  }
+
+  public async addOrDeleteEntryComponentProcess(
+    action: string,
+    index?: number
+  ): Promise<void> {
+    switch (action) {
+      case 'add': {
+        // Add an item to the local ReasonsForRejection array
+        if (this.entryProcessControl.valid) {
+          const temp: ProcessList = {
+            id: null,
+            name: this.entryProcessControl.value.trim(),
+            createdBy: null,
+            createdAt: null,
+          };
+          // Searching for repeated values
+          const equal = (currentItem: ProcessList) =>
+            currentItem.name !== temp.name;
+          if (this.listProcessArray.every(equal)) {
+            this.listProcessArray.unshift(temp);
+          }
+          // Reset the text in the form control
+          this.entryProcessControl.reset();
+        }
+
+        break;
+      }
+      case 'delete': {
+        console.log(this.listProcessArray[index].id)
+        // Check if the item exists in the db
+        if (this.listProcessArray[index].id) {
+          this.loading6.next(true);
+          const resp = this.qualityService.deleteProcess(
+            this.listProcessArray[index].id
+          );
+          this.subscription.add(
+            resp.subscribe((batch) => {
+              if (batch) {
+                batch
+                  .commit()
+                  .then(() => {
+                    this.loading6.next(false);
+                    this.snackbar.open('✅ Elemento borrado correctamente', 'Aceptar', {
+                      duration: 6000,
+                    });
+                  })
+                  .catch((error: any) => {
+                    this.loading6.next(false);
+                    this.snackbar.open(
+                      '🚨 Hubo un error al eliminar!',
+                      'Aceptar',
+                      {
+                        duration: 6000,
+                      }
+                    );
+                  });
+              }
+            })
+          );
+        }
+        /// Delete an item from the local ReasonsForRejection array
+        this.listProcessArray.splice(index, 1);
+        break;
+      }
     }
   }
 

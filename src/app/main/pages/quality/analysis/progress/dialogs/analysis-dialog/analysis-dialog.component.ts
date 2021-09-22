@@ -412,19 +412,19 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
     });
   }
 
-  onAddCauseFailure(): void {
-    this.dialog.open(CauseFailureDialogComponent, {
-      maxWidth: 500,
-      width: '90vw',
-    });
-  }
+  // onAddCauseFailure(): void {
+  //   this.dialog.open(CauseFailureDialogComponent, {
+  //     maxWidth: 500,
+  //     width: '90vw',
+  //   });
+  // }
 
-  onAddProcess(): void {
-    this.dialog.open(ProcessDialogComponent, {
-      maxWidth: 500,
-      width: '90vw',
-    });
-  }
+  // onAddProcess(): void {
+  //   this.dialog.open(ProcessDialogComponent, {
+  //     maxWidth: 500,
+  //     width: '90vw',
+  //   });
+  // }
 
   removeEmail(email: string): void {
     const index = this.emailArray.indexOf(email);
