@@ -97,7 +97,11 @@
         </p>
         <p class="analysis-result">
           <span> Causa inmediata:</span>
-          {{ data.analysis ? data.analysis["causeFailure"] : "-" }}
+          {{ data.analysis ? data.analysis.causeFailure : "-" }}
+        </p>
+        <p class="analysis-result">
+          <span> Causa básica:</span>
+          {{ data.analysis ? data.analysis.causeBasic : "-" }}
         </p>
         <p class="analysis-result">
           <span> Proceso:</span>
@@ -105,7 +109,21 @@
         </p>
         <p class="analysis-result">
           <span> Observación:</span>
-          {{ data.analysis ? data.analysis["observation"] : "-" }}
+          {{ data.analysis ? data.analysis.observation : "-" }}
+        </p>
+        <p class="analysis-result">
+          <span> Responsable:</span>
+          {{ data.analysis ? data.analysis.responsable : "-" }}
+        </p>
+        <p class="analysis-result">
+          <span> Bahía:</span>
+          {{ data.analysis ? data.analysis.bahia: "-" }}
+        </p>
+        <p class="analysis-result">
+          <span> URL imágenes: </span>
+          <a [href]="data.analysis.URLimage" target="_blank" >
+            {{ data.analysis ? data.analysis.URLimage : "-" }}
+          </a>
         </p>
 
         <ng-container *ngIf="data.correctiveActions">
