@@ -123,7 +123,7 @@
         </p>
         <p class="analysis-result">
           <span> URL imágenes: </span>
-          <a [href]="data.analysis.URLimage" target="_blank" >
+          <a [href]="data.analysis ? data.analysis.URLimage : ''" target="_blank" >
             {{ data.analysis ? data.analysis.URLimage : "-" }}
           </a>
         </p>
