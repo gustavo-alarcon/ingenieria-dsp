@@ -190,7 +190,7 @@
                                         </mat-error>
                                     </mat-form-field>
 
-                                    <button mat-icon-button type="button" style="margin-top: 8px;"
+                                    <button mat-icon-button type="button" style="margin-top: 8px;" *ngIf="i>0"
                                         class="form-corrective__btn-delete">
                                         <mat-icon color="warn" (click)="deleteControl(i)">delete</mat-icon>
                                     </button>

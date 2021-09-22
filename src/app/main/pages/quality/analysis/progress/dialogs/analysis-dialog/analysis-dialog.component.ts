@@ -91,7 +91,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
     private qualityService: QualityService,
     private snackbar: MatSnackBar,
     public authService: AuthService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.initForm();
@@ -203,20 +203,37 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
         URLimage: ['', Validators.required],
       });
 
-      this.listAreaForm = this.fb.group({
-        areas: this.fb.array([
-          this.fb.group({
-            corrective: ['', Validators.required],
-            name: ['', Validators.required],
-            kit: false,
-            url: null,
-            nameFile: null,
-            createdAt: this.date,
-            closedAt: null,
-            user: null,
-          }),
-        ]),
-      });
+      if (this.data.evaluationAnalisis <= 5) {
+        this.listAreaForm = this.fb.group({
+          areas: this.fb.array([
+            this.fb.group({
+              corrective: [null],
+              name: [null],
+              kit: false,
+              url: null,
+              nameFile: null,
+              createdAt: this.date,
+              closedAt: null,
+              user: null,
+            }),
+          ]),
+        });
+      } else {
+        this.listAreaForm = this.fb.group({
+          areas: this.fb.array([
+            this.fb.group({
+              corrective: [null, Validators.required],
+              name: [null, Validators.required],
+              kit: false,
+              url: null,
+              nameFile: null,
+              createdAt: this.date,
+              closedAt: null,
+              user: null,
+            }),
+          ]),
+        });
+      }
     }
   }
 
@@ -246,16 +263,29 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
         user: null,
       });
     } else {
-      group = this.fb.group({
-        corrective: ['', Validators.required],
-        name: ['', Validators.required],
-        kit: false,
-        url: null,
-        nameFile: null,
-        createdAt: this.date,
-        closedAt: null,
-        user: null,
-      });
+      if (this.data.evaluationAnalisis <= 5) {
+        group = this.fb.group({
+          corrective: [null],
+          name: [null],
+          kit: false,
+          url: null,
+          nameFile: null,
+          createdAt: this.date,
+          closedAt: null,
+          user: null,
+        });
+      } else {
+        group = this.fb.group({
+          corrective: ['', Validators.required],
+          name: ['', Validators.required],
+          kit: false,
+          url: null,
+          nameFile: null,
+          createdAt: this.date,
+          closedAt: null,
+          user: null,
+        });
+      }
     }
 
     this.areas.push(group);
@@ -285,13 +315,16 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
   save(): void {
     try {
       if (this.areas.valid) {
+        if (this.data.evaluationAnalisis <= 5) {
+          this.validatePurgeAreasFormArray();
+        }
         const resp = this.qualityService.updateQualityEvaluationAnalysis(
           this.data,
           this.resultAnalysis,
           this.evaluationName,
           this.analysisForm.value,
           this.listAreaForm.value
-        );
+          );
         this.subscription.add(
           resp.subscribe((batch) => {
             if (batch) {
@@ -336,7 +369,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
 
     this.areas.value.every((element) => {
       const a = element['corrective'].toLowerCase();
-      
+
       if (a === temp) {
         match = true;
       } else {
@@ -356,6 +389,9 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
         this.areas.valid &&
         !this.checkDuplicates()
       ) {
+        if (this.data.evaluationAnalisis <= 5) {
+          this.validatePurgeAreasFormArray();
+        }
         const resp = this.qualityService.saveCorrectiveActions(
           this.data,
           this.analysisForm.value,
@@ -365,7 +401,6 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
           this.evaluationName,
           this.state
         );
-
         this.subscription.add(
           resp.subscribe((batch) => {
             if (batch) {
@@ -458,4 +493,19 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
 
     this.broadcastControl.setValue(null);
   }
+
+  private validatePurgeAreasFormArray() {
+    let index = 0;
+    while (index < this.areas.length) {
+      const corrective = this.areas.controls[index].value['corrective'];
+      const name = this.areas.controls[index].value['name'];
+      if (corrective === null || name === null || corrective.length === 0 || name.length === 0) {
+        this.areas.removeAt(index);
+        index = 0;
+      } else {
+        index++;
+      }
+    }
+  }
 }
+
