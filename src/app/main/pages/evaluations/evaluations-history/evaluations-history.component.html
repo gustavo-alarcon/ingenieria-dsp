@@ -1,25 +1,17 @@
 <div *ngIf="authService.user$ | async as user">
-  <div class="ms-kanban-toolbar">
+    <div class="ms-kanban-toolbar">
 
-    <button type="file" mat-stroked-button class="ms-kanban-toolbar__button" (click)="uploadFileDialog()"
-      *ngIf="authService.uiConfig.preEvaluations.tabs.results.toolbar.bulk"
-      [ngClass]="isMobile ? 'ms-kanban-toolbar__button--mobile' : 'ms-kanban-toolbar__button--desktop'">
+        <button type="file" mat-stroked-button class="ms-kanban-toolbar__button" (click)="uploadFileDialog()" *ngIf="authService.uiConfig.preEvaluations.tabs.results.toolbar.bulk" [ngClass]="isMobile ? 'ms-kanban-toolbar__button--mobile' : 'ms-kanban-toolbar__button--desktop'">
       <mat-icon aria-label="agregar" class="icon-add">add</mat-icon>
       LOTE
     </button>
 
-    <button mat-stroked-button class="ms-kanban-toolbar__button" (click)="downloadXlsx(historyDataSource.data)"
-      *ngIf="authService.uiConfig.preEvaluations.tabs.results.toolbar.download"
-      [disabled]="historyDataSource.data.length < 1"
-      [ngClass]="isMobile ? 'ms-kanban-toolbar__button--mobile' : 'ms-kanban-toolbar__button--desktop'">
+        <button mat-stroked-button class="ms-kanban-toolbar__button" (click)="downloadXlsx(historyDataSource.data)" *ngIf="authService.uiConfig.preEvaluations.tabs.results.toolbar.download" [disabled]="historyDataSource.data.length < 1" [ngClass]="isMobile ? 'ms-kanban-toolbar__button--mobile' : 'ms-kanban-toolbar__button--desktop'">
       <mat-icon aria-label="agregar" class="icon-add">download</mat-icon>
       DESCARGAR
     </button>
 
-    <button mat-stroked-button class="ms-kanban-toolbar__button" (click)="openDialog('report')"
-      *ngIf="authService.uiConfig.preEvaluations.tabs.results.toolbar.report"
-      [disabled]="historyDataSource.data.length < 1"
-      [ngClass]="isMobile ? 'ms-kanban-toolbar__button--mobile' : 'ms-kanban-toolbar__button--desktop'">
+        <button mat-stroked-button class="ms-kanban-toolbar__button" (click)="openDialog('report')" *ngIf="authService.uiConfig.preEvaluations.tabs.results.toolbar.report" [disabled]="historyDataSource.data.length < 1" [ngClass]="isMobile ? 'ms-kanban-toolbar__button--mobile' : 'ms-kanban-toolbar__button--desktop'">
       <mat-icon aria-label="agregar" class="icon-add">description</mat-icon>
       REPORTE
     </button>
@@ -161,7 +153,7 @@
 
             <ng-container matColumnDef="createdBy">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">Inspector</th>
-                <td mat-cell *matCellDef="let element" class="table__cell"> {{element.createdBy ? (element.createdBy.name ? element.createdBy.name : element.createdBy) : 'Sin asignar'}} </td>
+                <td mat-cell *matCellDef="let element" class="table__cell"> {{element.finalizedBy ? (element.finalizedBy.name ? element.finalizedBy.name : element.finalizedBy) : 'Sin asignar'}} </td>
             </ng-container>
 
             <ng-container matColumnDef="processDate">
