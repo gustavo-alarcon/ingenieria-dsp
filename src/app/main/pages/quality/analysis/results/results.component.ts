@@ -21,6 +21,7 @@ import * as XLSX from 'xlsx';
 import { DatePipe } from '@angular/common';
 import { MatSort, Sort } from '@angular/material/sort';
 import { WorkshopModel } from 'src/app/main/models/workshop.model';
+import { R } from '@angular/cdk/keycodes';
 
 @Component({
   selector: 'app-results',
@@ -292,7 +293,7 @@ export class ResultsComponent implements OnInit {
     return date >= begin && date <= end;
   }
 
-  download(): void {
+  download(quality: Quality[]): void {
     let table_xlsx: any[] = [];
 
     const headersXlsx = [
@@ -303,29 +304,60 @@ export class ResultsComponent implements OnInit {
       'Nro de parte',
       'Taller',
       'Operacion Minera',
-      'Detalle de evento',
-      'Numero de plaqueteo',
-      'Pregunta 1',
-      'Pregunta 2',
-      'Pregunta 3',
-      'Pregunta 4',
-      'Proceso',
-      'Causante de falla',
       'Especialista',
+      'Accion correctiva',
+      'Causante de falla',
+      'Proceso',
       'Nivel de riesgo',
       'Usuario',
       'Estado',
-      'Fecha de inicio de accion correctiva',
-      'Accion correctiva',
-      'Area responsable',
-      'Estado',
-      'Fecha de finalizacion de accion correctiva',
-      'Responsable de implemento',
+      // 'Detalle de evento',
+      // 'Numero de plaqueteo',
+      // 'Pregunta 1',
+      // 'Pregunta 2',
+      // 'Pregunta 3',
+      // 'Pregunta 4',
+      // 'Fecha de inicio de accion correctiva',
+      // 'Area responsable',
+      // 'Fecha de finalizacion de accion correctiva',
+      // 'Responsable de implemento',
     ];
 
     table_xlsx.push(headersXlsx);
 
-    this.settingsDataSource.data.forEach((element) => {
+    quality.forEach( results =>{
+
+      const temp = [
+        results.createdAt ? new Date(results.createdAt['seconds'] * 1000): '---',
+        results.eventType ? results.eventType: '---', 
+        results.workOrder ? results.workOrder : '-',
+        results.component ? results.component : '-',
+        results.partNumber ? results.partNumber : '-',
+        results.workShop ? results.workShop : '-',
+        results.miningOperation ? results.miningOperation : '-',
+        results.specialist ? results.specialist['name'] : '-',
+        results.taskDone ? results.taskDone : '-',
+        results.analysis ? results.analysis['causeFailure'] : '-',
+        results.analysis ? results.analysis['process'] : '-',
+        results.evaluationAnalysisName ? results.evaluationAnalysisName : '-',
+        results.createdBy ? results.createdBy.name : '',
+        results.state ? results.state : '',
+
+
+
+        // results.enventDetail ? results.enventDetail : '-',
+        // results.packageNumber ? results.packageNumber : '-',
+        // results.question1 ? results.question1 : '-',
+        // results.question2 ? results.question2 : '-',
+        // results.question3 ? results.question3 : '-',
+        // results.question4 ? results.question4 : '-',
+     
+      ]
+
+      table_xlsx.push(temp);
+    })
+
+    this.quality.forEach((element) => {
       let temp1 = [];
       let temp2 = [];
 
