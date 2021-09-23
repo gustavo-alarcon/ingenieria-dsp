@@ -312,6 +312,7 @@
                     type="button"
                     style="margin-top: 8px"
                     class="form-corrective__btn-delete"
+                    *ngIf="i>0"
                   >
                     <mat-icon color="warn" (click)="deleteControl(i)"
                       >delete</mat-icon
