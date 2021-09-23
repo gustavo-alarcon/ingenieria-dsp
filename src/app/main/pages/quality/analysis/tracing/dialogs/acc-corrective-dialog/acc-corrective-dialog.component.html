@@ -45,13 +45,13 @@
             data.reportingWorkshop ? data.reportingWorkshop.workshopName : "---"
           }}
         </p>
+        <p>
+          <span style="font-weight: bold"> Taller resposable :</span>
+          {{ data.workShop ? data.workShop : "---" }}
+        </p>
         <p *ngIf="data.eventType === 'Interno'">
           <span style="font-weight: bold"> Proceso :</span>
-          {{
-            data.reportingWorkshopProcess
-              ? data.reportingWorkshopProcess
-              : "---"
-          }}
+          {{ data.analysis.process ? data.analysis.process : "---" }}
         </p>
         <p *ngIf="data.miningOperation">
           <span style="font-weight: bold"> Operacion minera :</span>

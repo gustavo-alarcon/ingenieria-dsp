@@ -1,16 +1,26 @@
 <div class="ms-container">
   <div class="ms-toolbar">
     <mat-icon mat-list-icon class="ms-toolbar__icon">settings</mat-icon>
-    <h1 class="ms-toolbar__title" [ngClass]="
+    <h1
+      class="ms-toolbar__title"
+      [ngClass]="
         isMobile ? 'ms-toolbar__title--mobile' : 'ms-toolbar__title--desktop'
-      ">
+      "
+    >
       Configuraciones
     </h1>
   </div>
   <mat-divider></mat-divider>
-  <div class="container-settings" *ngIf="authService.uiConfig.quality.configuration.panel.lists">
-    <mat-expansion-panel class="container-settings__color-expantion" [expanded]="step === 1" (opened)="setStep(1)"
-      hideToggle>
+  <div
+    class="container-settings"
+    *ngIf="authService.uiConfig.quality.configuration.panel.lists"
+  >
+    <mat-expansion-panel
+      class="container-settings__color-expantion"
+      [expanded]="step === 1"
+      (opened)="setStep(1)"
+      hideToggle
+    >
       <mat-expansion-panel-header style="height: 58px">
         <mat-panel-title class="container-settings__header-title">
           Envío de correos
@@ -19,18 +29,28 @@
       <div style="border: 10px"></div>
 
       <mat-card class="mat-elevation-z0">
-        <div class="container-diffusion" *ngIf="broadcast$ | async as broadcastList">
+        <div
+          class="container-diffusion"
+          *ngIf="broadcast$ | async as broadcastList"
+        >
           <div *ngFor="let broadcast of broadcastList; let i = index">
             <mat-card-content>
-              <mat-card class="mat-elevation-z0" style="margin-left: -10px; margin-top: 5px">
+              <mat-card
+                class="mat-elevation-z0"
+                style="margin-left: -10px; margin-top: 5px"
+              >
                 <mat-card-header>
                   <mat-card-title>
                     <div class="container-diffusion__title">
                       <p class="container-diffusion__title--name">
                         Lista de {{ broadcast.name }}
                       </p>
-                      <button mat-icon-button aria-label="deletelistResult" class="container-diffusion__btn"
-                        (click)="deleteListBroadcast(broadcast, i)">
+                      <button
+                        mat-icon-button
+                        aria-label="deletelistResult"
+                        class="container-diffusion__btn"
+                        (click)="deleteListBroadcast(broadcast, i)"
+                      >
                         <mat-icon style="color: #ff2d2d">delete</mat-icon>
                       </button>
                     </div>
@@ -38,32 +58,62 @@
                 </mat-card-header>
               </mat-card>
 
-              <mat-card class="mat-elevation-z0 container-expansion1__content-card">
-                <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
-                <mat-card-header class="container-expansion1__content-card--header">
+              <mat-card
+                class="mat-elevation-z0 container-expansion1__content-card"
+              >
+                <mat-progress-bar
+                  mode="indeterminate"
+                  *ngIf="loading$ | async"
+                ></mat-progress-bar>
+                <mat-card-header
+                  class="container-expansion1__content-card--header"
+                >
                   <mat-form-field>
                     <mat-label>Escribir</mat-label>
-                    <input type="text" matInput placeholder="Escribir" [formControl]="broadcastFormArray.controls[i]"
-                      (keyup.enter)="addListDiffusion(broadcast, i)" [errorStateMatcher]="matcher" autocomplete="off" />
-                    <button mat-button *ngIf="broadcastFormArray.controls[i].errors" matSuffix mat-icon-button
-                      aria-label="clearResult" (click)="broadcastFormArray.controls[i].reset()">
+                    <input
+                      type="text"
+                      matInput
+                      placeholder="Escribir"
+                      [formControl]="broadcastFormArray.controls[i]"
+                      (keyup.enter)="addListDiffusion(broadcast, i)"
+                      [errorStateMatcher]="matcher"
+                      autocomplete="off"
+                    />
+                    <button
+                      mat-button
+                      *ngIf="broadcastFormArray.controls[i].errors"
+                      matSuffix
+                      mat-icon-button
+                      aria-label="clearResult"
+                      (click)="broadcastFormArray.controls[i].reset()"
+                    >
                       <mat-icon>close</mat-icon>
                     </button>
                     <mat-hint>Presione ENTER para agregar</mat-hint>
-                    <mat-error *ngIf="
+                    <mat-error
+                      *ngIf="
                         broadcastFormArray.controls[i].hasError('required')
-                      ">
+                      "
+                    >
                       El campo es <strong>Requerido</strong>
                     </mat-error>
                   </mat-form-field>
                 </mat-card-header>
-                <mat-card-content class="container-expansion1__content-card-content">
-                  <div role="list" *ngFor="let item of broadcast['emailList']; let j = index">
+                <mat-card-content
+                  class="container-expansion1__content-card-content"
+                >
+                  <div
+                    role="list"
+                    *ngFor="let item of broadcast['emailList']; let j = index"
+                  >
                     <div class="item-list">
                       <span>{{ item }}</span>
                       <span>
-                        <button mat-icon-button aria-label="deletelistResult"
-                          (click)="updateBrocastListEmail(broadcast, item)">
+                        <button
+                          mat-icon-button
+                          aria-label="deletelistResult"
+                          (click)="updateBrocastListEmail(broadcast, item)"
+                        >
                           <mat-icon style="color: #828282">delete</mat-icon>
                         </button>
                       </span>
@@ -75,17 +125,30 @@
           </div>
         </div>
 
-        <button type="button" aria-label="saveDataDifusion" mat-button class="container-settings__btn-add"
-          style="margin-top: 50px" (click)="addBroadcast()">
+        <button
+          type="button"
+          aria-label="saveDataDifusion"
+          mat-button
+          class="container-settings__btn-add"
+          style="margin-top: 50px"
+          (click)="addBroadcast()"
+        >
           AGREGAR
         </button>
       </mat-card>
     </mat-expansion-panel>
   </div>
 
-  <div class="container-settings" *ngIf="authService.uiConfig.quality.configuration.panel.broadcast">
-    <mat-expansion-panel class="container-settings__color-expantion" [expanded]="step === 2" (opened)="setStep(2)"
-      hideToggle>
+  <div
+    class="container-settings"
+    *ngIf="authService.uiConfig.quality.configuration.panel.broadcast"
+  >
+    <mat-expansion-panel
+      class="container-settings__color-expantion"
+      [expanded]="step === 2"
+      (opened)="setStep(2)"
+      hideToggle
+    >
       <mat-expansion-panel-header style="height: 58px">
         <mat-panel-title class="container-settings__header-title">
           Listas
@@ -94,46 +157,80 @@
       <div style="border: 10px"></div>
       <mat-card class="mat-elevation-z0">
         <div class="container-diffusion">
-          <mat-card class="mat-elevation-z0">
+          <!-- <mat-card class="mat-elevation-z0">
             <mat-card-content>
               <mat-card class="mat-elevation-z0">
                 <mat-card-header class="header-list">
                   <mat-card-title class="header-list__title">
                     <span class="mini-title">Taller</span>
-                    <button type="button" aria-label="saveDataDifusion" mat-button class="container-settings__btn-save"
-                      (click)="saveWorkshop()">
+                    <button
+                      type="button"
+                      aria-label="saveDataDifusion"
+                      mat-button
+                      class="container-settings__btn-save"
+                      (click)="saveWorkshop()"
+                    >
                       GUARDAR
                     </button>
                   </mat-card-title>
                 </mat-card-header>
               </mat-card>
 
-              <mat-card class="mat-elevation-z0 container-expansion1__content-card">
-                <mat-progress-bar mode="indeterminate" *ngIf="loading1$ | async"></mat-progress-bar>
-                <mat-card-header class="container-expansion1__content-card--header">
+              <mat-card
+                class="mat-elevation-z0 container-expansion1__content-card"
+              >
+                <mat-progress-bar
+                  mode="indeterminate"
+                  *ngIf="loading1$ | async"
+                ></mat-progress-bar>
+                <mat-card-header
+                  class="container-expansion1__content-card--header"
+                >
                   <mat-form-field>
                     <mat-label>Escribir</mat-label>
-                    <input type="text" matInput placeholder="Escribir" [formControl]="entryWorkshopControl"
-                      (keyup.enter)="addOrDeleteEntryWorkshopList('add')" [errorStateMatcher]="matcher"
-                      autocomplete="off" />
-                    <button mat-button *ngIf="entryWorkshopControl.value" matSuffix mat-icon-button
-                      aria-label="clearResult" (click)="entryWorkshopControl.reset()">
+                    <input
+                      type="text"
+                      matInput
+                      placeholder="Escribir"
+                      [formControl]="entryWorkshopControl"
+                      (keyup.enter)="addOrDeleteEntryWorkshopList('add')"
+                      [errorStateMatcher]="matcher"
+                      autocomplete="off"
+                    />
+                    <button
+                      mat-button
+                      *ngIf="entryWorkshopControl.value"
+                      matSuffix
+                      mat-icon-button
+                      aria-label="clearResult"
+                      (click)="entryWorkshopControl.reset()"
+                    >
                       <mat-icon>close</mat-icon>
                     </button>
                     <mat-hint>Presione ENTER para agregar</mat-hint>
-                    <mat-error *ngIf="entryWorkshopControl.hasError('required')">
+                    <mat-error
+                      *ngIf="entryWorkshopControl.hasError('required')"
+                    >
                       El campo es <strong>Requerido</strong>
                     </mat-error>
                   </mat-form-field>
                 </mat-card-header>
-                <mat-card-content class="container-expansion1__content-card-content">
-                  <div role="list" *ngFor="let workshop of listWorkshopArray; let i = index">
+                <mat-card-content
+                  class="container-expansion1__content-card-content"
+                >
+                  <div
+                    role="list"
+                    *ngFor="let workshop of listWorkshopArray; let i = index"
+                  >
                     <div class="item-list">
                       <span>{{ workshop.name }}</span>
 
                       <span>
-                        <button mat-icon-button aria-label="deletelistWarehouse"
-                          (click)="addOrDeleteEntryWorkshopList('delete', i)">
+                        <button
+                          mat-icon-button
+                          aria-label="deletelistWarehouse"
+                          (click)="addOrDeleteEntryWorkshopList('delete', i)"
+                        >
                           <mat-icon class="delete-color">delete</mat-icon>
                         </button>
                       </span>
@@ -142,7 +239,7 @@
                 </mat-card-content>
               </mat-card>
             </mat-card-content>
-          </mat-card>
+          </mat-card> -->
 
           <mat-card class="mat-elevation-z0">
             <mat-card-content>
@@ -150,44 +247,79 @@
                 <mat-card-header class="header-list">
                   <mat-card-title class="header-list__title">
                     <span class="mini-title">Componente Interno</span>
-                    <button type="button" aria-label="saveDataDifusion" mat-button class="container-settings__btn-save"
-                      (click)="saveComponentInternal()">
+                    <button
+                      type="button"
+                      aria-label="saveDataDifusion"
+                      mat-button
+                      class="container-settings__btn-save"
+                      (click)="saveComponentInternal()"
+                    >
                       GUARDAR
                     </button>
                   </mat-card-title>
                 </mat-card-header>
               </mat-card>
 
-              <mat-card class="mat-elevation-z0 container-expansion1__content-card">
-                <mat-progress-bar mode="indeterminate" *ngIf="loading2$ | async"></mat-progress-bar>
-                <mat-card-header class="container-expansion1__content-card--header">
+              <mat-card
+                class="mat-elevation-z0 container-expansion1__content-card"
+              >
+                <mat-progress-bar
+                  mode="indeterminate"
+                  *ngIf="loading2$ | async"
+                ></mat-progress-bar>
+                <mat-card-header
+                  class="container-expansion1__content-card--header"
+                >
                   <mat-form-field>
                     <mat-label>Escribir</mat-label>
-                    <input type="text" matInput placeholder="Escribir" [formControl]="entryComponentInternalControl"
-                      (keyup.enter)="addOrDeleteEntryComponentInternal('add')" [errorStateMatcher]="matcher"
-                      autocomplete="off" />
-                    <button mat-button *ngIf="entryComponentInternalControl.value" matSuffix mat-icon-button
-                      aria-label="clearResult" (click)="entryComponentInternalControl.reset()">
+                    <input
+                      type="text"
+                      matInput
+                      placeholder="Escribir"
+                      [formControl]="entryComponentInternalControl"
+                      (keyup.enter)="addOrDeleteEntryComponentInternal('add')"
+                      [errorStateMatcher]="matcher"
+                      autocomplete="off"
+                    />
+                    <button
+                      mat-button
+                      *ngIf="entryComponentInternalControl.value"
+                      matSuffix
+                      mat-icon-button
+                      aria-label="clearResult"
+                      (click)="entryComponentInternalControl.reset()"
+                    >
                       <mat-icon>close</mat-icon>
                     </button>
                     <mat-hint>Presione ENTER para agregar</mat-hint>
-                    <mat-error *ngIf="entryComponentInternalControl.hasError('required')">
+                    <mat-error
+                      *ngIf="entryComponentInternalControl.hasError('required')"
+                    >
                       El campo es <strong>Requerido</strong>
                     </mat-error>
                   </mat-form-field>
                 </mat-card-header>
-                <mat-card-content class="container-expansion1__content-card-content">
-                  <div role="list" *ngFor="
+                <mat-card-content
+                  class="container-expansion1__content-card-content"
+                >
+                  <div
+                    role="list"
+                    *ngFor="
                       let compInternal of listComponentInternalArray;
                       let i = index
-                    ">
+                    "
+                  >
                     <div class="item-list">
                       <span>{{ compInternal.name }}</span>
 
                       <span>
-                        <button mat-icon-button aria-label="deletelistWarehouse" (click)="
+                        <button
+                          mat-icon-button
+                          aria-label="deletelistWarehouse"
+                          (click)="
                             addOrDeleteEntryComponentInternal('delete', i)
-                          ">
+                          "
+                        >
                           <mat-icon class="delete-color">delete</mat-icon>
                         </button>
                       </span>
@@ -204,45 +336,81 @@
                 <mat-card-header class="header-list">
                   <mat-card-title class="header-list__title">
                     <span class="mini-title">Componente Externo</span>
-                    <button type="button" aria-label="saveDataDifusion" mat-button class="container-settings__btn-save"
-                      (click)="saveComponentExternal()">
+                    <button
+                      type="button"
+                      aria-label="saveDataDifusion"
+                      mat-button
+                      class="container-settings__btn-save"
+                      (click)="saveComponentExternal()"
+                    >
                       GUARDAR
                     </button>
                   </mat-card-title>
                 </mat-card-header>
               </mat-card>
 
-              <mat-card class="mat-elevation-z0 container-expansion1__content-card">
-                <mat-progress-bar mode="indeterminate" *ngIf="loading3$ | async"></mat-progress-bar>
-                <mat-card-header class="container-expansion1__content-card--header">
+              <mat-card
+                class="mat-elevation-z0 container-expansion1__content-card"
+              >
+                <mat-progress-bar
+                  mode="indeterminate"
+                  *ngIf="loading3$ | async"
+                ></mat-progress-bar>
+                <mat-card-header
+                  class="container-expansion1__content-card--header"
+                >
                   <mat-form-field>
                     <mat-label>Escribir</mat-label>
-                    <input type="text" matInput placeholder="Escribir" [formControl]="entryComponentExternalControl"
+                    <input
+                      type="text"
+                      matInput
+                      placeholder="Escribir"
+                      [formControl]="entryComponentExternalControl"
                       (keyup.enter)="
                         addOrDeleteEntryComponentExternalList('add')
-                      " [errorStateMatcher]="matcher" autocomplete="off" />
-                    <button mat-button *ngIf="entryComponentExternalControl.value" matSuffix mat-icon-button
-                      aria-label="clearResult" (click)="entryComponentExternalControl.reset()">
+                      "
+                      [errorStateMatcher]="matcher"
+                      autocomplete="off"
+                    />
+                    <button
+                      mat-button
+                      *ngIf="entryComponentExternalControl.value"
+                      matSuffix
+                      mat-icon-button
+                      aria-label="clearResult"
+                      (click)="entryComponentExternalControl.reset()"
+                    >
                       <mat-icon>close</mat-icon>
                     </button>
                     <mat-hint>Presione ENTER para agregar</mat-hint>
-                    <mat-error *ngIf="entryComponentExternalControl.hasError('required')">
+                    <mat-error
+                      *ngIf="entryComponentExternalControl.hasError('required')"
+                    >
                       El campo es <strong>Requerido</strong>
                     </mat-error>
                   </mat-form-field>
                 </mat-card-header>
-                <mat-card-content class="container-expansion1__content-card-content">
-                  <div role="list" *ngFor="
+                <mat-card-content
+                  class="container-expansion1__content-card-content"
+                >
+                  <div
+                    role="list"
+                    *ngFor="
                       let compExternal of listComponentExternalArray;
                       let i = index
-                    ">
+                    "
+                  >
                     <div class="item-list">
                       <span>{{ compExternal.name }}</span>
 
                       <span>
-                        <button mat-icon-button aria-label="deletelistWarehouse" (click)="
+                        <button
+                          mat-icon-button
+                          aria-label="deletelistWarehouse"
+                          (click)="
                             addOrDeleteEntryComponentExternalList('delete', i)
-                          ">
+                          "
+                        >
                           <mat-icon class="delete-color">delete</mat-icon>
                         </button>
                       </span>
@@ -259,43 +427,77 @@
                 <mat-card-header class="header-list">
                   <mat-card-title class="header-list__title">
                     <span class="mini-title">Operación Minera</span>
-                    <button type="button" aria-label="saveDataDifusion" mat-button class="container-settings__btn-save"
-                      (click)="saveMiningOperation()">
+                    <button
+                      type="button"
+                      aria-label="saveDataDifusion"
+                      mat-button
+                      class="container-settings__btn-save"
+                      (click)="saveMiningOperation()"
+                    >
                       GUARDAR
                     </button>
                   </mat-card-title>
                 </mat-card-header>
               </mat-card>
 
-              <mat-card class="mat-elevation-z0 container-expansion1__content-card">
-                <mat-progress-bar mode="indeterminate" *ngIf="loading4$ | async"></mat-progress-bar>
-                <mat-card-header class="container-expansion1__content-card--header">
+              <mat-card
+                class="mat-elevation-z0 container-expansion1__content-card"
+              >
+                <mat-progress-bar
+                  mode="indeterminate"
+                  *ngIf="loading4$ | async"
+                ></mat-progress-bar>
+                <mat-card-header
+                  class="container-expansion1__content-card--header"
+                >
                   <mat-form-field>
                     <mat-label>Escribir</mat-label>
-                    <input type="text" matInput placeholder="Escribir" [formControl]="entryMiningOperationControl"
-                      (keyup.enter)="addOrDeleteEntryMiningOperation('add')" [errorStateMatcher]="matcher"
-                      autocomplete="off" />
-                    <button mat-button *ngIf="entryMiningOperationControl.value" matSuffix mat-icon-button
-                      aria-label="clearResult" (click)="entryMiningOperationControl.reset()">
+                    <input
+                      type="text"
+                      matInput
+                      placeholder="Escribir"
+                      [formControl]="entryMiningOperationControl"
+                      (keyup.enter)="addOrDeleteEntryMiningOperation('add')"
+                      [errorStateMatcher]="matcher"
+                      autocomplete="off"
+                    />
+                    <button
+                      mat-button
+                      *ngIf="entryMiningOperationControl.value"
+                      matSuffix
+                      mat-icon-button
+                      aria-label="clearResult"
+                      (click)="entryMiningOperationControl.reset()"
+                    >
                       <mat-icon>close</mat-icon>
                     </button>
                     <mat-hint>Presione ENTER para agregar</mat-hint>
-                    <mat-error *ngIf="entryMiningOperationControl.hasError('required')">
+                    <mat-error
+                      *ngIf="entryMiningOperationControl.hasError('required')"
+                    >
                       El campo es <strong>Requerido</strong>
                     </mat-error>
                   </mat-form-field>
                 </mat-card-header>
-                <mat-card-content class="container-expansion1__content-card-content">
-                  <div role="list" *ngFor="
+                <mat-card-content
+                  class="container-expansion1__content-card-content"
+                >
+                  <div
+                    role="list"
+                    *ngFor="
                       let mining of listMiningOperationArray;
                       let i = index
-                    ">
+                    "
+                  >
                     <div class="item-list">
                       <span>{{ mining.name }}</span>
 
                       <span>
-                        <button mat-icon-button aria-label="deletelistWarehouse"
-                          (click)="addOrDeleteEntryMiningOperation('delete', i)">
+                        <button
+                          mat-icon-button
+                          aria-label="deletelistWarehouse"
+                          (click)="addOrDeleteEntryMiningOperation('delete', i)"
+                        >
                           <mat-icon class="delete-color">delete</mat-icon>
                         </button>
                       </span>
@@ -306,50 +508,86 @@
             </mat-card-content>
           </mat-card>
 
-          <mat-card class="mat-elevation-z0">
+          <!-- <mat-card class="mat-elevation-z0">
             <mat-card-content>
               <mat-card class="mat-elevation-z0">
                 <mat-card-header class="header-list">
                   <mat-card-title class="header-list__title">
                     <span class="mini-title">Causante de falla</span>
-                    <button type="button" aria-label="saveDataCausefailed" mat-button
-                      class="container-settings__btn-save" (click)="saveCauseFailed()">
+                    <button
+                      type="button"
+                      aria-label="saveDataCausefailed"
+                      mat-button
+                      class="container-settings__btn-save"
+                      (click)="saveCauseFailed()"
+                    >
                       GUARDAR
                     </button>
                   </mat-card-title>
                 </mat-card-header>
               </mat-card>
 
-              <mat-card class="mat-elevation-z0 container-expansion1__content-card">
-                <mat-progress-bar mode="indeterminate" *ngIf="loading5$ | async"></mat-progress-bar>
-                <mat-card-header class="container-expansion1__content-card--header">
+              <mat-card
+                class="mat-elevation-z0 container-expansion1__content-card"
+              >
+                <mat-progress-bar
+                  mode="indeterminate"
+                  *ngIf="loading5$ | async"
+                ></mat-progress-bar>
+                <mat-card-header
+                  class="container-expansion1__content-card--header"
+                >
                   <mat-form-field>
                     <mat-label>Escribir</mat-label>
-                    <input type="text" matInput placeholder="Escribir" [formControl]="entryCauseFailedControl"
-                      (keyup.enter)="addOrDeleteEntryComponentCauseFailure('add')" [errorStateMatcher]="matcher"
-                      autocomplete="off" />
-                    <button mat-button *ngIf="entryCauseFailedControl.value" matSuffix mat-icon-button
-                      aria-label="clearResult" (click)="entryCauseFailedControl.reset()">
+                    <input
+                      type="text"
+                      matInput
+                      placeholder="Escribir"
+                      [formControl]="entryCauseFailedControl"
+                      (keyup.enter)="
+                        addOrDeleteEntryComponentCauseFailure('add')
+                      "
+                      [errorStateMatcher]="matcher"
+                      autocomplete="off"
+                    />
+                    <button
+                      mat-button
+                      *ngIf="entryCauseFailedControl.value"
+                      matSuffix
+                      mat-icon-button
+                      aria-label="clearResult"
+                      (click)="entryCauseFailedControl.reset()"
+                    >
                       <mat-icon>close</mat-icon>
                     </button>
                     <mat-hint>Presione ENTER para agregar</mat-hint>
-                    <mat-error *ngIf="entryCauseFailedControl.hasError('required')">
+                    <mat-error
+                      *ngIf="entryCauseFailedControl.hasError('required')"
+                    >
                       El campo es <strong>Requerido</strong>
                     </mat-error>
                   </mat-form-field>
                 </mat-card-header>
-                <mat-card-content class="container-expansion1__content-card-content">
-                  <div role="list" *ngFor="
+                <mat-card-content
+                  class="container-expansion1__content-card-content"
+                >
+                  <div
+                    role="list"
+                    *ngFor="
                       let compCause of listCauseFailureArray;
                       let i = index
-                    ">
+                    "
+                  >
                     <div class="item-list">
                       <span>{{ compCause.name }}</span>
 
                       <span>
-                        <button mat-icon-button (click)="
-                          addOrDeleteEntryComponentCauseFailure('delete', i)
-                          ">
+                        <button
+                          mat-icon-button
+                          (click)="
+                            addOrDeleteEntryComponentCauseFailure('delete', i)
+                          "
+                        >
                           <mat-icon class="delete-color">delete</mat-icon>
                         </button>
                       </span>
@@ -358,32 +596,56 @@
                 </mat-card-content>
               </mat-card>
             </mat-card-content>
-          </mat-card>
+          </mat-card> -->
 
-          <mat-card class="mat-elevation-z0">
+          <!-- <mat-card class="mat-elevation-z0">
             <mat-card-content>
               <mat-card class="mat-elevation-z0">
                 <mat-card-header class="header-list">
                   <mat-card-title class="header-list__title">
                     <span class="mini-title">Proceso</span>
-                    <button type="button" aria-label="saveDataProcess" mat-button class="container-settings__btn-save"
-                      (click)="saveProcess()">
+                    <button
+                      type="button"
+                      aria-label="saveDataProcess"
+                      mat-button
+                      class="container-settings__btn-save"
+                      (click)="saveProcess()"
+                    >
                       GUARDAR
                     </button>
                   </mat-card-title>
                 </mat-card-header>
               </mat-card>
 
-              <mat-card class="mat-elevation-z0 container-expansion1__content-card">
-                <mat-progress-bar mode="indeterminate" *ngIf="loading6$ | async"></mat-progress-bar>
-                <mat-card-header class="container-expansion1__content-card--header">
+              <mat-card
+                class="mat-elevation-z0 container-expansion1__content-card"
+              >
+                <mat-progress-bar
+                  mode="indeterminate"
+                  *ngIf="loading6$ | async"
+                ></mat-progress-bar>
+                <mat-card-header
+                  class="container-expansion1__content-card--header"
+                >
                   <mat-form-field>
                     <mat-label>Escribir</mat-label>
-                    <input type="text" matInput placeholder="Escribir" [formControl]="entryProcessControl"
-                      (keyup.enter)="addOrDeleteEntryComponentProcess('add')" [errorStateMatcher]="matcher"
-                      autocomplete="off" />
-                    <button mat-button *ngIf="entryProcessControl.value" matSuffix mat-icon-button
-                      aria-label="clearResult" (click)="entryProcessControl.reset()">
+                    <input
+                      type="text"
+                      matInput
+                      placeholder="Escribir"
+                      [formControl]="entryProcessControl"
+                      (keyup.enter)="addOrDeleteEntryComponentProcess('add')"
+                      [errorStateMatcher]="matcher"
+                      autocomplete="off"
+                    />
+                    <button
+                      mat-button
+                      *ngIf="entryProcessControl.value"
+                      matSuffix
+                      mat-icon-button
+                      aria-label="clearResult"
+                      (click)="entryProcessControl.reset()"
+                    >
                       <mat-icon>close</mat-icon>
                     </button>
                     <mat-hint>Presione ENTER para agregar</mat-hint>
@@ -392,18 +654,23 @@
                     </mat-error>
                   </mat-form-field>
                 </mat-card-header>
-                <mat-card-content class="container-expansion1__content-card-content">
-                  <div role="list" *ngFor="
-                      let process of listProcessArray;
-                      let i = index
-                    ">
+                <mat-card-content
+                  class="container-expansion1__content-card-content"
+                >
+                  <div
+                    role="list"
+                    *ngFor="let process of listProcessArray; let i = index"
+                  >
                     <div class="item-list">
                       <span>{{ process.name }}</span>
 
                       <span>
-                        <button mat-icon-button (click)="
-                        addOrDeleteEntryComponentProcess('delete', i)
-                          ">
+                        <button
+                          mat-icon-button
+                          (click)="
+                            addOrDeleteEntryComponentProcess('delete', i)
+                          "
+                        >
                           <mat-icon class="delete-color">delete</mat-icon>
                         </button>
                       </span>
@@ -412,7 +679,7 @@
                 </mat-card-content>
               </mat-card>
             </mat-card-content>
-          </mat-card>
+          </mat-card> -->
         </div>
 
         <mat-divider style="margin: 2em 0; position: relative"></mat-divider>
@@ -421,100 +688,25 @@
           <div>
             <mat-card-content class="container-expansion2">
               <div class="container-expansion2__container-form">
-                <mat-card class="mat-elevation-z0" style="margin-left: -10px; margin-top: 5px">
-                  <mat-card-header>
-                    <mat-card-title class="container-title">
-                      <span> Áreas responsables </span>
-                    </mat-card-title>
-                  </mat-card-header>
-                </mat-card>
-                <form [formGroup]="areaForm" class="container-expansion2__form">
-                  <mat-form-field class="container-expansion2__form--input" appearance="outline">
-                    <mat-label>Área responsable</mat-label>
-                    <input type="text" autocomplete="off" formControlName="name" placeholder="Escribe..." matInput />
-                    <mat-error *ngIf="areaForm.controls['name'].errors">
-                      Campo <strong>requerido.</strong>
-                    </mat-error>
-                  </mat-form-field>
-
-                  <mat-form-field class="container-expansion2__form--input" appearance="outline">
-                    <mat-label>Correo</mat-label>
-                    <input type="text" autocomplete="off" formControlName="email" placeholder="Escribe..." matInput />
-                    <mat-error *ngIf="areaForm.controls['email'].errors">
-                      Campo <strong>requerido.</strong>
-                    </mat-error>
-                  </mat-form-field>
-
-                  <button type="submit" aria-label="saveDataDifusion" mat-button class="container-expansion2__form--btn"
-                    (click)="saveResponsibleArea()">
-                    GUARDAR
-                  </button>
-                </form>
-              </div>
-
-              <div>
-                <div class="container-table" *ngIf="areaResponsable$ | async">
-                  <table mat-table [dataSource]="historyMobilDataSource" class="mat-elevation-z8">
-                    <ng-container matColumnDef="name">
-                      <th mat-header-cell *matHeaderCellDef class="table__cell theader">
-                        Área responsable
-                      </th>
-                      <td mat-cell *matCellDef="let element" class="table__cell">
-                        {{ element.name ? element.name : "---" }}
-                      </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="email">
-                      <th mat-header-cell *matHeaderCellDef class="table__cell theader">
-                        Email
-                      </th>
-                      <td mat-cell *matCellDef="let element" class="table__cell">
-                        {{ element.email ? element.email : "---" }}
-                      </td>
-                    </ng-container>
-
-                    <ng-container matColumnDef="actions" stickyEnd>
-                      <th mat-header-cell *matHeaderCellDef class="table__cell theader">
-                        Acción
-                      </th>
-                      <td mat-cell *matCellDef="let element" class="table__cell">
-                        <button mat-icon-button aria-label="deletelistResult"
-                          (click)="deleteListResponsibleArea(element)">
-                          <mat-icon style="color: #828282">delete</mat-icon>
-                        </button>
-                      </td>
-                    </ng-container>
-
-                    <tr mat-header-row *matHeaderRowDef="historyMobilDisplayedColumns"></tr>
-                    <tr mat-row *matRowDef="
-                        let row;
-                        columns: historyMobilDisplayedColumns
-                      "></tr>
-                  </table>
-                </div>
-                <mat-paginator #historyMobilPaginator class="ms-paginator" [pageSizeOptions]="[5, 10, 20]"
-                  showFirstLastButtons>
-                </mat-paginator>
-              </div>
-            </mat-card-content>
-          </div>
-        </div>
-
-        <mat-divider style="margin: 2em 0; position: relative"></mat-divider>
-
-        <div class="container-diffusion">
-          <div>
-            <mat-card-content class="container-expansion2">
-              <div class="container-expansion2__container-form">
-                <mat-card class="mat-elevation-z0" style="margin-left: -10px; margin-top: 5px">
+                <mat-card
+                  class="mat-elevation-z0"
+                  style="margin-left: -10px; margin-top: 5px"
+                >
                   <mat-card-header>
                     <mat-card-title class="container-title">
                       <span> Talleres </span>
                     </mat-card-title>
                   </mat-card-header>
                 </mat-card>
-                <form [formGroup]="workshopForm" class="container-expansion2__form" autocomplete="off">
-                  <mat-form-field class="container-expansion2__form--input" appearance="outline">
+                <form
+                  [formGroup]="workshopForm"
+                  class="container-expansion2__form"
+                  autocomplete="off"
+                >
+                  <mat-form-field
+                    class="container-expansion2__form--input"
+                    appearance="outline"
+                  >
                     <mat-label>Taller</mat-label>
                     <input
                       type="text"
@@ -531,12 +723,7 @@
                   </mat-form-field>
 
                   <div style="width: 100%; height: 200px; overflow: auto">
-                    <mat-form-field
-                      style="
-                        width: 100%;
-                        background: white;
-                      "
-                    >
+                    <mat-form-field style="width: 100%; background: white">
                       <mat-label>Escribir</mat-label>
                       <input
                         type="text"
@@ -592,10 +779,15 @@
                     </mat-card-header>
                   </div> -->
 
-                  <button type="submit" mat-button class="container-expansion2__form--btn"
-                    (click)="saveSubmitWorkshopForm()" [disabled]="
+                  <button
+                    type="submit"
+                    mat-button
+                    class="container-expansion2__form--btn"
+                    (click)="saveSubmitWorkshopForm()"
+                    [disabled]="
                       workshopProcessArray.length < 1 || !workshopForm.valid
-                    ">
+                    "
+                  >
                     GUARDAR
                   </button>
                 </form>
@@ -609,22 +801,38 @@
                     class="mat-elevation-z8"
                   >
                     <ng-container matColumnDef="No">
-                      <th mat-header-cell *matHeaderCellDef class="table__cell theader">
+                      <th
+                        mat-header-cell
+                        *matHeaderCellDef
+                        class="table__cell theader"
+                      >
                         Nro
                       </th>
-                      <td mat-cell *matCellDef="let element; let i = index" class="table__cell">
+                      <td
+                        mat-cell
+                        *matCellDef="let element; let i = index"
+                        class="table__cell"
+                      >
                         {{ i + 1 }}
                       </td>
                     </ng-container>
 
                     <ng-container matColumnDef="workshopNameProcess">
-                      <th mat-header-cell *matHeaderCellDef class="table__cell theader">
+                      <th
+                        mat-header-cell
+                        *matHeaderCellDef
+                        class="table__cell theader"
+                      >
                         Talleres
                       </th>
-                      <td mat-cell *matCellDef="let element" class="table__cell">
+                      <td
+                        mat-cell
+                        *matCellDef="let element"
+                        class="table__cell"
+                      >
                         <div>
                           {{
-                          element.workshopName ? element.workshopName : "---"
+                            element.workshopName ? element.workshopName : "---"
                           }}
                         </div>
                         <ul>
@@ -636,7 +844,11 @@
                     </ng-container>
 
                     <ng-container matColumnDef="actions" stickyEnd>
-                      <th mat-header-cell *matHeaderCellDef class="table__cell theader">
+                      <th
+                        mat-header-cell
+                        *matHeaderCellDef
+                        class="table__cell theader"
+                      >
                         Acción
                       </th>
                       <td
@@ -656,12 +868,354 @@
                       </td>
                     </ng-container>
 
-                    <tr mat-header-row *matHeaderRowDef="workshopDisplayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: workshopDisplayedColumns"></tr>
+                    <tr
+                      mat-header-row
+                      *matHeaderRowDef="workshopDisplayedColumns"
+                    ></tr>
+                    <tr
+                      mat-row
+                      *matRowDef="let row; columns: workshopDisplayedColumns"
+                    ></tr>
                   </table>
                 </div>
-                <mat-paginator #workshopPaginator class="ms-paginator" [pageSizeOptions]="[5, 10, 20]"
-                  showFirstLastButtons>
+                <mat-paginator
+                  #workshopPaginator
+                  class="ms-paginator"
+                  [pageSizeOptions]="[5, 10, 20]"
+                  showFirstLastButtons
+                >
+                </mat-paginator>
+              </div>
+            </mat-card-content>
+          </div>
+        </div>
+
+        <mat-divider style="margin: 2em 0; position: relative"></mat-divider>
+
+        <div class="container-diffusion">
+          <div>
+            <mat-card-content class="container-expansion2">
+              <div class="container-expansion2__container-form">
+                <mat-card
+                  class="mat-elevation-z0"
+                  style="margin-left: -10px; margin-top: 5px"
+                >
+                  <mat-card-header>
+                    <mat-card-title class="container-title">
+                      <span> Causas </span>
+                    </mat-card-title>
+                  </mat-card-header>
+                </mat-card>
+                <form
+                  [formGroup]="causesForm"
+                  class="container-expansion2__form"
+                  autocomplete="off"
+                >
+                  <mat-form-field
+                    class="container-expansion2__form--input"
+                    appearance="outline"
+                  >
+                    <mat-label>Causa inmediata</mat-label>
+                    <input
+                      type="text"
+                      formControlName="immediateCause"
+                      placeholder="Escribir..."
+                      matInput
+                      onkeypress="return event.charCode !== 13"
+                    />
+                    <mat-error *ngIf="causesForm.controls['immediateCause'].errors">
+                      Campo <strong>requerido.</strong>
+                    </mat-error>
+                  </mat-form-field>
+
+                  <div style="width: 100%; height: 200px; overflow: auto">
+                    <mat-form-field style="width: 100%; background: white">
+                      <mat-label>Escribir</mat-label>
+                      <input
+                        type="text"
+                        matInput
+                        placeholder="Escribir"
+                        formControlName="basicCause"
+                        (keyup.enter)="addBasicCause()"
+                      />
+                      <button mat-button matSuffix mat-icon-button>
+                        <mat-icon (click)="resetBasicCause()"
+                          >close</mat-icon
+                        >
+                      </button>
+                      <mat-hint>Presione ENTER para agregar</mat-hint>
+                    </mat-form-field>
+
+                    <div
+                      role="list"
+                      *ngFor="let item of basicCausesArray; let j = index"
+                    >
+                      <div class="item-list">
+                        <span>{{ item }}</span>
+                        <span>
+                          <button
+                            mat-icon-button
+                            (click)="deleteBasicCauseArray(j)"
+                          >
+                            <mat-icon style="color: #828282">delete</mat-icon>
+                          </button>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    mat-button
+                    class="container-expansion2__form--btn"
+                    (click)="saveSubmitCausesForm()"
+                    [disabled]="
+                      basicCausesArray.length < 1 || !causesForm.valid
+                    "
+                  >
+                    GUARDAR
+                  </button>
+                </form>
+              </div>
+
+              <div>
+                <div class="table__taller" *ngIf="immediateCauses$ | async">
+                  <table
+                    mat-table
+                    [dataSource]="causesDataSource"
+                    class="mat-elevation-z8"
+                  >
+                    <ng-container matColumnDef="No">
+                      <th
+                        mat-header-cell
+                        *matHeaderCellDef
+                        class="table__cell theader"
+                      >
+                        Nro
+                      </th>
+                      <td
+                        mat-cell
+                        *matCellDef="let element; let i = index"
+                        class="table__cell"
+                      >
+                        {{ i + 1 }}
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="immediateCause">
+                      <th
+                        mat-header-cell
+                        *matHeaderCellDef
+                        class="table__cell theader"
+                      >
+                        Causa inmediata
+                      </th>
+                      <td
+                        mat-cell
+                        *matCellDef="let element"
+                        class="table__cell"
+                      >
+                        <div>
+                          {{ element.name ? element.name : "---" }}
+                        </div>
+                        <ul>
+                          <li *ngFor="let item of element.basicCauses">
+                            {{ item }}
+                          </li>
+                        </ul>
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="actions" stickyEnd>
+                      <th
+                        mat-header-cell
+                        *matHeaderCellDef
+                        class="table__cell theader"
+                      >
+                        Acción
+                      </th>
+                      <td
+                        mat-cell
+                        *matCellDef="let element"
+                        class="table__cell"
+                      >
+                        <button mat-icon-button (click)="editCause(element)">
+                          <mat-icon style="color: #828282">edit</mat-icon>
+                        </button>
+                        <button mat-icon-button (click)="deleteCause(element)">
+                          <mat-icon style="color: #828282">delete</mat-icon>
+                        </button>
+                      </td>
+                    </ng-container>
+
+                    <tr
+                      mat-header-row
+                      *matHeaderRowDef="causesDisplayedColumns"
+                    ></tr>
+                    <tr
+                      mat-row
+                      *matRowDef="let row; columns: causesDisplayedColumns"
+                    ></tr>
+                  </table>
+                </div>
+                <mat-paginator
+                  #causesPaginator
+                  class="ms-paginator"
+                  [pageSizeOptions]="[5, 10, 20]"
+                  showFirstLastButtons
+                >
+                </mat-paginator>
+              </div>
+            </mat-card-content>
+          </div>
+        </div>
+
+        <mat-divider style="margin: 2em 0; position: relative"></mat-divider>
+
+        <div class="container-diffusion">
+          <div>
+            <mat-card-content class="container-expansion2">
+              <div class="container-expansion2__container-form">
+                <mat-card
+                  class="mat-elevation-z0"
+                  style="margin-left: -10px; margin-top: 5px"
+                >
+                  <mat-card-header>
+                    <mat-card-title class="container-title">
+                      <span> Áreas responsables </span>
+                    </mat-card-title>
+                  </mat-card-header>
+                </mat-card>
+                <form [formGroup]="areaForm" class="container-expansion2__form">
+                  <mat-form-field
+                    class="container-expansion2__form--input"
+                    appearance="outline"
+                  >
+                    <mat-label>Área responsable</mat-label>
+                    <input
+                      type="text"
+                      autocomplete="off"
+                      formControlName="name"
+                      placeholder="Escribe..."
+                      matInput
+                    />
+                    <mat-error *ngIf="areaForm.controls['name'].errors">
+                      Campo <strong>requerido.</strong>
+                    </mat-error>
+                  </mat-form-field>
+
+                  <mat-form-field
+                    class="container-expansion2__form--input"
+                    appearance="outline"
+                  >
+                    <mat-label>Correo</mat-label>
+                    <input
+                      type="text"
+                      autocomplete="off"
+                      formControlName="email"
+                      placeholder="Escribe..."
+                      matInput
+                    />
+                    <mat-error *ngIf="areaForm.controls['email'].errors">
+                      Campo <strong>requerido.</strong>
+                    </mat-error>
+                  </mat-form-field>
+
+                  <button
+                    type="submit"
+                    aria-label="saveDataDifusion"
+                    mat-button
+                    class="container-expansion2__form--btn"
+                    (click)="saveResponsibleArea()"
+                  >
+                    GUARDAR
+                  </button>
+                </form>
+              </div>
+
+              <div>
+                <div class="container-table" *ngIf="areaResponsable$ | async">
+                  <table
+                    mat-table
+                    [dataSource]="historyMobilDataSource"
+                    class="mat-elevation-z8"
+                  >
+                    <ng-container matColumnDef="name">
+                      <th
+                        mat-header-cell
+                        *matHeaderCellDef
+                        class="table__cell theader"
+                      >
+                        Área responsable
+                      </th>
+                      <td
+                        mat-cell
+                        *matCellDef="let element"
+                        class="table__cell"
+                      >
+                        {{ element.name ? element.name : "---" }}
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="email">
+                      <th
+                        mat-header-cell
+                        *matHeaderCellDef
+                        class="table__cell theader"
+                      >
+                        Email
+                      </th>
+                      <td
+                        mat-cell
+                        *matCellDef="let element"
+                        class="table__cell"
+                      >
+                        {{ element.email ? element.email : "---" }}
+                      </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="actions" stickyEnd>
+                      <th
+                        mat-header-cell
+                        *matHeaderCellDef
+                        class="table__cell theader"
+                      >
+                        Acción
+                      </th>
+                      <td
+                        mat-cell
+                        *matCellDef="let element"
+                        class="table__cell"
+                      >
+                        <button
+                          mat-icon-button
+                          aria-label="deletelistResult"
+                          (click)="deleteListResponsibleArea(element)"
+                        >
+                          <mat-icon style="color: #828282">delete</mat-icon>
+                        </button>
+                      </td>
+                    </ng-container>
+
+                    <tr
+                      mat-header-row
+                      *matHeaderRowDef="historyMobilDisplayedColumns"
+                    ></tr>
+                    <tr
+                      mat-row
+                      *matRowDef="
+                        let row;
+                        columns: historyMobilDisplayedColumns
+                      "
+                    ></tr>
+                  </table>
+                </div>
+                <mat-paginator
+                  #historyMobilPaginator
+                  class="ms-paginator"
+                  [pageSizeOptions]="[5, 10, 20]"
+                  showFirstLastButtons
+                >
                 </mat-paginator>
               </div>
             </mat-card-content>

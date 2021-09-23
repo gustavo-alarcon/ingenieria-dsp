@@ -134,8 +134,8 @@
               autoActiveFirstOption
               #autocomplete="matAutocomplete"
             >
-              <mat-option *ngFor="let item of workshops" [value]="item.name">
-                {{ item.name }}
+              <mat-option *ngFor="let workshop of workshop$ | async" [value]="workshop.workshopName">
+                {{ workshop.workshopName }}
               </mat-option>
             </mat-autocomplete>
             <mat-hint *ngIf="!(workshop$ | async)">
