@@ -72,15 +72,6 @@
                 <span class="step-text" style="margin-top: 10px">
                   Análisis
                 </span>
-                <!--   <span *ngIf="resultEvaluation$  | async as result " 
-                                [ngClass]="{
-                                            'btn-result-1':   result > 0 &&  result < 5
-                                            ,'btn-result-2':   result > 4 &&  result < 10
-                                            ,'btn-result-3':   result > 9 &&  result < 20
-                                            ,'btn-result-4':   result > 19 && result < 26
-                                            }"
-                                > [ {{result}} ]
-                            </span> -->
                 <span
                   *ngIf="data.evaluationAnalisis"
                   [ngClass]="{
@@ -103,38 +94,17 @@
               </div>
             </ng-template>
 
-            <mat-form-field
-              *ngIf="causeFailure$ | async as causeFailuries"
-              class="container__form--input"
-              appearance="outline"
-            >
+            <mat-form-field class="container__form--input" appearance="outline">
               <mat-label>Causa inmediata</mat-label>
-              <input
-                autocomplete="off"
-                formControlName="causeFailure"
-                [matAutocomplete]="causeFailureAutocomplete"
-                type="text"
-                matInput
-              />
 
-              <mat-autocomplete
-                autoActiveFirstOption
-                #causeFailureAutocomplete="matAutocomplete"
-              >
-                <!-- <mat-option *ngIf="authService.uiConfig.quality.analysis.tabs.process.forms.failRoot" (click)="onAddCauseFailure()" [value]="">
-                                    <mat-icon>add_circle_outline</mat-icon>Añadir/Eliminar
-                                </mat-option> -->
+              <mat-select formControlName="causeFailure">
                 <mat-option
-                  *ngFor="let causeFailure of causeFailuries"
-                  [value]="causeFailure.name"
+                  *ngFor="let item of immediateCauses$ | async"
+                  [value]="item"
                 >
-                  {{ causeFailure.name }}
+                  {{ item.name }}
                 </mat-option>
-              </mat-autocomplete>
-              <mat-hint *ngIf="!(causeFailure$ | async)">
-                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-                <p>Cargando lista ...</p>
-              </mat-hint>
+              </mat-select>
               <mat-error>
                 <span *ngIf="analysisForm.get('causeFailure').errors?.required"
                   >Por favor, complete el campo.</span
@@ -148,77 +118,36 @@
 
             <mat-form-field appearance="outline" class="container__form--input">
               <mat-label>Causa básica</mat-label>
-              <input
-                autocomplete="off"
+
+              <mat-select
                 placeholder="Escribir..."
-                formControlName="causeBasic"
-                type="text"
-                matInput
-              />
-              <mat-error *ngIf="analysisForm.get('causeBasic').errors">
+                formControlName="basicCause"
+              >
+                <mat-option
+                  *ngFor="let item of basicCausesArray"
+                  [value]="item"
+                >
+                  {{ item }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="analysisForm.get('basicCause').errors">
                 Campo <strong>requerido.</strong>
               </mat-error>
             </mat-form-field>
             <br />
 
-            <mat-form-field
-              *ngIf="process$ | async as process"
-              class="container__form--input"
-              appearance="outline"
-            >
-              <mat-label>Proceso</mat-label>
-              <input
-                autocomplete="off"
-                formControlName="process"
-                [matAutocomplete]="processAutocomplete"
-                type="text"
-                matInput
-              />
-              <mat-autocomplete
-                autoActiveFirstOption
-                #processAutocomplete="matAutocomplete"
-              >
-                <mat-option *ngFor="let item of process" [value]="item.name">
-                  {{ item.name }}
-                </mat-option>
-              </mat-autocomplete>
-              <mat-hint *ngIf="!(process$ | async)">
-                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-                <p>Cargando lista ...</p>
-              </mat-hint>
-              <mat-error>
-                <span *ngIf="analysisForm.get('process').errors?.required"
-                  >Por favor, complete el campo.</span
-                >
-                <span *ngIf="analysisForm.get('process').errors?.invalid"
-                  >Dato inválido. Complete con alguna opción válida.</span
-                >
-              </mat-error>
-            </mat-form-field>
-
             <mat-divider></mat-divider>
 
             <mat-form-field class="container__form--input" appearance="outline">
               <mat-label>Taller responsable</mat-label>
-              <input
-                autocomplete="off"
-                formControlName="responsibleWorkshop"
-                [matAutocomplete]="resposibleWorkshopAutocomplete"
-                type="text"
-                matInput
-              />
-              <mat-autocomplete
-                autoActiveFirstOption
-                #resposibleWorkshopAutocomplete="matAutocomplete"
-                [displayWith]="showSelectedWorkshop"
-              >
+              <mat-select formControlName="responsibleWorkshop">
                 <mat-option
                   *ngFor="let workshop of responsibleWorkshopList$ | async"
                   [value]="workshop"
                 >
-                  {{ workshop.name }}
+                  {{ workshop.workshopName }}
                 </mat-option>
-              </mat-autocomplete>
+              </mat-select>
               <mat-error>
                 <span
                   *ngIf="
@@ -237,31 +166,22 @@
 
             <mat-form-field class="container__form--input" appearance="outline">
               <mat-label>Proceso</mat-label>
-              <input
-                autocomplete="off"
-                formControlName="workshopProcess"
-                [matAutocomplete]="workshopProcessAutocomplete"
-                type="text"
-                matInput
-              />
-              <mat-autocomplete
-                autoActiveFirstOption
-                #workshopProcessAutocomplete="matAutocomplete"
-              >
+
+              <mat-select formControlName="process">
                 <mat-option
                   *ngFor="let process of workshopProcessList"
                   [value]="process"
                 >
                   {{ process }}
                 </mat-option>
-              </mat-autocomplete>
+              </mat-select>
               <mat-error>
                 <span
-                  *ngIf="analysisForm.get('workshopProcess').errors?.required"
+                  *ngIf="analysisForm.get('process').errors?.required"
                   >Por favor, complete el campo.</span
                 >
                 <span
-                  *ngIf="analysisForm.get('workshopProcess').errors?.invalid"
+                  *ngIf="analysisForm.get('process').errors?.invalid"
                   >Dato inválido. Complete con alguna opción válida.</span
                 >
               </mat-error>
