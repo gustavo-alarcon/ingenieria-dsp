@@ -49,7 +49,7 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Taller</mat-label>
                     <mat-select formControlName="workshop">
-                        <mat-option *ngFor="let item of workshops" [value]="item.code">
+                        <mat-option *ngFor="let item of workshops" [value]="item">
                             {{item.location}}
                         </mat-option>
                     </mat-select>

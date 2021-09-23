@@ -20,7 +20,11 @@
   class="mat-typography"
   style="color: gray; margin: 24px 0px 16px 0px"
 >
-  <p>¿Esta seguro de borrar la lista de {{ data.workshopName }}?</p>
+  <p>
+    ¿Esta seguro de borrar: <b>{{ data.name }}</b
+    >?
+  </p>
+  <p>Este proceso también borrara las causas básicas vinculadas</p>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button
@@ -38,7 +42,7 @@
     color="warn"
     class="footer__btn-save"
     cdkFocusInitial
-    (click)="deleteWorkshop()"
+    (click)="deleteImmediateCause()"
   >
     SI, BORRAR
   </button>

@@ -53,9 +53,7 @@
       </p>
       <p *ngIf="data.eventType === 'Interno'">
         <span style="font-weight: bold"> Proceso :</span>
-        {{
-          data.reportingWorkshopProcess ? data.reportingWorkshopProcess : "---"
-        }}
+        {{ data.analysis ? data.analysis["process"] : "---" }}
       </p>
     </div>
 

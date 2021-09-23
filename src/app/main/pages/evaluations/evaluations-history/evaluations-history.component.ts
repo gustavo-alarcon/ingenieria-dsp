@@ -3,7 +3,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ImprovementEntry } from '../../../models/improvenents.model';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
-import { Evaluation } from '../../../models/evaluations.model';
+import { Evaluation, Workshop } from '../../../models/evaluations.model';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import { EvaluationsService } from '../../../services/evaluations.service';
 import { debounceTime, distinctUntilChanged, map, startWith, tap } from 'rxjs/operators';
@@ -329,9 +329,15 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
         // evaluation.kindOfTest ? evaluation.kindOfTest : '---',
         evaluation.observations ? evaluation.observations : '---',
         evaluation.quantity ? evaluation.quantity : '---',
-        evaluation.workshop ? evaluation.workshop : '---',
+
         // evaluation.status ? evaluation.status : '---',  
         evaluation.createdAt ? new Date(evaluation.createdAt['seconds'] * 1000) : '---',
+
+        evaluation.workshop ? evaluation.workshop['location'] : evaluation.workshop ? evaluation.workshop : '---',
+
+        evaluation.wof ? evaluation.wof : '---',
+        evaluation.task ? evaluation.task : '---',
+     
         evaluation.processAt ? new Date(evaluation.processAt['seconds'] * 1000) : '---',
         evaluation.finalizedAt ? new Date(evaluation.finalizedAt['seconds'] * 1000) : '---',
         evaluation.finalizedBy ? (evaluation.finalizedBy.name ? evaluation.finalizedBy.name : evaluation.finalizedBy) : '---',
@@ -368,6 +374,44 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
         default: return 0;
       }
     });
+  }
+
+  filterWorkshopByCode(code: number): any{
+    let filterWorkshop;
+
+    const workshops = [
+      {
+        code: 5, location: 'MSH'
+      },
+      {
+        code: 201306412, location: 'TMM'
+      },
+      {
+        code: 1, location: 'CRC LIMA'
+      },
+      {
+        code: 2, location: 'CRC LA JOYA'
+      },
+      {
+        code: 3, location: 'TMAQ LIMA'
+      },
+      {
+        code: 4, location: 'TH'
+      },
+      {
+        code: 6, location: 'TMAQ LA JOYA'
+      }
+    ];
+
+    workshops.filter(workshop => {
+      if (workshop.code === code){
+        filterWorkshop = workshop.location;
+        }
+    });
+
+
+    return filterWorkshop ? filterWorkshop : '---';
+
   }
 
 }
