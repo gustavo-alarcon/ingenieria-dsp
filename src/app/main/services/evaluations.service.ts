@@ -56,14 +56,13 @@ export class EvaluationsService {
     let toYear = fromYear;
 
 
-    console.log(fromMonth);
+   
 
     if (fromMonth + 1 >= 12) {
       toYear++;
     }
 
     const toDate = new Date(toYear, toMonth, 1);
-    console.log(toMonth);
     return { from: actualFromDate, to: toDate };
   }
   /**

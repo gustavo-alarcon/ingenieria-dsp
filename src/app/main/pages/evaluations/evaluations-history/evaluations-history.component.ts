@@ -41,7 +41,7 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
     'otChild',
     'wof',
     'task',
-    'position',
+    // 'position',
     'partNumber',
     'description',
     'internalStatus',
@@ -49,7 +49,7 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
     'observations',
     'quantity',
     'workshop',
-    'status',
+    // 'status',
     'createdAt',
     'processAt',
     'finalizedAt',
@@ -292,24 +292,25 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
     let headersXlsx = [
       'otMain',
       'otChild',
-      'position',
+      // 'position',
+      'wof',
+      'task',
       'partNumber',
       'description',
       'internalStatus',
       'result',
-      'comments',
-      'kindOfTest',
+      // 'comments',
+      // 'kindOfTest',
       'observations',
       'quantity',
       'workshop',
-      'status',
-      'wof',
-      'task',
-      'finalizedBy',
+      // 'status',
       'createdAt',
-      'finalizedAt',
       'processAt',
-      'inquiryAt']
+      'finalizedAt',
+      'finalizedBy',
+      // 'inquiryAt'
+    ]
 
     table_xlsx.push(headersXlsx);
 
@@ -317,23 +318,30 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
       const temp = [
         evaluation.otMain ? evaluation.otMain : '---',
         evaluation.otChild ? evaluation.otChild : '---',
-        evaluation.position ? evaluation.position : '---',
+        evaluation.wof ? evaluation.wof : '---',
+        evaluation.task ? evaluation.task : '---',
+        // evaluation.position ? evaluation.position : '---',
         evaluation.partNumber ? evaluation.partNumber : '---',
         evaluation.description ? evaluation.description : '---',
         evaluation.internalStatus ? evaluation.internalStatus : '---',
         evaluation.result ? evaluation.result : '---',
-        evaluation.comments ? evaluation.comments : '---',
-        evaluation.kindOfTest ? evaluation.kindOfTest : '---',
+        // evaluation.comments ? evaluation.comments : '---',
+        // evaluation.kindOfTest ? evaluation.kindOfTest : '---',
         evaluation.observations ? evaluation.observations : '---',
         evaluation.quantity ? evaluation.quantity : '---',
+
+        // evaluation.status ? evaluation.status : '---',  
+        evaluation.createdAt ? new Date(evaluation.createdAt['seconds'] * 1000) : '---',
+
         evaluation.workshop ? evaluation.workshop['location'] : evaluation.workshop ? evaluation.workshop : '---',
-        evaluation.status ? evaluation.status : '---',
+
         evaluation.wof ? evaluation.wof : '---',
         evaluation.task ? evaluation.task : '---',
-        evaluation.finalizedBy ? (evaluation.finalizedBy.name ? evaluation.finalizedBy.name : evaluation.finalizedBy) : '---',
-        evaluation.finalizedAt ? new Date(evaluation.finalizedAt['seconds'] * 1000) : '---',
+     
         evaluation.processAt ? new Date(evaluation.processAt['seconds'] * 1000) : '---',
-        evaluation.inquiryAt ? new Date(evaluation.inquiryAt['seconds'] * 1000) : '---',
+        evaluation.finalizedAt ? new Date(evaluation.finalizedAt['seconds'] * 1000) : '---',
+        evaluation.finalizedBy ? (evaluation.finalizedBy.name ? evaluation.finalizedBy.name : evaluation.finalizedBy) : '---',
+        // evaluation.inquiryAt ? new Date(evaluation.inquiryAt['seconds'] * 1000) : '---',
       ]
 
       table_xlsx.push(temp);
