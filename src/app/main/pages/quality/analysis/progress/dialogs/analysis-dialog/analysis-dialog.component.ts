@@ -2,6 +2,7 @@ import {
   FrequencyList,
   Quality,
   QualityList,
+  WorkshopList,
 } from './../../../../../../models/quality.model';
 import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable, combineLatest, Subscription } from 'rxjs';
@@ -34,6 +35,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { element } from 'protractor';
 import { controllers } from 'chart.js';
+import { BasicCause, WorkshopModel } from 'src/app/main/models/workshop.model';
 
 @Component({
   selector: 'app-analysis-dialog',
@@ -48,7 +50,11 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
 
   category$: Observable<Quality[]>;
   causeFailure$: Observable<CauseFailureList[]>;
-  process$: Observable<ProcessList[]>;
+  responsibleWorkshopList$: Observable<WorkshopModel[]>;
+  immediateCauses$: Observable<BasicCause[]>;
+
+  workshopProcessList: Array<string>;
+  basicCausesArray: Array<string>;
 
   // step 1
   isLinear = false;
@@ -110,45 +116,56 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
       })
     );
 
-    this.causeFailure$ = combineLatest(
-      this.analysisForm.get('causeFailure').valueChanges.pipe(
-        startWith(''),
-        map((name) => (name ? name : ''))
-      ),
-      this.qualityService.getAllCauseFailureList()
-    ).pipe(
-      map(([formValue, causeFailuries]) => {
-        const filter = causeFailuries.filter((el) =>
-          formValue
-            ? el.name.toLowerCase().includes(formValue.toLowerCase())
-            : true
-        );
-        if (!(filter.length === 1) && formValue.length) {
-          this.analysisForm.get('causeFailure').setErrors({ invalid: true });
-        }
-        return filter;
+    this.immediateCauses$ = this.qualityService
+      .getAllQualityImmediateCauses()
+      .pipe(
+        tap((res) => {
+          if (!res) return;
+          if (!this.data.analysis.causeFailure) return;
+
+          const actualCause = res.filter(
+            (cause) => cause.name === this.data.analysis.causeFailure
+          );
+
+          this.analysisForm.get('causeFailure').setValue(actualCause[0]);
+        })
+      );
+
+    this.subscription.add(
+      this.analysisForm.get('causeFailure').valueChanges.subscribe((res) => {
+        if (!res) return;
+
+        this.basicCausesArray = res['basicCauses'];
       })
     );
 
-    this.process$ = combineLatest(
-      this.analysisForm.get('process').valueChanges.pipe(
-        startWith(''),
-        map((name) => (name ? name : ''))
-      ),
-      this.qualityService.getAllProcessList()
-    ).pipe(
-      map(([formValue, process]) => {
-        const filter = process.filter((el) =>
-          formValue
-            ? el.name.toLowerCase().includes(formValue.toLowerCase())
-            : true
-        );
-        if (!(filter.length === 1) && formValue.length) {
-          this.analysisForm.get('process').setErrors({ invalid: true });
-        }
+    this.responsibleWorkshopList$ = this.qualityService
+      .getAllQualityInternalWorkshop()
+      .pipe(
+        tap((res) => {
+          if (!res) return;
+          if (!this.data.workShop) return;
 
-        return filter;
-      })
+          const actualResponsibleWorkshop = res.filter(
+            (workshop) => workshop.workshopName === this.data.workShop
+          );
+
+          this.analysisForm
+            .get('responsibleWorkshop')
+            .setValue(actualResponsibleWorkshop[0]);
+        })
+      );
+
+    this.subscription.add(
+      this.analysisForm
+        .get('responsibleWorkshop')
+        .valueChanges.subscribe((res) => {
+          if (!res) return;
+
+          console.log(res);
+
+          this.workshopProcessList = res.workshopProcessName;
+        })
     );
 
     this.areaResponsable$ = this.qualityService
@@ -166,7 +183,8 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
     if (this.data.analysis) {
       this.analysisForm = this.fb.group({
         causeFailure: this.data.analysis['causeFailure'],
-        causeBasic: this.data.analysis['causeBasic'],
+        basicCause: this.data.analysis['basicCause'],
+        responsibleWorkshop: this.data.workShop ? this.data.workShop : null,
         process: this.data.analysis['process'],
         observation: this.data.analysis['observation'],
         responsable: this.data.analysis['responsable'],
@@ -181,42 +199,49 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
       this.data.correctiveActions.forEach((accion) => {
         this.addControl(accion);
       });
-
-      //this.analysisForm.get('quality').setValue(this.data.analysis['quality']['name']);
-      //this.analysisForm.controls['quality'].setValue(this.data.analysis['quality']);
-
-      // setValue es para agregarle un valor
-      /*  this.analysisForm.controls['quality'].setValue(
-        this.data.analysis['quality'],
-        { onlySelf: true }
-       ); */
-
-      //this.analysisForm.get('quality').setValue(this.data.analysis['quality']);
     } else {
       this.analysisForm = this.fb.group({
         causeFailure: ['', Validators.required],
-        causeBasic: ['', Validators.required],
-        process: ['', Validators.required],
+        basicCause: ['', Validators.required],
+        responsibleWorkshop: [''],
+        process: [''],
         observation: [null],
         responsable: ['', Validators.required],
         bahia: ['', Validators.required],
         URLimage: ['', Validators.required],
       });
 
-      this.listAreaForm = this.fb.group({
-        areas: this.fb.array([
-          this.fb.group({
-            corrective: ['', Validators.required],
-            name: ['', Validators.required],
-            kit: false,
-            url: null,
-            nameFile: null,
-            createdAt: this.date,
-            closedAt: null,
-            user: null,
-          }),
-        ]),
-      });
+      if (this.data.evaluationAnalisis <= 5) {
+        this.listAreaForm = this.fb.group({
+          areas: this.fb.array([
+            this.fb.group({
+              corrective: [null],
+              name: [null],
+              kit: false,
+              url: null,
+              nameFile: null,
+              createdAt: this.date,
+              closedAt: null,
+              user: null,
+            }),
+          ]),
+        });
+      } else {
+        this.listAreaForm = this.fb.group({
+          areas: this.fb.array([
+            this.fb.group({
+              corrective: [null, Validators.required],
+              name: [null, Validators.required],
+              kit: false,
+              url: null,
+              nameFile: null,
+              createdAt: this.date,
+              closedAt: null,
+              user: null,
+            }),
+          ]),
+        });
+      }
     }
   }
 
@@ -246,16 +271,29 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
         user: null,
       });
     } else {
-      group = this.fb.group({
-        corrective: ['', Validators.required],
-        name: ['', Validators.required],
-        kit: false,
-        url: null,
-        nameFile: null,
-        createdAt: this.date,
-        closedAt: null,
-        user: null,
-      });
+      if (this.data.evaluationAnalisis <= 5) {
+        group = this.fb.group({
+          corrective: [null],
+          name: [null],
+          kit: false,
+          url: null,
+          nameFile: null,
+          createdAt: this.date,
+          closedAt: null,
+          user: null,
+        });
+      } else {
+        group = this.fb.group({
+          corrective: ['', Validators.required],
+          name: ['', Validators.required],
+          kit: false,
+          url: null,
+          nameFile: null,
+          createdAt: this.date,
+          closedAt: null,
+          user: null,
+        });
+      }
     }
 
     this.areas.push(group);
@@ -282,9 +320,16 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
     }
   }
 
+  showSelectedWorkshop(value: WorkshopList): string | null {
+    return value ? value.name : null;
+  }
+
   save(): void {
     try {
       if (this.areas.valid) {
+        if (this.data.evaluationAnalisis <= 5) {
+          this.validatePurgeAreasFormArray();
+        }
         const resp = this.qualityService.updateQualityEvaluationAnalysis(
           this.data,
           this.resultAnalysis,
@@ -336,7 +381,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
 
     this.areas.value.every((element) => {
       const a = element['corrective'].toLowerCase();
-      
+
       if (a === temp) {
         match = true;
       } else {
@@ -356,6 +401,9 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
         this.areas.valid &&
         !this.checkDuplicates()
       ) {
+        if (this.data.evaluationAnalisis <= 5) {
+          this.validatePurgeAreasFormArray();
+        }
         const resp = this.qualityService.saveCorrectiveActions(
           this.data,
           this.analysisForm.value,
@@ -365,7 +413,6 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
           this.evaluationName,
           this.state
         );
-
         this.subscription.add(
           resp.subscribe((batch) => {
             if (batch) {
@@ -457,5 +504,24 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
     });
 
     this.broadcastControl.setValue(null);
+  }
+
+  private validatePurgeAreasFormArray() {
+    let index = 0;
+    while (index < this.areas.length) {
+      const corrective = this.areas.controls[index].value['corrective'];
+      const name = this.areas.controls[index].value['name'];
+      if (
+        corrective === null ||
+        name === null ||
+        corrective.length === 0 ||
+        name.length === 0
+      ) {
+        this.areas.removeAt(index);
+        index = 0;
+      } else {
+        index++;
+      }
+    }
   }
 }

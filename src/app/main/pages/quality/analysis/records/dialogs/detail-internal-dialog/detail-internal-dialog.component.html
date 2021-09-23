@@ -29,10 +29,8 @@
           {{ data.eventType ? data.eventType : "---" }}
         </p>
         <p>
-          <span style="font-weight: bold"> Taller responsable:</span>
-          {{
-            data.workShop ? data.workShop : "---"
-          }}
+          <span style="font-weight: bold"> Taller - Posible responsable:</span>
+          {{ data.workShop ? data.workShop : "---" }}
         </p>
         <p>
           <span style="font-weight: bold"> Taller que reporta :</span>
@@ -43,7 +41,9 @@
         <p>
           <span style="font-weight: bold"> Proceso :</span>
           {{
-            data.reportingWorkshopProcess ? data.reportingWorkshopProcess : "---"
+            data.reportingWorkshopProcess
+              ? data.reportingWorkshopProcess
+              : "---"
           }}
         </p>
         <p>

@@ -6,6 +6,7 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { take, switchMap } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { EvaluationsService } from 'src/app/main/services/evaluations.service';
+import { Workshop } from '../../../../../models/evaluations.model';
 
 @Component({
   selector: 'app-requests-create-dialog',
@@ -22,7 +23,7 @@ export class RequestsCreateDialogComponent implements OnInit {
 
   indexAux: number[] = [];
 
-  workshops = [
+  workshops:Workshop[] = [
     {
       code: '5', location: 'MSH'
     },

@@ -17,7 +17,7 @@ export interface Evaluation {
     wof: string; // Solicitud TR
     task: string; // Trabajo
     observations: string;
-    workshop: number | string; // Taller
+    workshop: Array<Workshop> | string;  // Taller
     images?: Array<string>;
     imagesCounter: number;
     inquiries?: Array<EvaluationInquiry>;
@@ -46,7 +46,15 @@ export interface Evaluation {
     extends?: string[];
     emailList?: Array<string>;
 }
-//Al que creo, al inspector y a la lista de difusion
+
+// list workshop
+export interface Workshop{
+    code: string;
+    location: string;
+}
+
+// Al que creo, al inspector y a la lista de difusion
+
 export interface EvaluationRegistryForm {
     otMain: string; // Orden de trabajo
     otChild: string; // Segmento / Operación

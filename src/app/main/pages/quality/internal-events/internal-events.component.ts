@@ -10,10 +10,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { QualityService } from 'src/app/main/services/quality.service';
 import { User } from '../../../models/user-model';
-import { finalize, take, startWith, map, tap, pluck } from 'rxjs/operators';
+import { finalize, take, startWith, map} from 'rxjs/operators';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { ComponentList, WorkshopList, FileAdditional } from '../../../models/quality.model';
+import { ComponentList, FileAdditional } from '../../../models/quality.model';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { WorkshopModel } from '../../../../main/models/workshop.model';
@@ -61,7 +61,7 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
 
   isMobile = false;
 
-  workshop$: Observable<WorkshopList[]>;
+  workshop$: Observable<WorkshopModel[]>;
   component$: Observable<ComponentList[]>;
 
 
@@ -134,12 +134,12 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
         startWith(''),
         map((name) => (name ? name : ''))
       ),
-      this.qualityService.getAllWorkshopList()
+      this.qualityService.getAllQualityInternalWorkshop()
     ).pipe(
       map(([formValue, miningOperation]) => {
         const filter = miningOperation.filter((el) =>
           formValue
-            ? el.name.toLowerCase().includes(formValue.toLowerCase())
+            ? el.workshopName.toLowerCase().includes(formValue.toLowerCase())
             : true
         );
         if (!(filter.length === 1) && formValue.length) {
