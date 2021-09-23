@@ -97,7 +97,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
     private qualityService: QualityService,
     private snackbar: MatSnackBar,
     public authService: AuthService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.initForm();
@@ -116,7 +116,20 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
       })
     );
 
-    this.immediateCauses$ = this.qualityService.getAllQualityImmediateCauses();
+    this.immediateCauses$ = this.qualityService
+      .getAllQualityImmediateCauses()
+      .pipe(
+        tap((res) => {
+          if (!res) return;
+          if (!this.data.analysis.causeFailure) return;
+
+          const actualCause = res.filter(
+            (cause) => cause.name === this.data.analysis.causeFailure
+          );
+
+          this.analysisForm.get('causeFailure').setValue(actualCause[0]);
+        })
+      );
 
     this.subscription.add(
       this.analysisForm.get('causeFailure').valueChanges.subscribe((res) => {
@@ -126,8 +139,22 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
       })
     );
 
-    this.responsibleWorkshopList$ =
-      this.qualityService.getAllQualityInternalWorkshop();
+    this.responsibleWorkshopList$ = this.qualityService
+      .getAllQualityInternalWorkshop()
+      .pipe(
+        tap((res) => {
+          if (!res) return;
+          if (!this.data.workShop) return;
+
+          const actualResponsibleWorkshop = res.filter(
+            (workshop) => workshop.workshopName === this.data.workShop
+          );
+
+          this.analysisForm
+            .get('responsibleWorkshop')
+            .setValue(actualResponsibleWorkshop[0]);
+        })
+      );
 
     this.subscription.add(
       this.analysisForm
@@ -158,9 +185,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
         causeFailure: this.data.analysis['causeFailure'],
         basicCause: this.data.analysis['basicCause'],
         responsibleWorkshop: this.data.workShop ? this.data.workShop : null,
-        process: this.data.reportingWorkshopProcess
-          ? this.data.reportingWorkshopProcess
-          : null,
+        process: this.data.analysis['process'],
         observation: this.data.analysis['observation'],
         responsable: this.data.analysis['responsable'],
         bahia: this.data.analysis['bahia'],
@@ -311,7 +336,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
           this.evaluationName,
           this.analysisForm.value,
           this.listAreaForm.value
-          );
+        );
         this.subscription.add(
           resp.subscribe((batch) => {
             if (batch) {
@@ -486,7 +511,12 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
     while (index < this.areas.length) {
       const corrective = this.areas.controls[index].value['corrective'];
       const name = this.areas.controls[index].value['name'];
-      if (corrective === null || name === null || corrective.length === 0 || name.length === 0) {
+      if (
+        corrective === null ||
+        name === null ||
+        corrective.length === 0 ||
+        name.length === 0
+      ) {
         this.areas.removeAt(index);
         index = 0;
       } else {
@@ -495,4 +525,3 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
     }
   }
 }
-
