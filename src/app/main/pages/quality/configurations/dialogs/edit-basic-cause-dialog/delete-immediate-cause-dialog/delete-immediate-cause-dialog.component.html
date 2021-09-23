@@ -11,17 +11,13 @@
   <mat-divider></mat-divider>
 </h2>
 
-<mat-progress-bar
-  mode="indeterminate"
-  *ngIf="loading$ | async"
-></mat-progress-bar>
-
 <mat-dialog-content
   class="mat-typography"
   style="color: gray; margin: 24px 0px 16px 0px"
 >
-  <p>¿Esta seguro de borrar la lista de {{ data.workshopName }}?</p>
+  <p>¿Esta seguro de borrar la causa básica?</p>
 </mat-dialog-content>
+
 <mat-dialog-actions align="end">
   <button
     type="button"
@@ -37,8 +33,7 @@
     mat-raised-button
     color="warn"
     class="footer__btn-save"
-    cdkFocusInitial
-    (click)="deleteWorkshop()"
+    (click)="deleteBasicCause()"
   >
     SI, BORRAR
   </button>

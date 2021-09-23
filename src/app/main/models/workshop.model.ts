@@ -8,7 +8,16 @@ export interface WorkshopModel {
     workshopProcessName: string[];
     createdBy?: User;
     updatedBy?: User;
+}
 
+export interface BasicCause {
+  name: string;
+  id: string;
+  basicCauses: string[];
+  createdAt: Date;
+  editedAt: Date;
+  createdBy?: User;
+  updatedBy?: User;
 }
 
 export interface workshopForm {

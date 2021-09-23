@@ -41,7 +41,9 @@
         <p>
           <span style="font-weight: bold"> Proceso :</span>
           {{
-            data.reportingWorkshopProcess ? data.reportingWorkshopProcess : "---"
+            data.reportingWorkshopProcess
+              ? data.reportingWorkshopProcess
+              : "---"
           }}
         </p>
         <p>
@@ -101,7 +103,11 @@
         </p>
         <p class="analysis-result">
           <span> Causa básica:</span>
-          {{ data.analysis ? data.analysis.causeBasic : "-" }}
+          {{ data.analysis ? data.analysis.basicCause : "-" }}
+        </p>
+        <p class="analysis-result">
+          <span> Taller responsable:</span>
+          {{ data.workShop ? data.workShop : "-" }}
         </p>
         <p class="analysis-result">
           <span> Proceso:</span>
@@ -117,11 +123,11 @@
         </p>
         <p class="analysis-result">
           <span> Bahía:</span>
-          {{ data.analysis ? data.analysis.bahia: "-" }}
+          {{ data.analysis ? data.analysis.bahia : "-" }}
         </p>
         <p class="analysis-result">
           <span> URL imágenes: </span>
-          <a [href]="data.analysis.URLimage" target="_blank" >
+          <a [href]="data.analysis.URLimage" target="_blank">
             {{ data.analysis ? data.analysis.URLimage : "-" }}
           </a>
         </p>

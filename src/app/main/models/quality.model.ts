@@ -71,7 +71,8 @@ export interface Quality {
 
 export interface Analysis {
   causeFailure: string;
-  causeBasic: string;
+  basicCause: string;
+  responsibleWorkshop: string;
   process: string;
   observation: string;
   responsable: string;
