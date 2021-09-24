@@ -182,3 +182,18 @@ export interface BudgetHistoryDate {
   milli: number;
   createBy: User;
 }
+
+export interface EmailData {
+  id: string;
+  type: 'budget';
+  budgetFiles: Array<string>;
+  reportFiles: Array<string>;
+  quotationFiles: Array<string>;
+  subject: string;
+  body: string;
+  observations: string;
+  emailList: Array<string>;
+  workOrder: number;
+  workshop: string;
+}
+

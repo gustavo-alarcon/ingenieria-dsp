@@ -462,7 +462,20 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
                     this.fileSubscriptions.unsubscribe();
                     this.loading.next(false);
                     this.dialogRef.close(true);
-                    this.sendBudgetToEndpoint(emailData);
+                    // Send email
+                    this._budgetService.sendBudgetEmail({
+                      id: this.data.id,
+                      type: 'budget',
+                      budgetFiles: budgetFiles.map((file) => file.url),
+                      reportFiles: reportFiles.map((file) => file.url),
+                      quotationFiles: quotationFiles.map((file) => file.url),
+                      subject: this.form.value['subject'],
+                      body: this.form.value['body'],
+                      observations: this.form.value['observations'],
+                      emailList: this.emails,
+                      workOrder: this.data.ioMain,
+                      workshop: this.data.taller,
+                    });
                   })
                   .catch((err) => {
                     this.snackbar.open(
@@ -500,7 +513,20 @@ export class BudgetsSummarySendDialogComponent implements OnInit {
       this.loading.next(false);
       this.dialogRef.close(true);
 
-      this.sendBudgetToEndpoint(emailData);
+      // Send email
+      this._budgetService.sendBudgetEmail({
+        id: this.data.id,
+        type: 'budget',
+        budgetFiles: this.budgetsSent.map((file) => file.url),
+        reportFiles: this.reportsSent.map((file) => file.url),
+        quotationFiles: this.quotationsSent.map((file) => file.url),
+        subject: this.form.value['subject'],
+        body: this.form.value['body'],
+        observations: this.form.value['observations'],
+        emailList: this.emails,
+        workOrder: this.data.ioMain,
+        workshop: this.data.taller,
+      });
     }
   }
 

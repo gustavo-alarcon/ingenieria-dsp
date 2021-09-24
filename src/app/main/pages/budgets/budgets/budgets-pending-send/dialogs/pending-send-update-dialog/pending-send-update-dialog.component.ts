@@ -38,7 +38,6 @@ import { AngularFirestore } from '@angular/fire/firestore';
 
 import * as firebase from 'firebase/app';
 import { AuthService } from 'src/app/auth/services/auth.service';
-import { threadId } from 'worker_threads';
 @Component({
   selector: 'app-pending-send-update-dialog',
   templateUrl: './pending-send-update-dialog.component.html',
@@ -108,7 +107,7 @@ export class PendingSendUpdateDialogComponent implements OnInit {
     private matSnackBar: MatSnackBar,
     private dialog: MatDialog,
     private storage: AngularFireStorage,
-    private af: AngularFirestore
+    private af: AngularFirestore,
   ) {}
 
   ngOnInit(): void {
@@ -745,7 +744,21 @@ export class PendingSendUpdateDialogComponent implements OnInit {
                   this.fileSubscriptions.unsubscribe();
                   this.loading.next(false);
                   this.dialogRef.close(true);
-                  // TODO: Send email notifications
+
+                  // Send email
+                  this._budgetService.sendBudgetEmail({
+                    id: this.data.id,
+                    type: 'budget',
+                    budgetFiles: budgetFiles.map((file) => file.url),
+                    reportFiles: reportFiles.map((file) => file.url),
+                    quotationFiles: quotationFiles.map((file) => file.url),
+                    subject: this.form.value['subject'],
+                    body: this.form.value['body'],
+                    observations: this.form.value['observations'],
+                    emailList: this.emails,
+                    workOrder: this.data.ioMain,
+                    workshop: this.data.taller,
+                  });
                 })
                 .catch((err) => {
                   this.matSnackBar.open(
@@ -784,6 +797,8 @@ export class PendingSendUpdateDialogComponent implements OnInit {
   public setReport(value: string): void {
     this.filesFormGroup.get('checkboxGroup').get('report').setValue(value);
   }
+  
+  
 }
 
 function requireCheckboxesToBeCheckedValidator(minRequired = 1): ValidatorFn {
@@ -820,3 +835,5 @@ interface CheckboxesI {
   text: string;
   textObs: string;
 }
+
+
