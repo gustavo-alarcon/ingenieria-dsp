@@ -100,6 +100,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    console.log(this.immediateCauses$)
     this.initForm();
     if (this.data.evaluationAnalisis) {
       this.resultAnalysis = this.data.evaluationAnalisis;
@@ -121,10 +122,10 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
       .pipe(
         tap((res) => {
           if (!res) return;
-          if (!this.data.analysis.causeFailure) return;
+          if (!this.data.causeBasic) return;
 
           const actualCause = res.filter(
-            (cause) => cause.name === this.data.analysis.causeFailure
+            (cause) => cause.name === this.data.causeBasic  
           );
 
           this.analysisForm.get('causeFailure').setValue(actualCause[0]);
@@ -135,7 +136,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
       this.analysisForm.get('causeFailure').valueChanges.subscribe((res) => {
         if (!res) return;
 
-        this.basicCausesArray = res['basicCauses'];
+        this.basicCausesArray = res.basicCauses;
       })
     );
 

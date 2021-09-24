@@ -52,6 +52,7 @@ export interface Quality {
   specialist?: string;
   partNumber?: number;
   workShop?: string; //responsible workshop
+  causeBasic?: string;
   reportingWorkshop?: WorkshopModel;
   reportingWorkshopProcess?: string;
   enventDetail?: string;
