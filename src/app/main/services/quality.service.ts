@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 import {
   QualityTimer,
   QualityListSpecialist,
@@ -12,7 +12,7 @@ import {
   WorkshopList,
   ComponentList,
   ProcessList,
-  Analysis,
+  Analysis
 } from '../models/quality.model';
 import { User } from '../models/user-model';
 import * as firebase from 'firebase/app';
@@ -26,7 +26,6 @@ import {
   WorkshopModel,
 } from '../models/workshop.model';
 import { FormGroup } from '@angular/forms';
-import { off } from 'process';
 
 @Injectable({
   providedIn: 'root',
@@ -34,7 +33,7 @@ import { off } from 'process';
 export class QualityService {
   constructor(
     private afs: AngularFirestore,
-    private storage: AngularFireStorage
+    private storage: AngularFireStorage,
   ) {}
 
   /**
@@ -79,6 +78,7 @@ export class QualityService {
       tracingPercentageElapsed: null,
       eventType: 'Interno', //Interno , Externo
       fileAdditional: dataFile,
+      paralized: !!(workshop && workshopProcessName),
       workOrder: form.workdOrden,
       component: form.component,
       specialist: null,
@@ -104,6 +104,9 @@ export class QualityService {
         ? workshopProcessName
         : null,
     };
+
+    console.log(data);
+    
 
     batch.set(qualityDocRef, data);
 
@@ -154,8 +157,8 @@ export class QualityService {
       component: form.component,
       specialist: null,
       partNumber: form.nPart,
-      workShop: null,
-      reportingWorkshop: form.workshopName,
+      workShop: form.workshopName,
+      reportingWorkshop: null,
       enventDetail: null,
       packageNumber: form.nPackage,
       componentHourMeter: form.componentHourMeter,

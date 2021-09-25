@@ -1,4 +1,4 @@
-import { map, shareReplay } from 'rxjs/operators';
+import { map, shareReplay, take } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 import {
@@ -9,7 +9,7 @@ import {
   rejectionReasonForm,
   BudgetHistoryDate,
   Budget,
-  ApprovedEntry,
+  EmailData,
 } from '../models/budgets.model';
 
 import { User } from '../models/user-model';
@@ -18,16 +18,18 @@ import { Observable, of } from 'rxjs';
 import * as firebase from 'firebase/app';
 import moment from 'moment';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { element } from 'protractor';
-import { TestBed } from '@angular/core/testing';
-import { B } from '@angular/cdk/keycodes';
 import { additionalsForms } from '../models/budgets.model';
+import { AngularFireFunctions } from '@angular/fire/functions';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BudgetsService {
-  constructor(private afs: AngularFirestore) {}
+  constructor(
+    private afs: AngularFirestore,
+    private afFun: AngularFireFunctions,
+    private snackbar: MatSnackBar
+  ) {}
 
   checkBudgetConflicts(entry: Budget): Observable<{
     isDuplicated: boolean;
@@ -1250,14 +1252,13 @@ export class BudgetsService {
     }
 
     if (budget.motivoDeModificacion02) {
-
       const fecha = this.getStringFromTimestamp(
         budget.motivoDeModificacion02.createdAt
       );
 
-        
-      const milliSeconds =
-      budget.motivoDeModificacion02.createdAt ? budget.motivoDeModificacion02.createdAt['seconds'] * 1000 : null;
+      const milliSeconds = budget.motivoDeModificacion02.createdAt
+        ? budget.motivoDeModificacion02.createdAt['seconds'] * 1000
+        : null;
 
       const usuario = budget.motivoDeModificacion02.createdBy;
       if (fecha !== '---') {
@@ -1276,8 +1277,9 @@ export class BudgetsService {
       const fecha = this.getStringFromTimestamp(
         budget.motivoDeModificacion03.createdAt
       );
-      const milliSeconds =
-      budget.motivoDeModificacion03.createdAt ? budget.motivoDeModificacion03.createdAt['seconds'] * 1000 : null;
+      const milliSeconds = budget.motivoDeModificacion03.createdAt
+        ? budget.motivoDeModificacion03.createdAt['seconds'] * 1000
+        : null;
 
       const usuario = budget.motivoDeModificacion03.createdBy;
       if (fecha !== '---') {
@@ -1296,8 +1298,9 @@ export class BudgetsService {
       const fecha = this.getStringFromTimestamp(
         budget.motivoDeModificacion04.createdAt
       );
-      const milliSeconds =
-      budget.motivoDeModificacion04.createdAt ? budget.motivoDeModificacion04.createdAt['seconds'] * 1000 : null;
+      const milliSeconds = budget.motivoDeModificacion04.createdAt
+        ? budget.motivoDeModificacion04.createdAt['seconds'] * 1000
+        : null;
 
       const usuario = budget.motivoDeModificacion04.createdBy;
       if (fecha !== '---') {
@@ -1337,8 +1340,9 @@ export class BudgetsService {
     // If date is unvalid or doesn't exist
     if (seconds == null || seconds.seconds <= 0) return '---';
 
-    const date: string = moment(seconds.seconds * 1000)
-      .format('DD/MM/YYYY HH:mm');
+    const date: string = moment(seconds.seconds * 1000).format(
+      'DD/MM/YYYY HH:mm'
+    );
     // HH:mm:ss
 
     return date;
@@ -1397,5 +1401,18 @@ export class BudgetsService {
     return of(
       this.afs.firestore.collection('/db/ferreyros/budgets').doc(id).delete()
     );
+  }
+
+  sendBudgetEmail(data: EmailData) {
+    // this.afFun.useEmulator("localhost", 5001)
+    const callable = this.afFun.httpsCallable('sendBudget');
+
+    callable(data)
+      .pipe(take(1))
+      .subscribe((res) => {
+        this.snackbar.open('📩 Correo enviado', 'Aceptar', {
+          duration: 6000,
+        });
+      });
   }
 }

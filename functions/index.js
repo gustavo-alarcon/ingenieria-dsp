@@ -410,6 +410,78 @@ exports.sendPreevaluationToEndpoint = functions.firestore.document(`db/ferreyros
 exports.sendQualityToEndpoint = functions.firestore.document(`db/ferreyros/quality/{qualityId}`)
     .onUpdate(async(event) => {
         let quality = event.after.data();
+        if (quality.state == "process") {
+            console.log("receiving request");
+
+            let url;
+            await admin.firestore().doc('/db/generalConfig').onSnapshot(val => {
+                url = val.data()['endpoint'];
+
+                let actionsForEmail = [];
+                if (quality.correctiveActions.length) {
+                    actionsForEmail = quality.correctiveActions.map(element => { return [element['corrective'], element['name']] });
+                }
+
+                const data = {
+                    "id": quality.id,
+                    "type": "quality process",
+                    "otChild": quality.workOrder ? quality.workOrder : '-',
+                    "partNumber": quality.partNumber ? quality.partNumber : '-',
+                    "workshop": quality.workShop ? (quality.eventType === 'Externo' ? quality.workShop.workshopName : quality.workShop) : '', //taller responsable
+                    "analysisQuality": quality.analysisQuality ? quality.analysisQuality : '',
+                    "analysisCost": quality.analysisCost ? quality.analysisCost : '',
+                    "analysisFrequency": quality.analysisFrequency ? quality.analysisFrequency : '',
+                    "specialist": quality.specialist ? quality.specialist : '',
+                    "details": quality.enventDetail ? quality.enventDetail : (quality.question1 + '. ' +
+                        quality.question2 + '. ' +
+                        quality.question3 + '. ' +
+                        quality.question4),
+                    "riskLevel": quality.evaluationAnalysisName + '(' + quality.evaluationAnalisis + ')',
+                    "eventType": quality.eventType ? quality.eventType : '-',
+                    "detailImages": quality.detailImages ? quality.detailImages.join('@@') : '',
+                    "generalImages": quality.generalImages ? quality.generalImages.join('@@') : '',
+                    "emailList": quality.emailList.toString()
+                }
+
+                const options = {
+                    "method": "POST",
+                    "url": url,
+                    "port": null,
+                    "headers": {
+                        "authorization": `*`,
+                        "content-type": "application/json"
+                    },
+                    data: data
+                };
+
+                console.log("Just before sending email: ", data)
+
+                return gaxios.request(options)
+                    .then(res2 => {
+                        console.log(`✉️ Quality data sent!`)
+                    })
+                    .catch(error => {
+                        console.log("Error: ")
+                        if (error.response) {
+                            // The request was made and the server responded with a status code
+                            // that falls out of the range of 2xx
+                            console.log(error.response.data);
+                            console.log(error.response.status);
+                            console.log(error.response.headers);
+                        } else if (error.request) {
+                            // The request was made but no response was received
+                            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                            // http.ClientRequest in node.js
+                            console.log(error.request);
+                        } else {
+                            // Something happened in setting up the request that triggered an Error
+                            console.log(error.message);
+                        }
+                        console.log(error.config);
+                    })
+            });
+        }
+
         if (quality.state == "tracing") {
             console.log("receiving request");
 
@@ -428,6 +500,7 @@ exports.sendQualityToEndpoint = functions.firestore.document(`db/ferreyros/quali
                     "otChild": quality.workOrder ? quality.workOrder : '-',
                     "partNumber": quality.partNumber ? quality.partNumber : '-',
                     "workshop": quality.workShop ? quality.workShop : '-',
+                    "reportingWorkshop": quality.reportingWorkshop ? quality.reportingWorkshop : '-',
                     "details": quality.enventDetail ? quality.enventDetail : (quality.question1 + '. ' +
                         quality.question2 + '. ' +
                         quality.question3 + '. ' +
@@ -436,7 +509,11 @@ exports.sendQualityToEndpoint = functions.firestore.document(`db/ferreyros/quali
                     "eventType": quality.eventType ? quality.eventType : '-',
                     "quality": quality.analysisQuality ? quality.analysisQuality : '-',
                     "failRoot": quality.analysis.causeFailure ? quality.analysis.causeFailure : '---',
+                    "basicCause": quality.analysis.basicCause ? quality.analysis.basicCause : '---',
                     "process": quality.analysis.process ? quality.analysis.process : '---',
+                    "responsable": quality.analysis.responsable ? quality.analysis.responsable : '---',
+                    "bahia": quality.analysis.bahia ? quality.analysis.bahia : '---',
+                    "URLimages": quality.analysis.URLimage ? quality.analysis.URLimage : '---',
                     "observations": quality.analysis.observation ? quality.analysis.observation : '---',
                     "correctiveActions": actionsForEmail,
                     "detailImages": quality.detailImages ? quality.detailImages.join('@@') : '',
@@ -483,3 +560,137 @@ exports.sendQualityToEndpoint = functions.firestore.document(`db/ferreyros/quali
             });
         }
     });
+
+
+exports.sendQualityOnCreate = functions.firestore.document(`db/ferreyros/quality/{qualityId}`)
+    .onCreate(async(event) => {
+        const quality = event.data();
+
+        let url;
+        await admin.firestore().doc('/db/generalConfig').onSnapshot(val => {
+            url = val.data()['endpoint'];
+
+            const data = {
+                "id": quality.id,
+                "type": "quality creation",
+                "otChild": quality.workOrder ? quality.workOrder : '',
+                "partNumber": quality.partNumber ? quality.partNumber : '',
+                "component": quality.component ? quality.component : '',
+                "paralized": quality.paralized ? quality.paralized : false, // boolean
+                "workshop": quality.workShop ? (quality.eventType === 'Externo' ? quality.workShop.workshopName : quality.workShop) : '', //taller responsable
+                "reportingWorkshop": quality.reportingWorkshop ? quality.reportingWorkshop.workshopName : '', //taller que reporta
+
+                "packageNumber": quality.packageNumber ? quality.packageNumber : '',
+                "horometer": quality.componentHourMeter ? quality.componentHourMeter : '',
+                "miningOperation": quality.miningOperation ? quality.miningOperation : '',
+                
+                "details": quality.enventDetail ? quality.enventDetail : (quality.question1 + '. ' +
+                    quality.question2 + '. ' +
+                    quality.question3 + '. ' +
+                    quality.question4),
+                "eventType": quality.eventType ? quality.eventType : '',
+                "process": quality.reportingWorkshopProcess ? quality.reportingWorkshopProcess : '',
+                "detailImages": quality.detailImages ? quality.detailImages.join('@@') : '',
+                "generalImages": quality.generalImages ? quality.generalImages.join('@@') : '',
+                "createdByEmail": quality.createdBy ? quality.createdBy.email : ''
+            }
+
+            const options = {
+                "method": "POST",
+                "url": url,
+                "port": null,
+                "headers": {
+                    "authorization": `*`,
+                    "content-type": "application/json"
+                },
+                data: data
+            };
+
+            console.log("Just before sending email: ", data);
+
+            return gaxios.request(options)
+                .then(res2 => {
+                    console.log(`✉️ Quality create sent!`)
+                })
+                .catch(error => {
+                    console.log("Error: ")
+                    if (error.response) {
+                        // The request was made and the server responded with a status code
+                        // that falls out of the range of 2xx
+                        console.log(error.response.data);
+                        console.log(error.response.status);
+                        console.log(error.response.headers);
+                    } else if (error.request) {
+                        // The request was made but no response was received
+                        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                        // http.ClientRequest in node.js
+                        console.log(error.request);
+                    } else {
+                        // Something happened in setting up the request that triggered an Error
+                        console.log(error.message);
+                    }
+                    console.log(error.config);
+                })
+        });
+    });
+
+
+exports.sendBudget = functions.https.onCall(async(data, context) => {
+    
+    console.log(data);
+    let url;
+    await admin.firestore().doc('/db/generalConfig').onSnapshot(val => {
+        url = val.data()['endpoint'];
+
+        const emailData = {
+            "id": data.id,
+            "type": "budget",
+            "budgetFiles": data.budgetFiles ? data.budgetFiles.join('@@') : '',
+            "reportFiles": data.reportFiles ? data.reportFiles.join('@@') : '',
+            "quotationFiles": data.quotationFiles ? data.quotationFiles.join('@@') : '',
+            "subject": data.subject ? data.subject : '',
+            "body": data.body ? data.body : '',
+            "observations": data.observations ? data.observations : '',
+            "emailList": data.emailList.toString(),
+            "workOrder": data.workOrder ? data.workOrder : '',
+            "workshop": data.workshop ? data.workshop : '',
+        }
+
+        const options = {
+            "method": "POST",
+            "url": url,
+            "port": null,
+            "headers": {
+                "authorization": `*`,
+                "content-type": "application/json"
+            },
+            data: emailData
+        };
+
+        console.log("Just before sending email: ", emailData);
+
+        return gaxios.request(options)
+            .then(res2 => {
+                console.log(`✉️ Budget data sent!`)
+            })
+            .catch(error => {
+                console.log("Error: ")
+                if (error.response) {
+                    // The request was made and the server responded with a status code
+                    // that falls out of the range of 2xx
+                    console.log(error.response.data);
+                    console.log(error.response.status);
+                    console.log(error.response.headers);
+                } else if (error.request) {
+                    // The request was made but no response was received
+                    // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                    // http.ClientRequest in node.js
+                    console.log(error.request);
+                } else {
+                    // Something happened in setting up the request that triggered an Error
+                    console.log(error.message);
+                }
+                console.log(error.config);
+            })
+    });
+});

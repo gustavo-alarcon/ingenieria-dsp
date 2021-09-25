@@ -46,6 +46,7 @@ export interface Quality {
   evaluationAnalisis?: number;
   eventType: string; //Interno- Externo
   emailList?: Array<string>;
+  paralized?: boolean;
   workOrder?: number;
   component?: string;
   specialist?: string;
