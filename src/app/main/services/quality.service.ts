@@ -157,7 +157,7 @@ export class QualityService {
       component: form.component,
       specialist: null,
       partNumber: form.nPart,
-      workShop: form.workshopName,
+      workShop: form.workshopName.workshopName,
       reportingWorkshop: null,
       enventDetail: null,
       packageNumber: form.nPackage,
@@ -175,6 +175,9 @@ export class QualityService {
       question3: form.question3,
       question4: form.question4,
     };
+
+    console.log(data);
+    
     batch.set(qualityDocRef, data);
 
     return of(batch);

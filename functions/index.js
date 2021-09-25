@@ -427,7 +427,7 @@ exports.sendQualityToEndpoint = functions.firestore.document(`db/ferreyros/quali
                     "type": "quality process",
                     "otChild": quality.workOrder ? quality.workOrder : '-',
                     "partNumber": quality.partNumber ? quality.partNumber : '-',
-                    "workshop": quality.workShop ? (quality.eventType === 'Externo' ? quality.workShop.workshopName : quality.workShop) : '', //taller responsable
+                    "workshop": quality.workShop ? quality.workShop : '-',
                     "analysisQuality": quality.analysisQuality ? quality.analysisQuality : '',
                     "analysisCost": quality.analysisCost ? quality.analysisCost : '',
                     "analysisFrequency": quality.analysisFrequency ? quality.analysisFrequency : '',
@@ -577,7 +577,7 @@ exports.sendQualityOnCreate = functions.firestore.document(`db/ferreyros/quality
                 "partNumber": quality.partNumber ? quality.partNumber : '',
                 "component": quality.component ? quality.component : '',
                 "paralized": quality.paralized ? quality.paralized : false, // boolean
-                "workshop": quality.workShop ? (quality.eventType === 'Externo' ? quality.workShop.workshopName : quality.workShop) : '', //taller responsable
+                "workshop": quality.workShop ? quality.workShop : '', //taller responsable
                 "reportingWorkshop": quality.reportingWorkshop ? quality.reportingWorkshop.workshopName : '', //taller que reporta
 
                 "packageNumber": quality.packageNumber ? quality.packageNumber : '',
