@@ -105,6 +105,9 @@ export class QualityService {
         : null,
     };
 
+    console.log(data);
+    
+
     batch.set(qualityDocRef, data);
 
     return of(batch);

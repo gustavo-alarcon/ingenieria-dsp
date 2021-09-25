@@ -426,7 +426,8 @@ exports.sendQualityToEndpoint = functions.firestore.document(`db/ferreyros/quali
                     "id": quality.id,
                     "type": "quality process",
                     "otChild": quality.workOrder ? quality.workOrder : '-',
-                    "workshop": quality.workShop ? quality.workShop : '-',
+                    "partNumber": quality.partNumber ? quality.partNumber : '-',
+                    "workshop": quality.workShop ? (quality.eventType === 'Externo' ? quality.workShop.workshopName : quality.workShop) : '', //taller responsable
                     "analysisQuality": quality.analysisQuality ? quality.analysisQuality : '',
                     "analysisCost": quality.analysisCost ? quality.analysisCost : '',
                     "analysisFrequency": quality.analysisFrequency ? quality.analysisFrequency : '',
@@ -576,19 +577,19 @@ exports.sendQualityOnCreate = functions.firestore.document(`db/ferreyros/quality
                 "partNumber": quality.partNumber ? quality.partNumber : '',
                 "component": quality.component ? quality.component : '',
                 "paralized": quality.paralized ? quality.paralized : false, // boolean
-                "workshop": quality.workShop ? quality.workShop.workshopName : '', //taller responsable
+                "workshop": quality.workShop ? (quality.eventType === 'Externo' ? quality.workShop.workshopName : quality.workShop) : '', //taller responsable
                 "reportingWorkshop": quality.reportingWorkshop ? quality.reportingWorkshop.workshopName : '', //taller que reporta
 
                 "packageNumber": quality.packageNumber ? quality.packageNumber : '',
                 "horometer": quality.componentHourMeter ? quality.componentHourMeter : '',
-                "miningOperation": quality.miningOperation ? quality.minigOperation : '',
+                "miningOperation": quality.miningOperation ? quality.miningOperation : '',
                 
                 "details": quality.enventDetail ? quality.enventDetail : (quality.question1 + '. ' +
                     quality.question2 + '. ' +
                     quality.question3 + '. ' +
                     quality.question4),
                 "eventType": quality.eventType ? quality.eventType : '',
-                "process": quality.analysis ? quality.analysis.process : '',
+                "process": quality.reportingWorkshopProcess ? quality.reportingWorkshopProcess : '',
                 "detailImages": quality.detailImages ? quality.detailImages.join('@@') : '',
                 "generalImages": quality.generalImages ? quality.generalImages.join('@@') : '',
                 "createdByEmail": quality.createdBy ? quality.createdBy.email : ''
@@ -644,9 +645,9 @@ exports.sendBudget = functions.https.onCall(async(data, context) => {
         const emailData = {
             "id": data.id,
             "type": "budget",
-            "budgetFiles": data.budgetFiles ? quality.budgetFiles.join('@@') : '',
-            "reportFiles": data.reportFiles ? quality.reportFiles.join('@@') : '',
-            "quotationFiles": data.quotationFiles ? quality.quotationFiles.join('@@') : '',
+            "budgetFiles": data.budgetFiles ? data.budgetFiles.join('@@') : '',
+            "reportFiles": data.reportFiles ? data.reportFiles.join('@@') : '',
+            "quotationFiles": data.quotationFiles ? data.quotationFiles.join('@@') : '',
             "subject": data.subject ? data.subject : '',
             "body": data.body ? data.body : '',
             "observations": data.observations ? data.observations : '',

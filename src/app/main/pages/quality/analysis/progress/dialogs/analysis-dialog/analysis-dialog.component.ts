@@ -121,13 +121,14 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
       .pipe(
         tap((res) => {
           if (!res) return;
-          if (!this.data.analysis.causeFailure) return;
+          if (this.data.analysis) {
+            const actualCause = res.filter(
+              (cause) => cause.name === this.data.analysis.causeFailure
+            );
 
-          const actualCause = res.filter(
-            (cause) => cause.name === this.data.analysis.causeFailure
-          );
-
-          this.analysisForm.get('causeFailure').setValue(actualCause[0]);
+            if (actualCause.length)
+              this.analysisForm.get('causeFailure').setValue(actualCause[0]);
+          }
         })
       );
 
