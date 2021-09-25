@@ -381,7 +381,9 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
     let match = false;
 
     this.areas.value.every((element) => {
-      const a = element['corrective'].toLowerCase();
+      const a = element['corrective']
+        ? element['corrective'].toLowerCase()
+        : '';
 
       if (a === temp) {
         match = true;
