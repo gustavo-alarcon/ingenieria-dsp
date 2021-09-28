@@ -14,7 +14,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import * as XLSX from 'xlsx';
 import { BudgetsPendingApproveComponent } from './dialogs/budgets-pending-approve/budgets-pending-approve.component';
 import { BudgetsPendingModifyComponent } from './dialogs/budgets-pending-modify/budgets-pending-modify.component';
-
+import { BudgetsPendingRejectionComponent } from './dialogs/budgets-pending-rejection/budgets-pending-rejection.component';
+import { BudgetsPendingHistoryComponent } from './dialogs/budgets-pending-history/budgets-pending-history.component';
 
 @Component({
   selector: 'app-budgets-pending-approval',
@@ -257,7 +258,7 @@ export class BudgetsPendingApprovalComponent implements OnInit {
   }
 
   public downloadReport(): void {
-    const dataSource: Array<Budget> = this.tableData.data;
+    const dataSource: Array<Budget> = this.tableData.filteredData;
 
     const tableXlsx: any[] = [];
     const headersXlsx = [
@@ -313,7 +314,7 @@ export class BudgetsPendingApprovalComponent implements OnInit {
       'HORAS REALES',
       'TIEMPO OBJETIVO ENVIO PPTO',
       'DIAS RESTANTES ENVIO PPTO',
-      'NO. PPTOS MODIFICADOS O ADICIONALES',
+      'N°. PPTOS MODIFICADOS O ADICIONALES',
       'OBSERVACIONES EN EL PRESUPUESTO',
       'FECHA DE TERMINO DE REP',
       'FECHA ULTIMO INPUT',
@@ -434,9 +435,7 @@ export class BudgetsPendingApprovalComponent implements OnInit {
         item.horasReales ? item.horasReales : '---',
         item.tiempoObjetivoEnvioPPTO ? item.tiempoObjetivoEnvioPPTO : '---',
         item.diasRestantesEnvioPPTO ? item.diasRestantesEnvioPPTO : '---',
-        item.NoPPTOSModificadosOAdicionales
-          ? item.NoPPTOSModificadosOAdicionales
-          : '---',
+        this.getAdditionalsAndModified(item),
         item.observacionesEnElPresupuesto
           ? item.observacionesEnElPresupuesto
           : '---',
@@ -518,15 +517,42 @@ export class BudgetsPendingApprovalComponent implements OnInit {
 
   public timelineDialog(i: number) {}
 
-  public sendDialog(element: Budget){
+  public sendDialog(element: Budget) {
     const a = this.MatDialog.open(BudgetsPendingApproveComponent, {
-      data: element
+      width: '90vw',
+      maxWidth: '500px',
+      data: element,
     });
   }
 
-  public modifyDialog(element: Budget){
+  public modifyDialog(element: Budget) {
     const a = this.MatDialog.open(BudgetsPendingModifyComponent, {
-      data: element
+      width: '90vw',
+      maxWidth: '700px',
+      data: element,
     });
+  }
+
+  public rejectionDialog(element: Budget) {
+    const a = this.MatDialog.open(BudgetsPendingRejectionComponent, {
+      width: '90vw',
+      maxWidth: '500px',
+      data: element,
+    });
+  }
+
+  public historyDialog(element: Budget) {
+    const a = this.MatDialog.open(BudgetsPendingHistoryComponent, {
+      width: '90vw',
+      maxWidth: '700px',
+      data: element,
+    });
+  }
+
+  public getAdditionalsAndModified(budget: Budget): number | string {
+    const additional = budget.additionals ? budget.additionals.length : 0;
+    const modified = budget.NoPPTOSModificadosOAdicionales ? budget.NoPPTOSModificadosOAdicionales : 0;
+    const sum = additional + modified;
+    return sum ? sum : '---';
   }
 }

@@ -1,4 +1,3 @@
-import { PendingSendTimelineDialogComponent } from './dialogs/pending-send-timeline-dialog/pending-send-timeline-dialog.component';
 import { PendingSendDeleteDialogComponent } from './dialogs/pending-send-delete-dialog/pending-send-delete-dialog.component';
 import { PendingSendUpdateDialogComponent } from './dialogs/pending-send-update-dialog/pending-send-update-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -16,6 +15,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MatPaginator } from '@angular/material/paginator';
 import * as XLSX from 'xlsx';
 import moment from 'moment';
+import { BudgetsPendingHistoryComponent } from '../budgets-pending-approval/dialogs/budgets-pending-history/budgets-pending-history.component';
 
 @Component({
   selector: 'app-budgets-pending-send',
@@ -245,7 +245,7 @@ export class BudgetsPendingSendComponent implements OnInit {
   }
 
   public downloadReport(): void {
-    const dataSource: Array<Budget> = this.tableData.data;
+    const dataSource: Array<Budget> = this.tableData.filteredData;
 
     const tableXlsx: any[] = [];
     const headersXlsx = [
@@ -506,19 +506,14 @@ export class BudgetsPendingSendComponent implements OnInit {
     this.tableData.data = this.tableData.data;
   }
 
-  public updateDialog(currentBudget: Budget): void {
+  public updateDialog(currentBudget: Budget) {
     const ref = this.MatDialog.open(PendingSendUpdateDialogComponent, {
       data: currentBudget,
+      disableClose: true
     });
   }
 
-  public timelineDialog(currentBudget: Budget): void {
-    const ref = this.MatDialog.open(PendingSendTimelineDialogComponent, {
-      data: currentBudget,
-    });
-  }
-
-  public deleteDialog(currentBudget: Budget): void {
+  public deleteDialog(currentBudget: Budget) {
     const ref = this.MatDialog.open(PendingSendDeleteDialogComponent, {
       data: {
         woMain: currentBudget.woMain,
@@ -553,6 +548,22 @@ export class BudgetsPendingSendComponent implements OnInit {
 
   daysLeft(budget: Budget): string {
     // Get the goal Date and convert it to a moment.js object
+    if (typeof budget.tiempoObjetivoEnvioPPTO === 'number'){
+
+      // convertir fechaApert. en milisegundos
+      const openDate = budget.fechaAperturaChild['seconds'] * 1000;
+      // convertir los dias del tiempoOb. en mili segundos
+      const timeDate = budget.tiempoObjetivoEnvioPPTO * 8.64e+7;
+      const goalDate = openDate + timeDate;
+
+      const leftDate = goalDate -  Date.now();
+
+      const date = (leftDate / 8.64e+7).toFixed(2);
+
+      return date;
+
+    }else{
+
     const goalDate: moment.Moment = moment(
       budget.tiempoObjetivoEnvioPPTO.toDate()
     );
@@ -560,8 +571,19 @@ export class BudgetsPendingSendComponent implements OnInit {
     // Get the difference from the current moment() in days
     const diff: number = goalDate.diff(moment(), 'days');
 
-    if (diff >= 0) return diff.toString();
 
-    return '---';
+    return diff.toString();
+
+    }
   }
+
+  public timelineDialog(element: Budget): void {
+    const a = this.MatDialog.open(BudgetsPendingHistoryComponent, {
+      width: '90vw',
+      maxWidth: '700px',
+      data: element,
+    });
+  }
+
+  
 }

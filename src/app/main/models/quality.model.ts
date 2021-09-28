@@ -1,4 +1,5 @@
 import { User } from './user-model';
+import { WorkshopModel } from './workshop.model';
 
 export interface Quality {
   id?: string;
@@ -26,30 +27,33 @@ export interface Quality {
   finalizedTimeElapsed?: QualityTimer;
   finalizedPercentageElapsed?: number;
 
-  fileName: string;
+  fileName?: string;
   inquiryAt?: Date;
   attentionTimeElapsed?: QualityTimer;
   //finalizedAt?: Date;
   //finalizedBy: User;
-  analysisQuality: string;
-  analysisCost: string;
-  analysisFrequency: string;
+  analysisQuality?: string;
+  analysisCost?: string;
+  analysisFrequency?: string;
   //analysisCauseFailure: string;
   //analysisProcess: string;
   //analysisObservation: string;
   evaluationAnalysisName?: string;
   fileAdditional?: FileAdditional;
   taskDone?: number;
-  causeFailureList: Array<string>;
-  analysis: Array<string>;
-  evaluationAnalisis: number;
+  causeFailureList?: Array<string>;
+  analysis?: Analysis;
+  evaluationAnalisis?: number;
   eventType: string; //Interno- Externo
   emailList?: Array<string>;
+  paralized?: boolean;
   workOrder?: number;
   component?: string;
   specialist?: string;
   partNumber?: number;
-  workShop?: string;
+  workShop?: string; //responsible workshop
+  reportingWorkshop?: WorkshopModel;
+  reportingWorkshopProcess?: string;
   enventDetail?: string;
   packageNumber?: string;
   componentHourMeter?: string;
@@ -64,6 +68,17 @@ export interface Quality {
   question3?: string;
   question4?: string;
   file?: string;
+}
+
+export interface Analysis {
+  causeFailure: string;
+  basicCause: string;
+  responsibleWorkshop: string;
+  process: string;
+  observation: string;
+  responsable: string;
+  bahia: string;
+  URLimage: string;
 }
 
 export interface QualityTimer {
@@ -129,9 +144,10 @@ export interface ComponentList {
   name: string;
   createdAt: Date;
 }
-export interface WorkShopList {
+export interface WorkshopList {
   id: number;
   name: string;
+  createdBy: User;
   createdAt: Date;
 }
 

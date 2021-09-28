@@ -1,4 +1,4 @@
-import { Budget } from './../../../../../../models/budgets.model';
+import { Budget, DocumentSent } from './../../../../../../models/budgets.model';
 import { BudgetsService } from './../../../../../../services/budgets.service';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import {
@@ -16,10 +16,14 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { BehaviorSubject, Observable } from 'rxjs';
+import {
+  MatDialogRef,
+  MAT_DIALOG_DATA,
+  MatDialog,
+} from '@angular/material/dialog';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { BudgetsBroadcastList } from 'src/app/main/models/budgets.model';
-import { map, startWith } from 'rxjs/operators';
+import { finalize, map, startWith, take } from 'rxjs/operators';
 import {
   MatAutocomplete,
   MatAutocompleteSelectedEvent,
@@ -28,7 +32,12 @@ import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { COMMA, ENTER, SPACE, TAB } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import moment from 'moment';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { AngularFireStorage } from '@angular/fire/storage';
+import { AngularFirestore } from '@angular/fire/firestore';
 
+import * as firebase from 'firebase/app';
+import { AuthService } from 'src/app/auth/services/auth.service';
 @Component({
   selector: 'app-pending-send-update-dialog',
   templateUrl: './pending-send-update-dialog.component.html',
@@ -82,22 +91,34 @@ export class PendingSendUpdateDialogComponent implements OnInit {
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
   @ViewChild('autosize') autosize: CdkTextareaAutosize;
 
+  fileUploadCount = new BehaviorSubject<boolean>(false);
+  fileUploadCount$ = this.fileUploadCount.asObservable();
+
+  fileSubscriptions = new Subscription();
+
+  // filesUploadPercentageArray: Array<Observable<number>> = [];
+
   constructor(
     public dialogRef: MatDialogRef<PendingSendUpdateDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: Budget,
     private _formBuilder: FormBuilder,
-    private _budgetService: BudgetsService
+    private _budgetService: BudgetsService,
+    private authService: AuthService,
+    private matSnackBar: MatSnackBar,
+    private dialog: MatDialog,
+    private storage: AngularFireStorage,
+    private af: AngularFirestore,
   ) {}
 
   ngOnInit(): void {
     this.filesFormGroup = new FormGroup({
       checkboxGroup: new FormGroup(
         {
-          afa: new FormControl(false),
-          summary: new FormControl(false),
-          fesa: new FormControl(false),
-          text: new FormControl(false),
-          report: new FormControl(false),
+          afa: new FormControl('required'),
+          summary: new FormControl('required'),
+          fesa: new FormControl('required'),
+          text: new FormControl('required'),
+          report: new FormControl('required'),
           afaObs: new FormControl(''),
           summaryObs: new FormControl(''),
           fesaObs: new FormControl(''),
@@ -115,27 +136,40 @@ export class PendingSendUpdateDialogComponent implements OnInit {
       const checkbox = this.filesFormGroup.get('checkboxGroup').get('afa');
       switch (this.data.afa) {
         case 'SI': {
-          checkbox.setValue(true);
+          checkbox.setValue('required');
           break;
         }
         case 'NO': {
-          checkbox.setValue(false);
+          checkbox.setValue('notRequired');
           break;
         }
         default: {
-          checkbox.setValue(false);
+          checkbox.setValue('notRequired');
           break;
         }
       }
     })();
+
     if (moment(this.data.resumen, 'DD/MM/YYYY').isValid())
-      this.filesFormGroup.get('checkboxGroup').get('summary').setValue(true);
+      this.filesFormGroup
+        .get('checkboxGroup')
+        .get('summary')
+        .setValue('compliant');
     if (moment(this.data.cotizacionFesa, 'DD/MM/YYYY').isValid())
-      this.filesFormGroup.get('checkboxGroup').get('fesa').setValue(true);
+      this.filesFormGroup
+        .get('checkboxGroup')
+        .get('fesa')
+        .setValue('compliant');
     if (moment(this.data.cotizacionText, 'DD/MM/YYYY').isValid())
-      this.filesFormGroup.get('checkboxGroup').get('text').setValue(true);
+      this.filesFormGroup
+        .get('checkboxGroup')
+        .get('text')
+        .setValue('compliant');
     if (moment(this.data.informe, 'DD/MM/YYYY').isValid())
-      this.filesFormGroup.get('checkboxGroup').get('report').setValue(true);
+      this.filesFormGroup
+        .get('checkboxGroup')
+        .get('report')
+        .setValue('compliant');
 
     // Populate dialog with all observation fields
     if (this.data.afaObs) {
@@ -225,18 +259,32 @@ export class PendingSendUpdateDialogComponent implements OnInit {
       // Update additionals
       this.loading.next(true);
       this._budgetService
-        .updateBudgetFields(this.data.id, {
-          additionals: currentAdditionalDocs,
-        })
+        .updateBudgetFields(
+          this.data.id,
+          this.data,
+          {
+            additionals: currentAdditionalDocs,
+          },
+          this.filesFormGroup.value
+        )
         .subscribe((batch: firebase.default.firestore.WriteBatch) => {
           batch.commit().then(() => {
             this.loading.next(false);
+            this.matSnackBar.open(
+              ' ✅ Archivo se modifico de forma correcta',
+              'Aceptar',
+              {
+                duration: 6000,
+              }
+            );
+            this.dialog.closeAll();
           });
         });
     }
 
     // Update checkboxes in the database
-    this.updateAfaState(this.firstCheckboxStamp.afa, currentCheckboxes.afa);
+    // this.updateAfaState(this.firstCheckboxStamp.afa, currentCheckboxes.afa);
+
     this.updateDocumentState(
       this.firstCheckboxStamp.afa,
       currentCheckboxes.afa,
@@ -292,38 +340,74 @@ export class PendingSendUpdateDialogComponent implements OnInit {
   }
 
   private updateDocumentState(
-    originalState: boolean,
-    finalState: boolean,
+    originalState: string,
+    finalState: string,
     fieldToUpdate: string
   ): void {
     if (originalState !== finalState) {
       // The checkbox state has changed
-      if (finalState) {
-        // New date to be applied
-        this.loading.next(true);
-        this._budgetService
-          .updateBudgetFields(this.data.id, {
-            [fieldToUpdate]: moment().format('DD/MM/YYYY').toString(),
-          })
-          .subscribe((batch: firebase.default.firestore.WriteBatch) => {
-            batch.commit().then(() => {
-              this.loading.next(false);
+
+      switch (finalState) {
+        case 'compliant':
+          // New date to be applied
+          this.loading.next(true);
+
+          this._budgetService
+            .updateBudgetFields(
+              this.data.id,
+              this.data,
+              {
+                [fieldToUpdate]: moment().format('DD/MM/YYYY').toString(),
+              },
+              this.filesFormGroup.value
+            )
+            .pipe(take(1))
+            .subscribe((batch: firebase.default.firestore.WriteBatch) => {
+              batch.commit().then(() => {
+                this.loading.next(false);
+              });
             });
-          });
-      } else {
-        let state: string = 'PDTE';
-        if (fieldToUpdate == 'afaDate') state = '';
-        // Mark as pending
-        this.loading.next(true);
-        this._budgetService
-          .updateBudgetFields(this.data.id, {
-            [fieldToUpdate]: `${state}`,
-          })
-          .subscribe((batch: firebase.default.firestore.WriteBatch) => {
-            batch.commit().then(() => {
-              this.loading.next(false);
+          break;
+        case 'notRequired':
+          // Mark as pending
+          this.loading.next(true);
+          this._budgetService
+            .updateBudgetFields(
+              this.data.id,
+              this.data,
+              {
+                [fieldToUpdate]: '---',
+              },
+              this.filesFormGroup.value
+            )
+            .pipe(take(1))
+            .subscribe((batch: firebase.default.firestore.WriteBatch) => {
+              batch.commit().then(() => {
+                this.loading.next(false);
+              });
             });
-          });
+          break;
+        case 'required':
+          // Mark as pending
+          this.loading.next(true);
+          this._budgetService
+            .updateBudgetFields(
+              this.data.id,
+              this.data,
+              {
+                [fieldToUpdate]: 'PDTE',
+              },
+              this.filesFormGroup.value
+            )
+            .pipe(take(1))
+            .subscribe((batch: firebase.default.firestore.WriteBatch) => {
+              batch.commit().then(() => {
+                this.loading.next(false);
+              });
+            });
+          break;
+        default:
+          break;
       }
     }
   }
@@ -337,9 +421,14 @@ export class PendingSendUpdateDialogComponent implements OnInit {
       // The observation field has changed
       this.loading.next(true);
       this._budgetService
-        .updateBudgetFields(this.data.id, {
-          [observationFieldName]: finalState,
-        })
+        .updateBudgetFields(
+          this.data.id,
+          this.data,
+          {
+            [observationFieldName]: finalState,
+          },
+          this.filesFormGroup.value
+        )
         .subscribe((batch: firebase.default.firestore.WriteBatch) => {
           batch.commit().then(() => {
             // The new observation has been applied
@@ -349,15 +438,23 @@ export class PendingSendUpdateDialogComponent implements OnInit {
     }
   }
 
-  private updateAfaState(originalState: boolean, finalState: boolean): void {
+  private updateAfaState(originalState: string, finalState: string): void {
+    console.table([originalState, finalState]);
+
     if (originalState !== finalState) {
       // The checkbox state has changed
-      if (finalState) {
+      if (finalState.includes('compliant')) {
         this.loading.next(true);
         this._budgetService
-          .updateBudgetFields(this.data.id, {
-            afa: 'SI',
-          })
+          .updateBudgetFields(
+            this.data.id,
+            this.data,
+            {
+              afa: 'SI',
+            },
+            this.filesFormGroup.value
+          )
+          .pipe(take(1))
           .subscribe((batch: firebase.default.firestore.WriteBatch) => {
             batch.commit().then(() => {
               this.loading.next(false);
@@ -367,9 +464,14 @@ export class PendingSendUpdateDialogComponent implements OnInit {
         // Mark as "NO"
         this.loading.next(true);
         this._budgetService
-          .updateBudgetFields(this.data.id, {
-            afa: 'NO',
-          })
+          .updateBudgetFields(
+            this.data.id,
+            this.data,
+            {
+              afa: 'NO',
+            },
+            this.filesFormGroup.value
+          )
           .subscribe((batch: firebase.default.firestore.WriteBatch) => {
             batch.commit().then(() => {
               this.loading.next(false);
@@ -486,6 +588,217 @@ export class PendingSendUpdateDialogComponent implements OnInit {
     });
     this.loading.next(false);
   }
+
+  public send(): void {
+    if (this.budgetFilesList.length === 0 || !this.filesFormGroup.valid) return;
+
+    // first, save form changes
+    this.saveChanges();
+
+    // then, initialize the variables for document uploads
+    this.loading.next(true);
+    const now = Date.now();
+    let counter = 0;
+    const totalFiles =
+      this.budgetFilesList.length +
+      this.reportFilesList.length +
+      this.quotationFilesList.length;
+    const currentVersionCount = this.data.versionCount + 1;
+    // for every file in budgetFilesList, we will push a path reference to a budgetPathReferences
+    let budgetFiles: Array<DocumentSent> = [];
+
+    this.budgetFilesList.forEach((file) => {
+      const filePath = `budgets/${this.data.id}/v${currentVersionCount}/budgets/${now}_${file.name}`;
+      const task = this.storage.upload(filePath, file);
+
+      this.fileSubscriptions.add(
+        task
+          .snapshotChanges()
+          .pipe(
+            finalize(() => {
+              this.storage
+                .ref(filePath)
+                .getDownloadURL()
+                .pipe(take(1))
+                .subscribe((url) => {
+                  if (url) {
+                    budgetFiles.push({
+                      name: file.name,
+                      url: url,
+                    });
+
+                    this.fileUploadCount.next(true);
+                  }
+                });
+            })
+          )
+          .subscribe()
+      );
+    });
+
+    // for every file in reportFilesList, we will push  a path reference to reportPathReferences
+    let reportFiles: Array<DocumentSent> = [];
+
+    this.reportFilesList.forEach((file) => {
+      const filePath = `budgets/${this.data.id}/v${currentVersionCount}/reports/${now}_${file.name}`;
+      const task = this.storage.upload(filePath, file);
+
+      this.fileSubscriptions.add(
+        task
+          .snapshotChanges()
+          .pipe(
+            finalize(() => {
+              this.storage
+                .ref(filePath)
+                .getDownloadURL()
+                .pipe(take(1))
+                .subscribe((url) => {
+                  if (url) {
+                    reportFiles.push({
+                      name: file.name,
+                      url: url,
+                    });
+
+                    this.fileUploadCount.next(true);
+                  }
+                });
+            })
+          )
+          .subscribe()
+      );
+    });
+
+    // for every file in reportFilesList, we will push  a path reference to reportPathReferences
+    let quotationFiles: Array<DocumentSent> = [];
+
+    this.quotationFilesList.forEach((file) => {
+      const filePath = `budgets/${this.data.id}/v${currentVersionCount}/quotations/${now}_${file.name}`;
+      const task = this.storage.upload(filePath, file);
+
+      this.fileSubscriptions.add(
+        task
+          .snapshotChanges()
+          .pipe(
+            finalize(() => {
+              this.storage
+                .ref(filePath)
+                .getDownloadURL()
+                .pipe(take(1))
+                .subscribe((url) => {
+                  if (url) {
+                    quotationFiles.push({
+                      name: file.name,
+                      url: url,
+                    });
+
+                    this.fileUploadCount.next(true);
+                  }
+                });
+            })
+          )
+          .subscribe()
+      );
+    });
+
+    // Now, we will keep track of the number of uploads done to unsubscribe and finilize the loaders
+    this.fileSubscriptions.add(
+      this.fileUploadCount$.subscribe((res) => {
+        try {
+          if (res) counter++;
+
+          if (counter === totalFiles) {
+            this.authService.user$.pipe(take(1)).subscribe((user) => {
+              const batch = this.af.firestore.batch();
+              const budgetRef = this.af.doc(
+                `db/ferreyros/budgets/${this.data.id}`
+              ).ref;
+
+              batch.update(budgetRef, {
+                statusPresupuesto: 'PDTE. APROB.',
+                versionCount: currentVersionCount,
+                documentVersions:
+                  firebase.default.firestore.FieldValue.arrayUnion({
+                    version: currentVersionCount,
+                    budgets: budgetFiles,
+                    reports: reportFiles,
+                    quotations: quotationFiles,
+                    subject: this.form.value['subject'],
+                    body: this.form.value['body'],
+                    observations: this.form.value['observations'],
+                    to: this.emails,
+                  }),
+                fechaUltimoEnvioPPTO: new Date(),
+                lastSendBy: user,
+              });
+
+              batch
+                .commit()
+                .then(() => {
+                  this.matSnackBar.open(
+                    '✅ PTTO. enviado con éxito',
+                    'Aceptar',
+                    {
+                      duration: 6000,
+                    }
+                  );
+                  this.fileSubscriptions.unsubscribe();
+                  this.loading.next(false);
+                  this.dialogRef.close(true);
+
+                  // Send email
+                  this._budgetService.sendBudgetEmail({
+                    id: this.data.id,
+                    type: 'budget',
+                    budgetFiles: budgetFiles.map((file) => file.url),
+                    reportFiles: reportFiles.map((file) => file.url),
+                    quotationFiles: quotationFiles.map((file) => file.url),
+                    subject: this.form.value['subject'],
+                    body: this.form.value['body'],
+                    observations: this.form.value['observations'],
+                    emailList: this.emails,
+                    workOrder: this.data.ioMain,
+                    workshop: this.data.taller,
+                  });
+                })
+                .catch((err) => {
+                  this.matSnackBar.open(
+                    '🚨 Hubo un error guardando los archivos. Por favor, vuelva a intentarlo',
+                    'Aceptar',
+                    {
+                      duration: 6000,
+                    }
+                  );
+                });
+            });
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      })
+    );
+  }
+
+  public setAfa(value: string): void {
+    this.filesFormGroup.get('checkboxGroup').get('afa').setValue(value);
+  }
+
+  public setSummary(value: string): void {
+    this.filesFormGroup.get('checkboxGroup').get('summary').setValue(value);
+  }
+
+  public setFesa(value: string): void {
+    this.filesFormGroup.get('checkboxGroup').get('fesa').setValue(value);
+  }
+
+  public setText(value: string): void {
+    this.filesFormGroup.get('checkboxGroup').get('text').setValue(value);
+  }
+
+  public setReport(value: string): void {
+    this.filesFormGroup.get('checkboxGroup').get('report').setValue(value);
+  }
+  
+  
 }
 
 function requireCheckboxesToBeCheckedValidator(minRequired = 1): ValidatorFn {
@@ -495,7 +808,7 @@ function requireCheckboxesToBeCheckedValidator(minRequired = 1): ValidatorFn {
     Object.keys(formGroup.controls).forEach((key) => {
       const control = formGroup.controls[key];
 
-      if (control.value === true) {
+      if (control.value === 'compliant') {
         checked++;
       }
     });
@@ -511,14 +824,16 @@ function requireCheckboxesToBeCheckedValidator(minRequired = 1): ValidatorFn {
 }
 
 interface CheckboxesI {
-  afa: boolean;
+  afa: string;
   afaObs: string;
-  fesa: boolean;
+  fesa: string;
   fesaObs: string;
-  report: boolean;
+  report: string;
   reportObs: string;
-  summary: boolean;
+  summary: string;
   summaryObs: string;
-  text: boolean;
+  text: string;
   textObs: string;
 }
+
+

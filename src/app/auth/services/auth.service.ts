@@ -22,7 +22,7 @@ export class AuthService {
   user$: Observable<User>;
   uiConfig: UiConfig;
   version$: Observable<GeneralConfig>;
-  version: string = 'V6.18.24r';
+  version: string = 'V7.18.24r';
 
   constructor(
     private afAuth: AngularFireAuth,
@@ -54,7 +54,7 @@ export class AuthService {
 
   async loginGoogle(): Promise<firebase.auth.UserCredential> {
     try {
-      await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+      // await firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL);
       return await this.afAuth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
     } catch (error) {
       return error;

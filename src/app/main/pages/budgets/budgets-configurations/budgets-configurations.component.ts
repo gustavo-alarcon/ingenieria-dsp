@@ -264,6 +264,7 @@ export class BudgetsConfigurationsComponent implements OnInit {
           const temp: ModificationReasonEntry = {
             id: null,
             name: this.listReasonsForModificationFormControl.value.trim(),
+            additionals:null,
             createdBy: null,
             createdAt: null,
           };

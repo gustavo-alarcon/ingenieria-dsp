@@ -1,23 +1,31 @@
-import { Injectable, Component } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { Injectable } from '@angular/core';
+import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { from, Observable, of } from 'rxjs';
-import { map, shareReplay } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, take } from 'rxjs/operators';
 import {
   QualityTimer,
   QualityListSpecialist,
   QualityListResponsibleArea,
   QualityBroadcastList,
   CauseFailureList,
-  WorkShopList,
+  WorkshopList,
+  ComponentList,
+  ProcessList,
+  Analysis
 } from '../models/quality.model';
 import { User } from '../models/user-model';
 import * as firebase from 'firebase/app';
 import { EvaluationsUser } from '../models/evaluations.model';
-import { logging } from 'protractor';
 import { Quality, MiningOperation } from '../models/quality.model';
 import jsPDF from 'jspdf';
 import { saveAs } from 'file-saver';
+import {
+  BasicCause,
+  workshopForm,
+  WorkshopModel,
+} from '../models/workshop.model';
+import { FormGroup } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root',
@@ -25,8 +33,8 @@ import { saveAs } from 'file-saver';
 export class QualityService {
   constructor(
     private afs: AngularFirestore,
-    private storage: AngularFireStorage
-  ) { }
+    private storage: AngularFireStorage,
+  ) {}
 
   /**
    * add internal events entry
@@ -41,7 +49,9 @@ export class QualityService {
     user: User,
     imagesGeneral,
     imagesDetail,
-    dataFile
+    dataFile,
+    workshop?: WorkshopModel,
+    workshopProcessName?: string
   ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
@@ -51,7 +61,7 @@ export class QualityService {
       .doc();
 
     // Structuring the data model
-    const data: any = {
+    const data: Quality = {
       id: qualityDocRef.id,
       createdBy: user,
       editedAt: null,
@@ -68,6 +78,7 @@ export class QualityService {
       tracingPercentageElapsed: null,
       eventType: 'Interno', //Interno , Externo
       fileAdditional: dataFile,
+      paralized: !!(workshop && workshopProcessName),
       workOrder: form.workdOrden,
       component: form.component,
       specialist: null,
@@ -88,17 +99,17 @@ export class QualityService {
       question2: null,
       question3: null,
       question4: null,
+      reportingWorkshop: workshop ? workshop : null,
+      reportingWorkshopProcess: workshopProcessName
+        ? workshopProcessName
+        : null,
     };
+
+    console.log(data);
+    
+
     batch.set(qualityDocRef, data);
-    /* 
-        emailList.forEach(el => {
-          const qualityEmailDocRef = this.afs.firestore.doc(`db/ferreyros/quality/${quality.id}`);
-          const data1: any = {
-            emailList: firebase.default.firestore.FieldValue.arrayUnion(el)
-          };
-          batch.update(qualityEmailDocRef, data1);
-        });
-     */
+
     return of(batch);
   }
 
@@ -146,7 +157,8 @@ export class QualityService {
       component: form.component,
       specialist: null,
       partNumber: form.nPart,
-      workShop: null,
+      workShop: form.workshopName.workshopName,
+      reportingWorkshop: null,
       enventDetail: null,
       packageNumber: form.nPackage,
       componentHourMeter: form.componentHourMeter,
@@ -163,6 +175,9 @@ export class QualityService {
       question3: form.question3,
       question4: form.question4,
     };
+
+    console.log(data);
+    
     batch.set(qualityDocRef, data);
 
     return of(batch);
@@ -291,10 +306,103 @@ export class QualityService {
       .collection(`/db/generalConfig/qualityListSpecialist`)
       .doc(id)
       .delete()
-      .then(() => { })
+      .then(() => {})
       .catch((error) => {
         console.log(error);
       });
+  }
+
+  deleteWorkshop(
+    id: string
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    const batch = this.afs.firestore.batch();
+    const workshopDoc = this.afs.firestore.doc(
+      `db/generalConfigQuality/qualityWorkshop/${id}`
+    );
+
+    batch.delete(workshopDoc);
+    return of(batch);
+  }
+
+  updateWorkShop(
+    id: string,
+    form: workshopForm,
+    arrayProcess: string[]
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    const batch = this.afs.firestore.batch();
+    const docRef: DocumentReference = this.afs.firestore.doc(
+      `db/generalConfigQuality/qualityWorkshop/${id}`
+    );
+
+    const data: any = {
+      id: docRef.id,
+      workshopName: form.workshopName,
+      workshopProcessName: arrayProcess,
+    };
+    batch.update(docRef, data);
+    return of(batch);
+  }
+
+  updateWorkshopProcess(
+    workshop: WorkshopModel
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    const batch = this.afs.firestore.batch();
+    const docRef: DocumentReference = this.afs.firestore.doc(
+      `db/generalConfigQuality/qualityWorkshop/${workshop.id}`
+    );
+
+    const data: any = {
+      workshopProcessName: workshop.workshopProcessName,
+    };
+    batch.update(docRef, data);
+    return of(batch);
+  }
+
+  deleteImmediateCause(
+    id: string
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    const batch = this.afs.firestore.batch();
+    const docRef = this.afs.firestore.doc(
+      `db/generalConfigQuality/qualityImmediateCauses/${id}`
+    );
+
+    batch.delete(docRef);
+    return of(batch);
+  }
+
+  updateImmediateCause(
+    id: string,
+    name: string,
+    basicCauses: string[]
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    const batch = this.afs.firestore.batch();
+    const docRef: DocumentReference = this.afs.firestore.doc(
+      `db/generalConfigQuality/qualityImmediateCauses/${id}`
+    );
+
+    const data: Partial<BasicCause> = {
+      editedAt: new Date(),
+      name: name,
+      basicCauses: basicCauses,
+    };
+    batch.update(docRef, data);
+    return of(batch);
+  }
+
+  updateBasicCause(
+    immediateCause: BasicCause
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    const batch = this.afs.firestore.batch();
+    const docRef: DocumentReference = this.afs.firestore.doc(
+      `db/generalConfigQuality/qualityImmediateCauses/${immediateCause.id}`
+    );
+
+    const data: any = {
+      immediateCauses: immediateCause.basicCauses,
+    };
+
+    batch.update(docRef, data);
+    return of(batch);
   }
 
   // get all QualityListResponsibleArea
@@ -380,7 +488,7 @@ export class QualityService {
     batch.set(qualityDocRef, data);
 
     return of(batch);
-  }/* 
+  } /* 
   async deleteImage(imagesObj: string): Promise<any> {
     return await this.storage.storage.refFromURL(imagesObj).delete();
   } */
@@ -454,8 +562,8 @@ export class QualityService {
     evaluationName
   ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
-    console.log(' resultAnalysis: ', resultAnalysis)
-    console.log('    evaluationName:', evaluationName)
+    console.log(' resultAnalysis: ', resultAnalysis);
+    console.log('    evaluationName:', evaluationName);
     const batch = this.afs.firestore.batch();
     // create reference for document in evaluation entries collection
 
@@ -474,14 +582,16 @@ export class QualityService {
       evaluationAnalisis: resultAnalysis,
       evaluationAnalysisName: evaluationName,
       state: status,
-    }
+    };
 
     batch.update(qualityDocRef, data);
 
-    emailList.forEach(el => {
-      const qualityEmailDocRef = this.afs.firestore.doc(`db/ferreyros/quality/${quality.id}`);
+    emailList.forEach((el) => {
+      const qualityEmailDocRef = this.afs.firestore.doc(
+        `db/ferreyros/quality/${quality.id}`
+      );
       const data1: any = {
-        emailList: firebase.default.firestore.FieldValue.arrayUnion(el)
+        emailList: firebase.default.firestore.FieldValue.arrayUnion(el),
       };
       batch.update(qualityEmailDocRef, data1);
     });
@@ -516,6 +626,58 @@ export class QualityService {
 
     return of(batch);
   }
+
+  addComponentListCauseFailureList(
+    listCompCauseFailed: Array<CauseFailureList>,
+    user: User
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    const date = firebase.default.firestore.FieldValue.serverTimestamp();
+    const batch: firebase.default.firestore.WriteBatch =
+      this.afs.firestore.batch();
+
+    listCompCauseFailed.forEach((compCauseFailed: CauseFailureList) => {
+      const compCauseFailedRef = this.afs.firestore
+        .collection(`/db/generalConfigQuality/causeFailureList`)
+        .doc();
+
+      if (!compCauseFailed.id) {
+        batch.set(compCauseFailedRef, {
+          id: compCauseFailedRef.id,
+          name: compCauseFailed.name,
+          createdAt: date,
+          createdBy: user,
+        });
+      }
+    });
+
+    return of(batch);
+  }
+
+  addComponentListProcessList(
+    listCompProcess: Array<ProcessList>,
+    user: User
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    const date = firebase.default.firestore.FieldValue.serverTimestamp();
+    const batch: firebase.default.firestore.WriteBatch =
+      this.afs.firestore.batch();
+
+    listCompProcess.forEach((compProcess: ProcessList) => {
+      const compProcessRef = this.afs.firestore
+        .collection(`/db/generalConfigQuality/processList`)
+        .doc();
+
+      if (!compProcess.id) {
+        batch.set(compProcessRef, {
+          id: compProcessRef.id,
+          name: compProcess.name,
+          createdAt: date,
+          createdBy: user,
+        });
+      }
+    });
+
+    return of(batch);
+  }
   // get all CauseFailureList
   getAllCauseFailureList(): Observable<CauseFailureList[]> {
     return this.afs
@@ -527,7 +689,7 @@ export class QualityService {
   }
 
   deleteCauseFailure(
-    entryId,
+    entryId
   ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
@@ -547,24 +709,27 @@ export class QualityService {
    * @param {User} user - User's data in actual session
    */
   addMiningOperationList(
-    form,
+    listMining: Array<ComponentList>,
     user: User
   ): Observable<firebase.default.firestore.WriteBatch> {
-    // create batch
-    const batch = this.afs.firestore.batch();
-    // create reference for document in evaluation entries collection
-    const qualityDocRef = this.afs.firestore
-      .collection(`/db/generalConfigQuality/miningOperationList`)
-      .doc();
+    const date = firebase.default.firestore.FieldValue.serverTimestamp();
+    const batch: firebase.default.firestore.WriteBatch =
+      this.afs.firestore.batch();
 
-    // Structuring the data model
-    const data: any = {
-      id: qualityDocRef.id,
-      name: form.name,
-      createdAt: new Date(),
-      createdBy: user,
-    };
-    batch.set(qualityDocRef, data);
+    listMining.forEach((mining: WorkshopList) => {
+      const miningDocumentRef = this.afs.firestore
+        .collection(`/db/generalConfigQuality/miningOperationList`)
+        .doc();
+
+      if (!mining.id) {
+        batch.set(miningDocumentRef, {
+          id: miningDocumentRef.id,
+          name: mining.name,
+          createdAt: date,
+          createdBy: user,
+        });
+      }
+    });
 
     return of(batch);
   }
@@ -580,7 +745,7 @@ export class QualityService {
   }
 
   deleteMiningOperation(
-    entryId,
+    entryId
   ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
@@ -594,43 +759,43 @@ export class QualityService {
     return of(batch);
   }
 
-
   addWorkshopList(
-    form,
+    listWorkshop: Array<WorkshopList>,
     user: User
   ): Observable<firebase.default.firestore.WriteBatch> {
-    // create batch
-    const batch = this.afs.firestore.batch();
-    // create reference for document in evaluation entries collection
-    const qualityDocRef = this.afs.firestore
-      .collection(`/db/generalConfigQuality/workshopList`)
-      .doc();
+    const date = firebase.default.firestore.FieldValue.serverTimestamp();
+    const batch: firebase.default.firestore.WriteBatch =
+      this.afs.firestore.batch();
 
-    // Structuring the data model
-    const data: any = {
-      id: qualityDocRef.id,
-      name: form.name,
-      createdAt: new Date(),
-      createdBy: user,
-    };
-    batch.set(qualityDocRef, data);
+    listWorkshop.forEach((workshop: WorkshopList) => {
+      const listWorkshopDocumentRef = this.afs.firestore
+        .collection(`/db/generalConfigQuality/workshopList`)
+        .doc();
+
+      if (!workshop.id) {
+        batch.set(listWorkshopDocumentRef, {
+          id: listWorkshopDocumentRef.id,
+          name: workshop.name,
+          createdAt: date,
+          createdBy: user,
+        });
+      }
+    });
 
     return of(batch);
   }
 
   // get all CauseFailureList
-  getAllWorkshopList(): Observable<WorkShopList[]> {
+  getAllWorkshopList(): Observable<WorkshopList[]> {
     return this.afs
-      .collection<WorkShopList>(
+      .collection<WorkshopList>(
         `/db/generalConfigQuality/workshopList`,
         (ref) => ref.orderBy('createdAt', 'asc')
       )
       .valueChanges();
   }
 
-  deleteWorshop(
-    entryId,
-  ): Observable<firebase.default.firestore.WriteBatch> {
+  deleteWorshop(entryId): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
     // create reference for document in evaluation entries collection
@@ -644,31 +809,34 @@ export class QualityService {
   }
 
   addComponentListInternal(
-    form,
+    listCompInternal: Array<ComponentList>,
     user: User
   ): Observable<firebase.default.firestore.WriteBatch> {
-    // create batch
-    const batch = this.afs.firestore.batch();
-    // create reference for document in evaluation entries collection
-    const qualityDocRef = this.afs.firestore
-      .collection(`/db/generalConfigQuality/componentListInternal`)
-      .doc();
+    const date = firebase.default.firestore.FieldValue.serverTimestamp();
+    const batch: firebase.default.firestore.WriteBatch =
+      this.afs.firestore.batch();
 
-    // Structuring the data model
-    const data: any = {
-      id: qualityDocRef.id,
-      name: form.name,
-      createdAt: new Date(),
-      createdBy: user,
-    };
-    batch.set(qualityDocRef, data);
+    listCompInternal.forEach((compInternal: WorkshopList) => {
+      const compInternalDocumentRef = this.afs.firestore
+        .collection(`/db/generalConfigQuality/componentListInternal`)
+        .doc();
+
+      if (!compInternal.id) {
+        batch.set(compInternalDocumentRef, {
+          id: compInternalDocumentRef.id,
+          name: compInternal.name,
+          createdAt: date,
+          createdBy: user,
+        });
+      }
+    });
 
     return of(batch);
   }
 
-  getAllComponentsListInternal(): Observable<WorkShopList[]> {
+  getAllComponentsListInternal(): Observable<WorkshopList[]> {
     return this.afs
-      .collection<WorkShopList>(
+      .collection<WorkshopList>(
         `/db/generalConfigQuality/componentListInternal`,
         (ref) => ref.orderBy('createdAt', 'asc')
       )
@@ -676,7 +844,7 @@ export class QualityService {
   }
 
   deleteComponentInternal(
-    entryId,
+    entryId
   ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
@@ -690,31 +858,34 @@ export class QualityService {
     return of(batch);
   }
   addComponentListExternal(
-    form,
+    listCompExternal: Array<ComponentList>,
     user: User
   ): Observable<firebase.default.firestore.WriteBatch> {
-    // create batch
-    const batch = this.afs.firestore.batch();
-    // create reference for document in evaluation entries collection
-    const qualityDocRef = this.afs.firestore
-      .collection(`/db/generalConfigQuality/componentListExternal`)
-      .doc();
+    const date = firebase.default.firestore.FieldValue.serverTimestamp();
+    const batch: firebase.default.firestore.WriteBatch =
+      this.afs.firestore.batch();
 
-    // Structuring the data model
-    const data: any = {
-      id: qualityDocRef.id,
-      name: form.name,
-      createdAt: new Date(),
-      createdBy: user,
-    };
-    batch.set(qualityDocRef, data);
+    listCompExternal.forEach((compExternal: WorkshopList) => {
+      const compExtermalDocumentRef = this.afs.firestore
+        .collection(`/db/generalConfigQuality/componentListExternal`)
+        .doc();
+
+      if (!compExternal.id) {
+        batch.set(compExtermalDocumentRef, {
+          id: compExtermalDocumentRef.id,
+          name: compExternal.name,
+          createdAt: date,
+          createdBy: user,
+        });
+      }
+    });
 
     return of(batch);
   }
 
-  getAllComponentsListExternal(): Observable<WorkShopList[]> {
+  getAllComponentsListExternal(): Observable<WorkshopList[]> {
     return this.afs
-      .collection<WorkShopList>(
+      .collection<WorkshopList>(
         `/db/generalConfigQuality/componentListExternal`,
         (ref) => ref.orderBy('createdAt', 'asc')
       )
@@ -722,7 +893,7 @@ export class QualityService {
   }
 
   deleteComponentExternal(
-    entryId,
+    entryId
   ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
@@ -772,9 +943,7 @@ export class QualityService {
       .valueChanges();
   }
 
-  deleteProcess(
-    entryId,
-  ): Observable<firebase.default.firestore.WriteBatch> {
+  deleteProcess(entryId): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
     // create reference for document in evaluation entries collection
@@ -794,7 +963,7 @@ export class QualityService {
    */
   saveCorrectiveActions(
     quality: Quality,
-    formAnalysis,
+    formAnalysis: Analysis,
     formCorrective,
     emailList,
     analysis: number,
@@ -808,8 +977,11 @@ export class QualityService {
       `db/ferreyros/quality/${quality.id}`
     );
 
+    formAnalysis.causeFailure = formAnalysis.causeFailure['name'];
+
     // Structuring the data model
     const data: any = {
+      workShop: formAnalysis.responsibleWorkshop['workshopName'],
       processTimeElapsed: quality.processTimeElapsed,
       processPercentageElapsed: quality.processPercentageElapsed,
       tracingAt: new Date(),
@@ -817,14 +989,16 @@ export class QualityService {
       state: status,
       evaluationAnalisis: analysis,
       evaluationAnalysisName: evaluationName,
-      correctiveActions: formCorrective.areas
+      correctiveActions: formCorrective.areas,
     };
     batch.update(qualityDocRef, data);
 
-    emailList.forEach(el => {
-      const qualityEmailDocRef = this.afs.firestore.doc(`db/ferreyros/quality/${quality.id}`);
+    emailList.forEach((el) => {
+      const qualityEmailDocRef = this.afs.firestore.doc(
+        `db/ferreyros/quality/${quality.id}`
+      );
       const data1: any = {
-        emailList: firebase.default.firestore.FieldValue.arrayUnion(el)
+        emailList: firebase.default.firestore.FieldValue.arrayUnion(el),
       };
       batch.update(qualityEmailDocRef, data1);
     });
@@ -836,7 +1010,7 @@ export class QualityService {
     quality: Quality,
     analisis: number,
     evaluationName: string,
-    formAnalysis,
+    formAnalysis: Analysis,
     formCorrective?
   ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
@@ -845,22 +1019,18 @@ export class QualityService {
     const qualityDocRef = this.afs.firestore.doc(
       `db/ferreyros/quality/${quality.id}`
     );
+
+    formAnalysis.causeFailure = formAnalysis.causeFailure['name'];
+
     // Structuring the data model
     const data: any = {
+      workShop: formAnalysis.responsibleWorkshop['workshopName'],
       evaluationAnalysis: analisis,
       evaluationAnalysisName: evaluationName,
       analysis: formAnalysis,
-      correctiveActions: formCorrective.areas
+      correctiveActions: formCorrective.areas,
     };
 
-    /* formCorrective.areas.forEach(el => {
-      const qualityEmailDocRef = this.afs.firestore.doc(`db/ferreyros/quality/${quality.id}`);
-      const data2: any = {
-        correctiveActions: firebase.default.firestore.FieldValue.arrayUnion(el)
-      };
-      batch.update(qualityEmailDocRef, data2);
-    });
- */
     batch.update(qualityDocRef, data);
 
     return of(batch);
@@ -888,7 +1058,6 @@ export class QualityService {
     return of(batch);
   }
 
-
   finalizedCorrectiveActions(
     quality: Quality,
     status: string
@@ -906,16 +1075,14 @@ export class QualityService {
       tracingTimeElapsed: quality.tracingTimeElapsed,
       tracingPercentageElapsed: quality.tracingPercentageElapsed,
       finalizedAt: new Date(),
-      state: status
+      state: status,
     };
     batch.update(qualityDocRef, data);
 
     return of(batch);
   }
 
-  deleteQuality(
-    entryId,
-  ): Observable<firebase.default.firestore.WriteBatch> {
+  deleteQuality(entryId): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
     // create reference for document in evaluation entries collection
@@ -993,102 +1160,150 @@ export class QualityService {
 
   async printQualityPdf(data: Quality) {
     let imgAddress = <const>'../../../assets/img-quality/';
-    const defaultImage = 'https://firebasestorage.googleapis.com/v0/b/ferreyros-mvp.appspot.com/o/assets%2Fwithout-image.jpg?alt=media&token=d0676f36-9c69-490c-b8e7-790e7a7038a8';;
+    const defaultImage =
+      'https://firebasestorage.googleapis.com/v0/b/ferreyros-mvp.appspot.com/o/assets%2Fwithout-image.jpg?alt=media&token=d0676f36-9c69-490c-b8e7-790e7a7038a8';
     let doc = new jsPDF({
-      orientation: "portrait",
-      unit: "mm",
-      format: "a4"
-    })
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4',
+    });
 
     //Importando Plantilla
-    let img = new Image(595, 842)
+    let img = new Image(595, 842);
     img.src = imgAddress + 'report_1.png';
-
 
     //First page
     doc.addImage(img, 'PNG', 0, 0, 210, 297);
     //Setting body styles
-    doc.setFontSize(10)
+    doc.setFontSize(10);
 
     //Fecha de emisión
-    let emisionDate = null
+    let emisionDate = null;
     if (data.createdAt instanceof Date) {
-      emisionDate = this.getDateFromSec(data.createdAt.valueOf() / 1000)
+      emisionDate = this.getDateFromSec(data.createdAt.valueOf() / 1000);
     } else {
-      emisionDate = this.getDateFromSec(data.createdAt["seconds"])
+      emisionDate = this.getDateFromSec(data.createdAt['seconds']);
     }
-    doc.text(`${emisionDate.day}/${emisionDate.month}/${emisionDate.year}`, 79, 51, { align: "center" })
+    doc.text(
+      `${emisionDate.day}/${emisionDate.month}/${emisionDate.year}`,
+      79,
+      51,
+      { align: 'center' }
+    );
 
     //Nivel de riesgo
-    const riskName = data.evaluationAnalysisName ? data.evaluationAnalysisName : '---';
-    const riskNumber = data.evaluationAnalisis ? data.evaluationAnalisis : '---';
-    doc.text(riskName + ' (' + riskNumber +')', 155, 48, { align: "center" })
+    const riskName = data.evaluationAnalysisName
+      ? data.evaluationAnalysisName
+      : '---';
+    const riskNumber = data.evaluationAnalisis
+      ? data.evaluationAnalisis
+      : '---';
+    doc.text(riskName + ' (' + riskNumber + ')', 155, 48, { align: 'center' });
 
     //OT que reporta
-    doc.text(data.workOrder ? ('' + data.workOrder) : '---', 155, 57, { align: "center" })
+    doc.text(data.workOrder ? '' + data.workOrder : '---', 155, 57, {
+      align: 'center',
+    });
 
     //Analista
-    doc.text(data.specialist ? data.specialist['name'] : '---', 79, 67, { align: "center" })
+    doc.text(data.specialist ? data.specialist['name'] : '---', 79, 67, {
+      align: 'center',
+    });
 
     //Colaborador del análisis
-    doc.text(`---`, 155, 67, { align: "center" })
+    doc.text(`---`, 155, 67, { align: 'center' });
 
     //Talller
-    doc.text(data.workShop ? data.workShop : '---', 72, 75, { align: "center" })
+    doc.text(data.workShop ? data.workShop : '---', 72, 75, {
+      align: 'center',
+    });
 
     //Área
-    doc.text(`---`, 117, 75, { align: "center" })
+    doc.text(`---`, 117, 75, { align: 'center' });
 
     //Bahia
-    doc.text(`---`, 162, 75, { align: "center" })
+    doc.text(`---`, 162, 75, { align: 'center' });
 
     //Tipo reha
-    doc.text(data.eventType ? data.eventType : '---', 79, 81, { align: "center" })
+    doc.text(data.eventType ? data.eventType : '---', 79, 81, {
+      align: 'center',
+    });
 
     //Modelo
-    doc.text('---', 155, 81, { align: "center" })
+    doc.text('---', 155, 81, { align: 'center' });
 
     //Componente
-    doc.text(data.component ? data.component : '---', 79, 89, { align: "center" })
+    doc.text(data.component ? data.component : '---', 79, 89, {
+      align: 'center',
+    });
 
     //Nro de parte
-    doc.text(data.partNumber ? ('' + data.partNumber) : '---', 155, 89, { align: "center" })
+    doc.text(data.partNumber ? '' + data.partNumber : '---', 155, 89, {
+      align: 'center',
+    });
 
     //Descripción
-    doc.text('---', 79, 97, { align: "center" })
+    doc.text('---', 79, 97, { align: 'center' });
 
     //Proceso
-    doc.text(data.analysis ? data.analysis['process'] : '---', 135, 96, { align: "left" })
+    doc.text(data.analysis ? data.analysis['process'] : '---', 135, 96, {
+      align: 'left',
+    });
 
     //Modo de falla
-    doc.text(
-      doc.splitTextToSize('---', 100 - 59).slice(0, 2),
-      58, 103, { align: "left", maxWidth: 100 - 59 })
+    doc.text(doc.splitTextToSize('---', 100 - 59).slice(0, 2), 58, 103, {
+      align: 'left',
+      maxWidth: 100 - 59,
+    });
 
     //Causa raíz
     doc.text(
-      doc.splitTextToSize(data.analysis ? data.analysis['causeFailure'] : '---', 176 - 135).slice(0, 2),
-      135, 103, { align: "left", maxWidth: 176 - 135 })
+      doc
+        .splitTextToSize(
+          data.analysis ? data.analysis['causeFailure'] : '---',
+          176 - 135
+        )
+        .slice(0, 2),
+      135,
+      103,
+      { align: 'left', maxWidth: 176 - 135 }
+    );
 
-    const detailsExternalEvent = data.question1 + ' *** ' +
-      data.question2 + ' *** ' +
-      data.question3 + ' *** ' +
+    const detailsExternalEvent =
+      data.question1 +
+      ' *** ' +
+      data.question2 +
+      ' *** ' +
+      data.question3 +
+      ' *** ' +
       data.question4;
     //Análisis
-    let eventDetails = data.enventDetail ? data.enventDetail : detailsExternalEvent;
+    let eventDetails = data.enventDetail
+      ? data.enventDetail
+      : detailsExternalEvent;
     doc.text(
       doc.splitTextToSize(`${eventDetails}`, 176 - 58).slice(0, 8),
-      58, 117, { align: "left", maxWidth: 176 - 58 })
+      58,
+      117,
+      { align: 'left', maxWidth: 176 - 58 }
+    );
 
     //Observaciones
-    let observations = data.analysis ? (data.analysis['observations'] ? data.analysis['observations'] : '---') : '---'
+    let observations = data.analysis
+      ? data.analysis['observations']
+        ? data.analysis['observations']
+        : '---'
+      : '---';
     doc.text(
       doc.splitTextToSize(`${observations}`, 176 - 58).slice(0, 6),
-      58, 155, { align: "left", maxWidth: 176 - 58 })
+      58,
+      155,
+      { align: 'left', maxWidth: 176 - 58 }
+    );
 
     //Segunda hoja
-    doc.addPage("a4", "portrait")
-    let img2 = new Image(595, 842)
+    doc.addPage('a4', 'portrait');
+    let img2 = new Image(595, 842);
     img2.src = imgAddress + 'report_2.png';
     doc.addImage(img2, 'PNG', 0, 11, 210, 272);
 
@@ -1100,7 +1315,7 @@ export class QualityService {
     } else {
       image1 = await this.getDataUri(defaultImage);
     }
-    doc.addImage(image1, 'PNG', 28, 28, 70, 70)
+    doc.addImage(image1, 'PNG', 28, 28, 70, 70);
 
     // let imgSpec = new Image(595, 842)
     // imgSpec.src = imgAddress + 'timeline-s2.png';
@@ -1111,155 +1326,269 @@ export class QualityService {
     } else {
       image2 = await this.getDataUri(defaultImage);
     }
-    doc.addImage(image2, 'PNG', 107, 28, 70, 70)
+    doc.addImage(image2, 'PNG', 107, 28, 70, 70);
 
     //Tercera hoja
-    doc.addPage("a4", "portrait")
-    let h = 10
+    doc.addPage('a4', 'portrait');
+    let h = 10;
 
     //Each row
-    let correctiveActions = [{
-      denom: "Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación ",
-      respon: "Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable ",
-      area: "Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable "
-    }, {
-      denom: "Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación ",
-      respon: "Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable ",
-      area: "Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable "
-    }, {
-      denom: "Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación ",
-      respon: "Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable ",
-      area: "Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable "
-    }, {
-      denom: "Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación ",
-      respon: "Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable ",
-      area: "Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable "
-    }, {
-      denom: "Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación ",
-      respon: "Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable ",
-      area: "Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable "
-    }]
+    let correctiveActions = [
+      {
+        denom:
+          'Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación ',
+        respon:
+          'Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable ',
+        area: 'Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable ',
+      },
+      {
+        denom:
+          'Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación ',
+        respon:
+          'Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable ',
+        area: 'Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable ',
+      },
+      {
+        denom:
+          'Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación ',
+        respon:
+          'Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable ',
+        area: 'Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable ',
+      },
+      {
+        denom:
+          'Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación ',
+        respon:
+          'Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable ',
+        area: 'Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable ',
+      },
+      {
+        denom:
+          'Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación Denominación ',
+        respon:
+          'Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable Responsable ',
+        area: 'Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable Area responsable ',
+      },
+    ];
 
-
-    doc.text("Acciones Correctivas:", 26, 42 - h, { align: "left" })
+    doc.text('Acciones Correctivas:', 26, 42 - h, { align: 'left' });
 
     //Header square
     //Horizontal line
-    doc.line(26, 42, 180, 42)
-    doc.line(26, 42 + h, 180, 42 + h)
+    doc.line(26, 42, 180, 42);
+    doc.line(26, 42 + h, 180, 42 + h);
     //Vertical lines
-    doc.line(26, 42, 26, 42 + h)
-    doc.line(107, 42, 107, 42 + h)
-    doc.line(152, 42, 152, 42 + h)
-    doc.line(180, 42, 180, 42 + h)
+    doc.line(26, 42, 26, 42 + h);
+    doc.line(107, 42, 107, 42 + h);
+    doc.line(152, 42, 152, 42 + h);
+    doc.line(180, 42, 180, 42 + h);
 
     //Text header
     doc.text(
       doc.splitTextToSize(`Denominación`, 104 - 28).slice(0, 2),
-      68, 45.5, { align: "center", maxWidth: 104 - 28 })
+      68,
+      45.5,
+      { align: 'center', maxWidth: 104 - 28 }
+    );
 
     doc.text(
       doc.splitTextToSize(`Responsable`, 150 - 108).slice(0, 2),
-      130, 45.5, { align: "center", maxWidth: 150 - 108 })
+      130,
+      45.5,
+      { align: 'center', maxWidth: 150 - 108 }
+    );
 
     doc.text(
       doc.splitTextToSize(`Área responsable`, 178 - 152).slice(0, 2),
-      166, 45.5, { align: "center", maxWidth: 178 - 152 })
+      166,
+      45.5,
+      { align: 'center', maxWidth: 178 - 152 }
+    );
 
     //Text body
     data.correctiveActions.forEach((value, index) => {
       //Horizontal line
       //doc.line(26, 42, 180, 42)
-      doc.line(26, 42 + h * (index + 2), 180, 42 + h * (index + 2))
+      doc.line(26, 42 + h * (index + 2), 180, 42 + h * (index + 2));
       //Vertical lines
-      doc.line(26, 42 + h * (index + 1), 26, 42 + h * (index + 2))
-      doc.line(107, 42 + h * (index + 1), 107, 42 + h * (index + 2))
-      doc.line(152, 42 + h * (index + 1), 152, 42 + h * (index + 2))
-      doc.line(180, 42 + h * (index + 1), 180, 42 + h * (index + 2))
+      doc.line(26, 42 + h * (index + 1), 26, 42 + h * (index + 2));
+      doc.line(107, 42 + h * (index + 1), 107, 42 + h * (index + 2));
+      doc.line(152, 42 + h * (index + 1), 152, 42 + h * (index + 2));
+      doc.line(180, 42 + h * (index + 1), 180, 42 + h * (index + 2));
       //Text
       //Denominacion
       doc.text(
         doc.splitTextToSize(value['corrective'], 104 - 28).slice(0, 2),
-        68, 45.5 + h * (index + 1), { align: "center", maxWidth: 104 - 28 })
+        68,
+        45.5 + h * (index + 1),
+        { align: 'center', maxWidth: 104 - 28 }
+      );
 
       //Responsable
       doc.text(
         doc.splitTextToSize('---', 150 - 108).slice(0, 2),
-        130, 45.5 + h * (index + 1), { align: "center", maxWidth: 150 - 108 })
+        130,
+        45.5 + h * (index + 1),
+        { align: 'center', maxWidth: 150 - 108 }
+      );
 
       //Area
       doc.text(
         doc.splitTextToSize(value['name'], 178 - 152).slice(0, 2),
-        166, 45.5 + h * (index + 1), { align: "center", maxWidth: 178 - 152 })
-    })
+        166,
+        45.5 + h * (index + 1),
+        { align: 'center', maxWidth: 178 - 152 }
+      );
+    });
 
-    let responsibles = [{
-      sap: "4654654654",
-      name: "Juan Pérez"
-    }, {
-      sap: "4654654654",
-      name: "Juan Pérez"
-    }, {
-      sap: "4654654654",
-      name: "Juan Pérez"
-    }, {
-      sap: "4654654654",
-      name: "Juan Pérez"
-    }, {
-      sap: "4654654654",
-      name: "Juan Pérez"
-    },
-    ]
+    let responsibles = [
+      {
+        sap: '4654654654',
+        name: 'Juan Pérez',
+      },
+      {
+        sap: '4654654654',
+        name: 'Juan Pérez',
+      },
+      {
+        sap: '4654654654',
+        name: 'Juan Pérez',
+      },
+      {
+        sap: '4654654654',
+        name: 'Juan Pérez',
+      },
+      {
+        sap: '4654654654',
+        name: 'Juan Pérez',
+      },
+    ];
 
-
-    doc.text("Responsables:", 26, 42 + h * (correctiveActions.length + 2), { align: "left" })
+    doc.text('Responsables:', 26, 42 + h * (correctiveActions.length + 2), {
+      align: 'left',
+    });
     //Header square
     //Horizontal line
-    doc.line(26, 42 + h * (correctiveActions.length + 3), 180, 42 + h * (correctiveActions.length + 3))
-    doc.line(26, 42 + h + h * (correctiveActions.length + 3), 180, 42 + h + h * (correctiveActions.length + 3))
+    doc.line(
+      26,
+      42 + h * (correctiveActions.length + 3),
+      180,
+      42 + h * (correctiveActions.length + 3)
+    );
+    doc.line(
+      26,
+      42 + h + h * (correctiveActions.length + 3),
+      180,
+      42 + h + h * (correctiveActions.length + 3)
+    );
     //Vertical lines
-    doc.line(26, 42 + h * (correctiveActions.length + 3), 26, 42 + h * (correctiveActions.length + 4))
-    doc.line(62, 42 + h * (correctiveActions.length + 3), 62, 42 + h * (correctiveActions.length + 4))
-    doc.line(180, 42 + h * (correctiveActions.length + 3), 180, 42 + h * (correctiveActions.length + 4))
+    doc.line(
+      26,
+      42 + h * (correctiveActions.length + 3),
+      26,
+      42 + h * (correctiveActions.length + 4)
+    );
+    doc.line(
+      62,
+      42 + h * (correctiveActions.length + 3),
+      62,
+      42 + h * (correctiveActions.length + 4)
+    );
+    doc.line(
+      180,
+      42 + h * (correctiveActions.length + 3),
+      180,
+      42 + h * (correctiveActions.length + 4)
+    );
 
     //Text header
-    doc.text('Código SAP', 42, 45.5 + +h * (correctiveActions.length + 3), { align: "center" })
+    doc.text('Código SAP', 42, 45.5 + +h * (correctiveActions.length + 3), {
+      align: 'center',
+    });
 
-    doc.text('Nombres y Apellidos', 120, 45.5 + +h * (correctiveActions.length + 3), { align: "center" })
+    doc.text(
+      'Nombres y Apellidos',
+      120,
+      45.5 + +h * (correctiveActions.length + 3),
+      { align: 'center' }
+    );
 
     //Text body
     responsibles.forEach((value, index) => {
       //Header square
       //Horizontal line
       //doc.line(26, 42+h*(correctiveActions.length+3), 180, 42+h*(correctiveActions.length+3))
-      doc.line(26, 42 + h + h * (correctiveActions.length + 3 + index + 1), 180, 42 + h + h * (correctiveActions.length + 3 + index + 1))
+      doc.line(
+        26,
+        42 + h + h * (correctiveActions.length + 3 + index + 1),
+        180,
+        42 + h + h * (correctiveActions.length + 3 + index + 1)
+      );
       //Vertical lines
-      doc.line(26, 42 + h * (correctiveActions.length + 3 + index + 1), 26, 42 + h * (correctiveActions.length + 4 + index + 1))
-      doc.line(62, 42 + h * (correctiveActions.length + 3 + index + 1), 62, 42 + h * (correctiveActions.length + 4 + index + 1))
-      doc.line(180, 42 + h * (correctiveActions.length + 3 + index + 1), 180, 42 + h * (correctiveActions.length + 4 + index + 1))
+      doc.line(
+        26,
+        42 + h * (correctiveActions.length + 3 + index + 1),
+        26,
+        42 + h * (correctiveActions.length + 4 + index + 1)
+      );
+      doc.line(
+        62,
+        42 + h * (correctiveActions.length + 3 + index + 1),
+        62,
+        42 + h * (correctiveActions.length + 4 + index + 1)
+      );
+      doc.line(
+        180,
+        42 + h * (correctiveActions.length + 3 + index + 1),
+        180,
+        42 + h * (correctiveActions.length + 4 + index + 1)
+      );
 
       //Text header
-      doc.text('---', 42, 45.5 + +h * (correctiveActions.length + 3 + index + 1), { align: "center" })
+      doc.text(
+        '---',
+        42,
+        45.5 + +h * (correctiveActions.length + 3 + index + 1),
+        { align: 'center' }
+      );
 
-      doc.text('---', 120, 45.5 + +h * (correctiveActions.length + 3 + index + 1), { align: "center" })
-    })
+      doc.text(
+        '---',
+        120,
+        45.5 + +h * (correctiveActions.length + 3 + index + 1),
+        { align: 'center' }
+      );
+    });
 
-    doc.text("Link de aplicación:", 26, 42 + h * (correctiveActions.length + responsibles.length + 5), { align: "left" })
+    doc.text(
+      'Link de aplicación:',
+      26,
+      42 + h * (correctiveActions.length + responsibles.length + 5),
+      { align: 'left' }
+    );
     doc.setTextColor(6, 69, 173);
     //    doc.setTextColor(0,0,255);
 
-    doc.textWithLink('Ferreyros MVP', 26, 42 + h * (correctiveActions.length + responsibles.length + 6), { url: 'https://ferreyros-mvp.web.app/main/quality-analysis' });
-
-
+    doc.textWithLink(
+      'Ferreyros MVP',
+      26,
+      42 + h * (correctiveActions.length + responsibles.length + 6),
+      { url: 'https://ferreyros-mvp.web.app/main/quality-analysis' }
+    );
 
     let blob = doc.output('blob');
 
-    saveAs(blob, 'Reporte_de_calidad_' + data.workOrder + '_' + (new Date).toLocaleDateString());
-
-  };
+    saveAs(
+      blob,
+      'Reporte_de_calidad_' +
+        data.workOrder +
+        '_' +
+        new Date().toLocaleDateString()
+    );
+  }
 
   getDataUri(url): Promise<HTMLImageElement> {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       var image = new Image();
 
       image.onload = () => {
@@ -1267,7 +1596,7 @@ export class QualityService {
       };
 
       image.src = url;
-    })
+    });
   }
 
   getDateFromSec(seconds: number): {
@@ -1278,21 +1607,89 @@ export class QualityService {
     minutes: string;
   } {
     let date = new Date(1970);
-    date.setSeconds(seconds)
+    date.setSeconds(seconds);
     let month = '' + (date.getMonth() + 1);
     let day = '' + date.getDate();
     let year = date.getFullYear();
     let hours = date.getHours();
     let minutes = '' + date.getMinutes();
 
-    if (minutes.length < 2)
-      minutes = '0' + minutes;
-    if (month.length < 2)
-      month = '0' + month;
-    if (day.length < 2)
-      day = '0' + day;
+    if (minutes.length < 2) minutes = '0' + minutes;
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
 
-    return { year, month, day, hours, minutes }
+    return { year, month, day, hours, minutes };
   }
 
+  getAllQualityInternalWorkshop(): Observable<WorkshopModel[]> {
+    return this.afs
+      .collection<WorkshopModel>(
+        `db/generalConfigQuality/qualityWorkshop`,
+        (ref) => ref.orderBy('createdAt', 'asc')
+      )
+      .valueChanges();
+  }
+
+  getAllQualityImmediateCauses(): Observable<BasicCause[]> {
+    return this.afs
+      .collection<BasicCause>(
+        `db/generalConfigQuality/qualityImmediateCauses`,
+        (ref) => ref.orderBy('createdAt', 'asc')
+      )
+      .valueChanges();
+  }
+
+  addQualityInternalWorkshop(
+    form: FormGroup,
+    user: User,
+    arrayWorkshopProcessName: string[]
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    // create reference for document in evaluation entries collection
+    const qualityWorkshopDocRef = this.afs.firestore
+      .collection(`db/generalConfigQuality/qualityWorkshop`)
+      .doc();
+
+    // Structuring the data model
+    const data: WorkshopModel = {
+      id: qualityWorkshopDocRef.id,
+      createdBy: user,
+      editedAt: null,
+      createdAt: new Date(),
+      workshopName: form.get('workshopName').value,
+      workshopProcessName: arrayWorkshopProcessName,
+    };
+
+    batch.set(qualityWorkshopDocRef, data);
+
+    return of(batch);
+  }
+
+  addQualityImmediateCause(
+    form: FormGroup,
+    user: User,
+    basicCauses: string[]
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    // create batch
+    const batch = this.afs.firestore.batch();
+    // create reference for document in evaluation entries collection
+    const docRef = this.afs.firestore
+      .collection(`db/generalConfigQuality/qualityImmediateCauses`)
+      .doc();
+
+    // Structuring the data model
+    const data: BasicCause = {
+      id: docRef.id,
+      createdBy: user,
+      editedAt: null,
+      createdAt: new Date(),
+      name: form.get('immediateCause').value,
+      basicCauses: basicCauses,
+    };
+
+    batch.set(docRef, data);
+
+    return of(batch);
+  }
 }

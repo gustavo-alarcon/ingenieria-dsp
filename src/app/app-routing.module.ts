@@ -15,7 +15,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: 'main',
+    redirectTo: 'auth',
     pathMatch: 'full'
   },
   { path: '**', component: NotFoundComponent }

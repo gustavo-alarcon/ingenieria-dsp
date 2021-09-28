@@ -1,0 +1,18 @@
+.container-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.container-title {
+    display: flex;
+    align-items: stretch;
+    .icon {
+        align-self: center;
+        margin-right: 8px;
+    }
+    .title {
+        margin: 0px;
+        align-self: center;
+    }
+}

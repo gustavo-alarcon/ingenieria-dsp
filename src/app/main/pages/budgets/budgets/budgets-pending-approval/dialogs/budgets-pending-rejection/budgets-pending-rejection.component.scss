@@ -1,0 +1,40 @@
+.rejection-title {
+    margin-top: 5px;
+    margin-right: 15px;
+}
+
+.rejection-title--close {
+    margin-top: 5px;
+    margin-left: 220px;
+    cursor: pointer;
+}
+
+.rejection-title--close {
+    margin-top: 5px;
+    margin-left: 220px;
+}
+
+p {
+    font-family: Roboto;
+    font-style: normal;
+    font-size: 14px;
+    text-align: center;
+    line-height: 20px;
+    color: #828282;
+    margin: 1em 0;
+}
+
+.main--wrapper {
+    display: flex;
+    flex-direction: column;
+    padding: 0 4em;
+}
+
+.main--form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    mat-form-field {
+        margin: 0.5em 0;
+    }
+}

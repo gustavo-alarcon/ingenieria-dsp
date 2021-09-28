@@ -1,67 +1,101 @@
-
 <div>
-    <div class="ms-dialog-header">
-        <mat-icon class="ms-dialog-header__icon">timeline</mat-icon>
-        <h3 class="ms-dialog-header__title">Línea de tiempo <span style="font-size: 0.8rem; color: grey; margin-left: 1rem">OT -{{data.workOrder}} </span> </h3>           
-        <span class="ms-fill"></span>
-        <button mat-icon-button mat-dialog-close>
-            <mat-icon>cancel</mat-icon>
-        </button>
+  <div class="ms-dialog-header">
+    <mat-icon class="ms-dialog-header__icon">timeline</mat-icon>
+    <h3 class="ms-dialog-header__title">
+      Línea de tiempo
+      <span style="font-size: 0.8rem; color: grey; margin-left: 1rem"
+        >OT -{{ data.workOrder }}
+      </span>
+    </h3>
+    <span class="ms-fill"></span>
+    <button mat-icon-button mat-dialog-close>
+      <mat-icon>cancel</mat-icon>
+    </button>
+  </div>
+  <mat-divider></mat-divider>
+
+  <mat-divider></mat-divider>
+  <mat-progress-bar
+    mode="indeterminate"
+    *ngIf="loading$ | async"
+  ></mat-progress-bar>
+  <mat-dialog-content class="timer">
+    <div class="timer__details">
+      <p>
+        <span style="font-weight: bold"> OT Actual :</span>
+        {{ data.workOrder ? data.workOrder : "---" }}
+      </p>
+      <p>
+        <span style="font-weight: bold"> Componente :</span>
+        {{ data.component ? data.component : "---" }}
+      </p>
+      <p>
+        <span style="font-weight: bold"> Número de paqueteo :</span>
+        {{ data.packageNumber ? data.packageNumber : "---" }}
+      </p>
+      <p>
+        <span style="font-weight: bold"> Horómetro de componente :</span>
+        {{ data.componentHourMeter ? data.componentHourMeter : "---" }}
+      </p>
+      <p>
+        <span style="font-weight: bold"> Número de parte :</span>
+        {{ data.partNumber ? data.partNumber : "---" }}
+      </p>
+      <p>
+        <span style="font-weight: bold"> Tipo de evento :</span>
+        {{ data.eventType ? data.eventType : "---" }}
+      </p>
+      <p>
+        <span style="font-weight: bold"> Taller que reporta :</span>
+        {{
+          data.reportingWorkshop ? data.reportingWorkshop.workshopName : "---"
+        }}
+      </p>
+      <p *ngIf="data.eventType === 'Interno'">
+        <span style="font-weight: bold"> Proceso :</span>
+        {{ data.analysis ? data.analysis["process"] : "---" }}
+      </p>
     </div>
-    <mat-divider></mat-divider>
 
-    <mat-divider></mat-divider>
-    <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
-    <mat-dialog-content class="timer" >       
-        
-        <div class="timer__details">
-            <p><span style="font-weight: bold;"> OT Actual :</span> {{data.workOrder ? data.workOrder : ''}}</p>
-            <p><span style="font-weight: bold;"> Componente :</span> {{data.component ? data.component : ''}}</p>
-            <p><span style="font-weight: bold;"> Número de paqueteo :</span> {{data.packageNumber ? data.packageNumber : ''}}</p>
-            <p><span style="font-weight: bold;"> Horómetro de componente :</span> {{data.componentHourMeter ? data.componentHourMeter : ''}}</p>
-            <p><span style="font-weight: bold;"> Número de parte :</span> {{data.partNumber ? data.partNumber : ''}}</p>
-            <p><span style="font-weight: bold;"> Tipo de evento :</span> {{data.eventType ? data.eventType : ''}} </p>
+    <div class="timer__time-line">
+      <div class="timer__time-line--registry">
+        <div>
+          {{ data.registryTimeElapsed?.days | number: "2." }} /
+          {{ data.registryTimeElapsed?.hours | number: "2." }} :
+          {{ data.registryTimeElapsed?.minutes | number: "2." }} :
+          {{ data.registryTimeElapsed?.seconds | number: "2." }}
         </div>
+      </div>
 
-        <div class="timer__time-line">
-            <div class="timer__time-line--registry">
-                <div>
-                    {{data.registryTimeElapsed?.days | number : '2.'}} /
-                    {{data.registryTimeElapsed?.hours | number : '2.'}} :
-                    {{data.registryTimeElapsed?.minutes | number : '2.'}} :
-                    {{data.registryTimeElapsed?.seconds | number : '2.'}}
-                </div>
-            </div>
-
-            <div class="timer__time-line--attention">
-                <div>
-                    {{data.attentionTimeElapsed?.days | number : '2.'}} /
-                    {{data.attentionTimeElapsed?.hours | number : '2.'}} :
-                    {{data.attentionTimeElapsed?.minutes | number : '2.'}} :
-                    {{data.attentionTimeElapsed?.seconds | number : '2.'}}
-                </div>
-            </div>
-            <div class="timer__time-line--processed">
-                <div>
-                    {{data.processTimeElapsed?.days | number : '2.'}} /
-                    {{data.processTimeElapsed?.hours | number : '2.'}} :
-                    {{data.processTimeElapsed?.minutes | number : '2.'}} :
-                    {{data.processTimeElapsed?.seconds | number : '2.'}}
-                </div>
-            </div>
-            <div class="timer__time-line--tracing">
-                <div>
-                    {{data.tracingTimeElapsed?.days | number : '2.'}} /
-                    {{data.tracingTimeElapsed?.hours | number : '2.'}} :
-                    {{data.tracingTimeElapsed?.minutes | number : '2.'}} :
-                    {{data.tracingTimeElapsed?.seconds | number : '2.'}}
-                </div>
-            </div>
-            <img src="../../../../../../../assets/img-quality/timeline-s4.png" alt="" style="width: 100%; margin-top: 20px;">
+      <div class="timer__time-line--attention">
+        <div>
+          {{ data.attentionTimeElapsed?.days | number: "2." }} /
+          {{ data.attentionTimeElapsed?.hours | number: "2." }} :
+          {{ data.attentionTimeElapsed?.minutes | number: "2." }} :
+          {{ data.attentionTimeElapsed?.seconds | number: "2." }}
         </div>
-
-
-    </mat-dialog-content>
-
-   
+      </div>
+      <div class="timer__time-line--processed">
+        <div>
+          {{ data.processTimeElapsed?.days | number: "2." }} /
+          {{ data.processTimeElapsed?.hours | number: "2." }} :
+          {{ data.processTimeElapsed?.minutes | number: "2." }} :
+          {{ data.processTimeElapsed?.seconds | number: "2." }}
+        </div>
+      </div>
+      <div class="timer__time-line--tracing">
+        <div>
+          {{ data.tracingTimeElapsed?.days | number: "2." }} /
+          {{ data.tracingTimeElapsed?.hours | number: "2." }} :
+          {{ data.tracingTimeElapsed?.minutes | number: "2." }} :
+          {{ data.tracingTimeElapsed?.seconds | number: "2." }}
+        </div>
+      </div>
+      <img
+        src="../../../../../../../assets/img-quality/timeline-s4.png"
+        alt=""
+        style="width: 100%; margin-top: 20px"
+      />
+    </div>
+  </mat-dialog-content>
 </div>

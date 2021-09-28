@@ -13,6 +13,11 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MatPaginator } from '@angular/material/paginator';
 import * as XLSX from 'xlsx';
+import moment from 'moment';
+import { BudgetsPendingHistoryComponent } from '../budgets-pending-approval/dialogs/budgets-pending-history/budgets-pending-history.component';
+
+import * as FileSaver from 'file-saver';
+const EXCEL_EXT = '.xlsx';
 
 @Component({
   selector: 'app-budgets-summary',
@@ -44,97 +49,99 @@ export class BudgetsSummaryComponent implements OnInit {
   public displayedColumns = [
     'taller',
     'woMain',
-    'ioMain',
+    // 'ioMain',
     'woChild',
-    'ioChild',
-    'statusWoChild',
-    'otTaller',
-    'otMadre',
+    'statusPresupuesto',
+    // 'ioChild',
+    // 'statusWoChild',
+    // 'otTaller',
+    // 'otMadre',
+    'cliente',
+    // 'gmorngm',
+    'modelo',
+    // 'tipoSS',
+    // 'servicio',
+    // 'tipoAtencion',
+    // 'modalidadPresupuesto',
+    'componente',
     'fechaAperturaChild',
     'fechaReleasedIoChild',
-    'cliente',
-    'gmorngm',
-    'modelo',
-    'tipoSS',
-    'servicio',
-    'tipoAtencion',
-    'modalidadPresupuesto',
-    'componente',
-    'afa',
-    'fechaUltimoListado',
-    'fechaUltimoEnvioDocumentoADM',
-    'ultimoDocumento',
-    'fechaDefinicionDeCargos',
-    'definicionDeCargo',
-    'fechaUltimoEnvioPPTO',
+    'createdAt',
+    // 'afa',
+    // 'fechaUltimoListado',
+    // 'fechaUltimoEnvioDocumentoADM',
+    // 'ultimoDocumento',
+    // 'fechaDefinicionDeCargos',
+    // 'definicionDeCargo',
     'fechaEnvioPPTO01',
-    'fechaEnvioPPTO02',
-    'motivoDeModificacion02',
-    'detalleDeModificacion02',
-    'fechaEnvioPPTO03',
-    'motivoDeModificacion03',
-    'detalleDeModificacion03',
-    'fechaEnvioPPTO04',
-    'motivoDeModificacion04',
-    'detalleDeModificacion04',
-    'fechaDeAprobacionORechazo',
-    'statusPresupuesto',
-    'motivoDelRechazo',
-    'detalleDelRechazo',
-    'vv$servicios',
-    'vv$adicionalesServicios',
-    'vv$descuentoServicios',
-    'vv$repuestos',
-    'vv$adicionalesRepuestos',
-    'vv$descuentoRepuestos',
-    'totalvvPPTOUS$',
-    '$componenteNuevo',
-    'reparacion60',
-    'horasSTD',
-    'horasReales',
-    'tiempoObjetivoEnvioPPTO',
-    'diasRestantesEnvioPPTO',
+    'fechaUltimoEnvioPPTO',
     'NoPPTOSModificadosOAdicionales',
-    'observacionesEnElPresupuesto',
-    'fechaDeTerminoDeRep',
-    'fechaUltimoInput',
-    'motivoDeInput',
-    'fechaDeFactDeTaller',
-    'costo$ServiciosCliente',
-    'costo$ServiciosDeOperacion',
-    'rentabilidadServiciosPercent',
-    'costo$RepuestosCLIENTE',
-    'costo$RepuestosOperacion',
-    'rentabilidadRepuestosPercent',
-    'observacionesTaller',
-    'realDevueltoAServicios',
-    'diferenciaServicios',
-    'realDevueltoARepuestos',
-    'diferenciaRepuestos',
-    'totalVVFacturadoUS$',
-    'mesFactVenta',
-    'percentHorasSTDvsHorasDBS',
-    'fechaFirstLabour',
-    'fechaLastLabour',
-    'diasDemoraFact',
-    'diasFactLastLabour',
-    'elaborarPPTO',
-    'tipoDeComponente',
-    'tipoAAorPandP',
-    'taller02',
-    'diasDesdeAperturaChild',
-    'resumen',
-    'definicionDeCargos',
-    'informe',
-    'cotizacionFesa',
-    'cotizacionText',
-    'excelid',
-    'clave',
-    'obj',
-    'diasPPTO',
-    'mesTer',
-    'anio',
-    'fechaLPD',
+    // 'fechaEnvioPPTO02',
+    // 'motivoDeModificacion02',
+    // 'detalleDeModificacion02',
+    // // 'fechaEnvioPPTO03',
+    // 'motivoDeModificacion03',
+    // 'detalleDeModificacion03',
+    // 'fechaEnvioPPTO04',
+    // 'motivoDeModificacion04',
+    // 'detalleDeModificacion04',
+    'fechaDeAprobacionORechazo',
+    // 'statusPresupuesto', Lo pasamos a la primera columna
+    'motivoDelRechazo',
+    // 'detalleDelRechazo',
+    // 'vv$servicios',
+    // 'vv$adicionalesServicios',
+    // 'vv$descuentoServicios',
+    // 'vv$repuestos',
+    // 'vv$adicionalesRepuestos',
+    // 'vv$descuentoRepuestos',
+    // 'totalvvPPTOUS$',
+    // '$componenteNuevo',
+    // 'reparacion60',
+    // 'horasSTD',
+    // 'horasReales',
+    // 'tiempoObjetivoEnvioPPTO',
+    // 'diasRestantesEnvioPPTO',
+    // 'observacionesEnElPresupuesto',
+    // 'fechaDeTerminoDeRep',
+    // 'fechaUltimoInput',
+    // 'motivoDeInput',
+    // 'fechaDeFactDeTaller',
+    // 'costo$ServiciosCliente',
+    // 'costo$ServiciosDeOperacion',
+    // 'rentabilidadServiciosPercent',
+    // 'costo$RepuestosCLIENTE',
+    // 'costo$RepuestosOperacion',
+    // 'rentabilidadRepuestosPercent',
+    // 'observacionesTaller',
+    // 'realDevueltoAServicios',
+    // 'diferenciaServicios',
+    // 'realDevueltoARepuestos',
+    // 'diferenciaRepuestos',
+    // 'totalVVFacturadoUS$',
+    // 'mesFactVenta',
+    // 'percentHorasSTDvsHorasDBS',
+    // 'fechaFirstLabour',
+    // 'fechaLastLabour',
+    // 'diasDemoraFact',
+    // 'diasFactLastLabour',
+    // 'elaborarPPTO',
+    // 'tipoDeComponente',
+    // 'tipoAAorPandP',
+    // 'taller02',
+    // 'diasDesdeAperturaChild',
+    // 'resumen',
+    // 'definicionDeCargos',
+    // 'informe',
+    // 'cotizacionFesa',
+    // 'cotizacionText',
+    // 'excelid',
+    // 'clave',
+    // 'obj',
+    // 'diasPPTO',
+    // 'mesTer',
+    // 'anio',
+    // 'fechaLPD',
     'actions',
   ];
 
@@ -256,9 +263,11 @@ export class BudgetsSummaryComponent implements OnInit {
         })
     );
     this.loading.next(true);
+    console.log(this.ngAfterViewInit);
   }
 
   public ngAfterViewInit(): void {
+    const tableFilter: any[] = [];
     this.tableData.sort = this.sort;
     this.tableData.paginator = this.paginator;
     this._budgetsService
@@ -269,6 +278,7 @@ export class BudgetsSummaryComponent implements OnInit {
         this.cantWO = this.tableData.data.length;
 
         this.tallerFormControl.valueChanges.subscribe((val) => {
+          console.log('val', val);
           this.filteredValues['taller'] = val;
           this.tableData.filter = JSON.stringify(this.filteredValues);
         });
@@ -342,37 +352,42 @@ export class BudgetsSummaryComponent implements OnInit {
     this.subscriptions.unsubscribe();
   }
 
-  public downloadReport(): void {
-    const dataSource: Array<Budget> = this.tableData.data;
+  public downloadReport(json: any[], excelFileName: string): void {
+    const dataSource: Array<Budget> = this.tableData.filteredData;
 
     const tableXlsx: any[] = [];
     const headersXlsx = [
       'TALLER',
       'WO MAIN',
-      'IO MAIN',
       'WO CHILD',
+      'CLIENTE',
+      'MODELO',
+      'COMPONENTE',
+      'FECHA APERTURA CHILD',
+      'FECHA RELEASED IO CHILD',
+      'FECHA REGISTRO',
+      'FECHA ENVIO PPTO 01',
+      'FECHA ULTIMO ENVIO PPTO',
+      'NO. PPTOS MODIFICADOS O ADICIONALES',
+      'FECHA DE APROBACIÓN O RECHAZO',
+      'STATUS PRESUPUESTO',
+      'MOTIVO DEL RECHAZO',
+
       'IO CHILD',
       'STATUS WO CHILD',
       'OT TALLER',
       'OT MADRE',
-      'FECHA APERTURA CHILD',
-      'FECHA RELEASED IO CHILD',
-      'CLIENTE',
       'GM / NGM',
-      'MODELO',
       'TIPO SS',
       'SERVICIO',
       'TIPO ATENCIÓN',
       'MODALIDAD PRESUPUESTO',
-      'COMPONENTE',
       'AFA',
       'FECHA ULTIMO LISTADO',
       'FECHA ULTIMO ENVIO DOCUMENTO ADM',
       'ULTIMO DOCUMENTO',
       'FECHA DEFINICIÓN CARGOS',
       'DEFINICIÓN DE CARGO',
-      'FECHA ULTIMO ENVIO PPTO',
-      'FECHA ENVIO PPTO 01',
       'FECHA ENVIO PPTO 02',
       'MOTIVO DE MODIFICACIÓN 02',
       'DETALLE DE MODIFICACIÓN 02',
@@ -382,9 +397,6 @@ export class BudgetsSummaryComponent implements OnInit {
       'FECHA ENVIO PPTO 04',
       'MOTIVO DE MODIFICACIÓN 04',
       'DETALLE DE MODIFICACIÓN 04',
-      'FECHA DE APROBACIÓN O RECHAZO',
-      'STATUS PRESUPUESTO',
-      'MOTIVO DEL RECHAZO',
       'DETALLE DEL RECHAZO',
       'VV$ SERVICIOS',
       'VV$ ADICIONALES SERVICIOS',
@@ -399,7 +411,6 @@ export class BudgetsSummaryComponent implements OnInit {
       'HORAS REALES',
       'TIEMPO OBJETIVO ENVIO PPTO',
       'DIAS RESTANTES ENVIO PPTO',
-      'NO. PPTOS MODIFICADOS O ADICIONALES',
       'OBSERVACIONES EN EL PRESUPUESTO',
       'FECHA DE TERMINO DE REP',
       'FECHA ULTIMO INPUT',
@@ -440,6 +451,7 @@ export class BudgetsSummaryComponent implements OnInit {
       'MES TER',
       'AÑO',
       'FECHA LPD',
+      'IO MAIN',
     ];
 
     tableXlsx.push(headersXlsx);
@@ -448,26 +460,40 @@ export class BudgetsSummaryComponent implements OnInit {
       const temp = [
         item.taller ? item.taller : '---',
         item.woMain ? item.woMain : '---',
-        item.ioMain ? item.ioMain : '---',
         item.woChild ? item.woChild : '---',
-        item.ioChild ? item.ioChild : '---',
-        item.statusWoChild ? item.statusWoChild : '---',
-        item.otTaller ? item.otTaller : '---',
-        item.otMadre ? item.otMadre : '---',
+        item.cliente ? item.cliente : '---',
+        item.modelo ? item.modelo : '---',
+        item.componente ? item.componente : '---',
         item.fechaAperturaChild
           ? new Date(item.fechaAperturaChild['seconds'] * 1000)
           : '---',
         item.fechaReleasedIoChild
           ? new Date(item.fechaReleasedIoChild['seconds'] * 1000)
           : '---',
-        item.cliente ? item.cliente : '---',
+        '---',
+        item.fechaEnvioPPTO01
+          ? new Date(item.fechaEnvioPPTO01['seconds'] * 1000)
+          : '---',
+        item.fechaUltimoEnvioPPTO
+          ? new Date(item.fechaUltimoEnvioPPTO['seconds'] * 1000)
+          : '---',
+        item.NoPPTOSModificadosOAdicionales
+          ? item.NoPPTOSModificadosOAdicionales
+          : '---',
+        item.fechaDeAprobacionORechazo
+          ? new Date(item.fechaDeAprobacionORechazo['seconds'] * 1000)
+          : '---',
+        item.statusPresupuesto ? item.statusPresupuesto : '---',
+        item.motivoDelRechazo ? item.motivoDelRechazo : '---',
+        item.ioChild ? item.ioChild : '---',
+        item.statusWoChild ? item.statusWoChild : '---',
+        item.otTaller ? item.otTaller : '---',
+        item.otMadre ? item.otMadre : '---',
         item.gmorngm ? item.gmorngm : '---',
-        item.modelo ? item.modelo : '---',
         item.tipoSS ? item.tipoSS : '---',
         item.servicio ? item.servicio : '---',
         item.tipoAtencion ? item.tipoAtencion : '---',
         item.modalidadPresupuesto ? item.modalidadPresupuesto : '---',
-        item.componente ? item.componente : '---',
         item.afa ? item.afa : '---',
         item.fechaUltimoListado
           ? new Date(item.fechaUltimoListado['seconds'] * 1000)
@@ -480,12 +506,6 @@ export class BudgetsSummaryComponent implements OnInit {
           ? new Date(item.fechaDefinicionDeCargos['seconds'] * 1000)
           : '---',
         item.definicionDeCargo ? item.definicionDeCargo : '---',
-        item.fechaUltimoEnvioPPTO
-          ? new Date(item.fechaUltimoEnvioPPTO['seconds'] * 1000)
-          : '---',
-        item.fechaEnvioPPTO01
-          ? new Date(item.fechaEnvioPPTO01['seconds'] * 1000)
-          : '---',
         item.fechaEnvioPPTO02
           ? new Date(item.fechaEnvioPPTO02['seconds'] * 1000)
           : '---',
@@ -501,11 +521,6 @@ export class BudgetsSummaryComponent implements OnInit {
           : '---',
         item.motivoDeModificacion04 ? item.motivoDeModificacion04 : '---',
         item.detalleDeModificacion04 ? item.detalleDeModificacion04 : '---',
-        item.fechaDeAprobacionORechazo
-          ? new Date(item.fechaDeAprobacionORechazo['seconds'] * 1000)
-          : '---',
-        item.statusPresupuesto ? item.statusPresupuesto : '---',
-        item.motivoDelRechazo ? item.motivoDelRechazo : '---',
         item.detalleDelRechazo ? item.detalleDelRechazo : '---',
         item.vv$servicios ? item.vv$servicios : '---',
         item.vv$adicionalesServicios ? item.vv$adicionalesServicios : '---',
@@ -519,10 +534,7 @@ export class BudgetsSummaryComponent implements OnInit {
         item.horasSTD ? item.horasSTD : '---',
         item.horasReales ? item.horasReales : '---',
         item.tiempoObjetivoEnvioPPTO ? item.tiempoObjetivoEnvioPPTO : '---',
-        item.diasRestantesEnvioPPTO ? item.diasRestantesEnvioPPTO : '---',
-        item.NoPPTOSModificadosOAdicionales
-          ? item.NoPPTOSModificadosOAdicionales
-          : '---',
+        this.daysLeft(item),
         item.observacionesEnElPresupuesto
           ? item.observacionesEnElPresupuesto
           : '---',
@@ -581,6 +593,7 @@ export class BudgetsSummaryComponent implements OnInit {
         item.mesTer ? item.mesTer : '---',
         item.anio ? item.anio : '---',
         item.fechaLPD ? new Date(item.fechaLPD['seconds'] * 1000) : '---',
+        item.ioMain ? item.ioMain : '---',
       ];
       tableXlsx.push(temp);
     });
@@ -588,11 +601,9 @@ export class BudgetsSummaryComponent implements OnInit {
     // generate worksheet
     const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(tableXlsx);
 
-    // generate workbook and add the worksheet
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Tabla_Resumen');
 
-    // save to file
     const name = `Tabla_Resumen.xlsx`;
     XLSX.writeFile(wb, name);
   }
@@ -635,9 +646,75 @@ export class BudgetsSummaryComponent implements OnInit {
     this.tableData.data = this.tableData.data;
   }
 
-  public sendDialog(element: any) {
-    this.MatDialog.open(BudgetsSummarySendDialogComponent);
+  public sendDialog(element: Budget) {
+    if (this.checkIfHaveDocuments(element)) {
+      this.MatDialog.open(BudgetsSummarySendDialogComponent, {
+        disableClose: true,
+        data: element,
+      });
+    } else {
+      this.MatSnackBar.open(
+        'El PPTO no cuenta con información sobre los archivos enviados',
+        'Aceptar',
+        {
+          duration: 6000,
+        }
+      );
+    }
   }
 
-  public timelineDialog(i: number) {}
+  public timelineDialog(element: Budget) {
+    const a = this.MatDialog.open(BudgetsPendingHistoryComponent, {
+      width: '90vw',
+      maxWidth: '700px',
+      data: element,
+    });
+  }
+
+  daysLeft(budget: Budget) {
+    // Get the goal Date and convert it to a moment.js object
+
+    if (typeof budget.tiempoObjetivoEnvioPPTO === 'number') {
+      // convertir fechaApert. en milisegundos
+
+      const openDate = budget.fechaAperturaChild['seconds'] * 1000;
+
+      // convertir los dias del tiempoOb. en mili segundos
+      const timeDate = budget.tiempoObjetivoEnvioPPTO * 8.64e7;
+
+      const goalDate = openDate + timeDate;
+
+      const leftDate = goalDate - Date.now();
+
+      const date = (leftDate / 8.64e7).toFixed(2);
+
+      return date;
+    } else {
+      const goalDate: moment.Moment = moment(
+        budget.tiempoObjetivoEnvioPPTO.toDate()
+      );
+
+      // Get the difference from the current moment() in days
+      const diff: number = goalDate.diff(moment(), 'days');
+
+      if (diff >= 0) return diff.toString();
+
+      return diff;
+    }
+  }
+
+  public getAdditionalsAndModified(budget: Budget): number | string {
+    const additional = budget.additionals ? budget.additionals.length : 0;
+    const modified = budget.NoPPTOSModificadosOAdicionales
+      ? budget.NoPPTOSModificadosOAdicionales
+      : 0;
+    const sum = additional + modified;
+    return sum ? sum : '---';
+  }
+
+  private checkIfHaveDocuments(data: Budget): boolean {
+    if (!data.documentVersions) return false;
+
+    return !!data.documentVersions.length;
+  }
 }

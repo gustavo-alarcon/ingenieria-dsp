@@ -21,9 +21,7 @@
         <p><span style="font-weight: bold;"> Cantidad :</span> {{data.quantity ? data.quantity : ''}}</p>
         <p><span style="font-weight: bold;"> Descripcion :</span> {{data.description ? data.description : ''}}</p>
         <p><span style="font-weight: bold;"> Tipo de Atencion :</span> {{data.status ? data.status : ''}}</p>
-        <p><span style="font-weight: bold;"> Usuario :</span> {{data.createdBy ? (data.createdBy.name ?
-            data.createdBy.name
-            : data.createdBy) : 'Sin asignar'}}
+        <p><span style="font-weight: bold;"> Creado por :</span> {{data.createdBy ? (data.createdBy.name ? data.createdBy.name : data.createdBy) : ' --- '}}
         </p>
         <p><span style="font-weight: bold;"> WOF (Orden de Fabricacion) :</span> {{data.wof ? data.wof : ''}}</p>
         <p><span style="font-weight: bold;"> Trabajo :</span> {{data.task ? data.task : ''}}</p>
@@ -31,10 +29,9 @@
         <mat-divider style="margin: 16px 0px"></mat-divider>
         <p><span style="font-weight: bold;"> Resultados :</span> {{data.result ? data.result : ''}}</p>
         <p><span style="font-weight: bold;"> Tipo de ensayo :</span> {{data.kindOfTest ? data.kindOfTest : ''}}</p>
-        <p><span style="font-weight: bold;"> Inspector :</span> {{data.finalizedBy ? (data.finalizedBy.name ?
-            data.finalizedBy.name : data.finalizedBy) : 'Sin asignar'}}</p>
-        <p *ngIf="data.length"><span style="font-weight: bold;"> Longitud :</span> {{data.length ? data.length : ''}}
-            [mm]</p>
+        <p><span style="font-weight: bold;"> Inspector :</span> {{data.finalizedBy ? (data.finalizedBy.name ? data.finalizedBy.name : data.finalizedBy) : 'Sin asignar'}}</p>
+        <p *ngIf="data.length"><span style="font-weight: bold;"> Longitud :</span> {{data.length ? data.length : ''}} [mm]
+        </p>
         <mat-divider style="margin: 16px 0px"></mat-divider>
         <ng-container *ngIf="data.extends">
             <p style="font-weight: bold;">Ampliaciones</p>

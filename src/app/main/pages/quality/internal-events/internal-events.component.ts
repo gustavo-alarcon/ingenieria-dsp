@@ -1,9 +1,16 @@
 import {
   FormGroup,
   Validators,
-  FormBuilder
+  FormBuilder,
+  FormControl,
 } from '@angular/forms';
-import { Component, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ElementRef,
+  ViewChild,
+} from '@angular/core';
 import { BehaviorSubject, Subscription, Observable, combineLatest } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from 'src/app/auth/services/auth.service';
@@ -12,11 +19,11 @@ import { User } from '../../../models/user-model';
 import { finalize, take, startWith, map } from 'rxjs/operators';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { ComponentList, WorkShopList, FileAdditional } from '../../../models/quality.model';
+import { ComponentList, FileAdditional } from '../../../models/quality.model';
 import { MatDialog } from '@angular/material/dialog';
-import { AddWorkshopComponent } from './dialogs/add-workshop/add-workshop.component';
-import { AddComponentComponent } from './dialogs/add-component/add-component.component';
 import { Router } from '@angular/router';
+import { WorkshopModel } from '../../../../main/models/workshop.model';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-internal-events',
@@ -54,19 +61,28 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
   isHoveringFile: boolean;
   uploadPercent$: Observable<number>;
 
-
   subscription = new Subscription();
   user: User;
 
   isMobile = false;
 
-  workshop$: Observable<WorkShopList[]>;
+  workshop$: Observable<WorkshopModel[]>;
   component$: Observable<ComponentList[]>;
 
-
-  @ViewChild("fileInput2", { read: ElementRef }) fileButton: ElementRef;
+  @ViewChild('fileInput2', { read: ElementRef }) fileButton: ElementRef;
 
   dataFiles: FileAdditional[] = [];
+
+  allCompleteField: boolean = false;
+
+  workshopName = new FormControl(null);
+  workshopProcess = new FormControl(null);
+
+  filteredOptionsWorkshopName$: Observable<WorkshopModel[]>;
+  optionsWorkshopName: WorkshopModel[] = [];
+
+  filteredOptionsWorkshopProcess$: Observable<string[]>;
+  optionsWorkshopProcess: string[] = [];
 
   constructor(
     private breakpoint: BreakpointObserver,
@@ -77,20 +93,40 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
     private storage: AngularFireStorage,
     private dialog: MatDialog,
     private router: Router
-  ) { }
-
+  ) {}
 
   ngOnInit(): void {
     this.initFormInternal();
-    this.subscription.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
-      .subscribe(res => {
-        if (res.matches) {
-          this.isMobile = true;
-        } else {
-          this.isMobile = false;
-        }
-      })
-    )
+    this.subscription.add(
+      this.qualityService
+        .getAllQualityInternalWorkshop()
+        .pipe()
+        .subscribe((resp) => {
+          this.optionsWorkshopName = resp;
+          this.filteredOptionsWorkshopName$ =
+            this.workshopName.valueChanges.pipe(
+              startWith(''),
+              map((value) => (typeof value === 'string' ? value : value.name)),
+              map((name) =>
+                name
+                  ? this._filterWorkshopName(name)
+                  : this.optionsWorkshopName.slice()
+              )
+            );
+        })
+    );
+
+    this.subscription.add(
+      this.breakpoint
+        .observe([Breakpoints.HandsetPortrait])
+        .subscribe((res) => {
+          if (res.matches) {
+            this.isMobile = true;
+          } else {
+            this.isMobile = false;
+          }
+        })
+    );
 
     this.subscription.add(
       this.authService.user$.subscribe((user) => {
@@ -106,12 +142,12 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
         startWith(''),
         map((name) => (name ? name : ''))
       ),
-      this.qualityService.getAllWorkshopList()
+      this.qualityService.getAllQualityInternalWorkshop()
     ).pipe(
       map(([formValue, miningOperation]) => {
         const filter = miningOperation.filter((el) =>
           formValue
-            ? el.name.toLowerCase().includes(formValue.toLowerCase())
+            ? el.workshopName.toLowerCase().includes(formValue.toLowerCase())
             : true
         );
         if (!(filter.length === 1) && formValue.length) {
@@ -142,7 +178,54 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
         return filter;
       })
     );
+
+    this.setFields(false);
+    this.allCompleteField = false;
   }
+
+  setFields(event: boolean): void {
+    this.allCompleteField = !this.allCompleteField;
+    if (event) {
+      this.workshopName = new FormControl(null, Validators.required);
+      this.workshopProcess = new FormControl(null, Validators.required);
+      this.workshopName.markAllAsTouched();
+      this.workshopProcess.markAllAsTouched();
+    } else {
+      this.workshopName = new FormControl(null);
+      this.workshopProcess = new FormControl(null);
+    }
+  }
+
+  private _filterWorkshopName(workshopName: string): WorkshopModel[] {
+    const filterValue = workshopName.toLowerCase();
+    return this.optionsWorkshopName.filter(
+      (option) => option.workshopName.toLowerCase().indexOf(filterValue) === 0
+    );
+  }
+
+  private _filterWorkshopProcess(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.optionsWorkshopProcess.filter(
+      (option) => option.toLowerCase().indexOf(filterValue) === 0
+    );
+  }
+
+  displayFn(workshop: WorkshopModel): string {
+    return workshop && workshop.workshopName ? workshop.workshopName : '';
+  }
+
+  setSelectedWorkshop(event: MatAutocompleteSelectedEvent): void {
+    const { workshopProcessName } = event.option.value;
+    this.optionsWorkshopProcess = [...workshopProcessName];
+
+    this.filteredOptionsWorkshopProcess$ =
+      this.workshopProcess.valueChanges.pipe(
+        startWith(''),
+        map((value) => this._filterWorkshopProcess(value))
+      );
+  }
+
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
@@ -156,7 +239,6 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
       eventDetail: ['', Validators.required],
     });
   }
-
 
   uploadFiles(event): void {
     const files = event.target.files;
@@ -194,15 +276,14 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
               });
               this.loading.next(false);
             })
-          ).subscribe()
+          )
+          .subscribe()
       );
     }
-
   }
 
   save(): void {
     try {
-
       this.internalForm.markAsPristine();
       this.internalForm.markAsUntouched();
 
@@ -212,7 +293,6 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
         this.loading.next(false);
         return;
       } else {
-
         this.imagesGeneral = [];
         this.imagesGeneral = [...this.imagesUploadGeneral];
 
@@ -225,7 +305,9 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
             this.user,
             this.imagesGeneral,
             this.imagesDetail,
-            this.dataFiles
+            this.dataFiles,
+            this.workshopName.value,
+            this.workshopProcess.value
           )
           .pipe(take(1))
           .subscribe((res) => {
@@ -233,15 +315,15 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
               .commit()
               .then(() => {
                 //this.loading.next(false)
-                this.snackbar.open('✅ Evento guardado correctamente!', 'IR A ANALISIS', {
-                  duration: 6000,
-                }).onAction()
-                  .pipe(
-                    take(1)
-                  )
-                  .subscribe(() => {
-                    this.router.navigateByUrl('main/quality-analysis/records')
+                this.snackbar
+                  .open('✅ Evento guardado correctamente!', 'IR A ANALISIS', {
+                    duration: 6000,
                   })
+                  .onAction()
+                  .pipe(take(1))
+                  .subscribe(() => {
+                    this.router.navigateByUrl('main/quality-analysis/records');
+                  });
 
                 this.loading.next(false);
                 this.internalForm.reset();
@@ -262,9 +344,15 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
           });
       }
     } catch (error) {
-      this.snackbar.open('🚨 Hubo un error, debe de ingresar todo los datos requeridos', 'Aceptar', {
-        duration: 6000,
-      });
+      console.log(error);
+      
+      this.snackbar.open(
+        '🚨 Hubo un error, debe de ingresar todo los datos requeridos',
+        'Aceptar',
+        {
+          duration: 6000,
+        }
+      );
       this.loading.next(false);
     }
   }
@@ -309,12 +397,10 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
         this.imagesUploadGeneral.splice(i, 1);
       }
       this.loading.next(false);
-
     } catch (error) {
       console.log(error);
       this.loading.next(false);
     }
-
   }
   async deleteImageDetail(event): Promise<void> {
     try {
@@ -326,12 +412,10 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
         this.imagesUploadGeneral.splice(i, 1);
       }
       this.loading.next(false);
-
     } catch (error) {
       console.log(error);
       this.loading.next(false);
     }
-
   }
   async deleteDataFiles(url, index): Promise<void> {
     try {
@@ -340,24 +424,9 @@ export class InternalEventsComponent implements OnInit, OnDestroy {
 
       this.dataFiles.splice(index, 1);
       this.loading.next(false);
-
     } catch (error) {
       console.log(error);
       this.loading.next(false);
     }
   }
-  onAddWorkshop(): void {
-    this.dialog.open(AddWorkshopComponent, {
-      maxWidth: 500,
-      width: '90vw',
-    });
-  }
-
-  onAddComponent(): void {
-    this.dialog.open(AddComponentComponent, {
-      maxWidth: 500,
-      width: '90vw',
-    });
-  }
-
 }

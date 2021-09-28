@@ -1,25 +1,17 @@
 <div *ngIf="authService.user$ | async as user">
-  <div class="ms-kanban-toolbar">
+    <div class="ms-kanban-toolbar">
 
-    <button type="file" mat-stroked-button class="ms-kanban-toolbar__button" (click)="uploadFileDialog()"
-      *ngIf="authService.uiConfig.preEvaluations.tabs.results.toolbar.bulk"
-      [ngClass]="isMobile ? 'ms-kanban-toolbar__button--mobile' : 'ms-kanban-toolbar__button--desktop'">
+        <button type="file" mat-stroked-button class="ms-kanban-toolbar__button" (click)="uploadFileDialog()" *ngIf="authService.uiConfig.preEvaluations.tabs.results.toolbar.bulk" [ngClass]="isMobile ? 'ms-kanban-toolbar__button--mobile' : 'ms-kanban-toolbar__button--desktop'">
       <mat-icon aria-label="agregar" class="icon-add">add</mat-icon>
       LOTE
     </button>
 
-    <button mat-stroked-button class="ms-kanban-toolbar__button" (click)="downloadXlsx(historyDataSource.data)"
-      *ngIf="authService.uiConfig.preEvaluations.tabs.results.toolbar.download"
-      [disabled]="historyDataSource.data.length < 1"
-      [ngClass]="isMobile ? 'ms-kanban-toolbar__button--mobile' : 'ms-kanban-toolbar__button--desktop'">
+        <button mat-stroked-button class="ms-kanban-toolbar__button" (click)="downloadXlsx(historyDataSource.data)" *ngIf="authService.uiConfig.preEvaluations.tabs.results.toolbar.download" [disabled]="historyDataSource.data.length < 1" [ngClass]="isMobile ? 'ms-kanban-toolbar__button--mobile' : 'ms-kanban-toolbar__button--desktop'">
       <mat-icon aria-label="agregar" class="icon-add">download</mat-icon>
       DESCARGAR
     </button>
 
-    <button mat-stroked-button class="ms-kanban-toolbar__button" (click)="openDialog('report')"
-      *ngIf="authService.uiConfig.preEvaluations.tabs.results.toolbar.report"
-      [disabled]="historyDataSource.data.length < 1"
-      [ngClass]="isMobile ? 'ms-kanban-toolbar__button--mobile' : 'ms-kanban-toolbar__button--desktop'">
+        <button mat-stroked-button class="ms-kanban-toolbar__button" (click)="openDialog('report')" *ngIf="authService.uiConfig.preEvaluations.tabs.results.toolbar.report" [disabled]="historyDataSource.data.length < 1" [ngClass]="isMobile ? 'ms-kanban-toolbar__button--mobile' : 'ms-kanban-toolbar__button--desktop'">
       <mat-icon aria-label="agregar" class="icon-add">description</mat-icon>
       REPORTE
     </button>
@@ -60,11 +52,11 @@
                 <td mat-cell *matCellDef="let element" class="table__cell"> {{element.otChild ? element.otChild : '---'}} </td>
             </ng-container>
 
-            <ng-container matColumnDef="position">
+            <!-- <ng-container matColumnDef="position">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">Posición</th>
                 <td mat-cell *matCellDef="let element" class="table__cell"> {{element.position ? element.position : '---'}}
                 </td>
-            </ng-container>
+            </ng-container> -->
 
             <ng-container matColumnDef="partNumber">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">NP</th>
@@ -101,10 +93,10 @@
                 </td>
             </ng-container>
 
-            <ng-container matColumnDef="status">
+            <!-- <ng-container matColumnDef="status">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell"> Atención </th>
                 <td mat-cell *matCellDef="let element" class="table__cell"> {{element.status ? element.status : '---'}} </td>
-            </ng-container>
+            </ng-container> -->
 
             <ng-container matColumnDef="wof">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">WOF</th>
@@ -123,23 +115,23 @@
 
             <ng-container matColumnDef="workshop">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">Taller</th>
-                <td mat-cell *matCellDef="let element" class="table__cell"> {{element.workshop ? element.workshop : '---'}}
+                <td mat-cell *matCellDef="let element" class="table__cell"> {{element.workshop.location ?element.workshop.location:element.workshop? filterWorkshopByCode(element.workshop):'--'}}
                 </td>
             </ng-container>
 
             <ng-container matColumnDef="createdAt">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">Fecha de solicitud</th>
-                <td mat-cell *matCellDef="let element" class="table__cell"> {{(element.createdAt.seconds * 1000) | date : 'dd/MM/yy hh:mm:ss'}} </td>
+                <td mat-cell *matCellDef="let element" class="table__cell"> {{element.createdAt ? (element.createdAt.seconds * 1000 | date : 'dd/MM/yy hh:mm:ss') : '---'}} </td>
             </ng-container>
 
             <ng-container matColumnDef="processAt">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">Fecha de proceso</th>
-                <td mat-cell *matCellDef="let element" class="table__cell"> {{(element.processAt?.seconds * 1000) | date : 'dd/MM/yy hh:mm:ss'}} </td>
+                <td mat-cell *matCellDef="let element" class="table__cell"> {{element.processAt ? (element.processAt.seconds * 1000 | date : 'dd/MM/yy hh:mm:ss'):'---'}} </td>
             </ng-container>
 
             <ng-container matColumnDef="finalizedAt">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">Fecha de finalizado</th>
-                <td mat-cell *matCellDef="let element" class="table__cell"> {{(element.finalizedAt?.seconds * 1000) | date : 'dd/MM/yy hh:mm:ss'}} </td>
+                <td mat-cell *matCellDef="let element" class="table__cell"> {{element.finalizedAt ? (element.finalizedAt.seconds * 1000 | date : 'dd/MM/yy hh:mm:ss'):'---'}} </td>
             </ng-container>
 
             <ng-container matColumnDef="result">
@@ -147,21 +139,21 @@
                 <td mat-cell *matCellDef="let element" class="table__cell"> {{element.result ? element.result : '---'}} </td>
             </ng-container>
 
-            <ng-container matColumnDef="kindOfTest">
+            <!-- <ng-container matColumnDef="kindOfTest">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">Ensayo</th>
                 <td mat-cell *matCellDef="let element" class="table__cell"> {{element.kindOfTest ? element.kindOfTest : '---'}}
                 </td>
-            </ng-container>
-
+            </ng-container> -->
+            <!-- 
             <ng-container matColumnDef="comments">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">Comentarios</th>
                 <td mat-cell *matCellDef="let element" class="table__cell"> {{element.comments ? element.comments : '---'}}
                 </td>
-            </ng-container>
+            </ng-container> -->
 
             <ng-container matColumnDef="createdBy">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header class="table__cell">Inspector</th>
-                <td mat-cell *matCellDef="let element" class="table__cell"> {{element.createdBy ? (element.createdBy.name ? element.createdBy.name : element.createdBy) : 'Sin asignar'}} </td>
+                <td mat-cell *matCellDef="let element" class="table__cell"> {{element.finalizedBy ? (element.finalizedBy.name ? element.finalizedBy.name : element.finalizedBy) : 'Sin asignar'}} </td>
             </ng-container>
 
             <ng-container matColumnDef="processDate">

@@ -5,17 +5,17 @@ import {
   FormArray,
   FormBuilder,
   Validators,
+  AbstractControl,
 } from '@angular/forms';
 import {
   ModificationReasonEntry,
   Budget,
 } from '../../../../../../models/budgets.model';
-import { combineLatest, Observable, pipe, BehaviorSubject } from 'rxjs';
+import { combineLatest, Observable, BehaviorSubject } from 'rxjs';
 import { BudgetsService } from '../../../../../../services/budgets.service';
-import { filter, map, startWith, take } from 'rxjs/operators';
+import { map, startWith, take } from 'rxjs/operators';
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { element } from 'protractor';
 import { AuthService } from 'src/app/auth/services/auth.service';
 
 @Component({
@@ -73,39 +73,60 @@ export class BudgetsPendingModifyComponent implements OnInit {
       })
     );
 
+    
+
     this.modificationFormGroup = this.formBuilder.group({
       modificationReason: ['', Validators.required],
-      additionals: this.formBuilder.array([]),
+      additionals: this.formBuilder.array([], Validators.required),
     });
-
   }
 
   saveChanges(): void {
-  
+    if (
+      this.data.motivoDeModificacion02 != undefined &&
+      this.data.motivoDeModificacion03 != undefined &&
+      this.data.motivoDeModificacion04 != undefined
+    ) {
+      this.matSnackBar.open(
+        ' 🚨 No puede superar las 3 modificaciones',
+        'Aceptar',
+        {
+          duration: 6000,
+        }
+      );
+      this.dialog.closeAll();
+      return;
+    }
 
     if (this.modificationFormGroup.valid) {
       this.loading.next(true);
-      this.authService.user$.pipe(take(1)).subscribe((user) => {
-        this.budgetService
-          .updateModifyReason(this.data.id, this.modificationFormGroup.value, user)
-          .subscribe((batch: firebase.default.firestore.WriteBatch) => {
-            batch.commit().then(() => {
-              this.loading.next(false);
-              this.matSnackBar.open(
-                ' ✅ Archivo se modifico de forma correcta',
-              'Aceptar',
-              {
-                duration: 6000,
-              }
-              );
-              this.dialog.closeAll();
+
+      if (this.budgetService.updateModifyReason)
+        this.authService.user$.pipe(take(1)).subscribe((user) => {
+          this.budgetService
+            .updateModifyReason(
+              this.data.id,
+              this.modificationFormGroup.value,
+              this.data,
+              user
+            )
+            .subscribe((batch: firebase.default.firestore.WriteBatch) => {
+              batch.commit().then(() => {
+                this.loading.next(false);
+
+                this.matSnackBar.open(
+                  ' ✅ Archivo se modifico de forma correcta',
+                  'Aceptar',
+                  {
+                    duration: 6000,
+                  }
+                );
+                this.dialog.closeAll();
+              });
             });
-          });
-      });
+        });
     }
-
   }
-
 
   showModification(value: ModificationReasonEntry): string | null {
     return value ? value.name : null;
@@ -126,5 +147,15 @@ export class BudgetsPendingModifyComponent implements OnInit {
 
   deleteAdditional(i: number) {
     this.additionalForms.removeAt(i);
+  }
+
+  notSelectedValidator(control: AbstractControl): { [key: string]: boolean } {
+    
+
+    if (typeof control.value === 'string' && control.value !== '') {
+      return { notSelected: true };
+    } else {
+      return null;
+    }
   }
 }

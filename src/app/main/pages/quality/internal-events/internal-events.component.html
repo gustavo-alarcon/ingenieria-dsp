@@ -1,176 +1,379 @@
 <div class="ms-container">
-    <div class="ms-toolbar">
-        <mat-icon class="ms-toolbar__icon">note_alt</mat-icon>
-        <h1 class="ms-toolbar__title" [ngClass]="isMobile ? 'ms-toolbar__title--mobile' : 'ms-toolbar__title--desktop'">
-            Eventos Internos</h1>
-    </div>
+  <div class="ms-toolbar">
+    <mat-icon class="ms-toolbar__icon">note_alt</mat-icon>
+    <h1
+      class="ms-toolbar__title"
+      [ngClass]="
+        isMobile ? 'ms-toolbar__title--mobile' : 'ms-toolbar__title--desktop'
+      "
+    >
+      Eventos Internos
+    </h1>
+  </div>
 
-    <div class="container-body">
-        <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
+  <div class="container-body">
+    <mat-progress-bar
+      mode="indeterminate"
+      *ngIf="loading$ | async"
+    ></mat-progress-bar>
 
-        <mat-card class="card mat-elevation-z4">
-            <h3 class="title-form">Información del evento</h3>
-            <form [formGroup]="internalForm" autocomplete="off" class="container-form">
-                <div class="container-form__work">
+    <mat-card class="card mat-elevation-z4">
+      <h3 class="title-form">Información del evento</h3>
+      <form
+        [formGroup]="internalForm"
+        autocomplete="off"
+        class="container-form"
+      >
+        <div class="div-margin" autocomplete="off">
+          <h3 class="container-form__title">
+            ¿Se está paralizando el trabajo?
+          </h3>
+          <mat-checkbox
+            class="div-margin__margin-space"
+            [checked]="allCompleteField"
+            (change)="setFields($event.checked)"
+          ></mat-checkbox>
+        </div>
 
-                    <mat-form-field *ngIf="workshop$ | async as workshops" class="container-form__work__input"
-                        [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'"
-                        appearance="outline">
-                        <mat-label>Taller</mat-label>
-                        <input autocomplete="off" formControlName="workShop" [matAutocomplete]="autocomplete"
-                            type="text" matInput />
-                        <mat-autocomplete multiple autoActiveFirstOption #autocomplete="matAutocomplete">
-                            <mat-option *ngIf="authService.uiConfig.quality.internalEvents.forms.workshop"
-                                (click)="onAddWorkshop()" [value]="">
-                                <mat-icon>add_circle_outline</mat-icon>Añadir/Eliminar
-                            </mat-option>
-                            <mat-option *ngFor="let item of workshops" [value]="item.name">
-                                {{ item.name }}
-                            </mat-option>
-                        </mat-autocomplete>
-                        <mat-hint *ngIf="!(workshop$ | async)">
-                            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-                            <p>Cargando lista ...</p>
-                        </mat-hint>
-                        <mat-error>
-                            <span *ngIf="internalForm.get('workShop').errors?.required">Por favor, complete el
-                                campo.</span>
-                            <span *ngIf="internalForm.get('workShop').errors?.invalid">Dato inválido. Complete con
-                                alguna opción
-                                válida.</span>
-                        </mat-error>
-                    </mat-form-field>
+        <div *ngIf="allCompleteField">
+          <mat-form-field
+            class="container-form__work__input"
+            [ngClass]="
+              isMobile
+                ? 'container-form__work__input--mobile'
+                : 'container-form__work__input--desktop'
+            "
+            appearance="outline"
+          >
+            <mat-label>Taller que reporta</mat-label>
+            <input
+              autocomplete="off"
+              type="text"
+              matInput
+              [formControl]="workshopName"
+              [matAutocomplete]="auto1"
+              placeholder="¿En que taller se detecto el problema?"
+            />
+            <mat-autocomplete
+              #auto1="matAutocomplete"
+              [displayWith]="displayFn"
+              autoActiveFirstOption
+              (optionSelected)="setSelectedWorkshop($event)"
+            >
+              <mat-option
+                *ngFor="let option of filteredOptionsWorkshopName$ | async"
+                [value]="option"
+              >
+                {{ option.workshopName }}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-error
+              *ngIf="workshopName.hasError('required') && workshopName.touched"
+            >
+              Campo <strong>requerido.</strong>
+            </mat-error>
+          </mat-form-field>
 
-                    <mat-form-field appearance="outline" class="container-form__work__input"
-                        [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
-                        <mat-label>Orden de trabajo</mat-label>
-                        <input matInput type="number" placeholder="Orden de trabajo" formControlName="workdOrden" />
-                        <mat-error *ngIf="internalForm.controls['workdOrden'].errors">
-                            Campo <strong>requerido.</strong>
-                        </mat-error>
-                    </mat-form-field>
+          <mat-form-field
+            class="container-form__work__input"
+            [ngClass]="
+              isMobile
+                ? 'container-form__work__input--mobile'
+                : 'container-form__work__input--desktop'
+            "
+            appearance="outline"
+          >
+            <mat-label>Proceso</mat-label>
+            <input
+              autocomplete="off"
+              type="text"
+              matInput
+              [formControl]="workshopProcess"
+              [matAutocomplete]="auto2"
+              placeholder="¿En que proceso se detecto este evento?"
+            />
+            <mat-autocomplete #auto2="matAutocomplete" autoActiveFirstOption>
+              <mat-option
+                *ngFor="let option of filteredOptionsWorkshopProcess$ | async"
+                [value]="option"
+              >
+                {{ option }}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-error
+              *ngIf="
+                workshopProcess.hasError('required') && workshopProcess.touched
+              "
+            >
+              Campo <strong>requerido.</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
 
-                    <mat-form-field *ngIf="component$ | async as components" class="container-form__work__input"
-                        [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'"
-                        appearance="outline">
-                        <mat-label>Componente</mat-label>
-                        <input autocomplete="off" formControlName="component" [matAutocomplete]="autocomplete"
-                            type="text" matInput />
-                        <mat-autocomplete multiple autoActiveFirstOption #autocomplete="matAutocomplete">
-                            <mat-option *ngIf="authService.uiConfig.quality.internalEvents.forms.component"
-                                (click)="onAddComponent()" [value]="">
-                                <mat-icon>add_circle_outline</mat-icon>Añadir/Eliminar
-                            </mat-option>
-                            <mat-option *ngFor="let item of components" [value]="item.name">
-                                {{ item.name }}
-                            </mat-option>
-                        </mat-autocomplete>
-                        <mat-hint *ngIf="!(component$ | async)">
-                            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-                            <p>Cargando lista ...</p>
-                        </mat-hint>
-                        <mat-error>
-                            <span *ngIf="internalForm.get('component').errors?.required">Por favor, complete el
-                                campo.</span>
-                            <span *ngIf="internalForm.get('component').errors?.invalid">Dato inválido. Complete con
-                                alguna opción
-                                válida.</span>
-                        </mat-error>
-                    </mat-form-field>
+        <div class="container-form__work">
+          <mat-form-field
+            *ngIf="workshop$ | async as workshops"
+            class="container-form__work__input"
+            [ngClass]="
+              isMobile
+                ? 'container-form__work__input--mobile'
+                : 'container-form__work__input--desktop'
+            "
+            appearance="outline"
+          >
+            <mat-label>Taller - Posible responsable</mat-label>
+            <input
+              autocomplete="off"
+              formControlName="workShop"
+              [matAutocomplete]="autocomplete"
+              type="text"
+              matInput
+            />
+            <mat-autocomplete
+              multiple
+              autoActiveFirstOption
+              #autocomplete="matAutocomplete"
+            >
+              <mat-option *ngFor="let workshop of workshop$ | async" [value]="workshop.workshopName">
+                {{ workshop.workshopName }}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-hint *ngIf="!(workshop$ | async)">
+              <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+              <p>Cargando lista ...</p>
+            </mat-hint>
+            <mat-error>
+              <span *ngIf="internalForm.get('workShop').errors?.required"
+                >Por favor, complete el campo.</span
+              >
+              <span *ngIf="internalForm.get('workShop').errors?.invalid"
+                >Dato inválido. Complete con alguna opción válida.</span
+              >
+            </mat-error>
+          </mat-form-field>
 
-                    <mat-form-field appearance="outline" class="container-form__work__input"
-                        [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
-                        <mat-label>Nro de parte</mat-label>
-                        <input matInput type="text" placeholder="Nro de parte" formControlName="nPart" />
-                        <mat-error *ngIf="internalForm.controls['nPart'].errors">
-                            Campo <strong>requerido.</strong>
-                        </mat-error>
-                    </mat-form-field>
-                </div>
+          <mat-form-field
+            appearance="outline"
+            class="container-form__work__input"
+            [ngClass]="
+              isMobile
+                ? 'container-form__work__input--mobile'
+                : 'container-form__work__input--desktop'
+            "
+          >
+            <mat-label>Orden de trabajo</mat-label>
+            <input
+              matInput
+              type="number"
+              placeholder="Orden de trabajo"
+              formControlName="workdOrden"
+            />
+            <mat-error *ngIf="internalForm.controls['workdOrden'].errors">
+              Campo <strong>requerido.</strong>
+            </mat-error>
+          </mat-form-field>
 
-                <mat-form-field appearance="outline" class="container-form__area"
-                    [ngClass]="isMobile ? 'container-form__area--mobile' : 'container-form__area--desktop'">
-                    <mat-label>Detalle de evento</mat-label>
-                    <textarea matInput type="text" placeholder="Detalle del evento" formControlName="eventDetail"
-                        rows="2">
-                    </textarea>
-                    <mat-error *ngIf="internalForm.controls['eventDetail'].errors">
-                        Campo <strong>requerido.</strong>
-                    </mat-error>
-                </mat-form-field>
+          <mat-form-field
+            *ngIf="component$ | async as components"
+            class="container-form__work__input"
+            [ngClass]="
+              isMobile
+                ? 'container-form__work__input--mobile'
+                : 'container-form__work__input--desktop'
+            "
+            appearance="outline"
+          >
+            <mat-label>Componente</mat-label>
+            <input
+              autocomplete="off"
+              formControlName="component"
+              [matAutocomplete]="autocomplete"
+              type="text"
+              matInput
+            />
+            <mat-autocomplete
+              multiple
+              autoActiveFirstOption
+              #autocomplete="matAutocomplete"
+            >
+              <mat-option *ngFor="let item of components" [value]="item.name">
+                {{ item.name }}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-hint *ngIf="!(component$ | async)">
+              <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+              <p>Cargando lista ...</p>
+            </mat-hint>
+            <mat-error>
+              <span *ngIf="internalForm.get('component').errors?.required"
+                >Por favor, complete el campo.</span
+              >
+              <span *ngIf="internalForm.get('component').errors?.invalid"
+                >Dato inválido. Complete con alguna opción válida.</span
+              >
+            </mat-error>
+          </mat-form-field>
 
-                <h3 class="container-form__title">Imagen general</h3>
+          <mat-form-field
+            appearance="outline"
+            class="container-form__work__input"
+            [ngClass]="
+              isMobile
+                ? 'container-form__work__input--mobile'
+                : 'container-form__work__input--desktop'
+            "
+          >
+            <mat-label>Nro de parte</mat-label>
+            <input
+              matInput
+              type="text"
+              placeholder="Nro de parte"
+              formControlName="nPart"
+            />
+            <mat-error *ngIf="internalForm.controls['nPart'].errors">
+              Campo <strong>requerido.</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
 
-                <div class="dropzone" appDropzone (hovered)="toggleHoverGeneral($event)"
-                    (dropped)="onDropGeneral($event)" [class.hovering]="isHoveringGeneral">
-                    <p>Arrastrar imágenes</p>
-                    <div class="file">
-                        <label class="file-label">
-                            <input class="file-input" type="file" (change)="onDropGeneral($event.target.files)">
-                            <span class="file-cta">
-                                <span class="file-label">
-                                    Seleccione una imagen
-                                </span>
-                            </span>
-                        </label>
-                    </div>
-                </div>
-                <div *ngFor="let file of filesGeneral">
-                    <app-upload-task [file]="file" [pathStorage]="pathStorageGeneral"
-                        (onNewImage)="addNewImageGeneral($event)" (onDeleteImage)="deleteImageGeneral($event)">
-                    </app-upload-task>
-                </div>
+        <mat-form-field
+          appearance="outline"
+          class="container-form__area"
+          [ngClass]="
+            isMobile
+              ? 'container-form__area--mobile'
+              : 'container-form__area--desktop'
+          "
+        >
+          <mat-label>Detalle de evento</mat-label>
+          <textarea
+            matInput
+            type="text"
+            placeholder="Detalle del evento"
+            formControlName="eventDetail"
+            rows="2"
+          >
+          </textarea>
+          <mat-error *ngIf="internalForm.controls['eventDetail'].errors">
+            Campo <strong>requerido.</strong>
+          </mat-error>
+        </mat-form-field>
 
-                <h3 class="container-form__title">Imagen de detalle</h3>
+        <div
+          class="dropzone"
+          appDropzone
+          (hovered)="toggleHoverGeneral($event)"
+          (dropped)="onDropGeneral($event)"
+          [class.hovering]="isHoveringGeneral"
+        >
+          <p>Arrastrar imágenes</p>
+          <div class="file">
+            <label class="file-label">
+              <input
+                class="file-input"
+                type="file"
+                (change)="onDropGeneral($event.target.files)"
+              />
+              <span class="file-cta">
+                <span class="file-label"> Seleccione una imagen </span>
+              </span>
+            </label>
+          </div>
+        </div>
+        <div *ngFor="let file of filesGeneral">
+          <app-upload-task
+            [file]="file"
+            [pathStorage]="pathStorageGeneral"
+            (onNewImage)="addNewImageGeneral($event)"
+            (onDeleteImage)="deleteImageGeneral($event)"
+          >
+          </app-upload-task>
+        </div>
 
-                <div class="dropzone" appDropzone (hovered)="toggleHoverDetail($event)" (dropped)="onDropDetail($event)"
-                    [class.hovering]="isHoveringDetail">
-                    <p>Arrastrar imágenes</p>
-                    <div class="file">
-                        <label class="file-label">
-                            <input class="file-input" type="file" (change)="onDropDetail($event.target.files)">
-                            <span class="file-cta">
-                                <span class="file-label">
-                                    Seleccione una imagen
-                                </span>
-                            </span>
-                        </label>
-                    </div>
-                </div>
+        <h3 class="container-form__title">Imagen de detalle</h3>
 
-                <div *ngFor="let file of filesDetail">
-                    <app-upload-task [file]="file" [pathStorage]="pathStorageDetail"
-                        (onNewImage)="addNewImageDetail($event)" (onDeleteImage)="deleteImageDetail($event)">
-                    </app-upload-task>
-                </div>
+        <div
+          class="dropzone"
+          appDropzone
+          (hovered)="toggleHoverDetail($event)"
+          (dropped)="onDropDetail($event)"
+          [class.hovering]="isHoveringDetail"
+        >
+          <p>Arrastrar imágenes</p>
+          <div class="file">
+            <label class="file-label">
+              <input
+                class="file-input"
+                type="file"
+                (change)="onDropDetail($event.target.files)"
+              />
+              <span class="file-cta">
+                <span class="file-label"> Seleccione una imagen </span>
+              </span>
+            </label>
+          </div>
+        </div>
 
+        <div *ngFor="let file of filesDetail">
+          <app-upload-task
+            [file]="file"
+            [pathStorage]="pathStorageDetail"
+            (onNewImage)="addNewImageDetail($event)"
+            (onDeleteImage)="deleteImageDetail($event)"
+          >
+          </app-upload-task>
+        </div>
 
-                <div class="container-form__uploadXlx">
-                    <h3 class="container-form__title">Archivo adicional</h3>
-                    <p *ngIf="fileSelect" style="color:#0064EA;">
-                        <span *ngFor="let item of dataFiles; let i = index">
-                            {{item.name}}
-                            <button mat-icon-button aria-label="deletelistResult" class="btn-delete"
-                                (click)="deleteDataFiles(item.url,i)">
-                                <mat-icon style="color: red">delete</mat-icon>
-                            </button>
-                            <br>
-                        </span>
-                    </p>
-                    <input #fileInput2 style="display: none" id="fileInput2" (change)="uploadFiles($event)" type="file"
-                        multiple accept="*">
-                    <button type="file" mat-stroked-button class="ms-button" accept="*" (click)="fileInput2.click()">
-                        <mat-icon>add</mat-icon>
-                        ADJUNTAR
-                    </button>
-                </div>
-
-                <button aria-label="add" mat-button class="container-form__btn-save" [disabled]='internalForm.invalid'
-                    (click)="save()">
-                    GUARDAR
-                </button>
-
-            </form>
-        </mat-card>
-    </div>
+        <div class="container-form__uploadXlx">
+          <h3 class="container-form__title">Archivo adicional</h3>
+          <p *ngIf="fileSelect" style="color: #0064ea">
+            <span *ngFor="let item of dataFiles; let i = index">
+              {{ item.name }}
+              <button
+                mat-icon-button
+                aria-label="deletelistResult"
+                class="btn-delete"
+                (click)="deleteDataFiles(item.url, i)"
+              >
+                <mat-icon style="color: red">delete</mat-icon>
+              </button>
+              <br />
+            </span>
+          </p>
+          <input
+            #fileInput2
+            style="display: none"
+            id="fileInput2"
+            (change)="uploadFiles($event)"
+            type="file"
+            multiple
+            accept="*"
+          />
+          <button
+            type="file"
+            mat-stroked-button
+            class="ms-button"
+            accept="*"
+            (click)="fileInput2.click()"
+          >
+            <mat-icon>add</mat-icon>
+            ADJUNTAR
+          </button>
+        </div>
+        <button
+          aria-label="add"
+          mat-button
+          class="container-form__btn-save"
+          [disabled]="
+            internalForm.invalid ||
+            workshopName.invalid ||
+            workshopProcess.invalid
+          "
+          (click)="save()"
+        >
+          GUARDAR
+        </button>
+      </form>
+    </mat-card>
+  </div>
 </div>

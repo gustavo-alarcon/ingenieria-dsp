@@ -3,20 +3,19 @@
     <mat-icon class="ms-dialog-header__icon">attach_email</mat-icon>
     <h3 class="ms-dialog-header__title">Enviar PPTO.</h3>
     <span class="ms-fill"></span>
-    <button mat-icon-button mat-dialog-close>
+    <button mat-icon-button mat-dialog-close [disabled]="loading$ | async">
       <mat-icon>clear</mat-icon>
     </button>
   </div>
   <mat-divider></mat-divider>
+  <mat-progress-bar
+    mode="indeterminate"
+    *ngIf="loading$ | async"
+  ></mat-progress-bar>
 
   <mat-dialog-content>
     <div class="main--wrapper" [formGroup]="form">
       <div class="file--upload__wrapper">
-        <mat-progress-bar
-          class="loader"
-          mode="indeterminate"
-          *ngIf="loading$ | async"
-        ></mat-progress-bar>
         <div class="file--upload--card">
           <div class="file--upload--card__title">
             <p>PRESUPUESTO</p>
@@ -24,6 +23,25 @@
           </div>
 
           <div class="file--upload--card__files">
+            <p
+              *ngFor="let document of budgetsSent; let i = index"
+              class="file-send"
+            >
+              <a [href]="document.url" target="_blank">{{
+                document.name.length > 25
+                  ? "..." +
+                    (document.name
+                      | slice: document.name.length - 25:document.name.length)
+                  : document.name
+              }}</a>
+              <button
+                mat-icon-button
+                color="warn"
+                (click)="deleteFile('budget', i)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </p>
             <p *ngFor="let file of budgetFilesList">
               {{ file.name }}
             </p>
@@ -51,10 +69,26 @@
         <div class="file--upload--card">
           <div class="file--upload--card__title">
             <p>INFORME</p>
-            <p>Requerido</p>
+            <p>Opcional</p>
           </div>
 
           <div class="file--upload--card__files">
+            <p *ngFor="let document of reportsSent" class="file-send">
+              <a [href]="document.url" target="_blank">{{
+                document.name.length > 25
+                  ? "..." +
+                    (document.name
+                      | slice: document.name.length - 25:document.name.length)
+                  : document.name
+              }}</a>
+              <button
+                mat-icon-button
+                color="warn"
+                (click)="deleteFile('report', i)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </p>
             <p *ngFor="let file of reportFilesList">
               {{ file.name }}
             </p>
@@ -86,6 +120,22 @@
           </div>
 
           <div class="file--upload--card__files">
+            <p *ngFor="let document of quotationsSent" class="file-send">
+              <a [href]="document.url" target="_blank">{{
+                document.name.length > 25
+                  ? "..." +
+                    (document.name
+                      | slice: document.name.length - 25:document.name.length)
+                  : document.name
+              }}</a>
+              <button
+                mat-icon-button
+                color="warn"
+                (click)="deleteFile('quotation', i)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </p>
             <p *ngFor="let file of quotationFilesList">
               {{ file.name }}
             </p>
@@ -193,19 +243,26 @@
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">
-    <button type="button" mat-stroked-button color="warn" mat-dialog-close>
+    <button
+      type="button"
+      mat-stroked-button
+      color="warn"
+      [disabled]="loading$ | async"
+      mat-dialog-close
+    >
       CERRAR
     </button>
+
     <button
-      [disabled]="
-        form.invalid ||
-        emails.length === 0 ||
-        budgetFilesList.length === 0 ||
-        reportFilesList.length === 0
-      "
       type="submit"
       mat-raised-button
       color="primary"
+      (click)="send()"
+      [disabled]="
+        form.invalid ||
+        emails.length === 0 ||
+        (budgetsSent.length === 0 && budgetFilesList.length === 0)
+      "
     >
       ENVIAR
     </button>

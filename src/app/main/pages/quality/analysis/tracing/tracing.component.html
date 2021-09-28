@@ -1,104 +1,186 @@
 <div class="container">
-  <div class="ms-kanban-toolbar mat-elevation-z4">
-    <mat-form-field appearance="outline" class="ms-kanban-toolbar__input"
-      [ngClass]="isMobile ? 'ms-kanban-toolbar__input--mobile' : 'ms-kanban-toolbar__input--desktop'">
-      <mat-icon matPrefix>location_on</mat-icon>
-      <mat-select [formControl]="eventTypeControl">
-        <mat-option value="">Todos</mat-option>
-        <mat-option *ngFor="let item of eventType" [value]="item.code">
-          {{item.event}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field appearance="outline" class="ms-kanban-toolbar__input"
-      [ngClass]="isMobile ? 'ms-kanban-toolbar__input--mobile' : 'ms-kanban-toolbar__input--desktop'">
-      <mat-icon matPrefix>search</mat-icon>
-      <input matInput type="text" [formControl]="searchControl" placeholder="Escribir" autocomplete="off">
-    </mat-form-field>
-    <div class="ms-kanban-toolbar__tasks"
-      [ngClass]="isMobile ? 'ms-kanban-toolbar__tasks--mobile' : 'ms-kanban-toolbar__tasks--desktop'">
-      Total de tareas pendientes <span class="ms-kanban-toolbar__tasks--tag"> {{this.totalTask | number : '2.'}}</span>
+    <div class="ms-kanban-toolbar mat-elevation-z4">
+        <mat-form-field appearance="outline" class="ms-kanban-toolbar__input" [ngClass]="
+        isMobile
+          ? 'ms-kanban-toolbar__input--mobile'
+          : 'ms-kanban-toolbar__input--desktop'
+      " matTooltip="Tipo de evento" matTooltipPosition="above">
+            <mat-icon matPrefix>location_on</mat-icon>
+            <mat-select [formControl]="eventTypeControl">
+                <mat-option value="">Todos</mat-option>
+                <mat-option *ngFor="let item of eventType" [value]="item.code">
+                    {{ item.event }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="ms-kanban-toolbar__input" [ngClass]="
+        isMobile
+          ? 'ms-kanban-toolbar__input--mobile'
+          : 'ms-kanban-toolbar__input--desktop'
+      " matTooltip="Taller que reporta" matTooltipPosition="above">
+            <mat-icon matPrefix>report</mat-icon>
+            <mat-select [formControl]="reportingWorkshopControl">
+                <mat-option value="">Todos</mat-option>
+                <mat-option *ngFor="let workshop of reportingWorkshopList$ | async" [value]="workshop">
+                    {{ workshop.workshopName }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="ms-kanban-toolbar__input" [ngClass]="
+        isMobile
+          ? 'ms-kanban-toolbar__input--mobile'
+          : 'ms-kanban-toolbar__input--desktop'
+      " matTooltip="Taller responsable" matTooltipPosition="above">
+            <mat-icon matPrefix>home_repair_service</mat-icon>
+            <mat-select [formControl]="responsibleWorkshopControl">
+                <mat-option value="">Todos</mat-option>
+                <mat-option *ngFor="let workshop of responsibleWorkshopList$ | async" [value]="workshop">
+                    {{ workshop.name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="ms-kanban-toolbar__input" [ngClass]="
+        isMobile
+          ? 'ms-kanban-toolbar__input--mobile'
+          : 'ms-kanban-toolbar__input--desktop'
+      " matTooltip="Área responsable" matTooltipPosition="above">
+            <mat-icon matPrefix>
+                <span class="material-icons"> handyman </span>
+            </mat-icon>
+            <mat-select [formControl]="responsibleAreaControl">
+                <mat-option value="">Todos</mat-option>
+                <mat-option *ngFor="let area of responsibleAreaList$ | async" [value]="area">
+                    {{ area.name }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="ms-kanban-toolbar__input" [ngClass]="
+        isMobile
+          ? 'ms-kanban-toolbar__input--mobile'
+          : 'ms-kanban-toolbar__input--desktop'
+      ">
+            <mat-icon matPrefix>search</mat-icon>
+            <input matInput type="text" [formControl]="searchControl" placeholder="Escribir" autocomplete="off" />
+        </mat-form-field>
+        <div class="ms-kanban-toolbar__tasks" [ngClass]="
+        isMobile
+          ? 'ms-kanban-toolbar__tasks--mobile'
+          : 'ms-kanban-toolbar__tasks--desktop'
+      ">
+            Pendientes
+            <span class="ms-kanban-toolbar__tasks--tag">
+        {{ this.totalTask | number: "2." }}</span
+      >
     </div>
     <span class="ms-fill"></span>
-    <div class="ms-kanban-toolbar__counter">
-      {{counter | number : '2.'}}
-    </div>
-    <button mat-icon-button class="ms-kanban-toolbar__button--icon" (click)="settingDialog()"
-      *ngIf="authService.uiConfig.quality.analysis.tabs.tracing.toolbar.configuration">
+            <div class="ms-kanban-toolbar__counter">
+                {{ counter | number: "2." }}
+            </div>
+            <button mat-icon-button class="ms-kanban-toolbar__button--icon" (click)="settingDialog()" *ngIf="
+        authService.uiConfig.quality.analysis.tabs.tracing.toolbar.configuration
+      ">
       <mat-icon>settings</mat-icon>
     </button>
-  </div>
-  <div class="cards-container" *ngIf="quality$|async as evaluations; else default">
-    <div *ngFor="let item of evaluations" class="mat-elevation-z4"
-      style="display: flex; flex-direction: column; width: 230px">
-      <div class="box">
-        <div class="header-box">
-          <div class="priority" [ngClass]="{
-           'btn-event-internal': item.eventType === 'Interno'
-           ,'btn-event-external':  item.eventType === 'Externo'
+        </div>
+        <div class="cards-container" *ngIf="quality$ | async as evaluations; else default">
+            <div *ngFor="let item of evaluations" class="mat-elevation-z4" style="display: flex; flex-direction: column; width: 230px">
+                <div class="box">
+                    <div class="header-box">
+                        <div class="priority" [ngClass]="{
+              'btn-event-internal': item.eventType === 'Interno',
+              'btn-event-external': item.eventType === 'Externo'
             }">
-            {{item.eventType}}
-          </div>
-          <span [ngClass]="{
-             'task-pending': item.taskDone < item.correctiveActions.length
-            ,'task-completed': item.taskDone === item.correctiveActions.length
-             }">
-            {{item.taskDone}}/{{item.correctiveActions.length }}
+                            {{ item.eventType }}
+                        </div>
+                        <span [ngClass]="{
+              'task-pending': item.taskDone < item.correctiveActions.length,
+              'task-completed': item.taskDone === item.correctiveActions.length
+            }">
+            {{ item.taskDone }}/{{ item.correctiveActions.length }}
           </span>
-          <div>
-            <mat-menu #requestsMenu="matMenu">
-              <button mat-menu-item *ngIf="authService.uiConfig.quality.analysis.tabs.tracing.actions.details"
-                (click)="detailDialog(item, item.eventType)">
+                        <div>
+                            <mat-menu #requestsMenu="matMenu">
+                                <button mat-menu-item *ngIf="
+                  authService.uiConfig.quality.analysis.tabs.tracing.actions
+                    .details
+                " (click)="detailDialog(item, item.eventType)">
                 <mat-icon>visibility</mat-icon> Detalle
               </button>
-              <button mat-menu-item *ngIf="authService.uiConfig.quality.analysis.tabs.tracing.actions.correctiveActions"
-                (click)="accCorrective(item)">
+                                <button mat-menu-item *ngIf="
+                  authService.uiConfig.quality.analysis.tabs.tracing.actions
+                    .correctiveActions
+                " (click)="accCorrective(item)">
                 <mat-icon>fact_check</mat-icon> Acc Correctivas
               </button>
-              <button mat-menu-item *ngIf="authService.uiConfig.quality.analysis.tabs.tracing.actions.report"
-                (click)="printPdf(item)">
+                                <!-- <button
+                mat-menu-item
+                *ngIf="
+                  authService.uiConfig.quality.analysis.tabs.tracing.actions
+                    .report
+                "
+                (click)="printPdf(item)"
+              >
                 <mat-icon>picture_as_pdf</mat-icon> Reporte
-              </button>
-              <button mat-menu-item *ngIf="authService.uiConfig.quality.analysis.tabs.tracing.actions.timeLine"
-                (click)="timeline(item)">
+              </button> -->
+                                <button mat-menu-item *ngIf="
+                  authService.uiConfig.quality.analysis.tabs.tracing.actions
+                    .timeLine
+                " (click)="timeline(item)">
                 <mat-icon>timeline</mat-icon> Línea de tiempo
               </button>
-            </mat-menu>
-            <button mat-icon-button [matMenuTriggerFor]="requestsMenu">
+                            </mat-menu>
+                            <button mat-icon-button [matMenuTriggerFor]="requestsMenu">
               <mat-icon>more_vert</mat-icon>
             </button>
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <div class="lj" matTooltip="WOF" matTooltipPosition="above">
+                            <span>OT {{ item.workOrder }}</span>
+                        </div>
+                        <div class="info-row">
+                            Componente: <span> {{ item.component }}</span>
+                        </div>
+                        <div *ngIf="item.workShop" class="info-row">
+                            Taller: <span> {{ item.workShop ? item.workShop : "-" }}</span>
+                        </div>
+                        <div *ngIf="item.miningOperation" class="info-row">
+                            Operación minera:
+                            <span>
+              {{ item.miningOperation ? item.miningOperation : "-" }}</span
+            >
           </div>
+          <div class="info-row">
+            Especialista: <span> {{ item.specialist["name"] }}</span>
+                        </div>
+                        <div class="info-row">
+                            Fecha:
+                            <span>
+              {{
+                item.createdAt["seconds"] * 1000 | date: "dd/MM/yy - hh:mm:ss"
+              }}
+            </span>
+                        </div>
+                    </div>
+                    <div class="ms-fill"></div>
+                </div>
+                <div class="timer-container">
+                    <div class="timer-color"></div>
+                    <div class="timer-black" [ngStyle]="{ 'width.%': item.tracingPercentageElapsed }"></div>
+                    <div class="progress-view">
+                        {{ item.tracingTimeElapsed?.days | number: "2." }} / {{ item.tracingTimeElapsed?.hours | number: "2." }} : {{ item.tracingTimeElapsed?.minutes | number: "2." }}
+                        <!-- : {{item.tracingTimeElapsed?.seconds | number : '2.'}} -->
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="info-box">
-          <div class="lj" matTooltip="WOF" matTooltipPosition="above"><span>OT {{item.workOrder}}</span> </div>
-          <div class="info-row"> Componente: <span> {{item.component}}</span> </div>
-          <div *ngIf="item.workShop" class="info-row"> Taller: <span> {{item.workShop? item.workShop : '-'}}</span>
-          </div>
-          <div *ngIf="item.miningOperation" class="info-row"> Operación minera: <span> {{item.miningOperation?
-              item.miningOperation : '-'}}</span></div>
-          <div class="info-row"> Especialista: <span> {{item.specialist['name']}}</span></div>
-          <div class="info-row"> Fecha: <span> {{(item.createdAt['seconds'] * 1000) | date : 'dd/MM/yy - hh:mm:ss'}}
-            </span></div>
-        </div>
-        <div class="ms-fill"></div>
-      </div>
-      <div class="timer-container">
-        <div class="timer-color">
-        </div>
-        <div class="timer-black" [ngStyle]="{'width.%': item.tracingPercentageElapsed }">
-        </div>
-        <div class="progress-view">
-          {{item.tracingTimeElapsed?.days | number : '2.'}} /
-          {{item.tracingTimeElapsed?.hours | number : '2.'}} :
-          {{item.tracingTimeElapsed?.minutes | number : '2.'}} :
-          {{item.tracingTimeElapsed?.seconds | number : '2.'}}
-        </div>
-      </div>
+        <ng-template #default>
+            <div class="ms-default">
+                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+            </div>
+        </ng-template>
     </div>
-  </div>
-  <ng-template #default>
-    <div class="ms-default">
-      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-    </div>
-  </ng-template>
-</div>

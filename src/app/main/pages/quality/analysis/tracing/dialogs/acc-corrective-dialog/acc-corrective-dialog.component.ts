@@ -21,16 +21,16 @@ export class AccCorrectiveDialogComponent implements OnInit, OnDestroy {
   loading$ = this.loading.asObservable();
 
   dataArea = [];
-  
+
   fileSelect = false;
   nameFileSelect: string;
   uploadFileUrl: string;
   pathStorageFile: string;
-  
+
   uploadPercent$: Observable<number>;
 
   subscription = new Subscription();
-  
+
   newAccCorrective;
 
   date = new Date();
@@ -64,7 +64,7 @@ export class AccCorrectiveDialogComponent implements OnInit, OnDestroy {
 
   }
 
-  initForm(): void{
+  initForm(): void {
 
   }
 
@@ -72,7 +72,7 @@ export class AccCorrectiveDialogComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  uploadFiles(event, item ): void {
+  uploadFiles(event, item): void {
 
     if (!event.target.files[0]) {
       return;
@@ -95,19 +95,19 @@ export class AccCorrectiveDialogComponent implements OnInit, OnDestroy {
           finalize(() => {
             fileRef.getDownloadURL().subscribe((link) => {
               if (link) {
-               const code = item.corrective;
-               const kits = true;
+                const code = item.corrective;
+                const kits = true;
 
-               this.newAccCorrective = this.dataArea.map(el => {
-                 if (el.corrective === code) {
-                   return {...el, nameFile: filename, kit: kits, url: link, closedAt: this.date, user: this.userCurrent};
-                 }else{
-                   return el;
-                 }
-               });
+                this.newAccCorrective = this.dataArea.map(el => {
+                  if (el.corrective === code) {
+                    return { ...el, nameFile: filename, kit: kits, url: link, closedAt: this.date, user: this.userCurrent };
+                  } else {
+                    return el;
+                  }
+                });
 
-               this.dataArea = this.newAccCorrective ;
-               this.checkCounter();
+                this.dataArea = this.newAccCorrective;
+                this.checkCounter();
               }
             });
             this.loading.next(false);
@@ -116,11 +116,11 @@ export class AccCorrectiveDialogComponent implements OnInit, OnDestroy {
     );
   }
 
-  checkCounter(): void{
+  checkCounter(): void {
     this.countCheck += 1;
   }
 
-  save(): void{
+  save(): void {
     const task = this.data.taskDone + this.countCheck;
 
     try {
@@ -155,7 +155,7 @@ export class AccCorrectiveDialogComponent implements OnInit, OnDestroy {
         );
       }
 
-      if ( task >= this.data.correctiveActions.length ) {
+      if (task >= this.data.correctiveActions.length) {
         const resp = this.qualityService.finalizedCorrectiveActions(
           this.data,
           this.status
@@ -192,7 +192,7 @@ export class AccCorrectiveDialogComponent implements OnInit, OnDestroy {
       console.log(error);
       this.loading.next(false);
     }
-    
+
   }
 
 }

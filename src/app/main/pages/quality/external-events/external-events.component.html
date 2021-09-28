@@ -1,205 +1,446 @@
 <div class="ms-container">
-    <div class="ms-toolbar">
-        <mat-icon mat-list-icon class="ms-toolbar__icon">note_alt</mat-icon>
-        <h1 class="ms-toolbar__title" [ngClass]="isMobile ? 'ms-toolbar__title--mobile' : 'ms-toolbar__title--desktop'">
-            Eventos Externos
-        </h1>
-    </div>
+  <div class="ms-toolbar">
+    <mat-icon mat-list-icon class="ms-toolbar__icon">note_alt</mat-icon>
+    <h1
+      class="ms-toolbar__title"
+      [ngClass]="
+        isMobile ? 'ms-toolbar__title--mobile' : 'ms-toolbar__title--desktop'
+      "
+    >
+      Eventos Externos
+    </h1>
+  </div>
 
-    <div class="container-body">
-        <mat-card class="card">
-            <h3 class="title-form">Registros de eventos de calidad - Externos</h3>
-            <form [formGroup]="externalForm" autocomplete="off" class="container-form">
+  <div class="container-body">
+    <mat-card class="card">
+      <h3 class="title-form">Registros de eventos de calidad - Externos</h3>
+      <form
+        [formGroup]="externalForm"
+        autocomplete="off"
+        class="container-form"
+      >
+        <div class="container-form__work">
+          <mat-form-field
+            appearance="outline"
+            class="container-form__work__input"
+            [ngClass]="
+              isMobile
+                ? 'container-form__work__input--mobile'
+                : 'container-form__work__input--desktop'
+            "
+          >
+            <mat-label>Orden de trabajo actual</mat-label>
+            <input
+              matInput
+              type="text"
+              placeholder="Orden de trabajo"
+              formControlName="workdOrden"
+            />
+            <mat-error *ngIf="externalForm.controls['workdOrden'].errors">
+              Campo <strong>requerido.</strong>
+            </mat-error>
+          </mat-form-field>
 
-                <div class="container-form__work">
+          <mat-form-field
+            *ngIf="component$ | async as components"
+            class="container-form__work__input"
+            [ngClass]="
+              isMobile
+                ? 'container-form__work__input--mobile'
+                : 'container-form__work__input--desktop'
+            "
+            appearance="outline"
+          >
+            <mat-label>Componente</mat-label>
+            <input
+              autocomplete="off"
+              formControlName="component"
+              [matAutocomplete]="autocomplete"
+              type="text"
+              matInput
+            />
+            <mat-autocomplete
+              multiple
+              autoActiveFirstOption
+              #autocomplete="matAutocomplete"
+            >
+              <mat-option *ngFor="let item of components" [value]="item.name">
+                {{ item.name }}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-hint *ngIf="!(component$ | async)">
+              <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+              <p>Cargando lista ...</p>
+            </mat-hint>
+            <mat-error>
+              <span *ngIf="externalForm.get('component').errors?.required"
+                >Por favor, complete el campo.</span
+              >
+              <span *ngIf="externalForm.get('component').errors?.invalid"
+                >Dato inválido. Complete con alguna opción válida.</span
+              >
+            </mat-error>
+          </mat-form-field>
 
-                    <mat-form-field appearance="outline" class="container-form__work__input" [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
-                        <mat-label>Orden de trabajo actual</mat-label>
-                        <input matInput type="text" placeholder="Orden de trabajo" formControlName="workdOrden" />
-                        <mat-error *ngIf="externalForm.controls['workdOrden'].errors">
-                            Campo <strong>requerido.</strong>
-                        </mat-error>
-                    </mat-form-field>
+          <mat-form-field
+            appearance="outline"
+            class="container-form__work__input"
+            [ngClass]="
+              isMobile
+                ? 'container-form__work__input--mobile'
+                : 'container-form__work__input--desktop'
+            "
+          >
+            <mat-label> Número de paqueteo</mat-label>
+            <input
+              matInput
+              type="text"
+              placeholder="Número de paqueteo"
+              formControlName="nPackage"
+            />
+            <mat-error *ngIf="externalForm.controls['nPackage'].errors">
+              Campo <strong>requerido.</strong>
+            </mat-error>
+          </mat-form-field>
 
-                    <mat-form-field *ngIf="component$ | async as components" class="container-form__work__input" [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'" appearance="outline">
-                        <mat-label>Componente</mat-label>
-                        <input autocomplete="off" formControlName="component" [matAutocomplete]="autocomplete" type="text" matInput />
-                        <mat-autocomplete multiple autoActiveFirstOption #autocomplete="matAutocomplete">
-                            <mat-option *ngIf="authService.uiConfig.quality.externalEvents.forms.component" (click)="onAddComponent()" [value]="">
-                                <mat-icon>add_circle_outline</mat-icon>Añadir/Eliminar
-                            </mat-option>
-                            <mat-option *ngFor="let item of components" [value]="item.name">
-                                {{ item.name }}
-                            </mat-option>
-                        </mat-autocomplete>
-                        <mat-hint *ngIf="!(component$ | async)">
-                            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-                            <p>Cargando lista ...</p>
-                        </mat-hint>
-                        <mat-error>
-                            <span *ngIf="externalForm.get('component').errors?.required">Por favor, complete el
-                                campo.</span>
-                            <span *ngIf="externalForm.get('component').errors?.invalid">Dato inválido. Complete con
-                                alguna opción
-                                válida.</span>
-                        </mat-error>
-                    </mat-form-field>
+          <mat-form-field
+            appearance="outline"
+            class="container-form__work__input"
+            [ngClass]="
+              isMobile
+                ? 'container-form__work__input--mobile'
+                : 'container-form__work__input--desktop'
+            "
+          >
+            <mat-label> Horómetro de componente</mat-label>
+            <input
+              matInput
+              type="number"
+              placeholder="Horómetro de componente"
+              formControlName="componentHourMeter"
+            />
+            <mat-error
+              *ngIf="externalForm.controls['componentHourMeter'].errors"
+            >
+              Campo <strong>requerido.</strong>
+            </mat-error>
+          </mat-form-field>
 
-                    <mat-form-field appearance="outline" class="container-form__work__input" [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
-                        <mat-label> Número de paqueteo</mat-label>
-                        <input matInput type="text" placeholder="Número de paqueteo" formControlName="nPackage" />
-                        <mat-error *ngIf="externalForm.controls['nPackage'].errors">
-                            Campo <strong>requerido.</strong>
-                        </mat-error>
-                    </mat-form-field>
+          <mat-form-field
+            appearance="outline"
+            class="container-form__work__input"
+            [ngClass]="
+              isMobile
+                ? 'container-form__work__input--mobile'
+                : 'container-form__work__input--desktop'
+            "
+          >
+            <mat-label> Número de parte (Causante de falla)</mat-label>
+            <input
+              matInput
+              type="text"
+              placeholder="Número de parte"
+              formControlName="nPart"
+            />
+            <mat-error *ngIf="externalForm.controls['nPart'].errors">
+              Campo <strong>requerido.</strong>
+            </mat-error>
+          </mat-form-field>
 
-                    <mat-form-field appearance="outline" class="container-form__work__input" [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
-                        <mat-label> Horómetro de componente</mat-label>
-                        <input matInput type="number" placeholder="Horómetro de componente" formControlName="componentHourMeter" />
-                        <mat-error *ngIf="externalForm.controls['componentHourMeter'].errors">
-                            Campo <strong>requerido.</strong>
-                        </mat-error>
-                    </mat-form-field>
+          <mat-form-field
+            *ngIf="miningOperation$ | async as miningOperations"
+            class="container-form__work__input"
+            [ngClass]="
+              isMobile
+                ? 'container-form__work__input--mobile'
+                : 'container-form__work__input--desktop'
+            "
+            appearance="outline"
+          >
+            <mat-label>Operación minera</mat-label>
+            <input
+              autocomplete="off"
+              formControlName="miningOperation"
+              [matAutocomplete]="miningOperationAutocomplete"
+              type="text"
+              matInput
+            />
+            <mat-autocomplete
+              autoActiveFirstOption
+              #miningOperationAutocomplete="matAutocomplete"
+            >
+              <mat-option
+                *ngFor="let item of miningOperations"
+                [value]="item.name"
+              >
+                {{ item.name }}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-hint *ngIf="!(miningOperation$ | async)">
+              <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+              <p>Cargando lista ...</p>
+            </mat-hint>
+            <mat-error>
+              <span *ngIf="externalForm.get('miningOperation').errors?.required"
+                >Por favor, complete el campo.</span
+              >
+              <span *ngIf="externalForm.get('miningOperation').errors?.invalid"
+                >Dato inválido. Complete con alguna opción válida.</span
+              >
+            </mat-error>
+          </mat-form-field>
+          <mat-form-field
+            class="container-form__work__input"
+            [ngClass]="
+              isMobile
+                ? 'container-form__work__input--mobile'
+                : 'container-form__work__input--desktop'
+            "
+            appearance="outline"
+          >
+            <mat-label>Taller - Posible responsable</mat-label>
+            <input
+              autocomplete="off"
+              type="text"
+              matInput
+              formControlName="workshopName"
+              [matAutocomplete]="auto1"
+              placeholder="¿De que taller viene este trabajo?"
+            />
+            <mat-autocomplete
+              #auto1="matAutocomplete"
+              [displayWith]="displayFn"
+              autoActiveFirstOption
+            >
+              <mat-option
+                *ngFor="let option of filteredOptionsWorkshopName$ | async"
+                [value]="option"
+              >
+                {{ option.workshopName }}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-error
+              *ngIf="externalForm.get('workshopName').errors?.required"
+            >
+              Campo <strong>requerido.</strong>
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <br />
+        <mat-form-field
+          appearance="outline"
+          class="container-form__area"
+          [ngClass]="
+            isMobile
+              ? 'container-form__area--mobile'
+              : 'container-form__area--desktop'
+          "
+        >
+          <mat-label>1 ¿Cuéntame que sucedió?</mat-label>
+          <textarea
+            matInput
+            type="text"
+            placeholder=" Escribir..."
+            formControlName="question1"
+            rows="2"
+          >
+          </textarea>
+          <mat-error *ngIf="externalForm.controls['question1'].errors">
+            Campo <strong>requerido.</strong>
+          </mat-error>
+        </mat-form-field>
+        <br />
+        <mat-form-field
+          appearance="outline"
+          class="container-form__area"
+          [ngClass]="
+            isMobile
+              ? 'container-form__area--mobile'
+              : 'container-form__area--desktop'
+          "
+        >
+          <mat-label
+            >2. ¿Qué acciones de corrección se realizaron para solucionar el
+            problema?</mat-label
+          >
+          <textarea
+            matInput
+            type="text"
+            placeholder=" Escribir..."
+            formControlName="question2"
+            rows="2"
+          >
+          </textarea>
+          <mat-error *ngIf="externalForm.controls['question2'].errors">
+            Campo <strong>requerido.</strong>
+          </mat-error>
+        </mat-form-field>
+        <br />
+        <mat-form-field
+          appearance="outline"
+          class="container-form__area"
+          [ngClass]="
+            isMobile
+              ? 'container-form__area--mobile'
+              : 'container-form__area--desktop'
+          "
+        >
+          <mat-label>3. ¿Cuál crees que fue la causa de la falla?</mat-label>
+          <textarea
+            matInput
+            type="text"
+            placeholder=" Escribir..."
+            formControlName="question3"
+            rows="2"
+          >
+          </textarea>
+          <mat-error *ngIf="externalForm.controls['question3'].errors">
+            Campo <strong>requerido.</strong>
+          </mat-error>
+        </mat-form-field>
+        <br />
+        <mat-form-field
+          appearance="outline"
+          class="container-form__area"
+          [ngClass]="
+            isMobile
+              ? 'container-form__area--mobile'
+              : 'container-form__area--desktop'
+          "
+        >
+          <mat-label
+            >4. ¿Qué recomendarias para evitar que este problema vuelva a
+            suceder?</mat-label
+          >
+          <textarea
+            matInput
+            type="text"
+            placeholder=" Escribir..."
+            formControlName="question4"
+            rows="2"
+          >
+          </textarea>
+          <mat-error *ngIf="externalForm.controls['question4'].errors">
+            Campo <strong>requerido.</strong>
+          </mat-error>
+        </mat-form-field>
+        <br />
 
-                    <mat-form-field appearance="outline" class="container-form__work__input" [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
-                        <mat-label> Número de parte (Causante de falla)</mat-label>
-                        <input matInput type="text" placeholder="Número de parte" formControlName="nPart" />
-                        <mat-error *ngIf="externalForm.controls['nPart'].errors">
-                            Campo <strong>requerido.</strong>
-                        </mat-error>
-                    </mat-form-field>
+        <h3 class="container-form__title">Imagen general</h3>
 
-                    <mat-form-field *ngIf="miningOperation$ | async as miningOperations" class="container-form__work__input" [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'" appearance="outline">
-                        <mat-label>Operación minera</mat-label>
-                        <input autocomplete="off" formControlName="miningOperation" [matAutocomplete]="miningOperationAutocomplete" type="text" matInput />
-                        <mat-autocomplete autoActiveFirstOption #miningOperationAutocomplete="matAutocomplete">
-                            <mat-option *ngIf="authService.uiConfig.quality.externalEvents.forms.miningOperation" (click)="onAddminingOperation()" [value]="">
-                                <mat-icon>add_circle_outline</mat-icon>Añadir/Eliminar
-                            </mat-option>
-                            <mat-option *ngFor="let item of miningOperations" [value]="item.name">
-                                {{ item.name }}
-                            </mat-option>
-                        </mat-autocomplete>
-                        <mat-hint *ngIf="!(miningOperation$ | async)">
-                            <mat-progress-bar mode="indeterminate"></mat-progress-bar>
-                            <p>Cargando lista ...</p>
-                        </mat-hint>
-                        <mat-error>
-                            <span *ngIf="externalForm.get('miningOperation').errors?.required">Por favor, complete el
-                                campo.</span>
-                            <span *ngIf="externalForm.get('miningOperation').errors?.invalid">Dato inválido. Complete
-                                con alguna opción
-                                válida.</span>
-                        </mat-error>
-                    </mat-form-field>
-                </div>
-                <br />
-                <mat-form-field appearance="outline" class="container-form__area" [ngClass]="isMobile ? 'container-form__area--mobile' : 'container-form__area--desktop'">
-                    <mat-label>1 ¿Cuéntame que sucedió?</mat-label>
-                    <textarea matInput type="text" placeholder=" Escribir..." formControlName="question1" rows="2">
-                    </textarea>
-                    <mat-error *ngIf="externalForm.controls['question1'].errors">
-                        Campo <strong>requerido.</strong>
-                    </mat-error>
-                </mat-form-field>
-                <br>
-                <mat-form-field appearance="outline" class="container-form__area" [ngClass]="isMobile ? 'container-form__area--mobile' : 'container-form__area--desktop'">
-                    <mat-label>2. ¿Qué acciones de corrección se realizaron para solucionar el problema?</mat-label>
-                    <textarea matInput type="text" placeholder=" Escribir..." formControlName="question2" rows="2">
-                    </textarea>
-                    <mat-error *ngIf="externalForm.controls['question2'].errors">
-                        Campo <strong>requerido.</strong>
-                    </mat-error>
-                </mat-form-field>
-                <br>
-                <mat-form-field appearance="outline" class="container-form__area" [ngClass]="isMobile ? 'container-form__area--mobile' : 'container-form__area--desktop'">
-                    <mat-label>3. ¿Cuál crees que fue la causa de la falla?</mat-label>
-                    <textarea matInput type="text" placeholder=" Escribir..." formControlName="question3" rows="2">
-                    </textarea>
-                    <mat-error *ngIf="externalForm.controls['question3'].errors">
-                        Campo <strong>requerido.</strong>
-                    </mat-error>
-                </mat-form-field>
-                <br>
-                <mat-form-field appearance="outline" class="container-form__area" [ngClass]="isMobile ? 'container-form__area--mobile' : 'container-form__area--desktop'">
-                    <mat-label>4. ¿Qué recomendarias para evitar que este problema vuelva a suceder?</mat-label>
-                    <textarea matInput type="text" placeholder=" Escribir..." formControlName="question4" rows="2">
-                    </textarea>
-                    <mat-error *ngIf="externalForm.controls['question4'].errors">
-                        Campo <strong>requerido.</strong>
-                    </mat-error>
-                </mat-form-field>
-                <br>
+        <div
+          class="dropzone"
+          appDropzone
+          (hovered)="toggleHoverGeneral($event)"
+          (dropped)="onDropGeneral($event)"
+          [class.hovering]="isHoveringGeneral"
+        >
+          <p>Arrastrar imágenes</p>
+          <div class="file">
+            <label class="file-label">
+              <input
+                class="file-input"
+                type="file"
+                (change)="onDropGeneral($event.target.files)"
+              />
+              <span class="file-cta">
+                <span class="file-label"> Seleccione una imagen </span>
+              </span>
+            </label>
+          </div>
+        </div>
 
-                <h3 class="container-form__title">Imagen general</h3>
+        <div *ngFor="let file of filesGeneral">
+          <app-upload-task
+            [file]="file"
+            [pathStorage]="pathStorageGeneral"
+            (onNewImage)="addNewImageGeneral($event)"
+            (onDeleteImage)="deleteImageGeneral($event)"
+          >
+          </app-upload-task>
+        </div>
 
-                <div class="dropzone" appDropzone (hovered)="toggleHoverGeneral($event)" (dropped)="onDropGeneral($event)" [class.hovering]="isHoveringGeneral">
-                    <p>Arrastrar imágenes</p>
-                    <div class="file">
-                        <label class="file-label">
-                            <input class="file-input" type="file" (change)="onDropGeneral($event.target.files)">
-                            <span class="file-cta">
-                                <span class="file-label">
-                                    Seleccione una imagen
-                                </span>
-                            </span>
-                        </label>
-                    </div>
-                </div>
+        <h3 class="container-form__title">Imagen de detalle</h3>
 
-                <div *ngFor="let file of filesGeneral">
-                    <app-upload-task [file]="file" [pathStorage]="pathStorageGeneral" (onNewImage)="addNewImageGeneral($event)" (onDeleteImage)="deleteImageGeneral($event)">
-                    </app-upload-task>
-                </div>
+        <div
+          class="dropzone"
+          appDropzone
+          (hovered)="toggleHoverDetail($event)"
+          (dropped)="onDropDetail($event)"
+          [class.hovering]="isHoveringDetail"
+        >
+          <p>Arrastrar imágenes</p>
+          <div class="file">
+            <label class="file-label">
+              <input
+                class="file-input"
+                type="file"
+                (change)="onDropDetail($event.target.files)"
+              />
+              <span class="file-cta">
+                <span class="file-label"> Seleccione una imagen </span>
+              </span>
+            </label>
+          </div>
+        </div>
 
-                <h3 class="container-form__title">Imagen de detalle</h3>
+        <div *ngFor="let file of filesDetail">
+          <app-upload-task
+            [file]="file"
+            [pathStorage]="pathStorageDetail"
+            (onNewImage)="addNewImageDetail($event)"
+            (onDeleteImage)="deleteImageDetail($event)"
+          >
+          </app-upload-task>
+        </div>
 
-                <div class="dropzone" appDropzone (hovered)="toggleHoverDetail($event)" (dropped)="onDropDetail($event)" [class.hovering]="isHoveringDetail">
-                    <p>Arrastrar imágenes</p>
-                    <div class="file">
-                        <label class="file-label">
-                            <input class="file-input" type="file" (change)="onDropDetail($event.target.files)">
-                            <span class="file-cta">
-                                <span class="file-label">
-                                    Seleccione una imagen
-                                </span>
-                            </span>
-                        </label>
-                    </div>
-                </div>
+        <div class="container-form__uploadXlx">
+          <h3 class="container-form__title">Archivo adicional</h3>
+          <p *ngIf="fileSelect" style="color: #0064ea">
+            <span *ngFor="let item of dataFiles; let i = index">
+              {{ item.name }}
+              <button
+                mat-icon-button
+                aria-label="deletelistResult"
+                class="btn-delete"
+                (click)="deleteDataFiles(item.url, i)"
+              >
+                <mat-icon style="color: red">delete</mat-icon>
+              </button>
+              <br />
+            </span>
+          </p>
+          <input
+            #fileInput2
+            style="display: none"
+            id="fileInput2"
+            (change)="uploadFiles($event)"
+            type="file"
+            multiple
+            accept="*"
+          />
+          <button
+            type="file"
+            mat-stroked-button
+            class="ms-button"
+            accept="*"
+            (click)="fileInput2.click()"
+          >
+            <mat-icon>add</mat-icon>
+            ADJUNTAR
+          </button>
+        </div>
 
-                <div *ngFor="let file of filesDetail">
-                    <app-upload-task [file]="file" [pathStorage]="pathStorageDetail" (onNewImage)="addNewImageDetail($event)" (onDeleteImage)="deleteImageDetail($event)">
-                    </app-upload-task>
-                </div>
-
-                <div class="container-form__uploadXlx">
-                    <h3 class="container-form__title">Archivo adicional</h3>
-                    <p *ngIf="fileSelect" style="color:#0064EA;">
-                        <span *ngFor="let item of dataFiles; let i= index">
-                            {{item.name}}
-                            <button mat-icon-button aria-label="deletelistResult" class="btn-delete"
-                                (click)="deleteDataFiles(item.url,i)">
-                                <mat-icon style="color: red">delete</mat-icon>
-                            </button>
-                            <br>
-                        </span>
-                    </p>
-                    <input #fileInput2 style="display: none" id="fileInput2" (change)="uploadFiles($event)" type="file" multiple accept="*">
-                    <button type="file" mat-stroked-button class="ms-button" accept="*" (click)="fileInput2.click()">
-                        <mat-icon>add</mat-icon>
-                        ADJUNTAR
-                    </button>
-                </div>
-
-                <button aria-label="add" mat-button class="container-form__btn-save" [disabled]='externalForm.invalid' (click)="save()">
-                    GUARDAR
-                </button>
-
-            </form>
-        </mat-card>
-
-
-    </div>
-
+        <button
+          aria-label="add"
+          mat-button
+          class="container-form__btn-save"
+          [disabled]="externalForm.invalid"
+          (click)="save()"
+        >
+          GUARDAR
+        </button>
+      </form>
+    </mat-card>
+  </div>
 </div>

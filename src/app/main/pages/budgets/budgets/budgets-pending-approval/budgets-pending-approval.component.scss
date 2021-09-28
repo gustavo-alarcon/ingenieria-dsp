@@ -24,11 +24,7 @@
 
 .ms-kanban-toolbar__input {
   margin-right: 12px;
-}
-
-.matMenu{
-  height:203x;
-  weight: 173x;
+  width: 150px;
 }
 
 .download {
@@ -38,20 +34,31 @@
 
 .table-wrapper {
   overflow: auto;
+  max-height: 80vh;
+  margin-top: 1.5em;
 }
 
 table {
-  margin-top: 1.5em;
   border: 1px solid #f1eeee;
+  
   .table__cell {
-    min-width: 90px;
+    min-width: 100px;
     padding: 0px 8px;
+    font-size: 14px;
     &:first-child {
       padding-left: 36px;
     }
   }
   .observaciones-taller {
     min-width: 500px;
+  }
+
+  .cell-sticky-right-limit {
+    border-right: 2px solid lightgrey;
+  }
+
+  .cell-sticky-left-limit {
+    border-left: 2px solid lightgrey;
   }
 }
 

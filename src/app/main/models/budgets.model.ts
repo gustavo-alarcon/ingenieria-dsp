@@ -1,5 +1,5 @@
+import { Observable } from 'rxjs';
 import { User } from './user-model';
-import * as firebase from 'firebase/app';
 
 export interface Budget {
   taller: string;
@@ -10,8 +10,8 @@ export interface Budget {
   statusWoChild: string;
   otTaller: string;
   otMadre: string;
-  fechaAperturaChild: Date;
-  fechaReleasedIoChild: Date;
+  fechaAperturaChild: Date & firebase.default.firestore.Timestamp;
+  fechaReleasedIoChild: Date & firebase.default.firestore.Timestamp;
   cliente: string;
   gmorngm: string;
   modelo: string;
@@ -21,25 +21,27 @@ export interface Budget {
   modalidadPresupuesto: string;
   componente: string;
   afa: string;
-  fechaUltimoListado: Date;
-  fechaUltimoEnvioDocumentoADM: Date;
+  fechaUltimoListado: Date & firebase.default.firestore.Timestamp;
+  fechaUltimoEnvioDocumentoADM: Date & firebase.default.firestore.Timestamp;
   ultimoDocumento: string;
-  fechaDefinicionDeCargos: Date;
+  fechaDefinicionDeCargos: Date & firebase.default.firestore.Timestamp;
   definicionDeCargo: string;
-  fechaUltimoEnvioPPTO: Date;
-  fechaEnvioPPTO01: Date;
-  fechaEnvioPPTO02: Date;
+  fechaUltimoEnvioPPTO: Date & firebase.default.firestore.Timestamp;
+  fechaEnvioPPTO01: Date & firebase.default.firestore.Timestamp;
+  fechaEnvioPPTO02: Date & firebase.default.firestore.Timestamp;
   motivoDeModificacion: Array<ModificationReasonEntry>;
-  motivoDeModificacion02: string;
+  motivoDeModificacion02: ModificationReasonEntry;
   detalleDeModificacion02: string;
-  fechaEnvioPPTO03: Date;
-  motivoDeModificacion03: string;
+  fechaEnvioPPTO03: Date & firebase.default.firestore.Timestamp;
+  motivoDeModificacion03: ModificationReasonEntry;
   detalleDeModificacion03: string;
-  fechaEnvioPPTO04: Date;
-  motivoDeModificacion04: string;
+  fechaEnvioPPTO04: Date & firebase.default.firestore.Timestamp;
+  motivoDeModificacion04: ModificationReasonEntry;
   detalleDeModificacion04: string;
   // Check "statusPresupuesto" to know if it is approved or rejected
-  fechaDeAprobacionORechazo: Date;
+  fechaDeAprobacionORechazo: Date & firebase.default.firestore.Timestamp;
+  aprobadoPor?: User;
+  rechazadoPor?: User;
   // Defines the state of the budget
   statusPresupuesto: string;
   motivoDelRechazo: string;
@@ -55,14 +57,14 @@ export interface Budget {
   reparacion60: string;
   horasSTD: number;
   horasReales: number;
-  tiempoObjetivoEnvioPPTO: firebase.default.firestore.Timestamp;
+  tiempoObjetivoEnvioPPTO: Date & firebase.default.firestore.Timestamp;
   diasRestantesEnvioPPTO: string;
-  NoPPTOSModificadosOAdicionales: string | number;
+  NoPPTOSModificadosOAdicionales: number;
   observacionesEnElPresupuesto: string;
-  fechaDeTerminoDeRep: Date;
-  fechaUltimoInput: Date;
+  fechaDeTerminoDeRep: Date & firebase.default.firestore.Timestamp;
+  fechaUltimoInput: Date & firebase.default.firestore.Timestamp;
   motivoDeInput: string;
-  fechaDeFactDeTaller: Date;
+  fechaDeFactDeTaller: Date & firebase.default.firestore.Timestamp;
   costo$ServiciosCliente: number;
   costo$ServiciosDeOperacion: number;
   rentabilidadServiciosPercent: string;
@@ -75,10 +77,10 @@ export interface Budget {
   realDevueltoARepuestos: number;
   diferenciaRepuestos: number;
   totalVVFacturadoUS$: number;
-  mesFactVenta: Date;
+  mesFactVenta: Date & firebase.default.firestore.Timestamp;
   percentHorasSTDvsHorasDBS: string;
-  fechaFirstLabour: Date;
-  fechaLastLabour: Date | firebase.default.firestore.Timestamp;
+  fechaFirstLabour: Date & firebase.default.firestore.Timestamp;
+  fechaLastLabour: Date & firebase.default.firestore.Timestamp;
   diasDemoraFact: number;
   diasFactLastLabour: number;
   elaborarPPTO: string;
@@ -86,11 +88,11 @@ export interface Budget {
   tipoAAorPandP: string;
   taller02: string;
   diasDesdeAperturaChild: number;
-  resumen: string | Date;
+  resumen: string | (Date & firebase.default.firestore.Timestamp);
   definicionDeCargos: string;
-  informe: string | Date;
-  cotizacionFesa: string | Date;
-  cotizacionText: string | Date;
+  informe: string | (Date & firebase.default.firestore.Timestamp);
+  cotizacionFesa: string | (Date & firebase.default.firestore.Timestamp);
+  cotizacionText: string | (Date & firebase.default.firestore.Timestamp);
   statusFacturacion: string;
   excelid: string;
   clave: string;
@@ -98,7 +100,7 @@ export interface Budget {
   diasPPTO: number;
   mesTer: number;
   anio: number;
-  fechaLPD: Date;
+  fechaLPD: Date & firebase.default.firestore.Timestamp;
   id?: any;
   afaObs?: string;
   fesaObs?: string;
@@ -107,8 +109,25 @@ export interface Budget {
   textObs?: string;
   additionals?: object[];
   afaDate?: string;
+  versionCount?: number;
+  documentVersions?: Array<DocumentVersion>;
+  lastSendBy?: User;
+}
+export interface DocumentVersion {
+  version: number;
+  budgets: Array<DocumentSent>;
+  reports: Array<DocumentSent>;
+  quotations: Array<DocumentSent>;
+  subject: string;
+  body: string;
+  observations: string;
+  to: Array<string>;
 }
 
+export interface DocumentSent {
+  name: string;
+  url: string;
+}
 export interface Additional {
   type: string;
   observation: string;
@@ -117,6 +136,12 @@ export interface Additional {
 export interface RejectionReasonsEntry {
   id: string;
   name: string;
+  detail?: string;
+  createdBy: User;
+  createdAt: Date;
+}
+
+export interface ApprovedEntry {
   createdBy: User;
   createdAt: firebase.default.firestore.FieldValue;
 }
@@ -125,8 +150,12 @@ export interface ModificationReasonEntry {
   id: string;
   name: string;
   createdBy: User;
-  additionals?: Array<Additional>;
-  createdAt: Date;
+  additionals: Array<Additional>;
+  createdAt: firebase.default.firestore.FieldValue;
+}
+
+export interface additionalsForms {
+  additionals: Array<Additional>;
 }
 
 export interface modificationReasonForm {
@@ -134,6 +163,10 @@ export interface modificationReasonForm {
   modificationReason: ModificationReasonEntry;
 }
 
+export interface rejectionReasonForm {
+  rejectionReason: RejectionReasonsEntry;
+  detailReason: string;
+}
 export interface BudgetsBroadcastList {
   id?: string;
   name: string;
@@ -141,3 +174,26 @@ export interface BudgetsBroadcastList {
   createdAt: firebase.default.firestore.FieldValue;
   createdBy: User;
 }
+
+export interface BudgetHistoryDate {
+  description?: string;
+  type: string;
+  date: string;
+  milli: number;
+  createBy: User;
+}
+
+export interface EmailData {
+  id: string;
+  type: 'budget';
+  budgetFiles: Array<string>;
+  reportFiles: Array<string>;
+  quotationFiles: Array<string>;
+  subject: string;
+  body: string;
+  observations: string;
+  emailList: Array<string>;
+  workOrder: number;
+  workshop: string;
+}
+
