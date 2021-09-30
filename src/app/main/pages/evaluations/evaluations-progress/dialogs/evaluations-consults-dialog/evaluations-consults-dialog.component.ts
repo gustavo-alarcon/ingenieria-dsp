@@ -10,6 +10,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Ng2ImgMaxService } from 'ng2-img-max';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { finalize } from 'rxjs/operators';
+// @ts-ignore: Unreachable code error
+import Painterro from 'painterro';
 
 @Component({
   selector: 'app-evaluations-consults-dialog',
@@ -25,7 +27,7 @@ export class EvaluationsConsultsDialogComponent implements OnInit, OnDestroy {
 
   user: User;
 
-  imagesUpload: string = null;
+
   date: string = new Date().toISOString();
 
   evaluationsById: EvaluationInquiry[];
@@ -64,7 +66,7 @@ export class EvaluationsConsultsDialogComponent implements OnInit, OnDestroy {
   createForm(): void {
     this.consultForm = this.fb.group({
       inquiry: ['', Validators.required],
-      inquiryImage: [''],
+      inquiryImage: [null],
     });
   }
 
@@ -109,9 +111,8 @@ export class EvaluationsConsultsDialogComponent implements OnInit, OnDestroy {
   async deleteImage(): Promise<void> {
     try {
       this.loading.next(true);
-      await this.evaluationServices.deleteImage(this.imagesUpload);
+      await this.evaluationServices.deleteImage(this.consultForm.get('inquiryImage').value);
       this.loading.next(false);
-      this.imagesUpload = null;
       this.consultForm.get('inquiryImage').setValue(null);
     } catch (error) {
       console.log(error);
@@ -119,35 +120,66 @@ export class EvaluationsConsultsDialogComponent implements OnInit, OnDestroy {
     }
   }
 
-  uploadFile(event): void {
-    if (!event.target.files[0]) {
-      return;
-    }
+  showPizarra(): void {
+    const storage = this.storage;
+    const id = this.data.id;
+    const consultForm=this.consultForm.get('inquiryImage');
+    Painterro({
+      language: 'es',
+      hiddenTools: ['rotate','resize'],
+      saveHandler: async function (image: any, done: any) {
+        image.asBlob(image.hasAlphaChannel() ? 'image/png' : 'image/jpeg');
+        this.imagen = await image.asDataURL()
+        const metadata = {
+          contentType: image.hasAlphaChannel() ? 'image/png' : 'image/jpeg',
+        };
 
-    this.loading.next(true);
-    this.snackBar.open('🗜️ Comprimiendo', 'Aceptar', {
-      duration: 3000
-    });
-
-    const file = event.target.files[0];
-    this.subscription.add(this.ng2ImgMax.resize([file], 800, 10000).subscribe((result) => {
-      const name = `evaluations/${this.data.id}/pictures/${this.data.id}-${this.date}-${result.name}.png`;
-      const fileRef = this.storage.ref(name);
-      const task = this.storage.upload(name, file);
-      this.uploadPercent$ = task.percentageChanges();
-      this.subscription.add(task.snapshotChanges().pipe(
-        finalize(() => {
-          fileRef.getDownloadURL().subscribe(url => {
-            this.imagesUpload = url;
-            this.consultForm.get('inquiryImage').setValue(url);
+        const name = `evaluations/${id}/pictures/${id}-${new Date().toISOString()}`;
+        await storage.ref(name).putString(this.imagen.split(/,(.+)/)[1], 'base64', metadata)
+          .then(async (snapshot: any) => {
+            const url = await snapshot.ref.getDownloadURL();
+            consultForm.setValue(url);
           });
-          this.loading.next(false);
-        })
-      ).subscribe()
-      );
-    }));
 
+        done(true)
+      },
+      onImageLoaded: function () {
+        console.log('open')
+      },
+      doneCallback: function (image: any, done: any) {
+      }
+    }).show()
   }
+
+  // uploadFile(event): void {
+  //   if (!event.target.files[0]) {
+  //     return;
+  //   }
+
+  //   this.loading.next(true);
+  //   this.snackBar.open('🗜️ Comprimiendo', 'Aceptar', {
+  //     duration: 3000
+  //   });
+
+  //   const file = event.target.files[0];
+  //   this.subscription.add(this.ng2ImgMax.resize([file], 800, 10000).subscribe((result) => {
+  //     const name = `evaluations/${this.data.id}/pictures/${this.data.id}-${this.date}-${result.name}.png`;
+  //     const fileRef = this.storage.ref(name);
+  //     const task = this.storage.upload(name, file);
+  //     this.uploadPercent$ = task.percentageChanges();
+  //     this.subscription.add(task.snapshotChanges().pipe(
+  //       finalize(() => {
+  //         fileRef.getDownloadURL().subscribe(url => {
+  //           this.imagesUpload = url;
+  //           this.consultForm.get('inquiryImage').setValue(url);
+  //         });
+  //         this.loading.next(false);
+  //       })
+  //     ).subscribe()
+  //     );
+  //   }));
+
+  // }
 
   private scrollToFirstInvalidControl(): void {
     if (this.consultForm.get('inquiry').errors) {
