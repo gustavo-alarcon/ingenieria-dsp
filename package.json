@@ -43,6 +43,7 @@
     "ng2-img-max": "^2.2.4",
     "ngx-mask": "^11.1.4",
     "ngx-print": "^1.2.0-beta.5",
+    "painterro": "^1.2.66",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "xlsx": "^0.16.9",
