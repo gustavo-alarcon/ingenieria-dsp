@@ -66,7 +66,7 @@ export class EvaluationsConsultsDialogComponent implements OnInit, OnDestroy {
   createForm(): void {
     this.consultForm = this.fb.group({
       inquiry: ['', Validators.required],
-      inquiryImage: [''],
+      inquiryImage: [null],
     });
   }
 
