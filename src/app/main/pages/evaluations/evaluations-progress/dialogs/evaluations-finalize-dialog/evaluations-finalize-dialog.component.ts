@@ -4,7 +4,7 @@ import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Evaluation, EvaluationBroadcastList, EvaluationsKindOfTest, EvaluationsResultTypeUser } from 'src/app/main/models/evaluations.model';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { debounceTime, distinctUntilChanged, finalize, map, startWith, switchMap, take, tap } from 'rxjs/operators';
+import { finalize, take, tap } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Ng2ImgMaxService } from 'ng2-img-max';
 import { EvaluationsService } from 'src/app/main/services/evaluations.service';
@@ -13,8 +13,8 @@ import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material
 import { ENTER, COMMA } from '@angular/cdk/keycodes';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { User } from '../../../../../models/user-model';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
+// @ts-ignore: Unreachable code error
+import Painterro from 'painterro';
 
 @Component({
   selector: 'app-evaluations-finalize-dialog',
@@ -22,7 +22,6 @@ import { MatTableDataSource } from '@angular/material/table';
   styleUrls: ['./evaluations-finalize-dialog.component.scss']
 })
 export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
-
 
   loading = new BehaviorSubject<boolean>(false);
   loading$ = this.loading.asObservable();
@@ -114,6 +113,9 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
         return res;
       })
     );
+
+
+
   }
 
   createFormFinalize(): void {
@@ -192,6 +194,7 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
   }
 
   async deleteImage(imgForDelete: string, index: number): Promise<void> {
+
     try {
       this.loading.next(true);
       await this.evaluationServices.deleteImage(this.imagesUpload[index]);
@@ -204,35 +207,73 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
     }
   }
 
-  uploadFile(event, i?: number): void {
-    if (!event.target.files[0]) {
-      return;
-    }
-    this.loading.next(true);
-    const file = event.target.files[0];
-    this.subscription.add(this.ng2ImgMax.resize([file], 800, 10000).subscribe((result) => {
-      const name = `evaluations/${this.data.id}/pictures/${this.data.id}-${this.date}-${result.name}.png`;
-      const fileRef = this.storage.ref(name);
-      const task = this.storage.upload(name, file);
-      this.uploadPercent$ = task.percentageChanges();
-      this.subscription.add(task.snapshotChanges().pipe(
-        finalize(() => {
-          fileRef.getDownloadURL().subscribe(url => {
-            if (this.imagesUpload[i] === '') {
-              this.imagesUpload.pop();
-              this.imagesUpload.push(url);
-              this.imagesUpload.push('');
+  showPizarra(i?: number): void {
+    const storage = this.storage;
+    const index = i;
+    const id = this.data.id;
+    const imagesAuxArray = this.imagesUpload;
+    Painterro({
+      language: 'es',
+      hiddenTools: ['rotate', 'resize'],
+      saveHandler: async function (image: any, done: any) {
+        image.asBlob(image.hasAlphaChannel() ? 'image/png' : 'image/jpeg');
+        this.imagen = await image.asDataURL()
+        const metadata = {
+          contentType: image.hasAlphaChannel() ? 'image/png' : 'image/jpeg',
+        };
+
+        const name = `evaluations/${id}/pictures/${id}-${new Date().toISOString()}`;
+        await storage.ref(name).putString(this.imagen.split(/,(.+)/)[1], 'base64', metadata)
+          .then(async (snapshot: any) => {
+            const url = await snapshot.ref.getDownloadURL();
+            if (imagesAuxArray[index] === '') {
+              imagesAuxArray.pop();
+              imagesAuxArray.push(url);
+              imagesAuxArray.push('');
             } else {
-              this.imagesUpload[i] = url;
+              imagesAuxArray[index] = url;
             }
           });
-          this.loading.next(false);
-        })
-      ).subscribe()
-      );
-    }));
 
+        done(true)
+      },
+      onImageLoaded: function () {
+        console.log('open')
+      },
+      doneCallback: function (image: any, done: any) {
+      }
+    }).show()
   }
+
+  // uploadFile(event: any, i?: number): void {
+  //   if (!event.target.files[0]) {
+  //     return;
+  //   }
+  //   this.loading.next(true);
+  //   const file = event.target.files[0];
+  //   this.subscription.add(this.ng2ImgMax.resize([file], 800, 10000).subscribe((result) => {
+  //     const name = `evaluations/${this.data.id}/pictures/${this.data.id}-${this.date}-${result.name}.png`;
+  //     const fileRef = this.storage.ref(name);
+  //     const task = this.storage.upload(name, file);
+  //     this.uploadPercent$ = task.percentageChanges();
+  //     this.subscription.add(task.snapshotChanges().pipe(
+  //       finalize(() => {
+  //         fileRef.getDownloadURL().subscribe(url => {
+  //           if (this.imagesUpload[i] === '') {
+  //             this.imagesUpload.pop();
+  //             this.imagesUpload.push(url);
+  //             this.imagesUpload.push('');
+  //           } else {
+  //             this.imagesUpload[i] = url;
+  //           }
+  //         });
+  //         this.loading.next(false);
+  //       })
+  //     ).subscribe()
+  //     );
+  //   }));
+
+  // }
 
   get imagesArray(): FormArray {
     return this.finalizeForm.get('images') as FormArray;
@@ -285,4 +326,8 @@ export class EvaluationsFinalizeDialogComponent implements OnInit, OnDestroy {
     this.emailInput.nativeElement.value = '';
     this.broadcastControl.setValue(null);
   }
+
+  // showPizarra(imagen?: any) {
+  // this.painterroService.showPizarra();
+  // }
 }
