@@ -66,9 +66,10 @@
         </div>
         <label for="inquiryImage">
             <mat-card class="mat-elevation-z0">
-                <img [src]="imagesUpload" onError="this.src='../../../../../../../assets/img/camara.png'"
-                    class="pointer" />
-                <mat-card-actions *ngIf="imagesUpload" align="end">
+                <img [src]="consultForm.get('inquiryImage').value"
+                    onError="this.src='../../../../../../../assets/img/camara.png'" class="pointer"
+                    (click)="showPizarra()" />
+                <mat-card-actions *ngIf="consultForm.get('inquiryImage').value" align="end">
                     <button mat-icon-button (click)="deleteImage()">
                         <mat-icon color="warn">delete</mat-icon>
                     </button>
@@ -76,8 +77,8 @@
             </mat-card>
             <mat-divider></mat-divider>
         </label>
-        <input id="inquiryImage" type="file" style="display: none;" accept="image/x-png, image/jpg, image/jpeg"
-            (change)="uploadFile($event)" />
+        <!-- <input id="inquiryImage" type="file" style="display: none;" accept="image/x-png, image/jpg, image/jpeg"
+            (change)="uploadFile($event)" /> -->
     </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
