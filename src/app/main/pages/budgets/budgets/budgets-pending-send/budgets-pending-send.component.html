@@ -6,6 +6,26 @@
     </div>
 
     <mat-form-field
+    appearance="outline"
+    [ngClass]="
+      isMobile
+        ? 'ms-kanban-toolbar__input--mobile'
+        : 'ms-kanban-toolbar__input'
+    "
+  >
+    <mat-label>Taller</mat-label>
+    <input
+      type="text"
+      [formControl]="tallerFormControl"
+      matInput
+      placeholder="Taller"
+      autocomplete="off"
+      [disabled]="cantWO < 1"
+    />
+    <mat-icon matPrefix>business</mat-icon>
+  </mat-form-field>
+
+    <mat-form-field
       appearance="outline"
       [ngClass]="
         isMobile
@@ -90,6 +110,19 @@
         matSort
         class="mat-elevation-z8"
       >
+      <ng-container matColumnDef="taller" sticky>
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          class="table__cell"
+        >
+          Taller
+        </th>
+        <td mat-cell *matCellDef="let element" class="table__cell">
+          {{ element.taller ? element.taller : "---" }}
+        </td>
+      </ng-container>
         <ng-container matColumnDef="woMain" sticky>
           <th
             mat-header-cell
