@@ -35,6 +35,7 @@ export class BudgetsPendingSendComponent implements OnInit {
   ) {}
 
   // Form controllers
+  public tallerFormControl: FormControl = new FormControl();
   public woMainFormControl: FormControl = new FormControl();
   public woChildFormControl: FormControl = new FormControl();
   public clienteFormControl: FormControl = new FormControl();
@@ -43,6 +44,7 @@ export class BudgetsPendingSendComponent implements OnInit {
     new MatTableDataSource<Budget>();
 
   public displayedColumns = [
+    'taller',
     'woMain',
     'woChild',
     'cliente',
@@ -189,6 +191,11 @@ export class BudgetsPendingSendComponent implements OnInit {
         this.tableData.data = res;
         this.cantWO = this.tableData.data.length;
 
+        this.tallerFormControl.valueChanges.subscribe((val) => {
+          this.filteredValues['taller'] = val;
+          this.tableData.filter = JSON.stringify(this.filteredValues);
+        }); 
+
         this.woMainFormControl.valueChanges.subscribe((val) => {
           this.filteredValues['woMain'] = val;
           this.tableData.filter = JSON.stringify(this.filteredValues);
@@ -214,6 +221,11 @@ export class BudgetsPendingSendComponent implements OnInit {
     const myFilterPredicate = (data: Budget, filter: string): boolean => {
       let searchString = JSON.parse(filter);
       return (
+        this.checkIfNull(data.taller)
+          .toString()
+          .trim()
+          .toLowerCase()
+          .indexOf(searchString.taller.toLowerCase()) !== -1 &&
         this.checkIfNull(data.woMain)
           .toString()
           .trim()
