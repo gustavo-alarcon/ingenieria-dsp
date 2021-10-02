@@ -48,7 +48,7 @@
       *ngIf="loading$ | async"
     ></mat-progress-bar>
 
-    <div style="overflow: auto">
+    <div style="overflow: auto" [class.header-table-container] = "budgetsDailyEntriesDataSource.data.length !== 0" >
       <table
         mat-table
         [dataSource]="budgetsDailyEntriesDataSource"
@@ -3059,7 +3059,7 @@
 
         <tr
           mat-header-row
-          *matHeaderRowDef="budgetsDailyEntriesDisplayedColumns"
+          *matHeaderRowDef="budgetsDailyEntriesDisplayedColumns; sticky: true"
         ></tr>
         <tr
           mat-row
