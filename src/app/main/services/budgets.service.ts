@@ -29,7 +29,7 @@ export class BudgetsService {
     private afs: AngularFirestore,
     private afFun: AngularFireFunctions,
     private snackbar: MatSnackBar
-  ) {}
+  ) { }
 
   checkBudgetConflicts(entry: Budget): Observable<{
     isDuplicated: boolean;
@@ -1006,7 +1006,7 @@ export class BudgetsService {
       .collection('/db/generalConfig/budgetsListRejectionReasons')
       .doc(id)
       .delete()
-      .then(() => {})
+      .then(() => { })
       .catch((error) => {
         console.error(error);
       });
@@ -1017,7 +1017,7 @@ export class BudgetsService {
       .collection('/db/generalConfig/budgetsListModificationReasons')
       .doc(id)
       .delete()
-      .then(() => {})
+      .then(() => { })
       .catch((error) => {
         console.error(error);
       });
@@ -1055,6 +1055,43 @@ export class BudgetsService {
 
   public getDateHistory(budget: Budget): Array<BudgetHistoryDate> {
     let tempArray = [];
+
+    if (budget.statusPresupuesto === 'PPTO. MODIFICADO') {
+      let auxFecha = [
+        budget.fechaEnvioPPTO01,
+        budget.fechaEnvioPPTO02,
+        budget.fechaEnvioPPTO03,
+        budget.fechaEnvioPPTO04,
+      ];
+      const fechaAux = auxFecha.filter((vl) => { return vl !== null })
+      const fecha = this.getStringFromTimestamp(fechaAux[fechaAux.length - 1]);
+      const milliSeconds = fechaAux[fechaAux.length - 1].seconds * 1000;
+
+      if (fecha !== '---') {
+        const data: BudgetHistoryDate = {
+          type: 'Fecha última modificación',
+          date: fecha,
+          milli: milliSeconds,
+          createBy: null,
+        };
+        tempArray.push(data);
+      }
+    } else if (budget.statusPresupuesto === 'PPTO. RECHAZADO' || budget.statusPresupuesto === 'PPTO. APROBADO') {
+      const fecha = this.getStringFromTimestamp(budget.fechaDeAprobacionORechazo);
+      const milliSeconds = budget.fechaDeAprobacionORechazo.seconds * 1000;
+
+      if (fecha !== '---') {
+        const data: BudgetHistoryDate = {
+          type: budget.statusPresupuesto === 'PPTO. RECHAZADO' ? 'Fecha de rechazo' : 'Fecha de aprobación',
+          date: fecha,
+          milli: milliSeconds,
+          createBy: null,
+        };
+        tempArray.push(data);
+      }
+    }
+
+
     //Verificar fecha
     if (budget.fechaAperturaChild) {
       const fecha = this.getStringFromTimestamp(budget.fechaAperturaChild);

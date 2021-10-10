@@ -13,25 +13,15 @@ export class BudgetsPendingHistoryComponent implements OnInit {
 
   panelOpenState = false;
 
-   dateArray: BudgetHistoryDate[] = []
-  
+  dateArray: BudgetHistoryDate[] = [];
 
-  constructor( private budgetsService: BudgetsService,
-               @Inject(MAT_DIALOG_DATA) public budget: Budget
-               ) { }
 
-  
+  constructor(private budgetsService: BudgetsService,
+    @Inject(MAT_DIALOG_DATA) public budget: Budget
+  ) { }
 
   ngOnInit(): void {
-
-    
     this.dateArray = this.budgetsService.getDateHistory(this.budget);
-  
-  
-    
-    
   }
-
-  
 
 }
