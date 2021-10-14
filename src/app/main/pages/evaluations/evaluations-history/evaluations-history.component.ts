@@ -141,12 +141,14 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
       )
     ).pipe(
       map(([evaluations, status, search, startdate, enddate]) => {
+
         const date = { begin: startdate, end: enddate };
         const searchTerm = search.toLowerCase();
 
         let preFilterStatus = [];
         let preFilterSearch = [...evaluations];
-        let preFilterWithDate = [];
+        const preFilterWithDate = [];
+
 
         preFilterSearch.filter((element) => {
           const dateMillis = element.createdAt['seconds'] * 1000;
@@ -154,7 +156,6 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
             preFilterWithDate.push(element);
           }
         });
-
         if (status.length > 1) {
           preFilterStatus = preFilterWithDate.filter(
             (evaluation) => evaluation.internalStatus === status
@@ -195,7 +196,9 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
               return this.getFilterTime(evaluation.createdAt, date);
             });
         }
-        return preFilterSearch;
+
+        return preFilterSearch
+        ;
       }),
       tap((res) => {
         if (res) {
@@ -204,6 +207,7 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
         }
       })
     );
+
   }
 
   ngOnDestroy() {
@@ -306,66 +310,78 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
   }
 
   downloadXlsx(evaluations: Evaluation[]): void {
+    console.log('evaluaciones : ',evaluations);
+
     let table_xlsx: any[] = [];
 
     let headersXlsx = [
       'otMain',
       'otChild',
-      // 'position',
-      'wof',
-      'task',
+      'position',
       'partNumber',
       'description',
-      'internalStatus',
-      'result',
-      // 'comments',
-      // 'kindOfTest',
-      'observations',
       'quantity',
+      'internalStatus',
+      'status',
+      'wof',
+      'task',
+      'observations',
       'workshop',
-      // 'status',
-      'createdAt',
+      'images',
       'processAt',
+      'inquiryAt',
       'finalizedAt',
       'finalizedBy',
-      // 'inquiryAt'
+      'result',
+      'kindOfTest',
+      'comments',
+      'resultImage1',
+      'resultImage2',
+      'createdAt',
+      'createdBy',
+      'editedAt',
+      'editedBy',
+      'emailList',
+      'question1',
+      'answer1',
+      'question2',
+      'answer2',
+      'question3',
+      'answer3',
+      'question4',
+      'answer4',
+      'question5',
+      'answer5',
     ];
 
     table_xlsx.push(headersXlsx);
 
     evaluations.forEach((evaluation) => {
-      const temp = [
+      let  temp1 = [];
+      let  temp2 = [];
+
+      temp1 = [
         evaluation.otMain ? evaluation.otMain : '---',
         evaluation.otChild ? evaluation.otChild : '---',
-        evaluation.wof ? evaluation.wof : '---',
-        evaluation.task ? evaluation.task : '---',
-        // evaluation.position ? evaluation.position : '---',
+        evaluation.position ? evaluation.position : '---',
         evaluation.partNumber ? evaluation.partNumber : '---',
         evaluation.description ? evaluation.description : '---',
-        evaluation.internalStatus ? evaluation.internalStatus : '---',
-        evaluation.result ? evaluation.result : '---',
-        // evaluation.comments ? evaluation.comments : '---',
-        // evaluation.kindOfTest ? evaluation.kindOfTest : '---',
-        evaluation.observations ? evaluation.observations : '---',
         evaluation.quantity ? evaluation.quantity : '---',
-
-        // evaluation.status ? evaluation.status : '---',
-        evaluation.createdAt
-          ? new Date(evaluation.createdAt['seconds'] * 1000)
-          : '---',
-
-        evaluation.workshop
-          ? evaluation.workshop['location']
-          : evaluation.workshop
-          ? evaluation.workshop
-          : '---',
-
+        evaluation.internalStatus ? evaluation.internalStatus : '---',
+        evaluation.status ? evaluation.status : '---',
         evaluation.wof ? evaluation.wof : '---',
         evaluation.task ? evaluation.task : '---',
-
+        evaluation.observations ? evaluation.observations : '---',
+        evaluation.workshop
+        ? evaluation.workshop['location']
+        : evaluation.workshop
+        ? evaluation.workshop
+        : '---',
+        evaluation.images ? evaluation.images['0'] : '---',
         evaluation.processAt
           ? new Date(evaluation.processAt['seconds'] * 1000)
           : '---',
+        evaluation.inquiryAt ? new Date(evaluation.inquiryAt['seconds'] * 1000) : '---',
         evaluation.finalizedAt
           ? new Date(evaluation.finalizedAt['seconds'] * 1000)
           : '---',
@@ -374,10 +390,41 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
             ? evaluation.finalizedBy.name
             : evaluation.finalizedBy
           : '---',
-        // evaluation.inquiryAt ? new Date(evaluation.inquiryAt['seconds'] * 1000) : '---',
+          evaluation.result ? evaluation.result : '---',
+          evaluation.kindOfTest ? evaluation.kindOfTest : '---',
+          evaluation.comments ? evaluation.comments : '---',
+          evaluation.resultImage1 ? evaluation.resultImage1 : '---',
+          evaluation.resultImage2 ? evaluation.resultImage2 : '---',
+          evaluation.createdAt
+          ? new Date(evaluation.createdAt['seconds'] * 1000)
+          : '---',
+          evaluation.createdBy
+            ? evaluation.createdBy.name
+            ? evaluation.createdBy.name
+              : evaluation.createdBy
+            : '---',
+          evaluation.editedAt
+          ? new Date(evaluation.editedAt['seconds'] * 1000)
+          : '---',
+          evaluation.editedBy
+            ? evaluation.editedBy.name
+            ? evaluation.editedBy.name
+              : evaluation.editedBy
+            : '---',
+          evaluation.emailList ? evaluation.emailList.join() : '---',
+          evaluation.inquiries ? evaluation.inquiries['question0'] ? evaluation.inquiries['question0'] : '----' : '----',
+          evaluation.inquiries ? evaluation.inquiries['answer0'] ? evaluation.inquiries['answer0']: '----': '----',
+          evaluation.inquiries ? evaluation.inquiries['question1'] ? evaluation.inquiries['question1'] : '----' : '----',
+          evaluation.inquiries ? evaluation.inquiries['answer1'] ? evaluation.inquiries['answer1']: '----': '----',
+          evaluation.inquiries ? evaluation.inquiries['question2'] ? evaluation.inquiries['question2'] : '----' : '----',
+          evaluation.inquiries ? evaluation.inquiries['answer2'] ? evaluation.inquiries['answer2']: '----': '----',
+          evaluation.inquiries ? evaluation.inquiries['question3'] ? evaluation.inquiries['question3'] : '----' : '----',
+          evaluation.inquiries ? evaluation.inquiries['answer3'] ? evaluation.inquiries['answer3']: '----': '----',
+          evaluation.inquiries ? evaluation.inquiries['question4'] ? evaluation.inquiries['question4'] : '----' : '----',
+          evaluation.inquiries ? evaluation.inquiries['answer4'] ? evaluation.inquiries['answer4']: '----': '----',
       ];
 
-      table_xlsx.push(temp);
+      table_xlsx.push(temp1);
     });
 
     /* generate worksheet */
