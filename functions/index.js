@@ -280,7 +280,7 @@ exports.sendAndonToEndpoint = functions.firestore.document(`db/ferreyros/andon/{
         let url;
         await admin.firestore().doc('/db/generalConfig').onSnapshot(val => {
             url = val.data()['endpoint'];
-
+            
             const data = {
                 "id": andon.id,
                 "type": "andon",
@@ -329,6 +329,67 @@ exports.sendAndonToEndpoint = functions.firestore.document(`db/ferreyros/andon/{
                     console.log(error.config);
                 })
         });
+    });
+
+exports.updateSendAndonToEndpoint = functions.firestore.document(`db/ferreyros/andon/{andonId}`)
+    .onUpdate(async(event) => {
+        const andon = event.after.data();
+        let url;
+
+        if(andon.reassignedAt){
+            await admin.firestore().doc('/db/generalConfig').onSnapshot(val => {
+                url = val.data()['endpoint'];
+                const data = {
+                    "id": andon.id,
+                    "type": "andon",
+                    "otChild": andon.otChild,
+                    "bay": andon.name,
+                    "problemType": andon.problemType,
+                    "description": andon.description,
+                    "emailList": andon.emailList.toString(),
+                    "images": Object.values(andon.images).length > 0 ? Object.values(andon.images).join('@@') : ''
+                }
+    
+                const options = {
+                    "method": "POST",
+                    "url": url,
+                    "port": null,
+                    "headers": {
+                        "authorization": `*`,
+                        "content-type": "application/json"
+                    },
+                    data: data
+                };
+    
+                console.log("Just before sending email: ", data);
+    
+                return gaxios.request(options)
+                    .then(res2 => {
+                        console.log(`✉️ Andon data sent!`)
+                    })
+                    .catch(error => {
+                        console.log("Error: ")
+                        if (error.response) {
+                            // The request was made and the server responded with a status code
+                            // that falls out of the range of 2xx
+                            console.log(error.response.data);
+                            console.log(error.response.status);
+                            console.log(error.response.headers);
+                        } else if (error.request) {
+                            // The request was made but no response was received
+                            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                            // http.ClientRequest in node.js
+                            console.log(error.request);
+                        } else {
+                            // Something happened in setting up the request that triggered an Error
+                            console.log(error.message);
+                        }
+                        console.log(error.config);
+                    })
+            });
+
+        }
+       
     });
 
 exports.sendPreevaluationToEndpoint = functions.firestore.document(`db/ferreyros/evaluations/{evalId}`)

@@ -1,0 +1,82 @@
+.container-header{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: stretch;
+
+    h1 {
+        margin: 0px;
+        align-self: center;
+    }
+
+    &--border {
+        border: 1px dashed lightcoral;
+        padding: 12px;
+        border-radius: 10px;
+        margin-bottom: 12px;
+    }
+
+    .timer {
+        display: flex;
+        align-self: center;
+    }
+}
+
+.imge{
+    width: 100%;
+}
+
+.container-images {
+    position: relative;
+    margin-top: 24px;
+}
+
+.container-title {
+    display: flex;
+    align-items: stretch;
+
+    .icon {
+        align-self: center;
+        margin-right: 8px;
+    }
+
+    .title {
+        margin: 0px;
+        align-self: center;
+    }
+}
+.btn-delete{
+    position: absolute;
+    right: -20px;
+    top: -10px;
+}
+
+.title-form{
+    color: #828282;
+    font-size: 1.3em;
+    font-weight: 600;   
+    margin:20px 0px 10px 0px;
+}
+
+.report {
+    margin-top: 50px;
+    background: white;
+    padding: 24px 24px;
+    border: 1px solid lightgrey;
+    border-radius: 10px 10px 10px 10px;
+    width: fit-content;
+    margin: 24px auto;
+
+    &__title {
+        font-weight: bold;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+    }
+    &__form {
+        &--input {
+            width: 100%;
+        }
+    }
+}
+
