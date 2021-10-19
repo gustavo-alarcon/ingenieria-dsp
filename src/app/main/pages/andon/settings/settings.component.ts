@@ -41,10 +41,10 @@ export class SettingsComponent implements OnInit, OnDestroy {
   broadcast$: Observable<AndonBroadcastList[]>;
   broadcastListArray: AndonBroadcastList[] = [];
   broadcastFormArray = new FormArray([]);
-
+  emailArray: string[] = [];
   
    
-  historyMobilDataSource = new MatTableDataSource<any[]>();
+  historyMobilDataSource = new MatTableDataSource<AndonProblemType>();
   historyMobilDisplayedColumns: string[] = [
     'name',
     'email',
@@ -57,7 +57,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.historyMobilDataSource.paginator = paginator;
   }
 
-  problemType$: Observable<any[]>;
+  problemType$: Observable<AndonProblemType[]>;
   
   problemTypeForm: FormGroup;
 
@@ -153,7 +153,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.problemTypeForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [
-        Validators.required,
         Validators.pattern(/^[\w]{1,}[\w.+-]{0,}@[\w-]{1,}([.][a-zA-Z]{2,}|[.][\w-]{2,}[.][a-zA-Z]{2,})$/)
         ]],
     });
@@ -192,13 +191,47 @@ export class SettingsComponent implements OnInit, OnDestroy {
     }
   }
 
+  addEmail(): void {
+
+    if (this.problemTypeForm.get('name').invalid) {
+      this.problemTypeForm.markAllAsTouched();
+      return;
+    }
+ 
+    const value = { ...this.problemTypeForm.value };
+
+    this.emailArray.unshift(value.email);
+    this.resetEmail();
+  }
+
+  resetEmail(): void {
+    this.problemTypeForm.get('email').reset();
+    
+  }
+
+  
+  deleteEmailArray(index: number): void {
+    this.emailArray.splice(index, 1);
+  }
   saveProblemType(): void{
     try {
+      this.loading.next(true)    
+       
+      if( this.emailArray.length > 0){
+        this.problemTypeForm.controls['']
+      }
 
+
+      if(this.problemTypeForm.invalid){
+        this.problemTypeForm.markAllAsTouched();
+        this.loading.next(false)
+        return
+      }
       if (this.problemTypeForm.valid) {
         const resp = this.andonService.addAndonProblemType(
           this.problemTypeForm.value,
-          this.user
+          this.user,
+          this.emailArray
         );
         //this.loading.next(true);
         this.subscription.add(
@@ -211,6 +244,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
                   this.snackbar.open('✅ Se guardo correctamente!', 'Aceptar', {
                     duration: 6000,
                   });
+                  this.emailArray = [];
                   this.problemTypeForm.reset();
                 })
                 .catch((err) => {

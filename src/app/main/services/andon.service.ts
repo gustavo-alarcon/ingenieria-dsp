@@ -162,7 +162,8 @@ export class AndonService {
 
   addAndonProblemType(
     form: AndonProblemType,
-    user: User
+    user: User,
+    emailArray: string[]
   ): Observable<firebase.default.firestore.WriteBatch> {
     const date = new Date();
     const batch = this.afs.firestore.batch();
@@ -173,9 +174,10 @@ export class AndonService {
     const data: any = {
       id: qualityDocRef.id,
       name: form.name,
-      email: form.email,
+      // email: form.email,
       createdBy: user,
       createdAt: date,
+      emailList: emailArray
     };
     batch.set(qualityDocRef, data);
     return of(batch);
