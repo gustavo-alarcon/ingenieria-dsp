@@ -49,7 +49,7 @@
                                               </button>
                                                 <mat-hint>Presione ENTER para agregar</mat-hint>
                                             </mat-form-field>
-                                            <div role="list" *ngFor="let item of emailArray; let j = index">
+                                            <div role="list" *ngFor="let item of emailList; let j = index">
                                                 <div class="item-list">
                                                     <span>{{ item }}</span>
                                                     <span>
@@ -73,7 +73,7 @@
                                         </mat-form-field> -->
 
                                         <button type="submit" aria-label="saveDataDifusion" mat-button class="container-expansion2__form--btn" (click)="saveProblemType()" [disabled]="
-                                        emailArray.length < 1 || !problemTypeForm.valid
+                                        emailList.length < 1 || !problemTypeForm.valid
                                       ">
                                                 GUARDAR
                                         </button>
@@ -93,12 +93,12 @@
                                             </ng-container>
 
                                             <ng-container matColumnDef="email">
-                                                <th mat-header-cell *matHeaderCellDef class="table__cell theader">Email</th>
+                                                <th mat-header-cell *matHeaderCellDef class="table__cell theader">Lista de difusión</th>
 
                                                 <td mat-cell *matCellDef="let element" class="table__cell">
-                                                    <ul *ngFor="let item of element.emailList">
-                                                        {{item}}
-                                                    </ul>
+                                                    <div *ngFor="let item of element.emailList">
+                                                        {{item}};
+                                                    </div>
 
                                                 </td>
                                                 <!-- <td  *ngFor="let item of element.emailList" mat-cell class="table__cell"> {{ item }}
@@ -110,6 +110,10 @@
                                                     Accion
                                                 </th>
                                                 <td mat-cell *matCellDef="let element" class="table__cell">
+
+                                                    <button mat-icon-button (click)="editProblem(element)">
+                                                      <mat-icon style="color: #828282">edit</mat-icon>
+                                                    </button>
                                                     <button mat-icon-button aria-label="deletelistResult" (click)="deleteProblemType(element)">
                                                         <mat-icon style="color: #828282">delete</mat-icon>
                                                     </button>

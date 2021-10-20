@@ -6,6 +6,7 @@ import { EvaluationsService } from '../../../../../services/evaluations.service'
 import { EvaluationBroadcastList } from '../../../../../models/evaluations.model';
 import { take } from 'rxjs/operators';
 import { AndonService } from 'src/app/main/services/andon.service';
+import { AndonProblemType } from 'src/app/main/models/andon.model';
 
 @Component({
   selector: 'app-delete-broadcast-dialog',
@@ -18,18 +19,18 @@ export class DeleteBroadcastDialogComponent implements OnInit {
   loading$ = this.loading.asObservable();
   constructor(
           public dialogRef: MatDialogRef<DeleteBroadcastDialogComponent>,
-          @Inject(MAT_DIALOG_DATA) public data: EvaluationBroadcastList,
+          @Inject(MAT_DIALOG_DATA) public data: AndonProblemType,
           private andonService: AndonService,
           private snackbar: MatSnackBar,
     ) {}
 
   ngOnInit(): void {}
 
-  deleteBroadcastList(): void {
+  deleteAndonProblemType(): void {
     try {
       this.loading.next(false);
 
-      this.andonService.deleteListBroadcast(this.data.id).pipe(take(1)
+      this.andonService.deleteAndonProblemType(this.data.id).pipe(take(1)
         ).subscribe(batch => {
           batch.commit()
             .then(() => {
