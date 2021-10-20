@@ -58,7 +58,6 @@ export class ReportsComponent implements OnInit {
       map(([andons, search]) => {
         const searchTerm = search.toLowerCase().trim();
         let preFilterSearch: Andon[] = [...andons];
-console.log(andons)
         preFilterSearch = andons.filter((andon) => {
           return (
             String(andon.name).toLowerCase().includes(searchTerm) ||
