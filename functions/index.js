@@ -283,10 +283,10 @@ exports.alertAndonsOpen60minutes = functions.pubsub.schedule('every 60 minutes')
         return;
     }
     let url;
-    await admin.firestore().doc('/db/generalConfig').onSnapshot(val => {
+    admin.firestore().doc('/db/generalConfig').onSnapshot(val => {
         url = val.data()['endpoint'];
         snapshot.forEach((doc) => {
-            const andon = doc.data()
+            const andon = doc.data();
             const data = {
                 "id": andon.id,
                 "type": "andon",
@@ -296,7 +296,7 @@ exports.alertAndonsOpen60minutes = functions.pubsub.schedule('every 60 minutes')
                 "description": andon.description,
                 "emailList": andon.emailList.toString(),
                 "images": Object.values(andon.images).length > 0 ? Object.values(andon.images).join('@@') : ''
-            }
+            };
 
             const options = {
                 "method": "POST",
@@ -313,10 +313,10 @@ exports.alertAndonsOpen60minutes = functions.pubsub.schedule('every 60 minutes')
 
             gaxios.request(options)
                 .then(res2 => {
-                    console.log(`✉️ Andon data sent!`)
+                    console.log(`✉️ Andon data sent!`);
                 })
                 .catch(error => {
-                    console.log("Error: ")
+                    console.log("Error: ");
                     if (error.response) {
                         // The request was made and the server responded with a status code
                         // that falls out of the range of 2xx
@@ -333,7 +333,7 @@ exports.alertAndonsOpen60minutes = functions.pubsub.schedule('every 60 minutes')
                         console.log(error.message);
                     }
                     console.log(error.config);
-                })
+                });
         });
     });
     return;
