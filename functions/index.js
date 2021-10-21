@@ -2,7 +2,7 @@ const functions = require("firebase-functions");
 const admin = require('firebase-admin');
 // const { createUserSetClaims } = require('./functions/auth/create-user-claims');
 const gaxios = require('gaxios')
-    // const SENDGRID_APY_KEY = require('./keys.json').ferreyros_01
+// const SENDGRID_APY_KEY = require('./keys.json').ferreyros_01
 
 admin.initializeApp();
 admin.firestore().settings({ timestampsInSnapshots: true });
@@ -31,7 +31,7 @@ exports.googleChatBot = functions.https.onRequest((request, response) => {
 });
 
 
-exports.createUserSetClaims = functions.auth.user().onCreate(async(user) => {
+exports.createUserSetClaims = functions.auth.user().onCreate(async (user) => {
     functions.logger.info(`create user ${user.email} ${user.uid}`, { structuredData: true });
     const basics = {
         superuser: false,
@@ -56,7 +56,7 @@ exports.createUserSetClaims = functions.auth.user().onCreate(async(user) => {
     }
 });
 
-exports.setClaimsAsTechnician = functions.https.onCall(async(data, context) => {
+exports.setClaimsAsTechnician = functions.https.onCall(async (data, context) => {
     functions.logger.info(`User ${data.uid} claims updated`, { structuredData: true });
     const uid = data.uid;
     const roles = {
@@ -94,7 +94,7 @@ exports.setClaimsAsTechnician = functions.https.onCall(async(data, context) => {
     }
 });
 
-exports.setClaimsAsAdministrator = functions.https.onCall(async(data, context) => {
+exports.setClaimsAsAdministrator = functions.https.onCall(async (data, context) => {
     functions.logger.info(`User ${data.uid} claims updated`, { structuredData: true });
     const uid = data.uid;
     const roles = {
@@ -132,7 +132,7 @@ exports.setClaimsAsAdministrator = functions.https.onCall(async(data, context) =
     }
 });
 
-exports.setClaimsAsSuperuser = functions.https.onCall(async(data, context) => {
+exports.setClaimsAsSuperuser = functions.https.onCall(async (data, context) => {
     functions.logger.info(`User ${data.uid} claims updated`, { structuredData: true });
     const uid = data.uid;
     const roles = {
@@ -273,10 +273,78 @@ exports.setClaimsAsSuperuser = functions.https.onCall(async(data, context) => {
 //     }
 //     )
 
-exports.sendAndonToEndpoint = functions.firestore.document(`db/ferreyros/andon/{andonId}`)
-    .onWrite(async(event) => {
-        const andon = event.after.data();
+exports.alertAndonsOpen60minutes = functions.pubsub.schedule('every 60 minutes').onRun(async (context) => {
 
+    functions.logger.info({ log: 'alertAndoneOpen60minutes!' }, { structuredData: true });
+    const andon = await admin.firestore().collection('db/ferreyros/andon');
+    const snapshot = await andon.where('state', '==', 'stopped').get();
+    if (snapshot.empty) {
+        console.log('no matching documents andons');
+        return;
+    }
+    let url;
+    admin.firestore().doc('/db/generalConfig').onSnapshot(val => {
+        url = val.data()['endpoint'];
+        snapshot.forEach((doc) => {
+            const andon = doc.data();
+            const data = {
+                "id": andon.id,
+                "type": "andon",
+                "otChild": andon.otChild,
+                "bay": andon.name,
+                "problemType": andon.problemType,
+                "description": andon.description,
+                "emailList": andon.emailList.toString(),
+                "images": Object.values(andon.images).length > 0 ? Object.values(andon.images).join('@@') : ''
+            };
+
+            const options = {
+                "method": "POST",
+                "url": url,
+                "port": null,
+                "headers": {
+                    "authorization": `*`,
+                    "content-type": "application/json"
+                },
+                data: data
+            };
+
+            console.log("Just before sending email: ", data);
+
+            gaxios.request(options)
+                .then(res2 => {
+                    console.log(`✉️ Andon data sent!`);
+                })
+                .catch(error => {
+                    console.log("Error: ");
+                    if (error.response) {
+                        // The request was made and the server responded with a status code
+                        // that falls out of the range of 2xx
+                        console.log(error.response.data);
+                        console.log(error.response.status);
+                        console.log(error.response.headers);
+                    } else if (error.request) {
+                        // The request was made but no response was received
+                        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                        // http.ClientRequest in node.js
+                        console.log(error.request);
+                    } else {
+                        // Something happened in setting up the request that triggered an Error
+                        console.log(error.message);
+                    }
+                    console.log(error.config);
+                });
+        });
+    });
+    return;
+});
+
+
+
+
+exports.sendAndonToEndpoint = functions.firestore.document(`db/ferreyros/andon/{andonId}`)
+    .onWrite(async (event) => {
+        const andon = event.after.data();
         let url;
         await admin.firestore().doc('/db/generalConfig').onSnapshot(val => {
             url = val.data()['endpoint'];
@@ -393,7 +461,7 @@ exports.updateSendAndonToEndpoint = functions.firestore.document(`db/ferreyros/a
     });
 
 exports.sendPreevaluationToEndpoint = functions.firestore.document(`db/ferreyros/evaluations/{evalId}`)
-    .onUpdate(async(event) => {
+    .onUpdate(async (event) => {
         let eval = event.after.data();
         if ((eval.internalStatus == "finalized") &&
             ((eval.result == "fuera de servicio") || (eval.result == "ampliacion") || (eval.result.toLowerCase() == "dsr"))) {
@@ -423,7 +491,7 @@ exports.sendPreevaluationToEndpoint = functions.firestore.document(`db/ferreyros
                     "comments": eval.comments ? eval.comments : '-',
                     "observations": eval.observations ? eval.observations : '-',
                     "extends": eval.extends ? eval.extends.join('@@') : '',
-                    "images": [eval.resultImage1,eval.resultImage2].join('@@'),
+                    "images": [eval.resultImage1, eval.resultImage2].join('@@'),
                     "emailList": eval.emailList ? eval.emailList.toString() : ''
                 }
 
@@ -469,7 +537,7 @@ exports.sendPreevaluationToEndpoint = functions.firestore.document(`db/ferreyros
     });
 
 exports.sendQualityToEndpoint = functions.firestore.document(`db/ferreyros/quality/{qualityId}`)
-    .onUpdate(async(event) => {
+    .onUpdate(async (event) => {
         let quality = event.after.data();
         if (quality.state == "process") {
             console.log("receiving request");
@@ -624,7 +692,7 @@ exports.sendQualityToEndpoint = functions.firestore.document(`db/ferreyros/quali
 
 
 exports.sendQualityOnCreate = functions.firestore.document(`db/ferreyros/quality/{qualityId}`)
-    .onCreate(async(event) => {
+    .onCreate(async (event) => {
         const quality = event.data();
 
         let url;
@@ -644,7 +712,7 @@ exports.sendQualityOnCreate = functions.firestore.document(`db/ferreyros/quality
                 "packageNumber": quality.packageNumber ? quality.packageNumber : '',
                 "horometer": quality.componentHourMeter ? quality.componentHourMeter : '',
                 "miningOperation": quality.miningOperation ? quality.miningOperation : '',
-                
+
                 "details": quality.enventDetail ? quality.enventDetail : (quality.question1 + '. ' +
                     quality.question2 + '. ' +
                     quality.question3 + '. ' +
@@ -696,8 +764,8 @@ exports.sendQualityOnCreate = functions.firestore.document(`db/ferreyros/quality
     });
 
 
-exports.sendBudget = functions.https.onCall(async(data, context) => {
-    
+exports.sendBudget = functions.https.onCall(async (data, context) => {
+
     console.log(data);
     let url;
     await admin.firestore().doc('/db/generalConfig').onSnapshot(val => {
