@@ -17,7 +17,7 @@ import {
 import { AngularFireStorage } from '@angular/fire/storage';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -40,26 +40,66 @@ export class EvaluationsService {
   /**
    * Get all documents from evaluations collection
    */
-
   //where('createAt','>=',start)
+
   getAllEvaluations(start?: Date, end?: Date): Observable<Evaluation[]> {
-    
-    if (start && end)
+    if (start && end){
+      return this.afs
+          .collection<Evaluation>(`/db/ferreyros/evaluations`, (ref) =>
+            ref.where('createdAt', '>=', start).where('createdAt', '<=', end)
+          )
+          .valueChanges()
+          .pipe(
+            map((list) => {
+              const data: Evaluation[] = [];
+              list.forEach(el => {
+                this.getEvaluationInquiryById(el.id).subscribe(
+                  (res) => {
+                    let inquiry;
+                    res.forEach((valor, index, arr) => {
+                      inquiry = {
+                        ...inquiry,
+                      ['question' + index]: valor.inquiry,
+                      ['answer' + index]: valor.answer,
+                      };
+                    });
+                    const arrayJoin = {
+                      ...el,
+                      inquiries: inquiry
+                    };
+                    data.push(arrayJoin);
+                });
+              });
+
+              return data.sort(
+                (a, b) => b['createdAt']['seconds'] - a['createdAt']['seconds']
+              );
+            })
+          );
+    }
+    else{
       return this.afs
         .collection<Evaluation>(`/db/ferreyros/evaluations`, (ref) =>
-          ref.where('createdAt', '>=', start).where('createdAt', '<=', end)
+          ref.orderBy('createdAt', 'asc')
         )
-        .valueChanges()
-        .pipe(
-          map((list) => {
-            return list.sort(
-              (a, b) => b['createdAt']['seconds'] - a['createdAt']['seconds']
-            );
-          })
-        );
-    
+        .valueChanges();
+    }
+  }
+
+  getAllEvaluationInquiry(): Observable<EvaluationInquiry[]> {
+    return this.afs.collectionGroup<EvaluationInquiry>('inquiries',(ref) =>
+    ref.orderBy('createdAt', 'desc')).valueChanges();
+  }
+
+  getEvaluationInquiryById(idEvaluation: string): Observable<EvaluationInquiry[]>{
+    return this.afs.collection<EvaluationInquiry>(`/db/ferreyros/evaluations/${idEvaluation}/inquiries`)
+    .valueChanges()
+    .pipe(take(1));
+  }
+
+  getAllEvaluationsOrderByAsc(): Observable<Evaluation[]> {
     return this.afs
-      .collection<Evaluation>(`/db/ferreyros/evaluations`, (ref) =>
+        .collection<Evaluation>(`/db/ferreyros/evaluations`, (ref) =>
         ref.orderBy('createdAt', 'asc')
       )
       .valueChanges();
