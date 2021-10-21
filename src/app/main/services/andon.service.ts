@@ -89,13 +89,53 @@ export class AndonService {
   }
 
   /**
+   * update the evaluation entry
+   * @param {string} entryId - id data
+   * @param {Andon} form - Form data passed on andon edit
+   * @param {string} imges - imgs
+   * @param {User} user - imgs
+   */
+   updateReasignAndOn(
+    entryId: string,
+    form,
+    user: User,
+    imagesObj,
+    emailArray
+  ): Observable<firebase.default.firestore.WriteBatch> {
+
+    // create batch
+    const batch = this.afs.firestore.batch();
+    // create reference for document in evaluation entries collection
+    const andonDocRef = this.afs.firestore.doc(`/db/ferreyros/andon/${entryId}`);
+
+    // Structuring the data model
+    const data: any = {
+      createdAt: new Date(),
+      reassignedAt: new Date(),
+      reassignedBy: user,
+      reportDate: new Date(),
+      workShop: form.name.workShop,
+      name: form.name.name,
+      problemType: form.problemType,
+      description: form.description,
+      images: imagesObj,
+      reportUser: user.name,
+      state: 'stopped', // => stopped //retaken
+      emailList: emailArray
+    };
+
+    batch.update(andonDocRef, data);
+    return of(batch);
+  }
+
+  /**
    * Get all documents from evaluations collection
    */
   getAllAndon(): Observable<Andon[]> {
     return this.afs
-      .collection<Andon>(`db/ferreyros/andon`, (ref) =>
-        ref.orderBy('createdAt', 'desc')
-      )
+    .collection<Andon>(`db/ferreyros/andon`, (ref) =>
+    ref.orderBy('createdAt', 'desc')
+    )
       .valueChanges();
   }
 

@@ -9,10 +9,11 @@ import { ReturnDialogComponent } from './dialogs/return-dialog/return-dialog.com
 import { DeleteDialogComponent } from './dialogs/delete-dialog/delete-dialog.component';
 import { Ng2ImgMaxModule } from 'ng2-img-max';
 import { ComponentsModule } from 'src/app/shared/components/components.module';
+import { ReasignDialogComponent } from './dialogs/reasign-dialog/reasign-dialog.component';
 
 
 @NgModule({
-  declarations: [ReportsComponent, DetailsDialogComponent, ReturnDialogComponent, DeleteDialogComponent],
+  declarations: [ReportsComponent, DetailsDialogComponent, ReturnDialogComponent, DeleteDialogComponent, ReasignDialogComponent],
   imports: [
     CommonModule,
     ReportsRoutingModule,

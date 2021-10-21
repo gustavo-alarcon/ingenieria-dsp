@@ -30,6 +30,10 @@
                 <mat-icon>delete</mat-icon>
                 Borrar
               </button>
+              <button class="w3-small" mat-menu-item (click)="reasign(item)">
+                <mat-icon>edit</mat-icon>
+                Reasignar
+              </button>
             </mat-menu>
 
             <button mat-icon-button [matMenuTriggerFor]="rawMenu">
