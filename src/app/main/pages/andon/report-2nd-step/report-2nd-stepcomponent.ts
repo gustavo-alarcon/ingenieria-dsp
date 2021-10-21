@@ -19,7 +19,7 @@ import { AndonService } from '../../../services/andon.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Ng2ImgMaxService } from 'ng2-img-max';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { take, tap, finalize } from 'rxjs/operators';
+import { take, tap, finalize, map, startWith } from 'rxjs/operators';
 import { Andon, AndonProblemType } from './../../../models/andon.model';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { AuthService } from '../../../../auth/services/auth.service';
@@ -38,7 +38,8 @@ import { MatChipInputEvent } from '@angular/material/chips';
   styleUrls: ['./report-2nd-step.component.scss'],
 })
 export class report2ndStepComponent
-  implements OnInit, OnDestroy, AfterViewInit {
+  implements OnInit, OnDestroy, AfterViewInit
+{
   loading = new BehaviorSubject<boolean>(false);
   loading$ = this.loading.asObservable();
   reportForm: FormGroup;
@@ -50,7 +51,7 @@ export class report2ndStepComponent
   date: string = new Date().toISOString();
 
   uploadPercent$: Observable<number>;
-  filteredOptions: Observable<string[]>;
+  filteredOptions: Observable<AndonProblemType['emailList']>;
 
   nameBahia: string;
   workShop: string;
@@ -66,10 +67,15 @@ export class report2ndStepComponent
   subscriptions = new Subscription();
   isMobile = false;
 
+
+  emailList: Observable<AndonProblemType[]>;
+
+
   //Chip email
   emailArray: string[] = [];
   filteredBroadcast$: Observable<AndonBroadcastList[]>;
   broadcastControl = new FormControl();
+  emailControl = new FormControl();
   listBroadcast: string[] = [];
   // chips
   visible = true;
@@ -99,7 +105,6 @@ export class report2ndStepComponent
 
     this.currentId = this.otChild.toString();
     console.log([this.workShop, this.nameBahia, this.otChild]);
-
   }
 
   ngOnInit(): void {
@@ -147,11 +152,15 @@ export class report2ndStepComponent
         return res;
       })
     );
+    
 
     this.loading.next(false);
+
+
   }
 
-  ngAfterViewInit(): void { }
+
+  ngAfterViewInit(): void {}
 
   ngOnDestroy(): void {
     this.subscriptions.unsubscribe();
@@ -180,7 +189,8 @@ export class report2ndStepComponent
             this.otChild,
             this.user,
             imagesObj,
-            this.emailArray)
+            this.emailArray
+          )
           .pipe(take(1))
           .subscribe((res) => {
             res
@@ -302,7 +312,9 @@ export class report2ndStepComponent
     this.broadcastControl.setValue(null);
   }
   selectedBroadcast(event: MatAutocompleteSelectedEvent): void {
+    // console.log(event);
     event.option.value.emailList.map((el) => {
+      // console.log(el);
       this.emailArray.push(el);
     });
 
@@ -310,9 +322,21 @@ export class report2ndStepComponent
     this.broadcastControl.setValue(null);
   }
 
-  onClickProblemType(item): void {
-    const email = item.email;
 
-    this.emailArray.push(email);
+
+  onClickProblemType(item): void {
+    console.log(item);
+    const email = item.emailList;
+    if (email) {
+      email.forEach( e =>{
+        this.emailArray.push(e);
+      })
+     
+    } else {
+      this.snackbar.open('🚨  No existe lista de difusión para este tipo de problema', 'Aceptar', {
+        duration: 6000,
+
+      });
+    }
   }
 }

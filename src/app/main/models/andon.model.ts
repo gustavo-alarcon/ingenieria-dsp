@@ -53,5 +53,5 @@ export interface AndonProblemType {
   // email: string;
   createdAt: Date;
   createdBy: User;
-  emailList:string[];
+  emailList:Array<string>;
 }
