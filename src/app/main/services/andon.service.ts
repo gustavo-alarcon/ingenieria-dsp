@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { User } from '../models/user-model';
-import { AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestore, DocumentReference } from '@angular/fire/firestore';
 import { Observable, of } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 import { AngularFireStorage } from '@angular/fire/storage';
@@ -11,6 +11,7 @@ import {
 } from '../models/andon.model';
 import * as firebase from 'firebase/app';
 import { AndonBroadcastList } from '../models/andon.model';
+import { stringify } from 'querystring';
 
 @Injectable({
   providedIn: 'root',
@@ -202,7 +203,8 @@ export class AndonService {
 
   addAndonProblemType(
     form: AndonProblemType,
-    user: User
+    user: User,
+    emailList: string[]
   ): Observable<firebase.default.firestore.WriteBatch> {
     const date = new Date();
     const batch = this.afs.firestore.batch();
@@ -213,9 +215,10 @@ export class AndonService {
     const data: any = {
       id: qualityDocRef.id,
       name: form.name,
-      email: form.email,
+      // email: form.email,
       createdBy: user,
       createdAt: date,
+      emailList: emailList  
     };
     batch.set(qualityDocRef, data);
     return of(batch);
@@ -390,6 +393,27 @@ export class AndonService {
     batch.update(evaluationDocRef, data);
 
     return of(batch);
+  }
+
+  updateProblemType(
+    id: string,
+    form: AndonBroadcastList,
+    arrayEmail: string[]
+  ):Observable<firebase.default.firestore.WriteBatch> {
+    const batch = this.afs.firestore.batch();
+    const docRef: DocumentReference = this.afs.firestore.doc(
+      `/db/generalConfig/andonProblemType/${id}`
+    );
+
+    const data: any = {
+      id: docRef.id,
+      name: form.name,
+      emailList: arrayEmail,
+    };
+
+    batch.update(docRef, data);
+    return of(batch);
+
   }
 
   /**

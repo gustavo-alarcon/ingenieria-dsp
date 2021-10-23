@@ -14,6 +14,7 @@ import { DeleteBroadcastDialogComponent } from './dialogs/delete-broadcast-dialo
 import { AddBroadcastDialogComponent } from './dialogs/add-broadcast-dialog/add-broadcast-dialog.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { EditProblemTypeComponent } from './dialogs/edit-problem-type/edit-problem-type.component';
 
 @Component({
   selector: 'app-settings',
@@ -41,10 +42,10 @@ export class SettingsComponent implements OnInit, OnDestroy {
   broadcast$: Observable<AndonBroadcastList[]>;
   broadcastListArray: AndonBroadcastList[] = [];
   broadcastFormArray = new FormArray([]);
-
+  emailList: string[] = [];
   
    
-  historyMobilDataSource = new MatTableDataSource<any[]>();
+  historyMobilDataSource = new MatTableDataSource<AndonProblemType>();
   historyMobilDisplayedColumns: string[] = [
     'name',
     'email',
@@ -57,7 +58,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.historyMobilDataSource.paginator = paginator;
   }
 
-  problemType$: Observable<any[]>;
+  problemType$: Observable<AndonProblemType[]>;
   
   problemTypeForm: FormGroup;
 
@@ -153,7 +154,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
     this.problemTypeForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [
-        Validators.required,
         Validators.pattern(/^[\w]{1,}[\w.+-]{0,}@[\w-]{1,}([.][a-zA-Z]{2,}|[.][\w-]{2,}[.][a-zA-Z]{2,})$/)
         ]],
     });
@@ -161,44 +161,87 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
 
 
-  deleteProblemType(item: any): void{
-    const index = item.id;
-    try {
-        const resp = this.andonService.deleteAndonProblemType(
-        index
-        );
-        this.subscription.add(
-          resp.subscribe((batch) => {
-            if (batch) {
-              batch
-                .commit()
-                .then(() => {
-                  this.snackbar.open('✅ Se borrado correctamente!', 'Aceptar', {
-                    duration: 6000,
-                  });
-                })
-                .catch((err) => {
-                  this.snackbar.open('🚨 Hubo un error al crear!', 'Aceptar', {
-                    duration: 6000,
-                  });
-                });
-            }
-          })
-        );
+  deleteProblemType(problemType: AndonProblemType): void{
 
-    } catch (error) {
-      console.log(error);
-      this.loading.next(false);
-    }
+    this.dialog.open(DeleteBroadcastDialogComponent, {
+      maxWidth: 500,
+      width: '90vw',
+      data: problemType,
+    });
+    // const index = item.id;
+    // try {
+    //     const resp = this.andonService.deleteAndonProblemType(
+    //     index
+    //     );
+    //     this.subscription.add(
+    //       resp.subscribe((batch) => {
+    //         if (batch) {
+    //           batch
+    //             .commit()
+    //             .then(() => {
+    //               this.snackbar.open('✅ Se borrado correctamente!', 'Aceptar', {
+    //                 duration: 6000,
+    //               });
+    //             })
+    //             .catch((err) => {
+    //               this.snackbar.open('🚨 Hubo un error al crear!', 'Aceptar', {
+    //                 duration: 6000,
+    //               });
+    //             });
+    //         }
+    //       })
+    //     );
+
+    // } catch (error) {
+    //   console.log(error);
+    //   this.loading.next(false);
+    // }
   }
 
+  editProblem(problem: AndonProblemType): void {
+    this.dialog.open(EditProblemTypeComponent, {
+      maxWidth: 500,
+      width: '90vw',
+      data: problem,
+    });
+  }
+
+  addEmail(): void {
+
+    if (this.problemTypeForm.get('name').invalid) {
+      this.problemTypeForm.markAllAsTouched();
+      return;
+    }
+ 
+    const value = { ...this.problemTypeForm.value };
+
+    this.emailList.unshift(value.email);
+    this.resetEmail();
+  }
+
+  resetEmail(): void {
+    this.problemTypeForm.get('email').reset();
+    
+  }
+
+  
+  deleteEmailArray(index: number): void {
+    this.emailList.splice(index, 1);
+  }
   saveProblemType(): void{
     try {
-
+      this.loading.next(true)    
+       
+      if(this.problemTypeForm.invalid){
+        this.problemTypeForm.markAllAsTouched();
+        this.loading.next(false)
+        return
+      }
       if (this.problemTypeForm.valid) {
         const resp = this.andonService.addAndonProblemType(
           this.problemTypeForm.value,
-          this.user
+          this.user,
+          this.emailList
         );
         //this.loading.next(true);
         this.subscription.add(
@@ -211,6 +254,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
                   this.snackbar.open('✅ Se guardo correctamente!', 'Aceptar', {
                     duration: 6000,
                   });
+                  this.emailList = [];
                   this.problemTypeForm.reset();
                 })
                 .catch((err) => {

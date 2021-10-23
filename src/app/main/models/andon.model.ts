@@ -20,6 +20,7 @@ export interface Andon {
   comments?: string;
   returnUser?: string;
   emailList?: Array<string>;
+  // emailArray?:String[];
 
 }
 
@@ -49,7 +50,8 @@ export interface AndonBroadcastList {
 export interface AndonProblemType {
   id: string;
   name: string;
-  email: string;
+  // email: string;
   createdAt: Date;
   createdBy: User;
+  emailList:Array<string>;
 }
