@@ -61,7 +61,7 @@ export class ReasignDialogComponent implements OnInit {
   
   nameBahia: string;
   workShop: string;
-
+  initBbahia;
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: Andon,
     public dialogRef: MatDialogRef<DetailsDialogComponent>,
@@ -70,9 +70,19 @@ export class ReasignDialogComponent implements OnInit {
     private andonService: AndonService,
     private breakpoint: BreakpointObserver,
     public authService: AuthService
-  ) { }
+  ) { 
+
+     this.initBbahia = {
+      name : this.data.name,
+      workShop : this.data.workShop
+    };
+
+    //this.displayBay(bahia); 
+  }
 
   ngOnInit(): void {
+    this.initForm();
+
     this.subscriptions.add(
       this.breakpoint
         .observe([Breakpoints.HandsetPortrait])
@@ -84,6 +94,7 @@ export class ReasignDialogComponent implements OnInit {
           }
         })
     );
+
 
     this.subscriptions.add(
       this.authService.user$.subscribe((user) => {
@@ -97,8 +108,6 @@ export class ReasignDialogComponent implements OnInit {
         }
       })
     );
-
-    this.initForm();
 
     this.nameBahias$ = combineLatest(
       this.andonService.getAllAndonSettingsListBahias().pipe(
@@ -153,14 +162,10 @@ export class ReasignDialogComponent implements OnInit {
     this.reportForm = this.fb.group(
       {
         name: ['', [Validators.required, noSelection()]],
-        problemType: ['', Validators.required],
+        problemType: [this.data.problemType, Validators.required],
         description: ['']
       }
     );
-  }
-
-  report(): void{
-
   }
 
   onClickBahia(item: any): void{

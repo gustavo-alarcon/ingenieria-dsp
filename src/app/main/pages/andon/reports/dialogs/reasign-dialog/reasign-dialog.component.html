@@ -41,9 +41,10 @@
                 autocomplete="off">
             <mat-autocomplete #autoBay="matAutocomplete" [displayWith]="displayBay">
                 <mat-option *ngFor="let item of nameBahias$ | async" [value]="item" 
-                (click)="onClickBahia(item)" >
+                (click)="onClickBahia(item)" >  
                     {{item.name}} - <span style="color: #8f8a8a;">{{item.workShop}}</span>
                 </mat-option>
+                <!--[displayWith]="displayBay"  -->
             </mat-autocomplete>
             <mat-error *ngIf="reportForm.get('name').errors?.noSelection && !reportForm.get('name').errors?.required">
                 {{reportForm.get('name')?.errors?.noSelection}}
