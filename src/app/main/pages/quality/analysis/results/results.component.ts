@@ -311,6 +311,7 @@ export class ResultsComponent implements OnInit {
       'Pregunta 4',
       'Proceso',
       'Causa inmediata',
+      'Causa basica',
       'Especialista',
       'Nivel de riesgo',
       'Responsable del evento',
@@ -350,10 +351,19 @@ export class ResultsComponent implements OnInit {
         element.question4 ? element.question4 : '-',
         element.analysis ? element.analysis['process'] : '-',
         element.analysis ? element.analysis['causeFailure'] : '-',
+        element.analysis ? element.analysis['basicCause'] : '-',
         element.specialist ? element.specialist['name'] : '-',
         element.evaluationAnalysisName ? element.evaluationAnalysisName : '-',
-        element.analysis ? (element.analysis.responsable ? element.analysis.responsable : '-') : '-',
-        element.analysis ? (element.analysis.bahia ? element.analysis.bahia : '-') : '-',
+        element.analysis
+          ? element.analysis.responsable
+            ? element.analysis.responsable
+            : '-'
+          : '-',
+        element.analysis
+          ? element.analysis.bahia
+            ? element.analysis.bahia
+            : '-'
+          : '-',
         element.createdBy ? element.createdBy.name : '',
         element.state ? element.state : '',
       ];
