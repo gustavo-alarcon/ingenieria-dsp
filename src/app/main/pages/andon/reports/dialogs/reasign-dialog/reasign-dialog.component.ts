@@ -1,13 +1,42 @@
-import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Inject,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Andon, AndonBroadcastList, AndonListBahias, AndonProblemType } from 'src/app/main/models/andon.model';
+import {
+  Andon,
+  AndonBroadcastList,
+  AndonListBahias,
+  AndonProblemType,
+} from 'src/app/main/models/andon.model';
 import { DetailsDialogComponent } from '../details-dialog/details-dialog.component';
 import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
-import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 import { AndonService } from 'src/app/main/services/andon.service';
-import { debounceTime, distinctUntilChanged, map, startWith, take, tap } from 'rxjs/operators';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  startWith,
+  take,
+  tap,
+} from 'rxjs/operators';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import {
+  MatAutocomplete,
+  MatAutocompleteSelectedEvent,
+} from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { AuthService } from 'src/app/auth/services/auth.service';
@@ -18,7 +47,7 @@ import { Workshop } from '../../../../../models/evaluations.model';
 @Component({
   selector: 'app-reasign-dialog',
   templateUrl: './reasign-dialog.component.html',
-  styleUrls: ['./reasign-dialog.component.scss']
+  styleUrls: ['./reasign-dialog.component.scss'],
 })
 export class ReasignDialogComponent implements OnInit {
   loading = new BehaviorSubject<boolean>(false);
@@ -58,10 +87,13 @@ export class ReasignDialogComponent implements OnInit {
   imagesUpload: string[] = [''];
   date: string = new Date().toISOString();
   counter = 0;
-  
+
   nameBahia: string;
   workShop: string;
   initBbahia;
+
+  bayList: AndonListBahias[] = [];
+
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: Andon,
     public dialogRef: MatDialogRef<DetailsDialogComponent>,
@@ -70,14 +102,13 @@ export class ReasignDialogComponent implements OnInit {
     private andonService: AndonService,
     private breakpoint: BreakpointObserver,
     public authService: AuthService
-  ) { 
-
-     this.initBbahia = {
-      name : this.data.name,
-      workShop : this.data.workShop
+  ) {
+    this.initBbahia = {
+      name: this.data.name,
+      workShop: this.data.workShop,
     };
 
-    //this.displayBay(bahia); 
+    //this.displayBay(bahia);
   }
 
   ngOnInit(): void {
@@ -94,7 +125,6 @@ export class ReasignDialogComponent implements OnInit {
           }
         })
     );
-
 
     this.subscriptions.add(
       this.authService.user$.subscribe((user) => {
@@ -131,11 +161,20 @@ export class ReasignDialogComponent implements OnInit {
         startWith(''),
         debounceTime(300),
         distinctUntilChanged(),
-        map(value => typeof value === 'string' ? value.toLowerCase() : value['name'].toLowerCase())
+        map((value) =>
+          typeof value === 'string'
+            ? value.toLowerCase()
+            : value['name'].toLowerCase()
+        )
       )
     ).pipe(
+      tap(([list, value]) => {
+        this.bayList = list;
+      }),
       map(([list, value]) => {
-        const filteredList = list.filter(element => element['name'].toLowerCase().includes(value));
+        const filteredList = list.filter((element) =>
+          element['name'].toLowerCase().includes(value)
+        );
         return filteredList;
       })
     );
@@ -156,19 +195,30 @@ export class ReasignDialogComponent implements OnInit {
     this.loading.next(true);
     this.pathStorage = `andon/${this.currentId}/pictures/${this.currentId}`;
 
+    this.presetBahia(this.data.name, this.data.workShop);
   }
 
   initForm(): void {
-    this.reportForm = this.fb.group(
-      {
-        name: ['', [Validators.required, noSelection()]],
-        problemType: [this.data.problemType, Validators.required],
-        description: ['']
-      }
+    this.reportForm = this.fb.group({
+      name: ['', [Validators.required, noSelection()]],
+      problemType: [this.data.problemType, Validators.required],
+      description: [this.data.description],
+    });
+  }
+
+  presetBahia(bahia: string, workshop: string): void {
+    this.subscriptions.add(
+      this.andonService
+        .getBay(bahia, workshop)
+        .subscribe((res: AndonListBahias[]) => {
+          if (res.length > 0) {
+            this.reportForm.get('name').setValue(res[0]);
+          }
+        })
     );
   }
 
-  onClickBahia(item: any): void{
+  onClickBahia(item: any): void {
     this.nameBahia = item.name;
     this.workShop = item.Workshop;
   }
@@ -177,7 +227,7 @@ export class ReasignDialogComponent implements OnInit {
     return bay ? bay['name'] + ' - ' + bay['workShop'] : '';
   }
 
-  updateAndon(): void{
+  updateAndon(): void {
     try {
       this.loading.next(true);
       if (this.reportForm.invalid) {
@@ -198,7 +248,8 @@ export class ReasignDialogComponent implements OnInit {
             this.reportForm.value,
             this.user,
             imagesObj,
-            this.emailArray)
+            this.emailArray
+          )
           .pipe(take(1))
           .subscribe((res) => {
             res
@@ -224,10 +275,9 @@ export class ReasignDialogComponent implements OnInit {
       });
       this.loading.next(false);
     }
-
   }
 
-  sendEmail(email: Array<string> ): void{
+  sendEmail(email: Array<string>): void {
     //console.log('send email ', email)
   }
 
@@ -247,7 +297,7 @@ export class ReasignDialogComponent implements OnInit {
     }
   }
 
-  async deleteImageAndon(item,index): Promise<void>{
+  async deleteImageAndon(item, index): Promise<void> {
     this.imageArray.splice(index, 1);
 
     await this.andonService.deleteImage(item);
@@ -306,12 +356,12 @@ export class ReasignDialogComponent implements OnInit {
 
     this.emailArray.push(email);
   }
-
 }
 
 export function noSelection(): ValidatorFn {
   return (control: AbstractControl): { noSelection: string } | null => {
     return typeof control.value === 'object'
-      ? null : { noSelection: 'Seleccionar una bahía de la lista' };
-  }
+      ? null
+      : { noSelection: 'Seleccionar una bahía de la lista' };
+  };
 }

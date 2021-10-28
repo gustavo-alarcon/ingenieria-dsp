@@ -542,4 +542,9 @@ export class AndonService {
     batch.delete(broadcastDocRef);
     return of(batch);
   }
+
+  getBay(bay: string, workshop: string): Observable<AndonListBahias[]> {
+    return this.afs.collection<AndonListBahias>(`/db/generalConfig/andonListBahias`, ref => ref.where('name', '==', bay).where('workShop', '==', workshop)).valueChanges();
+  }
 }
+
