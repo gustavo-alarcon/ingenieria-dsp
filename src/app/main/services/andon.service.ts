@@ -145,7 +145,7 @@ export class AndonService {
     return this.afs
       .collection<AndonProblemType>(
         `/db/generalConfig/andonProblemType`,
-        (ref) => ref.orderBy('createdAt', 'asc')
+        (ref) => ref.orderBy('name', 'asc')
       )
       .valueChanges();
   }
@@ -196,7 +196,7 @@ export class AndonService {
   return this.afs
     .collection<AndonProblemType>(
       `/db/generalConfig/andonProblemType`,
-      (ref) => ref.orderBy('createdAt', 'asc')
+      (ref) => ref.orderBy('name', 'asc')
     )
     .valueChanges();
 }
