@@ -1,0 +1,51 @@
+<h2 mat-dialog-title>
+    <div class="container-header">
+        <div class="container-title">
+            <mat-icon class="icon">edit</mat-icon>
+            <h3 class="title">Editar</h3>
+        </div>
+        <button mat-icon-button mat-dialog-close>
+        <mat-icon style="color: gray">close</mat-icon>
+      </button>
+    </div>
+    <mat-divider></mat-divider>
+</h2>
+
+<mat-dialog-content>
+    <form [formGroup]="editFormGroup">
+        <div class="main--wapper">
+            <div class="main--form">
+                <mat-form-field appearance="outline">
+                    <mat-label>Nombre</mat-label>
+                    <input matInput type="text" formControlName="name" />
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-label>Escribir</mat-label>
+                    <input matInput type="text" placeholder="email" formControlName="emailList" (keyup.enter)="addEmail()" />
+                    <button mat-button matSuffix mat-icon-button>
+              <mat-icon (click)="resetEmail()">close</mat-icon>
+            </button>
+                    <mat-hint>Presione ENTER para agregar</mat-hint>
+                </mat-form-field>
+                <div class="item-list" *ngFor="let item of email; let i = index">
+                    <ul>
+                        <li>
+                            <span>{{ item }}</span>
+                            <button mat-icon-button aria-label="deletelistResult" class="container-diffusion__btn" (click)="deleteEmail(i)">
+                  <mat-icon style="color: #ff2d2d">delete</mat-icon>
+                </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close>
+      CERRAR
+    </button>
+    <button (click)="saveChanges()" type="submit" mat-raised-button color="primary" [disabled]="email.length < 1 || !editFormGroup.valid">
+      GUARDAR
+    </button>
+</mat-dialog-actions>

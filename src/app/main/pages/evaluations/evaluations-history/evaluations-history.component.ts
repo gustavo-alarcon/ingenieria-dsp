@@ -6,7 +6,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { Evaluation, Workshop } from '../../../models/evaluations.model';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import { EvaluationsService } from '../../../services/evaluations.service';
-import { debounceTime, distinctUntilChanged, map, startWith, tap } from 'rxjs/operators';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  startWith,
+  tap,
+} from 'rxjs/operators';
 import { HistoryEditDialogComponent } from './dialogs/history-edit-dialog/history-edit-dialog.component';
 import { HistoryDeleteDialogComponent } from './dialogs/history-delete-dialog/history-delete-dialog.component';
 import { HistoryImageDialogComponent } from './dialogs/history-image-dialog/history-image-dialog.component';
@@ -27,10 +33,9 @@ import { DatePipe } from '@angular/common';
   selector: 'app-evaluations-history',
   templateUrl: './evaluations-history.component.html',
   styleUrls: ['./evaluations-history.component.scss'],
-  providers: [DatePipe]
+  providers: [DatePipe],
 })
 export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
-
   evaluation$: Observable<Evaluation[]>;
 
   historyDataSource = new MatTableDataSource<Evaluation>();
@@ -78,7 +83,7 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
     { status: 'processed', name: 'En proceso' },
     { status: 'finalized', name: 'Finalizado' },
     { status: 'consultation', name: 'Consulta' },
-  ]
+  ];
 
   subscriptions = new Subscription();
   isMobile = false;
@@ -89,18 +94,20 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
     private evaltService: EvaluationsService,
     public authService: AuthService,
     private miDatePipe: DatePipe
-  ) { }
+  ) {}
 
   ngOnInit(): void {
-    this.subscriptions.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
-      .subscribe(res => {
-        if (res.matches) {
-          this.isMobile = true;
-        } else {
-          this.isMobile = false;
-        }
-      })
-    )
+    this.subscriptions.add(
+      this.breakpoint
+        .observe([Breakpoints.HandsetPortrait])
+        .subscribe((res) => {
+          if (res.matches) {
+            this.isMobile = true;
+          } else {
+            this.isMobile = false;
+          }
+        })
+    );
 
     const view = this.evaltService.getCurrentMonthOfViewDate();
 
@@ -113,23 +120,24 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
       end: new FormControl(endDate),
     });
 
-
     this.evaluation$ = combineLatest(
-      this.evaltService.getAllEvaluations(),
+      this.evaltService.getAllEvaluations(
+        this.dateForm.get('start').value,
+        this.dateForm.get('end').value
+      ),
       this.statusControl.valueChanges.pipe(startWith('')),
       this.searchControl.valueChanges.pipe(
         debounceTime(300),
         distinctUntilChanged(),
-        startWith(''),
-
+        startWith('')
       ),
       this.dateForm.get('start').valueChanges.pipe(
         startWith(beginDate),
-        map(begin => begin.setHours(0, 0, 0, 0))
+        map((begin) => begin.setHours(0, 0, 0, 0))
       ),
       this.dateForm.get('end').valueChanges.pipe(
         startWith(endDate),
-        map(end => end ? end.setHours(23, 59, 59) : null)
+        map((end) => (end ? end.setHours(23, 59, 59) : null))
       )
     ).pipe(
       map(([evaluations, status, search, startdate, enddate]) => {
@@ -139,47 +147,66 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
 
         let preFilterStatus = [];
         let preFilterSearch = [...evaluations];
-        let preFilterWithDate = [];
+        const preFilterWithDate = [];
 
-        preFilterSearch.filter(element => {
+
+        preFilterSearch.filter((element) => {
           const dateMillis = element.createdAt['seconds'] * 1000;
           if (dateMillis >= date.begin && dateMillis <= date.end) {
             preFilterWithDate.push(element);
           }
         });
-
         if (status.length > 1) {
-          preFilterStatus = preFilterWithDate.filter(evaluation => evaluation.internalStatus === status);
-          preFilterSearch = preFilterStatus.filter(evaluation => {
-            return String(evaluation.otMain).toLowerCase().includes(searchTerm) ||
-              String(evaluation.otChild).toLowerCase().includes(searchTerm) ||
-              String(evaluation.wof).toLowerCase().includes(searchTerm) ||
-              String(evaluation.partNumber).toLowerCase().includes(searchTerm) ||
-              String(evaluation.description).toLowerCase().includes(searchTerm);
-          }).filter((evaluation) => {
-            return this.getFilterTime(evaluation.createdAt, date)
-          })
+          preFilterStatus = preFilterWithDate.filter(
+            (evaluation) => evaluation.internalStatus === status
+          );
+          preFilterSearch = preFilterStatus
+            .filter((evaluation) => {
+              return (
+                String(evaluation.otMain).toLowerCase().includes(searchTerm) ||
+                String(evaluation.otChild).toLowerCase().includes(searchTerm) ||
+                String(evaluation.wof).toLowerCase().includes(searchTerm) ||
+                String(evaluation.partNumber)
+                  .toLowerCase()
+                  .includes(searchTerm) ||
+                String(evaluation.description)
+                  .toLowerCase()
+                  .includes(searchTerm)
+              );
+            })
+            .filter((evaluation) => {
+              return this.getFilterTime(evaluation.createdAt, date);
+            });
         } else {
-          preFilterSearch = preFilterWithDate.filter(evaluation => {
-            return String(evaluation.otMain).toLowerCase().includes(searchTerm) ||
-              String(evaluation.otChild).toLowerCase().includes(searchTerm) ||
-              String(evaluation.wof).toLowerCase().includes(searchTerm) ||
-              String(evaluation.partNumber).toLowerCase().includes(searchTerm) ||
-              String(evaluation.description).toLowerCase().includes(searchTerm);
-          }).filter((evaluation) => {
-            return this.getFilterTime(evaluation.createdAt, date)
-          })
+          preFilterSearch = preFilterWithDate
+            .filter((evaluation) => {
+              return (
+                String(evaluation.otMain).toLowerCase().includes(searchTerm) ||
+                String(evaluation.otChild).toLowerCase().includes(searchTerm) ||
+                String(evaluation.wof).toLowerCase().includes(searchTerm) ||
+                String(evaluation.partNumber)
+                  .toLowerCase()
+                  .includes(searchTerm) ||
+                String(evaluation.description)
+                  .toLowerCase()
+                  .includes(searchTerm)
+              );
+            })
+            .filter((evaluation) => {
+              return this.getFilterTime(evaluation.createdAt, date);
+            });
         }
-        return preFilterSearch;
-      })
-    ).pipe(
-      tap(res => {
+
+        return preFilterSearch
+        ;
+      }),
+      tap((res) => {
         if (res) {
           this.historyEntries = res;
           this.historyDataSource.data = res;
         }
       })
-    )
+    );
 
   }
 
@@ -199,79 +226,77 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
       maxWidth: 500,
       width: '90vw',
       disableClose: true,
-      data: entry
+      data: entry,
     };
 
     let dialogRef;
 
     switch (value) {
       case 'create':
-        dialogRef = this.dialog.open(HistoryCreateDialogComponent,
-          optionsDialog,
+        dialogRef = this.dialog.open(
+          HistoryCreateDialogComponent,
+          optionsDialog
         );
-        dialogRef.afterClosed().subscribe(result => {
+        dialogRef.afterClosed().subscribe((result) => {
           console.log(`Dialog result: ${result}`);
         });
         break;
       case 'edit':
-        dialogRef = this.dialog.open(HistoryEditDialogComponent,
-          optionsDialog,
-        );
-        dialogRef.afterClosed().subscribe(result => {
+        dialogRef = this.dialog.open(HistoryEditDialogComponent, optionsDialog);
+        dialogRef.afterClosed().subscribe((result) => {
           console.log(`Dialog result: ${result}`);
         });
         break;
       case 'delete':
         dialogRef = this.dialog.open(HistoryDeleteDialogComponent, {
-          data: entry
-        }
-        );
-        dialogRef.afterClosed().subscribe(result => {
+          data: entry,
+        });
+        dialogRef.afterClosed().subscribe((result) => {
           console.log(`Dialog result: ${result}`);
         });
         break;
       case 'image':
-        dialogRef = this.dialog.open(HistoryImageDialogComponent,
+        dialogRef = this.dialog.open(
+          HistoryImageDialogComponent,
           optionsDialog
         );
-        dialogRef.afterClosed().subscribe(result => {
+        dialogRef.afterClosed().subscribe((result) => {
           console.log(`Dialog result: ${result}`);
         });
         break;
       case 'observation':
-        dialogRef = this.dialog.open(HistoryObservationDialogComponent,
-          optionsDialog,
+        dialogRef = this.dialog.open(
+          HistoryObservationDialogComponent,
+          optionsDialog
         );
 
-        dialogRef.afterClosed().subscribe(result => {
+        dialogRef.afterClosed().subscribe((result) => {
           console.log(`Dialog result: ${result}`);
         });
         break;
       case 'time-line':
-        dialogRef = this.dialog.open(HistoryTimeLineComponent,
-          {
-            width: '90vw',
-            disableClose: true,
-            data: entry
-          }
-        );
+        dialogRef = this.dialog.open(HistoryTimeLineComponent, {
+          width: '90vw',
+          disableClose: true,
+          data: entry,
+        });
 
-        dialogRef.afterClosed().subscribe(result => {
+        dialogRef.afterClosed().subscribe((result) => {
           console.log(`Dialog result: ${result}`);
         });
         break;
       case 'report':
-        let data = this.historyDataSource.data.filter(element => element.result === 'fuera de servicio');
-        dialogRef = this.dialog.open(HistoryReportsDialogComponent,
-          {
-            maxWidth: 500,
-            width: '90vw',
-            disableClose: true,
-            data: data
-          }
+        let data = this.historyDataSource.data.filter(
+          (element) => element.result === 'fuera de servicio'
         );
+        dialogRef = this.dialog.open(HistoryReportsDialogComponent, {
+          maxWidth: 500,
+          width: '90vw',
+          disableClose: true,
+          data: data,
+        });
 
-        dialogRef.afterClosed().subscribe(result => {
+        dialogRef.afterClosed().subscribe((result) => {
           console.log(`Dialog result: ${result}`);
         });
         break;
@@ -284,69 +309,123 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
     });
   }
 
-
-
   downloadXlsx(evaluations: Evaluation[]): void {
+    console.log('evaluaciones : ',evaluations);
+
     let table_xlsx: any[] = [];
 
     let headersXlsx = [
       'otMain',
       'otChild',
-      // 'position',
-      'wof',
-      'task',
+      'position',
       'partNumber',
       'description',
-      'internalStatus',
-      'result',
-      // 'comments',
-      // 'kindOfTest',
-      'observations',
       'quantity',
+      'internalStatus',
+      'status',
+      'wof',
+      'task',
+      'observations',
       'workshop',
-      // 'status',
-      'createdAt',
+      'images',
       'processAt',
+      'inquiryAt',
       'finalizedAt',
       'finalizedBy',
-      // 'inquiryAt'
-    ]
+      'result',
+      'kindOfTest',
+      'comments',
+      'resultImage1',
+      'resultImage2',
+      'createdAt',
+      'createdBy',
+      'editedAt',
+      'editedBy',
+      'emailList',
+      'question1',
+      'answer1',
+      'question2',
+      'answer2',
+      'question3',
+      'answer3',
+      'question4',
+      'answer4',
+      'question5',
+      'answer5',
+    ];
 
     table_xlsx.push(headersXlsx);
 
-    evaluations.forEach(evaluation => {
-      const temp = [
+    evaluations.forEach((evaluation) => {
+      let  temp1 = [];
+      let  temp2 = [];
+
+      temp1 = [
         evaluation.otMain ? evaluation.otMain : '---',
         evaluation.otChild ? evaluation.otChild : '---',
-        evaluation.wof ? evaluation.wof : '---',
-        evaluation.task ? evaluation.task : '---',
-        // evaluation.position ? evaluation.position : '---',
+        evaluation.position ? evaluation.position : '---',
         evaluation.partNumber ? evaluation.partNumber : '---',
         evaluation.description ? evaluation.description : '---',
-        evaluation.internalStatus ? evaluation.internalStatus : '---',
-        evaluation.result ? evaluation.result : '---',
-        // evaluation.comments ? evaluation.comments : '---',
-        // evaluation.kindOfTest ? evaluation.kindOfTest : '---',
-        evaluation.observations ? evaluation.observations : '---',
         evaluation.quantity ? evaluation.quantity : '---',
-
-        // evaluation.status ? evaluation.status : '---',  
-        evaluation.createdAt ? new Date(evaluation.createdAt['seconds'] * 1000) : '---',
-
-        evaluation.workshop ? evaluation.workshop['location'] : evaluation.workshop ? evaluation.workshop : '---',
-
+        evaluation.internalStatus ? evaluation.internalStatus : '---',
+        evaluation.status ? evaluation.status : '---',
         evaluation.wof ? evaluation.wof : '---',
         evaluation.task ? evaluation.task : '---',
-     
-        evaluation.processAt ? new Date(evaluation.processAt['seconds'] * 1000) : '---',
-        evaluation.finalizedAt ? new Date(evaluation.finalizedAt['seconds'] * 1000) : '---',
-        evaluation.finalizedBy ? (evaluation.finalizedBy.name ? evaluation.finalizedBy.name : evaluation.finalizedBy) : '---',
-        // evaluation.inquiryAt ? new Date(evaluation.inquiryAt['seconds'] * 1000) : '---',
-      ]
+        evaluation.observations ? evaluation.observations : '---',
+        evaluation.workshop
+        ? evaluation.workshop['location']
+        : evaluation.workshop
+        ? evaluation.workshop
+        : '---',
+        evaluation.images ? evaluation.images['0'] : '---',
+        evaluation.processAt
+          ? new Date(evaluation.processAt['seconds'] * 1000)
+          : '---',
+        evaluation.inquiryAt ? new Date(evaluation.inquiryAt['seconds'] * 1000) : '---',
+        evaluation.finalizedAt
+          ? new Date(evaluation.finalizedAt['seconds'] * 1000)
+          : '---',
+        evaluation.finalizedBy
+          ? evaluation.finalizedBy.name
+            ? evaluation.finalizedBy.name
+            : evaluation.finalizedBy
+          : '---',
+          evaluation.result ? evaluation.result : '---',
+          evaluation.kindOfTest ? evaluation.kindOfTest : '---',
+          evaluation.comments ? evaluation.comments : '---',
+          evaluation.resultImage1 ? evaluation.resultImage1 : '---',
+          evaluation.resultImage2 ? evaluation.resultImage2 : '---',
+          evaluation.createdAt
+          ? new Date(evaluation.createdAt['seconds'] * 1000)
+          : '---',
+          evaluation.createdBy
+            ? evaluation.createdBy.name
+            ? evaluation.createdBy.name
+              : evaluation.createdBy
+            : '---',
+          evaluation.editedAt
+          ? new Date(evaluation.editedAt['seconds'] * 1000)
+          : '---',
+          evaluation.editedBy
+            ? evaluation.editedBy.name
+            ? evaluation.editedBy.name
+              : evaluation.editedBy
+            : '---',
+          evaluation.emailList ? evaluation.emailList.join() : '---',
+          evaluation.inquiries ? evaluation.inquiries['question0'] ? evaluation.inquiries['question0'] : '----' : '----',
+          evaluation.inquiries ? evaluation.inquiries['answer0'] ? evaluation.inquiries['answer0']: '----': '----',
+          evaluation.inquiries ? evaluation.inquiries['question1'] ? evaluation.inquiries['question1'] : '----' : '----',
+          evaluation.inquiries ? evaluation.inquiries['answer1'] ? evaluation.inquiries['answer1']: '----': '----',
+          evaluation.inquiries ? evaluation.inquiries['question2'] ? evaluation.inquiries['question2'] : '----' : '----',
+          evaluation.inquiries ? evaluation.inquiries['answer2'] ? evaluation.inquiries['answer2']: '----': '----',
+          evaluation.inquiries ? evaluation.inquiries['question3'] ? evaluation.inquiries['question3'] : '----' : '----',
+          evaluation.inquiries ? evaluation.inquiries['answer3'] ? evaluation.inquiries['answer3']: '----': '----',
+          evaluation.inquiries ? evaluation.inquiries['question4'] ? evaluation.inquiries['question4'] : '----' : '----',
+          evaluation.inquiries ? evaluation.inquiries['answer4'] ? evaluation.inquiries['answer4']: '----': '----',
+      ];
 
-      table_xlsx.push(temp);
-    })
-
+      table_xlsx.push(temp1);
+    });
 
     /* generate worksheet */
     const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(table_xlsx);
@@ -370,52 +449,57 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
     this.historyDataSource.data = data.sort((a, b) => {
       const isAsc = sort.direction === 'asc';
       switch (sort.active) {
-        case 'createdBy': return compare(a.createdBy.name, b.createdBy.name, isAsc);
-        default: return 0;
+        case 'createdBy':
+          return compare(a.createdBy.name, b.createdBy.name, isAsc);
+        default:
+          return 0;
       }
     });
   }
 
-  filterWorkshopByCode(code: number): any{
+  filterWorkshopByCode(code: number): any {
     let filterWorkshop;
 
     const workshops = [
       {
-        code: 5, location: 'MSH'
+        code: 5,
+        location: 'MSH',
       },
       {
-        code: 201306412, location: 'TMM'
+        code: 201306412,
+        location: 'TMM',
       },
       {
-        code: 1, location: 'CRC LIMA'
+        code: 1,
+        location: 'CRC LIMA',
       },
       {
-        code: 2, location: 'CRC LA JOYA'
+        code: 2,
+        location: 'CRC LA JOYA',
       },
       {
-        code: 3, location: 'TMAQ LIMA'
+        code: 3,
+        location: 'TMAQ LIMA',
       },
       {
-        code: 4, location: 'TH'
+        code: 4,
+        location: 'TH',
       },
       {
-        code: 6, location: 'TMAQ LA JOYA'
-      }
+        code: 6,
+        location: 'TMAQ LA JOYA',
+      },
     ];
 
-    workshops.filter(workshop => {
-      if (workshop.code === code){
+    workshops.filter((workshop) => {
+      if (workshop.code === code) {
         filterWorkshop = workshop.location;
-        }
+      }
     });
 
-
     return filterWorkshop ? filterWorkshop : '---';
-
   }
-
 }
-
 
 function compare(a: number | string, b: number | string, isAsc: boolean) {
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);

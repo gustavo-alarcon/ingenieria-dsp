@@ -10,6 +10,8 @@ import { Ng2ImgMaxService } from 'ng2-img-max';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { User } from 'src/app/main/models/user-model';
+// @ts-ignore: Unreachable code error
+import Painterro from 'painterro';
 
 @Component({
   selector: 'app-evaluations-response-dialog',
@@ -25,8 +27,6 @@ export class EvaluationsResponseDialogComponent implements OnInit {
   answerForm: FormGroup;
   user: User;
   inquiry: EvaluationInquiry;
-
-  imagesUpload: string = null;
   uploadPercent$: Observable<number>;
   date: string = new Date().toISOString();
 
@@ -45,7 +45,7 @@ export class EvaluationsResponseDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.createForm();
-    
+
     this.inquiry$ = this.evalService.getEvaluationInquiriesById(this.data.id)
       .pipe(
         map(list => {
@@ -62,16 +62,15 @@ export class EvaluationsResponseDialogComponent implements OnInit {
   createForm(): void {
     this.answerForm = this.fb.group({
       answer: ['', Validators.required],
-      answerImage: [''],
+      answerImage: [null],
     });
   }
 
   async deleteImage(): Promise<void> {
     try {
       this.loading.next(true);
-      await this.evalService.deleteImage(this.imagesUpload);
+      await this.evalService.deleteImage(this.answerForm.get('answerImage').value);
       this.loading.next(false);
-      this.imagesUpload = null;
       this.answerForm.get('answerImage').setValue(null);
     } catch (error) {
       console.log(error);
@@ -79,35 +78,67 @@ export class EvaluationsResponseDialogComponent implements OnInit {
     }
   }
 
-  uploadFile(event): void {
-    if (!event.target.files[0]) {
-      return;
-    }
 
-    this.loading.next(true);
-    this.snackbar.open('🗜️ Comprimiendo', 'Aceptar', {
-      duration: 3000
-    });
+  showPizarra(): void {
+    const storage = this.storage;
+    const id = this.data.id;
+    const consultForm = this.answerForm.get('answerImage');
+    Painterro({
+      language: 'es',
+      hiddenTools: ['rotate', 'resize'],
+      saveHandler: async function (image: any, done: any) {
+        image.asBlob(image.hasAlphaChannel() ? 'image/png' : 'image/jpeg');
+        this.imagen = await image.asDataURL()
+        const metadata = {
+          contentType: image.hasAlphaChannel() ? 'image/png' : 'image/jpeg',
+        };
 
-    const file = event.target.files[0];
-    this.subscription.add(this.ng2ImgMax.resize([file], 800, 10000).subscribe((result) => {
-      const name = `evaluations/${this.data.id}/pictures/${this.data.id}-${this.date}-${result.name}.png`;
-      const fileRef = this.storage.ref(name);
-      const task = this.storage.upload(name, file);
-      this.uploadPercent$ = task.percentageChanges();
-      this.subscription.add(task.snapshotChanges().pipe(
-        finalize(() => {
-          fileRef.getDownloadURL().subscribe(url => {
-            this.imagesUpload = url;
-            this.answerForm.get('answerImage').setValue(url);
+        const name = `evaluations/${id}/pictures/${id}-${new Date().toISOString()}`;
+        await storage.ref(name).putString(this.imagen.split(/,(.+)/)[1], 'base64', metadata)
+          .then(async (snapshot: any) => {
+            const url = await snapshot.ref.getDownloadURL();
+            consultForm.setValue(url);
           });
-          this.loading.next(false);
-        })
-      ).subscribe()
-      );
-    }));
 
+        done(true)
+      },
+      onImageLoaded: function () {
+        console.log('open')
+      },
+      doneCallback: function (image: any, done: any) {
+      }
+    }).show()
   }
+
+  // uploadFile(event): void {
+  //   if (!event.target.files[0]) {
+  //     return;
+  //   }
+
+  //   this.loading.next(true);
+  //   this.snackbar.open('🗜️ Comprimiendo', 'Aceptar', {
+  //     duration: 3000
+  //   });
+
+  //   const file = event.target.files[0];
+  //   this.subscription.add(this.ng2ImgMax.resize([file], 800, 10000).subscribe((result) => {
+  //     const name = `evaluations/${this.data.id}/pictures/${this.data.id}-${this.date}-${result.name}.png`;
+  //     const fileRef = this.storage.ref(name);
+  //     const task = this.storage.upload(name, file);
+  //     this.uploadPercent$ = task.percentageChanges();
+  //     this.subscription.add(task.snapshotChanges().pipe(
+  //       finalize(() => {
+  //         fileRef.getDownloadURL().subscribe(url => {
+  //           this.imagesUpload = url;
+  //           this.answerForm.get('answerImage').setValue(url);
+  //         });
+  //         this.loading.next(false);
+  //       })
+  //     ).subscribe()
+  //     );
+  //   }));
+
+  // }
 
   onSubmit(): void {
     this.loading.next(true);

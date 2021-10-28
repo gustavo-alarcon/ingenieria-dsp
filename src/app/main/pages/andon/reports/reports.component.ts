@@ -10,6 +10,7 @@ import { Andon } from '../../../models/andon.model';
 import { AndonService } from '../../../services/andon.service';
 import { tap, debounceTime, filter, startWith, map } from 'rxjs/operators';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { ReasignDialogComponent } from './dialogs/reasign-dialog/reasign-dialog.component';
 
 @Component({
   selector: 'app-reports',
@@ -58,7 +59,6 @@ export class ReportsComponent implements OnInit {
       map(([andons, search]) => {
         const searchTerm = search.toLowerCase().trim();
         let preFilterSearch: Andon[] = [...andons];
-
         preFilterSearch = andons.filter((andon) => {
           return (
             String(andon.name).toLowerCase().includes(searchTerm) ||
@@ -103,7 +103,9 @@ export class ReportsComponent implements OnInit {
       })
     );
   }
+
   editDialog(): void { }
+
   returnDialog(item): void {
     this.dialog.open(ReturnDialogComponent, {
       maxWidth: 450,
@@ -111,6 +113,7 @@ export class ReportsComponent implements OnInit {
       data: item,
     });
   }
+
   detailsDialog(item): void {
     this.dialog.open(DetailsDialogComponent, {
       maxWidth: 500,
@@ -126,6 +129,15 @@ export class ReportsComponent implements OnInit {
       data: item,
     });
   }
+
+  reasign(item): void {
+    this.dialog.open(ReasignDialogComponent, {
+      maxWidth: 450,
+      width: '90vw',
+      data: item,
+    });
+  }
+
   dashboard(): void {
     this.router.navigate(['main/dashboard']);
   }

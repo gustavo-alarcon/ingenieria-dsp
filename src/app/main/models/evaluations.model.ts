@@ -20,7 +20,7 @@ export interface Evaluation {
     workshop: Array<Workshop> | string;  // Taller
     images?: Array<string>;
     imagesCounter: number;
-    inquiries?: Array<EvaluationInquiry>;
+    inquiries?: Array<any>;
     inquiriesCounter: number;
     registryTimer?: any;
     registryTimeElapsed?: EvaluationTimer;

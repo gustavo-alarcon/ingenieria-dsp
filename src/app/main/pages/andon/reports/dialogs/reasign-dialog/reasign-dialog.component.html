@@ -1,0 +1,162 @@
+<h2 mat-dialog-title>
+    <div class="container-header">
+        <div class="container-title">
+            <mat-icon class="icon">edit</mat-icon>
+            <h3 class="title">
+                Reasignar
+            </h3>
+        </div>
+        <button mat-icon-button mat-dialog-close>
+            <mat-icon style="color: gray;">close</mat-icon>
+        </button>
+    </div>
+    <mat-divider></mat-divider>
+</h2>
+<mat-dialog-content class="mat-typography">
+    <div class="container-header container-header--border">
+        <h1 style="color:#828282;">{{data.name}}</h1>
+        <div class="timer">
+            <div style="background:#FF2D2D; height: 20px; width: 20px; border-radius: 10px;margin-right: 15px;"></div>
+            <span style="font-weight: bold;color: black;">
+                {{data.atentionTime?.days | number : '2.'}} /
+                {{data.atentionTime?.hours | number : '2.'}} :
+                {{data.atentionTime?.minutes | number : '2.'}} :
+                {{data.atentionTime?.seconds | number : '2.'}}
+            </span>
+        </div>
+    </div>
+
+    <p><span style="font-weight: bold;">OT CHILD : </span> {{data.otChild}}</p>
+    <p><span style="font-weight: bold;">Tipo de problema : </span> {{data.problemType}}</p>
+    <p><span style="font-weight: bold;">Descripción : </span> {{data.description}}</p>
+    <p><span style="font-weight: bold;">Fecha de reporte : </span> {{(data.reportDate['seconds'] *1000) |
+        date:'dd/MM/yyyy - h:mm'}} </p>
+    <p><span style="font-weight: bold;">Reportado por : </span>{{data.reportUser}}</p>
+
+    <div class="title-form">Actualizar datos</div>
+    <form [formGroup]="reportForm" autocomplete="off" class="report__form">
+        <mat-form-field appearance="outline" id="result" class="report__form--input">
+            <mat-label>Nombre de bahia</mat-label>
+            <input matInput type="text" formControlName="name" [matAutocomplete]="autoBay" placeholder="Escriba"
+                autocomplete="off">
+            <mat-autocomplete #autoBay="matAutocomplete" [displayWith]="displayBay">
+                <mat-option *ngFor="let item of nameBahias$ | async" [value]="item" 
+                (click)="onClickBahia(item)" >  
+                    {{item.name}} - <span style="color: #8f8a8a;">{{item.workShop}}</span>
+                </mat-option>
+                <!--[displayWith]="displayBay"  -->
+            </mat-autocomplete>
+            <mat-error *ngIf="reportForm.get('name').errors?.noSelection && !reportForm.get('name').errors?.required">
+                {{reportForm.get('name')?.errors?.noSelection}}
+            </mat-error>
+            <mat-hint *ngIf="!(nameBahias$ | async)">
+                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                <p>Cargando lista ...</p>
+            </mat-hint>
+            <mat-error *ngIf="reportForm.controls['name'].errors?.required">
+                Campo <strong>requerido.</strong>
+            </mat-error>
+        </mat-form-field>
+        <br />
+        <mat-form-field appearance="outline" id="result" class="report__form--input">
+            <mat-label>Tipo de problema</mat-label>
+            <mat-select formControlName="problemType" class="">
+                <mat-option *ngFor="let item of typeProblem$ | async" [value]="item.name"
+                (click)="onClickProblemType(item)"
+                >
+                    {{item.name}}</mat-option>
+            </mat-select>
+            <mat-hint *ngIf="!(typeProblem$ | async)">
+                <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+                <p>Cargando lista ...</p>
+            </mat-hint>
+            <mat-error *ngIf="reportForm.controls['problemType'].errors">
+                Campo <strong>requerido.</strong>
+            </mat-error>
+        </mat-form-field>
+        <br />
+        <mat-form-field appearance="outline" id="result" class="report__form--input">
+            <mat-label>Descripcion</mat-label>
+            <textarea matInput placeholder="Descripcion" formControlName="description">
+
+            </textarea>
+            <mat-error *ngIf="reportForm.controls['description'].errors">
+                Campo <strong>requerido.</strong>
+            </mat-error>
+        </mat-form-field>
+        <br />
+        <mat-form-field *ngIf="filteredBroadcast$ | async as broadcasts" appearance="outline" id="result" class="report__form--input">                     
+            <mat-label>Enviar a</mat-label>
+            <mat-chip-list #chipList aria-label="email selection">
+              <mat-chip
+                *ngFor="let email of emailArray"
+                [selectable]="selectable"
+                [removable]="removable"
+                (removed)="removeEmail(email)">
+                {{email}}
+                <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+              </mat-chip>
+              <input
+                placeholder="agregar nueva lista de difusion..."
+                #emailInput
+                [formControl]="broadcastControl"
+                [matAutocomplete]="auto"
+                [matChipInputFor]="chipList"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                (matChipInputTokenEnd)="addBroadcast($event)">
+            </mat-chip-list>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedBroadcast($event)">
+              <mat-option *ngFor="let broadcast of broadcasts" [value]="broadcast">
+                {{broadcast.name}}
+              </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+
+        <mat-divider style="margin: 20px 0px;"></mat-divider>
+        <h3>Imágenes</h3>
+        <div *ngFor="let item of imageArray; let i=index" class="container-images">
+            <div style="text-align: center;margin: 24px 15px;">
+                <img class="imge" [src]="item" onError="this.src='../../../../../../../assets/img/camara.png'" />
+                <button
+                    mat-icon-button
+                    aria-label="deletelistResult"
+                    class="btn-delete"
+                    (click)="deleteImageAndon(item, i)"
+                    >
+                    <mat-icon style="color: red">delete</mat-icon>
+                </button>
+            </div>
+        </div>
+        <div class="dropzone" appDropzone (hovered)="toggleHover($event)" (dropped)="onDrop($event)"
+            [class.hovering]="isHovering">
+            <p>Arrastrar imágenes</p>
+            <div class="file">
+                <label class="file-label">
+                    <input class="file-input" type="file" (change)="onDrop($event.target.files)">
+                    <span class="file-cta">
+                        <span class="file-label">
+                            Seleccione
+                        </span>
+                    </span>
+                </label>
+            </div>
+        </div>
+        <h3>Imágenes agregados</h3>
+        <div *ngFor="let file of files">
+            <app-upload-task [file]="file" 
+                 [pathStorage]="pathStorage" 
+                 (onNewImage)="addNewImage($event)"
+                 (onDeleteImage)="deleteImage($event)"
+                 >
+            </app-upload-task>
+        </div>
+        <br />
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button type="button" mat-stroked-button color="warn" class="footer__btn-close" mat-dialog-close>CERRAR</button>
+    <button type="button" mat-raised-button color="primary" class="footer__btn-save" cdkFocusInitial
+            (click)="updateAndon()" [disabled]="!loading"  >
+            GUARDAR
+    </button>
+</mat-dialog-actions>

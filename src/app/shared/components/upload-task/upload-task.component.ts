@@ -75,6 +75,8 @@ export class UploadTaskComponent implements OnInit, OnDestroy {
 
     if (url) {
       this.downloadURL = '';
+      this.percentage = null;
+      this.snapshot = null;
     }
   }
 }

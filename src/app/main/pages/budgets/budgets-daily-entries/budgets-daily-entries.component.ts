@@ -155,7 +155,7 @@ export class BudgetsDailyEntriesComponent implements OnInit {
     private BudgetsService: BudgetsService,
     private dialog: MatDialog,
     private router: Router
-  ) {}
+  ) { }
 
   public ngOnInit(): void {
     this.subscriptions.add(
@@ -181,14 +181,13 @@ export class BudgetsDailyEntriesComponent implements OnInit {
       /*  const data: Uint8Array = new Uint8Array(
         fileReader.result as ArrayBufferLike
         ); */
-      const data =  e.target.result;
+      const data = e.target.result;
 
       const workbook: XLSX.WorkBook = XLSX.read(data, {
         type: 'binary', // string  binary  array
         cellDates: true,
       });
-      const sheet: XLSX.WorkSheet = workbook.Sheets[workbook.SheetNames[0]];
-
+      const sheet: XLSX.WorkSheet = workbook.Sheets['RESUMEN'];
       const rawData = XLSX.utils.sheet_to_json(sheet, {
         header: 1,
       });
@@ -498,5 +497,5 @@ export class BudgetsDailyEntriesComponent implements OnInit {
   isString(val): boolean { return typeof val === 'string'; }
 
   isboolean(val): boolean { return typeof val === 'boolean'; }
-  
+
 }

@@ -48,7 +48,7 @@
       *ngIf="loading$ | async"
     ></mat-progress-bar>
 
-    <div style="overflow: auto">
+    <div style="overflow: auto" [class.header-table-container] = "budgetsDailyEntriesDataSource.data.length !== 0" >
       <table
         mat-table
         [dataSource]="budgetsDailyEntriesDataSource"
@@ -73,7 +73,7 @@
                   matTooltip="La información de este presupuesto ya existe en la base de datos, por lo que será omitida en el proceso de carga"
                   matTooltipPosition="right"
                 >
-                  Duplicado {{ markAsDuplicated(i) }}
+                Registrado {{ markAsDuplicated(i) }}
                 </div>
 
                 <div *ngIf="!upgrade.isDuplicated" class="entry entry--new">
@@ -92,7 +92,7 @@
                   matTooltipPosition="right"
                   (click)="applyUpgrade(upgrade.fields, i, upgrade.budgetId)"
                 >
-                  Upgrade?
+                Actualizar?
                 </div>
 
                 <div
@@ -3059,7 +3059,7 @@
 
         <tr
           mat-header-row
-          *matHeaderRowDef="budgetsDailyEntriesDisplayedColumns"
+          *matHeaderRowDef="budgetsDailyEntriesDisplayedColumns; sticky: true"
         ></tr>
         <tr
           mat-row

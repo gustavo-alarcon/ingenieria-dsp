@@ -13,7 +13,7 @@ export class BudgetsSummaryTimelineDialogComponent implements OnInit {
   dateArray: BudgetHistoryDate[] = []
 
   constructor(private budgetsService: BudgetsService,
-              @Inject(MAT_DIALOG_DATA) public budget: Budget) { }
+    @Inject(MAT_DIALOG_DATA) public budget: Budget) { }
 
   ngOnInit(): void {
     this.dateArray = this.budgetsService.getDateHistory(this.budget);

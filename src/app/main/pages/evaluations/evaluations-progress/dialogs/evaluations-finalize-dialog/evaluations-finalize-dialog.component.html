@@ -33,30 +33,24 @@
         <form [formGroup]="finalizeForm" autocomplete="off" class="form-container">
             <div class="form-container__form-inputs">
 
-                <mat-form-field *ngIf="filteredBroadcast$ | async as broadcasts" appearance="outline" id="result" class="timer-container__input">                     
+                <mat-form-field *ngIf="filteredBroadcast$ | async as broadcasts" appearance="outline" id="result"
+                    class="timer-container__input">
                     <mat-label>Enviar a</mat-label>
                     <mat-chip-list #chipList aria-label="Fruit selection">
-                      <mat-chip
-                        *ngFor="let email of emailArray"
-                        [selectable]="selectable"
-                        [removable]="removable"
-                        (removed)="removeEmail(email)">
-                        {{email}}
-                        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                      </mat-chip>
-                      <input
-                        placeholder="agregar nueva lista de difusion..."
-                        #emailInput
-                        [formControl]="broadcastControl"
-                        [matAutocomplete]="auto"
-                        [matChipInputFor]="chipList"
-                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                        (matChipInputTokenEnd)="addBroadcast($event)">
+                        <mat-chip *ngFor="let email of emailArray" [selectable]="selectable" [removable]="removable"
+                            (removed)="removeEmail(email)">
+                            {{email}}
+                            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                        </mat-chip>
+                        <input placeholder="agregar nueva lista de difusion..." #emailInput
+                            [formControl]="broadcastControl" [matAutocomplete]="auto" [matChipInputFor]="chipList"
+                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                            (matChipInputTokenEnd)="addBroadcast($event)">
                     </mat-chip-list>
                     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedBroadcast($event)">
-                      <mat-option *ngFor="let broadcast of broadcasts" [value]="broadcast">
-                        {{broadcast.name}}
-                      </mat-option>
+                        <mat-option *ngFor="let broadcast of broadcasts" [value]="broadcast">
+                            {{broadcast.name}}
+                        </mat-option>
                     </mat-autocomplete>
                 </mat-form-field>
 
@@ -127,7 +121,7 @@
                         <mat-card class="mat-elevation-z0">
                             Foto final {{i+1}}
                             <img [src]="imgUpload" onError="this.src='../../../../../../../assets/img/camara.png'"
-                                class="pointer" />
+                                class="pointer" (click)="showPizarra(i)" />
                             <mat-card-actions *ngIf="imgUpload" align="end">
                                 <button mat-icon-button (click)="deleteImage(imgForDelete, i)">
                                     <mat-icon color="warn">delete</mat-icon>
@@ -135,8 +129,8 @@
                             </mat-card-actions>
                         </mat-card>
                     </label>
-                    <input [id]="i" type="file" style="display: none;" (change)="uploadFile($event,i)"
-                        accept="image/x-png, image/jpg, image/jpeg" />
+                    <!-- <input [id]="i" type="file" style="display: none;" (click)="uploadFile($event,i)"
+                        accept="image/x-png, image/jpg, image/jpeg" /> -->
                 </div>
                 <mat-divider></mat-divider>
             </div>

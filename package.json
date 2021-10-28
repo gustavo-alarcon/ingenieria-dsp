@@ -1,6 +1,6 @@
 {
   "name": "ingenieria-dsp",
-  "version": "7.18.24",
+  "version": "7.19.24",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -43,9 +43,10 @@
     "ng2-img-max": "^2.2.4",
     "ngx-mask": "^11.1.4",
     "ngx-print": "^1.2.0-beta.5",
+    "painterro": "^1.2.66",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
-    "xlsx": "^0.16.9",
+    "xlsx": "^0.17.2",
     "zone.js": "~0.11.3"
   },
   "devDependencies": {
@@ -58,7 +59,7 @@
     "@types/jspdf": "^1.3.3",
     "@types/node": "^12.11.1",
     "codelyzer": "^6.0.0",
-    "firebase-tools": "^9.4.0",
+    "firebase-tools": "^9.19.0",
     "fuzzy": "^0.1.3",
     "inquirer": "^6.2.2",
     "inquirer-autocomplete-prompt": "^1.0.1",

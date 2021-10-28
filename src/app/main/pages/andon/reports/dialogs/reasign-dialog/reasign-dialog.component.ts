@@ -1,81 +1,74 @@
 import {
   Component,
-  OnInit,
-  OnDestroy,
-  AfterViewInit,
   ElementRef,
+  Inject,
+  OnInit,
   ViewChild,
 } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {
-  FormGroup,
-  FormBuilder,
-  Validators,
+  Andon,
+  AndonBroadcastList,
+  AndonListBahias,
+  AndonProblemType,
+} from 'src/app/main/models/andon.model';
+import { DetailsDialogComponent } from '../details-dialog/details-dialog.component';
+import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
+import {
+  AbstractControl,
   FormArray,
+  FormBuilder,
   FormControl,
+  FormGroup,
+  ValidatorFn,
+  Validators,
 } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
-import { BehaviorSubject, Subscription, Observable } from 'rxjs';
-import { AndonService } from '../../../services/andon.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Ng2ImgMaxService } from 'ng2-img-max';
-import { AngularFireStorage } from '@angular/fire/storage';
-import { take, tap, finalize, map, startWith } from 'rxjs/operators';
-import { Andon, AndonProblemType } from './../../../models/andon.model';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { AuthService } from '../../../../auth/services/auth.service';
-import { User } from '../../../models/user-model';
-import { AndonBroadcastList } from '../../../models/andon.model';
+import { AndonService } from 'src/app/main/services/andon.service';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  startWith,
+  take,
+  tap,
+} from 'rxjs/operators';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import {
   MatAutocomplete,
   MatAutocompleteSelectedEvent,
 } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { AuthService } from 'src/app/auth/services/auth.service';
+import { User } from 'src/app/main/models/user-model';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Workshop } from '../../../../../models/evaluations.model';
 
 @Component({
-  selector: 'app-report-2nd-step',
-  templateUrl: './report-2nd-step.component.html',
-  styleUrls: ['./report-2nd-step.component.scss'],
+  selector: 'app-reasign-dialog',
+  templateUrl: './reasign-dialog.component.html',
+  styleUrls: ['./reasign-dialog.component.scss'],
 })
-export class report2ndStepComponent
-  implements OnInit, OnDestroy, AfterViewInit
-{
+export class ReasignDialogComponent implements OnInit {
   loading = new BehaviorSubject<boolean>(false);
   loading$ = this.loading.asObservable();
   reportForm: FormGroup;
   currentId: string;
-  module = 'andon';
-
-  images: string[];
-  imagesUpload: string[] = [''];
-  date: string = new Date().toISOString();
-
-  uploadPercent$: Observable<number>;
-  filteredOptions: Observable<AndonProblemType['emailList']>;
-
-  nameBahia: string;
-  workShop: string;
-  otChild: string;
-  typeProblem$: Observable<AndonProblemType[]>;
-  andOn$: Observable<Andon>;
   user: User;
 
-  isHovering: boolean;
-  files: File[] = [];
-  pathStorage: string;
+  nameBahias$: Observable<AndonListBahias[]>;
 
+  containerStyle: any;
+  reportStyle: any;
+  typeProblem$: Observable<AndonProblemType[]>;
   subscriptions = new Subscription();
   isMobile = false;
-
-
-  emailList: Observable<AndonProblemType[]>;
-
+  imageArray: any = [];
 
   //Chip email
   emailArray: string[] = [];
   filteredBroadcast$: Observable<AndonBroadcastList[]>;
   broadcastControl = new FormControl();
-  emailControl = new FormControl();
   listBroadcast: string[] = [];
   // chips
   visible = true;
@@ -86,28 +79,41 @@ export class report2ndStepComponent
   @ViewChild('emailInput') emailInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') matAutocomplete: MatAutocomplete;
 
+  isHovering: boolean;
+  files: File[] = [];
+  pathStorage: string;
+
+  images: string[];
+  imagesUpload: string[] = [''];
+  date: string = new Date().toISOString();
   counter = 0;
 
+  nameBahia: string;
+  workShop: string;
+  initBbahia;
+
+  bayList: AndonListBahias[] = [];
+
   constructor(
+    @Inject(MAT_DIALOG_DATA) public data: Andon,
+    public dialogRef: MatDialogRef<DetailsDialogComponent>,
     private fb: FormBuilder,
-    public router: Router,
-    private andonService: AndonService,
     private snackbar: MatSnackBar,
-    private ng2ImgMax: Ng2ImgMaxService,
-    private storage: AngularFireStorage,
-    private route: ActivatedRoute,
+    private andonService: AndonService,
     private breakpoint: BreakpointObserver,
     public authService: AuthService
   ) {
-    const info = this.route.snapshot.paramMap.get('id');
+    this.initBbahia = {
+      name: this.data.name,
+      workShop: this.data.workShop,
+    };
 
-    [this.workShop, this.nameBahia, this.otChild] = info.split('@');
-
-    this.currentId = this.otChild.toString();
-    console.log([this.workShop, this.nameBahia, this.otChild]);
+    //this.displayBay(bahia);
   }
 
   ngOnInit(): void {
+    this.initForm();
+
     this.subscriptions.add(
       this.breakpoint
         .observe([Breakpoints.HandsetPortrait])
@@ -133,13 +139,45 @@ export class report2ndStepComponent
       })
     );
 
-    this.reportForm = this.fb.group({
-      problemType: ['', Validators.required],
-      description: ['', Validators.required],
-    });
+    this.nameBahias$ = combineLatest(
+      this.andonService.getAllAndonSettingsListBahias().pipe(
+        tap((res: AndonListBahias[]) => {
+          const arrayListBahia: AndonListBahias[] = res;
+          arrayListBahia.sort((a, b) => {
+            if (a.name > b.name) {
+              return 1;
+            }
+            if (a.name < b.name) {
+              return -1;
+            }
+            // a must be equal to b
+            return 0;
+          });
 
-    this.loading.next(true);
-    this.pathStorage = `andon/${this.currentId}/pictures/${this.currentId}`;
+          return arrayListBahia;
+        })
+      ),
+      this.reportForm.get('name').valueChanges.pipe(
+        startWith(''),
+        debounceTime(300),
+        distinctUntilChanged(),
+        map((value) =>
+          typeof value === 'string'
+            ? value.toLowerCase()
+            : value['name'].toLowerCase()
+        )
+      )
+    ).pipe(
+      tap(([list, value]) => {
+        this.bayList = list;
+      }),
+      map(([list, value]) => {
+        const filteredList = list.filter((element) =>
+          element['name'].toLowerCase().includes(value)
+        );
+        return filteredList;
+      })
+    );
 
     this.typeProblem$ = this.andonService.getAllAndonSettingsProblemType().pipe(
       tap((res) => {
@@ -152,21 +190,44 @@ export class report2ndStepComponent
         return res;
       })
     );
-    
 
-    this.loading.next(false);
+    this.imageArray = Object.values(this.data.images);
+    this.loading.next(true);
+    this.pathStorage = `andon/${this.currentId}/pictures/${this.currentId}`;
 
-
+    this.presetBahia(this.data.name, this.data.workShop);
   }
 
-
-  ngAfterViewInit(): void {}
-
-  ngOnDestroy(): void {
-    this.subscriptions.unsubscribe();
+  initForm(): void {
+    this.reportForm = this.fb.group({
+      name: ['', [Validators.required, noSelection()]],
+      problemType: [this.data.problemType, Validators.required],
+      description: [this.data.description],
+    });
   }
 
-  save(): void {
+  presetBahia(bahia: string, workshop: string): void {
+    this.subscriptions.add(
+      this.andonService
+        .getBay(bahia, workshop)
+        .subscribe((res: AndonListBahias[]) => {
+          if (res.length > 0) {
+            this.reportForm.get('name').setValue(res[0]);
+          }
+        })
+    );
+  }
+
+  onClickBahia(item: any): void {
+    this.nameBahia = item.name;
+    this.workShop = item.Workshop;
+  }
+
+  displayBay(bay): string | null {
+    return bay ? bay['name'] + ' - ' + bay['workShop'] : '';
+  }
+
+  updateAndon(): void {
     try {
       this.loading.next(true);
       if (this.reportForm.invalid) {
@@ -176,17 +237,15 @@ export class report2ndStepComponent
       } else {
         this.images = [];
         const imagesObj = {};
-        this.images = [...this.images, ...this.imagesUpload];
+        this.images = [...this.imageArray, ...this.imagesUpload];
         this.images.pop();
         this.images.forEach((value, index) => {
           imagesObj[index] = value;
         });
         this.andonService
-          .addAndOn(
+          .updateReasignAndOn(
+            this.data.id,
             this.reportForm.value,
-            this.workShop,
-            this.nameBahia,
-            this.otChild,
             this.user,
             imagesObj,
             this.emailArray
@@ -196,13 +255,12 @@ export class report2ndStepComponent
             res
               .commit()
               .then(() => {
-                //this.loading.next(false)
                 this.snackbar.open('✅ se guardo correctamente!', 'Aceptar', {
                   duration: 6000,
                 });
-                const code = this.workShop;
-                this.router.navigate(['main/andon-reports', code]);
+                this.sendEmail(this.emailArray);
                 this.loading.next(false);
+                this.dialogRef.close();
               })
               .catch((err) => {
                 this.snackbar.open('🚨 Hubo un error.', 'Aceptar', {
@@ -219,39 +277,8 @@ export class report2ndStepComponent
     }
   }
 
-  uploadFile(event, i?: number): void {
-    if (!event.target.files[0]) {
-      return;
-    }
-    this.loading.next(true);
-    const file = event.target.files[0];
-    this.subscriptions.add(
-      this.ng2ImgMax.resize([file], 800, 10000).subscribe((result) => {
-        const name = `andon/${this.currentId}/pictures/${this.currentId}-${this.date}-${result.name}.png`;
-        const fileRef = this.storage.ref(name);
-        const task = this.storage.upload(name, file);
-        this.uploadPercent$ = task.percentageChanges();
-        this.subscriptions.add(
-          task
-            .snapshotChanges()
-            .pipe(
-              finalize(() => {
-                fileRef.getDownloadURL().subscribe((url) => {
-                  if (this.imagesUpload[i] === '') {
-                    this.imagesUpload.pop();
-                    this.imagesUpload.push(url);
-                    this.imagesUpload.push('');
-                  } else {
-                    this.imagesUpload[i] = url;
-                  }
-                });
-                this.loading.next(false);
-              })
-            )
-            .subscribe()
-        );
-      })
-    );
+  sendEmail(email: Array<string>): void {
+    //console.log('send email ', email)
   }
 
   get imagesArray(): FormArray {
@@ -268,6 +295,12 @@ export class report2ndStepComponent
       this.loading.next(false);
       this.imagesUpload.splice(index, 1);
     }
+  }
+
+  async deleteImageAndon(item, index): Promise<void> {
+    this.imageArray.splice(index, 1);
+
+    await this.andonService.deleteImage(item);
   }
 
   toggleHover(event: boolean): void {
@@ -295,9 +328,7 @@ export class report2ndStepComponent
   }
   addBroadcast(event: MatChipInputEvent): void {
     const input = event.input;
-    console.log('input :', input);
     const value = event.value;
-    console.log('value :', value);
 
     // Add our fruit
     if ((value || '').trim()) {
@@ -312,9 +343,7 @@ export class report2ndStepComponent
     this.broadcastControl.setValue(null);
   }
   selectedBroadcast(event: MatAutocompleteSelectedEvent): void {
-    // console.log(event);
     event.option.value.emailList.map((el) => {
-      // console.log(el);
       this.emailArray.push(el);
     });
 
@@ -322,21 +351,17 @@ export class report2ndStepComponent
     this.broadcastControl.setValue(null);
   }
 
-
-
   onClickProblemType(item): void {
-    console.log(item);
-    const email = item.emailList;
-    if (email) {
-      email.forEach( e =>{
-        this.emailArray.push(e);
-      })
-     
-    } else {
-      this.snackbar.open('🚨  No existe lista de difusión para este tipo de problema', 'Aceptar', {
-        duration: 6000,
+    const email = item.email;
 
-      });
-    }
+    this.emailArray.push(email);
   }
+}
+
+export function noSelection(): ValidatorFn {
+  return (control: AbstractControl): { noSelection: string } | null => {
+    return typeof control.value === 'object'
+      ? null
+      : { noSelection: 'Seleccionar una bahía de la lista' };
+  };
 }
