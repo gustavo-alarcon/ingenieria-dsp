@@ -339,9 +339,6 @@ exports.alertAndonsOpen60minutes = functions.pubsub.schedule('every 60 minutes')
     return;
 });
 
-
-
-
 exports.sendAndonToEndpoint = functions.firestore.document(`db/ferreyros/andon/{andonId}`)
     .onWrite(async (event) => {
         const andon = event.after.data();
