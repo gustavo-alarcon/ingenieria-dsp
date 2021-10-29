@@ -43,39 +43,41 @@ export class EvaluationsService {
   //where('createAt','>=',start)
 
   getAllEvaluations(start?: Date, end?: Date): Observable<Evaluation[]> {
-    if (start && end){
+    if (start && end) {
+      console.log(start, end);
+      
       return this.afs
           .collection<Evaluation>(`/db/ferreyros/evaluations`, (ref) =>
             ref.where('createdAt', '>=', start).where('createdAt', '<=', end)
           )
           .valueChanges()
-          .pipe(
-            map((list) => {
-              const data: Evaluation[] = [];
-              list.forEach(el => {
-                this.getEvaluationInquiryById(el.id).subscribe(
-                  (res) => {
-                    let inquiry;
-                    res.forEach((valor, index, arr) => {
-                      inquiry = {
-                        ...inquiry,
-                      ['question' + index]: valor.inquiry,
-                      ['answer' + index]: valor.answer,
-                      };
-                    });
-                    const arrayJoin = {
-                      ...el,
-                      inquiries: inquiry
-                    };
-                    data.push(arrayJoin);
-                });
-              });
+          // .pipe(
+          //   map((list) => {
+          //     const data: Evaluation[] = [];
+          //     list.forEach(el => {
+          //       this.getEvaluationInquiryById(el.id).subscribe(
+          //         (res) => {
+          //           let inquiry;
+          //           res.forEach((valor, index, arr) => {
+          //             inquiry = {
+          //               ...inquiry,
+          //             ['question' + index]: valor.inquiry,
+          //             ['answer' + index]: valor.answer,
+          //             };
+          //           });
+          //           const arrayJoin = {
+          //             ...el,
+          //             inquiries: inquiry
+          //           };
+          //           data.push(arrayJoin);
+          //       });
+          //     });
 
-              return data.sort(
-                (a, b) => b['createdAt']['seconds'] - a['createdAt']['seconds']
-              );
-            })
-          );
+          //     return data.sort(
+          //       (a, b) => b['createdAt']['seconds'] - a['createdAt']['seconds']
+          //     );
+          //   })
+          // );
     }
     else{
       return this.afs
