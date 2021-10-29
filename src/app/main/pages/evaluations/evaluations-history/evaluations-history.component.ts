@@ -7,10 +7,13 @@ import { Evaluation, Workshop } from '../../../models/evaluations.model';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import { EvaluationsService } from '../../../services/evaluations.service';
 import {
+  catchError,
   debounceTime,
   distinctUntilChanged,
+  filter,
   map,
   startWith,
+  switchMap,
   tap,
 } from 'rxjs/operators';
 import { HistoryEditDialogComponent } from './dialogs/history-edit-dialog/history-edit-dialog.component';
@@ -28,6 +31,7 @@ import { HistoryReportsDialogComponent } from './dialogs/history-reports-dialog/
 import { MatSort, Sort } from '@angular/material/sort';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { DatePipe } from '@angular/common';
+import { time } from 'console';
 
 @Component({
   selector: 'app-evaluations-history',
@@ -121,26 +125,34 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
     });
 
     this.evaluation$ = combineLatest(
-      this.evaltService.getAllEvaluations(
-        this.dateForm.get('start').value,
-        this.dateForm.get('end').value
-      ),
+      // this.evaltService.getAllEvaluations(
+      //   this.dateForm.get('start').value,
+      //   this.dateForm.get('end').value
+      // ),
       this.statusControl.valueChanges.pipe(startWith('')),
       this.searchControl.valueChanges.pipe(
         debounceTime(300),
         distinctUntilChanged(),
         startWith('')
+      ),
+      this.dateForm.valueChanges.pipe(
+        startWith({ start: beginDate, end: endDate }),
+        filter((time) => { return time.start && time.end; }),
+        switchMap((time: { start: Date, end: Date }) => {
+          console.log(time);
+          
+          time.end.setHours(23, 59, 59);
+          return this.evaltService.getAllEvaluations(time.start, time.end);
+        }),
+        catchError(err => {
+          console.log(err);
+          return [];
+        })
       )
-      // this.dateForm.get('start').valueChanges.pipe(
-      //   startWith(beginDate),
-      //   map((begin) => begin.setHours(0, 0, 0, 0))
-      // ),
-      // this.dateForm.get('end').valueChanges.pipe(
-      //   startWith(endDate),
-      //   map((end) => (end ? end.setHours(23, 59, 59) : null))
-      // )
     ).pipe(
-      map(([evaluations, status, search]) => {
+      map(([status, search, evaluations]) => {
+        console.log(evaluations.length);
+
         let filteredEvaluations = [...evaluations];
 
         filteredEvaluations = filteredEvaluations.filter((evaluation) => {
@@ -160,6 +172,8 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
             String(evaluation.description).toLowerCase().includes(search)
           );
         });
+
+        console.log(filteredEvaluations.length);
 
         return filteredEvaluations;
       }),
