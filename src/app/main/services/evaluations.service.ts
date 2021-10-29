@@ -43,41 +43,40 @@ export class EvaluationsService {
   //where('createAt','>=',start)
 
   getAllEvaluations(start?: Date, end?: Date): Observable<Evaluation[]> {
-    if (start && end){
+    if (start && end) {
       return this.afs
-          .collection<Evaluation>(`/db/ferreyros/evaluations`, (ref) =>
-            ref.where('createdAt', '>=', start).where('createdAt', '<=', end)
-          )
-          .valueChanges()
-          .pipe(
-            map((list) => {
-              const data: Evaluation[] = [];
-              list.forEach(el => {
-                this.getEvaluationInquiryById(el.id).subscribe(
-                  (res) => {
-                    let inquiry;
-                    res.forEach((valor, index, arr) => {
-                      inquiry = {
-                        ...inquiry,
-                      ['question' + index]: valor.inquiry,
-                      ['answer' + index]: valor.answer,
-                      };
-                    });
-                    const arrayJoin = {
-                      ...el,
-                      inquiries: inquiry
-                    };
-                    data.push(arrayJoin);
-                });
-              });
+        .collection<Evaluation>(`/db/ferreyros/evaluations`, (ref) =>
+          ref.where('createdAt', '>=', start).where('createdAt', '<=', end)
+        )
+        .valueChanges();
+      // .pipe(
+      //   map((list) => {
+      //     const data: Evaluation[] = [];
+      //     list.forEach(el => {
+      //       this.getEvaluationInquiryById(el.id).subscribe(
+      //         (res) => {
+      //           let inquiry;
+      //           res.forEach((valor, index, arr) => {
+      //             inquiry = {
+      //               ...inquiry,
+      //             ['question' + index]: valor.inquiry,
+      //             ['answer' + index]: valor.answer,
+      //             };
+      //           });
+      //           const arrayJoin = {
+      //             ...el,
+      //             inquiries: inquiry
+      //           };
+      //           data.push(arrayJoin);
+      //       });
+      //     });
 
-              return data.sort(
-                (a, b) => b['createdAt']['seconds'] - a['createdAt']['seconds']
-              );
-            })
-          );
-    }
-    else{
+      //     return data.sort(
+      //       (a, b) => b['createdAt']['seconds'] - a['createdAt']['seconds']
+      //     );
+      //   })
+      // );
+    } else {
       return this.afs
         .collection<Evaluation>(`/db/ferreyros/evaluations`, (ref) =>
           ref.orderBy('createdAt', 'asc')
@@ -87,19 +86,27 @@ export class EvaluationsService {
   }
 
   getAllEvaluationInquiry(): Observable<EvaluationInquiry[]> {
-    return this.afs.collectionGroup<EvaluationInquiry>('inquiries',(ref) =>
-    ref.orderBy('createdAt', 'desc')).valueChanges();
+    return this.afs
+      .collectionGroup<EvaluationInquiry>('inquiries', (ref) =>
+        ref.orderBy('createdAt', 'desc')
+      )
+      .valueChanges();
   }
 
-  getEvaluationInquiryById(idEvaluation: string): Observable<EvaluationInquiry[]>{
-    return this.afs.collection<EvaluationInquiry>(`/db/ferreyros/evaluations/${idEvaluation}/inquiries`)
-    .valueChanges()
-    .pipe(take(1));
+  getEvaluationInquiryById(
+    idEvaluation: string
+  ): Observable<EvaluationInquiry[]> {
+    return this.afs
+      .collection<EvaluationInquiry>(
+        `/db/ferreyros/evaluations/${idEvaluation}/inquiries`
+      )
+      .valueChanges()
+      .pipe(take(1));
   }
 
   getAllEvaluationsOrderByAsc(): Observable<Evaluation[]> {
     return this.afs
-        .collection<Evaluation>(`/db/ferreyros/evaluations`, (ref) =>
+      .collection<Evaluation>(`/db/ferreyros/evaluations`, (ref) =>
         ref.orderBy('createdAt', 'asc')
       )
       .valueChanges();
