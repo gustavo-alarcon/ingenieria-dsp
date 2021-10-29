@@ -146,7 +146,8 @@
                 <mat-form-field appearance="outline" class="container-form__work__input"
                     [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
                     <mat-label> Observaciones</mat-label>
-                    <input matInput type="text" placeholder="Observaciones" formControlName="analysisObservations" />
+                    <textarea matInput type="text"  cols="30" rows="10" placeholder="Observaciones" formControlName="analysisObservations"></textarea>
+                    <!-- <input matInput type="text" placeholder="Observaciones" formControlName="analysisObservations" /> -->
                     <mat-error *ngIf="internalForm.controls['analysisObservations'].errors">
                         Campo <strong>requerido.</strong>
                     </mat-error>
