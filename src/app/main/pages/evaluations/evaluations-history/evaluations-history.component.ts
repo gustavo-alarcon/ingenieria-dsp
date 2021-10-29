@@ -7,10 +7,13 @@ import { Evaluation, Workshop } from '../../../models/evaluations.model';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import { EvaluationsService } from '../../../services/evaluations.service';
 import {
+  catchError,
   debounceTime,
   distinctUntilChanged,
+  filter,
   map,
   startWith,
+  switchMap,
   tap,
 } from 'rxjs/operators';
 import { HistoryEditDialogComponent } from './dialogs/history-edit-dialog/history-edit-dialog.component';
@@ -28,6 +31,7 @@ import { HistoryReportsDialogComponent } from './dialogs/history-reports-dialog/
 import { MatSort, Sort } from '@angular/material/sort';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { DatePipe } from '@angular/common';
+import { time } from 'console';
 
 @Component({
   selector: 'app-evaluations-history',
@@ -121,84 +125,57 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
     });
 
     this.evaluation$ = combineLatest(
-      this.evaltService.getAllEvaluations(
-        this.dateForm.get('start').value,
-        this.dateForm.get('end').value
-      ),
+      // this.evaltService.getAllEvaluations(
+      //   this.dateForm.get('start').value,
+      //   this.dateForm.get('end').value
+      // ),
       this.statusControl.valueChanges.pipe(startWith('')),
       this.searchControl.valueChanges.pipe(
         debounceTime(300),
         distinctUntilChanged(),
         startWith('')
       ),
-      this.dateForm.get('start').valueChanges.pipe(
-        startWith(beginDate),
-        map((begin) => begin.setHours(0, 0, 0, 0))
-      ),
-      this.dateForm.get('end').valueChanges.pipe(
-        startWith(endDate),
-        map((end) => (end ? end.setHours(23, 59, 59) : null))
+      this.dateForm.valueChanges.pipe(
+        startWith({ start: beginDate, end: endDate }),
+        filter((time) => { return time.start && time.end; }),
+        switchMap((time: { start: Date, end: Date }) => {
+          console.log(time);
+          
+          time.end.setHours(23, 59, 59);
+          return this.evaltService.getAllEvaluations(time.start, time.end);
+        }),
+        catchError(err => {
+          console.log(err);
+          return [];
+        })
       )
     ).pipe(
-      map(([evaluations, status, search, startdate, enddate]) => {
+      map(([status, search, evaluations]) => {
+        console.log(evaluations.length);
 
-        const date = { begin: startdate, end: enddate };
-        const searchTerm = search.toLowerCase();
+        let filteredEvaluations = [...evaluations];
 
-        let preFilterStatus = [];
-        let preFilterSearch = [...evaluations];
-        const preFilterWithDate = [];
-
-
-        preFilterSearch.filter((element) => {
-          const dateMillis = element.createdAt['seconds'] * 1000;
-          if (dateMillis >= date.begin && dateMillis <= date.end) {
-            preFilterWithDate.push(element);
+        filteredEvaluations = filteredEvaluations.filter((evaluation) => {
+          if (status) {
+            return evaluation.internalStatus === status;
+          } else {
+            return true;
           }
         });
-        if (status.length > 1) {
-          preFilterStatus = preFilterWithDate.filter(
-            (evaluation) => evaluation.internalStatus === status
-          );
-          preFilterSearch = preFilterStatus
-            .filter((evaluation) => {
-              return (
-                String(evaluation.otMain).toLowerCase().includes(searchTerm) ||
-                String(evaluation.otChild).toLowerCase().includes(searchTerm) ||
-                String(evaluation.wof).toLowerCase().includes(searchTerm) ||
-                String(evaluation.partNumber)
-                  .toLowerCase()
-                  .includes(searchTerm) ||
-                String(evaluation.description)
-                  .toLowerCase()
-                  .includes(searchTerm)
-              );
-            })
-            .filter((evaluation) => {
-              return this.getFilterTime(evaluation.createdAt, date);
-            });
-        } else {
-          preFilterSearch = preFilterWithDate
-            .filter((evaluation) => {
-              return (
-                String(evaluation.otMain).toLowerCase().includes(searchTerm) ||
-                String(evaluation.otChild).toLowerCase().includes(searchTerm) ||
-                String(evaluation.wof).toLowerCase().includes(searchTerm) ||
-                String(evaluation.partNumber)
-                  .toLowerCase()
-                  .includes(searchTerm) ||
-                String(evaluation.description)
-                  .toLowerCase()
-                  .includes(searchTerm)
-              );
-            })
-            .filter((evaluation) => {
-              return this.getFilterTime(evaluation.createdAt, date);
-            });
-        }
 
-        return preFilterSearch
-        ;
+        filteredEvaluations = filteredEvaluations.filter((evaluation) => {
+          return (
+            String(evaluation.otMain).toLowerCase().includes(search) ||
+            String(evaluation.otChild).toLowerCase().includes(search) ||
+            String(evaluation.wof).toLowerCase().includes(search) ||
+            String(evaluation.partNumber).toLowerCase().includes(search) ||
+            String(evaluation.description).toLowerCase().includes(search)
+          );
+        });
+
+        console.log(filteredEvaluations.length);
+
+        return filteredEvaluations;
       }),
       tap((res) => {
         if (res) {
@@ -207,7 +184,6 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
         }
       })
     );
-
   }
 
   ngOnDestroy() {
@@ -310,7 +286,7 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
   }
 
   downloadXlsx(evaluations: Evaluation[]): void {
-    console.log('evaluaciones : ',evaluations);
+    console.log('evaluaciones : ', evaluations);
 
     let table_xlsx: any[] = [];
 
@@ -357,8 +333,8 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
     table_xlsx.push(headersXlsx);
 
     evaluations.forEach((evaluation) => {
-      let  temp1 = [];
-      let  temp2 = [];
+      let temp1 = [];
+      let temp2 = [];
 
       temp1 = [
         evaluation.otMain ? evaluation.otMain : '---',
@@ -373,15 +349,17 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
         evaluation.task ? evaluation.task : '---',
         evaluation.observations ? evaluation.observations : '---',
         evaluation.workshop
-        ? evaluation.workshop['location']
-        : evaluation.workshop
-        ? evaluation.workshop
-        : '---',
+          ? evaluation.workshop['location']
+          : evaluation.workshop
+          ? evaluation.workshop
+          : '---',
         evaluation.images ? evaluation.images['0'] : '---',
         evaluation.processAt
           ? new Date(evaluation.processAt['seconds'] * 1000)
           : '---',
-        evaluation.inquiryAt ? new Date(evaluation.inquiryAt['seconds'] * 1000) : '---',
+        evaluation.inquiryAt
+          ? new Date(evaluation.inquiryAt['seconds'] * 1000)
+          : '---',
         evaluation.finalizedAt
           ? new Date(evaluation.finalizedAt['seconds'] * 1000)
           : '---',
@@ -390,38 +368,78 @@ export class EvaluationsHistoryComponent implements OnInit, OnDestroy {
             ? evaluation.finalizedBy.name
             : evaluation.finalizedBy
           : '---',
-          evaluation.result ? evaluation.result : '---',
-          evaluation.kindOfTest ? evaluation.kindOfTest : '---',
-          evaluation.comments ? evaluation.comments : '---',
-          evaluation.resultImage1 ? evaluation.resultImage1 : '---',
-          evaluation.resultImage2 ? evaluation.resultImage2 : '---',
-          evaluation.createdAt
+        evaluation.result ? evaluation.result : '---',
+        evaluation.kindOfTest ? evaluation.kindOfTest : '---',
+        evaluation.comments ? evaluation.comments : '---',
+        evaluation.resultImage1 ? evaluation.resultImage1 : '---',
+        evaluation.resultImage2 ? evaluation.resultImage2 : '---',
+        evaluation.createdAt
           ? new Date(evaluation.createdAt['seconds'] * 1000)
           : '---',
-          evaluation.createdBy
+        evaluation.createdBy
+          ? evaluation.createdBy.name
             ? evaluation.createdBy.name
-            ? evaluation.createdBy.name
-              : evaluation.createdBy
-            : '---',
-          evaluation.editedAt
+            : evaluation.createdBy
+          : '---',
+        evaluation.editedAt
           ? new Date(evaluation.editedAt['seconds'] * 1000)
           : '---',
-          evaluation.editedBy
+        evaluation.editedBy
+          ? evaluation.editedBy.name
             ? evaluation.editedBy.name
-            ? evaluation.editedBy.name
-              : evaluation.editedBy
-            : '---',
-          evaluation.emailList ? evaluation.emailList.join() : '---',
-          evaluation.inquiries ? evaluation.inquiries['question0'] ? evaluation.inquiries['question0'] : '----' : '----',
-          evaluation.inquiries ? evaluation.inquiries['answer0'] ? evaluation.inquiries['answer0']: '----': '----',
-          evaluation.inquiries ? evaluation.inquiries['question1'] ? evaluation.inquiries['question1'] : '----' : '----',
-          evaluation.inquiries ? evaluation.inquiries['answer1'] ? evaluation.inquiries['answer1']: '----': '----',
-          evaluation.inquiries ? evaluation.inquiries['question2'] ? evaluation.inquiries['question2'] : '----' : '----',
-          evaluation.inquiries ? evaluation.inquiries['answer2'] ? evaluation.inquiries['answer2']: '----': '----',
-          evaluation.inquiries ? evaluation.inquiries['question3'] ? evaluation.inquiries['question3'] : '----' : '----',
-          evaluation.inquiries ? evaluation.inquiries['answer3'] ? evaluation.inquiries['answer3']: '----': '----',
-          evaluation.inquiries ? evaluation.inquiries['question4'] ? evaluation.inquiries['question4'] : '----' : '----',
-          evaluation.inquiries ? evaluation.inquiries['answer4'] ? evaluation.inquiries['answer4']: '----': '----',
+            : evaluation.editedBy
+          : '---',
+        evaluation.emailList ? evaluation.emailList.join() : '---',
+        evaluation.inquiries
+          ? evaluation.inquiries['question0']
+            ? evaluation.inquiries['question0']
+            : '----'
+          : '----',
+        evaluation.inquiries
+          ? evaluation.inquiries['answer0']
+            ? evaluation.inquiries['answer0']
+            : '----'
+          : '----',
+        evaluation.inquiries
+          ? evaluation.inquiries['question1']
+            ? evaluation.inquiries['question1']
+            : '----'
+          : '----',
+        evaluation.inquiries
+          ? evaluation.inquiries['answer1']
+            ? evaluation.inquiries['answer1']
+            : '----'
+          : '----',
+        evaluation.inquiries
+          ? evaluation.inquiries['question2']
+            ? evaluation.inquiries['question2']
+            : '----'
+          : '----',
+        evaluation.inquiries
+          ? evaluation.inquiries['answer2']
+            ? evaluation.inquiries['answer2']
+            : '----'
+          : '----',
+        evaluation.inquiries
+          ? evaluation.inquiries['question3']
+            ? evaluation.inquiries['question3']
+            : '----'
+          : '----',
+        evaluation.inquiries
+          ? evaluation.inquiries['answer3']
+            ? evaluation.inquiries['answer3']
+            : '----'
+          : '----',
+        evaluation.inquiries
+          ? evaluation.inquiries['question4']
+            ? evaluation.inquiries['question4']
+            : '----'
+          : '----',
+        evaluation.inquiries
+          ? evaluation.inquiries['answer4']
+            ? evaluation.inquiries['answer4']
+            : '----'
+          : '----',
       ];
 
       table_xlsx.push(temp1);
