@@ -180,12 +180,48 @@
                         </td>
                     </ng-container>
 
+                    <ng-container matColumnDef="bahia">
+                        <th mat-header-cell *matHeaderCellDef class="table__cell theader" mat-sort-header>
+                            Bahía
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="table__cell">
+                            {{ element.analysis ? element.analysis.bahia : "-" }}
+                        </td>
+                    </ng-container>
+
                     <ng-container matColumnDef="causeFailure">
                         <th mat-header-cell *matHeaderCellDef class="table__cell theader" mat-sort-header>
-                            Causante de falla
+                            Causa inmediata 
                         </th>
                         <td mat-cell *matCellDef="let element" class="table__cell">
                             {{ element.analysis ? element.analysis.causeFailure : "-" }}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="basicCause">
+                        <th mat-header-cell *matHeaderCellDef class="table__cell theader" mat-sort-header>
+                            Causa basica
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="table__cell">
+                            {{ element.analysis ? element.analysis.basicCause : "-" }}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="responsable">
+                        <th mat-header-cell *matHeaderCellDef class="table__cell theader" mat-sort-header>
+                            responsable                         
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="table__cell">
+                            {{ element.analysis ? element.analysis.responsable : "-" }}
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="observations">
+                        <th mat-header-cell *matHeaderCellDef class="table__cell theader" mat-sort-header>
+                            Observaciones                         
+                        </th>
+                        <td mat-cell *matCellDef="let element" class="table__cell">
+                            {{ element.analysis ? element.analysis.observation : "-" }}
                         </td>
                     </ng-container>
 

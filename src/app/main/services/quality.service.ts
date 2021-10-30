@@ -1098,6 +1098,7 @@ export class QualityService {
   updateQualityExternal(
     entryId,
     form,
+    formAnalysis,
     user: User
   ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
@@ -1111,12 +1112,14 @@ export class QualityService {
     const data: any = {
       editedAt: new Date(),
       edited: user,
+      analysis: formAnalysis,
       workOrder: form.workdOrden,
       component: form.component,
       partNumber: form.nPart,
       packageNumber: form.nPackage,
       componentHourMeter: form.componentHourMeter,
       miningOperation: form.miningOperation,
+      workshop: form.workshop,
       question1: form.question1,
       question2: form.question2,
       question3: form.question3,
@@ -1130,6 +1133,7 @@ export class QualityService {
   updateQualityInternal(
     entryId,
     form,
+    formAnalysis,
     user: User
   ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
@@ -1143,10 +1147,11 @@ export class QualityService {
     const data: any = {
       editedAt: new Date(),
       edited: user,
+      analysis: formAnalysis,
       workOrder: form.workdOrden,
       component: form.component,
       partNumber: form.nPart,
-      workShop: form.workShop,
+      workShop: form.workshop.workshopName,
       enventDetail: form.eventDetail,
     };
     batch.update(qualityDocRef, data);
