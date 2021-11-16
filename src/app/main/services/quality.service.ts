@@ -263,8 +263,8 @@ export class QualityService {
   // get all QualityListSpecialist
   getAllQualityListSpecialist(): Observable<EvaluationsUser[]> {
     return this.afs
-      .collection<EvaluationsUser>(`/evaluations-settings`, (ref) =>
-        ref.where('workingArea', 'in', ['Soporte técnico', 'Confiabilidad'])
+      .collection<EvaluationsUser>(`/users`, (ref) =>
+        ref.where('role', '==', 'Administrador')
       )
       .valueChanges();
   }
