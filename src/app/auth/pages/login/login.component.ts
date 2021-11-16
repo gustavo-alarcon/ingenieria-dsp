@@ -24,7 +24,7 @@ export class LoginComponent {
       const userMail = user.email.split('@');
       if ((userMail[1] !== 'meraki-s.com' && userMail[1] !== 'ferreyros.com.pe')) {
         this.router.navigate(['/auth']);
-        this.authSevice.logout();
+        await this.authSevice.logout();
       }
       this.router.navigate(['/main']);
     } catch (error) {
