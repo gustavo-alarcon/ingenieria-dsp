@@ -20,7 +20,12 @@ export class LoginComponent {
 
   async loginGoogle(): Promise<void> {
     try {
-      await this.authSevice.loginGoogle();
+      const { user } = await this.authSevice.loginGoogle();
+      const userMail = user.email.split('@');
+      if ((userMail[1] !== 'meraki-s.com' && userMail[1] !== 'ferreyros.com.pe')) {
+        this.router.navigate(['/auth']);
+        this.authSevice.logout();
+      }
       this.router.navigate(['/main']);
     } catch (error) {
       console.log('error');
