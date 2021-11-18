@@ -209,7 +209,7 @@ export class AnalysisDialogComponent implements OnInit, OnDestroy {
         observation: [null],
         responsable: ['', Validators.required],
         bahia: ['', Validators.required],
-        URLimage: ['', Validators.required],
+        URLimage: '',
       });
 
       if (this.data.evaluationAnalisis <= 5) {
