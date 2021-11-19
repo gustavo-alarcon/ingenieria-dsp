@@ -220,36 +220,28 @@ export class EditInternalDialogComponent implements OnInit, OnDestroy {
       workshop: [this.data.workShop, Validators.required],
       analysisBasicCause: [
         this.data.analysis ? this.data.analysis.basicCause : '',
-        Validators.required,
       ],
       analysisCauseFailure: [
         this.data.analysis ? this.data.analysis.causeFailure : '',
-        Validators.required,
       ],
       analysisResponsable: [
         this.data.analysis ? this.data.analysis.responsable : '',
-        Validators.required,
       ],
       analysisObservations: [
         this.data.analysis ? this.data.analysis.observation : '',
-        Validators.required,
       ],
-      analysisBahia: [
-        this.data.analysis ? this.data.analysis.bahia : '',
-        Validators.required,
-      ],
+      analysisBahia: [this.data.analysis ? this.data.analysis.bahia : ''],
     });
   }
 
   save(): void {
     const causeFailure = this.internalForm.get('analysisCauseFailure').value;
     const analysis = {
-      URLimage: this.data.analysis.URLimage,
       bahia: this.internalForm.get('analysisBahia').value,
       basicCause: this.internalForm.get('analysisBasicCause').value,
-      causeFailure: causeFailure.name,
+      causeFailure: causeFailure ? causeFailure.name : '',
       observation: this.internalForm.get('analysisObservations').value,
-      process: this.data.analysis.process,
+      process: this.internalForm.get('reportingWorkshopProcess').value,
       responsable: this.internalForm.get('analysisResponsable').value,
       responsibleWorkshop: this.internalForm.get('workshop').value,
     };

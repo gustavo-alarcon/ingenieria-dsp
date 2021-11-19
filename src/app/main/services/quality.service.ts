@@ -1107,7 +1107,7 @@ export class QualityService {
     const qualityDocRef = this.afs.firestore.doc(
       `db/ferreyros/quality/${entryId}`
     );
-
+    
     // Structuring the data model
     const data: any = {
       editedAt: new Date(),
