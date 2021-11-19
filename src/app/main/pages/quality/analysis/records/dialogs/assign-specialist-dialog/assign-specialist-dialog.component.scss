@@ -1,46 +1,81 @@
 .header {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin: 8px 0px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 8px 0px;
 
-    &__title {
-        font-family: Poppins !important;
-        font-style: normal !important;
-        font-weight: bold !important;
-        font-size: 18px !important;
-        line-height: 27px !important;
-        color: rgba(43, 43, 43, 0.87) !important;
-        margin: 0px 0px;
-    }
+  &__title {
+    font-family: Poppins !important;
+    font-style: normal !important;
+    font-weight: bold !important;
+    font-size: 18px !important;
+    line-height: 27px !important;
+    color: rgba(43, 43, 43, 0.87) !important;
+    margin: 0px 0px;
+  }
 
-    &__icon {
-        margin-top: 0px; 
-        cursor: pointer;
-        color: black ;
-        margin-right: 20px  ;
-    }
-    &__icon-clear {
-        margin-top: 0px; 
-        cursor: pointer;
-        color: black ;
-    }
-}
-
-.timer-container{
-    &__input{
-        width: 100%;
-    }
-}
-.footer__btn-close{
-    border: 1px solid #B00020;
-    background: white;
-    padding: 0px 30px 0px 30px;
+  &__icon {
+    margin-top: 0px;
+    cursor: pointer;
+    color: black;
     margin-right: 20px;
+  }
+  &__icon-clear {
+    margin-top: 0px;
+    cursor: pointer;
+    color: black;
+  }
 }
 
-.footer__btn-save{
-    background: #6200EE;
-    color: white;
-    padding: 0px 30px 0px 30px;
+.timer-container {
+  &__input {
+    width: 100%;
+  }
+}
+.footer__btn-close {
+  border: 1px solid #b00020;
+  background: white;
+  padding: 0px 30px 0px 30px;
+  margin-right: 20px;
+}
+
+.footer__btn-save {
+  background: #6200ee;
+  color: white;
+  padding: 0px 30px 0px 30px;
+}
+
+.analysis-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  p {
+    margin: 4px;
+  }
+
+  span {
+    padding: 8px 16px;
+    margin: 4px;
+    background-color: rgba($color: #6200ee, $alpha: 0.2);
+    border-color: rgba($color: #000000, $alpha: 0.8);
+    border-radius: 4px;
+    font-size: 18px;
+    font-weight: bold;
+    line-height: 18px;
+  }
+}
+
+.info-label {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 0px 6px;
+  width: 75%;
+
+  &--warn {
+    color: rgba(255, 0, 0, 0.7);
+    border-left: 4px red solid;
+  }
 }

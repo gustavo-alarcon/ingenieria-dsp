@@ -27,8 +27,10 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="ms-kanban-toolbar__input" [ngClass]="isMobile ? 'ms-kanban-toolbar__input--mobile' : 'ms-kanban-toolbar__input--desktop'">
+            <mat-label>Taller</mat-label>
+            <mat-icon matPrefix>location_on</mat-icon>
             <mat-select [formControl]="statusControl" placeholder="Estados">
-                <mat-option value="">-Todos-</mat-option>
+                <mat-option value="">Todos</mat-option>
                 <mat-option *ngFor="let item of statusList" [value]="item.status">{{item.name}}</mat-option>
             </mat-select>
         </mat-form-field>

@@ -1,165 +1,350 @@
-
 <div>
-    <div class="ms-dialog-header">
-        <mat-icon class="ms-dialog-header__icon">note_alt</mat-icon>
-        <h3 class="ms-dialog-header__title"> Editar eventos internos</h3>
-        <span class="ms-fill"></span>
-        <button mat-icon-button mat-dialog-close>
-            <mat-icon>cancel</mat-icon>
-        </button>
-    </div>
-    <mat-divider></mat-divider>
+  <div class="ms-dialog-header">
+    <mat-icon class="ms-dialog-header__icon">note_alt</mat-icon>
+    <h3 class="ms-dialog-header__title">Editar eventos internos</h3>
+    <span class="ms-fill"></span>
+    <button mat-icon-button mat-dialog-close>
+      <mat-icon>cancel</mat-icon>
+    </button>
+  </div>
+  <mat-divider></mat-divider>
 
-    <mat-dialog-content style="margin-top: 20px;" >
-        <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
-        <form [formGroup]="internalForm" autocomplete="off" class="container-form">
-            <div class="container-form__work">
-                <!-- <mat-form-field appearance="outline" class="container-form__work__input"
-                    [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
-                    <mat-label>Taller</mat-label>
-                    <input matInput type="text" placeholder="taller" formControlName="workShop" readonly/>
-                    <mat-error *ngIf="internalForm.controls['workShop'].errors">
-                        Campo <strong>requerido.</strong>
-                    </mat-error>
-                </mat-form-field> -->
-                <mat-form-field appearance="outline" class="container-form__work__input"
-                    [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
-                    <mat-label> Taller resposnable</mat-label>
-                    <mat-select formControlName="workshop">
-                    <mat-option *ngFor="let workshop of responsibleWorkshopList$ | async"  [value]="workshop" >
-                        {{ workshop.workshopName }}
-                    </mat-option>
-                    </mat-select>
-                    <mat-error>
-                        <span *ngIf="internalForm.get('workshop').errors?.required">
-                        Por favor, complete el campo.
-                        </span >
-                        <span *ngIf="internalForm.get('workshop').errors?.invalid" >
-                        Dato inválido. Complete con alguna opción válida.
-                        </span>
-                    </mat-error>
-                </mat-form-field>
+  <mat-dialog-content style="margin-top: 20px">
+    <mat-progress-bar
+      mode="indeterminate"
+      *ngIf="loading$ | async"
+    ></mat-progress-bar>
+    <form [formGroup]="internalForm" autocomplete="off" class="container-form">
+      <div class="container-form__work">
+        <mat-form-field
+          appearance="outline"
+          class="container-form__work__input"
+          [ngClass]="
+            isMobile
+              ? 'container-form__work__input--mobile'
+              : 'container-form__work__input--desktop'
+          "
+        >
+          <mat-label> Taller responsable</mat-label>
+          <mat-select formControlName="workshop">
+            <mat-option
+              *ngFor="let workshop of responsibleWorkshopList$ | async"
+              [value]="workshop"
+            >
+              {{ workshop.workshopName }}
+            </mat-option>
+          </mat-select>
+          <mat-error>
+            <span *ngIf="internalForm.get('workshop').errors?.required">
+              Por favor, complete el campo.
+            </span>
+            <span *ngIf="internalForm.get('workshop').errors?.invalid">
+              Dato inválido. Complete con alguna opción válida.
+            </span>
+          </mat-error>
+        </mat-form-field>
 
-                <mat-form-field appearance="outline" class="container-form__work__input"
-                    [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
-                    <mat-label>Orden de trabajo</mat-label>
-                    <input matInput type="number" placeholder="Orden de trabajo" formControlName="workdOrden" />
-                    <mat-error *ngIf="internalForm.controls['workdOrden'].errors">
-                        Campo <strong>requerido.</strong>
-                    </mat-error>
-                </mat-form-field>
+        <mat-form-field
+          appearance="outline"
+          class="container-form__work__input"
+          [ngClass]="
+            isMobile
+              ? 'container-form__work__input--mobile'
+              : 'container-form__work__input--desktop'
+          "
+        >
+          <mat-label>Orden de trabajo</mat-label>
+          <input
+            matInput
+            type="number"
+            placeholder="Orden de trabajo"
+            formControlName="workdOrden"
+          />
+          <mat-error *ngIf="internalForm.controls['workdOrden'].errors">
+            Campo <strong>requerido.</strong>
+          </mat-error>
+        </mat-form-field>
 
-                <mat-form-field appearance="outline" class="container-form__work__input"
-                    [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
-                    <mat-label>Componente</mat-label>
-                    <input matInput type="text" placeholder="Componente" formControlName="component" />
-                    <mat-error *ngIf="internalForm.controls['component'].errors">
-                        Campo <strong>requerido.</strong>
-                    </mat-error>
-                </mat-form-field>
-                <mat-form-field appearance="outline" class="container-form__work__input"
-                    [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
-                    <mat-label>Nro de parte</mat-label>
-                    <input matInput type="text" placeholder="Nro de parte" formControlName="nPart" />
-                    <mat-error *ngIf="internalForm.controls['nPart'].errors">
-                        Campo <strong>requerido.</strong>
-                    </mat-error>
-                </mat-form-field>
-            </div>
+        <mat-form-field
+          appearance="outline"
+          class="container-form__work__input"
+          [ngClass]="
+            isMobile
+              ? 'container-form__work__input--mobile'
+              : 'container-form__work__input--desktop'
+          "
+        >
+          <mat-label>Componente</mat-label>
 
-            <mat-form-field appearance="outline" class="container-form__area"
-                [ngClass]="isMobile ? 'container-form__area--mobile' : 'container-form__area--desktop'">
-                <mat-label>Detalle de evento</mat-label>
-                <input matInput type="text" placeholder="Detalle del evento" formControlName="eventDetail">
-                <mat-error *ngIf="internalForm.controls['eventDetail'].errors">
-                    Campo <strong>requerido.</strong>
-                </mat-error>
-            </mat-form-field>
+          <input
+            autocomplete="off"
+            type="text"
+            matInput
+            formControlName="component"
+            [matAutocomplete]="autoComponent"
+            placeholder="Componente"
+          />
+          <mat-autocomplete
+            #autoComponent="matAutocomplete"
+            autoActiveFirstOption
+          >
+            <mat-option
+              *ngFor="let option of components$ | async"
+              [value]="option.name"
+            >
+              {{ option.name }}
+            </mat-option>
+          </mat-autocomplete>
+          <mat-error *ngIf="internalForm.controls['component'].errors">
+            Campo <strong>requerido.</strong>
+          </mat-error>
+        </mat-form-field>
 
-            <div class="container-form__work">
-               
-                <mat-form-field appearance="outline" class="container-form__work__input"
-                    [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
-                    <mat-label>Causa inmediata</mat-label>      
-                    <mat-select formControlName="analysisCauseFailure">
-                    <mat-option *ngFor="let item of immediateCauses$ | async" [value]="item"                    >
-                        {{ item.name }}
-                    </mat-option>
-                    </mat-select>
-                    <mat-error>
-                    <span *ngIf="internalForm.get('analysisCauseFailure').errors?.required"
-                        >Por favor, complete el campo.</span>
-                    <span *ngIf="internalForm.get('analysisCauseFailure').errors?.invalid"
-                        >Dato inválido. Complete con alguna opción válida.</span>
-                    </mat-error>
-                </mat-form-field>
-    
-                <mat-form-field appearance="outline" class="container-form__work__input"
-                    [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
-                <mat-label>Causa básica</mat-label>      
-                <mat-select placeholder="Escribir..." formControlName="analysisBasicCause" >
-                    <mat-option *ngFor="let item of basicCausesArray" [value]="item" >
-                    {{ item }}
-                    </mat-option>
-                </mat-select>
-                <mat-error *ngIf="internalForm.get('analysisBasicCause').errors">
-                    Campo <strong>requerido.</strong>
-                </mat-error>
-                </mat-form-field>
+        <mat-form-field
+          appearance="outline"
+          class="container-form__work__input"
+          [ngClass]="
+            isMobile
+              ? 'container-form__work__input--mobile'
+              : 'container-form__work__input--desktop'
+          "
+        >
+          <mat-label>Nro de parte</mat-label>
+          <input
+            matInput
+            type="text"
+            placeholder="Nro de parte"
+            formControlName="nPart"
+          />
+          <mat-error *ngIf="internalForm.controls['nPart'].errors">
+            Campo <strong>requerido.</strong>
+          </mat-error>
+        </mat-form-field>
+      </div>
 
-                <!-- <mat-form-field appearance="outline" class="container-form__work__input"
-                    [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
-                    <mat-label> Taller resposnable</mat-label>
-                    <mat-select formControlName="workshop">
-                      <mat-option *ngFor="let workshop of responsibleWorkshopList$ | async"  [value]="workshop" >
-                        {{ workshop.workshopName }}
-                      </mat-option>
-                    </mat-select>
-                    <mat-error>
-                        <span *ngIf="internalForm.get('workshop').errors?.required">
-                          Por favor, complete el campo.
-                        </span >
-                        <span *ngIf="internalForm.get('workshop').errors?.invalid" >
-                          Dato inválido. Complete con alguna opción válida.
-                        </span>
-                    </mat-error>
-                  </mat-form-field> -->
+      <mat-form-field
+        appearance="outline"
+        class="container-form__area"
+        [ngClass]="
+          isMobile
+            ? 'container-form__area--mobile'
+            : 'container-form__area--desktop'
+        "
+      >
+        <mat-label>Detalle del evento</mat-label>
+        <textarea
+          matInput
+          placeholder="Detalle del evento"
+          formControlName="eventDetail"
+          rows="5"
+        ></textarea>
+        <mat-error *ngIf="internalForm.controls['eventDetail'].errors">
+          Campo <strong>requerido.</strong>
+        </mat-error>
+      </mat-form-field>
 
-                <mat-form-field appearance="outline" class="container-form__work__input"
-                    [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
-                    <mat-label> Responsable</mat-label>
-                    <input matInput type="text" placeholder="Responsable" formControlName="analysisResponsable" />
-                    <mat-error *ngIf="internalForm.controls['analysisResponsable'].errors">
-                        Campo <strong>requerido.</strong>
-                    </mat-error>
-                </mat-form-field> 
+      <div class="container-form__work">
+        <mat-form-field
+          class="container-form__work__input"
+          [ngClass]="
+            isMobile
+              ? 'container-form__work__input--mobile'
+              : 'container-form__work__input--desktop'
+          "
+          appearance="outline"
+        >
+          <mat-label>Taller que reporta</mat-label>
+          <input
+            autocomplete="off"
+            type="text"
+            matInput
+            formControlName="reportingWorkshop"
+            [matAutocomplete]="auto1"
+            placeholder="¿En que taller se detecto el problema?"
+          />
+          <mat-autocomplete
+            #auto1="matAutocomplete"
+            [displayWith]="displayFn"
+            autoActiveFirstOption
+            (optionSelected)="setSelectedWorkshop($event)"
+          >
+            <mat-option
+              *ngFor="let option of reportingWorkshops$ | async"
+              [value]="option"
+            >
+              {{ option.workshopName }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
 
-                <mat-form-field appearance="outline" class="container-form__work__input"
-                    [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
-                    <mat-label> Bahía</mat-label>
-                    <input matInput type="text" placeholder="Bahía" formControlName="analysisBahia" />
-                    <mat-error *ngIf="internalForm.controls['analysisBahia'].errors">
-                        Campo <strong>requerido.</strong>
-                    </mat-error>
-                </mat-form-field>  
-                
-                <mat-form-field appearance="outline" class="container-form__work__input"
-                    [ngClass]="isMobile ? 'container-form__work__input--mobile' : 'container-form__work__input--desktop'">
-                    <mat-label> Observaciones</mat-label>
-                    <textarea matInput type="text"  cols="30" rows="10" placeholder="Observaciones" formControlName="analysisObservations"></textarea>
-                    <!-- <input matInput type="text" placeholder="Observaciones" formControlName="analysisObservations" /> -->
-                    <mat-error *ngIf="internalForm.controls['analysisObservations'].errors">
-                        Campo <strong>requerido.</strong>
-                    </mat-error>
-                </mat-form-field>  
-                            
-            </div>
+        <mat-form-field
+          class="container-form__work__input"
+          [ngClass]="
+            isMobile
+              ? 'container-form__work__input--mobile'
+              : 'container-form__work__input--desktop'
+          "
+          appearance="outline"
+        >
+          <mat-label>Proceso</mat-label>
+          <input
+            autocomplete="off"
+            type="text"
+            matInput
+            formControlName="reportingWorkshopProcess"
+            [matAutocomplete]="auto2"
+            placeholder="¿En que proceso se detecto este evento?"
+          />
+          <mat-autocomplete #auto2="matAutocomplete" autoActiveFirstOption>
+            <mat-option
+              *ngFor="let option of filteredOptionsWorkshopProcess$ | async"
+              [value]="option"
+            >
+              {{ option }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
 
-        </form>
-    </mat-dialog-content>
-    
-    <mat-dialog-actions align="end">
-        <button mat-stroked-button color="warn" mat-dialog-close [disabled]="loading$ | async">CANCELAR</button>
-        <button mat-stroked-button color="primary" (click)="save()" [disabled]="loading$ | async">GUARDAR</button>
-    </mat-dialog-actions>
+        <mat-form-field
+          appearance="outline"
+          class="container-form__work__input"
+          [ngClass]="
+            isMobile
+              ? 'container-form__work__input--mobile'
+              : 'container-form__work__input--desktop'
+          "
+        >
+          <mat-label>Causa inmediata</mat-label>
+          <mat-select formControlName="analysisCauseFailure">
+            <mat-option
+              *ngFor="let item of immediateCauses$ | async"
+              [value]="item"
+            >
+              {{ item.name }}
+            </mat-option>
+          </mat-select>
+          <mat-error>
+            <span
+              *ngIf="internalForm.get('analysisCauseFailure').errors?.required"
+              >Por favor, complete el campo.</span
+            >
+            <span
+              *ngIf="internalForm.get('analysisCauseFailure').errors?.invalid"
+              >Dato inválido. Complete con alguna opción válida.</span
+            >
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field
+          appearance="outline"
+          class="container-form__work__input"
+          [ngClass]="
+            isMobile
+              ? 'container-form__work__input--mobile'
+              : 'container-form__work__input--desktop'
+          "
+        >
+          <mat-label>Causa básica</mat-label>
+          <mat-select
+            placeholder="Escribir..."
+            formControlName="analysisBasicCause"
+          >
+            <mat-option *ngFor="let item of basicCausesArray" [value]="item">
+              {{ item }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="internalForm.get('analysisBasicCause').errors">
+            Campo <strong>requerido.</strong>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field
+          appearance="outline"
+          class="container-form__work__input"
+          [ngClass]="
+            isMobile
+              ? 'container-form__work__input--mobile'
+              : 'container-form__work__input--desktop'
+          "
+        >
+          <mat-label> Responsable</mat-label>
+          <input
+            matInput
+            type="text"
+            placeholder="Responsable"
+            formControlName="analysisResponsable"
+          />
+          <mat-error
+            *ngIf="internalForm.controls['analysisResponsable'].errors"
+          >
+            Campo <strong>requerido.</strong>
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field
+          appearance="outline"
+          class="container-form__work__input"
+          [ngClass]="
+            isMobile
+              ? 'container-form__work__input--mobile'
+              : 'container-form__work__input--desktop'
+          "
+        >
+          <mat-label> Bahía</mat-label>
+          <input
+            matInput
+            type="text"
+            placeholder="Bahía"
+            formControlName="analysisBahia"
+          />
+          <mat-error *ngIf="internalForm.controls['analysisBahia'].errors">
+            Campo <strong>requerido.</strong>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <mat-form-field
+        appearance="outline"
+        class="container-form__area"
+        [ngClass]="
+          isMobile
+            ? 'container-form__area--mobile'
+            : 'container-form__area--desktop'
+        "
+      >
+        <mat-label> Observaciones</mat-label>
+        <textarea
+          matInput
+          type="text"
+          cols="30"
+          rows="10"
+          placeholder="Observaciones"
+          formControlName="analysisObservations"
+        ></textarea>
+        <!-- <input matInput type="text" placeholder="Observaciones" formControlName="analysisObservations" /> -->
+        <mat-error *ngIf="internalForm.controls['analysisObservations'].errors">
+          Campo <strong>requerido.</strong>
+        </mat-error>
+      </mat-form-field>
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button
+      mat-stroked-button
+      color="warn"
+      mat-dialog-close
+      [disabled]="loading$ | async"
+    >
+      CANCELAR
+    </button>
+    <button
+      mat-stroked-button
+      color="primary"
+      (click)="save()"
+      [disabled]="loading$ | async"
+    >
+      GUARDAR
+    </button>
+  </mat-dialog-actions>
 </div>

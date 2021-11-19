@@ -222,26 +222,6 @@ export class AssignSpecialistDialogComponent implements OnInit, OnDestroy {
         return roundResult;
       })
     );
-
-
-    /* this.filteredBroadcast$ = combineLatest(
-      this.broadcastControl.valueChanges.pipe(
-        startWith(''),
-        debounceTime(300),
-        distinctUntilChanged(),
-        map(broadcast => broadcast.name ? broadcast.name : broadcast)
-        ),
-        this.qualityService.getAllBroadcastList()
-    ).pipe(map( ([formValue, broadcasts]) => {
-      console.log('formValue : ', formValue)
-      console.log('broadcasts : ', broadcasts)
-
-      const filter = broadcasts.filter((broadcast) => {
-        return broadcast.name.toLowerCase().includes(formValue.toLowerCase());
-      });
-      return filter;
-      }
-     )); */
   }
 
   ngOnDestroy(): void {

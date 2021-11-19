@@ -1,36 +1,47 @@
 import { Component, Inject, OnInit, OnDestroy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Quality } from '../../../../../../models/quality.model';
+import {
+  MiningOperation,
+  Quality,
+  WorkshopList,
+} from '../../../../../../models/quality.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '../../../../../../../auth/services/auth.service';
 import { QualityService } from '../../../../../../services/quality.service';
-import { BehaviorSubject, Subscription, Observable } from 'rxjs';
+import { BehaviorSubject, Subscription, Observable, combineLatest } from 'rxjs';
 import { User } from '../../../../../../models/user-model';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BasicCause, WorkshopModel } from 'src/app/main/models/workshop.model';
 import { map, startWith, tap } from 'rxjs/operators';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-edit-external-dialog',
   templateUrl: './edit-external-dialog.component.html',
-  styleUrls: ['./edit-external-dialog.component.scss']
+  styleUrls: ['./edit-external-dialog.component.scss'],
 })
 export class EditExternalDialogComponent implements OnInit, OnDestroy {
   loading = new BehaviorSubject<boolean>(false);
   loading$ = this.loading.asObservable();
-  
+
   externalForm: FormGroup;
   immediateCauses$: Observable<BasicCause[]>;
   basicCausesArray: Array<string>;
 
-  
   responsibleWorkshopList$: Observable<WorkshopModel[]>;
 
   user: User;
 
   subscription = new Subscription();
   isMobile = false;
+
+  optionsWorkshopProcess: string[] = [];
+  filteredOptionsWorkshopProcess$: Observable<string[]>;
+
+  reportingWorkshops$: Observable<WorkshopModel[]>;
+  components$: Observable<WorkshopList[]>;
+  miningOperation$: Observable<MiningOperation[]>;
 
   constructor(
     private breakpoint: BreakpointObserver,
@@ -39,19 +50,21 @@ export class EditExternalDialogComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private snackbar: MatSnackBar,
     private authService: AuthService,
-    private qualityService: QualityService,
-  ) { }
+    private qualityService: QualityService
+  ) {}
 
   ngOnInit(): void {
     this.initFormInternal();
-    this.subscription.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
-      .subscribe(res => {
-        if (res.matches) {
-          this.isMobile = true;
-        } else {
-          this.isMobile = false;
-        }
-      })
+    this.subscription.add(
+      this.breakpoint
+        .observe([Breakpoints.HandsetPortrait])
+        .subscribe((res) => {
+          if (res.matches) {
+            this.isMobile = true;
+          } else {
+            this.isMobile = false;
+          }
+        })
     );
 
     this.subscription.add(
@@ -61,50 +74,132 @@ export class EditExternalDialogComponent implements OnInit, OnDestroy {
     );
 
     this.immediateCauses$ = this.qualityService
-    .getAllQualityImmediateCauses()
+      .getAllQualityImmediateCauses()
       .pipe(
         tap((res) => {
-
-          if (!res) { return; }
+          if (!res) {
+            return;
+          }
           if (this.data.analysis) {
             const actualCause = res.filter(
               (cause) => cause.name === this.data.analysis.causeFailure
             );
             if (actualCause.length) {
-              this.externalForm.get('analysisCauseFailure').setValue(actualCause[0]);
+              this.externalForm
+                .get('analysisCauseFailure')
+                .setValue(actualCause[0]);
             }
           }
           return res;
         })
-        );
-
+      );
 
     this.subscription.add(
-      this.externalForm.get('analysisCauseFailure').valueChanges.subscribe((res) => {
-        if (!res) { return; }
-        this.basicCausesArray = res['basicCauses'];
-      })
-      );
+      this.externalForm
+        .get('analysisCauseFailure')
+        .valueChanges.subscribe((res) => {
+          if (!res) {
+            return;
+          }
+          this.basicCausesArray = res['basicCauses'];
+        })
+    );
 
     this.responsibleWorkshopList$ = this.qualityService
       .getAllQualityInternalWorkshop()
       .pipe(
         tap((res) => {
-          if (!res) { return; }
-          if (!this.data.workShop) { return; }
+          if (!res) {
+            return;
+          }
+          if (!this.data.workShop) {
+            return;
+          }
 
           const actualResponsibleWorkshop = res.filter(
             (workshop) => workshop.workshopName === this.data.workShop
           );
 
-          this.externalForm.get('workshop').setValue(actualResponsibleWorkshop[0]);
+          this.externalForm
+            .get('workshop')
+            .setValue(actualResponsibleWorkshop[0]);
         })
       );
 
+    // components
+    this.components$ = combineLatest(
+      this.externalForm.get('component').valueChanges.pipe(
+        startWith(''),
+        map((name) => (name ? name : ''))
+      ),
+      this.qualityService.getAllComponentsListExternal()
+    ).pipe(
+      map(([component, list]) => {
+        const filteredComponents = list.filter((el) =>
+          component
+            ? el.name
+                .toLowerCase()
+                .includes(
+                  component.name
+                    ? component.name.toLowerCase()
+                    : component.toLowerCase()
+                )
+            : true
+        );
+
+        return filteredComponents;
+      })
+    );
+
+    // mining operation
+    this.miningOperation$ = combineLatest(
+      this.externalForm.get('miningOperation').valueChanges.pipe(
+        startWith(''),
+        map((name) => (name ? name : ''))
+      ),
+      this.qualityService.getAllMiningOperationList()
+    ).pipe(
+      map(([formValue, miningOperation]) => {
+        const filter = miningOperation.filter((el) =>
+          formValue
+            ? el.name.toLowerCase().includes(formValue.toLowerCase())
+            : true
+        );
+        if (!(filter.length === 1) && formValue.length) {
+          this.externalForm.get('miningOperation').setErrors({ invalid: true });
+        }
+
+        return filter;
+      })
+    );
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+  }
+
+  setSelectedWorkshop(event: MatAutocompleteSelectedEvent): void {
+    const { workshopProcessName } = event.option.value;
+    this.optionsWorkshopProcess = [...workshopProcessName];
+
+    this.filteredOptionsWorkshopProcess$ = this.externalForm
+      .get('process')
+      .valueChanges.pipe(
+        startWith(''),
+        map((value) => this._filterWorkshopProcess(value))
+      );
+  }
+
+  private _filterWorkshopProcess(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.optionsWorkshopProcess.filter(
+      (option) => option.toLowerCase().indexOf(filterValue) === 0
+    );
+  }
+
+  displayFn(workshop: WorkshopModel): string {
+    return workshop && workshop.workshopName ? workshop.workshopName : '';
   }
 
   initFormInternal(): void {
@@ -116,31 +211,54 @@ export class EditExternalDialogComponent implements OnInit, OnDestroy {
       nPart: [this.data.partNumber, Validators.required],
       miningOperation: [this.data.miningOperation, Validators.required],
       workshop: [this.data.workShop, Validators.required],
-      analysisCauseFailure: [this.data.analysis ? this.data.analysis.causeFailure : '', Validators.required],
-      analysisBasicCause: [this.data.analysis ? this.data.analysis.basicCause : '', Validators.required],
-      analysisResponsable: [this.data.analysis ? this.data.analysis.responsable : '', Validators.required],
-      analysisObservations: [this.data.analysis ? this.data.analysis.observation : '', Validators.required],
-      analysisBahia: [this.data.analysis ? this.data.analysis.bahia : '', Validators.required],
-      question1: [this.data.question1, Validators.required],
-      question2: [this.data.question2, Validators.required],
-      question3: [this.data.question3, Validators.required],
-      question4: [this.data.question4, Validators.required],
+      process: [this.data.analysis ? this.data.analysis.process : ''],
+      analysisCauseFailure: [
+        this.data.analysis
+          ? this.data.analysis.causeFailure
+            ? this.data.analysis.causeFailure
+            : ''
+          : '',
+      ],
+      analysisBasicCause: [
+        this.data.analysis
+          ? this.data.analysis.basicCause
+            ? this.data.analysis.basicCause
+            : ''
+          : '',
+      ],
+      analysisResponsable: [
+        this.data.analysis
+          ? this.data.analysis.responsable
+            ? this.data.analysis.responsable
+            : ''
+          : '',
+      ],
+      analysisObservations: [
+        this.data.analysis
+          ? this.data.analysis.observation
+            ? this.data.analysis.observation
+            : ''
+          : '',
+      ],
+      analysisBahia: [this.data.analysis ? this.data.analysis.bahia : ''],
+      question1: [this.data.question1],
+      question2: [this.data.question2],
+      question3: [this.data.question3],
+      question4: [this.data.question4],
     });
-
   }
 
-  save(): void{
+  save(): void {
     const causeFailure = this.externalForm.get('analysisCauseFailure').value;
     const analysis = {
-      URLimage: this.data.analysis.URLimage,
       bahia: this.externalForm.get('analysisBahia').value,
       basicCause: this.externalForm.get('analysisBasicCause').value,
-      causeFailure: causeFailure.name,
+      causeFailure: causeFailure ? causeFailure.name : '',
       observation: this.externalForm.get('analysisObservations').value,
-      process:  this.data.analysis.process,
+      process: this.externalForm.get('process').value,
       responsable: this.externalForm.get('analysisResponsable').value,
-      responsibleWorkshop:  this.externalForm.get('workshop').value
-    }
+      responsibleWorkshop: this.externalForm.get('workshop').value,
+    };
 
     try {
       if (this.externalForm.valid) {
@@ -149,16 +267,20 @@ export class EditExternalDialogComponent implements OnInit, OnDestroy {
           this.externalForm.value,
           analysis,
           this.user
-          );
+        );
         this.subscription.add(
           resp.subscribe((batch) => {
             if (batch) {
               batch
                 .commit()
                 .then(() => {
-                  this.snackbar.open('✅ Se actualizo correctamente!', 'Aceptar', {
-                    duration: 6000,
-                  });
+                  this.snackbar.open(
+                    '✅ Se actualizo correctamente!',
+                    'Aceptar',
+                    {
+                      duration: 6000,
+                    }
+                  );
                   this.dialogRef.close(false);
                   this.externalForm.reset();
                 })
@@ -179,8 +301,5 @@ export class EditExternalDialogComponent implements OnInit, OnDestroy {
       console.log(error);
       this.loading.next(false);
     }
-
   }
-
-
 }
