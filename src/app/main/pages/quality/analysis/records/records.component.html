@@ -8,9 +8,8 @@
           ? 'ms-kanban-toolbar__input--mobile'
           : 'ms-kanban-toolbar__input--desktop'
       "
-      matTooltip="Tipo de evento"
-      matTooltipPosition="above"
     >
+      <mat-label>Tipo de evento</mat-label>
       <mat-icon matPrefix>location_on</mat-icon>
       <mat-select [formControl]="eventTypeControl">
         <mat-option value="">Todos</mat-option>
@@ -28,9 +27,8 @@
           ? 'ms-kanban-toolbar__input--mobile'
           : 'ms-kanban-toolbar__input--desktop'
       "
-      matTooltip="Taller que reporta"
-      matTooltipPosition="above"
     >
+      <mat-label>Taller que reporta</mat-label>
       <mat-icon matPrefix>report</mat-icon>
       <mat-select [formControl]="reportingWorkshopControl">
         <mat-option value="">Todos</mat-option>
@@ -51,9 +49,8 @@
           ? 'ms-kanban-toolbar__input--mobile'
           : 'ms-kanban-toolbar__input--desktop'
       "
-      matTooltip="Taller responsable"
-      matTooltipPosition="above"
     >
+      <mat-label>Taller responsable</mat-label>
       <mat-icon matPrefix>home_repair_service</mat-icon>
       <mat-select [formControl]="responsibleWorkshopControl">
         <mat-option value="">Todos</mat-option>
@@ -75,6 +72,7 @@
           : 'ms-kanban-toolbar__input--desktop'
       "
     >
+      <mat-label>Buscar</mat-label>
       <mat-icon matPrefix>search</mat-icon>
       <input
         matInput

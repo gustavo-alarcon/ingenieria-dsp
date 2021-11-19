@@ -1,6 +1,6 @@
 <div class="container-settings">
     <mat-accordion>
-        <mat-expansion-panel class="container-settings__color-expantion"
+        <!-- <mat-expansion-panel class="container-settings__color-expantion"
             *ngIf="authService.uiConfig.preEvaluations.tabs.configurations.panel.notifications">
             <mat-expansion-panel-header style="height: 58px;">
                 <mat-panel-title class="container-settings__header-title">
@@ -83,57 +83,9 @@
                         </table>
                         <mat-paginator #settingsPaginator [pageSizeOptions]="[20,30,40]"></mat-paginator>
                     </div>
-                    <!--  <mat-card class="mat-elevation-z0" style="margin-left: -10px;margin-top: 10px;">
-                        <mat-card-header>
-                            <mat-card-title>
-                                <span>
-                                    Lista de difusión
-                                </span>
-                                <button type="button" aria-label="saveDataDifusion" mat-button
-                                    class="container-settings__btn-save" (click)="saveDataNotify()">
-                                    GUARDAR
-                                </button>
-                            </mat-card-title>
-                        </mat-card-header>
-                    </mat-card>
-                    <mat-card class="mat-elevation-z0 container-expansion1__content-card">
-                        <mat-card-header class="container-expansion1__content-card--header">
-                            <mat-form-field>
-                                <mat-label>Escribir</mat-label>
-                                <input type="email" matInput placeholder="Escribir"
-                                    [formControl]="listNotifyFormControl" (keyup.enter)="addDeleteListNotify('add')"
-                                    [errorStateMatcher]="matcher" autocomplete="off">
-                                <button mat-button *ngIf="listNotifyFormControl.value" matSuffix mat-icon-button
-                                    aria-label="clearMail" (click)="listNotifyFormControl.reset()">
-                                    <mat-icon>close</mat-icon>
-                                </button>
-                                <mat-hint>Presione ENTER para agregar</mat-hint>
-                                <mat-error
-                                    *ngIf="listNotifyFormControl.hasError('email') && !listNotifyFormControl.hasError('required')">
-                                    Por favor ingrese un correo valido
-                                </mat-error>
-                                <mat-error *ngIf="listNotifyFormControl.hasError('required')">
-                                    El correo electronico es <strong>Requerido</strong>
-                                </mat-error>
-                            </mat-form-field>
-                        </mat-card-header>
-                        <mat-card-content class="container-expansion1__content-card-content">
-                            <div role="list" *ngFor="let notify of listNotifyArray;let i=index">
-                                <div class="item-list">
-                                    <span>{{notify.email}}</span>
-                                    <span>
-                                        <button mat-icon-button color="primary" aria-label="deletelistNotify"
-                                            (click)="addDeleteListNotify('delete',i)">
-                                            <mat-icon style="color: #828282">delete</mat-icon>
-                                        </button>
-                                    </span>
-                                </div>
-                            </div>
-                        </mat-card-content>
-                    </mat-card> -->
                 </mat-card-content>
             </mat-card>
-        </mat-expansion-panel>
+        </mat-expansion-panel> -->
         <div style="margin-top: 30px;"></div>
         <mat-expansion-panel class="container-settings__color-expantion"
             *ngIf="authService.uiConfig.preEvaluations.tabs.configurations.panel.lists" (opened)="panelOpenState = true"

@@ -33,6 +33,22 @@ exports.googleChatBot = functions.https.onRequest((request, response) => {
 
 exports.createUserSetClaims = functions.auth.user().onCreate(async (user) => {
     functions.logger.info(`create user ${user.email} ${user.uid}`, { structuredData: true });
+
+    const userEmail = user.email.split('@');
+
+    if ((userEmail[1] !== 'meraki-s.com' && userEmail[1] !== 'ferreyros.com.pe')) {
+        functions.logger.info(`Correo ${user.email} no cumple para iniciar sesión en la plataforma`);
+        admin.auth()
+            .deleteUser(user.uid)
+            .then(() => {
+                console.log('Successfully deleted user');
+            })
+            .catch((error) => {
+                console.log('Error deleting user:', error);
+            });
+        return;
+    }
+
     const basics = {
         superuser: false,
         admin: false,
@@ -345,7 +361,7 @@ exports.sendAndonToEndpoint = functions.firestore.document(`db/ferreyros/andon/{
         let url;
         await admin.firestore().doc('/db/generalConfig').onSnapshot(val => {
             url = val.data()['endpoint'];
-            
+
             const data = {
                 "id": andon.id,
                 "type": "andon",
@@ -397,11 +413,11 @@ exports.sendAndonToEndpoint = functions.firestore.document(`db/ferreyros/andon/{
     });
 
 exports.updateSendAndonToEndpoint = functions.firestore.document(`db/ferreyros/andon/{andonId}`)
-    .onUpdate(async(event) => {
+    .onUpdate(async (event) => {
         const andon = event.after.data();
         let url;
 
-        if(andon.reassignedAt){
+        if (andon.reassignedAt) {
             await admin.firestore().doc('/db/generalConfig').onSnapshot(val => {
                 url = val.data()['endpoint'];
                 const data = {
@@ -414,7 +430,7 @@ exports.updateSendAndonToEndpoint = functions.firestore.document(`db/ferreyros/a
                     "emailList": andon.emailList.toString(),
                     "images": Object.values(andon.images).length > 0 ? Object.values(andon.images).join('@@') : ''
                 }
-    
+
                 const options = {
                     "method": "POST",
                     "url": url,
@@ -425,9 +441,9 @@ exports.updateSendAndonToEndpoint = functions.firestore.document(`db/ferreyros/a
                     },
                     data: data
                 };
-    
+
                 console.log("Just before sending email: ", data);
-    
+
                 return gaxios.request(options)
                     .then(res2 => {
                         console.log(`✉️ Andon data sent!`)
@@ -454,7 +470,7 @@ exports.updateSendAndonToEndpoint = functions.firestore.document(`db/ferreyros/a
             });
 
         }
-       
+
     });
 
 exports.sendPreevaluationToEndpoint = functions.firestore.document(`db/ferreyros/evaluations/{evalId}`)
