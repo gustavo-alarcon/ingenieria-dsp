@@ -178,19 +178,10 @@
           appearance="outline"
         >
           <mat-label>Taller responsable</mat-label>
-          <input
-            autocomplete="off"
-            type="text"
-            matInput
+          <mat-select
             formControlName="workshop"
-            [matAutocomplete]="auto1"
-            placeholder="Taller responsable"
-          />
-          <mat-autocomplete
-            #auto1="matAutocomplete"
-            [displayWith]="displayFn"
-            autoActiveFirstOption
-            (optionSelected)="setSelectedWorkshop($event)"
+            (selectionChange)="setResponsibleProcesses($event)"
+            [compareWith]="compareWorkshop"
           >
             <mat-option
               *ngFor="let option of responsibleWorkshopList$ | async"
@@ -198,7 +189,7 @@
             >
               {{ option.workshopName }}
             </mat-option>
-          </mat-autocomplete>
+          </mat-select>
         </mat-form-field>
 
         <mat-form-field
@@ -210,23 +201,15 @@
           "
           appearance="outline"
         >
-          <mat-label>Proceso</mat-label>
-          <input
-            autocomplete="off"
-            type="text"
-            matInput
-            formControlName="process"
-            [matAutocomplete]="auto2"
-            placeholder="Proceso"
-          />
-          <mat-autocomplete #auto2="matAutocomplete" autoActiveFirstOption>
+          <mat-label>Proceso responsable</mat-label>
+          <mat-select formControlName="process">
             <mat-option
-              *ngFor="let option of filteredOptionsWorkshopProcess$ | async"
+              *ngFor="let option of responsibleWorkshopProcesses"
               [value]="option"
             >
               {{ option }}
             </mat-option>
-          </mat-autocomplete>
+          </mat-select>
         </mat-form-field>
 
         <mat-form-field

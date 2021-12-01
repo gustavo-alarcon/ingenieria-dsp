@@ -17,31 +17,50 @@
     <form [formGroup]="internalForm" autocomplete="off" class="container-form">
       <div class="container-form__work">
         <mat-form-field
-          appearance="outline"
           class="container-form__work__input"
           [ngClass]="
             isMobile
               ? 'container-form__work__input--mobile'
               : 'container-form__work__input--desktop'
           "
+          appearance="outline"
         >
-          <mat-label> Taller responsable</mat-label>
-          <mat-select formControlName="workshop">
+          <mat-label>Taller que reporta</mat-label>
+          <mat-select
+            formControlName="reportingWorkshop"
+            (selectionChange)="setReportingProcesses($event)"
+            [compareWith]="compareWorkshop"
+          >
             <mat-option
-              *ngFor="let workshop of responsibleWorkshopList$ | async"
-              [value]="workshop"
+              *ngFor="let option of reportingWorkshops$ | async"
+              [value]="option"
             >
-              {{ workshop.workshopName }}
+              {{ option.workshopName }}
             </mat-option>
           </mat-select>
-          <mat-error>
-            <span *ngIf="internalForm.get('workshop').errors?.required">
-              Por favor, complete el campo.
-            </span>
-            <span *ngIf="internalForm.get('workshop').errors?.invalid">
-              Dato inválido. Complete con alguna opción válida.
-            </span>
-          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field
+          class="container-form__work__input"
+          [ngClass]="
+            isMobile
+              ? 'container-form__work__input--mobile'
+              : 'container-form__work__input--desktop'
+          "
+          appearance="outline"
+        >
+          <mat-label>Proceso reportado</mat-label>
+          <mat-select
+            formControlName="reportingWorkshopProcess"
+            [compareWith]="compareProcess"
+          >
+            <mat-option
+              *ngFor="let option of reportingWorkshopProcesses"
+              [value]="option"
+            >
+              {{ option }}
+            </mat-option>
+          </mat-select>
         </mat-form-field>
 
         <mat-form-field
@@ -145,36 +164,35 @@
 
       <div class="container-form__work">
         <mat-form-field
+          appearance="outline"
           class="container-form__work__input"
           [ngClass]="
             isMobile
               ? 'container-form__work__input--mobile'
               : 'container-form__work__input--desktop'
           "
-          appearance="outline"
         >
-          <mat-label>Taller que reporta</mat-label>
-          <input
-            autocomplete="off"
-            type="text"
-            matInput
-            formControlName="reportingWorkshop"
-            [matAutocomplete]="auto1"
-            placeholder="¿En que taller se detecto el problema?"
-          />
-          <mat-autocomplete
-            #auto1="matAutocomplete"
-            [displayWith]="displayFn"
-            autoActiveFirstOption
-            (optionSelected)="setSelectedWorkshop($event)"
+          <mat-label> Taller responsable</mat-label>
+          <mat-select
+            formControlName="workShop"
+            (selectionChange)="setResponsibleProcesses($event)"
+            [compareWith]="compareWorkshop"
           >
             <mat-option
-              *ngFor="let option of reportingWorkshops$ | async"
-              [value]="option"
+              *ngFor="let workshop of responsibleWorkshopList$ | async"
+              [value]="workshop"
             >
-              {{ option.workshopName }}
+              {{ workshop.workshopName }}
             </mat-option>
-          </mat-autocomplete>
+          </mat-select>
+          <mat-error>
+            <span *ngIf="internalForm.get('workShop').errors?.required">
+              Por favor, complete el campo.
+            </span>
+            <span *ngIf="internalForm.get('workShop').errors?.invalid">
+              Dato inválido. Complete con alguna opción válida.
+            </span>
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field
@@ -186,23 +204,18 @@
           "
           appearance="outline"
         >
-          <mat-label>Proceso</mat-label>
-          <input
-            autocomplete="off"
-            type="text"
-            matInput
-            formControlName="reportingWorkshopProcess"
-            [matAutocomplete]="auto2"
-            placeholder="¿En que proceso se detecto este evento?"
-          />
-          <mat-autocomplete #auto2="matAutocomplete" autoActiveFirstOption>
+          <mat-label>Proceso responsable</mat-label>
+          <mat-select
+            formControlName="analysisProcess"
+            [compareWith]="compareProcess"
+          >
             <mat-option
-              *ngFor="let option of filteredOptionsWorkshopProcess$ | async"
+              *ngFor="let option of responsibleWorkshopProcesses"
               [value]="option"
             >
               {{ option }}
             </mat-option>
-          </mat-autocomplete>
+          </mat-select>
         </mat-form-field>
 
         <mat-form-field
