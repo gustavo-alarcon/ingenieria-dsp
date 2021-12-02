@@ -106,12 +106,14 @@ export class EditInternalDialogComponent implements OnInit, OnDestroy {
             (workshop) => workshop.workshopName === this.data.workShop
           );
 
-          this.responsibleWorkshopProcesses =
-            actualResponsibleWorkshop[0].workshopProcessName;
+          if (actualResponsibleWorkshop.length) {
+            this.responsibleWorkshopProcesses =
+              actualResponsibleWorkshop[0].workshopProcessName;
 
-          this.internalForm
-            .get('workShop')
-            .setValue(actualResponsibleWorkshop[0]);
+            this.internalForm
+              .get('workShop')
+              .setValue(actualResponsibleWorkshop[0]);
+          }
         })
       );
 
