@@ -15,6 +15,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BasicCause, WorkshopModel } from 'src/app/main/models/workshop.model';
 import { map, startWith, tap } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'app-edit-external-dialog',
@@ -42,6 +43,8 @@ export class EditExternalDialogComponent implements OnInit, OnDestroy {
   reportingWorkshops$: Observable<WorkshopModel[]>;
   components$: Observable<WorkshopList[]>;
   miningOperation$: Observable<MiningOperation[]>;
+
+  responsibleWorkshopProcesses: string[] = [];
 
   constructor(
     private breakpoint: BreakpointObserver,
@@ -120,6 +123,9 @@ export class EditExternalDialogComponent implements OnInit, OnDestroy {
             (workshop) => workshop.workshopName === this.data.workShop
           );
 
+          this.responsibleWorkshopProcesses =
+            actualResponsibleWorkshop[0].workshopProcessName;
+
           this.externalForm
             .get('workshop')
             .setValue(actualResponsibleWorkshop[0]);
@@ -188,6 +194,19 @@ export class EditExternalDialogComponent implements OnInit, OnDestroy {
         startWith(''),
         map((value) => this._filterWorkshopProcess(value))
       );
+  }
+
+  setResponsibleProcesses(event: MatSelectChange): void {
+    const { workshopProcessName } = event.value;
+    this.responsibleWorkshopProcesses = [...workshopProcessName];
+  }
+
+  compareWorkshop(o1: WorkshopModel, o2: WorkshopModel) {
+    return o1?.workshopName == o2?.workshopName;
+  }
+
+  compareProcess(o1: string, o2: string) {
+    return o1 == o2;
   }
 
   private _filterWorkshopProcess(value: string): string[] {

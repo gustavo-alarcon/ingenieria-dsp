@@ -1119,7 +1119,7 @@ export class QualityService {
       packageNumber: form.nPackage,
       componentHourMeter: form.componentHourMeter,
       miningOperation: form.miningOperation,
-      workshop: form.workshop,
+      workShop: form.workshop.workshopName,
       question1: form.question1,
       question2: form.question2,
       question3: form.question3,
@@ -1144,14 +1144,16 @@ export class QualityService {
     );
 
     // Structuring the data model
-    const data: any = {
+    const data: Partial<Quality> = {
       editedAt: new Date(),
       edited: user,
+      reportingWorkshop: form.reportingWorkshop,
+      reportingWorkshopProcess: form.reportingWorkshopProcess,
       analysis: formAnalysis,
       workOrder: form.workdOrden,
       component: form.component,
       partNumber: form.nPart,
-      workShop: form.workshop.workshopName,
+      workShop: form.workShop.workshopName,
       enventDetail: form.eventDetail,
     };
     batch.update(qualityDocRef, data);

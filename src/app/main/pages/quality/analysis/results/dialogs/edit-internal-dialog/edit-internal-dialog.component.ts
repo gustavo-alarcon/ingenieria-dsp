@@ -11,6 +11,7 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { BasicCause, WorkshopModel } from 'src/app/main/models/workshop.model';
 import { map, startWith, tap } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'app-edit-internal-dialog',
@@ -32,7 +33,8 @@ export class EditInternalDialogComponent implements OnInit, OnDestroy {
 
   isMobile = false;
 
-  optionsWorkshopProcess: string[] = [];
+  responsibleWorkshopProcesses: string[] = [];
+  reportingWorkshopProcesses: string[] = [];
   filteredOptionsWorkshopProcess$: Observable<string[]>;
 
   reportingWorkshops$: Observable<WorkshopModel[]>;
@@ -100,14 +102,18 @@ export class EditInternalDialogComponent implements OnInit, OnDestroy {
           if (!this.data.workShop) {
             return;
           }
-
           const actualResponsibleWorkshop = res.filter(
             (workshop) => workshop.workshopName === this.data.workShop
           );
 
-          this.internalForm
-            .get('workshop')
-            .setValue(actualResponsibleWorkshop[0]);
+          if (actualResponsibleWorkshop.length) {
+            this.responsibleWorkshopProcesses =
+              actualResponsibleWorkshop[0].workshopProcessName;
+
+            this.internalForm
+              .get('workShop')
+              .setValue(actualResponsibleWorkshop[0]);
+          }
         })
       );
 
@@ -122,27 +128,9 @@ export class EditInternalDialogComponent implements OnInit, OnDestroy {
         })
     );
 
-    // reporting worshop
-    this.reportingWorkshops$ = combineLatest(
-      this.internalForm.get('workShop').valueChanges.pipe(
-        startWith(''),
-        map((name) => (name ? name : ''))
-      ),
-      this.qualityService.getAllQualityInternalWorkshop()
-    ).pipe(
-      map(([formValue, miningOperation]) => {
-        const filter = miningOperation.filter((el) =>
-          formValue
-            ? el.workshopName.toLowerCase().includes(formValue.toLowerCase())
-            : true
-        );
-        if (!(filter.length === 1) && formValue.length) {
-          this.internalForm.get('workShop').setErrors({ invalid: true });
-        }
-
-        return filter;
-      })
-    );
+    // reporting workshop
+    this.reportingWorkshops$ =
+      this.qualityService.getAllQualityInternalWorkshop();
 
     // components
     this.components$ = combineLatest(
@@ -174,33 +162,27 @@ export class EditInternalDialogComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  setSelectedWorkshop(event: MatAutocompleteSelectedEvent): void {
-    const { workshopProcessName } = event.option.value;
-    this.optionsWorkshopProcess = [...workshopProcessName];
-
-    this.filteredOptionsWorkshopProcess$ = this.internalForm
-      .get('reportingWorkshopProcess')
-      .valueChanges.pipe(
-        startWith(''),
-        map((value) => this._filterWorkshopProcess(value))
-      );
+  setReportingProcesses(event: MatSelectChange): void {
+    const { workshopProcessName } = event.value;
+    this.reportingWorkshopProcesses = [...workshopProcessName];
   }
 
-  private _filterWorkshopProcess(value: string): string[] {
-    const filterValue = value.toLowerCase();
-
-    return this.optionsWorkshopProcess.filter(
-      (option) => option.toLowerCase().indexOf(filterValue) === 0
-    );
+  setResponsibleProcesses(event: MatSelectChange): void {
+    const { workshopProcessName } = event.value;
+    this.responsibleWorkshopProcesses = [...workshopProcessName];
   }
 
   displayFn(workshop: WorkshopModel): string {
     return workshop && workshop.workshopName ? workshop.workshopName : '';
   }
 
-  // displayComponent(workshop: WorkshopList): string {
-  //   return workshop && workshop.name ? workshop.name : '';
-  // }
+  compareWorkshop(o1: WorkshopModel, o2: WorkshopModel) {
+    return o1?.workshopName == o2?.workshopName;
+  }
+
+  compareProcess(o1: string, o2: string) {
+    return o1 == o2;
+  }
 
   initFormInternal(): void {
     this.internalForm = this.fb.group({
@@ -217,13 +199,14 @@ export class EditInternalDialogComponent implements OnInit, OnDestroy {
       workShop: [this.data.workShop, Validators.required],
       nPart: [this.data.partNumber, Validators.required],
       eventDetail: [this.data.enventDetail, Validators.required],
-      workshop: [this.data.workShop, Validators.required],
+      // workshop: [this.data.workShop, Validators.required],
       analysisBasicCause: [
         this.data.analysis ? this.data.analysis.basicCause : '',
       ],
       analysisCauseFailure: [
         this.data.analysis ? this.data.analysis.causeFailure : '',
       ],
+      analysisProcess: [this.data.analysis ? this.data.analysis.process : ''],
       analysisResponsable: [
         this.data.analysis ? this.data.analysis.responsable : '',
       ],
@@ -232,6 +215,17 @@ export class EditInternalDialogComponent implements OnInit, OnDestroy {
       ],
       analysisBahia: [this.data.analysis ? this.data.analysis.bahia : ''],
     });
+
+    if (this.data.reportingWorkshop) {
+      const { workshopProcessName } =
+        this.internalForm.get('reportingWorkshop').value;
+      this.reportingWorkshopProcesses = [...workshopProcessName];
+    }
+
+    // if (this.data.workShop) {
+    //   const { workshopProcessName } = this.internalForm.get('workShop').value;
+    //   this.responsibleWorkshopProcesses = [...workshopProcessName];
+    // }
   }
 
   save(): void {
@@ -241,9 +235,9 @@ export class EditInternalDialogComponent implements OnInit, OnDestroy {
       basicCause: this.internalForm.get('analysisBasicCause').value,
       causeFailure: causeFailure ? causeFailure.name : '',
       observation: this.internalForm.get('analysisObservations').value,
-      process: this.internalForm.get('reportingWorkshopProcess').value,
+      process: this.internalForm.get('analysisProcess').value,
       responsable: this.internalForm.get('analysisResponsable').value,
-      responsibleWorkshop: this.internalForm.get('workshop').value,
+      responsibleWorkshop: this.internalForm.get('workShop').value,
     };
 
     try {

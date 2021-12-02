@@ -300,6 +300,7 @@ export class ResultsComponent implements OnInit {
     let table_xlsx: any[] = [];
 
     const headersXlsx = [
+      'id',
       'Fecha',
       'Tipo de evento',
       'Orden de trabajo',
@@ -337,6 +338,7 @@ export class ResultsComponent implements OnInit {
       let temp2 = [];
 
       temp1 = [
+        element.id ? element.id : '',
         this.miDatePipe.transform(
           element['createdAt']['seconds'] * 1000,
           'dd/MM/yyyy h:mm:ss a'
