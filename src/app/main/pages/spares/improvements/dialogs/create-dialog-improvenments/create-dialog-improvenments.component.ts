@@ -44,6 +44,7 @@ export class CreateDialogImprovenmentsComponent implements OnInit {
       date: ['', Validators.required],
       criticalPart: [false],
       rate: [false],
+      comments: [''],
       parts: this.fb.array([
         this.fb.group({
           sparePart: ['', Validators.required],

@@ -38,6 +38,7 @@ export class ReplacementDialogImprovementsComponent implements OnInit {
       description: [this.data.description ? this.data.description : null, Validators.required],
       model: [this.data.model ? this.data.model : null, Validators.required],
       component: [this.data.component ? this.data.component : null, Validators.required],
+      comments: [this.data.comments ? this.data.comments : null],
       date: [this.data.date ? new Date(this.data.date['seconds'] * 1000) : null, Validators.required],
       criticalPart: [this.data.criticalPart ? this.data.criticalPart : false],
       rate: [this.data.rate ? this.data.rate : false],
@@ -75,7 +76,7 @@ export class ReplacementDialogImprovementsComponent implements OnInit {
       this.loading.next(false);
       return;
     } else {
-      // first check if we have some item for remplacement validation.
+      // first check if we have some items for remplacement validation.
       if (this.checkPartsForReplacements(this.validationLogisticForm.value)) {
         // update improvement entry for replacement generation
         this.snackbar.open(`🚨 Debe generar todos los reemplazos`, 'Aceptar', {
