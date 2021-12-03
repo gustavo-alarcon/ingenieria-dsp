@@ -7,7 +7,14 @@ import { CreateDialogImprovenmentsComponent } from './dialogs/create-dialog-impr
 import { EditDialogImprovenmentsComponent } from './dialogs/edit-dialog-improvenments/edit-dialog-improvenments.component';
 import { DeleteDialogImprovenmentsComponent } from './dialogs/delete-dialog-improvenments/delete-dialog-improvenments.component';
 import { ValidateDialogImprovenmentsComponent } from './dialogs/validate-dialog-improvenments/validate-dialog-improvenments.component';
-import { debounceTime, distinctUntilChanged, map, startWith, tap } from 'rxjs/operators';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  map,
+  startWith,
+  tap,
+} from 'rxjs/operators';
 import { ImprovementsService } from '../../../services/improvements.service';
 import { ImprovementEntry } from '../../../models/improvenents.model';
 import { ShowDialogImprovementsComponent } from './dialogs/show-dialog-improvements/show-dialog-improvements.component';
@@ -20,19 +27,29 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 @Component({
   selector: 'app-improvements',
   templateUrl: './improvements.component.html',
-  styleUrls: ['./improvements.component.scss']
+  styleUrls: ['./improvements.component.scss'],
 })
 export class ImprovementsComponent implements OnInit, OnDestroy {
-
   selected: any;
 
   improvement$: Observable<ImprovementEntry[]>;
 
   // Improvement
   improvementDataSource = new MatTableDataSource<ImprovementEntry>();
-  improvementDisplayedColumns: string[] = ['date', 'name', 'component', 'model', 'criticalPart', 'createdBy', 'state', 'actions'];
+  improvementDisplayedColumns: string[] = [
+    'date',
+    'name',
+    'component',
+    'model',
+    'criticalPart',
+    'createdBy',
+    'state',
+    'actions',
+  ];
 
-  @ViewChild('improvementPaginator', { static: false }) set content(paginator: MatPaginator) {
+  @ViewChild('improvementPaginator', { static: false }) set content(
+    paginator: MatPaginator
+  ) {
     this.improvementDataSource.paginator = paginator;
   }
 
@@ -44,6 +61,7 @@ export class ImprovementsComponent implements OnInit, OnDestroy {
   improvementEntries: ImprovementEntry[];
 
   searchControl = new FormControl('');
+  stateControl = new FormControl('');
 
   subscriptions = new Subscription();
   isMobile = false;
@@ -52,39 +70,57 @@ export class ImprovementsComponent implements OnInit, OnDestroy {
     private breakpoint: BreakpointObserver,
     private impvServices: ImprovementsService,
     public authService: AuthService,
-    public dialog: MatDialog,
-  ) { }
+    public dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
-    this.subscriptions.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
-      .subscribe(res => {
-        if (res.matches) {
-          this.isMobile = true;
-        } else {
-          this.isMobile = false;
-        }
-      })
-    )
+    this.subscriptions.add(
+      this.breakpoint
+        .observe([Breakpoints.HandsetPortrait])
+        .subscribe((res) => {
+          if (res.matches) {
+            this.isMobile = true;
+          } else {
+            this.isMobile = false;
+          }
+        })
+    );
 
     this.improvement$ = combineLatest(
       this.impvServices.getAllImprovementEntries(),
-      this.searchControl.valueChanges.pipe(startWith(''), debounceTime(300), distinctUntilChanged())
+      this.searchControl.valueChanges.pipe(
+        startWith(''),
+        debounceTime(300),
+        distinctUntilChanged()
+      ),
+      this.stateControl.valueChanges.pipe(startWith(''))
     ).pipe(
-      map(([list, search]) => {
-        const term = search.toLowerCase().trim();
-        let filteredList = list.filter(element => element.component.toLowerCase().includes(term) ||
-          element.name.toLowerCase().includes(term) ||
-          element.model.toLowerCase().includes(term));
+      map(([list, search, state]) => {
+        let filtered = [...list];
 
-        return filteredList
+        const term = search.toLowerCase().trim();
+
+        filtered = list.filter(
+          (element) =>
+            element.component.toLowerCase().includes(term) ||
+            element.name.toLowerCase().includes(term) ||
+            element.model.toLowerCase().includes(term)
+        );
+
+        filtered = filtered.filter((element) => {
+          if (state === '') return true;
+          return element.state === state;
+        });
+
+        return filtered;
       }),
-      tap(res => {
+      tap((res) => {
         if (res) {
           this.improvementEntries = res;
           this.improvementDataSource.data = res;
         }
       })
-    )
+    );
   }
 
   ngOnDestroy() {
@@ -94,44 +130,48 @@ export class ImprovementsComponent implements OnInit, OnDestroy {
   openDialog(value: string, entry?: ImprovementEntry, index?: number): void {
     const optionsDialog = {
       width: '100%',
-      data: entry
+      data: entry,
     };
     let dialogRef;
 
     switch (value) {
       case 'create':
-        dialogRef = this.dialog.open(CreateDialogImprovenmentsComponent,
-          optionsDialog,
+        dialogRef = this.dialog.open(
+          CreateDialogImprovenmentsComponent,
+          optionsDialog
         );
 
-        dialogRef.afterClosed().subscribe(result => {
+        dialogRef.afterClosed().subscribe((result) => {
           console.log(`Dialog result: ${result}`);
         });
         break;
       case 'validate':
-        dialogRef = this.dialog.open(ValidateDialogImprovenmentsComponent,
-          optionsDialog,
+        dialogRef = this.dialog.open(
+          ValidateDialogImprovenmentsComponent,
+          optionsDialog
         );
 
-        dialogRef.afterClosed().subscribe(result => {
+        dialogRef.afterClosed().subscribe((result) => {
           console.log(`Dialog result: ${result}`);
         });
         break;
       case 'replacement':
-        dialogRef = this.dialog.open(ReplacementDialogImprovementsComponent,
-          optionsDialog,
+        dialogRef = this.dialog.open(
+          ReplacementDialogImprovementsComponent,
+          optionsDialog
         );
 
-        dialogRef.afterClosed().subscribe(result => {
+        dialogRef.afterClosed().subscribe((result) => {
           console.log(`Dialog result: ${result}`);
         });
         break;
       case 'edit':
-        dialogRef = this.dialog.open(EditDialogImprovenmentsComponent,
-          optionsDialog,
+        dialogRef = this.dialog.open(
+          EditDialogImprovenmentsComponent,
+          optionsDialog
         );
 
-        dialogRef.afterClosed().subscribe(result => {
+        dialogRef.afterClosed().subscribe((result) => {
           console.log(`Dialog result: ${result}`);
         });
         break;
@@ -139,10 +179,9 @@ export class ImprovementsComponent implements OnInit, OnDestroy {
       case 'delete':
         dialogRef = this.dialog.open(DeleteDialogImprovenmentsComponent, {
           width: '350px',
-          data: this.improvementDataSource.data[index]
-        }
-        );
-        dialogRef.afterClosed().subscribe(result => {
+          data: this.improvementDataSource.data[index],
+        });
+        dialogRef.afterClosed().subscribe((result) => {
           console.log(`Dialog result: ${result}`);
         });
         break;
@@ -152,8 +191,8 @@ export class ImprovementsComponent implements OnInit, OnDestroy {
   showImprovementEntry(row: ImprovementEntry): void {
     this.dialog.open(ShowDialogImprovementsComponent, {
       width: '100%',
-      data: row
-    })
+      data: row,
+    });
   }
 
   sortData(sort: Sort) {
@@ -166,16 +205,15 @@ export class ImprovementsComponent implements OnInit, OnDestroy {
     this.improvementDataSource.data = data.sort((a, b) => {
       const isAsc = sort.direction === 'asc';
       switch (sort.active) {
-        case 'createdBy': return compare(a.createdBy.name, b.createdBy.name, isAsc);
-        default: return 0;
+        case 'createdBy':
+          return compare(a.createdBy.name, b.createdBy.name, isAsc);
+        default:
+          return 0;
       }
     });
   }
-
-
 }
 
 function compare(a: number | string, b: number | string, isAsc: boolean) {
   return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }
-
