@@ -56,6 +56,7 @@ export class ImprovementsService {
       rate: form.rate,
       state: 'registered',
       parts: form.parts,
+      comments: form.comments,
       createdAt: new Date(),
       createdBy: user,
       editedAt: null,
@@ -78,7 +79,7 @@ export class ImprovementsService {
     // create reference for document on improvementEntries
     const improvementDocRef = this.afs.firestore.doc(`db/ferreyros/improvementEntries/${entryId}`);
     // Structuring the data model
-    const data: any = {
+    const data: Partial<ImprovementEntry> = {
       date: new Date(),
       name: form.name,
       component: form.component,
@@ -88,6 +89,7 @@ export class ImprovementsService {
       rate: form.rate,
       state: 'registered',
       parts: form.parts,
+      comments: form.comments,
       editedAt: new Date(),
       editedBy: user,
     };
@@ -133,6 +135,7 @@ export class ImprovementsService {
         stock: part.stock,
         availability: new Date(year, month, day),
         kit: part.kit,
+        comments: form.comments,
         createdAt: new Date(),
         createdBy: user,
         editedAt: null,

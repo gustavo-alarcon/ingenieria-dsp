@@ -35,7 +35,8 @@ export class ShowDialogImprovementsComponent implements OnInit {
       component: [{value: this.data.component ? this.data.component : null, disabled: false}],
       date: [{value: this.data.date ? new Date(this.data.date['seconds'] * 1000) : null, disabled: false}],
       criticalPart: [{value: this.data.criticalPart ? this.data.criticalPart : false, disabled: false}],
-      rate: [{value: this.data.rate ? this.data.rate : false, disabled: false}],
+      rate: [{ value: this.data.rate ? this.data.rate : false, disabled: false }],
+      comments: [{value: this.data.comments ? this.data.comments : null, disabled: false}],
       parts: this.fb.array([])
     });
 

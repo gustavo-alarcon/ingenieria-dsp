@@ -17,6 +17,7 @@ export interface Improvement {
   stock: number;
   availability: Date;
   kit: boolean;
+  comments?: string;
   createdAt: Date;
   createdBy: User;
   editedAt: Date;
@@ -34,6 +35,7 @@ export interface improvementsForm {
   model: string;
   name: string;
   parts: Array<ImprovementPart>;
+  comments?: string;
 }
 
 // This interface should be used to store an improvement entry in firestore improvementEntries collection.
@@ -48,6 +50,7 @@ export interface ImprovementEntry {
   description: string;
   parts: Array<ImprovementPart>;
   state: 'registered' | 'replacement' | 'validated';
+  comments?: string;
   createdAt: Date;
   createdBy: User;
   editedAt: Date;
