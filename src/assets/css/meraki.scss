@@ -1,348 +1,363 @@
 // Common styles
 // *** Containers
 .ms-fill {
-    flex: auto 1 1;
+  flex: auto 1 1;
 }
 
 .ms-container {
-    padding: 5vh 5vw;
-    margin: auto;
-    min-height: 100vh;
+  padding: 5vh 5vw;
+  margin: auto;
+  min-height: 100vh;
 
-    .ms-toolbar {
-        display: flex;
-        align-items: stretch;
-        flex-wrap: wrap;
-        margin-bottom: 12px;
+  .ms-toolbar {
+    display: flex;
+    align-items: stretch;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
 
-        &__icon {
-            color: #2b2b2b;
-            align-self: center;
-            font-size: 36px;
-            width: 36px;
-            height: 36px;
-            margin-right: 12px;
-        }
-
-        &__title {
-            color: #2b2b2b;
-            align-self: center;
-            font-family: "Poppins", sans-serif;
-
-            font-weight: 900;
-            margin: 0px 24px 0px 0px;
-        }
-
-        &__button {
-            border: 1px #6200ee solid;
-            color: #6200ee;
-            background: white !important;
-            padding: 5px 15px 5px 15px;
-            height: 50px;
-            align-self: center;
-            margin-right: 24px;
-
-            &--back {
-                margin-right: 12px;
-
-                .mat-icon {
-                    height: 36px;
-                    width: 36px;
-                    font-size: 36px;
-                    line-height: 36px;
-                }
-            }
-        }
-
-        &__input {
-            padding-bottom: 0px !important;
-            font-size: 12px !important;
-            margin-right: 8px;
-
-            .mat-form-field-wrapper {
-                padding: 0px !important;
-            }
-
-            .mat-icon {
-                margin-right: 12px !important;
-            }
-        }
+    &__icon {
+      color: #2b2b2b;
+      align-self: center;
+      font-size: 36px;
+      width: 36px;
+      height: 36px;
+      margin-right: 12px;
     }
+
+    &__title {
+      color: #2b2b2b;
+      align-self: center;
+      font-family: "Poppins", sans-serif;
+
+      font-weight: 900;
+      margin: 0px 24px 0px 0px;
+    }
+
+    &__button {
+      border: 1px #6200ee solid;
+      color: #6200ee;
+      background: white !important;
+      padding: 5px 15px 5px 15px;
+      height: 50px;
+      align-self: center;
+      margin-right: 24px;
+
+      &--back {
+        margin-right: 12px;
+
+        .mat-icon {
+          height: 36px;
+          width: 36px;
+          font-size: 36px;
+          line-height: 36px;
+        }
+      }
+
+      &--mobile {
+        width: 100%;
+        margin: 0px 0px 1ch 0px;
+      }
+    }
+
+    &__input {
+      padding-bottom: 0px !important;
+      font-size: 12px !important;
+      margin-right: 8px;
+
+      .mat-form-field-wrapper {
+        padding: 0px !important;
+      }
+
+      .mat-icon {
+        margin-right: 12px !important;
+      }
+
+      &--mobile {
+        width: 100%;
+        margin: 0px 0px 1ch 0px;
+      }
+
+      ::ng-deep .mat-form-field-wrapper {
+        background: white !important;
+        border-radius: 5px !important;
+      }
+    }
+  }
 }
 
 .ms-default {
-    background: rgba(255, 255, 255, 0.5);
-    border: 1px dashed lightgray;
-    padding: 1rem;
-    border-radius: 10px 10px;
-    margin-top: 24px;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px dashed lightgray;
+  padding: 1rem;
+  border-radius: 10px 10px;
+  margin-top: 24px;
 }
 
 // *** Kanban
 .ms-kanban-toolbar {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: stretch;
-    border: 1px solid rgba(0, 0, 0, 0.12);
-    background: #fff;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: #fff;
+  padding: 16px;
+
+  &__button {
+    border: 1px #6200ee solid !important;
+    color: #6200ee;
+    align-self: center;
+
+    &--icon {
+      margin-right: 12px !important;
+      align-self: center;
+      color: rgba(0, 0, 0, 0.38) !important;
+    }
+
+    &--mobile {
+      width: 100% !important;
+      margin: 4px 0px !important;
+    }
+
+    &--desktop {
+      margin: 0px 4px !important;
+    }
+  }
+
+  &__icon {
+    color: #2b2b2b;
+    align-self: center;
+    font-size: 36px;
+    width: 36px;
+    height: 36px;
+    margin-right: 12px;
+  }
+
+  &__title {
+    color: #2b2b2b;
+    align-self: center;
+    font-family: "Poppins", sans-serif;
+
+    font-weight: 900;
+    margin: 0px 24px 0px 0px;
+
+    &--desktop {
+      font-size: 2rem;
+    }
+
+    &--mobile {
+      font-size: 1.6rem;
+    }
+  }
+
+  &__counter {
+    font-family: "Poppins", sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 36px;
+    line-height: 54px;
+    margin: 0px 12px;
+    color: #2b2b2b;
+  }
+
+  &__tasks {
+    font-family: "Poppins", sans-serif;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
     padding: 16px;
+    color: #2b2b2b;
+    border: dashed 1px indigo;
+    border-radius: 5px;
 
-    &__button {
-        border: 1px #6200ee solid !important;
-        color: #6200ee;
-        align-self: center;
-
-        &--icon {
-            margin-right: 12px !important;
-            align-self: center;
-            color: rgba(0, 0, 0, 0.38) !important;
-        }
-
-        &--mobile {
-            width: 100% !important;
-            margin: 4px 0px !important;
-        }
-
-        &--desktop {
-            margin: 0px 4px !important;
-        }
+    &--tag {
+      border-radius: 50%;
+      background-color: indianred;
+      color: white;
+      align-self: center;
+      justify-self: center;
+      padding: 4px 6px;
     }
 
-    &__icon {
-        color: #2b2b2b;
-        align-self: center;
-        font-size: 36px;
-        width: 36px;
-        height: 36px;
-        margin-right: 12px;
+    &--desktop {
+      margin: 0px 8px !important;
     }
 
-    &__title {
-        color: #2b2b2b;
-        align-self: center;
-        font-family: "Poppins", sans-serif;
+    &--mobile {
+      width: 100% !important;
+      margin: 4px 0px !important;
+    }
+  }
 
-        font-weight: 900;
-        margin: 0px 24px 0px 0px;
+  &__input {
+    padding-bottom: 0px !important;
+    font-size: 12px !important;
 
-        &--desktop {
-            font-size: 2rem;
-        }
-
-        &--mobile {
-            font-size: 1.6rem;
-        }
+    .mat-form-field-wrapper {
+      padding: 0px !important;
     }
 
-    &__counter {
-        font-family: "Poppins", sans-serif;
-        font-style: normal;
-        font-weight: bold;
-        font-size: 36px;
-        line-height: 54px;
-        margin: 0px 12px;
-        color: #2b2b2b;
+    .mat-icon {
+      margin-right: 12px !important;
     }
 
-    &__tasks {
-        font-family: "Poppins", sans-serif;
-        font-style: normal;
-        font-weight: bold;
-        font-size: 18px;
-        padding: 16px;
-        color: #2b2b2b;
-        border: dashed 1px indigo;
-        border-radius: 5px;
-
-        &--tag {
-            border-radius: 50%;
-            background-color: indianred;
-            color: white;
-            align-self: center;
-            justify-self: center;
-            padding: 4px 6px;
-        }
-
-        &--desktop {
-            margin: 0px 8px !important;
-        }
-
-        &--mobile {
-            width: 100% !important;
-            margin: 4px 0px !important;
-        }
+    &--desktop {
+      margin: 0px 8px !important;
     }
 
-    &__input {
-        padding-bottom: 0px !important;
-        font-size: 12px !important;
-
-        .mat-form-field-wrapper {
-            padding: 0px !important;
-        }
-
-        .mat-icon {
-            margin-right: 12px !important;
-        }
-
-        &--desktop {
-            margin: 0px 8px !important;
-        }
-
-        &--mobile {
-            width: 100% !important;
-            margin: 4px 0px !important;
-        }
+    &--mobile {
+      width: 100% !important;
+      margin: 4px 0px !important;
     }
+  }
 }
 
 // *** Tables
 .ms-table {
-    width: 100%;
-    margin-top: 8px;
+  width: 100%;
+  margin-top: 8px;
 
-    &__header {
-        padding: 8px 24px !important;
-    }
+  &__header {
+    padding: 8px 24px !important;
+  }
 }
 
 .ms-table-default {
-    border: 1px dashed lightgray;
-    padding: 1rem;
-    border-radius: 10px 10px;
-    margin-top: 8px;
-    color: lightslategrey;
-    font-size: 1rem;
-    font-weight: 500;
+  border: 1px dashed lightgray;
+  padding: 1rem;
+  border-radius: 10px 10px;
+  margin-top: 8px;
+  color: lightslategrey;
+  font-size: 1rem;
+  font-weight: 500;
 }
 
 // *** Buttons
 .ms-button {
-    font-size: 1rem !important;
-    padding: 8px 24px !important;
-    border: 1px solid #6200ee !important;
-    background: white !important;
-    color: #6200ee !important;
+  font-size: 1rem !important;
+  padding: 8px 24px !important;
+  border: 1px solid #6200ee !important;
+  background: white !important;
+  color: #6200ee !important;
 
-    &--icon {
-        margin-right: 8px;
-        vertical-align: middle;
-    }
+  &--icon {
+    margin-right: 8px;
+    vertical-align: middle;
+  }
 }
 
 // Dialog style
 .ms-dialog-header {
-    display: flex;
-    align-items: stretch;
-    margin-bottom: 10px;
+  display: flex;
+  align-items: stretch;
+  margin-bottom: 10px;
 
-    &__icon {
-        color: #2b2b2b;
-        align-self: center;
-        margin-right: 12px;
-    }
+  &__icon {
+    color: #2b2b2b;
+    align-self: center;
+    margin-right: 12px;
+  }
 
-    &__title {
-        color: #2b2b2b;
-        align-self: center;
-        font-family: "Poppins", sans-serif;
-        font-weight: 600;
-        color: #2b2b2b;
-        margin: 0px !important;
-    }
+  &__title {
+    color: #2b2b2b;
+    align-self: center;
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    color: #2b2b2b;
+    margin: 0px !important;
+  }
 
-    &__close {
-        height: 25px !important;
-        width: 25px !important;
-        line-height: 25px !important;
-    }
+  &__close {
+    height: 25px !important;
+    width: 25px !important;
+    line-height: 25px !important;
+  }
 }
 
 .ms-dialog-button {
-    border: 1px solid #6200ee !important;
-    color: #6200ee !important;
-    margin-right: 8px !important;
+  border: 1px solid #6200ee !important;
+  color: #6200ee !important;
+  margin-right: 8px !important;
 
-    &--icon {
-        margin-right: 8px;
-        vertical-align: middle;
-    }
+  &--icon {
+    margin-right: 8px;
+    vertical-align: middle;
+  }
 }
 
 .ms-dialog-info {
-    margin-top: 12px !important;
-    color: dimgrey;
+  margin-top: 12px !important;
+  color: dimgrey;
 }
 
 // Dropzone style
 .dropzone {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    width: 100%;
-    font-weight: 200;
-    height: 300px;
-    border: 2px dashed #6200ee;
-    border-radius: 5px;
-    background: white;
-    margin: 1rem auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  font-weight: 200;
+  height: 300px;
+  border: 2px dashed #6200ee;
+  border-radius: 5px;
+  background: white;
+  margin: 1rem auto;
 }
 
 .dropzone.hovering {
-    border: 2px solid #6200ee;
-    color: #dadada !important;
+  border: 2px solid #6200ee;
+  color: #dadada !important;
 }
 
 .dropzone .file-label {
-    font-size: 1.2em;
+  font-size: 1.2em;
 }
 
 progress::-webkit-progress-value {
-    transition: width 0.1s ease;
+  transition: width 0.1s ease;
 }
 
 .file-input {
-    display: none;
+  display: none;
 }
 
 .file-cta,
 .file-name {
-    border-color: #dbdbdb;
-    border-radius: 4px;
-    font-size: 1em;
-    white-space: nowrap;
+  border-color: #dbdbdb;
+  border-radius: 4px;
+  font-size: 1em;
+  white-space: nowrap;
 }
 
 .file-cta {
-    background-color: #f5f5f5;
-    color: #4a4a4a;
+  background-color: #f5f5f5;
+  color: #4a4a4a;
 }
 
 .file-cta,
 .file-name,
 .input {
-    -moz-appearance: none;
-    -webkit-appearance: none;
-    align-items: center;
-    border: 1px solid transparent;
-    border-radius: 4px;
-    box-shadow: none;
-    display: inline-flex;
-    font-size: 1rem;
-    height: 2.25em;
-    justify-content: flex-start;
-    line-height: 1.5;
-    padding-bottom: calc(0.375em - 1px);
-    padding-left: calc(0.625em - 1px);
-    padding-right: calc(0.625em - 1px);
-    padding-top: calc(0.375em - 1px);
-    position: relative;
-    vertical-align: top;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  align-items: center;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  box-shadow: none;
+  display: inline-flex;
+  font-size: 1rem;
+  height: 2.25em;
+  justify-content: flex-start;
+  line-height: 1.5;
+  padding-bottom: calc(0.375em - 1px);
+  padding-left: calc(0.625em - 1px);
+  padding-right: calc(0.625em - 1px);
+  padding-top: calc(0.375em - 1px);
+  position: relative;
+  vertical-align: top;
 }
 
 .ms-dropzone-grid {
-    display: grid;
-    grid-gap: 8px;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  display: grid;
+  grid-gap: 8px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
 }
