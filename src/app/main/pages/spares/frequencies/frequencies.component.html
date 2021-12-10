@@ -1,19 +1,19 @@
 <div class="ms-container">
   <div class="ms-toolbar">
-    <mat-icon class="ms-toolbar__icon">published_with_changes</mat-icon>
+    <mat-icon class="ms-toolbar__icon">timeline</mat-icon>
     <h1
       class="ms-toolbar__title"
       [ngClass]="
         isMobile ? 'ms-toolbar__title--mobile' : 'ms-toolbar__title--desktop'
       "
     >
-      Reemplazos
+      Frecuencia de uso
     </h1>
     <button
       mat-stroked-button
       class="ms-toolbar__button"
       (click)="openDialog('create')"
-      *ngIf="authService.uiConfig.spareParts.replacements.toolbar.create"
+      *ngIf="authService.uiConfig.spareParts.frequency.toolbar.create"
       [ngClass]="
         isMobile ? 'ms-toolbar__button--mobile' : 'ms-toolbar__button--desktop'
       "
@@ -25,7 +25,7 @@
       mat-stroked-button
       class="ms-toolbar__button"
       (click)="openDialog('create-bulk')"
-      *ngIf="authService.uiConfig.spareParts.replacements.toolbar.bulk"
+      *ngIf="authService.uiConfig.spareParts.frequency.toolbar.bulk"
       [ngClass]="
         isMobile ? 'ms-toolbar__button--mobile' : 'ms-toolbar__button--desktop'
       "
@@ -50,28 +50,16 @@
         autocomplete="off"
       />
     </mat-form-field>
-    <span class="ms-fill"></span>
-    <button
-      mat-stroked-button
-      class="ms-toolbar__button"
-      [routerLink]="['/main/improvements']"
-      [ngClass]="
-        isMobile ? 'ms-toolbar__button--mobile' : 'ms-toolbar__button--desktop'
-      "
-    >
-      <mat-icon>launch</mat-icon>
-      Ir a mejoras
-    </button>
   </div>
   <mat-divider></mat-divider>
 
   <div
-    *ngIf="replacement$ | async; else default"
+    *ngIf="frequencies$ | async; else default"
     class="body-container mat-elevation-z4"
   >
     <table
       mat-table
-      [dataSource]="replacementDataSource"
+      [dataSource]="frequenciesDataSource"
       matSort
       (matSortChange)="sortData($event)"
     >
@@ -89,79 +77,110 @@
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="replacedPart">
+      <ng-container matColumnDef="partNumber">
         <th
           mat-header-cell
           *matHeaderCellDef
           mat-sort-header
           class="ms-table__header"
         >
-          N/P Reemplazado
+          Part Number
         </th>
         <td mat-cell *matCellDef="let element" class="ms-table__header">
-          {{ element.replacedPart }}
+          {{ element.partNumber ? element.partNumber : "Indefinido" }}
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="currentPart">
+      <ng-container matColumnDef="frequency">
         <th
           mat-header-cell
           *matHeaderCellDef
           mat-sort-header
           class="ms-table__header"
         >
-          N/P Actual
+          Frecuencia
         </th>
         <td mat-cell *matCellDef="let element" class="ms-table__header">
-          {{ element.currentPart }}
+          {{ element.frequency ? element.frequency : "Indefinido" }}
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="description">
+      <ng-container matColumnDef="avgQty">
         <th
           mat-header-cell
           *matHeaderCellDef
           mat-sort-header
           class="ms-table__header"
         >
-          Descripción
+          Cant. Prom.
         </th>
         <td mat-cell *matCellDef="let element" class="ms-table__header">
-          {{ element.description }}
+          {{ element.avgQty ? element.avgQty : "Indefinido" }}
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="kit">
+      <ng-container matColumnDef="minQty">
         <th
           mat-header-cell
           *matHeaderCellDef
           mat-sort-header
           class="ms-table__header"
         >
-          Kit
+          Cant. Min.
         </th>
         <td mat-cell *matCellDef="let element" class="ms-table__header">
-          {{ element.kit ? "Si" : "No" }}
+          {{ element.minQty ? element.minQty : "Indefinido" }}
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="support">
+      <ng-container matColumnDef="maxQty">
         <th
           mat-header-cell
           *matHeaderCellDef
           mat-sort-header
           class="ms-table__header"
         >
-          Support
+          Cant. Max.
         </th>
         <td mat-cell *matCellDef="let element" class="ms-table__header">
-          {{ element.support ? "Si" : "No" }}
+          {{ element.maxQty ? element.maxQty : "Indefinido" }}
         </td>
       </ng-container>
 
       <ng-container matColumnDef="createdBy">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Usuario</th>
-        <td mat-cell *matCellDef="let element">{{ element.createdBy.name }}</td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Creado por</th>
+        <td mat-cell *matCellDef="let element">
+          <ng-container *ngIf="element.createdBy; else defaultCreator">
+            <span>{{ element.createdBy.displayName }}</span
+            ><br />
+            <span>
+              {{
+                element.createdAt.second * 1000 | date: "dd/MM/yy hh:mm:ss"
+              }}</span
+            >
+          </ng-container>
+          <ng-template #defaultCreator>
+            <span>Indefinido</span>
+          </ng-template>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="editedBy">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Editado por</th>
+        <td mat-cell *matCellDef="let element">
+          <ng-container *ngIf="element.editedBy; else defaultEditor">
+            <span>{{ element.editedBy.displayName }}</span
+            ><br />
+            <span>
+              {{
+                element.editedAt.second * 1000 | date: "dd/MM/yy hh:mm:ss"
+              }}</span
+            >
+          </ng-container>
+          <ng-template #defaultEditor>
+            <span>Sin ediciones</span>
+          </ng-template>
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="actions" stickyEnd>
@@ -176,7 +195,7 @@
                 mat-menu-item
                 (click)="openDialog('edit', element, i)"
                 *ngIf="
-                  authService.uiConfig.spareParts.replacements.actions.edit
+                  authService.uiConfig.spareParts.frequency.actions.edit
                 "
               >
                 <mat-icon>edit</mat-icon>
@@ -187,7 +206,7 @@
                 mat-menu-item
                 (click)="openDialog('delete', element, i)"
                 *ngIf="
-                  authService.uiConfig.spareParts.replacements.actions.delete
+                  authService.uiConfig.spareParts.frequency.actions.delete
                 "
               >
                 <mat-icon>delete</mat-icon>
@@ -202,14 +221,14 @@
         </td>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="replacementDisplayedColumns"></tr>
+      <tr mat-header-row *matHeaderRowDef="frequenciesDisplayedColumns"></tr>
       <tr
         mat-row
-        *matRowDef="let row; columns: replacementDisplayedColumns"
+        *matRowDef="let row; columns: frequenciesDisplayedColumns"
       ></tr>
     </table>
     <mat-paginator
-      #replacementPaginator
+      #frequenciesPaginator
       class="ms-paginator"
       [pageSizeOptions]="[20, 30, 40]"
       showFirstLastButtons
