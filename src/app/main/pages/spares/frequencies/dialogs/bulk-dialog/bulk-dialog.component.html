@@ -33,61 +33,56 @@
     SELECIONE ARCHIVO
   </button>
   <mat-dialog-content style="margin-top: 20px">
-    <ng-container *ngIf="replacementsDataSource.data.length; else default">
+    <ng-container *ngIf="frequenciesDataSource.data.length; else default">
       <div style="overflow: auto">
         <table
           mat-table
-          [dataSource]="replacementsDataSource"
+          [dataSource]="frequenciesDataSource"
           matSort
           class="mat-elevation-z8"
         >
-          <ng-container matColumnDef="createdAt">
-            <th mat-header-cell *matHeaderCellDef class="table__cell">Fecha</th>
-            <td mat-cell *matCellDef="let element" class="table__cell">
-              {{ element.createdAt | date: "dd/MM/yy" }}
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="replacedPart">
+          <ng-container matColumnDef="partNumber">
             <th mat-header-cell *matHeaderCellDef class="table__cell">
-              N/P Reemplazado
+              Part Number
             </th>
             <td mat-cell *matCellDef="let element" class="table__cell">
-              {{ element.replacedPart }}
+              {{ element.partNumber ? element.partNumber : "null" }}
             </td>
           </ng-container>
 
-          <ng-container matColumnDef="currentPart">
+          <ng-container matColumnDef="frequency">
             <th mat-header-cell *matHeaderCellDef class="table__cell">
-              N/P Actual
+              Frecuencia
             </th>
             <td mat-cell *matCellDef="let element" class="table__cell">
-              {{ element.currentPart }}
+              {{ element.frequency ? element.frequency : 0 }}
             </td>
           </ng-container>
 
-          <ng-container matColumnDef="description">
+          <ng-container matColumnDef="avgQty">
             <th mat-header-cell *matHeaderCellDef class="table__cell">
-              Descripción
+              Cant. Prom
             </th>
             <td mat-cell *matCellDef="let element" class="table__cell">
-              {{ element.description }}
+              {{ element.avgQty ? element.avgQty : 0 }}
             </td>
           </ng-container>
 
-          <ng-container matColumnDef="kit">
-            <th mat-header-cell *matHeaderCellDef class="table__cell">Kit</th>
-            <td mat-cell *matCellDef="let element" class="table__cell">
-              {{ element.kit ? "Si" : "No" }}
-            </td>
-          </ng-container>
-
-          <ng-container matColumnDef="support">
+          <ng-container matColumnDef="minQty">
             <th mat-header-cell *matHeaderCellDef class="table__cell">
-              support
+              Min. Cant.
             </th>
             <td mat-cell *matCellDef="let element" class="table__cell">
-              {{ element.support ? "Si" : "No" }}
+              {{ element.minQty ? element.minQty : 0 }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="maxQty">
+            <th mat-header-cell *matHeaderCellDef class="table__cell">
+              Max. Cant.
+            </th>
+            <td mat-cell *matCellDef="let element" class="table__cell">
+              {{ element.maxQty ? element.maxQty : 0 }}
             </td>
           </ng-container>
 
@@ -104,18 +99,18 @@
 
           <tr
             mat-header-row
-            *matHeaderRowDef="replacementsDisplayedColumns"
+            *matHeaderRowDef="frequenciesDisplayedColumns"
           ></tr>
           <tr
             mat-row
-            *matRowDef="let row; columns: replacementsDisplayedColumns"
+            *matRowDef="let row; columns: frequenciesDisplayedColumns"
           ></tr>
         </table>
       </div>
       <mat-paginator
-        #replacementsPaginator
+        #frequenciesPaginator
         class="ms-paginator"
-        [pageSizeOptions]="[5, 10, 20]"
+        [pageSizeOptions]="[10, 20, 50]"
         showFirstLastButtons
       >
       </mat-paginator>
@@ -123,8 +118,8 @@
     <ng-template #default>
       <div class="default">
         <span>
-          <mat-icon style="vertical-align: middle">upload</mat-icon> Adjunte
-          archivo
+          <mat-icon style="vertical-align: middle">upload</mat-icon> Aquí se
+          mostrarán el resultado
         </span>
       </div>
     </ng-template>
@@ -147,7 +142,7 @@
       mat-button
       class="footer__btn-save"
       (click)="save()"
-      [disabled]="!replacementsDataSource.data.length || (loading$ | async)"
+      [disabled]="!frequenciesDataSource.data.length || (loading$ | async)"
     >
       GUARDAR
     </button>

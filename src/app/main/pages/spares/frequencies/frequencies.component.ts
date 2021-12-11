@@ -16,6 +16,7 @@ import {
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { FrequencySparePart } from 'src/app/main/models/frequencySparePart.model';
 import { FrequenciesService } from 'src/app/main/services/frequencies.service';
+import { BulkDialogComponent } from './dialogs/bulk-dialog/bulk-dialog.component';
 
 @Component({
   selector: 'app-frequencies',
@@ -125,14 +126,14 @@ export class FrequenciesComponent implements OnInit, OnDestroy {
         // });
         break;
       case 'create-bulk':
-        // dialogRef = this.dialog.open(
-        //   UploadFileDialogReplacementsComponent,
-        //   optionsDialog
-        // );
+        dialogRef = this.dialog.open(
+          BulkDialogComponent,
+          optionsDialog
+        );
 
-        // dialogRef.afterClosed().subscribe((result) => {
-        //   console.log(`Dialog result: ${result}`);
-        // });
+        dialogRef.afterClosed().subscribe((result) => {
+          console.log(`Dialog result: ${result}`);
+        });
         break;
       case 'edit':
         // dialogRef = this.dialog.open(
