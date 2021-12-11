@@ -73,7 +73,8 @@
           Fecha
         </th>
         <td mat-cell *matCellDef="let element" class="ms-table__header">
-          {{ element.createdAt.seconds * 1000 | date: "dd/MM/yy" }}
+          <span>{{ element.createdAt.seconds * 1000 | date: "dd/MM/yy" }}</span><br>
+          <span style="font-size: 12px; font-weight: 900;">({{ element.createdAt.seconds * 1000 | date: "hh:mm" }})</span>
         </td>
       </ng-container>
 
@@ -101,7 +102,7 @@
           Frecuencia
         </th>
         <td mat-cell *matCellDef="let element" class="ms-table__header">
-          {{ element.frequency ? element.frequency : "Indefinido" }}
+          {{ element.frequency ? element.frequency : 0 }}
         </td>
       </ng-container>
 
@@ -115,7 +116,7 @@
           Cant. Prom.
         </th>
         <td mat-cell *matCellDef="let element" class="ms-table__header">
-          {{ element.avgQty ? element.avgQty : "Indefinido" }}
+          {{ element.avgQty ? element.avgQty : 0 }}
         </td>
       </ng-container>
 
@@ -129,7 +130,7 @@
           Cant. Min.
         </th>
         <td mat-cell *matCellDef="let element" class="ms-table__header">
-          {{ element.minQty ? element.minQty : "Indefinido" }}
+          {{ element.minQty ? element.minQty : 0 }}
         </td>
       </ng-container>
 
@@ -143,7 +144,7 @@
           Cant. Max.
         </th>
         <td mat-cell *matCellDef="let element" class="ms-table__header">
-          {{ element.maxQty ? element.maxQty : "Indefinido" }}
+          {{ element.maxQty ? element.maxQty : 0 }}
         </td>
       </ng-container>
 
@@ -194,9 +195,7 @@
                 class="w3-small"
                 mat-menu-item
                 (click)="openDialog('edit', element, i)"
-                *ngIf="
-                  authService.uiConfig.spareParts.frequency.actions.edit
-                "
+                *ngIf="authService.uiConfig.spareParts.frequency.actions.edit"
               >
                 <mat-icon>edit</mat-icon>
                 Editar
@@ -205,9 +204,7 @@
                 class="w3-small"
                 mat-menu-item
                 (click)="openDialog('delete', element, i)"
-                *ngIf="
-                  authService.uiConfig.spareParts.frequency.actions.delete
-                "
+                *ngIf="authService.uiConfig.spareParts.frequency.actions.delete"
               >
                 <mat-icon>delete</mat-icon>
                 Borrar
