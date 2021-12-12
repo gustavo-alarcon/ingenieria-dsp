@@ -74,7 +74,7 @@
         </th>
         <td mat-cell *matCellDef="let element" class="ms-table__header">
           <span>{{ element.createdAt.seconds * 1000 | date: "dd/MM/yy" }}</span><br>
-          <span style="font-size: 12px; font-weight: 900;">({{ element.createdAt.seconds * 1000 | date: "hh:mm" }})</span>
+          <span style="font-size: 0.6rem; font-weight: 900;">({{ element.createdAt.seconds * 1000 | date: "hh:mm aa" }})</span>
         </td>
       </ng-container>
 
