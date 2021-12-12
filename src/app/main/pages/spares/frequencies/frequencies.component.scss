@@ -28,6 +28,10 @@ table {
   }
 }
 
+::ng-deep td.mat-cell {
+  font-size: 0.8rem;
+}
+
 .btn-state-validate {
   background: #27ae60;
   color: white;
