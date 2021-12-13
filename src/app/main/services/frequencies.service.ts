@@ -23,7 +23,9 @@ export class FrequenciesService {
    */
   getAllFrequencies(): Observable<FrequencySparePart[]> {
     return this.afs
-      .collection<FrequencySparePart>('db/ferreyros/frequencies')
+      .collection<FrequencySparePart>('db/ferreyros/frequencies', (ref) =>
+        ref.orderBy('createdAt', 'desc')
+      )
       .valueChanges();
   }
 
@@ -84,6 +86,50 @@ export class FrequenciesService {
         }
 
         return of(batchArray);
+      })
+    );
+  }
+
+  /**
+   * Create a new sapre part frequency
+   *
+   * @param {Partial<FrequencySparePart>} form - Form with the new frequency
+   * @return {*}  {Observable<firebase.default.firestore.WriteBatch>}
+   * @memberof FrequenciesService
+   */
+  createFrequency(
+    form: Partial<FrequencySparePart>
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    return this.authService.user$.pipe(
+      take(1),
+      switchMap((user) => {
+        const shortUser: ShortUser = {
+          uid: user.uid,
+          displayName: user.name,
+          email: user.email,
+        };
+
+        const batch = this.afs.firestore.batch();
+        const frequenciesDocRef = this.afs.firestore
+          .collection(`db/ferreyros/frequencies`)
+          .doc();
+
+        const data: FrequencySparePart = {
+          id: frequenciesDocRef.id,
+          partNumber: form.partNumber,
+          frequency: form.frequency,
+          avgQty: form.avgQty,
+          minQty: form.minQty,
+          maxQty: form.maxQty,
+          createdAt: new Date() as Date & firebase.default.firestore.Timestamp,
+          createdBy: shortUser,
+          editedAt: null,
+          editedBy: null,
+        };
+
+        batch.set(frequenciesDocRef, data);
+
+        return of(batch);
       })
     );
   }

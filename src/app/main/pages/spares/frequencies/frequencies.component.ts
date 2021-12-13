@@ -17,6 +17,7 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 import { FrequencySparePart } from 'src/app/main/models/frequencySparePart.model';
 import { FrequenciesService } from 'src/app/main/services/frequencies.service';
 import { BulkDialogComponent } from './dialogs/bulk-dialog/bulk-dialog.component';
+import { CreateFrequencyDialogComponent } from './dialogs/create-frequency-dialog/create-frequency-dialog.component';
 
 @Component({
   selector: 'app-frequencies',
@@ -116,20 +117,17 @@ export class FrequenciesComponent implements OnInit, OnDestroy {
 
     switch (value) {
       case 'create':
-        // dialogRef = this.dialog.open(
-        //   CreateDialogReplacementsComponent,
-        //   optionsDialog
-        // );
+        dialogRef = this.dialog.open(
+          CreateFrequencyDialogComponent
+          // optionsDialog
+        );
 
-        // dialogRef.afterClosed().subscribe((result) => {
-        //   console.log(`Dialog result: ${result}`);
-        // });
+        dialogRef.afterClosed().subscribe((result) => {
+          console.log(`Dialog result: ${result}`);
+        });
         break;
       case 'create-bulk':
-        dialogRef = this.dialog.open(
-          BulkDialogComponent,
-          optionsDialog
-        );
+        dialogRef = this.dialog.open(BulkDialogComponent, optionsDialog);
 
         dialogRef.afterClosed().subscribe((result) => {
           console.log(`Dialog result: ${result}`);

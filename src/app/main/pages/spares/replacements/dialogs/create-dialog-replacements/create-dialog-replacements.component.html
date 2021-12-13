@@ -1,64 +1,126 @@
 <div class="container">
-    <h2 mat-dialog-title>
-        Ingreso de reemplazo
-        <mat-divider></mat-divider>
-        <mat-progress-bar mode="indeterminate" *ngIf="loading$ | async"></mat-progress-bar>
-    </h2>
-    <form class="container-form" [formGroup]="createReplacementForm" autocomplete="off">
-        <mat-dialog-content class="mat-typography">
-            <h3>Lista de reemplazos</h3>
+  <h2 mat-dialog-title>
+    Ingreso de reemplazo
+    <mat-divider></mat-divider>
+    <mat-progress-bar
+      mode="indeterminate"
+      *ngIf="loading$ | async"
+    ></mat-progress-bar>
+  </h2>
+  <form
+    class="container-form"
+    [formGroup]="createReplacementForm"
+    autocomplete="off"
+  >
+    <mat-dialog-content class="mat-typography">
+      <h3>Lista de reemplazos</h3>
 
-            <div formArrayName="parts">
-                <div *ngFor="let _ of parts.controls; let i=index" class="form-array">
-                    <div [formGroupName]="i" class="container-form-array">
+      <div formArrayName="parts">
+        <div *ngFor="let _ of parts.controls; let i = index" class="form-array">
+          <div [formGroupName]="i" class="container-form-array">
+            <mat-form-field
+              appearance="outline"
+              style="width: 150px"
+              class="container-form-array__inputs"
+            >
+              <mat-label>Anterior SAP</mat-label>
+              <input
+                matInput
+                type="text"
+                placeholder="Anterior SAP"
+                formControlName="replacedPart"
+              />
+              <mat-error *ngIf="parts.controls[i].get('replacedPart').errors">
+                Campo <strong>requerido.</strong>
+              </mat-error>
+            </mat-form-field>
 
-                        <mat-form-field appearance="outline" style="width: 150px;" class="container-form-array__inputs">
-                            <mat-label>Anterior SAP</mat-label>
-                            <input matInput type='text' placeholder="Anterior SAP" formControlName="replacedPart">
-                            <mat-error *ngIf="parts.controls[i].get('replacedPart').errors">
-                                Campo <strong>requerido.</strong>
-                            </mat-error>
-                        </mat-form-field>
-
-                        <mat-form-field appearance="outline" style="width: 150px;" class="container-form-array__inputs">
-                            <mat-label>Nuevo SAP</mat-label>
-                            <input matInput type="text" placeholder="Nuevo SAP"
-                                formControlName="currentPart">
-                            <mat-error *ngIf="parts.controls[i].get('currentPart').errors">
-                                Campo <strong>requerido.</strong>
-                            </mat-error>
-                        </mat-form-field>
-                        <mat-form-field appearance="outline" style="flex: auto 1 1;" class="container-form-array__inputs">
-                            <mat-label>Descripción</mat-label>
-                            <input matInput type="text" placeholder="Descripción" formControlName="description">
-                            <mat-error *ngIf="parts.controls[i].get('description').errors">
-                                Campo <strong>requerido.</strong>
-                            </mat-error>
-                        </mat-form-field>
-                        <div class="container-form-array__checked">
-                            <span>Kit</span>
-                            <mat-checkbox class="checked-margin" color="primary" formControlName="kit"></mat-checkbox>
-                        </div>
-                        <div class="container-form-array__checked">
-                            <span>Soporte</span>
-                            <mat-checkbox class="checked-margin" color="primary" formControlName="support"></mat-checkbox>
-                        </div>
-                        <button mat-icon-button type="button" style="margin-top: 8px;">
-                            <mat-icon color="warn" (click)="deleteControl(i)">delete</mat-icon>
-                        </button>
-                    </div>
-                </div>
+            <mat-form-field
+              appearance="outline"
+              style="width: 150px"
+              class="container-form-array__inputs"
+            >
+              <mat-label>Nuevo SAP</mat-label>
+              <input
+                matInput
+                type="text"
+                placeholder="Nuevo SAP"
+                formControlName="currentPart"
+              />
+              <mat-error *ngIf="parts.controls[i].get('currentPart').errors">
+                Campo <strong>requerido.</strong>
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field
+              appearance="outline"
+              style="flex: auto 1 1"
+              class="container-form-array__inputs"
+            >
+              <mat-label>Descripción</mat-label>
+              <input
+                matInput
+                type="text"
+                placeholder="Descripción"
+                formControlName="description"
+              />
+              <mat-error *ngIf="parts.controls[i].get('description').errors">
+                Campo <strong>requerido.</strong>
+              </mat-error>
+            </mat-form-field>
+            <div class="container-form-array__checked">
+              <span>Kit</span>
+              <mat-checkbox
+                class="checked-margin"
+                color="primary"
+                formControlName="kit"
+              ></mat-checkbox>
             </div>
-            <button type="button" mat-stroked-button color="primary" (click)="addControl()">
-                <mat-icon color="primary">add</mat-icon>
-                Agregar
+            <div class="container-form-array__checked">
+              <span>Soporte</span>
+              <mat-checkbox
+                class="checked-margin"
+                color="primary"
+                formControlName="support"
+              ></mat-checkbox>
+            </div>
+            <button mat-icon-button type="button" style="margin-top: 8px">
+              <mat-icon color="warn" (click)="deleteControl(i)"
+                >delete</mat-icon
+              >
             </button>
-        </mat-dialog-content>
-        <mat-dialog-actions align="end">
-            <button type="button" mat-stroked-button color="warn" class="footer__btn-close"
-                mat-dialog-close>CERRAR</button>
-            <button type="button" mat-raised-button color="primary" class="footer__btn-save"
-                (click)="save()" [disabled]="!createReplacementForm.valid">ENVIAR</button>
-        </mat-dialog-actions>
-    </form>
+          </div>
+        </div>
+      </div>
+      <button
+        type="button"
+        mat-stroked-button
+        color="primary"
+        (click)="addControl()"
+      >
+        <mat-icon color="primary">add</mat-icon>
+        Agregar
+      </button>
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+      <button
+        type="button"
+        mat-stroked-button
+        color="warn"
+        class="footer__btn-close"
+        mat-dialog-close
+      >
+        CERRAR
+      </button>
+      <button
+        type="button"
+        mat-raised-button
+        color="primary"
+        class="footer__btn-save"
+        (click)="save()"
+        [disabled]="!createReplacementForm.valid"
+      >
+        ENVIAR
+      </button>
+    </mat-dialog-actions>
+  </form>
 </div>
