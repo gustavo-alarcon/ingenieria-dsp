@@ -121,6 +121,19 @@
           <a
             mat-list-item
             class="mat-list-item-second"
+            [routerLink]="['/main/usage-monitor']"
+            routerLinkActive="active"
+            (click)="drawer.toggle()"
+            *ngIf="authService.uiConfig.spareParts.usageMonitor.menu"
+          >
+            <mat-icon mat-list-icon class="mat-icon-menu"
+              >monitor_heart</mat-icon
+            >
+            <span class="mat-item-list-span"> Monitor de uso </span>
+          </a>
+          <a
+            mat-list-item
+            class="mat-list-item-second"
             [routerLink]="['/main/settings']"
             routerLinkActive="active"
             (click)="drawer.toggle()"

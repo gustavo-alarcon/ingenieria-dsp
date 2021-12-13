@@ -57,6 +57,9 @@ export class UiConfig {
         download: boolean;
       };
     };
+    usageMonitor: {
+      menu: boolean;
+    };
     configuration: {
       menu: boolean;
       toolbar: {
@@ -356,6 +359,9 @@ export class UiConfig {
           download: false,
         },
       },
+      usageMonitor: {
+        menu: false,
+      },
       configuration: {
         menu: false,
         toolbar: {
@@ -633,6 +639,9 @@ export class UiConfig {
           download: true,
         },
       },
+      usageMonitor: {
+        menu: true,
+      },
       configuration: {
         menu: true,
         toolbar: {
@@ -879,6 +888,7 @@ export class UiConfig {
     this.spareParts.summary.menu = true;
     this.spareParts.summary.toolbar.download = true;
     this.spareParts.summary.actions.delete = true;
+    this.spareParts.usageMonitor.menu = true;
     this.spareParts.configuration.menu = true;
     this.spareParts.configuration.toolbar.upload = true;
     this.spareParts.configuration.actions.save = true;
