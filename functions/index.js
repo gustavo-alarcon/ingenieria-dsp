@@ -836,3 +836,64 @@ exports.sendBudget = functions.https.onCall(async (data, context) => {
             })
     });
 });
+
+exports.sendLowFrequency = functions.firestore.document(`db/ferreyros/reviewHistory/{reviewId}`)
+    .onCreate(async (event) => {
+        const review = event.data();
+
+        if (review.hasLowFrequency) {
+            let url;
+            await admin.firestore().doc('/db/generalConfig').onSnapshot(val => {
+                url = val.data()['endpoint'];
+
+                const data = {
+                    "id": review.id,
+                    "code": "frequency",
+                    "ot": review.ot ? review.ot : '',
+                    "hasLowFrequency": review.workOrder ? review.workOrder : '',
+                    "spareParts": review.spareParts ? review.spareParts.map(spare => spare.partNumber).join("@@") : '',
+                    "descriptions": review.descriptions ? review.descriptions.map(desc => desc.description).join("@@") : '',
+                    "createdByEmail": review.createdBy ? review.createdBy.email : '',
+                    "createdAt": review.createdAt ? review.createdAt : '',
+                }
+
+                const options = {
+                    "method": "POST",
+                    "url": url,
+                    "port": null,
+                    "headers": {
+                        "authorization": `*`,
+                        "content-type": "application/json"
+                    },
+                    data: data
+                };
+
+                console.log("Just before sending email: ", data);
+
+                return gaxios.request(options)
+                    .then(res2 => {
+                        console.log(`✉️ Frequency notification sent!`)
+                    })
+                    .catch(error => {
+                        console.log("Error: ")
+                        if (error.response) {
+                            // The request was made and the server responded with a status code
+                            // that falls out of the range of 2xx
+                            console.log(error.response.data);
+                            console.log(error.response.status);
+                            console.log(error.response.headers);
+                        } else if (error.request) {
+                            // The request was made but no response was received
+                            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                            // http.ClientRequest in node.js
+                            console.log(error.request);
+                        } else {
+                            // Something happened in setting up the request that triggered an Error
+                            console.log(error.message);
+                        }
+                        console.log(error.config);
+                    })
+        });
+        }
+        
+    });
