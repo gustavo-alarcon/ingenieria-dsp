@@ -1,7 +1,12 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable, of } from 'rxjs';
-import { improvementsForm, Improvement, ImprovementEntry, SparePart } from '../models/improvenents.model';
+import {
+  improvementsForm,
+  Improvement,
+  ImprovementEntry,
+  SparePart,
+} from '../models/improvenents.model';
 
 import * as firebase from 'firebase';
 
@@ -9,20 +14,19 @@ import { User } from '../models/user-model';
 import { map, switchMap, take } from 'rxjs/operators';
 import { Replacement } from '../models/replacements.models';
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ImprovementsService {
-
-  constructor(
-    private afs: AngularFirestore,
-  ) { }
+  constructor(private afs: AngularFirestore) {}
 
   /**
    * Get all documents from improvementEntries collection
    */
   getAllImprovementEntries(): Observable<ImprovementEntry[]> {
-    return this.afs.collection<ImprovementEntry>(`/db/ferreyros/improvementEntries`,
-      ref => ref.orderBy('createdAt', 'desc'))
+    return this.afs
+      .collection<ImprovementEntry>(`/db/ferreyros/improvementEntries`, (ref) =>
+        ref.orderBy('createdAt', 'desc')
+      )
       .valueChanges();
   }
 
@@ -30,7 +34,10 @@ export class ImprovementsService {
    * Get all documents from improvements collection
    */
   getAllImprovements(): Observable<Improvement[]> {
-    return this.afs.collection<Improvement>(`db/ferreyros/improvements`, ref => ref.orderBy('createdAt', 'desc'))
+    return this.afs
+      .collection<Improvement>(`db/ferreyros/improvements`, (ref) =>
+        ref.orderBy('createdAt', 'desc')
+      )
       .valueChanges();
   }
 
@@ -39,11 +46,16 @@ export class ImprovementsService {
    * @param {improvementsForm} form - Form data passed on improvements creation
    * @param {User} user - User's data in actual session
    */
-  createImprovementEntry(form: improvementsForm, user: User): Observable<firebase.default.firestore.WriteBatch> {
+  createImprovementEntry(
+    form: improvementsForm,
+    user: User
+  ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
     // create reference for document in improvement entries collection
-    const improvementDocRef = this.afs.firestore.collection(`db/ferreyros/improvementEntries`).doc();
+    const improvementDocRef = this.afs.firestore
+      .collection(`db/ferreyros/improvementEntries`)
+      .doc();
     // Structuring the data model
     const data: ImprovementEntry = {
       id: improvementDocRef.id,
@@ -73,11 +85,17 @@ export class ImprovementsService {
    * @param {improvementsForm} form - Form data passed on improvements creation
    * @param {User} user - User's data in actual session
    */
-  editImprovementEntry(entryId: string, form: improvementsForm, user: User): Observable<firebase.default.firestore.WriteBatch> {
+  editImprovementEntry(
+    entryId: string,
+    form: improvementsForm,
+    user: User
+  ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
     // create reference for document on improvementEntries
-    const improvementDocRef = this.afs.firestore.doc(`db/ferreyros/improvementEntries/${entryId}`);
+    const improvementDocRef = this.afs.firestore.doc(
+      `db/ferreyros/improvementEntries/${entryId}`
+    );
     // Structuring the data model
     const data: Partial<ImprovementEntry> = {
       date: new Date(),
@@ -104,15 +122,23 @@ export class ImprovementsService {
    * @param {improvementsForm} form - Form data passed on improvements creation
    * @param {User} user - User's data in actual session
    */
-  createImprovements(entryId: string, form: improvementsForm, user: User): Observable<firebase.default.firestore.WriteBatch> {
+  createImprovements(
+    entryId: string,
+    form: improvementsForm,
+    user: User
+  ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
     // create reference to entry document
-    const improvementEntryDocRef = this.afs.firestore.doc(`db/ferreyros/improvementEntries/${entryId}`);
+    const improvementEntryDocRef = this.afs.firestore.doc(
+      `db/ferreyros/improvementEntries/${entryId}`
+    );
     // add improvements to batch
-    form.parts.forEach(part => {
+    form.parts.forEach((part) => {
       // create reference for document in improvements collection
-      const improvementDocRef = this.afs.firestore.collection(`db/ferreyros/improvements`).doc();
+      const improvementDocRef = this.afs.firestore
+        .collection(`db/ferreyros/improvements`)
+        .doc();
       // Structuring the data model
       let availabilityArray = form.parts[0].availability.match(/(..?)/g);
       let year = parseInt(availabilityArray[2] + availabilityArray[3]);
@@ -149,7 +175,7 @@ export class ImprovementsService {
 
     batch.update(improvementEntryDocRef, {
       parts: form.parts,
-      state: 'validated'
+      state: 'validated',
     });
 
     return of(batch);
@@ -164,17 +190,23 @@ export class ImprovementsService {
    * @return {*}  {Observable<firebase.default.firestore.WriteBatch>}
    * @memberof ImprovementsService
    */
-  updateImprovements(entryId: string, form: improvementsForm, user: User): Observable<firebase.default.firestore.WriteBatch> {
+  updateImprovements(
+    entryId: string,
+    form: improvementsForm,
+    user: User
+  ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
     // create reference to entry document
-    const improvementEntryDocRef = this.afs.firestore.doc(`db/ferreyros/improvementEntries/${entryId}`);
+    const improvementEntryDocRef = this.afs.firestore.doc(
+      `db/ferreyros/improvementEntries/${entryId}`
+    );
 
     batch.update(improvementEntryDocRef, {
       parts: form.parts,
       state: 'replacement',
       editedAt: new Date(),
-      editedBy: user
+      editedBy: user,
     });
 
     return of(batch);
@@ -184,21 +216,29 @@ export class ImprovementsService {
    * Delete the passed improvement based in his ID
    * @param {string} id - ID of the improvement to be removed
    */
-  removeImprovement(id: string): Observable<firebase.default.firestore.WriteBatch> {
+  removeImprovement(
+    id: string
+  ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
     // create document reference in improvements collection
-    const improvementDocRef = this.afs.firestore.doc(`/db/ferreyros/improvements/${id}`);
+    const improvementDocRef = this.afs.firestore.doc(
+      `/db/ferreyros/improvements/${id}`
+    );
     //
     batch.delete(improvementDocRef);
 
     return of(batch);
   }
   async removeImprovementFef(id: string): Promise<void> {
-    await this.afs.collection(`db/ferreyros/improvementEntries/`).doc(id).delete().then(() => {
-    }).catch((error) => {
-      console.error('Error removing document: ', error);
-    });
+    await this.afs
+      .collection(`db/ferreyros/improvementEntries/`)
+      .doc(id)
+      .delete()
+      .then(() => {})
+      .catch((error) => {
+        console.error('Error removing document: ', error);
+      });
   }
 
   /**
@@ -206,13 +246,18 @@ export class ImprovementsService {
    * @param {Improvement[]} list - List of improvements uploaded by the user
    * @param {User} user - User's data in actual session
    */
-  addSettings(list: Improvement[], user): Observable<firebase.default.firestore.WriteBatch> {
+  addSettings(
+    list: Improvement[],
+    user
+  ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
 
-    list.forEach(element => {
+    list.forEach((element) => {
       // create reference for document in improvements collection
-      const improvementDocRef = this.afs.firestore.collection(`/db/ferreyros/improvements`).doc();
+      const improvementDocRef = this.afs.firestore
+        .collection(`/db/ferreyros/improvements`)
+        .doc();
       // Structuring the data model
       const data: Improvement = {
         id: improvementDocRef.id,
@@ -248,12 +293,14 @@ export class ImprovementsService {
    * @param {string} part - Part number to be evaluated
    */
   checkPart(part: any, readType: number): Observable<SparePart> {
-
-    return this.afs.collection<Improvement>(`/db/ferreyros/improvements`, ref => ref.where('improvedPart', '==', (part[0])))
+    return this.afs
+      .collection<Improvement>(`/db/ferreyros/improvements`, (ref) =>
+        ref.where('improvedPart', '==', part[0])
+      )
       .valueChanges()
       .pipe(
         take(1),
-        map(res => {
+        map((res) => {
           let data;
 
           if (res.length) {
@@ -263,57 +310,67 @@ export class ImprovementsService {
 
             if (doc.criticalPart) {
               data = {
-                description: readType === 1 ? part[3].replaceAll('"', '') : part[4].replaceAll('"', ''),
+                description:
+                  readType === 1
+                    ? part[3].replaceAll('"', '')
+                    : part[4].replaceAll('"', ''),
                 quantity: doc.quantity,
                 improvedPart: doc.improvedPart,
                 evaluatedPart: doc.improvedPart,
                 kit: doc.kit,
-                match: false
+                match: false,
               };
             } else {
               data = {
-                description: readType === 1 ? part[3].replaceAll('"', '') : part[4].replaceAll('"', ''),
+                description:
+                  readType === 1
+                    ? part[3].replaceAll('"', '')
+                    : part[4].replaceAll('"', ''),
                 quantity: doc.quantity,
                 improvedPart: doc.improvedPart,
                 evaluatedPart: evaluatedPart,
                 kit: doc.kit,
-                match: evaluatedPart ? true : false
+                match: evaluatedPart ? true : false,
               };
             }
           } else {
-
             data = {
-              description: readType === 1 ? part[3].replaceAll('"', '') : part[4].replaceAll('"', ''),
+              description:
+                readType === 1
+                  ? part[3].replaceAll('"', '')
+                  : part[4].replaceAll('"', ''),
               quantity: part[1],
               improvedPart: part[0],
               evaluatedPart: part[0],
               kit: null,
-              match: false
+              match: false,
             };
-
           }
 
           return data;
         }),
-        switchMap(firstEvaluation => {
-
+        switchMap((firstEvaluation) => {
           if (firstEvaluation.evaluatedPart === 'check replacement') {
-            return this.afs.collection<Replacement>(`/db/ferreyros/replacements`, ref => ref.where('replacedPart', '==', firstEvaluation.improvedPart))
+            return this.afs
+              .collection<Replacement>(`/db/ferreyros/replacements`, (ref) =>
+                ref.where('replacedPart', '==', firstEvaluation.improvedPart)
+              )
               .valueChanges()
               .pipe(
-                map(res => {
+                map((res) => {
                   if (res.length) {
-                    res.forEach(doc => {
+                    res.forEach((doc) => {
                       firstEvaluation.evaluatedPart = doc.currentPart;
                     });
                   } else {
-                    firstEvaluation.evaluatedPart = firstEvaluation.improvedPart;
+                    firstEvaluation.evaluatedPart =
+                      firstEvaluation.improvedPart;
                   }
                   return firstEvaluation;
                 })
-              )
+              );
           } else {
-            return of(firstEvaluation)
+            return of(firstEvaluation);
           }
         })
       );
@@ -322,20 +379,23 @@ export class ImprovementsService {
   evaluatePartNumber(data: Improvement): string | null {
     const availability = data.availability['seconds'] * 1000; //in milliseconds
     const now = Date.now(); //in milliseconds
-    let isAvailableNow = (availability - now) <= 0;
+    let isAvailableNow = availability - now <= 0;
     let hasStock = data.stock > 0;
 
     let result;
 
     if (hasStock && !isAvailableNow) {
-      result = data.currentPart
+      result = data.currentPart;
       console.log(data.improvedPart, ' - Met codition 1');
       return result;
     }
 
     if (!hasStock && !isAvailableNow) {
       result = 'check replacement';
-      console.log(data.improvedPart, " - Met codition 2 - Let's check for replacement");
+      console.log(
+        data.improvedPart,
+        " - Met codition 2 - Let's check for replacement"
+      );
       return result;
     }
 
@@ -356,9 +416,5 @@ export class ImprovementsService {
         return result;
       }
     }
-
-
-
-
   }
 }

@@ -1,88 +1,100 @@
 .container {
-    margin: 40px 70px 40px 70px;
+  margin: 40px 70px 40px 70px;
 }
 .header-container {
-    display: inline-flex;
+  display: inline-flex;
 }
 .btn-add {
-    border: 1px #6200ee solid;
-    color: #6200ee;
-    margin-left: 40px;
-    padding: 5px 30px 5px 30px;
+  border: 1px #6200ee solid;
+  color: #6200ee;
+  margin-left: 40px;
+  padding: 5px 30px 5px 30px;
 }
 .icon-add {
-    color: #6200ee;
+  color: #6200ee;
 }
 .body-container {
-    margin-top: 24px;
-    padding: 16px;
-    background: white;
+  margin-top: 24px;
+  padding: 16px;
+  background: white;
 }
 
 .checked-margin {
-    margin: 0 12px;
+  margin: 0 12px;
 }
 
 .container-form-array {
+  display: flex;
+  &__inputs {
+    margin-right: 20px;
+  }
+  &__checked {
     display: flex;
-    &__inputs {
-        margin-right: 20px;
-    }
-    &__checked {
-        display: flex;
-        margin: 18px 0;
-    }
+    margin: 18px 0;
+  }
 }
 
 .footer {
-    text-align: end;
-    margin: 50px 10px 50px 10px;
+  text-align: end;
+  margin: 50px 10px 50px 10px;
 }
 
 .footer__btn-save {
-    background: #6200ee;
-    margin-right: 100px;
-    color: white;
-    padding: 0px 30px 0px 30px;
+  background: #6200ee;
+  margin-right: 100px;
+  color: white;
+  padding: 0px 30px 0px 30px;
 }
 
 .default {
-    border: 1px dashed lightgray;
-    padding: 1rem;
-    border-radius: 10px 10px;
+  border: 1px dashed lightgray;
+  padding: 1rem;
+  border-radius: 10px 10px;
 }
 
 .match {
-    background: greenyellow;
-    padding: 4px;
-    font-weight: 700;
-    border-radius: 2px;
+  background: greenyellow;
+  padding: 4px;
+  font-weight: 700;
+  border-radius: 2px;
+}
+
+.trending-up {
+  color: green;
+}
+
+.trending-down {
+  color: orangered;
+}
+
+.sync-problem {
+  color: royalblue;
 }
 
 .single-query {
-    display: flex;
-    flex-wrap: wrap;
-    margin-bottom: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
 
-    .checked-part {
-        padding: 12px;
-        border: solid 1px lightgray;
-        border-radius: 5px;
-        color: #2b2b2b;
-        margin-right: 12px;
-    }
+  .checked-part {
+    padding: 12px;
+    border: solid 1px lightgray;
+    border-radius: 5px;
+    color: #2b2b2b;
+    margin-right: 12px;
+  }
 
-    .indicator {
-        margin-right: 8px;
-        color: grey;
-        border-bottom: dashed 1px;
-        align-self: center;
-    }
+  .indicator {
+    margin-right: 8px;
+    color: grey;
+    border-bottom: dashed 1px;
+    align-self: center;
+  }
 
-    .result-part {
-        padding: 12px;
-        border: solid 1px lightgray;
-        border-radius: 5px;
-        color: #2b2b2b;
-    }
+  .result-part {
+    padding: 12px;
+    border: solid 1px lightgray;
+    border-radius: 5px;
+    color: #2b2b2b;
+  }
 }

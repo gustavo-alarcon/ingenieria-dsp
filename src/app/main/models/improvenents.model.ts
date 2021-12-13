@@ -75,4 +75,5 @@ export interface SparePart {
   evaluatedPart: string;
   kit: boolean;
   match: boolean;
+  frequency?: number;
 }

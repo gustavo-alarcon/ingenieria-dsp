@@ -4,6 +4,7 @@ import { Observable, of } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { FrequencySparePart } from '../models/frequencySparePart.model';
+import { SparePart } from '../models/improvenents.model';
 import { ShortUser } from '../models/user-model';
 
 @Injectable({
@@ -195,5 +196,36 @@ export class FrequenciesService {
     batch.delete(frequenciesDocRef);
 
     return of(batch);
+  }
+
+  getMatchedFrequencies(list: SparePart[]): Observable<SparePart[]> {
+    // create a part number's list
+    const partNumbers = list.map((sparePart) => sparePart.evaluatedPart);
+    console.log(partNumbers);
+
+    let spareParts: SparePart[] = [...list];
+
+    // look up for frequencies
+    return this.afs
+      .collection<FrequencySparePart>(`db/ferreyros/frequencies`, (ref) =>
+        ref.where('partNumber', 'in', partNumbers)
+      )
+      .valueChanges()
+      .pipe(
+        switchMap((frequencies) => {
+          console.log(frequencies);
+
+          if (!frequencies) return of(spareParts);
+
+          frequencies.forEach((frequency) => {
+            const index = partNumbers.indexOf(frequency.partNumber);
+            if (index >= 0) {
+              spareParts[index].frequency = frequency.frequency;
+            }
+          });
+
+          return of(spareParts);
+        })
+      );
   }
 }
