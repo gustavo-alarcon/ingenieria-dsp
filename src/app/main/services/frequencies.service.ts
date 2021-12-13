@@ -176,4 +176,24 @@ export class FrequenciesService {
       })
     );
   }
+
+  /**
+   * Delete a spare part frequency
+   *
+   * @param {string} frequencyId - Frequency ID
+   * @return {*}  {Observable<firebase.default.firestore.WriteBatch>}
+   * @memberof FrequenciesService
+   */
+  deleteFrequency(
+    frequencyId: string
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    const batch = this.afs.firestore.batch();
+    const frequenciesDocRef = this.afs.firestore.doc(
+      `db/ferreyros/frequencies/${frequencyId}`
+    );
+
+    batch.delete(frequenciesDocRef);
+
+    return of(batch);
+  }
 }

@@ -18,6 +18,7 @@ import { FrequencySparePart } from 'src/app/main/models/frequencySparePart.model
 import { FrequenciesService } from 'src/app/main/services/frequencies.service';
 import { BulkDialogComponent } from './dialogs/bulk-dialog/bulk-dialog.component';
 import { CreateFrequencyDialogComponent } from './dialogs/create-frequency-dialog/create-frequency-dialog.component';
+import { DeleteFrequencyDialogComponent } from './dialogs/delete-frequency-dialog/delete-frequency-dialog.component';
 import { EditFrequencyDialogComponent } from './dialogs/edit-frequency-dialog/edit-frequency-dialog.component';
 
 @Component({
@@ -144,13 +145,13 @@ export class FrequenciesComponent implements OnInit, OnDestroy {
         break;
 
       case 'delete':
-        // dialogRef = this.dialog.open(DeleteDialogReplacementsComponent, {
-        //   width: '350px',
-        //   data: this.replacementDataSource.data[index],
-        // });
-        // dialogRef.afterClosed().subscribe((result) => {
-        //   console.log(`Dialog result: ${result}`);
-        // });
+        dialogRef = this.dialog.open(DeleteFrequencyDialogComponent, {
+          width: '350px',
+          data: entry,
+        });
+        dialogRef.afterClosed().subscribe((result) => {
+          console.log(`Dialog result: ${result}`);
+        });
         break;
     }
   }
