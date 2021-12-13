@@ -15,6 +15,8 @@ import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { FormControl } from '@angular/forms';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { FrequenciesService } from 'src/app/main/services/frequencies.service';
+import { OtDialogComponent } from './dialogs/ot-dialog/ot-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-spare-parts',
@@ -45,7 +47,8 @@ export class SparePartsComponent implements OnInit, OnDestroy {
     private snackBar: MatSnackBar,
     private impServices: ImprovementsService,
     public authService: AuthService,
-    private freqService: FrequenciesService
+    private freqService: FrequenciesService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -150,40 +153,14 @@ export class SparePartsComponent implements OnInit, OnDestroy {
   }
 
   downloadXls(): void {
-    if (this.dataSparePart.length < 1) {
-      return;
-    }
+    if (this.dataSparePart.length < 1) return;
 
-    const table_xlsx: any[] = [];
-
-    const headersXlsx = ['PART', '', '_1', 'QTY', 'Parts Category'];
-
-    table_xlsx.push(headersXlsx);
-
-    this.dataSparePart.forEach((part) => {
-      if (!part.kit) {
-        const temp = [
-          'AA:' + part.evaluatedPart,
-          '',
-          '',
-          part.quantity,
-          'Additional',
-        ];
-
-        table_xlsx.push(temp);
+    this.dialog.open(OtDialogComponent, {
+      data: {
+        list: this.dataSparePart,
+        threshold: this.threshold
       }
     });
-
-    /* generate worksheet */
-    const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(table_xlsx);
-
-    /* generate workbook and add the worksheet */
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'SAP');
-
-    /* save to file */
-    const name = 'SAP' + '.xlsx';
-    XLSX.writeFile(wb, name);
   }
 
   singleImprovementCheck(): void {

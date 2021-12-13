@@ -3,7 +3,10 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable, of } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 import { AuthService } from 'src/app/auth/services/auth.service';
-import { FrequencySparePart } from '../models/frequencySparePart.model';
+import {
+  FrequencySparePart,
+  ReviewHistory,
+} from '../models/frequencySparePart.model';
 import { SparePart } from '../models/improvenents.model';
 import { ShortUser } from '../models/user-model';
 
@@ -198,6 +201,13 @@ export class FrequenciesService {
     return of(batch);
   }
 
+  /**
+   * Maps the frequency data to the spare part model
+   *
+   * @param {SparePart[]} list - List of spare parts
+   * @return {*}  {Observable<SparePart[]>}
+   * @memberof FrequenciesService
+   */
   getMatchedFrequencies(list: SparePart[]): Observable<SparePart[]> {
     // create a part number's list
     const partNumbers = list.map((sparePart) => sparePart.evaluatedPart);
@@ -227,5 +237,51 @@ export class FrequenciesService {
           return of(spareParts);
         })
       );
+  }
+
+  /**
+   * Save the spare part frequencies to review history
+   *
+   * @param {string} ot - Work Order
+   * @param {SparePart[]} list - List of spare parts
+   * @param {number} threshold - Threshold frequency
+   * @return {*}  {Observable<firebase.default.firestore.WriteBatch>}
+   * @memberof FrequenciesService
+   */
+  saveHistory(
+    ot: string,
+    list: SparePart[],
+    threshold: number
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    return this.authService.user$.pipe(
+      take(1),
+      switchMap((user) => {
+        const shortUser: ShortUser = {
+          uid: user.uid,
+          displayName: user.name,
+          email: user.email,
+        };
+
+        const batch = this.afs.firestore.batch();
+        const historyDocRef = this.afs.firestore
+          .collection(`db/ferreyros/reviewHistory`)
+          .doc();
+
+        const data: ReviewHistory = {
+          id: historyDocRef.id,
+          ot: ot,
+          spareParts: list,
+          hasLowFrequency:
+            list.filter((sparePart) => sparePart.frequency < threshold).length >
+            0,
+          createdAt: new Date() as Date & firebase.default.firestore.Timestamp,
+          createdBy: shortUser,
+        };
+
+        batch.set(historyDocRef, data);
+
+        return of(batch);
+      })
+    );
   }
 }
