@@ -118,8 +118,8 @@ export class FrequenciesComponent implements OnInit, OnDestroy {
     switch (value) {
       case 'create':
         dialogRef = this.dialog.open(
-          CreateFrequencyDialogComponent,
-          optionsDialog
+          CreateFrequencyDialogComponent
+          // optionsDialog
         );
 
         dialogRef.afterClosed().subscribe((result) => {

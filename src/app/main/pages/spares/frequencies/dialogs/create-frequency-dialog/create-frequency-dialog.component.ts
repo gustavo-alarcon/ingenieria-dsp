@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { FrequenciesService } from 'src/app/main/services/frequencies.service';
 
 @Component({
@@ -38,6 +39,28 @@ export class CreateFrequencyDialogComponent implements OnInit {
   }
 
   save(): void {
-    // 
+    // check validity
+    if (this.frequencyFormGroup.invalid) return;
+
+    // update state to loading
+    this.loading.next(true);
+
+    this.freqService
+      .createFrequency(this.frequencyFormGroup.value)
+      .pipe(take(1))
+      .subscribe((batch) => {
+        if (batch) {
+          batch
+            .commit()
+            .then(() => {
+              this.loading.next(false);
+              this.dialogRef.close(true);
+            })
+            .catch((err) => {
+              this.loading.next(false);
+              this.snackbar.open(err.message, 'OK', { duration: 3000 });
+            });
+        }
+      });
   }
 }
