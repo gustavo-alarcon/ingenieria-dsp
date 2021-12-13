@@ -133,4 +133,47 @@ export class FrequenciesService {
       })
     );
   }
+
+  /**
+   * Edit a spare part frequency
+   *
+   * @param {string} frequencyId - Frequency ID
+   * @param {Partial<FrequencySparePart>} form - Form with the new frequency
+   * @return {*}  {Observable<firebase.default.firestore.WriteBatch>}
+   * @memberof FrequenciesService
+   */
+  editFrequency(
+    frequencyId: string,
+    form: Partial<FrequencySparePart>
+  ): Observable<firebase.default.firestore.WriteBatch> {
+    return this.authService.user$.pipe(
+      take(1),
+      switchMap((user) => {
+        const shortUser: ShortUser = {
+          uid: user.uid,
+          displayName: user.name,
+          email: user.email,
+        };
+
+        const batch = this.afs.firestore.batch();
+        const frequenciesDocRef = this.afs.firestore.doc(
+          `db/ferreyros/frequencies/${frequencyId}`
+        );
+
+        const data: Partial<FrequencySparePart> = {
+          partNumber: form.partNumber,
+          frequency: form.frequency,
+          avgQty: form.avgQty,
+          minQty: form.minQty,
+          maxQty: form.maxQty,
+          editedAt: new Date() as Date & firebase.default.firestore.Timestamp,
+          editedBy: shortUser,
+        };
+
+        batch.update(frequenciesDocRef, data);
+
+        return of(batch);
+      })
+    );
+  }
 }
