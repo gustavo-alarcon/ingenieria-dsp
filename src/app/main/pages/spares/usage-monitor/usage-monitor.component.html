@@ -72,6 +72,19 @@
         autocomplete="off"
       />
     </mat-form-field>
+    <span class="ms-fill"></span>
+    <button
+      mat-stroked-button
+      class="ms-toolbar__button"
+      (click)="downloadXlsx(historiesDataSource.data)"
+      [disabled]="historiesDataSource.data.length < 1"
+      [ngClass]="
+        isMobile ? 'ms-toolbar__button--mobile' : 'ms-toolbar__button--desktop'
+      "
+    >
+      <mat-icon>download</mat-icon>
+      DESCARGAR
+    </button>
   </div>
   <mat-divider></mat-divider>
 
@@ -141,7 +154,38 @@
           Repuestos
         </th>
         <td mat-cell *matCellDef="let element" class="ms-table__header">
-          Aquí pondremos algo
+          <table class="table-spares">
+            <tr>
+              <td class="cell-title">Mejora</td>
+              <td class="cell-title">Reemplazo</td>
+              <td class="cell-title">Frecuencia</td>
+              <td class="cell-title">Descripción</td>
+              <td class="cell-title">Cant.</td>
+            </tr>
+            <tr *ngFor="let sparePart of element.spareParts">
+              <td class="cell-spare-number">
+                <span>{{ sparePart.improvedPart }}</span>
+              </td>
+              <td class="cell-spare-number">
+                <span>{{ sparePart.evaluatedPart }}</span>
+              </td>
+              <td class="cell-spare-number">
+                <span
+                  >{{
+                    (sparePart.frequency ? sparePart.frequency : 0)
+                      | number: "2."
+                  }}
+                  %</span
+                >
+              </td>
+              <td class="cell-spare-description">
+                <span>{{ sparePart.description }}</span>
+              </td>
+              <td class="cell-spare-quantity">
+                <span>{{ sparePart.quantity }}</span>
+              </td>
+            </tr>
+          </table>
         </td>
       </ng-container>
 

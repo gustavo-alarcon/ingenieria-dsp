@@ -28,6 +28,27 @@ table {
   }
 }
 
+.table-spares {
+  font-size: 0.7rem;
+
+  .cell-title {
+    font-weight: bold;
+    color: rgba($color: #000000, $alpha: 0.6);
+  }
+
+  .cell-spare-description {
+    min-width: 100px;
+  }
+
+  .cell-spare-number {
+    min-width: 60px;
+  }
+
+  .cell-spare-quantity {
+    min-width: 50px;
+  }
+}
+
 ::ng-deep td.mat-cell {
   font-size: 0.8rem;
 }

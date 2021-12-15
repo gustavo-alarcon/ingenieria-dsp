@@ -19,6 +19,7 @@ import { ReviewHistory } from 'src/app/main/models/frequencySparePart.model';
 import { EvaluationsService } from 'src/app/main/services/evaluations.service';
 import { FrequenciesService } from 'src/app/main/services/frequencies.service';
 
+import * as XLSX from 'xlsx';
 @Component({
   selector: 'app-usage-monitor',
   templateUrl: './usage-monitor.component.html',
@@ -169,6 +170,54 @@ export class UsageMonitorComponent implements OnInit, OnDestroy {
           return 0;
       }
     });
+  }
+
+  downloadXlsx(histories: ReviewHistory[]): void {
+    console.log(histories);
+
+    const tableXlsx: any[] = [];
+    const headersXlsx = [
+      'createdAt',
+      'ot',
+      'createdBy',
+      'improvedPart',
+      'evaluatedPart',
+      'frequency',
+      'description',
+      'quantity',
+    ];
+
+    tableXlsx.push(headersXlsx);
+
+    histories.forEach((item) => {
+      let temp = [
+        item.createdAt ? new Date(item.createdAt.seconds * 1000) : '---',
+        item.ot ?? '---',
+        item.createdBy ? item.createdBy.displayName : '---',
+      ];
+
+      item.spareParts.forEach((sparePart) => {
+        const spare = [
+          sparePart.improvedPart ?? '---',
+          sparePart.evaluatedPart ?? '---',
+          sparePart.frequency ?? '---',
+          sparePart.description ?? '---',
+          sparePart.quantity ?? '---',
+        ];
+
+        tableXlsx.push([...temp, ...spare]);
+      });
+    });
+
+    /* generate worksheet */
+    const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(tableXlsx);
+
+    /* generate workbook and add the worksheet */
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Monitor_de_uso');
+    /* save to file */
+    const name = `Monitor_de_uso.xlsx`;
+    XLSX.writeFile(wb, name);
   }
 }
 
