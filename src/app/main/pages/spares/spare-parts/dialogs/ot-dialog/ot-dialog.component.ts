@@ -72,7 +72,7 @@ export class OtDialogComponent implements OnInit {
               XLSX.utils.book_append_sheet(wb, ws, 'SAP');
 
               /* save to file */
-              const name = 'SAP' + '.xlsx';
+              const name = this.otControl.value + '.xlsx';
               XLSX.writeFile(wb, name);
 
               this.loading.next(false);

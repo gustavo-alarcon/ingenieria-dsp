@@ -284,4 +284,23 @@ export class FrequenciesService {
       })
     );
   }
+
+  /**
+   * Get the review history based on date
+   *
+   * @param {Date} from - From date
+   * @param {Date} to - To date
+   * @return {*}  {Observable<ReviewHistory[]>}
+   * @memberof FrequenciesService
+   */
+  getHistory(from: Date, to: Date): Observable<ReviewHistory[]> {
+    return this.afs
+      .collection<ReviewHistory>(`db/ferreyros/reviewHistory`, (ref) =>
+        ref
+          .where('createdAt', '>=', from)
+          .where('createdAt', '<=', to)
+          .orderBy('createdAt', 'desc')
+      )
+      .valueChanges();
+  }
 }

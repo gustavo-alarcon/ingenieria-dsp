@@ -54,6 +54,13 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'usage-monitor',
+        loadChildren: () =>
+          import('./pages/spares/usage-monitor/usage-monitor.module').then(
+            (m) => m.UsageMonitorModule
+          ),
+      },
+      {
         path: 'settings',
         loadChildren: () =>
           import('./pages/spares/settings/settings.module').then(
@@ -182,6 +189,6 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class MainRoutingModule { }
+export class MainRoutingModule {}
