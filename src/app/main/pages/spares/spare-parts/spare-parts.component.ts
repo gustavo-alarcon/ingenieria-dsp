@@ -1,22 +1,30 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import * as XLSX from 'xlsx';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ImprovementsService } from '../../../services/improvements.service';
-import { map, take } from 'rxjs/operators';
+import { switchMap, take, tap } from 'rxjs/operators';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import { SparePart } from '../../../models/improvenents.model';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { FormControl } from '@angular/forms';
 import { AuthService } from 'src/app/auth/services/auth.service';
+import { FrequenciesService } from 'src/app/main/services/frequencies.service';
+import { OtDialogComponent } from './dialogs/ot-dialog/ot-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-spare-parts',
   templateUrl: './spare-parts.component.html',
-  styleUrls: ['./spare-parts.component.scss']
+  styleUrls: ['./spare-parts.component.scss'],
 })
 export class SparePartsComponent implements OnInit, OnDestroy {
-
-  @ViewChild("fileInput2", { read: ElementRef }) fileButton: ElementRef;
+  @ViewChild('fileInput2', { read: ElementRef }) fileButton: ElementRef;
 
   checked: boolean = false;
   selectCkeck: number;
@@ -32,24 +40,35 @@ export class SparePartsComponent implements OnInit, OnDestroy {
   improvementControl = new FormControl();
 
   singleCheckedPart: SparePart;
+  threshold: number = 0;
 
   constructor(
     private breakpoint: BreakpointObserver,
     private snackBar: MatSnackBar,
     private impServices: ImprovementsService,
-    public authService: AuthService
-  ) { }
+    public authService: AuthService,
+    private freqService: FrequenciesService,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
-    this.subscriptions.add(this.breakpoint.observe([Breakpoints.HandsetPortrait])
-      .subscribe(res => {
-        if (res.matches) {
-          this.isMobile = true;
-        } else {
-          this.isMobile = false;
-        }
+    this.subscriptions.add(
+      this.breakpoint
+        .observe([Breakpoints.HandsetPortrait])
+        .subscribe((res) => {
+          if (res.matches) {
+            this.isMobile = true;
+          } else {
+            this.isMobile = false;
+          }
+        })
+    );
+
+    this.subscriptions.add(
+      this.authService.getGeneralConfig().subscribe((generalConfig) => {
+        this.threshold = generalConfig.frequencyThreshold;
       })
-    )
+    );
   }
 
   ngOnDestroy() {
@@ -75,7 +94,7 @@ export class SparePartsComponent implements OnInit, OnDestroy {
         let dataReconstructed = [];
         let readType;
 
-        csvRead.forEach(element => {
+        csvRead.forEach((element) => {
           if (element[5]) {
             readType = 1;
             element[0] = element[0].replaceAll('-', '');
@@ -88,10 +107,9 @@ export class SparePartsComponent implements OnInit, OnDestroy {
 
             dataReconstructed.push(tempArray);
           }
+        });
 
-        })
-
-        this.upLoadXls(dataReconstructed, readType)
+        this.upLoadXls(dataReconstructed, readType);
       };
       reader.readAsBinaryString(event.target.files[0]);
     }
@@ -108,102 +126,61 @@ export class SparePartsComponent implements OnInit, OnDestroy {
     let obsArray: Array<Observable<SparePart>> = [];
 
     if (xlsx.length > 0) {
-      xlsx.forEach(el => {
+      xlsx.forEach((el) => {
         let temp = Object.values(el);
         let obs = this.impServices.checkPart(temp, readType);
         obsArray.push(obs);
       });
 
-      this.checkedParts$ = combineLatest(
-        obsArray
-      ).pipe(map((list) => {
-        this.dataSparePart = list;
-        this.fileButton.nativeElement.value = null;
-        return list
-      }))
-
+      this.checkedParts$ = combineLatest(obsArray).pipe(
+        switchMap((list) => {
+          return this.freqService.getMatchedFrequencies(list).pipe(
+            tap((res) => {
+              this.dataSparePart = res;
+              this.fileButton.nativeElement.value = null;
+            })
+          );
+        }),
+        tap((res) => {
+          console.log(res);
+        })
+      );
     } else {
-      this.snackBar.open("El archivo esta vacío", "Aceptar", {
+      this.snackBar.open('El archivo esta vacío', 'Aceptar', {
         duration: 3000,
       });
     }
   }
 
   downloadXls(): void {
-    if (this.dataSparePart.length < 1) {
-      return
-    }
+    if (this.dataSparePart.length < 1) return;
 
-    const table_xlsx: any[] = [];
-
-    const headersXlsx = [
-      'PART',
-      '',
-      '_1',
-      'QTY',
-      'Parts Category']
-
-    table_xlsx.push(headersXlsx);
-
-    this.dataSparePart.forEach(part => {
-      if (!part.kit) {
-        const temp = [
-          'AA:' + part.evaluatedPart,
-          '',
-          '',
-          part.quantity,
-          'Additional'
-        ];
-
-        table_xlsx.push(temp);
+    this.dialog.open(OtDialogComponent, {
+      data: {
+        list: this.dataSparePart,
+        threshold: this.threshold
       }
     });
-
-    /* generate worksheet */
-    const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(table_xlsx);
-
-    /* generate workbook and add the worksheet */
-    const wb: XLSX.WorkBook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'SAP');
-
-    /* save to file */
-    const name = 'SAP' + '.xlsx';
-    XLSX.writeFile(wb, name);
-
   }
 
   singleImprovementCheck(): void {
     this.singleCheckedPart = null;
 
     if (this.improvementControl.value) {
-      const part = [
-        this.improvementControl.value,
-        '',
-        '',
-        '',
-        '',
-        '',
-        '',
-        '',
-      ];
+      const part = [this.improvementControl.value, '', '', '', '', '', '', ''];
 
-      this.impServices.checkPart(part, 1)
-        .pipe(
-          take(1)
-        )
-        .subscribe(spare => {
+      this.impServices
+        .checkPart(part, 1)
+        .pipe(take(1))
+        .subscribe((spare) => {
           if (spare) {
             this.singleCheckedPart = spare;
           }
-        })
+        });
     }
-
   }
 
   deleteResult(index: number): void {
     this.dataSparePart.splice(index, 1);
   }
-
 }
-
-

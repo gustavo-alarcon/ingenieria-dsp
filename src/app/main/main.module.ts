@@ -9,18 +9,14 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AngularFireFunctionsModule } from '@angular/fire/functions';
 
 @NgModule({
-  declarations: [
-    MainComponent
-  ],
-  exports: [
-    MainComponent
-  ],
+  declarations: [MainComponent],
+  exports: [MainComponent],
   imports: [
     CommonModule,
     MainRoutingModule,
     MaterialModule,
     ReactiveFormsModule,
-    AngularFireFunctionsModule
-  ]
+    AngularFireFunctionsModule,
+  ],
 })
-export class MainModule { }
+export class MainModule {}

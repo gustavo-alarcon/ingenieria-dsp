@@ -1,0 +1,150 @@
+<div class="container">
+  <h2
+    mat-dialog-title
+    style="display: flex; padding-bottom: 0px; margin-bottom: 0px"
+  >
+    <div style="margin-top: 5px; margin-right: 15px" mat-dialog-close>
+      <mat-icon mat-list-icon>add</mat-icon>
+    </div>
+    CREAR LOTE
+  </h2>
+  <mat-divider></mat-divider>
+  <mat-progress-bar
+    mode="indeterminate"
+    *ngIf="loading$ | async"
+  ></mat-progress-bar>
+
+  <input
+    #fileInput2
+    style="display: none"
+    type="file"
+    (change)="onFileSelected($event)"
+    accept=".xls,.xlsx"
+    id="fileInput2"
+  />
+  <button
+    aria-label="add"
+    mat-button
+    class="btn-add"
+    accept=".xls,.xlsx"
+    (click)="fileInput2.click()"
+  >
+    <mat-icon aria-label="agregar" class="icon-add">add</mat-icon>
+    SELECIONE ARCHIVO
+  </button>
+  <mat-dialog-content style="margin-top: 20px">
+    <ng-container *ngIf="frequenciesDataSource.data.length; else default">
+      <div style="overflow: auto">
+        <table
+          mat-table
+          [dataSource]="frequenciesDataSource"
+          matSort
+          class="mat-elevation-z8"
+        >
+          <ng-container matColumnDef="partNumber">
+            <th mat-header-cell *matHeaderCellDef class="table__cell">
+              Part Number
+            </th>
+            <td mat-cell *matCellDef="let element" class="table__cell">
+              {{ element.partNumber ? element.partNumber : "null" }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="frequency">
+            <th mat-header-cell *matHeaderCellDef class="table__cell">
+              Frecuencia
+            </th>
+            <td mat-cell *matCellDef="let element" class="table__cell">
+              {{ element.frequency ? element.frequency : 0 }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="avgQty">
+            <th mat-header-cell *matHeaderCellDef class="table__cell">
+              Cant. Prom
+            </th>
+            <td mat-cell *matCellDef="let element" class="table__cell">
+              {{ element.avgQty ? element.avgQty : 0 }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="minQty">
+            <th mat-header-cell *matHeaderCellDef class="table__cell">
+              Min. Cant.
+            </th>
+            <td mat-cell *matCellDef="let element" class="table__cell">
+              {{ element.minQty ? element.minQty : 0 }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="maxQty">
+            <th mat-header-cell *matHeaderCellDef class="table__cell">
+              Max. Cant.
+            </th>
+            <td mat-cell *matCellDef="let element" class="table__cell">
+              {{ element.maxQty ? element.maxQty : 0 }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions" stickyEnd>
+            <th mat-header-cell *matHeaderCellDef class="table__cell">
+              Acciones
+            </th>
+            <td mat-cell *matCellDef="let element; let i = index">
+              <button class="w3-small" mat-icon-button (click)="remove(i)">
+                <mat-icon>remove_circle</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr
+            mat-header-row
+            *matHeaderRowDef="frequenciesDisplayedColumns"
+          ></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: frequenciesDisplayedColumns"
+          ></tr>
+        </table>
+      </div>
+      <mat-paginator
+        #frequenciesPaginator
+        class="ms-paginator"
+        [pageSizeOptions]="[10, 20, 50]"
+        showFirstLastButtons
+      >
+      </mat-paginator>
+    </ng-container>
+    <ng-template #default>
+      <div class="default">
+        <span>
+          <mat-icon style="vertical-align: middle">upload</mat-icon> Aquí se
+          mostrarán el resultado
+        </span>
+      </div>
+    </ng-template>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button
+      type="file"
+      aria-label="add"
+      mat-button
+      class="footer__btn-close"
+      mat-dialog-close
+      [disabled]="loading$ | async"
+    >
+      CANCELAR
+    </button>
+    <button
+      type="file"
+      aria-label="add"
+      mat-button
+      class="footer__btn-save"
+      (click)="save()"
+      [disabled]="!frequenciesDataSource.data.length || (loading$ | async)"
+    >
+      GUARDAR
+    </button>
+  </mat-dialog-actions>
+</div>

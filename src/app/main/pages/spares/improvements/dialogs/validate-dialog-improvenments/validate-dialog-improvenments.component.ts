@@ -43,6 +43,7 @@ export class ValidateDialogImprovenmentsComponent implements OnInit {
       date: [this.data.date ? new Date(this.data.date['seconds'] * 1000) : null, Validators.required],
       criticalPart: [this.data.criticalPart ? this.data.criticalPart : false],
       rate: [this.data.rate ? this.data.rate : false],
+      comments: [this.data.comments ? this.data.comments : null],
       parts: this.fb.array([])
     });
 

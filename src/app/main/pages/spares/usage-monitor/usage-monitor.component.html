@@ -1,0 +1,208 @@
+<div class="ms-container">
+  <div class="ms-toolbar">
+    <mat-icon class="ms-toolbar__icon">monitor_heart</mat-icon>
+    <h1
+      class="ms-toolbar__title"
+      [ngClass]="
+        isMobile ? 'ms-toolbar__title--mobile' : 'ms-toolbar__title--desktop'
+      "
+    >
+      Monitor de uso
+    </h1>
+    <mat-form-field
+      appearance="outline"
+      class="ms-kanban-toolbar__input"
+      [ngClass]="
+        isMobile
+          ? 'ms-kanban-toolbar__input--mobile'
+          : 'ms-kanban-toolbar__input--desktop'
+      "
+    >
+      <mat-label>FECHA/PERIODO</mat-label>
+      <mat-date-range-input [formGroup]="dateControl" [rangePicker]="picker">
+        <input
+          readonly
+          matStartDate
+          formControlName="start"
+          placeholder="Fecha Inicio"
+        />
+        <input
+          readonly
+          matEndDate
+          formControlName="end"
+          placeholder="Fecha Final"
+        />
+      </mat-date-range-input>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-date-range-picker #picker></mat-date-range-picker>
+    </mat-form-field>
+
+    <mat-form-field
+      appearance="outline"
+      class="ms-toolbar__input"
+      [ngClass]="
+        isMobile ? 'ms-toolbar__input--mobile' : 'ms-toolbar__input--desktop'
+      "
+    >
+      <mat-label>Orden de trabajo</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input
+        matInput
+        type="text"
+        [formControl]="otControl"
+        placeholder="Orden de trabajo"
+        autocomplete="off"
+      />
+    </mat-form-field>
+
+    <mat-form-field
+      appearance="outline"
+      class="ms-toolbar__input"
+      [ngClass]="
+        isMobile ? 'ms-toolbar__input--mobile' : 'ms-toolbar__input--desktop'
+      "
+    >
+      <mat-label>Técnico</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input
+        matInput
+        type="text"
+        [formControl]="technicianControl"
+        placeholder="Técnico"
+        autocomplete="off"
+      />
+    </mat-form-field>
+    <span class="ms-fill"></span>
+    <button
+      mat-stroked-button
+      class="ms-toolbar__button"
+      (click)="downloadXlsx(historiesDataSource.data)"
+      [disabled]="historiesDataSource.data.length < 1"
+      [ngClass]="
+        isMobile ? 'ms-toolbar__button--mobile' : 'ms-toolbar__button--desktop'
+      "
+    >
+      <mat-icon>download</mat-icon>
+      DESCARGAR
+    </button>
+  </div>
+  <mat-divider></mat-divider>
+
+  <div
+    *ngIf="histories$ | async; else default"
+    class="body-container mat-elevation-z4"
+  >
+    <table
+      mat-table
+      [dataSource]="historiesDataSource"
+      matSort
+      (matSortChange)="sortData($event)"
+    >
+      <ng-container matColumnDef="createdAt">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          class="ms-table__header"
+        >
+          Fecha
+        </th>
+        <td mat-cell *matCellDef="let element" class="ms-table__header">
+          <span>{{ element.createdAt.seconds * 1000 | date: "dd/MM/yy" }}</span
+          ><br />
+          <span style="font-size: 0.6rem; font-weight: 900"
+            >({{ element.createdAt.seconds * 1000 | date: "hh:mm aa" }})</span
+          >
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="ot">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          class="ms-table__header"
+        >
+          Orden de trabajo
+        </th>
+        <td mat-cell *matCellDef="let element" class="ms-table__header">
+          {{ element.ot ? element.ot : "Indefinido" }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="createdBy">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          class="ms-table__header"
+        >
+          Técnico
+        </th>
+        <td mat-cell *matCellDef="let element" class="ms-table__header">
+          {{ element.createdBy ? element.createdBy.displayName : 0 }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="spareParts">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          class="ms-table__header"
+        >
+          Repuestos
+        </th>
+        <td mat-cell *matCellDef="let element" class="ms-table__header">
+          <table class="table-spares">
+            <tr>
+              <td class="cell-title">Mejora</td>
+              <td class="cell-title">Reemplazo</td>
+              <td class="cell-title">Frecuencia</td>
+              <td class="cell-title">Descripción</td>
+              <td class="cell-title">Cant.</td>
+            </tr>
+            <tr *ngFor="let sparePart of element.spareParts">
+              <td class="cell-spare-number">
+                <span>{{ sparePart.improvedPart }}</span>
+              </td>
+              <td class="cell-spare-number">
+                <span>{{ sparePart.evaluatedPart }}</span>
+              </td>
+              <td class="cell-spare-number">
+                <span
+                  >{{
+                    (sparePart.frequency ? sparePart.frequency : 0)
+                      | number: "2."
+                  }}
+                  %</span
+                >
+              </td>
+              <td class="cell-spare-description">
+                <span>{{ sparePart.description }}</span>
+              </td>
+              <td class="cell-spare-quantity">
+                <span>{{ sparePart.quantity }}</span>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="historiesDisplayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: historiesDisplayedColumns"></tr>
+    </table>
+    <mat-paginator
+      #historiesPaginator
+      class="ms-paginator"
+      [pageSizeOptions]="[20, 30, 40]"
+      showFirstLastButtons
+    >
+    </mat-paginator>
+  </div>
+  <ng-template #default>
+    <div class="ms-default">
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    </div>
+  </ng-template>
+</div>

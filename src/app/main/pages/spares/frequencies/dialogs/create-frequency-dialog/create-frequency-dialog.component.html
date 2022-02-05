@@ -1,0 +1,112 @@
+<div class="ms-dialog-header">
+  <mat-icon class="ms-dialog-header__icon">add</mat-icon>
+  <h2 class="ms-dialog-header__title">Crear frecuencia</h2>
+  <span class="ms-fill"></span>
+  <button mat-icon-button mat-dialog-close>
+    <mat-icon class="ms-dialog-header__close">cancel</mat-icon>
+  </button>
+</div>
+<mat-divider></mat-divider>
+<mat-progress-bar
+  mode="indeterminate"
+  *ngIf="loading$ | async"
+></mat-progress-bar>
+
+<mat-dialog-content>
+  <div class="form-label">
+    <h3 class="form-label__title">Datos</h3>
+    <p class="form-label__description">
+      Información básica de frecuencia de uso en números de parte
+    </p>
+  </div>
+  <form [formGroup]="frequencyFormGroup" autocomplete="off">
+    <div class="form-container">
+      <div class="form-column">
+        <mat-form-field appearance="outline">
+          <mat-label>Part number</mat-label>
+          <input
+            matInput
+            type="text"
+            formControlName="partNumber"
+            placeholder="Part number"
+          />
+          <mat-hint>*Requerido</mat-hint>
+          <mat-error *ngIf="frequencyFormGroup.get('partNumber').errors"
+            >Campo requerido</mat-error
+          >
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Cant. Mínima</mat-label>
+          <input
+            matInput
+            type="number"
+            formControlName="minQty"
+            min="0"
+            placeholder="Cant. Mínima"
+          />
+          <mat-hint>*Requerido</mat-hint>
+        </mat-form-field>
+      </div>
+      <div class="form-column">
+        <mat-form-field appearance="outline">
+          <mat-label>Frecuencia</mat-label>
+          <input
+            matInput
+            type="number"
+            formControlName="frequency"
+            min="0"
+            placeholder="Frecuencia"
+          />
+          <mat-hint>*Requerido</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Cant. Máxima</mat-label>
+          <input
+            matInput
+            type="number"
+            formControlName="maxQty"
+            min="0"
+            placeholder="Cant. Máxima"
+          />
+          <mat-hint>*Requerido</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Cant. Promedio</mat-label>
+          <input
+            matInput
+            type="number"
+            formControlName="avgQty"
+            min="0"
+            placeholder="Cant. Promedio"
+          />
+          <mat-hint>*Requerido</mat-hint>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button
+    type="button"
+    mat-stroked-button
+    color="warn"
+    class="footer__btn-close"
+    mat-dialog-close
+  >
+    CERRAR
+  </button>
+  <button
+    type="button"
+    mat-raised-button
+    color="primary"
+    class="footer__btn-save"
+    (click)="save()"
+    [disabled]="!frequencyFormGroup.valid"
+  >
+    CREAR
+  </button>
+</mat-dialog-actions>

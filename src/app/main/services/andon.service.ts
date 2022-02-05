@@ -22,7 +22,7 @@ export class AndonService {
     private storage: AngularFireStorage
   ) {}
 
-  getCurrentMonthOfViewDate(): { from: Date, to: Date } {
+  getCurrentMonthOfViewDate(): { from: Date; to: Date } {
     const date = new Date();
     const fromMonth = date.getMonth();
     const fromYear = date.getFullYear();
@@ -41,6 +41,37 @@ export class AndonService {
     return { from: actualFromDate, to: toDate };
   }
 
+  getCurrentTimeFrame(): { from: Date; to: Date } {
+    const today = new Date();
+    const todayMonth = today.getMonth();
+    const todayYear = today.getFullYear();
+
+    // calculate fromDate
+    let fromYear = todayYear;
+    const monthsBefore = 2;
+
+    const fromMonth = ((todayMonth - monthsBefore) % 12) + 12;
+    if (todayMonth - 2 < 0) {
+      fromYear--;
+    }
+
+    // construct fromDate
+    const fromDate = new Date(fromYear, fromMonth, 1);
+
+    // calculate toDate
+    const toMonth = (todayMonth + 1) % 12;
+    let toYear = todayYear;
+
+    if (todayMonth + 1 >= 12) {
+      toYear++;
+    }
+
+    // construct toDate
+    const toDate = new Date(toYear, toMonth, 1);
+
+    return { from: fromDate, to: toDate };
+  }
+
   /**
    * update the evaluation entry
    * @param {string} entryId - id data
@@ -48,7 +79,7 @@ export class AndonService {
    * @param {string} imges - imgs
    * @param {User} user - imgs
    */
-   addAndOn(
+  addAndOn(
     form,
     workshop: string,
     nameBahia: string,
@@ -60,7 +91,9 @@ export class AndonService {
     // create batch
     const batch = this.afs.firestore.batch();
     // create reference for document in evaluation entries collection
-    const andonDocRef = this.afs.firestore.collection(`db/ferreyros/andon`).doc();
+    const andonDocRef = this.afs.firestore
+      .collection(`db/ferreyros/andon`)
+      .doc();
 
     // Structuring the data model
     const data: any = {
@@ -82,7 +115,7 @@ export class AndonService {
       workReturnDate: null,
       comments: null,
       returnUser: null,
-      emailList: emailArray
+      emailList: emailArray,
     };
     batch.set(andonDocRef, data);
 
@@ -96,18 +129,19 @@ export class AndonService {
    * @param {string} imges - imgs
    * @param {User} user - imgs
    */
-   updateReasignAndOn(
+  updateReasignAndOn(
     entryId: string,
     form,
     user: User,
     imagesObj,
     emailArray
   ): Observable<firebase.default.firestore.WriteBatch> {
-
     // create batch
     const batch = this.afs.firestore.batch();
     // create reference for document in evaluation entries collection
-    const andonDocRef = this.afs.firestore.doc(`/db/ferreyros/andon/${entryId}`);
+    const andonDocRef = this.afs.firestore.doc(
+      `/db/ferreyros/andon/${entryId}`
+    );
 
     // Structuring the data model
     const data: any = {
@@ -122,7 +156,7 @@ export class AndonService {
       images: imagesObj,
       reportUser: user.name,
       state: 'stopped', // => stopped //retaken
-      emailList: emailArray
+      emailList: emailArray,
     };
 
     batch.update(andonDocRef, data);
@@ -134,9 +168,9 @@ export class AndonService {
    */
   getAllAndon(): Observable<Andon[]> {
     return this.afs
-    .collection<Andon>(`db/ferreyros/andon`, (ref) =>
-    ref.orderBy('createdAt', 'desc')
-    )
+      .collection<Andon>(`db/ferreyros/andon`, (ref) =>
+        ref.orderBy('createdAt', 'desc')
+      )
       .valueChanges();
   }
 
@@ -154,7 +188,7 @@ export class AndonService {
    * @param {AndonProblemType} form - Form data passed on request creation
    * @param {User} user - User's data in actual session
    */
- /*  addAndonSettingsProblemType(
+  /*  addAndonSettingsProblemType(
     listProblemType: AndonProblemType[],
     user: User
   ): Observable<firebase.default.firestore.WriteBatch> {
@@ -188,18 +222,14 @@ export class AndonService {
       });
   }
 
-
-
-  getAllAndonProblemType(): Observable<
-  AndonProblemType[]
-> {
-  return this.afs
-    .collection<AndonProblemType>(
-      `/db/generalConfig/andonProblemType`,
-      (ref) => ref.orderBy('name', 'asc')
-    )
-    .valueChanges();
-}
+  getAllAndonProblemType(): Observable<AndonProblemType[]> {
+    return this.afs
+      .collection<AndonProblemType>(
+        `/db/generalConfig/andonProblemType`,
+        (ref) => ref.orderBy('name', 'asc')
+      )
+      .valueChanges();
+  }
 
   addAndonProblemType(
     form: AndonProblemType,
@@ -218,7 +248,7 @@ export class AndonService {
       // email: form.email,
       createdBy: user,
       createdAt: date,
-      emailList: emailList  
+      emailList: emailList,
     };
     batch.set(qualityDocRef, data);
     return of(batch);
@@ -237,8 +267,6 @@ export class AndonService {
     return of(batch);
   }
 
-
-
   // get all andonListBahias
   getAllAndonSettingsListBahias(): Observable<AndonListBahias[]> {
     return this.afs
@@ -251,10 +279,14 @@ export class AndonService {
    * Delete the passed List Bahia based in his ID
    * @param {string} id - ID of the list Bahia to be removed
    */
-   deleteAndonListBahia(id: string): Observable<firebase.default.firestore.WriteBatch> {
+  deleteAndonListBahia(
+    id: string
+  ): Observable<firebase.default.firestore.WriteBatch> {
     // create batch
     const batch = this.afs.firestore.batch();
-    const AndonDocRef = this.afs.firestore.doc(`/db/generalConfig/andonListBahias/${id}`);
+    const AndonDocRef = this.afs.firestore.doc(
+      `/db/generalConfig/andonListBahias/${id}`
+    );
     //
     batch.delete(AndonDocRef);
     return of(batch);
@@ -399,7 +431,7 @@ export class AndonService {
     id: string,
     form: AndonBroadcastList,
     arrayEmail: string[]
-  ):Observable<firebase.default.firestore.WriteBatch> {
+  ): Observable<firebase.default.firestore.WriteBatch> {
     const batch = this.afs.firestore.batch();
     const docRef: DocumentReference = this.afs.firestore.doc(
       `/db/generalConfig/andonProblemType/${id}`
@@ -413,7 +445,6 @@ export class AndonService {
 
     batch.update(docRef, data);
     return of(batch);
-
   }
 
   /**
@@ -452,7 +483,6 @@ export class AndonService {
       .valueChanges();
   }
 
-  
   // BROADCAS LIST
   // get all EvaluationBroadcastlist
   getAllBroadcastList(): Observable<AndonBroadcastList[]> {
@@ -544,7 +574,10 @@ export class AndonService {
   }
 
   getBay(bay: string, workshop: string): Observable<AndonListBahias[]> {
-    return this.afs.collection<AndonListBahias>(`/db/generalConfig/andonListBahias`, ref => ref.where('name', '==', bay).where('workShop', '==', workshop)).valueChanges();
+    return this.afs
+      .collection<AndonListBahias>(`/db/generalConfig/andonListBahias`, (ref) =>
+        ref.where('name', '==', bay).where('workShop', '==', workshop)
+      )
+      .valueChanges();
   }
 }
-
