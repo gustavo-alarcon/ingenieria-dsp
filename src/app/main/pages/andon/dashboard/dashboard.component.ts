@@ -99,7 +99,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         })
     );
 
-    const view = this.andonService.getCurrentMonthOfViewDate();
+    const view = this.andonService.getCurrentTimeFrame();
 
     const beginDate = view.from;
     const endDate = new Date();
@@ -392,10 +392,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
             ticks: {
               beginAtZero: true,
             },
-          }
+          },
         ],
-        yAxes: [
-        ],
+        yAxes: [],
       },
       plugins: {
         datalabels: {
