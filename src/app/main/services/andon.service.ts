@@ -50,7 +50,7 @@ export class AndonService {
     let fromYear = todayYear;
     const monthsBefore = 2;
 
-    const fromMonth = ((todayMonth - monthsBefore) % 12) + 12;
+    const fromMonth = ((todayMonth - monthsBefore) % 12);
     if (todayMonth - 2 < 0) {
       fromYear--;
     }
